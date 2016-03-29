@@ -7,8 +7,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.Platform
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_dap_core.layer.actor.ActorLayer;
 import com.bitdubai.fermat_dap_core.layer.actor_network_service.ActorNetworkServiceLayer;
+import com.bitdubai.fermat_dap_core.layer.bussiness_transaction.BusinessTransactionLayer;
+import com.bitdubai.fermat_dap_core.layer.funds_transaction.FundsTransactionLayer;
 import com.bitdubai.fermat_dap_core.layer.identity.IdentityLayer;
 import com.bitdubai.fermat_dap_core.layer.middleware.MiddlewareLayer;
+import com.bitdubai.fermat_dap_core.layer.negotiation_transaction.NegotiationTransactionLayer;
 import com.bitdubai.fermat_dap_core.layer.network_service.NetworkServiceLayer;
 import com.bitdubai.fermat_dap_core.layer.digital_asset_transaction.DigitalAssetTransactionLayer;
 import com.bitdubai.fermat_dap_core.layer.sub_app_module.SubAppModuleLayer;
@@ -34,7 +37,10 @@ public final class DAPPlatform extends AbstractPlatform {
 
             registerLayer(new ActorLayer()                  );
             registerLayer(new ActorNetworkServiceLayer()    );
+            registerLayer(new BusinessTransactionLayer()    );
             registerLayer(new DigitalAssetTransactionLayer());
+            registerLayer(new FundsTransactionLayer()       );
+            registerLayer(new NegotiationTransactionLayer() );
             registerLayer(new IdentityLayer()               );
             registerLayer(new MiddlewareLayer()             );
             registerLayer(new NetworkServiceLayer()         );

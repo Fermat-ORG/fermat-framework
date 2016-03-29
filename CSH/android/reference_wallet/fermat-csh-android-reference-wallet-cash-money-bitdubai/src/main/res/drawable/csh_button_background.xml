@@ -4,5 +4,5 @@
     >
     <solid android:color="@color/csh_home_titlebar_background"/>
     <corners
-        android:radius="100dp"/>
+        android:radius="3dp"/>
 </shape>

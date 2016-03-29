@@ -23,7 +23,7 @@ public class BitcoinWalletBuildNotificationPainter {
 
                 CryptoWalletTransaction transaction;
                 PaymentRequest paymentRequest;
-            String loggedIntraUserPublicKey;
+                String loggedIntraUserPublicKey;
 
                 String[] params = code.split("_");
                 String notificationType = params[0];
@@ -33,19 +33,30 @@ public class BitcoinWalletBuildNotificationPainter {
                     case "TRANSACTIONARRIVE":
                         if(moduleManager != null){
                             loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
+                            try{
                                 transaction= moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey,loggedIntraUserPublicKey);
+                                notification = new BitcoinWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","",true);
 
-                            notification = new BitcoinWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","",true);
+                            }catch(Exception ex) {
+                                notification = new BitcoinWalletNotificationPainter("Received money", "BTC Arrived","","",true);
+                            }
+
 
                         }else{
                             notification = new BitcoinWalletNotificationPainter("Received money", "BTC Arrived","","",true);
                         }
                         break;
-                    case "TRANSACTION_REVERSE":
+                    case "TRANSACTIONREVERSE":
                         if(moduleManager != null) {
                             loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
-                            transaction = moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey, loggedIntraUserPublicKey);
-                            notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC could not be completed.", "", "",true);
+
+                            try{
+                                 transaction = moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey, loggedIntraUserPublicKey);
+                                 notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC could not be completed.", "", "",true);
+
+                             }catch(Exception ex) {
+                                notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true);
+                            }
                         }else
                         {
                             notification = new BitcoinWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true);
@@ -89,8 +100,7 @@ public class BitcoinWalletBuildNotificationPainter {
 
                 }
 
-        } catch (CantListTransactionsException e) {
-            e.printStackTrace();
+
         } catch (CantListReceivePaymentRequestException e) {
             e.printStackTrace();
         } catch (Exception e) {

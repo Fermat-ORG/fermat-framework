@@ -13,8 +13,6 @@ public interface FermatScreenSwapper {
 
     void changeActivity(String activityName, String appBackPublicKey, Object... objects);
 
-    void changeWalletFragment(String walletCategory, String walletType, String walletPublicKey, String fragmentType);
-
     void onCallbackViewObserver(FermatCallback fermatCallback);
 
     void connectWithOtherApp(Engine emgine,String fermatAppPublicKey,Object[] objectses);

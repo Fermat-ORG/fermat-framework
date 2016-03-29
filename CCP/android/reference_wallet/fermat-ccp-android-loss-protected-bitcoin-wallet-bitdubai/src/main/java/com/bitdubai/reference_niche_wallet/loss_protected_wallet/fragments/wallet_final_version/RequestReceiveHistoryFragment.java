@@ -48,7 +48,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Loss
      * Session
      */
     LossProtectedWalletSession referenceWalletSession;
-    String walletPublicKey = "reference_wallet";
+    String walletPublicKey = "loss_protected_wallet";
     /**
      * MANAGERS
      */

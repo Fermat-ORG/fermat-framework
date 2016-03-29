@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
@@ -12,6 +13,9 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
+
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
+
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
@@ -33,14 +37,19 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoad
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionSummary;
+
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.OutgoingExtraUserManager;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.CantGetTransactionManagerException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_extra_user.exceptions.CantSendFundsException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorCantSendFundsExceptions;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.exceptions.OutgoingIntraActorInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_intra_actor.interfaces.OutgoingIntraActorManager;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.exceptions.CantSendTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.exceptions.TransferIntraWalletUsersNotEnoughFundsException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.interfaces.TransferIntraWalletUsersManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
@@ -74,10 +83,12 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetActorLossProtectedTransactionHistoryException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetAllIntraUserLossProtectedConnectionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetAllLossProtectedWalletContactsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeProviderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedPaymentRequestDateOrderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedReceivePaymentRequestException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedSentPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedSpendingException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantRefuseLossProtectedRequestPaymentException;
@@ -96,27 +107,38 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserActor;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantEnrichLossProtectedIntraUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantEnrichLossProtectedTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantGetLossProtectedActorException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantInitializeLossProtectedWalletManagerException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantRequestOrRegisterLossProtectedAddressException;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
+import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
 import org.apache.commons.collections.CollectionUtils;
 
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.BlockingDeque;
 
 /**
  * The Class <code>com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure.CryptoWalletWalletModuleManager</code>
@@ -134,7 +156,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     private final CryptoAddressBookManager       cryptoAddressBookManager      ;
     private final CryptoAddressesManager         cryptoAddressesNSManager      ;
     private final CryptoPaymentManager           cryptoPaymentManager          ;
-    private final CryptoVaultManager cryptoVaultManager            ;
+    private final CryptoVaultManager            cryptoVaultManager            ;
     private final ErrorManager                   errorManager                  ;
     private final ExtraUserManager               extraUserManager              ;
     private final IntraWalletUserActorManager    intraUserManager              ;
@@ -142,6 +164,10 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     private final OutgoingExtraUserManager       outgoingExtraUserManager      ;
     private final OutgoingIntraActorManager      outgoingIntraActorManager     ;
     private final WalletContactsManager          walletContactsManager         ;
+    private final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
+    private final WalletManagerManager walletManagerManager;
+    private final TransferIntraWalletUsersManager transferIntraWalletUsersManager;
+
 
 
     public LossProtectedWalletModuleManager(final BitcoinLossProtectedWalletManager bitcoinWalletManager          ,
@@ -155,7 +181,11 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                                            final IntraWalletUserIdentityManager intraWalletUserIdentityManager,
                                            final OutgoingExtraUserManager       outgoingExtraUserManager      ,
                                            final OutgoingIntraActorManager      outgoingIntraActorManager     ,
-                                           final WalletContactsManager          walletContactsManager        ) {
+                                           final WalletContactsManager          walletContactsManager,
+                                            final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter,
+                                            final WalletManagerManager walletManagerManager,
+                                            final TransferIntraWalletUsersManager transferIntraWalletUsersManager) {
+
 
         this.bitcoinWalletManager           = bitcoinWalletManager          ;
         this.cryptoAddressBookManager       = cryptoAddressBookManager      ;
@@ -169,6 +199,10 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         this.outgoingExtraUserManager       = outgoingExtraUserManager      ;
         this.outgoingIntraActorManager      = outgoingIntraActorManager     ;
         this.walletContactsManager          = walletContactsManager         ;
+        this.exchangeProviderFilterManagerproviderFilter = exchangeProviderFilterManagerproviderFilter;
+        this.walletManagerManager = walletManagerManager;
+        this.transferIntraWalletUsersManager = transferIntraWalletUsersManager;
+
 
     }
 
@@ -206,7 +240,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
             WalletContactsSearch walletContactsSearch = walletContactsRegistry.searchWalletContact(walletPublicKey);
             for(WalletContactRecord r : walletContactsSearch.getResult()){
 
-                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(),intraUserLoggedInPublicKey);
+                byte[] image = getImageByActorType(r.getActorType(), r.getActorPublicKey(), intraUserLoggedInPublicKey);
 
                 finalRecordList.add(new LossProtectedWalletModuleWalletContact(r, image));
             }
@@ -725,6 +759,21 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         try {
             BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             return bitcoinWalletWallet.getBalance(balanceType).getBalance(blockchainNetworkType);
+        } catch (CantCalculateBalanceException e) {
+            throw new CantGetLossProtectedBalanceException(CantGetLossProtectedBalanceException.DEFAULT_MESSAGE, e, "", "Cant Calculate Balance of the wallet.");
+        } catch(Exception e){
+            throw new CantGetLossProtectedBalanceException(CantGetLossProtectedBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+    }
+
+    @Override
+    public long getBalance(BalanceType balanceType, //available balance only
+                           String walletPublicKey,
+                           BlockchainNetworkType blockchainNetworkType,
+                           long exchangeRate) throws CantGetLossProtectedBalanceException {
+        try {
+            BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            return bitcoinWalletWallet.getBalance(balanceType).getBalance(blockchainNetworkType, exchangeRate);
         } catch (CantLoadWalletException e) {
             throw new CantGetLossProtectedBalanceException(CantGetLossProtectedBalanceException.DEFAULT_MESSAGE, e, "", "Cant Load Wallet.");
         }  catch (CantCalculateBalanceException e) {
@@ -733,6 +782,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
             throw new CantGetLossProtectedBalanceException(CantGetLossProtectedBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
+
 
     @Override
 
@@ -774,7 +824,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
             }
 
             return cryptoWalletTransactionList;
-        } catch (CantLoadWalletException | com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException e) {
+        } catch (com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException e) {
             throw new CantListLossProtectedTransactionsException(CantListLossProtectedTransactionsException.DEFAULT_MESSAGE, e);
         } catch(Exception e){
             throw new CantListLossProtectedTransactionsException(CantListLossProtectedTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
@@ -810,10 +860,22 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
             }
 
             return cryptoWalletTransactionList;
-        } catch (CantLoadWalletException | com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException e) {
+        } catch (com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantListTransactionsException e) {
             throw new CantListLossProtectedTransactionsException(CantListLossProtectedTransactionsException.DEFAULT_MESSAGE, e);
         } catch(Exception e){
             throw new CantListLossProtectedTransactionsException(CantListLossProtectedTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+    }
+
+    @Override
+    public List<BitcoinLossProtectedWalletSpend> listSpendingBlocksValue(String walletPublicKey,UUID transactionId) throws CantListLossProtectedSpendingException {
+        try {
+            return bitcoinWalletManager.loadWallet(walletPublicKey).listTransactionsSpending(transactionId);
+
+        } catch (CantLoadWalletException e) {
+            throw new CantListLossProtectedSpendingException(CantGetActorLossProtectedTransactionHistoryException.DEFAULT_MESSAGE, e);
+        } catch(Exception e){
+            throw new CantListLossProtectedSpendingException(CantGetActorLossProtectedTransactionHistoryException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
 
@@ -824,7 +886,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         try {
             BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             return constructActorTransactionSummary(bitcoinWalletWallet.getActorTransactionSummary(actorPublicKey, balanceType));
-        } catch (CantLoadWalletException | CantGetActorTransactionSummaryException e) {
+        } catch (CantGetActorTransactionSummaryException e) {
             throw new CantGetActorLossProtectedTransactionHistoryException(CantGetActorLossProtectedTransactionHistoryException.DEFAULT_MESSAGE, e);
         } catch(Exception e){
             throw new CantGetActorLossProtectedTransactionHistoryException(CantGetActorLossProtectedTransactionHistoryException.DEFAULT_MESSAGE, FermatException.wrapException(e));
@@ -902,14 +964,13 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
             return  cryptoWalletTransaction;
 
-        } catch (CantLoadWalletException e) {
-            throw new CantListLossProtectedTransactionsException(CantListLossProtectedTransactionsException.DEFAULT_MESSAGE, e);
         } catch (CantFindTransactionException e) {
             throw new CantListLossProtectedTransactionsException(CantListLossProtectedTransactionsException.DEFAULT_MESSAGE, e);
         } catch (CantEnrichLossProtectedTransactionException e) {
             throw new CantListLossProtectedTransactionsException(CantListLossProtectedTransactionsException.DEFAULT_MESSAGE, e);
+        } catch (CantLoadWalletException e) {
+            throw new CantListLossProtectedTransactionsException(CantListLossProtectedTransactionsException.DEFAULT_MESSAGE, e);
         }
-
     }
 
     @Override
@@ -920,7 +981,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         try {
             BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             bitcoinWalletWallet.setTransactionDescription(transactionID, description);
-        } catch (CantLoadWalletException | CantStoreMemoException e) {
+        } catch (CantStoreMemoException e) {
             throw new CantSaveLossProtectedTransactionDescriptionException(CantSaveLossProtectedTransactionDescriptionException.DEFAULT_MESSAGE, e);
         } catch (CantFindTransactionException e) {
             throw new LossProtectedTransactionNotFoundException(LossProtectedTransactionNotFoundException.DEFAULT_MESSAGE, e);
@@ -970,6 +1031,22 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CRYPTO_WALLET_WALLET_MODULE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new CantSendLossProtectedCryptoException(CantSendLossProtectedCryptoException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
+    }
+
+    @Override
+    public void sendToWallet(long cryptoAmount, String sendingWalletPublicKey,String receivingWalletPublicKey, String notes, Actors deliveredToActorType, ReferenceWallet sendingWallet, ReferenceWallet receivingWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
+
+       try {
+           transferIntraWalletUsersManager.getOutgoingDeviceUser().sendToWallet("",cryptoAmount,notes,deliveredToActorType,sendingWallet,receivingWallet,sendingWalletPublicKey,receivingWalletPublicKey,blockchainNetworkType);
+       } catch (CantSendTransactionException e) {
+           throw new CantSendLossProtectedCryptoException("CAN'T SEND CRYPTO TO WALLET EXCEPTION", e);
+
+       } catch (TransferIntraWalletUsersNotEnoughFundsException e) {
+           throw new LossProtectedInsufficientFundsException("TRANSFER TO WALLET Insufficient Funds", e,"","");
+
+       }
+
+
     }
 
     @Override
@@ -1031,6 +1108,11 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         }
 
 
+    }
+
+    @Override
+    public long getActualExchangeRate() throws CantListReceivePaymentRequestException {
+        return 400;
     }
 
 
@@ -1186,32 +1268,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
 
 
-    @Override
-    public List<LossProtectedPaymentRequest> listPaymentRequestDateOrder(String walletPublicKey,int max,int offset) throws CantListLossProtectedPaymentRequestDateOrderException {
-        try {
-            //Request order by date desc
 
-            List<LossProtectedPaymentRequest> lst =  new ArrayList<>();
-
-            LossProtectedWalletContact cryptoWalletWalletContact = null;
-
-//            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequests(walletPublicKey, max,offset)) {
-//
-//                WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
-//                if (walletContactRecord != null)
-//                    cryptoWalletWalletContact = new CryptoWalletWalletModuleWalletContact(walletContactRecord);
-//
-//                CryptoWalletWalletModulePaymentRequest cryptoWalletPaymentRequest = new CryptoWalletWalletModulePaymentRequest(convertTime(paymentRecord.getStartTimeStamp()),paymentRecord.getDescription(),paymentRecord.getAmount(),cryptoWalletWalletContact,PaymentRequest.SEND_PAYMENT,paymentRecord.getState().name());
-//                lst.add(cryptoWalletPaymentRequest);
-//            }
-
-
-
-            return lst;
-        } catch (Exception e) {
-            throw new CantListLossProtectedPaymentRequestDateOrderException(CantListLossProtectedPaymentRequestDateOrderException.DEFAULT_MESSAGE, FermatException.wrapException(e));
-        }
-    }
 
     @Override
     public boolean isValidAddress(CryptoAddress cryptoAddress) {
@@ -1429,7 +1486,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
     @Override
     public void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException {
-        intraWalletUserIdentityManager.createNewIntraWalletUser(name,phrase,image);
+        intraWalletUserIdentityManager.createNewIntraWalletUser(name, phrase, image);
     }
 
 
@@ -1438,10 +1495,69 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         intraWalletUserIdentityManager.registerIdentities();
     }
 
+    @Override
+    public List<String> getMnemonicText() throws CantGetMnemonicTextException {
+        try {
+            return cryptoVaultManager.getMnemonicCode();
+        } catch (CantLoadExistingVaultSeed e) {
+            throw new CantGetMnemonicTextException("CANT GET WALLET Mnemonic TEXT",e, "", "Crypto vault error.");
+        }
+    }
+
+    @Override
+    public ExchangeRate getCurrencyExchange(UUID rateProviderManagerId) throws CantGetCurrencyExchangeException {
+
+        ExchangeRate rate = null;
+        try {
+            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
+            CurrencyExchangeRateProviderManager  rateProviderManager = exchangeProviderFilterManagerproviderFilter.getProviderReference(rateProviderManagerId);
+                 //your exchange rate.
+                rate = rateProviderManager.getCurrentExchangeRate(wantedCurrencyPair);
+
+         } catch (CantGetExchangeRateException e) {
+            throw new CantGetCurrencyExchangeException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "ExchangeRate error.");
+        } catch (UnsupportedCurrencyPairException e) {
+            throw new CantGetCurrencyExchangeException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE, e, "", "UnsupportedCurrencyPair error.");
+
+        }catch(Exception e){
+                throw new CantGetCurrencyExchangeException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE, e, "", "unknown error.");
+
+            }
+
+            return rate;
+        }
+
+        @Override
+    public  Collection<CurrencyExchangeRateProviderManager> getExchangeRateProviderManagers() throws CantGetCurrencyExchangeProviderException {
+        Collection<CurrencyExchangeRateProviderManager> filteredProviders = null;
+        try {
+            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
+
+            filteredProviders = exchangeProviderFilterManagerproviderFilter.getProviderReferencesFromCurrencyPair(wantedCurrencyPair);
+
+
+
+        } catch (CantGetProviderException e) {
+            throw new CantGetCurrencyExchangeProviderException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "Provider error.");
+        }
+        catch (Exception e) {
+            throw new CantGetCurrencyExchangeProviderException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "unknown error.");
+        }
+
+        return filteredProviders;
+    }
 
     private  String convertTime(long time){
         Date date = new Date(time);
-        Format format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        return format.format(date);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy HH:mm", Locale.US);
+
+        return sdf.format(date);
     }
+
+    @Override
+    public List<InstalledWallet> getInstalledWallets() throws CantListWalletsException {
+        return walletManagerManager.getInstalledWallets();
+    }
+
+
 }

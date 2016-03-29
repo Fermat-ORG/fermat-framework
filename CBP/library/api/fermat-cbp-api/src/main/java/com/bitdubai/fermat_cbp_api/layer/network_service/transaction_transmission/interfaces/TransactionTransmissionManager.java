@@ -1,10 +1,11 @@
 package com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReception;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendBusinessTransactionHashException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 
@@ -30,7 +31,7 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
             String receiverPublicKey,
             String contractHash,
             String negotiationId,
-            Plugins remoteBusinessTransaction)  throws
+            Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent)  throws
             CantSendBusinessTransactionHashException;
 
     /**
@@ -48,7 +49,7 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
             String transactionHash,
             String transactionId,
             ContractTransactionStatus contractStatus,
-            Plugins remoteBusinessTransaction) throws
+            Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws
             CantSendContractNewStatusNotificationException;
 
     /**
@@ -61,7 +62,27 @@ public interface TransactionTransmissionManager extends FermatManager, Transacti
             String cryptoCustomerActorReceiverPublicKey,
             String contractHash,
             String transactionId,
-            Plugins remoteBusinessTransaction) throws
-            CantConfirmNotificationReception;
+            Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws
+            CantConfirmNotificationReceptionException;
+
+    /**
+     * Acknowleges that a confirmation has been received.
+     *
+     * @param cryptoBrokerActorSenderPublicKey
+     * @param cryptoCustomerActorReceiverPublicKey
+     * @param contractHash
+     * @param transactionId
+     * @param remoteBusinessTransaction
+     * @param senderComponent
+     * @param receiverComponent
+     * @throws CantConfirmNotificationReceptionException
+     */
+    void ackConfirmNotificationReception(
+            String cryptoBrokerActorSenderPublicKey,
+            String cryptoCustomerActorReceiverPublicKey,
+            String contractHash,
+            String transactionId,
+            Plugins remoteBusinessTransaction,PlatformComponentType senderComponent,PlatformComponentType receiverComponent) throws
+            CantConfirmNotificationReceptionException;
 
 }

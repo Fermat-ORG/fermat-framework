@@ -150,7 +150,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
         //Configure recyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletManager));
+        recyclerView.setAdapter(new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletManager, this));
 
         negotiationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -349,4 +349,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     }
 
 
+    public void goToWalletHome() {
+        changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
+    }
 }

@@ -80,17 +80,15 @@
                         android:id="@+id/radioButton2"
                         android:layout_marginLeft="6dp"/>
 
-                </RadioGroup>
+                    <RadioButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:button="@drawable/pager_selector"
+                        android:id="@+id/radioButton3"
+                        android:layout_marginLeft="6dp"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:src="@drawable/icon_recent_app"
-                    android:id="@+id/btn_recents"
-                    android:visibility="visible"
-                    android:layout_marginRight="9dp"
-                    android:layout_marginTop="9dp"/>
+
+                </RadioGroup>
 
 
                 <SlidingDrawer
@@ -176,7 +174,7 @@
             android:visibility="gone"/>
 
 
-        <include layout="@layout/reveal_bottom"
+        <include layout="@layout/reveal_botom_new"
             android:id="@+id/reveal_bottom_container"
             android:layout_gravity="bottom"
             android:layout_height="wrap_content"

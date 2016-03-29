@@ -78,7 +78,6 @@ dependencies {
     compile ('commons-codec:commons-codec:1.10')
     compile ('org.slf4j:slf4j-log4j12:1.7.13')
     compile ('org.jsoup:jsoup:1.8.3')
-    compile ('org.springframework:spring-core:4.2.5.RELEASE')
 
     compile files('src/main/libs/cling-core-2.1.0.jar')
     compile files('src/main/libs/cling-support-2.1.0.jar')

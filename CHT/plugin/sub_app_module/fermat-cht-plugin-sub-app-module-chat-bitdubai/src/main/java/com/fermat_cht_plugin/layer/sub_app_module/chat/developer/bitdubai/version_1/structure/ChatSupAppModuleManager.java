@@ -20,7 +20,8 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatExcepti
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendReadMessageNotificationException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
@@ -29,12 +30,14 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by franklin on 06/01/16.
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
 public class ChatSupAppModuleManager implements ChatManager {
 
@@ -76,8 +79,18 @@ public class ChatSupAppModuleManager implements ChatManager {
     }
 
     @Override
-    public List<Message> getMessageByChatId(UUID chatId) throws CantGetMessageException {
+    public List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException {
+        return middlewareChatManager.getMessagesByChatId(chatId);
+    }
+
+    @Override
+    public Message getMessageByChatId(UUID chatId) throws CantGetMessageException {
         return middlewareChatManager.getMessageByChatId(chatId);
+    }
+
+    @Override
+    public int getCountMessageByChatId(UUID chatId) throws CantGetMessageException {
+        return middlewareChatManager.getCountMessageByChatId(chatId);
     }
 
     @Override
@@ -92,6 +105,7 @@ public class ChatSupAppModuleManager implements ChatManager {
 
     @Override
     public void saveMessage(Message message) throws CantSaveMessageException {
+        System.out.println("*** 12345 case 2:send msg in Module layer" + new Timestamp(System.currentTimeMillis()));
         middlewareChatManager.saveMessage(message);
     }
 
@@ -101,7 +115,12 @@ public class ChatSupAppModuleManager implements ChatManager {
     }
 
     @Override
-    public void sendReadMessageNotification(Message message) throws SendReadMessageNotificationException {
+    public Chat getChatByRemotePublicKey(String publicKey) throws CantGetChatException {
+        return middlewareChatManager.getChatByRemotePublicKey(publicKey);
+    }
+
+    @Override
+    public void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException {
         middlewareChatManager.sendReadMessageNotification(message);
     }
 
@@ -132,8 +151,32 @@ public class ChatSupAppModuleManager implements ChatManager {
 
     @Override
     public List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException {
+        try
+        {
+            List<ContactConnection> contactConnections = middlewareChatManager.getContactConnections();
+
+            for (ContactConnection contactConnection : contactConnections)
+            {
+                middlewareChatManager.deleteContactConnection(contactConnection);
+            }
+
+        } catch (CantGetContactConnectionException e) {
+            throw new CantGetContactConnectionException(
+                    e,
+                    "delete contact connections",
+                    "Cannot get the contact connection"
+            );
+        } catch (CantDeleteContactConnectionException e) {
+            throw new CantGetContactConnectionException(
+                    e,
+                    "delete contact connections",
+                    "Cannot delete contact connections"
+            );
+        }
+
         return middlewareChatManager.discoverActorsRegistered();
     }
+
 
     /**
      * This method returns the Network Service public key
@@ -210,5 +253,16 @@ public class ChatSupAppModuleManager implements ChatManager {
     @Override
     public ContactConnection getContactConnectionByContactId(UUID contactId) throws CantGetContactConnectionException {
         return middlewareChatManager.getContactConnection(contactId);
+    }
+
+    /**
+     * This method sends the message through the Chat Network Service
+     *
+     * @param createdMessage
+     * @throws CantSendChatMessageException
+     */
+    @Override
+    public void sendMessage(Message createdMessage) throws CantSendChatMessageException {
+        middlewareChatManager.sendMessage(createdMessage);
     }
 }

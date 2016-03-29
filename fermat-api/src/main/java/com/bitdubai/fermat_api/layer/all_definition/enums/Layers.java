@@ -16,6 +16,7 @@ public enum Layers implements FermatEnum {
     ACTOR                          ("ACT"),
     ACTOR_CONNECTION               ("ACC"),
     ACTOR_NETWORK_SERVICE          ("ANS"),
+    AGENT                          ("AGN"),
     API                            ("API"),
     BANK_MONEY_TRANSACTION         ("BMT"),
     BASIC_WALLET                   ("BSW"),
@@ -30,7 +31,9 @@ public enum Layers implements FermatEnum {
     DEFINITION                     ("DEF"),
     DESKTOP_MODULE                 ("DKM"),
     DIGITAL_ASSET_TRANSACTION      ("DAT"),
+    EXTERNAL_API                   ("EAP"),
     ENGINE                         ("ENG"),
+    FUNDS_TRANSACTION              ("FTX"),
     HARDWARE                       ("HAR"),
     IDENTITY                       ("IDT"),
     MIDDLEWARE                     ("MID"),
@@ -43,6 +46,7 @@ public enum Layers implements FermatEnum {
     STOCK_TRANSACTIONS             ("STR"),
     SUB_APP_MODULE                 ("SAM"),
     SEARCH                         ("SCH"),
+    SONG_WALLET                    ("SWL"),
     SYSTEM                         ("SYS"),
     TRANSACTION                    ("TRA"),
     USER                           ("USR"),
@@ -66,6 +70,7 @@ public enum Layers implements FermatEnum {
             case "ACT":  return ACTOR;
             case "ACC":  return ACTOR_CONNECTION;
             case "ANS":  return ACTOR_NETWORK_SERVICE;
+            case "AGN":  return AGENT;
             case "API":  return API;
             case "BMT":  return BANK_MONEY_TRANSACTION;
             case "BSW":  return BASIC_WALLET;
@@ -81,6 +86,8 @@ public enum Layers implements FermatEnum {
             case "DEF":  return DEFINITION;
             case "DKM":  return DESKTOP_MODULE;
             case "ENG":  return ENGINE;
+            case "EAP":  return EXTERNAL_API;
+            case "FTX":  return FUNDS_TRANSACTION;
             case "HAR":  return HARDWARE;
             case "IDT":  return IDENTITY;
             case "MID":  return MIDDLEWARE;
@@ -94,6 +101,7 @@ public enum Layers implements FermatEnum {
             case "SYS":  return SYSTEM;
             case "TRA":  return TRANSACTION;
             case "NTR":  return NEGOTIATION_TRANSACTION;
+            case "SWL":  return SONG_WALLET;
             case "STR":  return STOCK_TRANSACTIONS;
             case "USR":  return USER;
             case "WAL":  return WALLET;

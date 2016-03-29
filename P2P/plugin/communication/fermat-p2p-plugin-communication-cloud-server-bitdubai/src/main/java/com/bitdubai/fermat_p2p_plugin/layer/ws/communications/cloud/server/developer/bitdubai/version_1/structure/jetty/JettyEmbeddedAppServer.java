@@ -6,7 +6,6 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty;
 
-import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.DeveloperBitDubai;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ConfigurationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.VpnWebSocketServlet;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.vpn.WebSocketVpnServerChannel;
@@ -22,28 +21,19 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Slf4jLog;
-import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
-import org.fourthline.cling.UpnpServiceImpl;
-import org.fourthline.cling.support.igd.PortMappingListener;
-import org.fourthline.cling.support.model.PortMapping;
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URISyntaxException;
-import java.net.URL;
 import java.net.UnknownHostException;
 import java.nio.channels.UnsupportedAddressTypeException;
-import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.Enumeration;

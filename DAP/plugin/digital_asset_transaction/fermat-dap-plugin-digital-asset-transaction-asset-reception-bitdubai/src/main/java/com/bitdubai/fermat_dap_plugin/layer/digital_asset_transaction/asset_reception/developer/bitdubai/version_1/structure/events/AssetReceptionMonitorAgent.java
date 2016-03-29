@@ -2,11 +2,11 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_rec
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
@@ -39,17 +40,14 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGet
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.enums.DigitalAssetMetadataTransactionType;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendTransactionNewStatusNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DigitalAssetMetadataTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.exceptions.CantDeliverDigitalAssetToAssetWalletException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingTransactionNotificationAgent;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.util.AssetVerification;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
@@ -66,7 +64,6 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_rece
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-
 
 import java.util.List;
 import java.util.UUID;
@@ -88,6 +85,8 @@ public class AssetReceptionMonitorAgent implements Agent {
     private final ActorAssetUserManager actorAssetUserManager;
     private final ActorAssetIssuerManager assetIssuerManager;
     private final ActorAssetRedeemPointManager redeemPointManager;
+    private final IncomingCryptoManager incomingCryptoManager;
+    private final TransactionProtocolManager<CryptoTransaction> protocolManager;
 
     public AssetReceptionMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
                                       ErrorManager errorManager,
@@ -99,7 +98,8 @@ public class AssetReceptionMonitorAgent implements Agent {
                                       ActorAssetIssuerManager issuerManager,
                                       ActorAssetRedeemPointManager redeemPointManager,
                                       DigitalAssetReceptor digitalAssetReceptor,
-                                      DigitalAssetReceptionVault digitalAssetReceptionVault) {
+                                      DigitalAssetReceptionVault digitalAssetReceptionVault,
+                                      IncomingCryptoManager incomingCryptoManager) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
@@ -112,6 +112,8 @@ public class AssetReceptionMonitorAgent implements Agent {
         this.digitalAssetReceptor = digitalAssetReceptor;
         this.digitalAssetReceptionVault = digitalAssetReceptionVault;
         this.digitalAssetReceptionVault.setActorAssetUserManager(actorAssetUserManager);
+        this.incomingCryptoManager = incomingCryptoManager;
+        this.protocolManager = incomingCryptoManager.getTransactionManager();
     }
 
     @Override
@@ -249,7 +251,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                 throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot deliver the digital asset metadata to asset user wallet");
             } catch (CantGetCryptoTransactionException exception) {
                 throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot get the genesis transaction from Crypto Network");
-            } catch (DAPException | CantRegisterCreditException | CantRegisterDebitException | CantLoadWalletException | CantGetTransactionsException e) {
+            } catch (DAPException | CantRegisterCreditException | CantRegisterDebitException | CantLoadWalletException | CantGetTransactionsException | CantDeliverPendingTransactionsException | CantConfirmTransactionException e) {
                 e.printStackTrace();
             }
         }
@@ -269,7 +271,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                 CantGetCryptoTransactionException,
                 UnexpectedResultReturnedFromDatabaseException,
                 //CantGetDigitalAssetFromLocalStorageException,
-                CantDeliverDigitalAssetToAssetWalletException, CantGetDigitalAssetFromLocalStorageException, CantCreateDigitalAssetFileException, CantGetTransactionsException, CantGetAssetUserActorsException, CantRegisterDebitException, CantAssetUserActorNotFoundException, CantLoadWalletException, CantGetAssetIssuerActorsException, CantRegisterCreditException {
+                CantDeliverDigitalAssetToAssetWalletException, CantGetDigitalAssetFromLocalStorageException, CantCreateDigitalAssetFileException, CantGetTransactionsException, CantGetAssetUserActorsException, CantRegisterDebitException, CantAssetUserActorNotFoundException, CantLoadWalletException, CantGetAssetIssuerActorsException, CantRegisterCreditException, CantDeliverPendingTransactionsException, CantConfirmTransactionException {
             System.out.println("ASSET RECEPTION is crypto pending events");
             List<String> eventIdList = assetReceptionDao.getIncomingCryptoEvents();
             System.out.println("ASSET RECEPTION is " + eventIdList.size() + " events");
@@ -286,16 +288,16 @@ public class AssetReceptionMonitorAgent implements Agent {
                         for (String genesisTransaction : genesisTransactionList) {
                             DigitalAssetMetadata metadata = digitalAssetReceptionVault.getDigitalAssetMetadataFromLocalStorage(genesisTransaction);
                             System.out.println("ASSET RECEPTION CN genesis transaction: " + genesisTransaction);
-                            CryptoTransaction cryptoGenesisTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, metadata, CryptoStatus.ON_CRYPTO_NETWORK);
-                            if (cryptoGenesisTransaction == null) {
+                            Transaction<CryptoTransaction> transaction = transactionForHash(metadata);
+                            if (transaction == null) {
                                 System.out.println("ASSET RECEPTION the genesis transaction from Crypto Network is null");
                                 continue;
                             }
-                            System.out.println("ASSET DISTRIBUTION crypto transaction on crypto network " + cryptoGenesisTransaction.getTransactionHash());
                             String actorIssuerPublicKey = assetReceptionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
-
-                            digitalAssetReceptionVault.updateWalletBalance(metadata, cryptoGenesisTransaction, BalanceType.BOOK, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey, Actors.DAP_ASSET_ISSUER, WalletUtilities.DEFAULT_MEMO_DISTRIBUTION);
+                            Actors senderType = assetReceptionDao.getSenderTypeByGenesisTransaction(genesisTransaction);
+                            digitalAssetReceptionVault.updateWalletBalance(metadata, transaction.getInformation(), BalanceType.BOOK, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey, senderType, WalletUtilities.DEFAULT_MEMO_DISTRIBUTION);
                             assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_CRYPTO_NETWORK);
+                            protocolManager.confirmReception(transaction.getTransactionID());
                         }
                     }
                 }
@@ -306,17 +308,19 @@ public class AssetReceptionMonitorAgent implements Agent {
                         for (String genesisTransaction : genesisTransactionList) {
                             System.out.println("ASSET RECEPTION BCH Transaction Hash: " + genesisTransaction);
                             DigitalAssetMetadata metadata = digitalAssetReceptionVault.getDigitalAssetMetadataFromLocalStorage(genesisTransaction);
-                            CryptoTransaction cryptoGenesisTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, metadata, CryptoStatus.ON_BLOCKCHAIN);
-                            if (cryptoGenesisTransaction == null) {
+                            System.out.println("ASSET RECEPTION CN genesis transaction: " + genesisTransaction);
+                            Transaction<CryptoTransaction> transaction = transactionForHash(metadata);
+                            if (transaction == null) {
                                 System.out.println("ASSET RECEPTION the genesis transaction from Crypto Network is null");
                                 continue;
                             }
-                            System.out.println("ASSET RECEPTION crypto transaction on blockchain " + cryptoGenesisTransaction.getTransactionHash());
                             assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.CRYPTO_RECEIVED, genesisTransaction);
                             String actorIssuerPublicKey = assetReceptionDao.getActorUserPublicKeyByGenesisTransaction(genesisTransaction);
-                            metadata = digitalAssetReceptionVault.updateMetadataTransactionChain(genesisTransaction, cryptoGenesisTransaction);
-                            digitalAssetReceptionVault.updateWalletBalance(metadata, cryptoGenesisTransaction, BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey, Actors.DAP_ASSET_ISSUER, WalletUtilities.DEFAULT_MEMO_DISTRIBUTION);
+                            metadata = digitalAssetReceptionVault.updateMetadataTransactionChain(genesisTransaction, transaction.getInformation());
+                            Actors senderType = assetReceptionDao.getSenderTypeByGenesisTransaction(genesisTransaction);
+                            digitalAssetReceptionVault.updateWalletBalance(metadata, transaction.getInformation(), BalanceType.AVAILABLE, TransactionType.CREDIT, DAPTransactionType.RECEPTION, actorIssuerPublicKey, senderType, WalletUtilities.DEFAULT_MEMO_DISTRIBUTION);
                             assetReceptionDao.updateDigitalAssetCryptoStatusByGenesisTransaction(genesisTransaction, CryptoStatus.ON_BLOCKCHAIN);
+                            protocolManager.confirmReception(transaction.getTransactionID());
                         }
                     }
                 }
@@ -365,6 +369,16 @@ public class AssetReceptionMonitorAgent implements Agent {
                 assetTransmissionManager.sendMessage(message);
                 assetReceptionDao.updateReceptionStatusByGenesisTransaction(ReceptionStatus.RECEPTION_FINISHED, genesisTransaction);
             }
+        }
+
+        private Transaction<CryptoTransaction> transactionForHash(DigitalAssetMetadata metadata) throws CantDeliverPendingTransactionsException {
+            List<Transaction<CryptoTransaction>> pendingTransactions = protocolManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
+            for (Transaction<CryptoTransaction> transaction : pendingTransactions) {
+                if (transaction.getInformation().getTransactionHash().equals(metadata.getLastTransactionHash())) {
+                    return transaction;
+                }
+            }
+            return null;
         }
 
         private boolean isTransactionToBeNotified(CryptoStatus cryptoStatus) throws CantExecuteQueryException {

@@ -85,7 +85,7 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
              * Read all pending message from database
              */
             Map<String, Object> filters = new HashMap<>();
-            filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.NEW_RECEIVED.getCode());
+            filters.put(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.NEW_RECEIVED.getCode());
             List<FermatMessage> messages = networkServiceRoot.getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().findAll(filters);
 
             /*

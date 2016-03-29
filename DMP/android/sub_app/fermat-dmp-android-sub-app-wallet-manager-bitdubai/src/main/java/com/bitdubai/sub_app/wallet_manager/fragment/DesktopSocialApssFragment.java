@@ -327,34 +327,34 @@ public class DesktopSocialApssFragment extends AbstractDesktopFragment<DesktopSe
 //                    lstItemsWithIcon.add(item);
 //                }
 //            }
-            InstalledApp installedApp = new InstalledApp("Uber","uber_public_key",new Version(),R.drawable.fermat,0,0, AppsStatus.getDefaultStatus());
-
-            lstInstalledApps.add(installedApp);
-            Item item = new Item(installedApp);
-            item.setIconResource(R.drawable.fermat);
-            item.setPosition(0);
-            lstItemsWithIcon.add(item);
-
-            installedApp = new InstalledApp("Airbnb","Airbnb_public_key",new Version(),R.drawable.fermat,0,0, AppsStatus.getDefaultStatus());
-            lstInstalledApps.add(installedApp);
-            item = new Item(installedApp);
-            item.setIconResource(R.drawable.fermat);
-            item.setPosition(1);
-            lstItemsWithIcon.add(item);
-
-            installedApp = new InstalledApp("eBay","eBay_public_key",new Version(),R.drawable.fermat,0,0, AppsStatus.getDefaultStatus());
-            lstInstalledApps.add(installedApp);
-            item = new Item(installedApp);
-            item.setIconResource(R.drawable.fermat);
-            item.setPosition(2);
-            lstItemsWithIcon.add(item);
-
-            installedApp = new InstalledApp("Tinder","Tinder_public_key",new Version(),R.drawable.fermat,0,0, AppsStatus.getDefaultStatus());
-            lstInstalledApps.add(installedApp);
-            item = new Item(installedApp);
-            item.setIconResource(R.drawable.fermat);
-            item.setPosition(3);
-            lstItemsWithIcon.add(item);
+//            InstalledApp installedApp = new InstalledApp("Uber","uber_public_key",new Version(),R.drawable.fermat,0,0, AppsStatus.getDefaultStatus());
+//
+//            lstInstalledApps.add(installedApp);
+//            Item item = new Item(installedApp);
+//            item.setIconResource(R.drawable.fermat);
+//            item.setPosition(0);
+//            lstItemsWithIcon.add(item);
+//
+//            installedApp = new InstalledApp("Airbnb","Airbnb_public_key",new Version(),R.drawable.fermat,0,0, AppsStatus.getDefaultStatus());
+//            lstInstalledApps.add(installedApp);
+//            item = new Item(installedApp);
+//            item.setIconResource(R.drawable.fermat);
+//            item.setPosition(1);
+//            lstItemsWithIcon.add(item);
+//
+//            installedApp = new InstalledApp("eBay","eBay_public_key",new Version(),R.drawable.fermat,0,0, AppsStatus.getDefaultStatus());
+//            lstInstalledApps.add(installedApp);
+//            item = new Item(installedApp);
+//            item.setIconResource(R.drawable.fermat);
+//            item.setPosition(2);
+//            lstItemsWithIcon.add(item);
+//
+//            installedApp = new InstalledApp("Tinder","Tinder_public_key",new Version(),R.drawable.fermat,0,0, AppsStatus.getDefaultStatus());
+//            lstInstalledApps.add(installedApp);
+//            item = new Item(installedApp);
+//            item.setIconResource(R.drawable.fermat);
+//            item.setPosition(3);
+//            lstItemsWithIcon.add(item);
 
 
             for(int i=0;i<12;i++){

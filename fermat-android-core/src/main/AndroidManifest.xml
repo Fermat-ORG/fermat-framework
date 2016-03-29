@@ -61,33 +61,23 @@
 
 
         <activity
-            android:name="com.bitdubai.android_core.app.SubAppActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.StartActivity" />
-        </activity>
-        <activity
             android:name="com.bitdubai.android_core.app.EditableWalletActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.SubAppActivity"/>
+                android:value="com.bitdubai.android_core.app.AppActivity"/>
         </activity>
         <activity
-            android:name="com.bitdubai.android_core.app.WalletActivity"
+            android:name="com.bitdubai.android_core.app.AppActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.bitdubai.android_core.app.SubAppActivity"
+                android:value="com.bitdubai.android_core.app.StartActivity"
                 android:configChanges="orientation"
                 android:screenOrientation="portrait"/>
         </activity>
@@ -145,9 +135,10 @@
 
         </receiver>
 
-        <service android:name="com.bitdubai.android_core.app.CommunicationService"
+        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.CommunicationService"
             android:label="CommService"
-            android:exported="true">
+            android:exported="true"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -155,6 +146,11 @@
                 <action android:name="org.fermat.COMM_SERVICE" />
             </intent-filter>
         </service>
+
+        <activity android:name="com.bitdubai.android_core.app.LoadingScreenActivity"
+            android:theme="@style/AppThemeDesktop"
+            />
+
 
     </application>
 </manifest>

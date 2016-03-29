@@ -1,8 +1,10 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantConnectToActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantDisconnectAssetActorException;
@@ -105,6 +107,8 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
 
     List<ActorAssetRedeemPoint> getAllRedeemPointActorConnectedForIssuer(String issuerPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException;
 
+    void updateOfflineRedeemPointRegisterInNetworkService(List<ActorAssetRedeemPoint> actorAssetUsers) throws CantGetAssetRedeemPointActorsException;
+
     /**
      * The method <code>sendMessage</code> Stablish Connection
      * with Requester and Lists Issuers Delivered
@@ -166,7 +170,8 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
     void receivingActorAssetRedeemRequestConnection(String actorAssetUserLoggedInPublicKey,
                                                   String actorAssetUserToAddName,
                                                   String actorAssetUserToAddPublicKey,
-                                                  byte[] profileImage) throws CantCreateActorAssetReceiveException;
+                                                  byte[] profileImage,
+                                                  Actors actorsType) throws CantCreateActorAssetReceiveException;
 
     /**
      * The method <code>cancelActorAssetRedeem</code> cancels an intra user from the connections registry
@@ -183,7 +188,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * @return the list of intra users the logged in intra user has as connections.
      * @throws CantGetActorAssetWaitingException
      */
-    List<ActorAssetRedeemPoint> getWaitingYourConnectionActorAssetRedeem(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException;
+    List<DAPActor> getWaitingYourConnectionActorAssetRedeem(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException;
 
     /**
      * The method <code>getWaitingTheirConnectionActorAssetRedeem</code> shows the list of all actor asset users
@@ -193,7 +198,7 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * @return the list of intra users the logged in intra user has as connections.
      * @throws CantGetActorAssetWaitingException
      */
-    List<ActorAssetRedeemPoint> getWaitingTheirConnectionActorAssetRedeem(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException;
+    List<DAPActor> getWaitingTheirConnectionActorAssetRedeem(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException;
 
     /**
      *The method <code>getLastNotificationActorAssetUser</code> get the last notification received by actor public key

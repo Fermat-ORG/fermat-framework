@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_o
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -42,6 +43,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exception
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
@@ -277,43 +279,46 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                  * The status to verify is PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION, it represents that the merchandise is
                  * acknowledge by the customer.
                  */
-                List<BusinessTransactionRecord> pendingToSubmitNotificationList=
-                        customerAckOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
+                List<BusinessTransactionRecord> pendingToSubmitNotificationList = customerAckOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
                 for(BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
+
                     contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
+
+                    System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList(): " +contractHash+"\n");
+
                     transactionTransmissionManager.sendContractStatusNotification(
-                            pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
+                            pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
                             ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK,
-                            Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE
+                            Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER
                     );
-                    customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(
-                            contractHash,
-                            ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK
-                    );
+
+                    customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK);
                 }
 
                 /**
                  * Check pending notifications - Broker side
                  */
-                List<BusinessTransactionRecord> pendingToSubmitConfirmationList=
-                        customerAckOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
+                List<BusinessTransactionRecord> pendingToSubmitConfirmationList = customerAckOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitConfirmList();
                 for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
+
+                    System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList()\n");
                     contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
-                    transactionTransmissionManager.sendContractStatusNotification(
-                            pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
+
+                    transactionTransmissionManager.confirmNotificationReception(
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
+                            pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
-                            ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE,
-                            Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE
-                    );
-                    customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(
-                            contractHash,
-                            ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE
-                    );
+                            Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
+
+                    customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);
                 }
 
                 /**
@@ -334,6 +339,11 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                 throw new CannotSendContractHashException(
                         e,
                         "Sending contract hash",
+                        "Unexpected result in database");
+            } catch (CantConfirmNotificationReceptionException e) {
+                throw new CannotSendContractHashException(
+                        e,
+                        "Sending confirm contract hash",
                         "Unexpected result in database");
             }  /*catch (CantSendBusinessTransactionHashException e) {
                 throw new CannotSendContractHashException(
@@ -369,73 +379,95 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                 BusinessTransactionMetadata businessTransactionMetadata;
                 ContractTransactionStatus contractTransactionStatus;
                 BusinessTransactionRecord businessTransactionRecord;
-                if(eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())){
+
+                //EVENT FOR CONTRACT STATUS UPDATE
+                if (eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())) {
+
+                    System.out.print("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_NEW_CONTRACT_STATUS_UPDATE\n");
+
                     //This will happen in broker side
-                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=
+                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList =
                             transactionTransmissionManager.getPendingTransactions(
                                     Specialist.UNKNOWN_SPECIALIST);
-                    for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
-                        businessTransactionMetadata=record.getInformation();
-                        contractHash=businessTransactionMetadata.getContractHash();
-                        if(customerAckOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)){
-                            contractTransactionStatus= customerAckOfflineMerchandiseBusinessTransactionDao.
+                    for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
+
+                        businessTransactionMetadata = record.getInformation();
+                        contractHash = businessTransactionMetadata.getContractHash();
+
+                        if (customerAckOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
+
+                            contractTransactionStatus = customerAckOfflineMerchandiseBusinessTransactionDao.
                                     getContractTransactionStatus(contractHash);
                             //TODO: analyze what we need to do here.
-                        }else{
-                            CustomerBrokerContractSale customerBrokerContractSale=
-                                    customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
-                                            contractHash);
+
+                        } else {
+
+                            System.out.print("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_NEW_CONTRACT_STATUS_UPDATE - VAL\n");
+
+                            CustomerBrokerContractSale customerBrokerContractSale = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
                             //If the contract is null, I cannot handle with this situation
                             ObjectChecker.checkArgument(customerBrokerContractSale);
-                            customerAckOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(
-                                    customerBrokerContractSale);
-                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
-                                    contractHash,
-                                    ContractStatus.READY_TO_CLOSE);
-                            Date date=new Date();
-                            customerAckOfflineMerchandiseBusinessTransactionDao.
-                                    setCompletionDateByContractHash(contractHash, date.getTime());
+                            customerAckOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale);
+                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.READY_TO_CLOSE);
+                            Date date = new Date();
+                            customerAckOfflineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
                             raiseAckConfirmationEvent(contractHash);
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }
                     customerAckOfflineMerchandiseBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
+
                 }
-                if(eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())){
+
+                //EVENT FOR TRANSACTION RESPONSE
+                if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())) {
+
+                    System.out.print("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE\n");
+
                     //This will happen in customer side
-                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=
+                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList =
                             transactionTransmissionManager.getPendingTransactions(
                                     Specialist.UNKNOWN_SPECIALIST);
-                    for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
-                        businessTransactionMetadata=record.getInformation();
-                        contractHash=businessTransactionMetadata.getContractHash();
-                        if(customerAckOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)){
-                            businessTransactionRecord =
-                                    customerAckOfflineMerchandiseBusinessTransactionDao.
-                                            getBusinessTransactionRecordByContractHash(contractHash);
-                            contractTransactionStatus= businessTransactionRecord.getContractTransactionStatus();
-                            if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_PAYMENT_ACK.getCode())){
-                                businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_ACK_PAYMENT);
-                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
-                                        contractHash,
-                                        ContractStatus.READY_TO_CLOSE);
-                                Date date=new Date();
-                                customerAckOfflineMerchandiseBusinessTransactionDao.
-                                        setCompletionDateByContractHash(contractHash, date.getTime());
+
+                    for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
+
+                        businessTransactionMetadata = record.getInformation();
+                        contractHash = businessTransactionMetadata.getContractHash();
+
+                        if (customerAckOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
+
+                            businessTransactionRecord = customerAckOfflineMerchandiseBusinessTransactionDao.getBusinessTransactionRecordByContractHash(contractHash);
+                            contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
+
+                            if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.OFFLINE_MERCHANDISE_ACK.getCode())) {
+
+                                System.out.print("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - VAL\n");
+
+//                                businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);
+                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.READY_TO_CLOSE);
+                                Date date = new Date();
+                                customerAckOfflineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
+                                customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash,ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);
                                 raiseAckConfirmationEvent(contractHash);
+
                             }
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
+
                     }
                     customerAckOfflineMerchandiseBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
+
                 }
-                if(eventTypeCode.equals(EventType.BROKER_ACK_PAYMENT_CONFIRMED.getCode())){
+
+                //EVENT FOR ACK PAYMENT CONFIRMED
+                if (eventTypeCode.equals(EventType.BROKER_ACK_PAYMENT_CONFIRMED.getCode())) {
+
+                    System.out.print("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_NEW_CONTRACT_STATUS_UPDATE\n");
+
                     //the eventId from this event is the contractId - Customer side
-                    CustomerBrokerContractPurchase customerBrokerContractPurchase=
-                            customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(
-                                    eventId);
-                    customerAckOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(
-                            customerBrokerContractPurchase);
+                    CustomerBrokerContractPurchase customerBrokerContractPurchase =
+                            customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(eventId);
+                    customerAckOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase);
 
                 }
 

@@ -5,7 +5,9 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantList
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantAddNewAccountException;
@@ -75,7 +77,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexIn
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.WalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetProvidersCurrentExchangeRatesException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRateException;
@@ -352,7 +353,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @throws CantGetCryptoBrokerWalletSettingException
      * @throws CantClearCryptoBrokerWalletSettingException
      */
-    void clearAssociatedWalletSettings(String publicKeyWalletCryptoBrokerInstall)
+    void clearAssociatedWalletSettings(String publicKeyWalletCryptoBrokerInstall, Platforms platform)
             throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantClearCryptoBrokerWalletSettingException;
 
     /**
@@ -719,7 +720,7 @@ public interface CryptoBrokerWalletManager extends WalletManager {
      * @return A BigDecimal, containing the balance.
      */
     long getBalanceBitcoinWallet(String walletPublicKey)
-            throws com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException, CantLoadWalletException;
+            throws com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCalculateBalanceException, CantLoadWalletsException;
 
     /**
      * This method returns the CustomerBrokerContractSale associated to a negotiationId

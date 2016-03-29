@@ -58,12 +58,12 @@ public class SecurityFilter implements Filter {
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        LOG.info("doFilter");
+        LOG.debug("doFilter");
 
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
-        LOG.info("Authorization = " + httpRequest.getHeader("Authorization"));
+        LOG.debug("Authorization = " + httpRequest.getHeader("Authorization"));
 
         final String authHeader = httpRequest.getHeader("Authorization");
         if (authHeader == null || !authHeader.contains("Bearer ")) {
@@ -74,7 +74,7 @@ public class SecurityFilter implements Filter {
         try {
 
             String token = authHeader.substring("Bearer ".length(), authHeader.length());
-            LOG.info("token = " + token);
+            LOG.debug("token = " + token);
 
             final Claims claims = Jwts.parser().setSigningKey(TextCodec.BASE64.encode(JWTManager.getKey())).parseClaimsJws(token).getBody();
             if (claims.getSubject().equals(ConfigurationManager.getValue(ConfigurationManager.USER))){

@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantAssetIssuerActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantCreateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
@@ -152,7 +154,8 @@ public interface ActorAssetIssuerManager extends FermatManager {
     void receivingActorAssetIssuerRequestConnection(String actorAssetIssuerLoggedInPublicKey,
                                                   String actorAssetIssuerToAddName,
                                                   String actorAssetIssuerToAddPublicKey,
-                                                  byte[] profileImage) throws CantCreateActorAssetReceiveException;
+                                                  byte[] profileImage,
+                                                  Actors actorsType) throws CantCreateActorAssetReceiveException;
 
     /**
      * The method <code>cancelIntraWalletUser</code> cancels an intra user from the connections registry
@@ -169,7 +172,7 @@ public interface ActorAssetIssuerManager extends FermatManager {
      * @return the list of intra users the logged in intra user has as connections.
      * @throws CantGetActorAssetWaitingException
      */
-    List<ActorAssetIssuer> getWaitingYourConnectionActorAssetIssuer(String actorAssetIssuerLoggedPublicKey, int max, int offset) throws CantGetActorAssetWaitingException;
+    List<DAPActor> getWaitingYourConnectionActorAssetIssuer(String actorAssetIssuerLoggedPublicKey, int max, int offset) throws CantGetActorAssetWaitingException;
 
     /**
      * The method <code>getWaitingTheirConnectionActorAssetUser</code> shows the list of all actor asset users
@@ -179,8 +182,10 @@ public interface ActorAssetIssuerManager extends FermatManager {
      * @return the list of intra users the logged in intra user has as connections.
      * @throws CantGetActorAssetWaitingException
      */
-    List<ActorAssetIssuer> getWaitingTheirConnectionActorAssetIssuer(String actorAssetIssuerLoggedPublicKey, int max, int offset) throws CantGetActorAssetWaitingException;
+    List<DAPActor> getWaitingTheirConnectionActorAssetIssuer(String actorAssetIssuerLoggedPublicKey, int max, int offset) throws CantGetActorAssetWaitingException;
 
     ActorAssetIssuer getLastNotificationActorAssetIssuer(String actorAssetIssuerPublicKey) throws CantGetActorAssetNotificationException;
+
+    void updateOfflineIssuersRegisterInNetworkService(List<ActorAssetIssuer> actorAssetIssuers) throws CantGetAssetIssuerActorsException;
 
 }

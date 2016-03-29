@@ -10,15 +10,21 @@ public class BlockchainDownloadProgress {
     int pendingBlocks;
     int totalBlocks;
     int downloadedBlocks;
-    long progress;
+    int progress;
+    String downloader;
+    long lastBlockDownloadTime;
 
-    public BlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType, int pendingBlocks, int totalBlocks, int downloadedBlocks, long progress) {
+    public BlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType, int pendingBlocks, int totalBlocks, int downloadedBlocks, int progress) {
         this.blockchainNetworkType = blockchainNetworkType;
         this.pendingBlocks = pendingBlocks;
         this.totalBlocks = totalBlocks;
         this.downloadedBlocks = downloadedBlocks;
         this.progress = progress;
     }
+
+    /**
+     * Getters and Setters
+     */
 
     public BlockchainNetworkType getBlockchainNetworkType() {
         return blockchainNetworkType;
@@ -36,7 +42,51 @@ public class BlockchainDownloadProgress {
         return downloadedBlocks;
     }
 
-    public long getProgress() {
+    public int getProgress() {
         return progress;
+    }
+
+    public void setPendingBlocks(int pendingBlocks) {
+        this.pendingBlocks = pendingBlocks;
+
+        downloadedBlocks = totalBlocks - pendingBlocks;
+
+        if (downloadedBlocks<0)
+            downloadedBlocks = 0;
+
+        progress = (totalBlocks > 0) ? ((downloadedBlocks * 100) / totalBlocks) : 100;
+
+    }
+
+    public void setTotalBlocks(int totalBlocks) {
+        this.totalBlocks = totalBlocks;
+    }
+
+    public String getDownloader() {
+        return downloader;
+    }
+
+    public void setDownloader(String downloader) {
+        this.downloader = downloader;
+    }
+
+    public long getLastBlockDownloadTime() {
+        return lastBlockDownloadTime;
+    }
+
+    public void setLastBlockDownloadTime(long lastBlockDownloadTime) {
+        this.lastBlockDownloadTime = lastBlockDownloadTime;
+    }
+
+    @Override
+    public String toString() {
+        return "BlockchainDownloadProgress{" +
+                "blockchainNetworkType=" + blockchainNetworkType +
+                ", pendingBlocks=" + pendingBlocks +
+                ", totalBlocks=" + totalBlocks +
+                ", downloadedBlocks=" + downloadedBlocks +
+                ", progress=" + progress +
+                ", downloader='" + downloader + '\'' +
+                '}';
     }
 }

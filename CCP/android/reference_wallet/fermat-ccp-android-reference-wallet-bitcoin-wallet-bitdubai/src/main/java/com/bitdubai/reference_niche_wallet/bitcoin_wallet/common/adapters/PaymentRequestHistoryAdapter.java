@@ -109,8 +109,8 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         holder.getTxt_notes().setText(data.getReason());
         holder.getTxt_notes().setTypeface(tf);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        holder.getTxt_time().setText(data.getDate());
+
+        holder.getTxt_time().setText(data.getDate() + " hs");
         holder.getTxt_time().setTypeface(tf);
 
         String state = "";
@@ -161,7 +161,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         }
         else
         {
-            if(data.getState().equals(CryptoPaymentState.APPROVED) || data.getState().equals(CryptoPaymentState.REFUSED) || data.getState().equals(CryptoPaymentState.ERROR)) {
+            if(data.getState().equals(CryptoPaymentState.APPROVED) || data.getState().equals(CryptoPaymentState.REFUSED)) {
                 holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
                 holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
 
