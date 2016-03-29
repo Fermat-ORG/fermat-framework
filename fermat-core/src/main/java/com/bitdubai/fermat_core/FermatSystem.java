@@ -51,35 +51,38 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class FermatSystem {
 
-    private static FermatSystem INSTANCE = null;
+    private static volatile FermatSystem INSTANCE = null;
 
     private FermatSystemContext fermatSystemContext;
     private FermatAddonManager  fermatAddonManager ;
     private FermatPluginManager fermatPluginManager;
     public boolean isStarted;
 
-    private synchronized static void createInstance() {
-
+    private static void createInstance() {
         if (INSTANCE == null)
             INSTANCE = new FermatSystem();
     }
 
     private synchronized static void createInstance(final Object           osContext  ,
                                                     final AbstractPlatform osaPlatform) {
-
         if (INSTANCE == null)
             INSTANCE = new FermatSystem(osContext, osaPlatform);
     }
 
     public static FermatSystem getInstance() {
-        if (INSTANCE == null) createInstance();
+        synchronized (FermatSystem.class) {
+            if (INSTANCE == null) createInstance();
+        }
+
         return INSTANCE;
     }
 
     public static FermatSystem getInstance(final Object           osContext  ,
                                            final AbstractPlatform osaPlatform) {
 
-        if (INSTANCE == null) createInstance(osContext, osaPlatform);
+        synchronized (FermatSystem.class) {
+            if (INSTANCE == null) createInstance(osContext, osaPlatform);
+        }
         return INSTANCE;
     }
 

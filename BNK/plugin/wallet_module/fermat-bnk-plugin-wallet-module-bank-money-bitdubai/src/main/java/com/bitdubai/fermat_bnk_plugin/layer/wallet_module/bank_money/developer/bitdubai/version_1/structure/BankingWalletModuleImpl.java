@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bnk_plugin.layer.wallet_module.bank_money.developer.
 import com.bitdubai.fermat_api.AsyncTransactionAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -46,7 +47,7 @@ public class BankingWalletModuleImpl extends AsyncTransactionAgent<BankTransacti
     private final Broadcaster broadcaster;
     private UUID pluginId;
 
-    private String publicKey = "banking_wallet";
+    private String publicKey = WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
     private BankTransactionParametersImpl tempLastParameter;
 
     public BankingWalletModuleImpl(BankMoneyWalletManager bankMoneyWalletManager, DepositManager depositManager, WithdrawManager withdrawManager, HoldManager holdManager, UnholdManager unholdManager, PluginFileSystem pluginFileSystem, UUID pluginId,Broadcaster broadcaster) {

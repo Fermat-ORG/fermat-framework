@@ -674,8 +674,9 @@ public class IssuerCommunityHomeFragment extends AbstractFermatFragment implemen
                     if (swipeRefreshLayout != null)
                         swipeRefreshLayout.setRefreshing(false);
                     if (getActivity() != null)
-                        Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
-                    ex.printStackTrace();
+                        showEmpty(true, emptyView);
+                    Toast.makeText(getActivity(), ex.getMessage(), Toast.LENGTH_LONG).show();
+//                    ex.printStackTrace();
                 }
             });
             worker.execute();

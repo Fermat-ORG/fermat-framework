@@ -272,6 +272,7 @@ public class BrokerSubmitOfflineMerchandisePluginRoot extends AbstractPlugin imp
                     transactionTransmissionManager,
                     customerBrokerContractPurchaseManager,
                     customerBrokerContractSaleManager,
+                    customerBrokerSaleNegotiationManager,
                     cashMoneyDestockManager,
                     bankMoneyDestockManager
                     );

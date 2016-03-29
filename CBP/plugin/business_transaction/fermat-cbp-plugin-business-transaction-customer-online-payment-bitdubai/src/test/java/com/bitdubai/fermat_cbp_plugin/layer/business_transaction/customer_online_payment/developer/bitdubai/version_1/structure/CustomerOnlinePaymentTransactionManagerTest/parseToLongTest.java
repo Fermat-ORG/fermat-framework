@@ -38,14 +38,14 @@ public class parseToLongTest {
     }
     @Test
     public void parseToLongTest_Should_Return_Long() throws  Exception{
-        assertEquals(customerOnlinePaymentTransactionManager.parseToLong("1"),1);
+        assertEquals(customerOnlinePaymentTransactionManager.parseToCryptoAmountFormat("1"),1);
     }
     @Test(expected = InvalidParameterException.class)
     public void parseToLongTest_Should_Throw_Null_InvalidParameterException() throws  Exception{
-        customerOnlinePaymentTransactionManager.parseToLong(null);
+        customerOnlinePaymentTransactionManager.parseToCryptoAmountFormat(null);
     }
     @Test(expected = InvalidParameterException.class)
     public void parseToLongTest_Should_Return_Exception() throws  Exception{
-        customerOnlinePaymentTransactionManager.parseToLong("Test");
+        customerOnlinePaymentTransactionManager.parseToCryptoAmountFormat("Test");
     }
 }

@@ -17,6 +17,8 @@ public enum WalletsPublicKeys implements FermatEnum {
     CBP_CRYPTO_CUSTOMER_WALLET      ("crypto_customer_wallet"),
     //TODO CCP Platform
     CCP_REFERENCE_WALLET            ("reference_wallet"),
+    //TODO CWP Platform
+    CWP_LOSS_PROTECTED_WALLET       ("loss_protected_wallet"),
     //TODO DAP Platform
     DAP_ISSUER_WALLET               ("asset_issuer"),
     DAP_USER_WALLET                 ("asset_user"),

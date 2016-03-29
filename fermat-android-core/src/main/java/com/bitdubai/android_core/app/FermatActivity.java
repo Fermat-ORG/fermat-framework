@@ -60,6 +60,7 @@ import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
 import com.bitdubai.android_core.app.common.version_1.communication.CommunicationMessages;
 import com.bitdubai.android_core.app.common.version_1.communication.CommunicationService;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
+import com.bitdubai.android_core.app.common.version_1.navigation_view.FermatActionBarDrawerEventListener;
 import com.bitdubai.android_core.app.common.version_1.provisory.FermatInstalledDesktop;
 import com.bitdubai.android_core.app.common.version_1.provisory.InstalledDesktop;
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
@@ -74,7 +75,6 @@ import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUt
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
-import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
@@ -762,57 +762,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
                     mToolbar.setNavigationIcon(R.drawable.ic_actionbar_menu);
                             /* setting up drawer layout */
-                    mDrawerToggle = new ActionBarDrawerToggle(this,
+                    mDrawerToggle = new FermatActionBarDrawerEventListener(this,
                             mDrawerLayout,
                             mToolbar,
-                            R.string.open, R.string.close) {
-                        @Override
-                        public void onDrawerOpened(View drawerView) {
-                            super.onDrawerOpened(drawerView);
-                            if(adapter!=null){
-                                if(!adapter.getLstCurrentFragments().isEmpty()){
-                                    for (AbstractFermatFragment abstractFermatFragment : adapter.getLstCurrentFragments()) {
-                                        abstractFermatFragment.onDrawerOpen();
-                                    }
-                                }
-                            }
-                            //setTitle(mTitle);
-                            //invalidateOptionsMenu();
-                        }
-
-                        @Override
-                        public void onDrawerClosed(View drawerView) {
-                            super.onDrawerClosed(drawerView);
-                            if(adapter!=null){
-                                if(!adapter.getLstCurrentFragments().isEmpty()){
-                                    for (AbstractFermatFragment abstractFermatFragment : adapter.getLstCurrentFragments()) {
-                                        abstractFermatFragment.onDrawerClose();
-                                    }
-                                }
-                            }
-                            //setTitle(mTitle);
-                            //invalidateOptionsMenu();
-                        }
-
-                        @Override
-                        public void onDrawerSlide(View drawerView, float slideOffset) {
-                            InputMethodManager imm =
-                                    (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                            if (getCurrentFocus() != null && imm != null && imm.isActive()) {
-                                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                            }
-                            super.onDrawerSlide(drawerView, slideOffset);
-                            float moveFactor = (navigationView.getWidth() * slideOffset);
-                            //findViewById(R.id.content).setTranslationX(moveFactor);
-                            /*if(adapter!=null){
-                                if(!adapter.getLstCurrentFragments().isEmpty()){
-                                    for (AbstractFermatFragment abstractFermatFragment : adapter.getLstCurrentFragments()) {
-                                        abstractFermatFragment.onDrawerSlide(drawerView, slideOffset);
-                                    }
-                                }
-                            }*/
-                        }
-                    };
+                            R.string.open, R.string.close);
 
                     mDrawerLayout.setDrawerListener(mDrawerToggle);
                     mDrawerLayout.post(new Runnable() {
@@ -1352,10 +1305,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         return new FermatInstalledDesktop();
     }
 
-    protected FermatApplicationSession getApplicationSession(){
-        return ApplicationSession.getInstance();
-    }
-
     /**
      * Set up wizards to this activity can be more than one.
      *
@@ -1808,13 +1757,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
 
-    final Messenger mMessenger = new Messenger(new IncomingHandler());
+    private final Messenger mMessenger = new Messenger(new IncomingHandler());
     boolean mBound;
 
     /**
      * Service
      */
-    static Messenger mServiceMcu = null;
+    private static Messenger mServiceMcu = null;
     private boolean mCommunicationServiceConnected;
 
 
