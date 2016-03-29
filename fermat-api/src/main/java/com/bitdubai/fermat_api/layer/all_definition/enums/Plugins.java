@@ -390,6 +390,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "OEU"  :   return OUTGOING_EXTRA_USER      ;
             case "OIA"  :   return OUTGOING_INTRA_ACTOR     ;
             case "TIW"  :   return TRANSFER_INTRA_WALLET     ;
+            case "TON"  :   return TIMEOUT_NOTIFIER         ;
             case "PBL"  :   return PUBLISHER                ;
             case "RP"   :   return REDEEM_POINT             ;
             case "RPC"  :   return REDEEM_POINT_COMMUNITY   ;

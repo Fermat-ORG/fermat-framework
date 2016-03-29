@@ -11,7 +11,15 @@ import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeO
 import java.util.UUID;
 
 /**
- * Created by rodrigo on 3/28/16.
+ * The Class <code>com.bitdubai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierAgent</code>
+ * is the agent that is started for each subscription from another plugin. When a request comes to start an agent
+ * this class on a new thread monitor and notifies once the time out happens.<p/>
+ * <p/>
+ *
+ * Created by Acosta Rodrigo - (acosta_rodrigo@hotmail.com) on 28/03/16.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
 public class TimeOutNotifierAgent implements TimeOutAgent {
 
