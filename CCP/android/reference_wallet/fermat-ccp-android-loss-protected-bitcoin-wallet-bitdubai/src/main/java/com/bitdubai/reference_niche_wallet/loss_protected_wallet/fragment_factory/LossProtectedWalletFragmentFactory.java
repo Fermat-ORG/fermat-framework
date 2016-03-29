@@ -6,7 +6,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.ContactDetailFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.ContactsFragment;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.ReferenceWalletSettings;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.LossProtectedSettingsFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.AddConnectionFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.NoIdentityFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.ReceiveTransactionFragment2;
@@ -14,6 +14,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.walle
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.RequestReceiveHistoryFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.RequestSendHistoryFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendFormFragment;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendFormWalletFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendTransactionFragment2;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SettingsMainNetworkFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SettingsNotificationsFragment;
@@ -35,67 +36,70 @@ public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<Lo
                 /**
                  * Executing fragments for BITCOIN REQUESTED.
                  */
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_RECEIVE:
                     currentFragment = ReceiveTransactionFragment2.newInstance();
                     break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_SEND:
                     currentFragment =SendTransactionFragment2.newInstance(); //RequestHomePaymentFragment.newInstance();
                     break;
 
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_TRANSACTIONS:
                     break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CONTACTS:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_CONTACTS:
                     currentFragment = ContactsFragment.newInstance();
                     break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_CREATE_CONTACTS:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_CREATE_CONTACTS:
                     currentFragment = null;//CreateContactFragment.newInstance();
                     break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_DETAIL_CONTACTS:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_DETAIL_CONTACTS:
                     currentFragment = ContactDetailFragment.newInstance();
                     break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_MONEY_REQUEST:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_MONEY_REQUEST:
                     break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_BOOK:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_TRANSACTIONS_BOOK:
                     break;
-                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE:
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE:
                     break;
-                case CCP_BITCOIN_WALLET_TRANSACTIONS_SENT:
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_SENT:
                     break;
-                case CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED:
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_RECEIVED:
                     break;
-                case CCP_BITCOIN_WALLET_REQUEST_RECEIVED:
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_RECEIVED:
                     currentFragment = RequestSendHistoryFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED_HISTORY:
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_RECEIVED_HISTORY:
                     break;
-                case CCP_BITCOIN_WALLET_TRANSACTIONS_SENT_HISTORY:
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_SENT_HISTORY:
                     break;
-                case CCP_BITCOIN_WALLET_REQUEST_RECEIVED_HISTORY:
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_RECEIVED_HISTORY:
                     currentFragment = RequestReceiveHistoryFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_REQUEST_SENT_HISTORY:
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_SENT_HISTORY:
                     currentFragment = RequestSendHistoryFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_SEND_FORM_FRAGMENT:
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_FORM_FRAGMENT:
                     currentFragment = SendFormFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_REQUEST_FORM_FRAGMENT:
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_FORM_FRAGMENT:
                     currentFragment = RequestFormFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT:
-                    currentFragment = ReferenceWalletSettings.newInstance();
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_FRAGMENT:
+                    currentFragment = LossProtectedSettingsFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS:
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_FRAGMENT_NOTIFICATIONS:
                     currentFragment = SettingsNotificationsFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK:
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_FRAGMENT_MAIN_NETWORK:
                     currentFragment = SettingsMainNetworkFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_ADD_CONNECTION_FRAGMENT:
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_ADD_CONNECTION_FRAGMENT:
                     currentFragment = AddConnectionFragment.newInstance();
                     break;
-                case CCP_BITCOIN_WALLET_NO_IDENTITY_FRAGMENT:
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_NO_IDENTITY_FRAGMENT:
                     currentFragment = NoIdentityFragment.newInstance();
+                    break;
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_WALLET_FORM_FRAGMENT:
+                    currentFragment = SendFormWalletFragment.newInstance();
                     break;
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.getKey(), "Swith failed");

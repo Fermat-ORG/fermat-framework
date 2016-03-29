@@ -27,6 +27,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetUserException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
@@ -69,7 +71,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
     private DeviceUserManager deviceUserManager;
 
-    @NeededPluginReference(platform =  Platforms.TOKENLY, layer = Layers.API, plugin = Plugins.API_TOKENLY)
+    @NeededPluginReference(platform =  Platforms.TOKENLY, layer = Layers.EXTERNAL_API, plugin = Plugins.TOKENLY_API)
     private TokenlyApiManager tokenlyApiManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
@@ -98,7 +100,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
                     this.tokenlyApiManager);
 
             System.out.println("############\n TKY IDENTITY FAN STARTED\n");
-            testCreateArtist();
+            //testCreateArtist();
             //testAskForConnection();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -149,7 +151,14 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
 
     @Override
     public Fan createFanIdentity(String alias, byte[] profileImage, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform) throws  CantCreateFanIdentityException {
-        if(tokenlyApiManager.isTokenlyAccessVaild(externalUserName,externalAccessToken)){
+        //TODO: Fix this Gabo. Manuel
+        User user=null;
+        try{
+            user = tokenlyApiManager.validateTokenlyUser(externalUserName, externalAccessToken);
+        } catch (CantGetUserException e) {
+            e.printStackTrace();
+        }
+        if(user!=null){
             return identityArtistManager.createNewIdentityFan(alias, profileImage, externalUserName, externalAccessToken, externalPlatform);
         }else{
             return null;

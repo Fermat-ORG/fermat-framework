@@ -5,65 +5,55 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent"
+    android:layout_width="290dp"
     android:background="#FFFFFF">
 
     <LinearLayout
         android:id="@+id/csh_ctd_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:orientation="horizontal"
+        android:layout_height="55dp"
         android:background="#12acff"
-        >
+        android:gravity="center"
 
-        <!--<ImageView
-            android:id="@+id/csh_ctd_title_img"
-            android:layout_width="@dimen/csh_transaction_image_width_and_height"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:contentDescription="@string/transaction_img"
-            tools:src="@drawable/csh_deposit"/>-->
+        >
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/csh_ctd_title"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:text="@string/csh_ctd_title"
-            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DEPOSIT"
             android:textColor="#fff"
-            android:textStyle="bold"
-            android:textSize="18sp"
-            app:typeface="ROBOTO_REGULAR" />
+            android:textSize="@dimen/csh_large_text_size"
+            />
 
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:paddingTop="7dp">
+>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/csh_ctd_amount_tag"
-            android:textColor="#000000"
+            android:textColor="@color/csh_text_lightgray"
             android:paddingLeft="20dp"
-            android:layout_alignParentTop="true"
-            android:visibility="visible"
-            app:typeface="ROBOTO_REGULAR"/>
+            android:textSize="@dimen/csh_regular_plus_text_size"
+            android:paddingTop="7dp"
+            />
 
         <EditText
             android:id="@+id/csh_ctd_amount"
-            android:layout_width="300dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:hint="@string/csh_ctd_amount_hint"
             android:textColorHint="#9a9a9c"
-            android:paddingLeft="15dip"
-            android:paddingRight="15dip"
-            android:textColor="#1d1d26"
-            android:textSize="14sp"
+            android:paddingLeft="15dp"
+            android:textColor="@color/csh_text_black"
+            android:textSize="@dimen/csh_regular_plus_text_size"
             android:layout_marginLeft="15dp"
-            android:textStyle="normal"
+            android:layout_marginRight="15dp"
             android:inputType="numberDecimal"
             />
 
@@ -74,11 +64,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/csh_ctd_memo_tag"
-            android:textColor="#000000"
-            android:paddingLeft="24dp"
-            android:layout_alignParentTop="true"
+            android:textColor="@color/csh_text_lightgray"
+            android:paddingLeft="20dp"
+            android:textSize="@dimen/csh_regular_plus_text_size"
             android:paddingTop="7dp"
-            app:typeface="ROBOTO_REGULAR"
             />
 
         <AutoCompleteTextView
@@ -87,60 +76,49 @@
             android:layout_height="60dp"
             android:hint="@string/csh_ctd_memo_hint"
             android:textColorHint="#9a9a9c"
-            android:inputType="textAutoComplete"
-            android:paddingLeft="15dip"
-            android:paddingRight="15dip"
-            android:textColor="#1d1d26"
-            android:textSize="14sp"
+            android:paddingLeft="15dp"
+            android:textColor="@color/csh_text_black"
+            android:textSize="@dimen/csh_regular_plus_text_size"
             android:layout_marginLeft="15dp"
-            android:textStyle="normal"
+            android:layout_marginRight="15dp"
+            android:inputType="textAutoComplete"
             />
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#777777"
-            android:layout_weight="0"
-            android:layout_marginTop="20dp"
-            android:layout_alignParentBottom="true"
-            />
 
         <LinearLayout
             android:id="@+id/linear_create_contact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="right"
+            android:layout_marginTop="22dp"
+            android:layout_marginBottom="22dp"
             >
 
-            <Button
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/csh_ctd_cancel_transaction_btn"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/csh_regular_plus_text_size"
+                android:layout_marginRight="30dp"
                 android:background="#ffffff"
-                android:text="Cancel"
-                android:textColor="#666666"
-                android:textSize="14sp"
-                />
-
-            <View
-                android:layout_width="1dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0"
-                android:background="#777777"
-                />
-
-
-            <Button
-                android:id="@+id/csh_ctd_apply_transaction_btn"
-                android:layout_width="match_parent"
-                android:layout_weight="1"
-                android:layout_height="50dp"
-                android:background="#ffffff"
-                android:text="Ok"
+                android:text="CANCEL"
                 android:textColor="#12acff"
-                android:textSize="14sp"
+                />
+
+
+
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/csh_ctd_apply_transaction_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/csh_regular_plus_text_size"
+                android:layout_marginRight="30dp"
+                android:background="#ffffff"
+                android:text="DEPOSIT"
+                android:textColor="#12acff"
                 />
 
         </LinearLayout>

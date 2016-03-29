@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +26,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -41,6 +41,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.Re
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
@@ -87,6 +88,8 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
     SettingsManager<RedeemPointSettings> settingsManager;
     RedeemPointSettings redeemPointSettings = null;
 
+    private boolean contextMenuInUse = false;
+
     public static CreateRedeemPointIdentityFragment newInstance() {
         return new CreateRedeemPointIdentityFragment();
     }
@@ -118,7 +121,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
                 }
             }
 
-            if(moduleManager.getIdentityAssetRedeemPoint() == null) {
+            if (moduleManager.getIdentityAssetRedeemPoint() == null) {
 
                 final RedeemPointSettings redeemPointSettingsTemp = redeemPointSettings;
 
@@ -231,7 +234,6 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
         mIdentityAddressHouseNumber = (TextView) layout.findViewById(R.id.dap_redeem_point_address_house_number);
 
 
-
         createButton.setText((!isUpdate) ? "Create" : "Update");
 
         mIdentityName.requestFocus();
@@ -334,6 +336,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
         if (resultCode == Activity.RESULT_OK) {
             Bitmap imageBitmap = null;
             ImageView pictureView = mIdentityImage;
+            contextMenuInUse = true;
 
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
@@ -348,10 +351,11 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
                             imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
                             brokerImageByteArray = toByteArray(imageBitmap);
+                            Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(mIdentityImage);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error Load Image", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -374,13 +378,17 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case CONTEXT_MENU_CAMERA:
-                dispatchTakePictureIntent();
-                break;
-            case CONTEXT_MENU_GALLERY:
-                loadImageFromGallery();
-                break;
+        if (!contextMenuInUse) {
+            switch (item.getItemId()) {
+                case CONTEXT_MENU_CAMERA:
+                    dispatchTakePictureIntent();
+                    contextMenuInUse = true;
+                    return true;
+                case CONTEXT_MENU_GALLERY:
+                    loadImageFromGallery();
+                    contextMenuInUse = true;
+                    return true;
+            }
         }
         return super.onContextItemSelected(item);
     }
@@ -411,11 +419,11 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
                 try {
                     if (!isUpdate)
                         moduleManager.createNewRedeemPoint(brokerNameText, (brokerImageByteArray == null) ? convertImage(R.drawable.redeem_point_identity) : brokerImageByteArray,
-                                brokerContactInformation, brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName,brokerAddressPostalCode,
-                                brokerAddressStreetName,brokerAddressHouseNumber);
+                                brokerContactInformation, brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName, brokerAddressPostalCode,
+                                brokerAddressStreetName, brokerAddressHouseNumber);
                     else
-                        moduleManager.updateIdentityRedeemPoint(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray,brokerContactInformation,
-                                brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName,brokerAddressPostalCode,brokerAddressStreetName,brokerAddressHouseNumber);
+                        moduleManager.updateIdentityRedeemPoint(identitySelected.getPublicKey(), brokerNameText, brokerImageByteArray, brokerContactInformation,
+                                brokerAddressCountryName, brokerAddressProvinceName, brokerAddressCityName, brokerAddressPostalCode, brokerAddressStreetName, brokerAddressHouseNumber);
                 } catch (CantCreateNewRedeemPointException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 } catch (CantUpdateIdentityRedeemPointException e) {
@@ -429,10 +437,10 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
 
     }
 
-    private byte[] convertImage(int resImage){
+    private byte[] convertImage(int resImage) {
         Bitmap bitmap = BitmapFactory.decodeResource(getActivity().getResources(), resImage);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
         //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
     }

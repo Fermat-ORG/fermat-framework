@@ -12,7 +12,7 @@ import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdu
 public class TokenlyPluginSubsystem extends AbstractPluginSubsystem {
 
     public TokenlyPluginSubsystem() {
-        super(new PluginReference(Plugins.API_TOKENLY));
+        super(new PluginReference(Plugins.TOKENLY_API));
     }
 
     @Override

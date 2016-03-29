@@ -188,8 +188,7 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
      */
     @Override
     public String toString() {
-        return "ContractSaleRecord{" +
-                "contractClauses=" + contractClauses +
+        return "ContractRecord{" +
                 ", dayTime=" + dayTime +
                 ", merchandiseCurrency=" + merchandiseCurrency +
                 ", merchandiseAmount=" + merchandiseAmount +

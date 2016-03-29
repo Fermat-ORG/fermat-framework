@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
@@ -68,9 +69,12 @@ import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProvi
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 
 
@@ -479,11 +483,100 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         return transactions;
     }
 
+    public  List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, MoneyType moneyType, int offset, long timeStamp) throws CantGetCryptoBrokerStockTransactionException {
+        DatabaseTable databaseTable = getStockWalletTransactionTable();
+        FiatCurrency fiatCurrency = null;
+        CryptoCurrency cryptoCurrency = null;
+        Currency fermatEnum = null;
+
+        long dateend = (1000 * 60 * 60 * 24);
+
+        dateend *= offset;
+
+        dateend += Math.abs(timeStamp);
+
+        if (MoneyType.CRYPTO != moneyType) {
+            try {
+                fiatCurrency = FiatCurrency.getByCode(merchandise.getCode());
+            } catch (InvalidParameterException e) {
+                throw new CantGetCryptoBrokerStockTransactionException("Invalid Parameter", e, "", "");
+            }
+            fermatEnum = fiatCurrency;
+        } else {
+            try {
+                cryptoCurrency = CryptoCurrency.getByCode(merchandise.getCode());
+            } catch (InvalidParameterException e) {
+                throw new CantGetCryptoBrokerStockTransactionException("Invalid Parameter", e, "", "");
+            }
+            fermatEnum = cryptoCurrency;
+        }
+
+        databaseTable.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME, fermatEnum.getCode(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, BalanceType.AVAILABLE.getCode(), DatabaseFilterType.EQUAL);
+
+        databaseTable.addFilterOrder(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+
+        List<CryptoBrokerStockTransaction> transactions = new ArrayList<>();
+
+        try {
+            databaseTable.loadToMemory();
+            Collection<DatabaseTableRecord> records = databaseTable.getRecords();
+            for (DatabaseTableRecord record : records) {
+                Long date = record.getLongValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME);
+
+                if( timeStamp <= date && date <= dateend ){
+
+                    if (MoneyType.CRYPTO != MoneyType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MONEY_TYPE_COLUMN_NAME))) {
+                        fiatCurrency = FiatCurrency.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
+                        fermatEnum = fiatCurrency;
+                    } else {
+                        cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
+                        fermatEnum = cryptoCurrency;
+                    }
+
+                    CryptoBrokerStockTransactionImpl cryptoBrokerStockTransaction = null;
+
+                    cryptoBrokerStockTransaction = new CryptoBrokerStockTransactionImpl(
+                            new BigDecimal(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_BOOK_BALANCE_COLUMN_NAME)),
+                            new BigDecimal(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME)),
+                            new BigDecimal(0),
+                            new BigDecimal(0),
+                            record.getUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME),
+                            BalanceType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME)),
+                            TransactionType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME)),
+                            MoneyType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MONEY_TYPE_COLUMN_NAME)),
+                            fermatEnum,
+                            record.getStringValue(""),
+                            record.getStringValue(""),
+                            new BigDecimal(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME)),
+                            record.getLongValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME),
+                            record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MEMO_COLUMN_NAME),
+                            new BigDecimal(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_PRICE_REFERENCE_COLUMN_NAME)),
+                            OriginTransaction.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_COLUMN_NAME)),
+                            record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME),
+                            Boolean.valueOf(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_SEEN_COLUMN_NAME))
+                    );
+
+                    transactions.add(cryptoBrokerStockTransaction);
+
+                }
+
+            }
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetCryptoBrokerStockTransactionException("Cant Load Table", e, "", "");
+        } catch (InvalidParameterException e) {
+            throw new CantGetCryptoBrokerStockTransactionException("Invalid Parameter", e, "", "");
+        }
+
+        return transactions;
+    }
+
     /*
     * Add a new debit transaction.
     */
     public void addDebit(final CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecord, final BalanceType balanceType) throws CantAddDebitException {
-        System.out.println("Agregando Debito-----------------------------------------------------------");
+        //System.out.println("Agregando Debito-----------------------------------------------------------");
         try {
             if (isTransactionInTable(cryptoBrokerStockTransactionRecord.getTransactionId().toString(), TransactionType.DEBIT, balanceType))
                 throw new CantAddDebitException(CantAddDebitException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
@@ -508,7 +601,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     * Add a new credit transaction.
     */
     public void addCredit(final CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecord, final BalanceType balanceType) throws CantAddCreditException {
-        System.out.println("Agregando Credito-----------------------------------------------------------");
+        //System.out.println("Agregando Credito-----------------------------------------------------------");
         try {
             if (isTransactionInTable(cryptoBrokerStockTransactionRecord.getTransactionId().toString(), TransactionType.CREDIT, balanceType))
                 throw new CantAddCreditException(CantAddCreditException.DEFAULT_MESSAGE, null, null, "The transaction is already in the database");
@@ -596,15 +689,14 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     public void saveCryptoBrokerWalletAssociatedSetting(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting) throws CantSaveCryptoBrokerWalletSettingException {
         DatabaseTransaction transaction = database.newTransaction();
 
-        //TODO:Solo para Testing y prueba luego eliminar
-        cryptoBrokerWalletAssociatedSetting.setId(UUID.randomUUID());
         DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_TABLE_NAME);
+
         try {
             DatabaseTableRecord Record = getCryptoBrokerWalletAssociatedSettingRecord(cryptoBrokerWalletAssociatedSetting);
 
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
-            filter.setValue(cryptoBrokerWalletAssociatedSetting.getId().toString());
+            filter.setValue(cryptoBrokerWalletAssociatedSetting.getBankAccount());
             filter.setColumn(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_ID_COLUMN_NAME);
 
             if (isNewRecord(table, filter))
@@ -623,15 +715,21 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         }
     }
 
-    public void clearCryptoBrokerWalletAssociatedSetting() throws CantClearCryptoBrokerWalletSettingException {
+    public void clearCryptoBrokerWalletAssociatedSetting(Platforms platform) throws CantClearCryptoBrokerWalletSettingException {
         DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_TABLE_NAME);
 
         try {
             table.loadToMemory();
             List<DatabaseTableRecord> records = table.getRecords();
 
-            for (DatabaseTableRecord record : records)
-                table.deleteRecord(record);
+            for (DatabaseTableRecord record : records) {
+                if(
+                    record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PLATFORM_COLUMN_NAME).equalsIgnoreCase(platform.getCode()) ||
+                    platform == null
+                ){
+                    table.deleteRecord(record);
+                }
+            }
 
         } catch (CantLoadTableToMemoryException e) {
             throw new CantClearCryptoBrokerWalletSettingException("Cant load table to memory", e, "", "");
@@ -967,7 +1065,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         DatabaseTableRecord record = getStockWalletTransactionTable().getEmptyRecord();
 
         record.setUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME, cryptoBrokerStockTransactionRecord.getTransactionId());
-        record.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, cryptoBrokerStockTransactionRecord.getBalanceType().getCode());
+        record.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode());
         record.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME, cryptoBrokerStockTransactionRecord.getTransactionType().getCode());
         record.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME, cryptoBrokerStockTransactionRecord.getAmount().toPlainString());
         record.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME, cryptoBrokerStockTransactionRecord.getMerchandise().getCode());

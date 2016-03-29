@@ -1,14 +1,26 @@
 package com.bitdubai.fermat_tky_api.all_definitions.interfaces;
 
+import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyRequestMethod;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.HTTPErrorResponseException;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Scanner;
+
+import javax.net.ssl.HttpsURLConnection;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/03/16.
@@ -35,7 +47,6 @@ public abstract class RemoteJSonProcessor {
                     "Getting JSonObject from requested URL:"+requestURL,
                     "There was a IOException");
         }
-
     }
 
     /**
@@ -78,6 +89,151 @@ public abstract class RemoteJSonProcessor {
             String requestURL)
             throws CantGetJSonObjectException {
         return getJSonElement(requestURL).getAsJsonArray();
+    }
+
+    /**
+     * This method returns a JsonElement from a cURL request.
+     * Here, we implemented a POST request to get responses from Tokenly public API.
+     * To work, we need to pass as arguments:
+     * @param requestUrl String in http format.
+     * @param parameters a hashMap with key as the parameter name and value as the parameter value in request
+     * @param urlParameters additional parameters to make the request.
+     * @return
+     * @throws CantGetJSonObjectException
+     */
+    public static JsonElement getJsonElementByPOSTCURLRequest(
+            String requestUrl,
+            HashMap<String,String> parameters,
+            String urlParameters)
+            throws CantGetJSonObjectException,
+            HTTPErrorResponseException {
+        try{
+            //Create URL object
+            URL urlObject = new URL(requestUrl);
+            HttpsURLConnection httpsURLConnection = (HttpsURLConnection) urlObject.openConnection();
+            //Add request headers - In this kind of request I'll use POST request
+            httpsURLConnection.setRequestMethod(TokenlyRequestMethod.POST.getCode());
+            Iterator it = parameters.entrySet().iterator();
+            while(it.hasNext()){
+                Map.Entry parameter = (Map.Entry)it.next();
+                httpsURLConnection.addRequestProperty(
+                        parameter.getKey().toString(),
+                        parameter.getValue().toString());
+            }
+            //Send post request
+            httpsURLConnection.setDoOutput(true);
+            if(!urlParameters.isEmpty()){
+                DataOutputStream dataOutputStream = new DataOutputStream(
+                        httpsURLConnection.getOutputStream());
+                dataOutputStream.writeBytes(urlParameters);
+                dataOutputStream.flush();
+                dataOutputStream.close();
+            }
+            //Get response code
+            int responseCode = httpsURLConnection.getResponseCode();
+            System.out.println("Sending 'POST' request to URL : " + requestUrl);
+            System.out.println("Response Code : " + responseCode);
+            if(responseCode!=200){
+                String errorResponse = httpsURLConnection.getResponseMessage();
+                throw new HTTPErrorResponseException(
+                        responseCode,
+                        errorResponse);
+            }
+            //Get the response String
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(httpsURLConnection.getInputStream()));
+            String responseLine;
+            StringBuilder response = new StringBuilder();
+            while ((responseLine = bufferedReader.readLine()) != null) {
+                response.append(responseLine);
+            }
+            bufferedReader.close();
+            JsonParser jsonParser=new JsonParser();
+            JsonElement jsonElement=jsonParser.parse(response.toString());
+            return jsonElement;
+        } catch (MalformedURLException e) {
+            throw new CantGetJSonObjectException(
+                    e,
+                    "Getting JSonObject from requested URL:"+requestUrl,
+                    "Malformed URL");
+        } catch (IOException e) {
+            throw new CantGetJSonObjectException(
+                    e,
+                    "Getting JSonObject from requested URL:"+requestUrl,
+                    "There was an IOException");
+        }
+    }
+
+    /**
+     * This method returns a JsonElement from a cURL request.
+     * Here, we implemented a GET request to get responses from Tokenly public API.
+     * To work, we need to pass as arguments:
+     * @param requestUrl String in http format.
+     * @param parameters a hashMap with key as the parameter name and value as the parameter value in request
+     * @param urlParameters additional parameters to make the request.
+     * @return
+     * @throws CantGetJSonObjectException
+     */
+    public static JsonElement getJsonElementByGETCURLRequest(
+            String requestUrl,
+            HashMap<String,String> parameters,
+            String urlParameters)
+            throws CantGetJSonObjectException, HTTPErrorResponseException {
+        try{
+            //Create URL object
+            URL urlObject = new URL(requestUrl);
+            HttpsURLConnection httpsURLConnection = (HttpsURLConnection) urlObject.openConnection();
+            //Add request headers
+            httpsURLConnection.setRequestMethod(TokenlyRequestMethod.GET.getCode());
+            Iterator it = parameters.entrySet().iterator();
+            while(it.hasNext()){
+                Map.Entry parameter = (Map.Entry)it.next();
+                httpsURLConnection.addRequestProperty(
+                        parameter.getKey().toString(),
+                        parameter.getValue().toString());
+            }
+            if(!urlParameters.isEmpty()){
+                DataOutputStream dataOutputStream = new DataOutputStream(
+                        httpsURLConnection.getOutputStream());
+                dataOutputStream.writeBytes(urlParameters);
+                dataOutputStream.flush();
+                dataOutputStream.close();
+            }
+            //Get response code
+            int responseCode = httpsURLConnection.getResponseCode();
+            if(responseCode!=200){
+                String errorResponse = httpsURLConnection.getResponseMessage();
+                throw new HTTPErrorResponseException(
+                        responseCode,
+                        errorResponse);
+            }
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(httpsURLConnection.getInputStream()));
+            String responseLine;
+            StringBuilder response = new StringBuilder();
+            while ((responseLine = bufferedReader.readLine()) != null) {
+                response.append(responseLine);
+            }
+            bufferedReader.close();
+            JsonParser jsonParser=new JsonParser();
+            JsonElement jsonElement=jsonParser.parse(response.toString());
+            return jsonElement;
+        } catch (MalformedURLException e) {
+            throw new CantGetJSonObjectException(
+                    e,
+                    "Getting JSonObject from requested URL:"+requestUrl,
+                    "Malformed URL");
+        } catch (ProtocolException e) {
+            throw new CantGetJSonObjectException(
+                    e,
+                    "Getting JSonObject from requested URL:"+requestUrl,
+                    "Protocol Exception");
+        } catch (IOException e) {
+            throw new CantGetJSonObjectException(
+                    e,
+                    "Getting JSonObject from requested URL:"+requestUrl,
+                    "There was an IOException");
+        }
     }
 
 }

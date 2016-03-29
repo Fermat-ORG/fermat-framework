@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
 import com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.desktop.database.bridge.DesktopDatabaseBridge;
 import com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.desktop.database.bridge.EnvironmentVariables;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -380,8 +381,8 @@ public class DesktopDatabase implements Database, DatabaseFactory {
 
             for (int i = 0; i < tableColumns.size(); i++) {
 
-                this.query += tableColumns.get(i).getName() +" " +  tableColumns.get(i).getType().name();
-                if(tableColumns.get(i).getType() == DatabaseDataType.STRING)
+                this.query += tableColumns.get(i).getName() +" " +  tableColumns.get(i).getDataType().name();
+                if(tableColumns.get(i).getDataType() == DatabaseDataType.STRING)
                     this.query +="("+ String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
 
                 if(i < tableColumns.size()-1)
@@ -433,12 +434,12 @@ public class DesktopDatabase implements Database, DatabaseFactory {
 
             for (int i = 0; i < tableColumns.size(); i++) {
 
-                this.query += tableColumns.get(i).getName() +" " +  tableColumns.get(i).getType().name();
+                this.query += tableColumns.get(i).getName() +" " +  tableColumns.get(i).getDataType().name();
 
-                if(tableColumns.get(i).getType() == DatabaseDataType.STRING)
+                if(tableColumns.get(i).getDataType() == DatabaseDataType.STRING)
                     this.query +="("+ String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
 
-                if(tableColumns.get(i).getPrimaryKey())
+                if(tableColumns.get(i).isPrimaryKey())
                     primaryKey = tableColumns.get(i).getName();
                 if(i < tableColumns.size()-1)
                     this.query +=",";

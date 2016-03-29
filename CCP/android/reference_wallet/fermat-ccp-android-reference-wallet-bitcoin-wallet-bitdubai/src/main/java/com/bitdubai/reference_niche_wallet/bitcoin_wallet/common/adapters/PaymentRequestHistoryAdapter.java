@@ -161,7 +161,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
         }
         else
         {
-            if(data.getState().equals(CryptoPaymentState.APPROVED) || data.getState().equals(CryptoPaymentState.REFUSED) || data.getState().equals(CryptoPaymentState.ERROR)) {
+            if(data.getState().equals(CryptoPaymentState.APPROVED) || data.getState().equals(CryptoPaymentState.REFUSED)) {
                 holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
                 holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
 

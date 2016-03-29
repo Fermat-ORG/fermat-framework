@@ -21,7 +21,7 @@ import java.util.List;
 /**
      * Tabs adapter
      */
-    public class TabsPagerAdapter extends FragmentStatePagerAdapter {
+    public class TabsPagerAdapter extends FragmentStatePagerAdapter implements FermatUIAdapter{
 
     private List<AbstractFermatFragment> lstCurrentFragments;
 

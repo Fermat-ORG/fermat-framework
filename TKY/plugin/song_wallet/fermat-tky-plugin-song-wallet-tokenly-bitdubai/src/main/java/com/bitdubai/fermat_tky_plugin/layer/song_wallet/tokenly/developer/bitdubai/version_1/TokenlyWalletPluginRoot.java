@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -23,15 +24,19 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDao;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDatabaseConstants;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDatabaseFactory;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDeveloperDatabaseFactory;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure.TokenlyWalletManager;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure.TokenlyWalletSongVault;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,10 +61,21 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    protected PluginFileSystem pluginFileSystem;
+
+    @NeededPluginReference(platform = Platforms.TOKENLY, layer = Layers.EXTERNAL_API, plugin = Plugins.TOKENLY_API)
+    protected TokenlyApiManager tokenlyApiManager;
+
     /**
      * Represents the TokenlyWalletManager
      */
     TokenlyWalletManager tokenlyWalletManager;
+
+    /**
+     * Represents the TokenlyWalletSongVault
+     */
+    TokenlyWalletSongVault tokenlyWalletSongVault;
 
     /**
      * Represents the plugin database
@@ -84,15 +100,8 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
      * This method returns the Plugin Manager.
      * @return
      */
-    public FermatManager getFermatManager(){
+    public FermatManager getManager(){
         return this.tokenlyWalletManager;
-    }
-
-    /**
-     * This method initialize the plugin manager.
-     */
-    private void initializePluginManager(){
-        this.tokenlyWalletManager = new TokenlyWalletManager();
     }
 
     /**
@@ -115,10 +124,6 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.TOKENLY_WALLET,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    cantOpenDatabaseException);
             throw new CantInitializeDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -144,10 +149,6 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(
-                        Plugins.TOKENLY_WALLET,
-                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                        cantOpenDatabaseException);
                 throw new CantInitializeDatabaseException(
                         cantOpenDatabaseException.getLocalizedMessage());
 
@@ -172,12 +173,33 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             tokenlySongWalletDeveloperDatabaseFactory.initializeDatabase();
 
             /**
+             * Init Database DAO.
+             */
+            TokenlySongWalletDao tokenlySongWalletDao = new TokenlySongWalletDao(
+                    pluginDatabaseSystem,
+                    pluginId,
+                    database,
+                    errorManager);
+
+            /**
+             * Init the song vault.
+             */
+            tokenlyWalletSongVault = new TokenlyWalletSongVault(
+                    pluginFileSystem,
+                    tokenlyApiManager);
+
+            /**
              * Init plugin manager
              */
-            initializePluginManager();
+            this.tokenlyWalletManager = new TokenlyWalletManager(
+                    tokenlySongWalletDao,
+                    tokenlyWalletSongVault,
+                    tokenlyApiManager,
+                    errorManager);
+            //testDownloadFile();
         } catch(CantInitializeDatabaseException e){
             errorManager.reportUnexpectedPluginException(
-                    Plugins.API_TOKENLY,
+                    Plugins.TOKENLY_API,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantStartPluginException(
@@ -187,7 +209,7 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
                     "There's an error initializing the plugin database");
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(
-                    Plugins.API_TOKENLY,
+                    Plugins.TOKENLY_API,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     e);
             throw new CantStartPluginException(
@@ -301,6 +323,17 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
                     Plugins.TOKENLY_WALLET,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     FermatException.wrapException(exception));
+        }
+    }
+
+    private void testDownloadFile(){
+        try{
+            String testURL="https://www.dropbox.com/s/l8df6ixyiweq8yt/appSessionFragmenContract?dl=0";
+            String testName="testFileName";
+            this.tokenlyWalletSongVault.downloadFile(testURL, testName);
+        } catch (Exception e){
+            System.out.println("TKY: Test Download exception");
+            e.printStackTrace();
         }
     }
 }
