@@ -52,10 +52,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.broker_submit_onli
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckPaymentException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractSaleManagerMock;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.CustomerBrokerContractSaleMock;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.SaleNegotiationOfflineMock;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.SaleNegotiationOnlineMock;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_ack_offline_merchandise.interfaces.CustomerAckOfflineMerchandiseManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_ack_online_merchandise.interfaces.CustomerAckOnlineMerchandiseManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.customer_offline_payment.interfaces.CustomerOfflinePaymentManager;
@@ -173,7 +170,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 
@@ -485,7 +481,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public Collection<NegotiationLocations> getAllLocations(NegotiationType negotiationType) throws CantGetListLocationsSaleException {
         Collection<NegotiationLocations> negotiationLocations = null;
-        if (Objects.equals(negotiationType.getCode(), NegotiationType.SALE.getCode())) {
+        if (negotiationType.getCode().equalsIgnoreCase(NegotiationType.SALE.getCode())) {
             negotiationLocations = customerBrokerSaleNegotiationManager.getAllLocations();
         }
         return negotiationLocations;
@@ -494,29 +490,30 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     @Override
     public long getCompletionDateForContractStatus(String contractHash, ContractStatus contractStatus, String paymentMethod) {
         try {
-            switch(contractStatus) {
+            switch (contractStatus) {
                 case PAYMENT_SUBMIT:
-                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                    if (paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
                         return customerOnlinePaymentManager.getCompletionDate(contractHash);
                     else
                         return customerOfflinePaymentManager.getCompletionDate(contractHash);
                 case PENDING_MERCHANDISE:
-                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                    if (paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
                         return brokerAckOnlinePaymentManager.getCompletionDate(contractHash);
                     else
                         return brokerAckOfflinePaymentManager.getCompletionDate(contractHash);
                 case MERCHANDISE_SUBMIT:
-                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                    if (paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
                         return brokerSubmitOnlineMerchandiseManager.getCompletionDate(contractHash);
                     else
                         return brokerSubmitOfflineMerchandiseManager.getCompletionDate(contractHash);
                 case READY_TO_CLOSE:
-                    if(paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
+                    if (paymentMethod.equals(MoneyType.CRYPTO.getFriendlyName()))
                         return customerAckOnlineMerchandiseManager.getCompletionDate(contractHash);
                     else
                         return customerAckOfflineMerchandiseManager.getCompletionDate(contractHash);
             }
-        }catch(CantGetCompletionDateException e) {}
+        } catch (CantGetCompletionDateException e) {
+        }
         return 0;
     }
 
@@ -668,8 +665,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             if (merchandise.getCode().equals(currencyCode) && associatedWallet.getPlatform() == Platforms.BANKING_PLATFORM) {
                 List<BankAccountNumber> accounts = getAccounts(associatedWallet.getWalletPublicKey());
                 for (BankAccountNumber accountNumber : accounts) {
-                    paymentMethod.add("Bank: " + accountNumber.getBankName() + "\n Account: " + accountNumber.getAccount() +
-                            "\n Account Type: " + accountNumber.getAccountType().getFriendlyName());
+                    if (associatedWallet.getBankAccount().equals(accountNumber.getAccount())) {
+                        paymentMethod.add("Bank: " + accountNumber.getBankName() +
+                                "\nAccount Number: " + accountNumber.getAccount() +
+                                "\nAccount Type: " + accountNumber.getAccountType().getFriendlyName());
+                    }
                 }
             }
 
@@ -685,15 +685,12 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         try {
             CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(negotiationInfo.getNegotiationId());
             saleNegotiationImpl = new CustomerBrokerSaleNegotiationImpl(saleNegotiation);
-            saleNegotiationImpl.changeInfo(negotiationInfo, NegotiationStatus.WAITING_FOR_CUSTOMER);
+            saleNegotiationImpl.changeInfo(negotiationInfo);
 
-            if (saleNegotiationImpl.dataHasChanged()) {
+            if (saleNegotiationImpl.dataHasChanged())
                 customerBrokerUpdateManager.createCustomerBrokerUpdateSaleNegotiationTranasction(saleNegotiationImpl);
-                System.out.print("\n**** 1.2) MOCK MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION - CLAUSES INFORMATION****\n");
-            } else {
-                System.out.print("\n**** 1.2) MOCK MODULE CRYPTO CUSTOMER - CLOSE NEGOTIATION - CLAUSES INFORMATION****\n");
+            else
                 customerBrokerCloseManager.createCustomerBrokerCloseSaleNegotiationTranasction(saleNegotiationImpl);
-            }
 
         } catch (CantGetListSaleNegotiationsException cause) {
             throw new CantSendNegotiationToCryptoCustomerException("Cant get the Sale Negotiation from the Data Base",
@@ -814,10 +811,10 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public void clearAssociatedWalletSettings(String publicKeyWalletCryptoBrokerInstall) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantClearCryptoBrokerWalletSettingException {
+    public void clearAssociatedWalletSettings(String publicKeyWalletCryptoBrokerInstall, Platforms platform) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, CantClearCryptoBrokerWalletSettingException {
         //TODO: Quitar este hardcode luego que se implemente la instalacion de la wallet
         publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest";
-        cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall).getCryptoWalletSetting().clearCryptoBrokerWalletAssociatedSetting();
+        cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall).getCryptoWalletSetting().clearCryptoBrokerWalletAssociatedSetting(platform);
     }
 
     @Override
@@ -1021,8 +1018,13 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, MoneyType moneyType, int offset, long timeStamp, String walletPublicKey) throws CantGetCryptoBrokerStockTransactionException {
-        //TODO: Implementar en la wallet la mejor forma de hacer esta consulta
-        return null;
+        //TODO: Quitar este hardcore luego que se implemente la instalacion de la wallet
+        walletPublicKey = "walletPublicKeyTest";
+        try {
+            return cryptoBrokerWalletManager.loadCryptoBrokerWallet(walletPublicKey).getStockHistory(merchandise, moneyType, offset, timeStamp);
+        } catch (CryptoBrokerWalletNotFoundException e) {
+            throw new CantGetCryptoBrokerStockTransactionException("Crypto Broker Wallet Not Found,", e, "", "");
+        }
     }
 
     @Override
@@ -1064,12 +1066,12 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountSaleException {
-        customerBrokerSaleNegotiationManager.createNewBankAccount(bankAccount);
+        //customerBrokerSaleNegotiationManager.createNewBankAccount(bankAccount);
     }
 
     @Override
     public void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountSaleException {
-        customerBrokerSaleNegotiationManager.deleteBankAccount(bankAccount);
+        //customerBrokerSaleNegotiationManager.deleteBankAccount(bankAccount);
     }
 
     @Override //TODO BNK
@@ -1190,7 +1192,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         try {
             CustomerBrokerContractSale customerBrokerContractSale;
             //TODO: This is the real implementation
-            customerBrokerContractSale=this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
+            customerBrokerContractSale = this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
 
             //TODO: for testing
             /*CustomerBrokerContractSaleManager customerBrokerContractSaleManagerMock = new CustomerBrokerContractSaleManagerMock();

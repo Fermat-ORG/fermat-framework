@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1;
 
+
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -531,7 +532,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             createWalletStoreNavigationStructure();
 
 
-
             /**
              * CCP Intra User Community SubApp
              */
@@ -795,6 +795,17 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             /**
              * CCP INTRA USER IDENTITY
              */
+
+           /*
+            *ART ARTIST IDENTITY
+            */
+            //createArtArtistIdentitySubAppNavigationStructure();
+
+            /*
+             *TKY ARTIST IDENTITY
+             */
+            createTkyArtistIdentityNavigationStructure();
+
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_INTRA_USER_IDENTITY);
             String intraUserIdentityPublicKey = SubAppsPublicKeys.CCP_IDENTITY.getCode();
@@ -917,7 +928,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeFragment.setType(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
             runtimeActivity.addFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
-
 
 
             /**
@@ -2129,6 +2139,94 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         listSubApp.put(dapAssetUserCommunity.getPublicKey(), dapAssetUserCommunity);
     }
 
+    private void createTkyArtistIdentityNavigationStructure(){
+        RuntimeSubApp runtimeSubApp = new RuntimeSubApp();
+        Activity runtimeActivity;
+        StatusBar statusBar;
+        
+        
+        
+        runtimeSubApp.setType(SubApps.TKY_ARTIST_IDENTITY_SUB_APP);
+        String tkyFanUserIdentityPublicKey = SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode();
+        runtimeSubApp.setPublicKey(tkyFanUserIdentityPublicKey);
+        // Activity: Create New Identity
+         runtimeActivity = new Activity();
+        
+        runtimeActivity.setType(Activities.TKY_ARTIST_IDENTITY);
+        runtimeActivity.setActivityType(Activities.TKY_ARTIST_IDENTITY.getCode());
+        //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+        runtimeActivity.setColor("#03A9F4");
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.addPosibleStartActivity(Activities.TKY_ARTIST_IDENTITY);
+
+        TitleBar runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Tokenly Identity");
+        runtimeTitleBar.setColor("#1189a4");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setLabelSize(18);
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+         statusBar = new StatusBar();
+        statusBar.setColor("#1189a4");
+        runtimeActivity.setStatusBar(statusBar);
+
+        Fragment runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
+        runtimeActivity.addFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
+
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+
+
+    }
+
+    private void createArtArtistIdentitySubAgracppNavigationStructure(){
+        RuntimeSubApp artArtistIdentity;
+        Activity runtimeActivity;
+        TitleBar runtimeTitleBar;
+        StatusBar statusBar;
+        Fragment runtimeFragment;
+        SideMenu runtimeSideMenu;
+        MenuItem runtimeMenuItem;
+
+        String IdentityArtistPublicKey = SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode();
+
+        artArtistIdentity = new RuntimeSubApp();
+        artArtistIdentity.setType(SubApps.ART_ASSETS_IDENTITY_ARTIST);
+        artArtistIdentity.setPublicKey(IdentityArtistPublicKey);
+        artArtistIdentity.addPosibleStartActivity(Activities.ART_ARTIST_IDENTITY_HOME);
+
+        runtimeActivity = new Activity();
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Artist Identity");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setStartFragment(Fragments.ART_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.ART_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
+        runtimeActivity.addFragment(Fragments.ART_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey(), runtimeFragment);
+
+/*
+        runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        */
+
+        artArtistIdentity.addActivity(runtimeActivity);
+
+        listSubApp.put(artArtistIdentity.getPublicKey(), artArtistIdentity);
+    } //ArtArtistIdentity
+
     private void createRedeemPointCommunitySubAppNavigationStructure() {
         RuntimeSubApp dapAssetRedeemPointCommunity;
         Activity runtimeActivity;
@@ -2519,8 +2617,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.         CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.     CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
     }
 
@@ -2546,7 +2644,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSubApp.addPosibleStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0e738b");
+        statusBar.setColor("#9A12B09F");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2554,7 +2652,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#1189a5");
+        runtimeTitleBar.setColor("#9A12B09F");
         //runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -2572,7 +2670,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0e738b");
+        statusBar.setColor("#9A12B09F");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2580,7 +2678,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#1189a5");
+        runtimeTitleBar.setColor("#9A12B09F");
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -2598,7 +2696,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSubApp.addActivity(runtimeActivity);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#0e738b");
+        statusBar.setColor("#9A12B09F");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
@@ -2606,7 +2704,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
-        runtimeTitleBar.setColor("#1189a5");
+        runtimeTitleBar.setColor("#9A12B09F");
         runtimeTitleBar.setIconName("Back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
@@ -2650,7 +2748,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeMenuItem.setLinkToActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_NOTIFICATIONS);
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
 
 
         //Activity: CONNECTION_WORLD
@@ -2817,7 +2914,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeMenuItem.setLinkToActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_NOTIFICATIONS);
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
-
 
 
         //Activity: CONNECTION_WORLD
@@ -3157,6 +3253,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTabStrip.setTabsColor("#000000");
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
         runtimeTabStrip.setTabsIndicateColor("#47BF73");
+//        runtimeTabStrip.setBackgroundColor(0xFFFFFF);
+//        runtimeTabStrip.setDividerColor(0xFFFFFF);
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         //Tabs Chats
@@ -3178,15 +3276,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
         runtimeTabStrip.addTab(runtimeTab);
 
-//        //Tabs Connections
-//        runtimeTab = new Tab();
-//        runtimeTab.setLabel("CONNECTIONS");
-//        runtimeTab.setFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT);
-//        runtimeFragment = new Fragment();
-//        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT.getKey());
-//        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONNECTIONLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
-//        runtimeTabStrip.addTab(runtimeTab);
-
         chtChat.addActivity(runtimeActivity);
         listSubApp.put(chtChat.getPublicKey(), chtChat);
 
@@ -3194,18 +3283,14 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONTACTLIST);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CONTACTLIST.getCode());
-        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
-        runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
         runtimeActivity.setBackgroundColor("F9F9F9");
-        chtChat.addActivity(runtimeActivity);
-        //runtimeActivity.setTabStrip(runtimeTabStrip);
 
         statusBar = new StatusBar();
         statusBar.setColor("#47BF73");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Contacts");
+        runtimeTitleBar.setLabel("Fermat Chat");
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#FFFFFF");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -3213,9 +3298,40 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONTACTLIST_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_FRAGMENT.getKey());
+        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
+
+        //Menu Tabs
+        runtimeTabStrip = new TabStrip();
+        runtimeTabStrip.setTabsColor("#000000");
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+        runtimeTabStrip.setTabsIndicateColor("#47BF73");
+        //runtimeTabStrip.setBackgroundColor(0xFFFFFF);
+        //runtimeTabStrip.setDividerColor(0xFFFFFF);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        //Tabs Chats
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("CHATS");
+        runtimeTab.setFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT);
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CHATLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
+        runtimeTabStrip.addTab(runtimeTab);
+
+        //Tabs Contacts
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("CONTACTS");
+        runtimeTab.setFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT);
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
+        runtimeTabStrip.addTab(runtimeTab);
+
+        chtChat.addActivity(runtimeActivity);
+        listSubApp.put(chtChat.getPublicKey(), chtChat);
 
         // Activity: Contact Detail
         runtimeActivity = new Activity();

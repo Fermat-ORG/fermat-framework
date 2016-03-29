@@ -2,16 +2,20 @@
     <string name="app_name">Cash Wallet</string>
 
     <!-- Home balances -->
-    <string name="csh_home_titlebar_title">CASH</string>
-    <string name="csh_home_titlebar_title_2">WALLET</string>
+    <string name="csh_home_titlebar_title">CASH WALLET</string>
+    <string name="csh_home_titlebar_balance">BALANCE</string>
+    <string name="csh_home_titlebar_available">Available</string>
+    <string name="csh_home_titlebar_book">Book</string>
 
 
     <!-- Home transactions -->
     <string name="csh_no_transactions">No transactions yet!</string>
     <string name="csh_transaction_img_desc" translatable="false">transaction_img</string>
     <string name="csh_withdrawal_transaction_text_caps" translatable="false">WITHDRAWAL</string>
-    <string name="csh_deposit_transaction_text_caps" translatable="false">DEPOSIT</string>
+    <string name="csh_withdrawal_transaction_text_btn_caps" translatable="false">WITHDRAW</string>
     <string name="csh_withdrawal_transaction_text" translatable="false">Withdrawal</string>
+    <string name="csh_withdrawal_transaction_text_btn" translatable="false">Withdraw</string>
+    <string name="csh_deposit_transaction_text_caps" translatable="false">DEPOSIT</string>
     <string name="csh_deposit_transaction_text" translatable="false">Deposit</string>
 
 

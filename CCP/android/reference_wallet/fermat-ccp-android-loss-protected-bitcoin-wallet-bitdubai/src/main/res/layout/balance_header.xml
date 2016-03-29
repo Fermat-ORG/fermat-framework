@@ -33,6 +33,15 @@
                 android:textColor="#44bcff"
                 android:textSize="12sp"/>
 
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1 BTC - 400 USD"
+                android:id="@+id/txt_exchange_rate"
+                android:textColor="#44bcff"
+                android:textSize="14sp"
+                />
+
         </LinearLayout>
 
         <LinearLayout

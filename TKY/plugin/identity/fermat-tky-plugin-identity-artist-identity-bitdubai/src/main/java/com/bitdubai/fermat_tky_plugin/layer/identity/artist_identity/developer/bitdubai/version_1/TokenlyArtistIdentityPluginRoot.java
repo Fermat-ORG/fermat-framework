@@ -29,6 +29,8 @@ import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnections
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetUserException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
@@ -72,7 +74,7 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
     private DeviceUserManager deviceUserManager;
 
-    @NeededPluginReference(platform =  Platforms.TOKENLY, layer = Layers.API, plugin = Plugins.API_TOKENLY)
+    @NeededPluginReference(platform =  Platforms.TOKENLY, layer = Layers.EXTERNAL_API, plugin = Plugins.TOKENLY_API)
     private TokenlyApiManager tokenlyApiManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
@@ -154,7 +156,14 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
 
     @Override
     public Artist createArtistIdentity(String alias, byte[] profileImage, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
-        if(tokenlyApiManager.isTokenlyAccessVaild(externalUserName,externalAccessToken)){
+        //TODO: Fix this Gabo. Manuel
+        User user=null;
+        try{
+            user = tokenlyApiManager.validateTokenlyUser(externalUserName, externalAccessToken);
+        } catch (CantGetUserException e) {
+            e.printStackTrace();
+        }
+        if(user!=null){
             return identityArtistManager.createNewIdentityArtist(alias,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
         }else{
             return null;

@@ -18,6 +18,7 @@ import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
@@ -54,6 +55,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     private List<GrouperItem> openNegotiationList;
     private CryptoBrokerWalletManager walletManager;
 
+    private  View emptyListViewsContainer;
+
 
     public static OpenNegotiationsTabFragment newInstance() {
         return new OpenNegotiationsTabFragment();
@@ -87,11 +90,13 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(activity, R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
-
+        emptyListViewsContainer = layout.findViewById(R.id.empty);
         if (openNegotiationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
-            View emptyListViewsContainer = layout.findViewById(R.id.empty);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }else {
+            emptyListViewsContainer.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -194,6 +199,13 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
     public void onItemClickListener(CustomerBrokerNegotiationInformation data, int position) {
         appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, data);
         changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS, appSession.getAppPublicKey());
+        /*
+        if(data.getStatus() == NegotiationStatus.SENT_TO_BROKER || data.getStatus() == NegotiationStatus.WAITING_FOR_BROKER){
+            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_NEGOTIATION_DETAILS, appSession.getAppPublicKey());
+        }else{
+            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT, appSession.getAppPublicKey());
+        }
+        */
     }
 
     @Override
@@ -210,6 +222,13 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
                 if (adapter != null)
                     adapter.changeDataSet(openNegotiationList);
             }
+        }
+        if (openNegotiationList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }else {
+            emptyListViewsContainer.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
         }
     }
 

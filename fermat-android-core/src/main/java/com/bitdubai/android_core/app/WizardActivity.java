@@ -1,7 +1,6 @@
 package com.bitdubai.android_core.app;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,6 +17,7 @@ import com.bitdubai.android_core.app.common.version_1.connections.ConnectionCons
 import com.bitdubai.android_core.app.common.version_1.util.DepthPageTransformer;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
@@ -32,7 +32,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.WizardP
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.fermat_wpd_api.layer.wpd_engine.wallet_runtime.interfaces.WalletRuntimeManager;
@@ -68,7 +67,7 @@ public class WizardActivity extends FermatActivity
      * DATA
      */
     private Map<String, Object> dataHash;
-    private List<Fragment> fragments = new ArrayList<>();
+    private List<AbstractFermatFragment> fragments = new ArrayList<>();
     private int position = -1;
     /**
      * UI
@@ -425,7 +424,7 @@ public class WizardActivity extends FermatActivity
     }
 
     private void connectWithSubApp(Engine engine, Object[] objects,SubApp subApp){
-        Intent intent = new Intent(this, SubAppActivity.class);
+        Intent intent = new Intent(this, AppActivity.class);
         intent.putExtra(ConnectionConstants.ENGINE_CONNECTION, engine);
         intent.putExtra(ConnectionConstants.SEARCH_NAME,objects);
         intent.putExtra(ConnectionConstants.SUB_APP_CONNECTION,subApp.getAppPublicKey());

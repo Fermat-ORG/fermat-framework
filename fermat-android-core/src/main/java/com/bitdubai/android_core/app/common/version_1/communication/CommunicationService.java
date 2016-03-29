@@ -10,14 +10,16 @@ import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_core.FermatSystem;
-import com.google.gson.Gson;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -87,30 +89,57 @@ public class CommunicationService extends Service{
     }
 
     private void registerClient(String key, Messenger replyTo){
-        clients.put(key,replyTo);
+        if(key!=null) {
+            clients.put(key, replyTo);
+        }
     }
 
     private void unRegisterClient(String key){
         clients.remove(key);
     }
 
-    private String moduleDataRequest(final PluginVersionReference pluginVersionReference,final String method, Serializable[] parameters){
+    private Object moduleDataRequest(final PluginVersionReference pluginVersionReference,final String method, final Serializable[] parameters){
         Log.i(TAG,"Invoque method called");
         Callable<Object> callable = new Callable<Object>() {
             @Override
             public Object call() throws Exception {
-
+                Log.i(TAG,"Method to execute: "+ method);
+                Log.i(TAG,"PluginVersionReference: "+ pluginVersionReference.toString());
+                Log.i(TAG,"Parameters: "+parameters);
                 FermatManager fermatManager = fermatSystem.getPlugin(pluginVersionReference);
-                Class clazz = fermatManager.getClass();
-
+                ModuleManager moduleManager = null;
+                Class clazz = null;
+                if(fermatManager instanceof AbstractModule){
+                    moduleManager = ((AbstractModule) fermatManager).getModuleManager();
+                    clazz = moduleManager.getClass();
+                }else{
+                    clazz = fermatManager.getClass();
+                }
                 Method m = null;
                 Object s = null;
+                Class[] classes = null;
+                if(parameters!=null) {
+                    classes = new Class[parameters.length];
+                    for (int pos = 0; pos < parameters.length; pos++) {
+                        classes[pos] = parameters[pos].getClass();
+                        Log.i(TAG, "Parametro: " + parameters[pos].getClass().getCanonicalName());
+                    }
+                }
+                //TODO: ver porque puse el moduleManager en el invoque, si daberia id ahí o d
                 try {
-                    m = clazz.getMethod(method,null);
-                    Log.i(TAG,"Method: "+ m.getName());
-                    Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
-                    Log.i(TAG,"Method return type: "+ m.getReturnType());
-                    s =  m.invoke(fermatManager, null);
+                    if(classes==null){
+                        m = clazz.getMethod(method,null);
+                        Log.i(TAG,"Method: "+ m.getName());
+                        Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
+                        Log.i(TAG,"Method return type: "+ m.getReturnType());
+                        s =  m.invoke(moduleManager, null);
+                    } else{
+                        m = clazz.getMethod(method,classes);
+                        Log.i(TAG,"Method: "+ m.getName());
+                        Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
+                        Log.i(TAG,"Method return type: "+ m.getReturnType());
+                        s =  m.invoke(moduleManager,parameters);
+                    }
                     Log.i(TAG,"Method return: "+ s.toString());
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
@@ -135,19 +164,49 @@ public class CommunicationService extends Service{
             e.printStackTrace();
         }
 
-        Log.i("APP", s != null ? s.toString() : null);
-        Gson gson = new Gson();
-        String json = gson.toJson(s);
-        Log.i("APP", s != null ? s.toString() : null);
+        Log.i(TAG,"Data to send: "+ s != null ? s.toString() : null);
 
-        return json;
+        final Object finalS = s;
+//        Future<String> gsonFuture = executorService.submit(new Callable<String>() {
+//            @Override
+//            public String call() throws Exception {
+//                Gson gson = new Gson();
+//                String json = gson.toJson(finalS);
+//                return json;
+//            }
+//        });
+//        String json = null;
+//        try {
+//            json = gsonFuture.get();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+        Log.i(TAG, s != null ? s.toString() : null);
+
+//        return json;
+        return finalS;
     }
 
 
-    private void send(String key,Serializable serializable) throws RemoteException {
+    private void send(String key,Object object) throws RemoteException {
+        Log.i(TAG,"Sending data to:"+ clients.get(key));
+        Log.i(TAG,"Sending data: "+ object);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Method method : object.getClass().getDeclaredMethods()) {
+            stringBuilder.append(method.getName()).append("\n");
+        }
+        Log.i(TAG, "Data methods: " + stringBuilder.toString());
+        Log.i(TAG, "Data name: " + object.getClass().getCanonicalName());
         Message msg = Message.obtain(null, CommunicationMessages.MSG_REQUEST_DATA_MESSAGE);
-        msg.getData().putSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE,serializable);
-        clients.get(key).send(msg);
+        if(object instanceof Serializable){
+            msg.getData().putSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE, (Serializable) object);
+            clients.get(key).send(msg);
+        }else{
+            Log.i(TAG, "Data is not serializable");
+        }
+
     }
 
     @Override
@@ -155,6 +214,13 @@ public class CommunicationService extends Service{
         super.onCreate();
         fermatSystem = FermatSystem.getInstance();
         executorService = Executors.newSingleThreadExecutor();
+        clients = new HashMap<>();
+
+        Log.i("Communication service","Package name:"+getPackageName());
+        Log.i("Communication service","Class cannonical:"+getClass().getCanonicalName());
+        Log.i("Communication service","Class simple name:"+getClass().getSimpleName());
+        Log.i("Communication service","Class name:"+getClass().getName());
+        Log.i("Communication service","Class package:"+getClass().getPackage().toString());
     }
 
     /**
@@ -168,5 +234,11 @@ public class CommunicationService extends Service{
     public IBinder onBind(Intent intent) {
         Log.d(TAG, "entering onBind");
         return mMessenger.getBinder();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        executorService.shutdownNow();
     }
 }

@@ -3,6 +3,7 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pa
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -71,10 +73,13 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
     private List<InstalledWallet> bitcoinWallets;
     private InstalledWallet selectedBitcoinWallet;
     private CryptoCustomerIdentity selectedIdentity;
+    private boolean walletConfigured;
+
 
     // UI
     private RecyclerView recyclerView;
     private FermatTextView emptyView;
+    private LinearLayout fragmentContainer;
 
     // Fermat Managers
     private CryptoCustomerWalletManager walletManager;
@@ -113,9 +118,10 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
 
             // Verify if wallet has been configured, if it is, go to wallet's home!
-            if (walletSettings.isWalletConfigured()) {
-                getRuntimeManager().changeStartActivity(1);
-                changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
+            walletConfigured = walletSettings.isWalletConfigured();
+            if (walletConfigured) {
+                //getRuntimeManager().changeStartActivity(1);
+                //changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
                 return;
             }
 
@@ -151,6 +157,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         recyclerView.setAdapter(adapter);
 
         emptyView = (FermatTextView) layout.findViewById(R.id.ccw_selected_providers_empty_view);
+        fragmentContainer = (LinearLayout) layout.findViewById(R.id.ccw_fragment_container);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.ccw_spinner_item, getFormattedCurrencies(currencies));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -186,7 +193,19 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             }
         });
 
-        showHelpDialog();
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //If wallet already configured, go directly to wallet
+                if (walletConfigured) {
+                    changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, appSession.getAppPublicKey());
+                } else {  //otherwise, show wizard page
+                    fragmentContainer.setVisibility(View.VISIBLE);
+                    showHelpDialog();
+                }
+            }
+        }, 250);
 
         return layout;
     }
@@ -284,6 +303,11 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
     private void showProvidersDialog() {
 
+        if (currencyFrom == currencyTo) {
+            Toast.makeText(getActivity(), R.string.ccw_same_currencies_providers_warning_msg, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        
         try {
             List<CurrencyPairAndProvider> providers = new ArrayList<>();
 
@@ -294,6 +318,10 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                     providers.add(new CurrencyPairAndProvider(currencyFrom, currencyTo, providerManager));
             }
 
+            if(providers.size() == 0){
+                Toast.makeText(getActivity(), R.string.ccw_no_providers_for_chosen_currencies_msg, Toast.LENGTH_SHORT).show();
+                return;
+            }
 
             final SimpleListDialogFragment<CurrencyPairAndProvider> dialogFragment = new SimpleListDialogFragment<>();
             dialogFragment.configure("Select a Provider", providers);

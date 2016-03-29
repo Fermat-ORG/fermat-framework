@@ -12,13 +12,9 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
@@ -34,6 +30,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantG
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionCryptoStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantStoreBitcoinTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.enums.Status;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.enums.CryptoVaults;
@@ -41,7 +38,7 @@ import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bit
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.CantLoadTransactionFromFileException;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.util.TransactionProtocolData;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -56,9 +53,7 @@ import org.bitcoinj.core.Sha256Hash;
 import org.bitcoinj.core.Transaction;
 import org.bitcoinj.core.TransactionInput;
 import org.bitcoinj.core.Wallet;
-import org.bitcoinj.core.WalletExtension;
 import org.bitcoinj.store.UnreadableWalletException;
-import org.bitcoinj.wallet.WalletTransaction;
 
 import java.io.File;
 import java.io.IOException;
@@ -72,7 +67,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Nullable;
 
-import static com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate.isValidString;
+
 
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptonetwork.bitcoin.developer.bitdubai.version_1.structure.BitcoinCryptoNetworkManager</code>
@@ -304,14 +299,21 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         Wallet wallet = null;
         walletFile = new File(WALLET_PATH, blockchainNetworkType.getCode());
 
-        try {
-            wallet = Wallet.loadFromFile(walletFile);
-        } catch (UnreadableWalletException e) {
-            /**
-             * If I couldn't load the wallet from file, I'm assuming is a new wallet and I will create it.
-             * I'm creating it by importing the keys sent by the vault.
-             */
-            //wallet = Wallet.fromKeys(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType), keyList);
+        // if the wallet file exists, I will get it from the Network Monitor
+        if (walletFile.exists()){
+            BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
+            if (monitor != null)
+                wallet = monitor.getWallet();
+            else {
+                try {
+                    wallet = Wallet.loadFromFile(walletFile);
+                } catch (UnreadableWalletException e) {
+                    e.printStackTrace();
+                }
+            }
+            return wallet;
+        } else {
+            // I will create a new one.
             NetworkParameters newWalletNetworkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
             Context context = new Context(newWalletNetworkParameters);
 
@@ -327,9 +329,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             } catch (IOException e1) {
                 e1.printStackTrace(); // I will continue because the key addition will trigger an autosave anyway.
             }
-
+            return wallet;
         }
-        return wallet;
     }
 
     /**
@@ -948,7 +949,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             /**
              * first iteration may have block hash null because transaction is not yet confirmed. If this is the case I will move to the next one
              */
-            if (!isValidString(entry.getValue()))
+            if (StringUtils.isBlank(entry.getValue()))
                 continue;
 
             /**

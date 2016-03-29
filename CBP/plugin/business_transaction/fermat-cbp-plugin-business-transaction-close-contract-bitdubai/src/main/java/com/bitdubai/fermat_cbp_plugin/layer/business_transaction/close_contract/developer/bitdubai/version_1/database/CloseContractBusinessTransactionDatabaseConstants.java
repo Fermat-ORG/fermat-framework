@@ -41,5 +41,6 @@ public class CloseContractBusinessTransactionDatabaseConstants {
     public static final String CLOSE_CONTRACT_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME = "timestamp";
 
     public static final String CLOSE_CONTRACT_EVENTS_RECORDED_TABLE_FIRST_KEY_COLUMN = "event_id";
-    
+
+    public static final String CLOSE_CONTRACT_COMPLETION_DATE_COLUMN_NAME = "completion_date";
 }

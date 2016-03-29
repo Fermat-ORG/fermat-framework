@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactsListFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
@@ -37,6 +38,7 @@ import java.util.UUID;
 
 /**
  * Created by richardalexander on 09/03/16.
+ * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 17/03/16.
  */
 public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickListener {
     private final ContactConnection contactConn;
@@ -50,6 +52,7 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
     private AdapterCallbackContacts mAdapterCallback;
     int AlertType = 0;
     String body,title;
+    boolean addcontact = false;
     public boolean delete_contact = false;
     ArrayList<String> contactname=new ArrayList<String>();
     ArrayList<Bitmap> contacticon=new ArrayList<>();
@@ -106,7 +109,7 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
     protected int setLayoutId() {
         return R.layout.cht_alert_dialog_yes_no;
     }
-
+    public boolean getStatusAddContact(){ return addcontact; }
 
     private void setUpListeners() {
         btn_yes.setOnClickListener(this);
@@ -135,24 +138,26 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                         newContact.setContactStatus(contactConn.getContactStatus());
                         newContact.setProfileImage(contactConn.getProfileImage());
                         chatManager.saveContact(newContact);
+                        addcontact = true;
                         Toast.makeText(getActivity(), "Contact added", Toast.LENGTH_SHORT).show();
                         //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-                        dismiss();
+                        //dismiss();
                     } else {
                         Toast.makeText(getActivity(), "Contact already exist", Toast.LENGTH_SHORT).show();
 
                         //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-                        dismiss();
+                        //dismiss();
                     }
+                    dismiss();
+                    mAdapterCallback.onMethodCallbackContacts();//solution to access to update contacts. j
+
                 } catch (CantSaveContactException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
                 //changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
-                dismiss();
-                mAdapterCallback.onMethodCallbackContacts();//solution to access to update contacts. j
-            }if(AlertType == 2){
+                }else if(AlertType == 2){
                 try {
                     Contact con = chatSession.getSelectedContact();
                     chatManager.deleteContact(con);

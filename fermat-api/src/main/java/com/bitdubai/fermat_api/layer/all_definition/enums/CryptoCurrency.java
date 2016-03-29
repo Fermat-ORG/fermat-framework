@@ -19,6 +19,7 @@ public enum CryptoCurrency implements Currency {
      */
     BITCOIN     ("BTC", "Bitcoin"),
     CHAVEZCOIN  ("CHC", "Chavezcoin"),
+    ETHEREUM    ("ETH", "Ethereum"),
     LITECOIN    ("LTC", "Litecoin")
 
     ;
@@ -40,6 +41,7 @@ public enum CryptoCurrency implements Currency {
         switch (code) {
             case "BTC": return CryptoCurrency.BITCOIN;
             case "CHC": return CryptoCurrency.CHAVEZCOIN;
+            case "ETH": return CryptoCurrency.ETHEREUM;
             case "LTC": return CryptoCurrency.LITECOIN;
             default:
                 throw new InvalidParameterException(

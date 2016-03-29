@@ -41,9 +41,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditT
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
@@ -66,8 +66,8 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.AssetFactorySe
 import com.bitdubai.fermat_dap_api.layer.dap_module.asset_factory.interfaces.AssetFactoryModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.sql.Timestamp;
@@ -124,6 +124,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
     private boolean hasResource;
 
     private long satoshisWalletBalance = 0;
+    private boolean contextMenuInUse = false;
 
     SettingsManager<AssetFactorySettings> settingsManager;
 
@@ -233,11 +234,11 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
             }
         });
         bitcoinsTextView.setText(String.format("%.6f BTC", 0.0));
+        registerForContextMenu(takePicture);
 
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                registerForContextMenu(view);
                 getActivity().openContextMenu(view);
             }
         });
@@ -431,6 +432,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             Bitmap imageBitmap = null;
+            contextMenuInUse = true;
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
@@ -442,10 +444,14 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
                         if (isAttached) {
                             imageBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
                             imageBitmap = Bitmap.createScaledBitmap(imageBitmap, takePicture.getWidth(), takePicture.getHeight(), true);
+                            if(imageBitmap != null){
+                                hasResource = true;
+//                                Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(takePicture);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error Loading Image", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -471,13 +477,17 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case CONTEXT_MENU_CAMERA:
-                dispatchTakePictureIntent();
-                break;
-            case CONTEXT_MENU_GALLERY:
-                loadImageFromGallery();
-                break;
+        if(!contextMenuInUse) {
+            switch (item.getItemId()) {
+                case CONTEXT_MENU_CAMERA:
+                    dispatchTakePictureIntent();
+                    contextMenuInUse = true;
+                    return true;
+                case CONTEXT_MENU_GALLERY:
+                    loadImageFromGallery();
+                    contextMenuInUse = true;
+                    return true;
+            }
         }
         return super.onContextItemSelected(item);
     }

@@ -10,6 +10,7 @@ public enum BusinessTransactionTransactionType {
      /**
       * Definition types
       */
+    ACK_CONFIRM_MESSAGE         ("ACMS"),
     CONFIRM_MESSAGE             ("CMS"),
     TRANSACTION_HASH            ("TXH"),
     CONTRACT_STATUS_UPDATE      ("CSU");
@@ -51,6 +52,8 @@ public enum BusinessTransactionTransactionType {
                 return BusinessTransactionTransactionType.TRANSACTION_HASH;
             case "CSU":
                 return BusinessTransactionTransactionType.CONTRACT_STATUS_UPDATE;
+            case "ACMS":
+                return BusinessTransactionTransactionType.ACK_CONFIRM_MESSAGE;
         }
 
         /**

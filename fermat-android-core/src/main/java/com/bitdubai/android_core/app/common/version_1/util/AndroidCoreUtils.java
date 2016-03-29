@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_android.broadcaster.AndroidCoreUtils {
 
     private BroadcasterInterface context;
-    private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private ExecutorService executor = Executors.newFixedThreadPool(2);
 
 
     private static final AndroidCoreUtils instance = new AndroidCoreUtils() ;
@@ -65,17 +65,14 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
     }
 
     @Override
-    public void publish(final BroadcasterType broadcasterType, final FermatBundle bundle) {
+    public int publish(final BroadcasterType broadcasterType, final FermatBundle bundle) {
+        int id = 0;
         try {
-            executor.submit(new Runnable() {
-                @Override
-                public void run() {
-                    if(context!=null) context.publish(broadcasterType,bundle);
-                }
-            });
+            id = (context!=null)? context.publish(broadcasterType,bundle):0;
         }catch (Exception e){
             e.printStackTrace();
         }
+        return id;
     }
 
     public BroadcasterInterface getContext() {

@@ -24,6 +24,7 @@ public class SongRecord implements Song {
     private String usageProhibitions;
     private String bitcoinAddress;
     private String other;
+    private String downloadUrl;
 
     public SongRecord(
             String id,
@@ -39,7 +40,8 @@ public class SongRecord implements Song {
             String usageRights,
             String usageProhibitions,
             String bitcoinAddress,
-            String other) {
+            String other,
+            String downloadUrl) {
         this.id = id;
         this.name = name;
         this.tokens = tokens;
@@ -54,6 +56,7 @@ public class SongRecord implements Song {
         this.usageProhibitions = usageProhibitions;
         this.bitcoinAddress = bitcoinAddress;
         this.other = other;
+        this.downloadUrl = downloadUrl;
     }
 
     /**
@@ -124,7 +127,7 @@ public class SongRecord implements Song {
      * @return
      */
     @Override
-    public String credits() {
+    public String getCredits() {
         return this.credits;
     }
 
@@ -182,6 +185,15 @@ public class SongRecord implements Song {
         return this.other;
     }
 
+    /**
+     * Represents the song download URL.
+     * @return
+     */
+    @Override
+    public String getDownloadUrl() {
+        return this.downloadUrl;
+    }
+
     @Override
     public String toString() {
         return "SongRecord{" +
@@ -199,6 +211,7 @@ public class SongRecord implements Song {
                 ", usageProhibitions='" + usageProhibitions + '\'' +
                 ", bitcoinAddress='" + bitcoinAddress + '\'' +
                 ", other='" + other + '\'' +
+                ", downloadUrl='" + downloadUrl + '\'' +
                 '}';
     }
 }

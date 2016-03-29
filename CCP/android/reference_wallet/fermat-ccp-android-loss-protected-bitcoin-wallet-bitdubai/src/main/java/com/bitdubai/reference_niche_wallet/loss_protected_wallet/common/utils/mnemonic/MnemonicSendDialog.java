@@ -7,11 +7,11 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
-//import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
+
 
 //import android.view.WindowManager;
 //import android.widget.Button;
-//import com.bitdubai.fermat.R;
+
 
 /**
  * Created by mati on 2016.02.20..

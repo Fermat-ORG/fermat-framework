@@ -26,4 +26,10 @@ public interface WalletSong extends Song {
      */
     UUID getSongId();
 
+    /**
+     * This method returns a XML String with the String[] associated to this object
+     * @return
+     */
+    String getTokensXML();
+
 }
