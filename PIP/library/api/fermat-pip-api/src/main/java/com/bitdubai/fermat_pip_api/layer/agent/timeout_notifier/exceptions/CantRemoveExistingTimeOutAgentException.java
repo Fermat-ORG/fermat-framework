@@ -12,4 +12,8 @@ public class CantRemoveExistingTimeOutAgentException extends FermatException{
     public CantRemoveExistingTimeOutAgentException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
+
+    public CantRemoveExistingTimeOutAgentException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
 }

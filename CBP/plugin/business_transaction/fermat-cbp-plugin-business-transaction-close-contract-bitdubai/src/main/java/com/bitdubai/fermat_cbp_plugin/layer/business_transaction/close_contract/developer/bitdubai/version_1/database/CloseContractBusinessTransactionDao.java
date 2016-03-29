@@ -441,4 +441,52 @@ public class CloseContractBusinessTransactionDao {
         }
     }
 
+    public long getCompletionDateByContractHash(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+            DatabaseTable databaseTable=getDatabaseContractTable();
+            databaseTable.addStringFilter(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return 0;
+            }
+            checkDatabaseRecords(records);
+            DatabaseTableRecord databaseTableRecord = records.get(0);
+            return databaseTableRecord.getLongValue(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_COMPLETION_DATE_COLUMN_NAME);
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting completion date from database",
+                    "Cannot load the database table");
+        }
+    }
+
+    /**
+     * This method sets the completion date in the database.
+     * @param contractHash
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    public void setCompletionDateByContractHash(String contractHash, long completionDate)
+            throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
+        try{
+            DatabaseTable databaseTable=getDatabaseContractTable();
+            databaseTable.addStringFilter(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash, DatabaseFilterType.EQUAL);
+
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty())
+                return ;
+
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record.setLongValue(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_COMPLETION_DATE_COLUMN_NAME, completionDate);
+            databaseTable.updateRecord(record);
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e, "Setting completion date from database", "Cannot load the database table");
+        }
+    }
 }

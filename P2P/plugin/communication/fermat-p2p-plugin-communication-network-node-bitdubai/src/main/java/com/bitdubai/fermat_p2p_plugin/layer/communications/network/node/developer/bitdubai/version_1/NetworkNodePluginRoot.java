@@ -160,17 +160,32 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             NodeContext.add(PluginFileSystem.class.getSimpleName(),         pluginFileSystem);
             NodeContext.add(PluginDatabaseSystem.class.getSimpleName(),     pluginDatabaseSystem);
 
-        } catch (Exception exception) {
+        } catch (CantInitializeCommunicationsNetworkNodeP2PDatabaseException exception) {
 
 
             exception.printStackTrace();
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
+            contextBuffer.append("Error trying to initialize the network node database.");
+            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
+            contextBuffer.append("Plugin ID: ");
+            contextBuffer.append(pluginId.toString());
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("Database Name: " + CommunicationsNetworkNodeP2PDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
+            String possibleCause = "The  Network Node Service triggered an unexpected problem that wasn't able to solve by itself";
+            CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
+
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_NODE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+
+            throw pluginStartException;
+        } catch (Exception exception) {
+
+
+            exception.printStackTrace();
+
+            String context = "Plugin ID: " + pluginId;
             String possibleCause = "The  Network Node Service triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 

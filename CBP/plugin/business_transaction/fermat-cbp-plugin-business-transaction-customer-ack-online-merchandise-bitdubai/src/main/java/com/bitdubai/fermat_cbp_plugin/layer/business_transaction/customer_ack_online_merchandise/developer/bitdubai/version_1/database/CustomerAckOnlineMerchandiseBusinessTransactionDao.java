@@ -456,30 +456,62 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
         }
     }
 
-    public List<BusinessTransactionRecord> getPendingToSubmitNotificationList() throws
-            UnexpectedResultReturnedFromDatabaseException,
-            CantGetContractListException {
+    public List<BusinessTransactionRecord> getPendingToSubmitNotificationList() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException {
         try{
             return getBusinessTransactionRecordList(
+                    ContractTransactionStatus.PENDING_ACK_ONLINE_MERCHANDISE_NOTIFICATION.getCode(),
+                    CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+
+        }catch (CantGetContractListException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,exception);
+            throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
+                    exception, "Getting value from PendingTosSubmitNotificationList", "");
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
+        }
+    }
+
+    public List<BusinessTransactionRecord> getPendingToSubmitConfirmationList() throws UnexpectedResultReturnedFromDatabaseException, CantGetContractListException{
+        try{
+            List<String> pendingContractHash = getStringList(
                     ContractTransactionStatus.PENDING_ACK_ONLINE_MERCHANDISE.getCode(),
                     CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
-        }catch (CantGetContractListException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
-            throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
-                    exception,
+
+            List<BusinessTransactionRecord> businessTransactionRecordList = new ArrayList<>();
+            for(String contractHash : pendingContractHash){
+                BusinessTransactionRecord businessTransactionRecord = getBrokerBusinessTransactionRecordByContractHash(contractHash);
+                businessTransactionRecordList.add(businessTransactionRecord);
+            }
+
+            return businessTransactionRecordList;
+
+        } catch (CantGetContractListException exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,exception);
+
+            throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE, exception,
                     "Getting value from PendingTosSubmitNotificationList", "");
+
         } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    exception);
-            throw new UnexpectedResultReturnedFromDatabaseException(exception,
-                    "Unexpected error",
-                    "Check the cause");
+            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception, "Unexpected error", "Check the cause");
+        }
+    }
+
+    private BusinessTransactionRecord getBrokerBusinessTransactionRecordByContractHash(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+            return getBrokerBusinessTransactionRecord(contractHash, CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                    ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        }catch(Exception e){
+            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected result","Check the cause");
         }
     }
 
@@ -552,23 +584,15 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
-    public BusinessTransactionRecord getBusinessTransactionRecordByContractHash(
-            String contractHash)
-            throws
-            UnexpectedResultReturnedFromDatabaseException {
+    public BusinessTransactionRecord getBusinessTransactionRecordByContractHash(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
         try{
-            return getBusinessTransactionRecord(
-                    contractHash,
-                    CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
+            return getBusinessTransactionRecord(contractHash, CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
                             ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
         }catch(Exception e){
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    e);
+            errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected result","Check the cause");
         }
-
     }
 
     /**
@@ -577,9 +601,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
      * @param keyColumn
      * @return
      */
-    private BusinessTransactionRecord getBusinessTransactionRecord(
-            String keyValue,
-            String keyColumn) throws UnexpectedResultReturnedFromDatabaseException {
+    private BusinessTransactionRecord getBusinessTransactionRecord(String keyValue, String keyColumn) throws UnexpectedResultReturnedFromDatabaseException {
         try{
             DatabaseTable databaseTable=getAckMerchandiseTable();
             ContractTransactionStatus contractTransactionStatus;
@@ -636,6 +658,48 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
                             CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
                                     ACK_ONLINE_MERCHANDISE_CRYPTO_AMOUNT_COLUMN_NAME));
             return businessTransactionRecord;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Cannot load the database table");
+        } catch (InvalidParameterException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Invalid parameter in ContractTransactionStatus");
+        }
+    }
+
+    private BusinessTransactionRecord getBrokerBusinessTransactionRecord(String keyValue, String keyColumn) throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+            DatabaseTable databaseTable=getAckMerchandiseTable();
+            ContractTransactionStatus contractTransactionStatus;
+            BusinessTransactionRecord businessTransactionRecord =new BusinessTransactionRecord();
+            databaseTable.addStringFilter(keyColumn, keyValue, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            if(records.isEmpty()){
+                return null;
+            }
+            DatabaseTableRecord record = records.get(0);
+            businessTransactionRecord.setTransactionId(record.getStringValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                    ACK_ONLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME));
+
+            businessTransactionRecord.setContractHash(record.getStringValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                    ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME));
+
+            businessTransactionRecord.setCustomerPublicKey(record.getStringValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                    ACK_ONLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
+
+            businessTransactionRecord.setBrokerPublicKey(record.getStringValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                    ACK_ONLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME));
+
+            contractTransactionStatus = ContractTransactionStatus.getByCode(record.getStringValue(CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
+                            ACK_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
+            businessTransactionRecord.setContractTransactionStatus(contractTransactionStatus);
+
+            return businessTransactionRecord;
+
         } catch (CantLoadTableToMemoryException e) {
             throw new UnexpectedResultReturnedFromDatabaseException(e,
                     "Getting value from database",

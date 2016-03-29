@@ -7,21 +7,13 @@
 package com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectOperatorType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseAggregateFunctionType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseTableOrder;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseAggregateFunction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator.AND;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator.OR;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder.ASCENDING;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder.DESCENDING;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType.EQUAL;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType.GREATER_THAN;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType.LESS_THAN;
-import static com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType.LIKE;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseSelectOperator;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableColumn;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
@@ -35,7 +27,6 @@ import com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdu
 
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -67,7 +58,7 @@ public class DesktopDatabaseTable implements  DatabaseTable{
     private String top = "";
     private String offset = "";
     private DatabaseTableFilterGroup tableFilterGroup;
-    private List<DatabaseSelectOperator> tableSelectOperator;
+    private List<DatabaseAggregateFunction> tableSelectOperator;
 
     // Public constructor declarations.
     public DesktopDatabaseTable (DesktopDatabaseBridge database, String tableName){
@@ -206,7 +197,7 @@ public class DesktopDatabaseTable implements  DatabaseTable{
             List<DatabaseRecord> records =  record.getValues();
 
             //ContentValues recordUpdateList = new ContentValues();
-            Map<String, Object> recordUpdateList = new HashMap<String, Object>();
+            Map<String, Object> recordUpdateList = new HashMap<>();
 
             /**
              * I update only the fields marked as modified
@@ -214,7 +205,7 @@ public class DesktopDatabaseTable implements  DatabaseTable{
              */
 
             for (int i = 0; i < records.size(); ++i) {
-                if(records.get(i).getChange())
+                if(records.get(i).isChange())
                     recordUpdateList.put(records.get(i).getName(), records.get(i).getValue());
             }
 
@@ -297,11 +288,11 @@ public class DesktopDatabaseTable implements  DatabaseTable{
 
                 while ( rs.next() ) {
 
-                    DatabaseTableRecord tableRecordConsult  = new DesktopDatabaseRecord();
-                    List<DatabaseRecord> recordValues = new ArrayList<DatabaseRecord>();
+                    DesktopDatabaseRecord tableRecordConsult  = new DesktopDatabaseRecord();
+                    List<DatabaseRecord> recordValues = new ArrayList<>();
 
                     for (String nameColumn : columns) {
-                        DatabaseRecord recordValue = new DesktopRecord();
+                        DesktopRecord recordValue = new DesktopRecord();
                         recordValue.setName(nameColumn.toString());
                         recordValue.setValue(rs.getString(nameColumn.toString()));
                         recordValue.setChange(false);
@@ -497,39 +488,6 @@ public class DesktopDatabaseTable implements  DatabaseTable{
     }
 
     @Override
-    public void addSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias) {
-
-        if (this.tableSelectOperator == null)
-            this.tableSelectOperator = new ArrayList<>();
-
-        DatabaseSelectOperator selectOperator = new DesktopDatabaseSelectOperator(
-                columnName,
-                operator,
-                alias
-        );
-
-        this.tableSelectOperator.add(selectOperator);
-
-    }
-
-
-    public void setSelectOperator(String columnName, DataBaseSelectOperatorType operator, String alias) {
-
-        if (this.tableSelectOperator == null)
-            this.tableSelectOperator = new ArrayList<>();
-
-        DatabaseSelectOperator selectOperator = new DesktopDatabaseSelectOperator();
-
-        selectOperator.setColumn(columnName);
-        selectOperator.setType(operator);
-        selectOperator.setAliasColumn(alias);
-
-
-        this.tableSelectOperator.add(selectOperator);
-
-    }
-
-    @Override
     public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException {
 
     }
@@ -612,7 +570,22 @@ public class DesktopDatabaseTable implements  DatabaseTable{
     }
 
     @Override
-    public List<DatabaseSelectOperator> getTableSelectOperator() {
+    public void addAggregateFunction(String columnName, DataBaseAggregateFunctionType operator, String alias) {
+
+        if (this.tableSelectOperator == null)
+            this.tableSelectOperator = new ArrayList<>();
+
+        DatabaseAggregateFunction selectOperator = new DesktopDatabaseSelectOperator(
+                columnName,
+                operator,
+                alias
+        );
+
+        this.tableSelectOperator.add(selectOperator);
+    }
+
+    @Override
+    public List<DatabaseAggregateFunction> getTableAggregateFunction() {
         return tableSelectOperator;
     }
 
