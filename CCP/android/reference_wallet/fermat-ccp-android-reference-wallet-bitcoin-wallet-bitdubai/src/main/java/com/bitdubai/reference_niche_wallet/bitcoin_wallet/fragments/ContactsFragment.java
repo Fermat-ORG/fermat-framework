@@ -260,6 +260,16 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         }
     }
 
+    @Override
+    public void onDrawerClose() {
+        FermatAnimationsUtils.showEmpty(getActivity(),true,actionMenu.getActivityContentView());
+
+    }
+
+    @Override
+    public void onDrawerSlide(View drawerView, float offset) {
+        FermatAnimationsUtils.showEmpty(getActivity(), false, actionMenu.getActivityContentView());
+    }
 
     @Override
     public void onStart() {
