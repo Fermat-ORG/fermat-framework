@@ -125,7 +125,8 @@ public class WalletSongRecord implements WalletSong {
             String usageRights,
             String usageProhibitions,
             String bitcoinAddress,
-            String other) throws
+            String other,
+            String downloadUrl) throws
             CanGetTokensArrayFromSongWalletException {
         this.songStatus = songStatus;
         this.songId = songId;
@@ -144,6 +145,7 @@ public class WalletSongRecord implements WalletSong {
         this.usageProhibitions = usageProhibitions;
         this.bitcoinAddress = bitcoinAddress;
         this.other = other;
+        this.downloadUrl = downloadUrl;
     }
 
     /**
@@ -174,6 +176,7 @@ public class WalletSongRecord implements WalletSong {
         this.usageProhibitions = song.getUsageProhibitions();
         this.bitcoinAddress = song.getBitcoinAddress();
         this.other = song.getOther();
+        this.downloadUrl = song.getDownloadUrl();
 
     }
 

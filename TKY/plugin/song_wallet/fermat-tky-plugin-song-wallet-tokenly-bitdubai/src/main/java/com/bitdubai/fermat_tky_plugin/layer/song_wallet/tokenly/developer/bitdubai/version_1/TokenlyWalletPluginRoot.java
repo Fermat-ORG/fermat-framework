@@ -34,6 +34,7 @@ import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantInitializeData
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDao;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDatabaseConstants;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDatabaseFactory;
@@ -208,6 +209,7 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             //testDownloadFile();
             //testSynchronizeSongs();
             //testAutomaticSyncSongs();
+            //testDeleteSong();
         } catch(CantInitializeDatabaseException e){
             errorManager.reportUnexpectedPluginException(
                     Plugins.TOKENLY_API,
@@ -365,6 +367,25 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             this.tokenlyWalletManager.synchronizeSongs(fanIdentity);
         } catch (Exception e){
             System.out.println("TKY: Test Automatic Download song exception");
+            e.printStackTrace();
+        }
+    }
+
+    private void testDeleteSong(){
+        try{
+            //Get the available songs
+            List<WalletSong> availableSongsList = this.tokenlyWalletManager.getAvailableSongs();
+            System.out.println("TKY - AVAILABLE List "+availableSongsList);
+            int indexToDelete = 0;
+            UUID idToDelete = availableSongsList.get(indexToDelete).getSongId();
+            this.tokenlyWalletManager.deleteSong(idToDelete);
+            availableSongsList = this.tokenlyWalletManager.getAvailableSongs();
+            System.out.println("TKY - NEW AVAILABLE List " + availableSongsList);
+            //Get the deleted songs
+            List<WalletSong> deletedSongsList = this.tokenlyWalletManager.getDeletedSongs();
+            System.out.println("TKY - Deleted List " + deletedSongsList);
+        } catch (Exception e){
+            System.out.println("TKY: Test Delete song exception");
             e.printStackTrace();
         }
     }
