@@ -468,7 +468,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     new ArrayList<InstalledLanguage>(),
                     "fan_wallet",
                     "Fan Wallet",
-                    "fan_wallet",
+                    WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
                     "wallet_fan_platform_identifier",
                     new Version(1,0,0),
                     AppsStatus.DEV);

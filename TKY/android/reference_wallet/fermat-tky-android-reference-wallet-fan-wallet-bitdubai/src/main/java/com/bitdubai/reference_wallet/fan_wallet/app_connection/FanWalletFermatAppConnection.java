@@ -14,11 +14,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.reference_wallet.bank_money_wallet.fragmentFactory.BankMoneyWalletFragmentFactory;
-import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSession;
+import com.bitdubai.reference_wallet.fan_wallet.fragmentFactory.FanWalletFragmentFactory;
+import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
 
 /**
- * Created by memo on 22/12/15.
+ * Created by Miguel Payarez on 28/03/16.
  */
 public class FanWalletFermatAppConnection extends AppConnections {
 
@@ -28,22 +28,22 @@ public class FanWalletFermatAppConnection extends AppConnections {
 
     @Override
     public FermatFragmentFactory getFragmentFactory() {
-        return new BankMoneyWalletFragmentFactory();
+        return new FanWalletFragmentFactory();
     }
 
     @Override
     public PluginVersionReference getPluginVersionReference() {
         return new PluginVersionReference(
-                Platforms.BANKING_PLATFORM,
+                Platforms.TOKENLY,
                 Layers.WALLET_MODULE,
-                Plugins.BITDUBAI_BNK_BANK_MONEY_WALLET_MODULE,
+                Plugins.TOKENLY_FAN_WALLET_MODULE,
                 Developers.BITDUBAI,
                 new Version()
         );
     }
 
     @Override
-    public AbstractFermatSession getSession() { return new BankMoneyWalletSession(); }
+    public AbstractFermatSession getSession() { return new FanWalletSession(); }
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
