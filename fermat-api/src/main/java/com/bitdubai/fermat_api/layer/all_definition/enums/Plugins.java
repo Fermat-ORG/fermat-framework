@@ -28,7 +28,7 @@ public enum Plugins implements FermatPluginsEnum {
     BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL    ("BWSCCLIENTCH" ),
     BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER      ("BWSCCLSERVER" ),
 
-    BITDUBAI_COMMUNICATIONS_NETWORK_NODE        ("BCNNODE"),
+    NETWORK_NODE("BCNNODE"),
     BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT      ("BCNCLIENT"),
 
     BITDUBAI_CLOUD_SERVER_COMMUNICATION                             ("BCLOUSC"      ),
@@ -461,7 +461,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
             case "MAEN":    return MATCHING_ENGINE;
 
-            case "BCNNODE"   :  return BITDUBAI_COMMUNICATIONS_NETWORK_NODE     ;
+            case "BCNNODE"   :  return NETWORK_NODE;
             case "BCNCLIENT" :  return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT   ;
             case "CHMID":       return CHAT_MIDDLEWARE                          ;
             case "CHTNS":       return CHAT_NETWORK_SERVICE                     ;

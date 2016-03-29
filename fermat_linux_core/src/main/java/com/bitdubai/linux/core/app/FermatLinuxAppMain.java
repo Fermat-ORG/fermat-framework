@@ -60,7 +60,7 @@ public class FermatLinuxAppMain {
             /*
              * Start the system
              */
-            fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_NODE, Developers.BITDUBAI, new Version()) );
+            fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_NODE, Developers.BITDUBAI, new Version()) );
 
         }catch (Exception e){
 

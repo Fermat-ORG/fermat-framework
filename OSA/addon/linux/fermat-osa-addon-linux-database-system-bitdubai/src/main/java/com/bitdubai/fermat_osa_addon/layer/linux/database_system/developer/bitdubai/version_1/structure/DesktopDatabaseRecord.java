@@ -268,4 +268,11 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
         return this.values;
     }
 
+
+    @Override
+    public String toString() {
+        return "DesktopDatabaseRecord{" +
+                "values=" + values +
+                '}';
+    }
 }

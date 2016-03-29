@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_pip_plugin.layer.sub_app_module.developer.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.Addon;
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
@@ -55,6 +56,11 @@ public class DeveloperSubAppModulePluginRoot extends AbstractPlugin implements
         logManagersOnAddons  = new ConcurrentHashMap<>();
     }
 
+    @Override
+    public void start() throws CantStartPluginException {
+        System.out.println("Developer SubApp Module started...");
+        super.start();
+    }
 
     @Override
     public void addDatabaseManager(final PluginVersionReference       pluginVersionReference      ,
