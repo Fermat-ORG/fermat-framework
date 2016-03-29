@@ -154,21 +154,6 @@ public class CustomerBrokerSaleNegotiationDeveloperDatabaseFactory implements De
         tables.add(clausesSaleTable);
 
         /**
-         * Table Changes Sale columns.
-         */
-        List<String> changesSaleColumns = new ArrayList<String>();
-
-        changesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_CHANGE_ID_COLUMN_NAME);
-        changesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_CLAUSE_ID_COLUMN_NAME);
-        changesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_STATUS_COLUMN_NAME);
-        changesSaleColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_START_DATE_TIME_COLUMN_NAME);
-        /**
-         * Table Changes Sale addition.
-         */
-        DeveloperDatabaseTable changesSaleTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerSaleNegotiationDatabaseConstants.CHANGES_SALE_TABLE_NAME, changesSaleColumns);
-        tables.add(changesSaleTable);
-
-        /**
          * Table Locations Broker columns.
          */
         List<String> locationsBrokerColumns = new ArrayList<String>();
@@ -181,36 +166,6 @@ public class CustomerBrokerSaleNegotiationDeveloperDatabaseFactory implements De
          */
         DeveloperDatabaseTable locationsBrokerTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerSaleNegotiationDatabaseConstants.LOCATIONS_BROKER_TABLE_NAME, locationsBrokerColumns);
         tables.add(locationsBrokerTable);
-
-        /**
-         * Table Bank Accounts Broker columns.
-         */
-        List<String> bankAccountsBrokerColumns = new ArrayList<String>();
-
-        bankAccountsBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_ID_COLUMN_NAME);
-        bankAccountsBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_COLUMN_NAME);
-        bankAccountsBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_BANK_ACCOUNTS_TYPE_COLUMN_NAME);
-        /**
-         * Table Bank Accounts Broker addition.
-         */
-        DeveloperDatabaseTable bankAccountsBrokerTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerSaleNegotiationDatabaseConstants.BANK_ACCOUNTS_BROKER_TABLE_NAME, bankAccountsBrokerColumns);
-        tables.add(bankAccountsBrokerTable);
-
-        /**
-         * Table Payment Currencies Broker columns.
-         */
-        List<String> paymentCurrenciesBrokerColumns = new ArrayList<String>();
-
-        paymentCurrenciesBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_CURRENCIES_ID_COLUMN_NAME);
-        paymentCurrenciesBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_TYPE_COLUMN_NAME);
-        paymentCurrenciesBrokerColumns.add(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_PAYMENT_CURRENCIES_COLUMN_NAME);
-        /**
-         * Table Payment Currencies Broker addition.
-         */
-        DeveloperDatabaseTable paymentCurrenciesBrokerTable = developerObjectFactory.getNewDeveloperDatabaseTable(CustomerBrokerSaleNegotiationDatabaseConstants.PAYMENT_CURRENCIES_BROKER_TABLE_NAME, paymentCurrenciesBrokerColumns);
-        tables.add(paymentCurrenciesBrokerTable);
-
-
 
         return tables;
     }

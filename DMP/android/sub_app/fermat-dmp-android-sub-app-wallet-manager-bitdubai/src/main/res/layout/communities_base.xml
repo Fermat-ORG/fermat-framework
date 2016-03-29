@@ -121,7 +121,6 @@
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="Enter Community Name"
                     android:textColorHint="#59595B"
                     android:textColor="#59595B"
                     android:hint="Enter Community Name"
@@ -137,14 +136,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     />
-
-
             </LinearLayout>
-
         </LinearLayout>
-
-
     </LinearLayout>
-
-
 </LinearLayout>

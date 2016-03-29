@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -24,6 +25,8 @@ public class AssetSellSelectUserHolder extends FermatViewHolder {
 
     private FermatTextView nameText;
     private ImageView imageViewUser;
+    public RelativeLayout userLayout;
+
 
 
     /**
@@ -39,6 +42,7 @@ public class AssetSellSelectUserHolder extends FermatViewHolder {
 
         nameText = (FermatTextView) itemView.findViewById(R.id.userName);
         imageViewUser = (ImageView) itemView.findViewById(R.id.imageView_user_sell_avatar);
+        userLayout = (RelativeLayout) itemView.findViewById(R.id.selectedUserEffect);
 
 
     }

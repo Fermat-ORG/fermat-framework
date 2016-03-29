@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -77,8 +78,8 @@ public class CryptoBrokerWalletSettingImpl implements CryptoBrokerWalletSetting 
      * {@inheritDoc}
      */
     @Override
-    public void clearCryptoBrokerWalletAssociatedSetting() throws CantClearCryptoBrokerWalletSettingException {
-         cryptoBrokerWalletDatabaseDao.clearCryptoBrokerWalletAssociatedSetting();
+    public void clearCryptoBrokerWalletAssociatedSetting(Platforms platform) throws CantClearCryptoBrokerWalletSettingException {
+         cryptoBrokerWalletDatabaseDao.clearCryptoBrokerWalletAssociatedSetting(platform);
     }
 
 

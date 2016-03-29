@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
@@ -55,7 +56,7 @@ import static android.widget.Toast.makeText;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class ContactDetailFragment extends AbstractFermatFragment implements View.OnClickListener {
+public class ContactDetailFragment extends AbstractFermatFragment<ReferenceWalletSession,ResourceProviderManager> implements View.OnClickListener {
 
 
     /**
@@ -103,8 +104,8 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             addressIsTouch = false;
         }
     };
-    SettingsManager<BitcoinWalletSettings> settingsManager;
-    BlockchainNetworkType blockchainNetworkType;
+    private SettingsManager<BitcoinWalletSettings> settingsManager;
+    private BlockchainNetworkType blockchainNetworkType;
 
 
     public static ContactDetailFragment newInstance() {
@@ -117,7 +118,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            referenceWalletSession = (ReferenceWalletSession) appSession;
+            referenceWalletSession = appSession;
             setHasOptionsMenu(true);
             cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
             if(cryptoWalletWalletContact==null){

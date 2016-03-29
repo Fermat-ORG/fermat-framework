@@ -173,29 +173,31 @@ public class ChatListFragment extends AbstractFermatFragment{
                             noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
                             contactId.add(mess.getContactId());
                             Contact cont = chatManager.getContactByContactId(mess.getContactId());
-                            contactName.add(cont.getAlias());
-                            message.add(mess.getMessage());
-                            status.add(mess.getStatus().toString());
-                            typeMessage.add(mess.getType().toString());
-                            long timemess = chat.getLastMessageDate().getTime();
-                            long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
-                            long milliseconds = timemess + nanos;
-                            Date dated= new java.util.Date(milliseconds);
-                            if (Validate.isDateToday(dated)) {
-                                dateMessage.add(new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds)));
-                            }else {
-                                Date old = new Date(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds)));
-                                Date today = new Date();
-                                long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
-                                if (dias == 1) {
-                                    dateMessage.add("YESTERDAY");
-                                } else
-                                    dateMessage.add(new SimpleDateFormat("dd/MM/yy").format(new java.util.Date(milliseconds)));
+                            if(cont != null) {
+                                contactName.add(cont.getAlias());
+                                message.add(mess.getMessage());
+                                status.add(mess.getStatus().toString());
+                                typeMessage.add(mess.getType().toString());
+                                long timemess = chat.getLastMessageDate().getTime();
+                                long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
+                                long milliseconds = timemess + nanos;
+                                Date dated = new java.util.Date(milliseconds);
+                                if (Validate.isDateToday(dated)) {
+                                    dateMessage.add(new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds)));
+                                } else {
+                                    Date old = new Date(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds)));
+                                    Date today = new Date();
+                                    long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
+                                    if (dias == 1) {
+                                        dateMessage.add("YESTERDAY");
+                                    } else
+                                        dateMessage.add(new SimpleDateFormat("dd/MM/yy").format(new java.util.Date(milliseconds)));
+                                }
+                                chatId.add(chatidtemp);
+                                ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getProfileImage());
+                                BitmapDrawable bmd = new BitmapDrawable(bytes);
+                                imgId.add(bmd.getBitmap());
                             }
-                            chatId.add(chatidtemp);
-                            ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getProfileImage());
-                            BitmapDrawable bmd = new BitmapDrawable(bytes);
-                            imgId.add(bmd.getBitmap());
                         }
                     }
                 }

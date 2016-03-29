@@ -5,7 +5,8 @@ import com.bitdubai.fermat_api.PluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitsubai.version_1.OutgoingDeviceUserTransactionPluginRoot;
+import com.bitdubai.fermat_dmp_plugin.layer.transaction.outgoing_device_user.developer.bitdubai.version_1.OutgoingDeviceUserTransactionPluginRoot;
+
 
 /**
  * Created by loui on 17/02/15.
