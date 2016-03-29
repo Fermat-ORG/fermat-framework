@@ -42,18 +42,17 @@ public class TimeOutNotifierAgentDatabaseFactory {
      * Create the database
      *
      * @param ownerId      the owner id
-     * @param databaseName the database name
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    protected Database createDatabase(UUID ownerId) throws CantCreateDatabaseException {
         Database database;
 
         /**
          * I will create the database where I am going to store the information of this wallet.
          */
         try {
-            database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
+            database = this.pluginDatabaseSystem.createDatabase(ownerId, TimeOutNotifierAgentDatabaseConstants.DATABASE_NAME);
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
             /**
              * I can not handle this situation.
@@ -91,7 +90,9 @@ public class TimeOutNotifierAgentDatabaseFactory {
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+
+            /**
              * Create agent_owner table.
              */
             table = databaseFactory.newTableFactory(ownerId, TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TABLE_NAME);

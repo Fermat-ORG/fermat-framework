@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
@@ -21,6 +22,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutAgent;
 
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class TimeOutNotifierAgentDatabaseDao {
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, "TimeOut Notifier");
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -92,7 +94,7 @@ public class TimeOutNotifierAgentDatabaseDao {
                   /*
                    * We create the new database
                    */
-                database = timeOutNotifierAgentDatabaseFactory.createDatabase(pluginId, "TimeOut Notifier");
+                database = timeOutNotifierAgentDatabaseFactory.createDatabase(pluginId);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -213,24 +215,22 @@ public class TimeOutNotifierAgentDatabaseDao {
         DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENTS_TABLE_NAME);
         DatabaseTableRecord record = getRecordFromTimeOutNotifierAgent(timeOutNotifierAgent);
 
-        // I insert the agent
-        try {
-            databaseTable.insertRecord(record);
-        } catch (CantInsertRecordException e) {
-            throw new CantExecuteQueryException(e, "Cant insert agent: " + timeOutNotifierAgent.toString(), "database issue");
-        }
+        // I create a transaction to insert both agent and owner
+        DatabaseTransaction transaction = database.newTransaction();
+        transaction.addRecordToInsert(databaseTable, record);
 
-        //if the owner is new I will insert it
         FermatActor owner = timeOutNotifierAgent.getOwner();
-
         if (isNewOwner(owner)){
             DatabaseTable ownerTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TABLE_NAME);
             DatabaseTableRecord ownerRecord = getOwnerRecordFromTimeOutNotifierAgent(owner);
-            try {
-                ownerTable.insertRecord(ownerRecord);
-            } catch (CantInsertRecordException e) {
-                throw new CantExecuteQueryException(e, "Cant insert owner: " + owner.toString(), "database issue");
-            }
+
+            transaction.addRecordToInsert(ownerTable, ownerRecord);
+        }
+
+        try {
+            database.executeTransaction(transaction);
+        } catch (DatabaseTransactionFailedException e) {
+            throw new CantExecuteQueryException(e, "Error executing a database transaction. " + transaction.toString(), "database issue");
         }
     }
 

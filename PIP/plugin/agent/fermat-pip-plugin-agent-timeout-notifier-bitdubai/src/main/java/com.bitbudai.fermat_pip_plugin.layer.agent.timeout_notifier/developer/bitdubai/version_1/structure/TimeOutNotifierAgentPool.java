@@ -70,7 +70,7 @@ public class TimeOutNotifierAgentPool {
 
 
     private TimeOutNotifierAgentDatabaseDao getDao(){
-        if (timeOutNotifierAgentDatabaseDao == null)
+             if (timeOutNotifierAgentDatabaseDao == null)
             timeOutNotifierAgentDatabaseDao = new TimeOutNotifierAgentDatabaseDao(pluginDatabaseSystem, pluginId);
 
         return timeOutNotifierAgentDatabaseDao;

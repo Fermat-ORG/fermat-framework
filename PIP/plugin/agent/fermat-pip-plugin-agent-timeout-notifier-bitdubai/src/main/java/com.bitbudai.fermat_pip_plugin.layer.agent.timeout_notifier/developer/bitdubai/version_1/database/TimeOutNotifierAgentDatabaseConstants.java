@@ -13,6 +13,11 @@ package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bi
 public class TimeOutNotifierAgentDatabaseConstants {
 
     /**
+     * Database name definition
+     */
+    public static final String DATABASE_NAME = "Timeout Notifier";
+
+    /**
      * agents database table definition.
      */
     public static final String AGENTS_TABLE_NAME = "agents";
