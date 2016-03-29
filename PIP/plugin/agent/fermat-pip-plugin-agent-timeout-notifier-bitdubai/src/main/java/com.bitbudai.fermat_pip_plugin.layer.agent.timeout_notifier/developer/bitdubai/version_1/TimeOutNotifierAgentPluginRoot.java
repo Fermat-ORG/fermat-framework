@@ -5,6 +5,7 @@ import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bit
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierAgent;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierAgentPool;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierManager;
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.utils.FermatActorImpl;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.actor.FermatActor;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -110,29 +111,16 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
 
     private void testAddNewAgent(){
         try{
-            FermatActor owner = new FermatActor() {
-                @Override
-                public String getPublicKey() {
-                    return UUID.randomUUID().toString();
-                }
-
-                @Override
-                public String getName() {
-                    return "Rodrigo";
-                }
-
-                @Override
-                public Actors getType() {
-                    return Actors.CCP_INTRA_WALLET_USER;
-                }
-            };
-
-            timeOutNotifierManager.addNew(System.currentTimeMillis(), 40000, "Prueba", owner);
+            FermatActorImpl owner = new FermatActorImpl();
+            owner.setPublicKey(UUID.randomUUID().toString());
+            owner.setType(Actors.CBP_CRYPTO_CUSTOMER);
+            owner.setName("Test Rodrigo");
+            timeOutNotifierManager.addNew(System.currentTimeMillis(), 40000, "Prueba _Rodrigo 2", owner);
 
             System.out.println("***TimeOutNotifier*** " + timeOutNotifierManager.getTimeOutAgents(owner).toString());
-            System.out.println("***TimeOutNotifier*** " + timeOutNotifierManager.getTimeOutAgents().toString());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            System.out.println("***TimeOutNotifier*** " + timeOutNotifierManager.getTimeOutAgents().size());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
     }
 }

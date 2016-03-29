@@ -65,7 +65,7 @@ public class TimeOutNotifierAgentDeveloperDatabaseFactory {
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, "TimeOut Notifier");
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -86,7 +86,7 @@ public class TimeOutNotifierAgentDeveloperDatabaseFactory {
                   /*
                    * We create the new database
                    */
-                database = timeOutNotifierAgentDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = timeOutNotifierAgentDatabaseFactory.createDatabase(pluginId, "TimeOut Notifier");
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
