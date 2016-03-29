@@ -75,4 +75,9 @@ public class TokenlySongAttNames {
      */
     public static final String OTHER = "other";
 
+    /**
+     * Represents the download url.
+     */
+    public static final String DOWNLOAD_URL = "downloadUrl";
+
 }

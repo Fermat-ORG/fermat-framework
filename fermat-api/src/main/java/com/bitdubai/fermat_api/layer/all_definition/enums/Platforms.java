@@ -25,7 +25,7 @@ public enum Platforms implements FermatEnum {
     CHAT_PLATFORM                       ("CHT","Chat"),
     CRYPTO_COMMODITY_MONEY              ("CCM","Crypto Commodity"),
     CRYPTO_CURRENCY_PLATFORM            ("CCP","Crypto Currencie"),
-    DIGITAL_ASSET_PLATFORM              ("DAP","Digatal Assets"),
+    DIGITAL_ASSET_PLATFORM              ("DAP","Digital Assets"),
     OPERATIVE_SYSTEM_API                ("OSA","OSA"),
     PLUG_INS_PLATFORM                   ("PIP","Tools"),
     WALLET_PRODUCTION_AND_DISTRIBUTION  ("WPD","Wallets"),

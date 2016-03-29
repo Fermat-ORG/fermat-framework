@@ -1234,11 +1234,11 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleMana
     }
 
     @Override
-    public List<CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException {
+    public ArrayList<CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException {
 
         try {
 
-            List<CryptoWalletIntraUserIdentity> cryptoWalletIntraUserIdentityList = new ArrayList<CryptoWalletIntraUserIdentity>();
+            ArrayList<CryptoWalletIntraUserIdentity> cryptoWalletIntraUserIdentityList = new ArrayList<CryptoWalletIntraUserIdentity>();
 
             for (IntraWalletUserIdentity intraWalletUser : this.intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser()) {
 
@@ -1258,54 +1258,11 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleMana
     }
 
     @Override
-    public List<IntraWalletUserIdentity> getActiveIdentities() {
+    public ArrayList<IntraWalletUserIdentity> getActiveIdentities() {
 
         try{
 
-            List<IntraWalletUserIdentity> lst = new ArrayList<>();
-
-            for (final IntraWalletUserIdentity intraWalletUserIdentity : intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser()) {
-                IntraWalletUserIdentity activeIdentity = new IntraWalletUserIdentity() {
-                    @Override
-                    public String getAlias() {
-                        return intraWalletUserIdentity.getAlias();
-                    }
-
-                    @Override
-                    public byte[] getImage() {
-                        return intraWalletUserIdentity.getImage();
-                    }
-
-                    @Override
-                    public String getPublicKey() {
-                        return intraWalletUserIdentity.getPublicKey();
-                    }
-
-                    @Override
-                    public Actors getActorType() {
-                        return intraWalletUserIdentity.getActorType();
-                    }
-
-                    @Override
-                    public String getPhrase() {
-                        return intraWalletUserIdentity.getPhrase();
-                    }
-
-                    @Override
-                    public void setNewProfileImage(byte[] newProfileImage) {
-
-                    }
-
-                    @Override
-                    public String createMessageSignature(String message) {
-                        return null;
-                    }
-                };
-                lst.add(activeIdentity);
-            }
-
-
-
+            ArrayList<IntraWalletUserIdentity> lst = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
             //return intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
             return lst;
 

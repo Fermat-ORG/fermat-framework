@@ -4,9 +4,10 @@ package com.bitdubai.fermat_wpd_plugin.layer.desktop_module.wallet_manager.devel
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -18,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -34,9 +36,11 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsEx
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletCreateNewIntraUserIdentityException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.structure.WalletManagerModuleInstalledWallet;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -54,8 +58,8 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.inte
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.CantPersistWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_desktop_module.wallet_manager.exceptions.NewWalletCreationFailedException;
@@ -67,7 +71,6 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exception
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantRemoveWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantRenameWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
-import com.bitdubai.fermat_wpd_plugin.layer.desktop_module.wallet_manager.developer.bitdubai.version_1.structure.WalletManagerModuleInstalledWallet;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -90,7 +93,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletManagerModulePluginRoot extends AbstractPlugin implements
+public class WalletManagerModulePluginRoot extends AbstractModule<FermatSettings,ActiveActorIdentityInformation> implements
         LogManagerForDevelopers,
         WalletManagerModule,
         WalletManager {
@@ -554,8 +557,8 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public InstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException {
-        InstalledWallet installedWallet = null;
+    public WalletManagerModuleInstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException {
+        WalletManagerModuleInstalledWallet installedWallet = null;
 
         //TODO: Hardcoded for testing purpose, hice esto que va a andar cuando la tengamos instalada.  mati
 //        com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet wallet = walletMiddlewareManager.getInstalledWallet(walletPublicKey);
@@ -576,7 +579,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "reference_wallet_icon",
                         "Bitcoin Reference Wallet",
-                        "reference_wallet",
+                        WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -588,7 +591,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "asset_issuer",
                         "asset issuer",
-                        "asset_issuer",
+                        WalletsPublicKeys.DAP_ISSUER_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -600,7 +603,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "asset_user",
                         "asset user",
-                        "asset_user",
+                        WalletsPublicKeys.DAP_USER_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -612,7 +615,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "redeem_point",
                         "redeem point",
-                        "redeem_point",
+                        WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -625,7 +628,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "loss_protected_wallet_icon",
                         "Loss Protected Wallet",
-                        "loss_protected_wallet",
+                        WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -652,7 +655,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "reference_wallet_icon",
                         "Bitcoin Reference Wallet",
-                        "reference_wallet",
+                        WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode(),
                         FermatApps.BITCOIN_REFERENCE_WALLET.getCode(),
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -843,6 +846,11 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
         } catch (CantCreateNewWalletException e) {
             throw new Exception(e);
         }
+    }
+
+    @Override
+    public ModuleManager<FermatSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+        return this;
     }
 }
 

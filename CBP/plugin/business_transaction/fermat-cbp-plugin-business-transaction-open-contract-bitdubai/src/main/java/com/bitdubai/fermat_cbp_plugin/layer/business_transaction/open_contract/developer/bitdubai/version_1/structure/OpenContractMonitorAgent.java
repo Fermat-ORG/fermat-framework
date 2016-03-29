@@ -39,7 +39,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.excep
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReception;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendBusinessTransactionHashException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
@@ -577,7 +577,7 @@ public class OpenContractMonitorAgent implements
                         e,
                         "Checking pending transactions",
                         "Cannot update the sale contract");
-            } catch (CantConfirmNotificationReception e) {
+            } catch (CantConfirmNotificationReceptionException e) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         e,
                         "Sending Confirm contract",
