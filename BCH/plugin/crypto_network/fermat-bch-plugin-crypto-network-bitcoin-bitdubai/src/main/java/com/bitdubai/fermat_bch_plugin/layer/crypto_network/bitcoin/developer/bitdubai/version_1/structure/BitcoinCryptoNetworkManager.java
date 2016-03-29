@@ -302,17 +302,11 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         // if the wallet file exists, I will get it from the Network Monitor
         if (walletFile.exists()){
             BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
-            if (monitor != null)
+
                 wallet = monitor.getWallet();
-            else {
-                try {
-                    wallet = Wallet.loadFromFile(walletFile);
-                } catch (UnreadableWalletException e) {
-                    e.printStackTrace();
-                }
+                return wallet;
             }
-            return wallet;
-        } else {
+         else {
             // I will create a new one.
             NetworkParameters newWalletNetworkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
             Context context = new Context(newWalletNetworkParameters);
