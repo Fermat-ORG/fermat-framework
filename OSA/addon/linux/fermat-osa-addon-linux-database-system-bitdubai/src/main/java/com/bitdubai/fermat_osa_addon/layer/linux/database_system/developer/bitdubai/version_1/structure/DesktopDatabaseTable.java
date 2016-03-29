@@ -197,7 +197,7 @@ public class DesktopDatabaseTable implements  DatabaseTable{
             List<DatabaseRecord> records =  record.getValues();
 
             //ContentValues recordUpdateList = new ContentValues();
-            Map<String, Object> recordUpdateList = new HashMap<String, Object>();
+            Map<String, Object> recordUpdateList = new HashMap<>();
 
             /**
              * I update only the fields marked as modified
@@ -289,7 +289,7 @@ public class DesktopDatabaseTable implements  DatabaseTable{
                 while ( rs.next() ) {
 
                     DesktopDatabaseRecord tableRecordConsult  = new DesktopDatabaseRecord();
-                    List<DatabaseRecord> recordValues = new ArrayList<DatabaseRecord>();
+                    List<DatabaseRecord> recordValues = new ArrayList<>();
 
                     for (String nameColumn : columns) {
                         DesktopRecord recordValue = new DesktopRecord();

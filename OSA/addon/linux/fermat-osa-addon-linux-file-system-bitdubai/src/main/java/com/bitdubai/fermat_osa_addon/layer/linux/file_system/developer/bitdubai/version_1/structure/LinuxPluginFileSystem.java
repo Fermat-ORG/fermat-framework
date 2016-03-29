@@ -174,6 +174,18 @@ public class LinuxPluginFileSystem implements PluginFileSystem {
         }
     }
 
+    @Override
+    public boolean isTextFileExist(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws Exception {
+        // TODO implement
+        return false;
+    }
+
+    @Override
+    public String getAppPath() {
+        // TODO implement
+        return null;
+    }
+
     /**
      *
      * Hash the file name using the algorithm SHA 256

@@ -55,6 +55,10 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
         return "";
     }
 
+    public void setValues(List<DatabaseRecord> values) {
+        this.values = values;
+    }
+
     /**
      * <p>Get field record value in UUID object
      * @param columnName column name to get back
