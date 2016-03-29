@@ -6,8 +6,8 @@
 */
 package com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseSelectOperatorType;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseSelectOperator;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DataBaseAggregateFunctionType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseAggregateFunction;
 
 /**
  * The Class <code>com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.structure.DesktopDatabaseSelectOperator</code>
@@ -17,20 +17,20 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseSelectO
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class DesktopDatabaseSelectOperator  implements DatabaseSelectOperator {
+public class DesktopDatabaseSelectOperator  implements DatabaseAggregateFunction {
 
     /**
      * DatabaseSelectOperator Member Variables.
      */
     private String column;
-    private DataBaseSelectOperatorType type;
+    private DataBaseAggregateFunctionType type;
     private String alias;
 
 
     public DesktopDatabaseSelectOperator(){}
 
 
-    public DesktopDatabaseSelectOperator(String column, DataBaseSelectOperatorType type, String alias){
+    public DesktopDatabaseSelectOperator(String column, DataBaseAggregateFunctionType type, String alias){
         this.column=column;
         this.type=type;
         this.alias=alias;
@@ -58,7 +58,7 @@ public class DesktopDatabaseSelectOperator  implements DatabaseSelectOperator {
      * @param type enum DataBaseSelectOperatorType , type of operator for the select
      */
     @Override
-    public void setType (DataBaseSelectOperatorType type)
+    public void setType (DataBaseAggregateFunctionType type)
     {
         this.type = type;
     }
@@ -69,7 +69,7 @@ public class DesktopDatabaseSelectOperator  implements DatabaseSelectOperator {
      * @return DataBaseSelectOperatorType enum
      */
     @Override
-    public DataBaseSelectOperatorType getType()
+    public DataBaseAggregateFunctionType getType()
     {
         return this.type;
     }
@@ -103,4 +103,8 @@ public class DesktopDatabaseSelectOperator  implements DatabaseSelectOperator {
         return this.column;
     }
 
+    @Override
+    public String toSQLQuery() {
+        return null;
+    }
 }
