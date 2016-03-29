@@ -82,7 +82,6 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     private LossProtectedWallet cryptoWallet;
     private ErrorManager errorManager;
     private LossProtectedWalletManager cryptoWalletManager;
-    private WalletSettingsManager walletSettingsManager;
 
     /**
      * DATA
@@ -91,7 +90,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     /**
      *  Resources
      */
-    WalletResourcesProviderManager walletResourcesProviderManager;
+
     private LossProtectedWalletSession referenceWalletSession;
     private FermatButton send_button;
     private FermatButton receive_button;

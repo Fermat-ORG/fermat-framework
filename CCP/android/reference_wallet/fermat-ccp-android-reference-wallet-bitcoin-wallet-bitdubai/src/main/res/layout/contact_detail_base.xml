@@ -88,9 +88,12 @@
                     android:textStyle="normal"
                     android:text="@string/matias_furszyfer_text"
                     android:layout_weight="0.54"
-                    android:inputType="numberDecimal"
                     android:state_selected = "true"
-                    android:background="@null" />
+                    android:background="@null"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
 
             </LinearLayout>
 
