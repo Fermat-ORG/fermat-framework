@@ -1,7 +1,7 @@
 package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database;
 
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.exceptions.CantInitializeTimeOutNotifierAgentDatabaseException;
-import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.exceptions.IncosistentResultObtainedInDatabaseQueryException;
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.exceptions.InconsistentResultObtainedInDatabaseQueryException;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierAgent;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.utils.FermatActorImpl;
 import com.bitdubai.fermat_api.layer.actor.FermatActor;
@@ -12,16 +12,16 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutAgent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,7 +134,7 @@ public class TimeOutNotifierAgentDatabaseDao {
         return owner;
     }
 
-    private DatabaseTableRecord getRecordFromTimeOutNotifierAgent(TimeOutNotifierAgent timeOutNotifierAgent){
+    private DatabaseTableRecord getRecordFromTimeOutNotifierAgent(TimeOutAgent timeOutNotifierAgent){
         DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENTS_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
@@ -167,7 +167,7 @@ public class TimeOutNotifierAgentDatabaseDao {
         return record;
     }
 
-    private boolean isNewTimeOutNotifierAgent(TimeOutNotifierAgent timeOutNotifierAgent) throws CantExecuteQueryException{
+    private boolean isNewTimeOutNotifierAgent(TimeOutAgent timeOutNotifierAgent) throws CantExecuteQueryException{
         DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENTS_TABLE_NAME);
         databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.AGENTS_ID_COLUMN_NAME, timeOutNotifierAgent.getUUID(), DatabaseFilterType.EQUAL);
 
@@ -203,11 +203,11 @@ public class TimeOutNotifierAgentDatabaseDao {
      * inserts into a database a new Agent and its owner
      * @param timeOutNotifierAgent
      * @throws CantExecuteQueryException
-     * @throws IncosistentResultObtainedInDatabaseQueryException
+     * @throws InconsistentResultObtainedInDatabaseQueryException
      */
-    public void addTimeOutNotifierAgent(TimeOutNotifierAgent timeOutNotifierAgent) throws CantExecuteQueryException, IncosistentResultObtainedInDatabaseQueryException {
+    public void addTimeOutNotifierAgent(TimeOutAgent timeOutNotifierAgent) throws CantExecuteQueryException, InconsistentResultObtainedInDatabaseQueryException {
         if (!isNewTimeOutNotifierAgent(timeOutNotifierAgent)){
-            throw new IncosistentResultObtainedInDatabaseQueryException(null, "The TimeOutNotifierAgent already exists in database.", "duplicated data");
+            throw new InconsistentResultObtainedInDatabaseQueryException(null, "The TimeOutNotifierAgent already exists in database.", "duplicated data");
         }
 
         DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENTS_TABLE_NAME);
@@ -259,6 +259,13 @@ public class TimeOutNotifierAgentDatabaseDao {
         return loadTimeOutNotifierAgentsFromDatabase(databaseTable);
     }
 
+    public List<TimeOutNotifierAgent> getTimeOutNotifierAgent(String columnName, String stringValue, DatabaseFilterType filterType) throws CantExecuteQueryException {
+        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENTS_TABLE_NAME);
+        databaseTable.addStringFilter(columnName, stringValue, filterType);
+
+        return loadTimeOutNotifierAgentsFromDatabase(databaseTable);
+    }
+
     public List<TimeOutNotifierAgent> getTimeOutNotifierAgent(String columnName, UUID uuIDValue) throws CantExecuteQueryException {
         DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENTS_TABLE_NAME);
         databaseTable.addUUIDFilter(columnName, uuIDValue, DatabaseFilterType.EQUAL);
@@ -292,6 +299,19 @@ public class TimeOutNotifierAgentDatabaseDao {
         }
 
         return timeOutNotifierAgentList;
+    }
+
+    public void removeTimeOutNotifierAgent (TimeOutAgent timeOutNotifierAgent) throws InconsistentResultObtainedInDatabaseQueryException, CantExecuteQueryException {
+        if (isNewTimeOutNotifierAgent(timeOutNotifierAgent))
+            throw new InconsistentResultObtainedInDatabaseQueryException(null, "Trying to delete an un existing agent." + timeOutNotifierAgent.toString(), "inconsistent data");
+
+        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENTS_TABLE_NAME);
+        DatabaseTableRecord record = getRecordFromTimeOutNotifierAgent(timeOutNotifierAgent);
+        try {
+            databaseTable.deleteRecord(record);
+        } catch (CantDeleteRecordException e) {
+            throw new CantExecuteQueryException(e, "Can't delete existing record." + record.toString(), "Database issue");
+        }
     }
 
 }

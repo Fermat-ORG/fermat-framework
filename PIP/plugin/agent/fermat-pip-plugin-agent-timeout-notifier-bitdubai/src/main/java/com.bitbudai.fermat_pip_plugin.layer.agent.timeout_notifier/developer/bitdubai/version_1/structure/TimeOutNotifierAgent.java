@@ -33,7 +33,10 @@ public class TimeOutNotifierAgent implements TimeOutAgent {
 
     @Override
     public boolean isRunning() {
-        return false;
+        if (this.getAgentStatus() == AgentStatus.STARTED)
+            return true;
+        else
+            return false;
     }
 
     @Override

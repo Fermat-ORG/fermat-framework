@@ -59,7 +59,7 @@ public class TimeOutNotifierManager  implements TimeOutManager{
 
     @Override
     public void remove(TimeOutAgent timeOutAgent) throws CantRemoveExistingTimeOutAgentException {
-
+        timeOutNotifierAgentPool.removeRunningAgent(timeOutAgent);
     }
 
     @Override
