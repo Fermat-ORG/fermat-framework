@@ -73,7 +73,7 @@ public class TokenlyManager implements TokenlyApiManager {
      */
     @Override
     public User validateTokenlyUser(String username, String userKey) throws CantGetUserException {
-        User user = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(username,userKey);
+        User user = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(username, userKey);
         return user;
     }
 
@@ -93,10 +93,39 @@ public class TokenlyManager implements TokenlyApiManager {
                             musicUser.getApiToken(),
                             musicUser.getApiSecretKey()});
             //Get songs from Tokenly protected API
-            Song[] songs = TokenlySongProcessor.getSongsAuthenticatedUser(musicUser);
+            Song[] songs = TokenlySongProcessor.getSongsByAuthenticatedUser(musicUser);
             return songs;
         } catch (ObjectNotSetException e) {
             throw new CantGetAlbumException("Any MusicUser argument is null");
+        }
+    }
+
+    /**
+     * This method returns a song. This song is provided by the Tokenly protected API, only
+     * authenticated users can get the song.
+     * @param musicUser
+     * @param tokenlySongId
+     * @return
+     * @throws CantGetSongException
+     */
+    @Override
+    public Song getSongByAuthenticatedUser(
+            MusicUser musicUser,
+            String tokenlySongId) throws CantGetSongException{
+        try{
+            //Validate if all the important musicUser fields are not null.
+            ObjectChecker.checkArguments(
+                    new String[]{
+                            musicUser.getUsername(),
+                            musicUser.getApiToken(),
+                            musicUser.getApiSecretKey()});
+            //Get songs from Tokenly protected API
+            Song song = TokenlySongProcessor.getSongByAuthenticatedUser(
+                    musicUser,
+                    tokenlySongId);
+            return song;
+        } catch (ObjectNotSetException e) {
+            throw new CantGetSongException("Any MusicUser argument is null");
         }
     }
 }

@@ -62,4 +62,14 @@ public interface TokenlyApiManager extends FermatManager {
      */
     Song[] getSongsByAuthenticatedUser(MusicUser musicUser) throws CantGetAlbumException;
 
+    /**
+     * This method returns a song. This song is provided by the Tokenly protected API, only
+     * authenticated users can get the song.
+     * @param musicUser
+     * @param tokenlySongId
+     * @return
+     * @throws CantGetSongException
+     */
+    Song getSongByAuthenticatedUser(MusicUser musicUser, String tokenlySongId) throws CantGetSongException;
+
 }
