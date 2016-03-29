@@ -318,7 +318,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void loadBasicUI(Activity activity,AppConnections appConnections) {
         // rendering UI components
         try {
-
+            Log.i("FERMAT ACTIVITY loadUI", "INICIA " + System.currentTimeMillis());
             TabStrip tabs = activity.getTabStrip();
             TitleBar titleBar = activity.getTitleBar();
             MainMenu mainMenu = activity.getMainMenu();
@@ -326,28 +326,42 @@ public abstract class FermatActivity extends AppCompatActivity implements
             SideMenu sideMenu = activity.getSideMenu();
 
             setMainLayout(sideMenu, activity.getHeader());
+            Log.i("FERMAT ACTIVITY loadUI", "setMainLayout " + System.currentTimeMillis());
 
             setMainMenu(mainMenu);
+            Log.i("FERMAT ACTIVITY loadUI", "setMainMenu " + System.currentTimeMillis());
 
             paintTabs(tabs, activity);
+            Log.i("FERMAT ACTIVITY loadUI", " paintTabs " + System.currentTimeMillis());
 
             paintStatusBar(activity.getStatusBar());
+            Log.i("FERMAT ACTIVITY loadUI", " paintStatusBar " + System.currentTimeMillis());
 
             paintTitleBar(titleBar, activity);
+            Log.i("FERMAT ACTIVITY loadUI", " paintTitleBar " + System.currentTimeMillis());
 
             if(appConnections.getFullyLoadedSession().getModuleManager()!=null && sideMenu!=null) sideMenu.setNotifications(appConnections.getFullyLoadedSession().getModuleManager().getMenuNotifications());
             paintSideMenu(activity, sideMenu, appConnections);
-
+            Log.i("FERMAT ACTIVITY loadUI", " paintSideMenu " + System.currentTimeMillis());
             paintFooter(activity.getFooter(), appConnections.getFooterViewPainter());
+
+            Log.i("FERMAT ACTIVITY loadUI", " paintFooter " + System.currentTimeMillis());
 
             pantHeader(activity.getHeader(), appConnections.getHeaderViewPainter());
 
+            Log.i("FERMAT ACTIVITY loadUI", " pantHeader " + System.currentTimeMillis());
             setScreen(activity);
+
+            Log.i("FERMAT ACTIVITY loadUI", " setScreen " + System.currentTimeMillis());
             // rendering wizards components
             if (tabs != null && tabs.getWizards() != null)
                 setWizards(tabs.getWizards());
             if (activity.getWizards() != null)
                 setWizards(activity.getWizards());
+
+            Log.i("FERMAT ACTIVITY loadUI", " setWizards " + System.currentTimeMillis());
+
+            Log.i("FERMAT ACTIVITY loadUI", "FIN " + System.currentTimeMillis());
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Oooops! recovering from system error",
@@ -1625,7 +1639,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
         }
         if(!mCommunicationServiceConnected){
-            doBindService();
+            //doBindService();
         }
 
 
@@ -1638,7 +1652,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //        networkStateReceiver.removeListener(this);
 
         if(mCommunicationServiceConnected){
-            doUnbindService();
+            //doUnbindService();
         }
     }
 

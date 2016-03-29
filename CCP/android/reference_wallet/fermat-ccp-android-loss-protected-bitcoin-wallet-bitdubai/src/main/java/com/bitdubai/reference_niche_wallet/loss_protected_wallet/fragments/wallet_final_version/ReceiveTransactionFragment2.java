@@ -380,14 +380,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         try {
             if (((LossProtectedWalletSession)appSession).getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
-                //txt_balance_amount.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
-                txt_type_balance.setText(R.string.book_balance);
-               // referenceWalletSession.setBalanceTypeSelected(BalanceType.BOOK);
-            //} else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())) {
-                //bookBalance = loadBalance(BalanceType.BOOK);
-            //    txt_balance_amount.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
-           //     txt_type_balance.setText(R.string.available_balance);
-               // referenceWalletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
+                 txt_type_balance.setText(R.string.book_balance);
             }
         } catch (Exception e) {
            // referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -398,11 +391,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     private long loadBalance(BalanceType balanceType){
         long balance = 0;
-//        try {
-//            balance = cryptoWallet.getBalance(balanceType,referenceWalletSession.getWalletSessionType().getWalletPublicKey());
-//        } catch (CantGetBalanceException e) {
-//            e.printStackTrace();
-//        }
         return balance;
     }
 

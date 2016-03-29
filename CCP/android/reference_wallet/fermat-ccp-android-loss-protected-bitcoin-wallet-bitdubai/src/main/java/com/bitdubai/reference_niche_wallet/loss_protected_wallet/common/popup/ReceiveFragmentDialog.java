@@ -150,7 +150,7 @@ public class ReceiveFragmentDialog extends Dialog implements
                     VaultType.CRYPTO_CURRENCY_VAULT,
                     "BITV",
                     walletPublicKey,
-                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                    ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                     blockchainNetworkType
             );
             walletAddres = cryptoAddress.getAddress();
