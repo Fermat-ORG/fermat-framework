@@ -148,9 +148,9 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             long timestamp = System.currentTimeMillis();
             //Calculate timestamp interval
             //TODO: only for testing
-            System.out.println("TKY - TIME_BETWEEN_SYNC "+TIME_BETWEEN_SYNC);
-            System.out.println("TKY - lastSyncUpdate changed to 0");
-            lastSyncUpdate=0;
+            //System.out.println("TKY - TIME_BETWEEN_SYNC "+TIME_BETWEEN_SYNC);
+            //System.out.println("TKY - lastSyncUpdate changed to 0");
+            //lastSyncUpdate=0;
             //End of testing
             long intervalTimestamp = timestamp - lastSyncUpdate;
             if(intervalTimestamp > TIME_BETWEEN_SYNC){
