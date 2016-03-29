@@ -1844,6 +1844,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             intentForMcuService.setComponent(new ComponentName(CommunicationService.class.getPackage().getName(),CommunicationService.class.getName()));
             Log.d(TAG, "Before bindService");
+
             if (bindService(intentForMcuService, mServiceCommunicationConnection, BIND_AUTO_CREATE)){
                 Log.d(TAG, "Binding to Modem Watcher returned true");
             } else {
