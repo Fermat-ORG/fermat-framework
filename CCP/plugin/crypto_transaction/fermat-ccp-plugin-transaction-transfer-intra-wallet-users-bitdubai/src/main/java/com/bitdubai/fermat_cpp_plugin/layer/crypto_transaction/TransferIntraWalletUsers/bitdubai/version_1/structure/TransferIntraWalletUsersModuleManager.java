@@ -1,25 +1,33 @@
 package com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletTransactionRecord;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFindTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.exceptions.TransferIntraWalletUsersNotEnoughFundsException;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.interfaces.TransferIntraWalletUsers;
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.database.TransferIntraWalletUsersDao;
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.enums.TransactionState;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.transfer_intra_wallet_users.exceptions.CantSendTransactionException;
+import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.exceptions.CantReceiveWalletTransactionException;
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.exceptions.TransferIntraWalletUsersCantCancelTransactionException;
 import com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1.utils.BitcoinWalletTransactionWalletRecord;
 
@@ -36,22 +44,23 @@ import java.util.UUID;
 public class TransferIntraWalletUsersModuleManager implements TransferIntraWalletUsers {
 
 
-
-
     private final BitcoinLossProtectedWalletManager bitcoinLossWalletManager;
     private final BitcoinWalletManager bitcoinWalletManager;
     private final ErrorManager errorManager;
     private final TransferIntraWalletUsersDao dao;
+    private final Broadcaster broadcaster;
 
 
     public TransferIntraWalletUsersModuleManager(final BitcoinLossProtectedWalletManager bitcoinLossWalletManager,
                                                  final BitcoinWalletManager bitcoinWalletManager,
                                                  final ErrorManager errorManager,
-                                                 final TransferIntraWalletUsersDao dao) {
+                                                 final TransferIntraWalletUsersDao dao,
+                                                 final Broadcaster broadcaster) {
         this.bitcoinLossWalletManager = bitcoinLossWalletManager;
         this.bitcoinWalletManager = bitcoinWalletManager;
         this.errorManager = errorManager;
         this.dao = dao;
+        this.broadcaster = broadcaster;
     }
 
     //TODO: los try catch tenes que ponerlos englobando toda la funcion, me parece que para que quede mas claro tenes que hacer un
@@ -66,51 +75,234 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
     //hay q ver si no puede completar la transaccion de avisar con una notificacion
     @Override
     public void sendToWallet(
-                             String txHash,
-                             long cryptoAmount,
-                             String notes,
-                             Actors actortype,
-                             ReferenceWallet reference_wallet_sending,
-                             ReferenceWallet reference_wallet_receiving,
-                             String wallet_public_key_sending,
-                             String wallet_public_key_receiving,
-                             BlockchainNetworkType blockchainNetworkType) throws CantSendTransactionException, TransferIntraWalletUsersNotEnoughFundsException {
-
-
-        Long balanceBeforeCredit = null;
-        Long amountRecord = null;
+            String txHash, //ESTE TX HASH PARA QUE SERIA?
+            long cryptoAmount,
+            String notes,
+            Actors actortype,
+            ReferenceWallet reference_wallet_sending,
+            ReferenceWallet reference_wallet_receiving,
+            String wallet_public_key_sending,
+            String wallet_public_key_receiving,
+            BlockchainNetworkType blockchainNetworkType) throws CantSendTransactionException, TransferIntraWalletUsersNotEnoughFundsException {
 
         Long initialBalance = null;
 
         UUID id = UUID.randomUUID();
 
-        //Chooses wallet to be credited.
+        try {
 
-        switch (reference_wallet_receiving){
+            //Register the new transaction
+            dao.registerNewTransaction(id,
+                    txHash,
+                    cryptoAmount,
+                    notes,
+                    actortype,
+                    reference_wallet_sending,
+                    reference_wallet_receiving,
+                    wallet_public_key_sending,
+                    wallet_public_key_receiving,
+                    TransactionState.NEW,
+                    blockchainNetworkType);
 
-            case  BASIC_WALLET_BITCOIN_WALLET:
+            TransferIntraWalletUsersWrapper transferIntraWalletUsersWrapper = dao.getTransaction(id);
 
-                //consult current balance of the sending wallet
+            //DEBIT TO WALLET SENDING
 
-                try {
-                    initialBalance =   this.bitcoinLossWalletManager.loadWallet(wallet_public_key_sending).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
-                } catch (CantCalculateBalanceException e) {
-                    e.printStackTrace();
-                    throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                } catch (CantLoadWalletException e) {
-                    e.printStackTrace();
-                    throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                }
+            switch (reference_wallet_receiving) {
+
+                case BASIC_WALLET_BITCOIN_WALLET:
+
+                    //Consult current balance of the sending wallet
+
+                    BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(wallet_public_key_receiving);
+                    initialBalance = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
 
 
-                //Checks the balance of the debiting wallet in order to decide if to continue or not.
+                    //Checks the balance of the debiting wallet in order to decide if to continue or not.
 
-                if (initialBalance != null && initialBalance >= cryptoAmount){
+                    if (initialBalance != null && initialBalance >= cryptoAmount) {
 
+
+                        //Prepares the record to be used within transactions
+
+                        //TODO: los actors de estas transacciones van a ser la wallets, hay que distinguir
+                        // esto con el actor type para poder mostrar despues bien el que seria el contacto asociado
+                        BitcoinWalletTransactionRecord bitcoinWalletTransactionWalletRecord = buildBitcoinWalletRecord(id,
+                                null,
+                                null,
+                                cryptoAmount,
+                                null,
+                                notes,
+                                System.currentTimeMillis(),
+                                "",
+                                wallet_public_key_sending,
+                                wallet_public_key_receiving,
+                                actortype,
+                                actortype,
+                                blockchainNetworkType);
+
+
+
+                        bitcoinWalletWallet.getBalance(BalanceType.BOOK).debit(bitcoinWalletTransactionWalletRecord);
+                        bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).debit(bitcoinWalletTransactionWalletRecord);
+
+                        //Proceeds to credit in the destination wallet
+                        try
+                        {
+                        receivedToWallet(id,
+                                txHash,
+                                cryptoAmount,
+                                notes,
+                                actortype,
+                                reference_wallet_sending,
+                                reference_wallet_receiving,
+                                wallet_public_key_sending,
+                                wallet_public_key_receiving,
+                                blockchainNetworkType);
+                        } catch (CantReceiveWalletTransactionException e){
+                            //change transaction state to reversed and update balance to revert
+                            bitcoinWalletWallet.revertTransaction(bitcoinWalletTransactionWalletRecord, false);
+                            dao.setToError(transferIntraWalletUsersWrapper);
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+
+                            throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "Recived Wallet process error");
+                        }
+
+                        //process oK
+                        dao.setToCompleted(transferIntraWalletUsersWrapper);
+
+
+                    } else {
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+                        //change transaction state to error
+                        dao.setToError(transferIntraWalletUsersWrapper);
+                        //There are not enough funds to perform this transaction
+                        throw new TransferIntraWalletUsersNotEnoughFundsException("There are not enough funds to perform this transaction", null, "", "NotEnoughFunds");
+
+                    }
+
+                    break;
+                case BASIC_WALLET_DISCOUNT_WALLET:
+                    break;
+                case BASIC_WALLET_FIAT_WALLET:
+                    break;
+                case BASIC_WALLET_LOSS_PROTECTED_WALLET:
+
+                    BitcoinLossProtectedWallet bitcoinLossProtectedWallet = this.bitcoinLossWalletManager.loadWallet(wallet_public_key_sending);
+                    //consult current balance of the sending wallet
+                    initialBalance = bitcoinLossProtectedWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
+
+                    //Checks the balance of the debiting wallet in order to decide if to continue or not.
+
+                    if (initialBalance != null && initialBalance >= cryptoAmount) {
+
+                        //Prepares the record to be used within transactions
+
+                        BitcoinLossProtectedWalletTransactionRecord bitcoinLossProtectedWalletTransactionWalletRecord2 = buildLossWalletRecord(id,
+                                null,
+                                null,
+                                cryptoAmount,
+                                null,
+                                notes,
+                                System.currentTimeMillis(),
+                                "",
+                                "",
+                                "",
+                                actortype,
+                                actortype,
+                                blockchainNetworkType);
+
+
+                        bitcoinLossProtectedWallet.getBalance(BalanceType.BOOK).debit(bitcoinLossProtectedWalletTransactionWalletRecord2);
+                        bitcoinLossProtectedWallet.getBalance(BalanceType.AVAILABLE).debit(bitcoinLossProtectedWalletTransactionWalletRecord2);
+
+                            try{
+                                receivedToWallet(id,
+                                        txHash,
+                                        cryptoAmount,
+                                        notes,
+                                        actortype,
+                                        reference_wallet_sending,
+                                        reference_wallet_receiving,
+                                        wallet_public_key_sending,
+                                        wallet_public_key_receiving,
+                                        blockchainNetworkType);
+
+                            } catch (CantReceiveWalletTransactionException e){
+
+                                bitcoinLossProtectedWallet.revertTransaction(bitcoinLossProtectedWalletTransactionWalletRecord2, false);
+                                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+
+                                dao.setToError(transferIntraWalletUsersWrapper);
+                                throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "Recived Wallet process error");
+                            }
+
+
+                        //process oK
+                        dao.setToCompleted(transferIntraWalletUsersWrapper);
+
+                    } else {
+                        dao.setToError(transferIntraWalletUsersWrapper);
+                        //There are not enough funds to perform this transaction
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, wallet_public_key_sending,"TRANSACTIONWALLETREVERSE");
+
+                        throw new TransferIntraWalletUsersNotEnoughFundsException("There are not enough funds to perform this transaction", null, "", "NotEnoughFunds");
+                    }
+
+                    break;
+                case COMPOSITE_WALLET_MULTI_ACCOUNT:
+                    break;
+
+
+            }
+
+
+
+       } catch (CantLoadWalletException e) {
+            throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
+
+        } catch (TransferIntraWalletUsersCantInsertRecordException e) {
+            throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
+        } catch (CantCalculateBalanceException e) {
+            throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
+        } catch (CantLoadWalletsException e) {
+           throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
+        }  catch (InvalidParameterException e) {
+            throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantSendTransactionException("I could not send the transaction", e, "TransferIntraWalletUsersModuleManager", "unknown reason");
+        }
+        catch (Exception e){
+            throw new CantSendTransactionException("I could not send the transaction", FermatException.wrapException(e), "TransferIntraWalletUsersModuleManager", "unknown reason");
+
+        }
+
+    }
+
+    //CREDIT TO DESTINATION WALLET
+
+    private void receivedToWallet(UUID id,
+                                 String txHash,
+                                 long cryptoAmount,
+                                 String notes,
+                                 Actors actortype,
+                                 ReferenceWallet reference_wallet_sending,
+                                 ReferenceWallet reference_wallet_receiving,
+                                 String wallet_public_key_sending,
+                                 String wallet_public_key_receiving,
+                                 BlockchainNetworkType blockchainNetworkType) throws CantReceiveWalletTransactionException {
+
+        try {
+            TransferIntraWalletUsersWrapper transactionWrapper = dao.getTransaction(id);
+
+            //checks what is the corresponding wallet to be debited.
+            switch (reference_wallet_sending) {
+
+                case BASIC_WALLET_BITCOIN_WALLET:
 
                     //Prepares the record to be used within transactions
 
-                    BitcoinWalletTransactionWalletRecord bitcoinWalletTransactionWalletRecord =  buildBitcoinWalletRecord(id,
+                    BitcoinWalletTransactionWalletRecord bitcoinWalletTransactionWalletRecord2 = buildBitcoinWalletRecord(id,
                             null,
                             null,
                             cryptoAmount,
@@ -118,180 +310,26 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             notes,
                             System.currentTimeMillis(),
                             "",
-                            "",
-                            "",
+                            wallet_public_key_sending,
+                            wallet_public_key_receiving,
                             actortype,
                             actortype,
                             blockchainNetworkType);
 
+                    BitcoinWalletWallet bitcoinWalletWallet =  this.bitcoinWalletManager.loadWallet(wallet_public_key_sending);
 
-                    try {
-                        balanceBeforeCredit =   this.bitcoinWalletManager.loadWallet(wallet_public_key_receiving).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
-                    } catch (CantLoadWalletsException e) {
-                        e.printStackTrace();
-                        throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                    } catch (CantCalculateBalanceException e) {
-                        e.printStackTrace();
-                        throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                    }
+                    bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionWalletRecord2);
+                    bitcoinWalletWallet.getBalance(BalanceType.BOOK).credit(bitcoinWalletTransactionWalletRecord2);
 
-                    //Checks that the current balance for the crediting wallet is not null in order to proceed.
-
-                    if (balanceBeforeCredit!=null){
-
-
-                        //Register the new transaction
-                        try {
-                            dao.registerNewTransaction(id,
-                                    txHash,
-                                    cryptoAmount,
-                                    notes,
-                                    actortype,
-                                    reference_wallet_sending,
-                                    reference_wallet_receiving,
-                                    wallet_public_key_sending,
-                                    wallet_public_key_receiving,
-                                    TransactionState.SENT_TO_WALLET,
-                                    blockchainNetworkType);
-                        } catch (TransferIntraWalletUsersCantInsertRecordException e) {
-                            e.printStackTrace();
-                            throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                        }
-
-
-
-
-                        try {
-                            this.bitcoinWalletManager.loadWallet(wallet_public_key_receiving).getBalance(BalanceType.BOOK).credit(bitcoinWalletTransactionWalletRecord);
-                            this.bitcoinWalletManager.loadWallet(wallet_public_key_receiving).getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionWalletRecord);
-                        } catch (CantRegisterCreditException e) {
-                            e.printStackTrace();
-                            throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                        } catch (CantLoadWalletsException e) {
-                            e.printStackTrace();
-                            throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                        }
-                    }
-
-
-
-
-                    try {
-                        amountRecord =   this.bitcoinWalletManager.loadWallet(wallet_public_key_receiving).getTransactionById(bitcoinWalletTransactionWalletRecord.getTransactionId()).getAmount();
-                    } catch (CantFindTransactionException e) {
-                        e.printStackTrace();
-                        throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                    } catch (CantLoadWalletsException e) {
-                        e.printStackTrace();
-                        throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                    }
-
-                    //check if amount within DB record correspond with the amount sent,
-                    // if it does, then it should debit it within the wallet.
-                    //if it does not, then it will not continue.
-
-
-                    if (amountRecord == cryptoAmount){
-
-
-                        //checks what is the corresponding wallet to be debited.
-
-                        switch (reference_wallet_sending) {
-
-                            case BASIC_WALLET_BITCOIN_WALLET:
-                                break;
-                            case BASIC_WALLET_DISCOUNT_WALLET:
-                                break;
-                            case BASIC_WALLET_FIAT_WALLET:
-                                break;
-                            case BASIC_WALLET_LOSS_PROTECTED_WALLET:
-
-                                //Prepares the record to be used within transactions
-
-                                BitcoinLossProtectedWalletTransactionWalletRecord bitcoinLossProtectedWalletTransactionWalletRecord =  buildLossWalletRecord(id,
-                                        null,
-                                        null,
-                                        cryptoAmount,
-                                        null,
-                                        notes,
-                                        System.currentTimeMillis(),
-                                        "",
-                                        "",
-                                        "",
-                                        actortype,
-                                        actortype,
-                                        blockchainNetworkType);
-
-                                try {
-                                    this.bitcoinLossWalletManager.loadWallet(wallet_public_key_sending).getBalance(BalanceType.AVAILABLE).debit(bitcoinLossProtectedWalletTransactionWalletRecord);
-                                    this.bitcoinLossWalletManager.loadWallet(wallet_public_key_sending).getBalance(BalanceType.BOOK).debit(bitcoinLossProtectedWalletTransactionWalletRecord);
-                                } catch (CantRegisterDebitException e) {
-                                    e.printStackTrace();
-                                    throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                                } catch (CantLoadWalletException e) {
-                                    e.printStackTrace();
-                                    throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                                }
-
-                                //Changes record state to completed.
-
-                                try {
-                                    TransferIntraWalletUsersWrapper transactionWrapper = dao.getTransaction(id);
-                                    dao.setToCompleted(transactionWrapper);
-
-                                } catch (CantLoadTableToMemoryException e) {
-                                    e.printStackTrace();
-                                    throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                                } catch (InvalidParameterException e) {
-                                    e.printStackTrace();
-                                    throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                                } catch (TransferIntraWalletUsersCantCancelTransactionException e) {
-                                    e.printStackTrace();
-                                    throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                                }
-
-                                break;
-
-
-                        }
-
-                    }//end if
-
-
-
-                }else{
-                    //There are not enough funds to perform this transaction
-                    throw new TransferIntraWalletUsersNotEnoughFundsException("There are not enough funds to perform this transaction",null,"","NotEnoughFunds");
-                }
-
-
-                break;
-            case  BASIC_WALLET_DISCOUNT_WALLET:
-                break;
-            case  BASIC_WALLET_FIAT_WALLET:
-                break;
-            case  BASIC_WALLET_LOSS_PROTECTED_WALLET:
-
-
-                //consult current balance of the sending wallet
-
-                try {
-                    initialBalance =   this.bitcoinWalletManager.loadWallet(wallet_public_key_sending).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
-                } catch (CantLoadWalletsException e) {
-                    e.printStackTrace();
-                    throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                } catch (CantCalculateBalanceException e) {
-                    e.printStackTrace();
-                    throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                }
-
-                //Checks the balance of the debiting wallet in order to decide if to continue or not.
-
-                if (initialBalance != null && initialBalance >= cryptoAmount){
-
+                    break;
+                case BASIC_WALLET_DISCOUNT_WALLET:
+                    break;
+                case BASIC_WALLET_FIAT_WALLET:
+                    break;
+                case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                     //Prepares the record to be used within transactions
-
-                    BitcoinLossProtectedWalletTransactionWalletRecord bitcoinLossProtectedWalletTransactionWalletRecord2 =  buildLossWalletRecord(id,
+                    BitcoinLossProtectedWallet bitcoinLossProtectedWallet = this.bitcoinLossWalletManager.loadWallet(wallet_public_key_sending);
+                    BitcoinLossProtectedWalletTransactionRecord bitcoinLossProtectedWalletTransactionWalletRecord = buildLossWalletRecord(id,
                             null,
                             null,
                             cryptoAmount,
@@ -299,173 +337,37 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             notes,
                             System.currentTimeMillis(),
                             "",
-                            "",
-                            "",
+                            wallet_public_key_sending,
+                            wallet_public_key_receiving,
                             actortype,
                             actortype,
                             blockchainNetworkType);
 
+//TODO: si da error en el credit del book tendria que hacer un debit en el available
+                    bitcoinLossProtectedWallet.getBalance(BalanceType.AVAILABLE).credit(bitcoinLossProtectedWalletTransactionWalletRecord);
+                    bitcoinLossProtectedWallet.getBalance(BalanceType.BOOK).credit(bitcoinLossProtectedWalletTransactionWalletRecord);
+
+                    break;
 
 
-                    try {
-                        balanceBeforeCredit =   this.bitcoinLossWalletManager.loadWallet(wallet_public_key_receiving).getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
-                    } catch (CantCalculateBalanceException e) {
-                        e.printStackTrace();
-                        throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                    } catch (CantLoadWalletException e) {
-                        e.printStackTrace();
-                        throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                    }
-
-
-                    //Checks that the current balance for the crediting wallet is not null in order to proceed.
-
-
-                    if (balanceBeforeCredit!=null){
-
-
-                        try {
-                            dao.registerNewTransaction(id,
-                                    txHash,
-                                    cryptoAmount,
-                                    notes,
-                                    actortype,
-                                    reference_wallet_sending,
-                                    reference_wallet_receiving,
-                                    wallet_public_key_sending,
-                                    wallet_public_key_receiving,
-                                    TransactionState.SENT_TO_WALLET,
-                                    blockchainNetworkType);
-                        } catch (TransferIntraWalletUsersCantInsertRecordException e) {
-                            e.printStackTrace();
-                            throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                        }
-
-                        try {
-                            this.bitcoinLossWalletManager.loadWallet(wallet_public_key_receiving).getBalance(BalanceType.BOOK).credit(bitcoinLossProtectedWalletTransactionWalletRecord2);
-                            this.bitcoinLossWalletManager.loadWallet(wallet_public_key_receiving).getBalance(BalanceType.AVAILABLE).credit(bitcoinLossProtectedWalletTransactionWalletRecord2);
-                        } catch (CantLoadWalletException e) {
-                            e.printStackTrace();
-                            throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                        } catch (CantRegisterCreditException e) {
-                            e.printStackTrace();
-                            throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                        }
-                    }
-
-
-
-
-                    try {
-                        amountRecord =   this.bitcoinLossWalletManager.loadWallet(wallet_public_key_receiving).getTransactionById(bitcoinLossProtectedWalletTransactionWalletRecord2.getTransactionId()).getAmount();
-                    } catch (CantFindTransactionException e) {
-                        e.printStackTrace();
-                        throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                    } catch (CantLoadWalletException e) {
-                        e.printStackTrace();
-                        throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                    }
-
-
-
-                    //check if amount within DB record correspond with the amount sent,
-                    // if it does, then it should debit it within the wallet.
-                    //if it does not, then it will not continue.
-
-
-                    if (amountRecord == cryptoAmount){
-
-                        //checks what is the corresponding wallet to be debited.
-
-                        switch (reference_wallet_sending) {
-
-                            case BASIC_WALLET_BITCOIN_WALLET:
-
-                                //Prepares the record to be used within transactions
-
-                                BitcoinWalletTransactionWalletRecord bitcoinWalletTransactionWalletRecord2 =  buildBitcoinWalletRecord(id,
-                                        null,
-                                        null,
-                                        cryptoAmount,
-                                        null,
-                                        notes,
-                                        System.currentTimeMillis(),
-                                        "",
-                                        "",
-                                        "",
-                                        actortype,
-                                        actortype,
-                                        blockchainNetworkType);
-
-                                try {
-
-                                    try {
-                                        this.bitcoinWalletManager.loadWallet(wallet_public_key_sending).getBalance(BalanceType.AVAILABLE).debit(bitcoinWalletTransactionWalletRecord2);
-                                        this.bitcoinWalletManager.loadWallet(wallet_public_key_sending).getBalance(BalanceType.BOOK).debit(bitcoinWalletTransactionWalletRecord2);
-                                    } catch (CantRegisterDebitException e) {
-                                        e.printStackTrace();
-                                        throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                                    }
-
-                                } catch (CantLoadWalletsException e) {
-                                    e.printStackTrace();
-                                    throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                                }
-
-                                //Change record state to completed.
-
-                                try {
-                                    TransferIntraWalletUsersWrapper transactionWrapper = dao.getTransaction(id);
-                                    dao.setToCompleted(transactionWrapper);
-
-                                } catch (CantLoadTableToMemoryException e) {
-                                    e.printStackTrace();
-                                    throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                                } catch (InvalidParameterException e) {
-                                    e.printStackTrace();
-                                    throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                                } catch (TransferIntraWalletUsersCantCancelTransactionException e) {
-                                    e.printStackTrace();
-                                    throw new CantSendTransactionException("I could not send the transaction",e,"TransferIntraWalletUsersModuleManager","unknown reason");
-                                }
-
-
-
-
-                                break;
-                            case BASIC_WALLET_DISCOUNT_WALLET:
-                                break;
-                            case BASIC_WALLET_FIAT_WALLET:
-                                break;
-                            case BASIC_WALLET_LOSS_PROTECTED_WALLET:
-                                break;
-
-
-                        }
-
-                    }//end if
-
-
-
-                }else{
-                    //There are not enough funds to perform this transaction
-                    throw new TransferIntraWalletUsersNotEnoughFundsException("There are not enough funds to perform this transaction",null,"","NotEnoughFunds");
-                }
-
-
-                break;
-            case    COMPOSITE_WALLET_MULTI_ACCOUNT:
-                break;
-
-
+            }
+        } catch (CantLoadTableToMemoryException e) {
+           throw new CantReceiveWalletTransactionException(CantReceiveWalletTransactionException.DEFAULT_MESSAGE, e, "", "");
+        } catch (InvalidParameterException e) {
+            throw new CantReceiveWalletTransactionException(CantReceiveWalletTransactionException.DEFAULT_MESSAGE, e, "", "");
+        } catch (CantLoadWalletException e) {
+            throw new CantReceiveWalletTransactionException(CantReceiveWalletTransactionException.DEFAULT_MESSAGE, e, "", "");
+        } catch (CantLoadWalletsException e) {
+            throw new CantReceiveWalletTransactionException(CantReceiveWalletTransactionException.DEFAULT_MESSAGE, e, "", "");
+        }catch (Exception e){
+            throw new CantReceiveWalletTransactionException(CantReceiveWalletTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
         }
 
 
     }
 
 
-
-    public BitcoinLossProtectedWalletTransactionWalletRecord buildLossWalletRecord(UUID transactionId,
+    public BitcoinLossProtectedWalletTransactionRecord buildLossWalletRecord(UUID transactionId,
                                                                                    CryptoAddress addressFrom,
                                                                                    UUID requestId,
                                                                                    long amount,
@@ -477,12 +379,11 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                                                                    String actorToPublicKey,
                                                                                    Actors actorToType,
                                                                                    Actors actorFromType,
-                                                                                   com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType){
+                                                                                   com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType) {
 
 
-        //UUID pluginId = UUID.randomUUID();
 
-        BitcoinLossProtectedWalletTransactionWalletRecord bitcoinLossProtectedWalletTransactionRecord = new BitcoinLossProtectedWalletTransactionWalletRecord(transactionId,
+        BitcoinLossProtectedWalletTransactionRecord bitcoinLossProtectedWalletTransactionRecord = new BitcoinLossProtectedWalletTransactionWalletRecord(transactionId,
                 addressFrom,
                 requestId,
                 amount,
@@ -494,25 +395,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                 actorToPublicKey,
                 actorToType,
                 actorFromType,
-                blockchainNetworkType);
-
-//        BitcoinLossProtectedWalletTransactionWalletRecord bitcoinLossProtectedWalletTransactionRecord = new BitcoinLossProtectedWalletTransactionWalletRecord(pluginId,
-//                null,
-//                null,
-//                cryptoAmount,
-//                null,
-//                notes,
-//                System.currentTimeMillis(),
-//                "",
-//                "",
-//                "",
-//                actorType,
-//                actorType,
-//                blockchainNetworkType);
-
-
-
-
+                blockchainNetworkType,
+                0);
 
         return bitcoinLossProtectedWalletTransactionRecord;
 
@@ -531,11 +415,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                                                                          String actorToPublicKey,
                                                                          Actors actorToType,
                                                                          Actors actorFromType,
-                                                                         com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType){
-
-
-        //UUID pluginId = UUID.randomUUID();
-
+                                                                         com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType blockchainNetworkType) {
 
 
         BitcoinWalletTransactionWalletRecord bitcoinLossProtectedWalletTransactionRecord = new BitcoinWalletTransactionWalletRecord(transactionId,
@@ -552,30 +432,9 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                 actorFromType,
                 blockchainNetworkType);
 
-
-
-//        BitcoinWalletTransactionWalletRecord bitcoinLossProtectedWalletTransactionRecord = new BitcoinWalletTransactionWalletRecord(pluginId,
-//                null,
-//                null,
-//                cryptoAmount,
-//                null,
-//                notes,
-//                System.currentTimeMillis(),
-//                "",
-//                "",
-//                "",
-//                actorType,
-//                actorType,
-//                blockchainNetworkType);
-
-
         return bitcoinLossProtectedWalletTransactionRecord;
 
     }
-
-
-
-
 
 
 }

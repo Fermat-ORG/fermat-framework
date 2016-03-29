@@ -203,7 +203,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 //                        FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
                         onRefreshList.onRefresh();
                     } catch (Exception e) {
-                        showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
+                        showMessage(context, "Cant Accept Receive Payment Exception- " + e.getMessage());
                     }
 
                 }
@@ -220,7 +220,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 //                    FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
                     onRefreshList.onRefresh();
                 } catch (Exception e) {
-                    showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
+                    showMessage(context, "Cant Denied Receive Payment Exception- " + e.getMessage());
                 }
             }
         });

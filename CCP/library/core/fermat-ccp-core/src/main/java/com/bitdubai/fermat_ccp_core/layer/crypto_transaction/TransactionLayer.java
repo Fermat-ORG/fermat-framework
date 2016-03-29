@@ -8,6 +8,7 @@ import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.outgoing_device_use
 import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.outgoing_draft.OutgoingDraftTransactionPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.outgoing_extra_user.OutgoingExtraUserPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.outgoing_intra_actor.OutgoingIntraActorPluginSubsystem;
+import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.transfer_intra_wallet_users.TransferIntraWalletPluginSubsystem;
 import com.bitdubai.fermat_ccp_core.layer.crypto_transaction.unhold.UnHoldCryptoMoneyTransactionPluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
@@ -36,7 +37,7 @@ public class TransactionLayer extends AbstractLayer {
             registerPlugin(new OutgoingDraftTransactionPluginSubsystem());
             registerPlugin(new HoldCryptoMoneyTransactionPluginSubsystem());
             registerPlugin(new UnHoldCryptoMoneyTransactionPluginSubsystem());
-            //registerPlugin(new OutgoingDeviceUserPluginSubsystem());
+            registerPlugin(new TransferIntraWalletPluginSubsystem());
             //registerPlugin(new UnHoldCryptoMoneyTransactionPluginSubsystem());
 
         } catch (CantRegisterPluginException e) {

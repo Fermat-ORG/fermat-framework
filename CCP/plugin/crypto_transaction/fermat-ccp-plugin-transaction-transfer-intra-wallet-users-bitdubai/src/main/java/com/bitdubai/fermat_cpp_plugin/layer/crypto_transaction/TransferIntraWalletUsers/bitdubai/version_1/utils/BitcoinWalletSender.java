@@ -208,22 +208,9 @@ public BitcoinLossProtectedWalletTransactionWalletRecord buildLossWalletRecord()
 
     UUID pluginId = UUID.randomUUID();
 
-    BitcoinLossProtectedWalletTransactionWalletRecord bitcoinLossProtectedWalletTransactionRecord = new BitcoinLossProtectedWalletTransactionWalletRecord(pluginId,
-            null,
-            null,
-    cryptoAmount,
-   null,
-    notes,
-    System.currentTimeMillis(),
-    "",
-    "",
-    "",
-            actorType,
-            actorType,
-    blockchainNetworkType);
 
 
-    return bitcoinLossProtectedWalletTransactionRecord;
+    return null;
 
     }
 

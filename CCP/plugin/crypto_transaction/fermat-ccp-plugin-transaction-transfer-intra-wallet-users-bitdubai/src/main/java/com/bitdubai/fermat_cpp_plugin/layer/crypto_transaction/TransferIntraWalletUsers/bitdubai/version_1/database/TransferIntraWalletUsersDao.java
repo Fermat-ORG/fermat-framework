@@ -171,6 +171,15 @@ public class TransferIntraWalletUsersDao {
         }
     }
 
+    public void setToError(TransferIntraWalletUsersWrapper bitcoinTransaction) throws TransferIntraWalletUsersCantCancelTransactionException {
+        try {
+            setToState(bitcoinTransaction, TransactionState.ERROR);
+        } catch (CantUpdateRecordException | TransferIntraWalletUsersInconsistentTableStateException | CantLoadTableToMemoryException exception) {
+            throw new TransferIntraWalletUsersCantCancelTransactionException("An exception happened", exception, "", "");
+        } catch (Exception exception) {
+            throw new TransferIntraWalletUsersCantCancelTransactionException("An unexpected exception happened", FermatException.wrapException(exception), null, null);
+        }
+    }
 
     public void setToCompleted(TransferIntraWalletUsersWrapper bitcoinTransaction) throws TransferIntraWalletUsersCantCancelTransactionException {
         try {

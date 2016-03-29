@@ -76,9 +76,7 @@ public class ContactsTutorialPart1V2 extends FermatDialog<LossProtectedWalletSes
         if(id == R.id.add_fermat_user){
             try {
                 saveSettings();
-//                Object[] object = new Object[2];
-//                changeApp(Engine.BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY, getSession().getCommunityConnection(), object);
-                changeActivity(Activities.CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY);
+                changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_ADD_CONNECTION_ACTIVITY);
                 dismiss();
             } catch (Exception e) {
                 e.printStackTrace();

@@ -1,8 +1,7 @@
 package com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWalletUsers.bitdubai.version_1;
 
 /**
- * Created by ciencias on 2/16/15.
- * Modified by Joaquin Carrasquero on 17/03/16.
+ * Created by Joaquin Carrasquero on 17/03/16.
  */
 
 import com.bitdubai.fermat_api.CantStartPluginException;
@@ -92,7 +91,7 @@ public class TransferIntraWalletUsersPluginRoot extends AbstractPlugin
         transferIntraWalletUsersDao = new TransferIntraWalletUsersDao(errorManager,pluginDatabaseSystem);
         try {
             transferIntraWalletUsersDao.initialize(pluginId);
-            transferIntraWalletUsersModuleManager = new TransferIntraWalletUsersModuleManager(bitcoinLossWalletManager,bitcoinWalletManager,errorManager, transferIntraWalletUsersDao);
+            transferIntraWalletUsersModuleManager = new TransferIntraWalletUsersModuleManager(bitcoinLossWalletManager,bitcoinWalletManager,errorManager, transferIntraWalletUsersDao,this.broadcaster);
    } catch (CantInitializeOutgoingIntraActorDaoException e) {
             e.printStackTrace();
         }
