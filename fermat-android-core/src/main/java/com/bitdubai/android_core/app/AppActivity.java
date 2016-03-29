@@ -282,11 +282,11 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
             if (!nextActivity.equals(lastActivity)) {
                 removecallbacks();
-//                Intent intent = new Intent(this,LoadingScreenActivity.class);
-//                intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appBackPublicKey);
+                Intent intent = new Intent(this,LoadingScreenActivity.class);
+                intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appBackPublicKey);
+                //recreate();
+                startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                recreate();
-//                startActivity(intent);
                 //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 //loadUI(getFermatAppManager().getAppsSession(fermatStructure.getPublicKey()));
             }
@@ -370,18 +370,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectApp"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
-    }
-
-    private void connectWithSubApp(Engine engine, Object[] objects,FermatApp fermatApp){
-        Intent intent = new Intent(this, AppActivity.class);
-        intent.putExtra(ConnectionConstants.ENGINE_CONNECTION, engine);
-        intent.putExtra(ConnectionConstants.SEARCH_NAME,objects);
-        intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,fermatApp.getAppPublicKey());
-        intent.putExtra(ApplicationConstants.INTENT_APP_TYPE,fermatApp.getAppStatus());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        finish();
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-        startActivity(intent);
     }
 
     @Override
