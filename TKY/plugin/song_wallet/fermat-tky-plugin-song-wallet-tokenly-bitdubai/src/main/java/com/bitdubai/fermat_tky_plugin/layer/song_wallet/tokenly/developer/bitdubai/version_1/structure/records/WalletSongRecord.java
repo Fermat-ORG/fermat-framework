@@ -244,8 +244,9 @@ public class WalletSongRecord implements WalletSong {
      */
     public void setTokens(String songTokens) throws CanGetTokensArrayFromSongWalletException {
         if(songTokens==null||songTokens.isEmpty()){
-            throw new CanGetTokensArrayFromSongWalletException(
-                    "The XML with the tokens is null or empty");
+            /*throw new CanGetTokensArrayFromSongWalletException(
+                    "The XML with the tokens is null or empty");*/
+            this.tokens=new String[0];
         }
         try{
             String[] tokensFromXML=new String[0];

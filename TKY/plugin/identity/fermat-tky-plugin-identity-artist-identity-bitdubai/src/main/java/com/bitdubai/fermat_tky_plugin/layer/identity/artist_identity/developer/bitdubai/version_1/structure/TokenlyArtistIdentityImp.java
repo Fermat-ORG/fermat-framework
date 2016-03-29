@@ -13,6 +13,7 @@ import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnections
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.TokenlyArtistIdentityPluginRoot;
 
@@ -222,7 +223,7 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
     }
 
     @Override
-    public User getUser() {
+    public MusicUser getMusicUser() {
         //TODO: Gabriel implement this. I put this only for compilation
         return null;
     }

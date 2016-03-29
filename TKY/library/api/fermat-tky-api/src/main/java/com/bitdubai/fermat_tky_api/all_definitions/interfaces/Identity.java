@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_tky_api.all_definitions.interfaces;
 
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 
 import java.util.UUID;
 
@@ -60,6 +61,6 @@ public interface Identity {
      * This method returns the Tokenly account data in an Fermat object.
      * @return
      */
-    User getUser();
+    MusicUser getMusicUser();
 
 }

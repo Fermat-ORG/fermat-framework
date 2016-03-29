@@ -1,11 +1,12 @@
 package com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 28/03/16.
  */
-public class TokenlyUserImp implements User {
+public class TokenlyUserImp implements MusicUser {
 
     String id;
     String username;
