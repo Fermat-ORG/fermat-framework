@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_wpd_plugin.layer.desktop_module.wallet_manager.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.structure;
 
 
 import com.bitdubai.fermat_api.AppsStatus;
@@ -44,7 +44,7 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
     private int bannerRes;
 
 
-    public WalletManagerModuleInstalledWallet(WalletCategory walletCategory,WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version,AppsStatus appsStatus) {
+    public WalletManagerModuleInstalledWallet(WalletCategory walletCategory, WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version, AppsStatus appsStatus) {
         this.walletCategory = walletCategory;
         this.skinsId = skinsId;
         this.languajesId = languajesId;

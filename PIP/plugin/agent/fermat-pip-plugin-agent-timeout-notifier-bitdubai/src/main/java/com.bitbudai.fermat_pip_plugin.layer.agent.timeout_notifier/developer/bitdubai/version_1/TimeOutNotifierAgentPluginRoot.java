@@ -1,13 +1,29 @@
 package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1;
 
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOutNotifierAgentDeveloperDatabaseFactory;
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.exceptions.CantInitializeTimeOutNotifierAgentDatabaseException;
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierAgent;
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierAgentPool;
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierManager;
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.utils.FermatActorImpl;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.actor.FermatActor;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantAddNewTimeOutAgentException;
-import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantRemoveExistingTimeOutAgentException;
-import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutAgent;
-import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutManager;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
 import java.util.UUID;
@@ -16,7 +32,24 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 3/27/16.
  */
-public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements TimeOutManager {
+public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER         )
+    private ErrorManager errorManager;
+
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM   , layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER         )
+    private EventManager eventManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
+    private PluginDatabaseSystem pluginDatabaseSystem;
+
+
+    /**
+     * Class Variables
+     */
+    TimeOutNotifierAgentDeveloperDatabaseFactory timeOutNotifierAgentDeveloperDatabaseFactory;
+    TimeOutNotifierAgentPool timeOutNotifierAgentPool;
+    TimeOutNotifierManager timeOutNotifierManager;
 
     /**
      * constructor
@@ -25,9 +58,49 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Ti
         super(new PluginVersionReference(new Version()));
     }
 
+
+    private void initializeDatabase(){
+        timeOutNotifierAgentDeveloperDatabaseFactory = new TimeOutNotifierAgentDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        try {
+            timeOutNotifierAgentDeveloperDatabaseFactory.initializeDatabase();
+        } catch (CantInitializeTimeOutNotifierAgentDatabaseException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        if (timeOutNotifierAgentDeveloperDatabaseFactory == null)
+            initializeDatabase();
+
+        return timeOutNotifierAgentDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        if (timeOutNotifierAgentDeveloperDatabaseFactory == null)
+            initializeDatabase();
+
+        return timeOutNotifierAgentDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        if (timeOutNotifierAgentDeveloperDatabaseFactory == null)
+            initializeDatabase();
+
+        return timeOutNotifierAgentDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+    }
+
     @Override
     public void start() throws CantStartPluginException {
-        System.out.println("***New Timeout Notifier started...***");
+        /**
+         * Instantiate agents.
+         */
+        timeOutNotifierAgentPool = new TimeOutNotifierAgentPool(this.pluginDatabaseSystem, this.pluginId, this.errorManager);
+        timeOutNotifierManager = new TimeOutNotifierManager(pluginDatabaseSystem, pluginId, errorManager, timeOutNotifierAgentPool);
+
+        testAddNewAgent();
     }
 
 
@@ -36,23 +109,18 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Ti
 
     }
 
-    @Override
-    public TimeOutAgent addNew(long epochTime, long timeout, String name) throws CantAddNewTimeOutAgentException {
-        return null;
+    private void testAddNewAgent(){
+        try{
+            FermatActorImpl owner = new FermatActorImpl();
+            owner.setPublicKey(UUID.randomUUID().toString());
+            owner.setType(Actors.CBP_CRYPTO_CUSTOMER);
+            owner.setName("Test Rodrigo");
+            timeOutNotifierManager.addNew(System.currentTimeMillis(), 40000, "Prueba _Rodrigo 2", owner);
+
+            System.out.println("***TimeOutNotifier*** " + timeOutNotifierManager.getTimeOutAgents(owner).toString());
+            System.out.println("***TimeOutNotifier*** " + timeOutNotifierManager.getTimeOutAgents().size());
+    } catch (Exception e) {
+        e.printStackTrace();
     }
-
-    @Override
-    public void remove(TimeOutAgent timeOutAgent) throws CantRemoveExistingTimeOutAgentException {
-
-    }
-
-    @Override
-    public TimeOutAgent getTimeOutAgent(UUID uuid) {
-        return null;
-    }
-
-    @Override
-    public List<TimeOutAgent> getTimeOutAgents() {
-        return null;
     }
 }
