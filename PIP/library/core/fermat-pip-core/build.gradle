@@ -23,6 +23,7 @@ dependencies {
     compile project(':fermat-pip-addon-platform-service-location-manager-bitdubai')
     compile project(':fermat-pip-addon-platform-service-platform-info-bitdubai')
 
+    compile project(':fermat-pip-plugin-agent-timeout-notifier-bitdubai')
     compile project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai')
     compile project(':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai')
 
@@ -31,6 +32,7 @@ dependencies {
     compile project(':fermat-pip-plugin-android-core-module-developer-bitdubai')
 
     compile project(':fermat-pip-plugin-network-service-subapp-resources-bitdubai')
+    compile project(':fermat-pip-plugin-network-service-subapp-fermat-monitor-bitdubai')
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }

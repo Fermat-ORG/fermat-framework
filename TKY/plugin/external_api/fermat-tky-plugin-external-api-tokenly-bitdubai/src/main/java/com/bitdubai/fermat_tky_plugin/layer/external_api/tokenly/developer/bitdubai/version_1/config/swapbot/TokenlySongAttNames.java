@@ -58,7 +58,7 @@ public class TokenlySongAttNames {
     /**
      * Represents the song usage rights.
      */
-    public static final String USAGE_RIGHTS = "ownership";
+    public static final String USAGE_RIGHTS = "usageRights";
 
     /**
      * Represents the song usage prohibitions.
@@ -74,5 +74,10 @@ public class TokenlySongAttNames {
      * Represents the song other.
      */
     public static final String OTHER = "other";
+
+    /**
+     * Represents the download url.
+     */
+    public static final String DOWNLOAD_URL = "downloadUrl";
 
 }

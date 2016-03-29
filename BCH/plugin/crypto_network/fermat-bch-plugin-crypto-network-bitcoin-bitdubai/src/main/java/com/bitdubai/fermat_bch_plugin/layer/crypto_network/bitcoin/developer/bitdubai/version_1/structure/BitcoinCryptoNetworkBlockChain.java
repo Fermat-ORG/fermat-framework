@@ -78,16 +78,12 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
          * initialize the objects
          */
         try {
-            initialize();
+            if (BLOCKCHAIN_NETWORK_TYPE == BlockchainNetworkType.REG_TEST)
+                initializeInMemory();
+            else
+                initialize();
         } catch (BlockStoreException e) {
-            if (BLOCKCHAIN_NETWORK_TYPE == BlockchainNetworkType.REG_TEST){
-                try {
-                    initializeInMemory();
-                } catch (BlockStoreException e1) {
-                    throw new BlockchainException(BlockchainException.DEFAULT_MESSAGE, e1, "Could not create blockchain to store block headers.", null);
-                }
-            } else
-                throw new BlockchainException(BlockchainException.DEFAULT_MESSAGE, e, "Could not create blockchain to store block headers.", null);
+            throw new BlockchainException(BlockchainException.DEFAULT_MESSAGE, e, "Could not create blockchain to store block headers.", "NetworkType:" + BLOCKCHAIN_NETWORK_TYPE.getCode());
         }
     }
 
@@ -143,7 +139,7 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
                 loadCheckpoint();
         } catch (IOException e) {
             // if there are no checkpoints, then I will continue
-            e.printStackTrace();
+            System.out.println("***CryptoNetwork*** no checkpoint founds for network type " + BLOCKCHAIN_NETWORK_TYPE.getCode());
         }
 
         /**

@@ -63,19 +63,19 @@ public interface FanWalletModule extends FermatManager{
      * This checks the time passed between the method execution and the last update, if the actual
      * time - last updated is less than the default update interval, this method not synchronize
      * with external API.
-     * @param tokenlyUsername
+     * @param fanIdentity
      * @throws CantSynchronizeWithExternalAPIException
      */
-    void synchronizeSongs(String tokenlyUsername) throws CantSynchronizeWithExternalAPIException;
+    void synchronizeSongs(Fan fanIdentity) throws CantSynchronizeWithExternalAPIException;
 
     /**
      * This method starts the synchronize songs process.
      * In this case, the synchronize process is started by the user.
      * This method doesn't check the last update field.
-     * @param username
+     * @param fanIdentity
      * @throws CantSynchronizeWithExternalAPIException
      */
-    void synchronizeSongsByUser(String username) throws CantSynchronizeWithExternalAPIException;
+    void synchronizeSongsByUser(Fan fanIdentity) throws CantSynchronizeWithExternalAPIException;
 
     /**
      * This method deletes a song from the wallet and the device storage.

@@ -76,7 +76,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, pluginId.toString());
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationsNetworkNodeP2PDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -97,7 +97,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
                   /*
                    * We create the new database
                    */
-                database = communicationsNetworkNodeP2PDatabaseFactory.createDatabase(pluginId, pluginId.toString());
+                database = communicationsNetworkNodeP2PDatabaseFactory.createDatabase(pluginId, CommunicationsNetworkNodeP2PDatabaseConstants.DATA_BASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -113,7 +113,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("Communications Network Node", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase("Communications Network Node", CommunicationsNetworkNodeP2PDatabaseConstants.DATA_BASE_NAME));
         return databases;
     }
 
@@ -473,7 +473,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
                 /**
                  * I get each row and save them into a List<String>
                  */
-                developerRow.add(field.getValue().toString());
+                developerRow.add(field.getValue());
             }
             /**
              * I create the Developer Database record

@@ -137,7 +137,7 @@ public class UnholdBankMoneyTransactionPluginRoot extends AbstractPlugin impleme
 
             @Override
             public String getPublicKeyWallet() {
-                return "banking_wallet";
+                return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
             }
 
             @Override

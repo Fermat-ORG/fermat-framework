@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.music;
 
+import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 
 /**
@@ -32,6 +33,19 @@ public class MusicUserRecord implements MusicUser {
         this.email = email;
         this.apiToken = apiToken;
         this.apiSecretKey = apiSecretKey;
+    }
+
+    /**
+     * Constructor with User object parameter.
+     * @param user
+     */
+    public MusicUserRecord(
+            User user){
+        this.id = user.getId();
+        this.username = user.getUsername();
+        this.email = user.getEmail();
+        this.apiToken = user.getApiToken();
+        this.apiSecretKey = user.getApiSecretKey();
     }
 
     /**

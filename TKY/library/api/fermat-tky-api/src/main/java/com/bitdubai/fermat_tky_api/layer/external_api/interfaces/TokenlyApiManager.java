@@ -1,11 +1,15 @@
 package com.bitdubai.fermat_tky_api.layer.external_api.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetUserException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Album;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.DownloadSong;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 
 /**
@@ -43,11 +47,29 @@ public interface TokenlyApiManager extends FermatManager {
     DownloadSong getDownloadSongBySongId(String id) throws CantGetSongException;
 
     /**
-     * This method returns if a username and key pair si valid (temporal method)
+     * This method returns a User object by a username and key pair.
      * @param username
      * @param userKey
      * @return
      */
-    boolean isTokenlyAccessVaild(String username, String userKey);
+    User validateTokenlyUser(String username, String userKey) throws CantGetUserException;
+
+    /**
+     * This method returns a song array. This songs are provided by the Tokenly protected API, only
+     * authenticated users can get the songs.
+     * @param musicUser
+     * @return
+     */
+    Song[] getSongsByAuthenticatedUser(MusicUser musicUser) throws CantGetAlbumException;
+
+    /**
+     * This method returns a song. This song is provided by the Tokenly protected API, only
+     * authenticated users can get the song.
+     * @param musicUser
+     * @param tokenlySongId
+     * @return
+     * @throws CantGetSongException
+     */
+    Song getSongByAuthenticatedUser(MusicUser musicUser, String tokenlySongId) throws CantGetSongException;
 
 }

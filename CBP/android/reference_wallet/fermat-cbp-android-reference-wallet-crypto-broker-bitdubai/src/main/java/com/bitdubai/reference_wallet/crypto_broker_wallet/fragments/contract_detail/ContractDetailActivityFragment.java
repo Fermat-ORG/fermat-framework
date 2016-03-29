@@ -184,7 +184,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         detailDate.setText("Date:\n"+formatter.format(date));
         double exchangeRateAmount= getFormattedNumber(data.getExchangeRateAmount());
         double amount= getFormattedNumber(data.getAmount());
-        adapter = new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletManager);
+        adapter = new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletManager, this);
         detailRate.setText("1" + " " + data.getMerchandise() + " @ " + exchangeRateAmount + " " + paymentCurrency);
         recyclerView.setAdapter(adapter);
     }
@@ -358,5 +358,8 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         return stream.toByteArray();
     }
 
+    public void goToWalletHome() {
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
+    }
 }
 

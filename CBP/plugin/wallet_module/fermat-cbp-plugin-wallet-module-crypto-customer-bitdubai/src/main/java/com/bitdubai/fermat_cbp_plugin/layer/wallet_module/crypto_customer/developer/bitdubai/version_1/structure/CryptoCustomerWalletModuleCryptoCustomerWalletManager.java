@@ -17,6 +17,8 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ActorType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
@@ -344,15 +346,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                 }
             }
 
-
-            //TODO:Eliminar solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", new byte[0], "publicKeyBroker", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, false, null, "");
-            filteredList.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", new byte[0], "publicKeyBroker", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, false, null, "");
-            filteredList.add(contract);
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("publicKeyCustomer", new byte[0], "publicKeyBroker", new byte[0], "merchandise", "typeOfPayment", "paymentCurrency", ContractStatus.CANCELLED, false, null, "");
-            filteredList.add(contract);
-
             return filteredList;
 
         } catch (Exception ex) {
@@ -394,12 +387,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
                 waitingForBroker.add(contract);
             }
-
-            //TODO:Eliminar. Solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("TESTMOCK", new byte[0], "TESTMOCK", new byte[0],
-                    "TESTMOCK", "TESTMOCK", "TESTMOCK", ContractStatus.PAYMENT_SUBMIT, false, null, "");
-            waitingForBroker.add(contract);
-
             return waitingForBroker;
 
         } catch (Exception ex) {
@@ -441,11 +428,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
                 waitingForBroker.add(contract);
             }
-
-            //TODO: Eliminar. Solo para que se terminen las pantallas
-            contract = new CryptoBrokerWalletModuleContractBasicInformation("TESTMOCK", new byte[0], "TESTMOCK", new byte[0],
-                    "TESTMOCK", "TESTMOCK", "TESTMOCK", ContractStatus.PENDING_MERCHANDISE, false, null, "");
-            waitingForBroker.add(contract);
 
             return waitingForBroker;
 
@@ -577,7 +559,15 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
         try {
 
+
             relationship = actorExtraDataManager.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);
+
+            System.out.println("VLZ: relationship: "+relationship);
+
+            if( relationship == null ){
+
+                return false;
+            }
 
         } catch (RelationshipNotFoundException relationshipNotFoundException) {
 
@@ -951,6 +941,41 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     /**
+     * Returns a list of all associated bank accounts
+     *
+     * @throws CantGetListBankAccountsPurchaseException
+     */
+    @Override
+    public List<BankAccountNumber> getListOfBankAccounts() throws CantGetListBankAccountsPurchaseException {
+        List<BankAccountNumber> bankAccounts = new ArrayList<>();
+
+        for (NegotiationBankAccount ba : customerBrokerPurchaseNegotiationManager.getAllBankAccount()) {
+
+            String bankAccountInfo = ba.getBankAccount();
+            String bank, accountNumber;
+            BankAccountType bankAccountType = null;
+
+            bank = bankAccountInfo.substring(bankAccountInfo.indexOf("Bank: ")+6, bankAccountInfo.indexOf("\n"));
+            bankAccountInfo = bankAccountInfo.substring(bankAccountInfo.indexOf("\n")+1);
+
+            try{
+                String accountType = bankAccountInfo.substring(bankAccountInfo.indexOf("Account Type: ")+14, bankAccountInfo.indexOf("\n"));
+                bankAccountType = BankAccountType.getByCode(accountType);
+            }catch (FermatException e){ }
+            bankAccountInfo = bankAccountInfo.substring(bankAccountInfo.indexOf("\n")+1);
+
+            accountNumber = bankAccountInfo.substring(bankAccountInfo.indexOf("Number: ")+8);
+
+            BankAccountData ban = new BankAccountData(ba.getCurrencyType(), bankAccountType, bank, accountNumber, "");
+
+            bankAccounts.add(ban);
+
+        }
+        return bankAccounts;
+    }
+
+
+    /**
      * Delete all bank accounts associated with the crypto customer wallet
      *
      * @throws CantDeleteBankAccountPurchaseException
@@ -1031,6 +1056,12 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
         return managerMap;
     }
+
+    @Override
+    public CurrencyExchangeRateProviderManager getProviderReferenceFromId(UUID providerId) throws CantGetProviderException {
+        return currencyExchangeProviderFilterManager.getProviderReference(providerId);
+    }
+
 
     @Override
     public CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerWalletProviderSetting() throws CantNewEmptyCryptoCustomerWalletProviderSettingException {
@@ -1171,7 +1202,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             if (contractClauseType.equals(ContractClauseType.CRYPTO_TRANSFER)) { //Case: sending online payment
                 //TODO: here we need to get the CCP Wallet public key to send BTC to the customer, when the settings are finished, please, implement how to get the CCP Wallet public key here. Thanks.
-                String cryptoBrokerPublicKey = "walletPublicKeyTest"; //TODO: this is a hardcoded public key
+                String cryptoBrokerPublicKey = "reference_wallet"; //TODO: this is a hardcoded public key
                 customerOnlinePaymentManager.sendPayment(cryptoBrokerPublicKey, contractHash);
 
             } else {  // Case: sending offline payment.
