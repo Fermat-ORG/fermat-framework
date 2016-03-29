@@ -87,7 +87,7 @@ public class HomeCardViewHolder extends FermatViewHolder {
         homeIssuerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(res, bitmap));
 
         cardActorName.setText(asset.getActorName());
-        cardTime.setText("2 minutes ago"); //TODO setting time
+        cardTime.setText(asset.getFormattedDate());
 
         int image = (asset.getStatus().equals(Asset.Status.CONFIRMED)) ? R.drawable.detail_check : R.drawable.detail_uncheck;
         cardConfirmedImage.setImageResource(image);

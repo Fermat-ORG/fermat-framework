@@ -1,12 +1,16 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models;
 
+import android.text.format.DateUtils;
+
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.Utils;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
@@ -23,6 +27,7 @@ public class Asset {
     private double amount;
     private String description;
     private Timestamp expDate;
+    private Timestamp date;
     private Status status;
     private String actorName;
     private byte[] actorImage;
@@ -49,7 +54,7 @@ public class Asset {
         this.name = name;
     }
 
-    public Asset(AssetUserWalletList assetUserWalletList, Status status) {
+    public Asset(AssetUserWalletList assetUserWalletList, long timestamp, Status status) {
         this.assetUserWalletList = assetUserWalletList;
         this.digitalAsset = assetUserWalletList.getDigitalAsset();
         setImage(digitalAsset.getResources().get(0).getResourceBinayData());
@@ -57,6 +62,7 @@ public class Asset {
         setAmount(assetUserWalletList.getAvailableBalance());
         setDescription(digitalAsset.getDescription());
         setExpDate((Timestamp) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
+        setDate(new Timestamp(timestamp));
         setStatus(status);
         setActorName(digitalAsset.getIdentityAssetIssuer().getAlias());
         setActorImage(digitalAsset.getIdentityAssetIssuer().getImage());
@@ -109,8 +115,20 @@ public class Asset {
         this.expDate = expDate;
     }
 
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
+    }
+
     public String getFormattedExpDate() {
         return (expDate == null) ? "No expiration date" : DAPStandardFormats.DATE_FORMAT.format(expDate);
+    }
+
+    public String getFormattedDate() {
+        return (date == null) ? "No date" : Utils.getTimeAgo(date.getTime());
     }
 
     public Status getStatus() {

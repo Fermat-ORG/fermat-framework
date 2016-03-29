@@ -9,6 +9,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Actor
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
 import java.util.ArrayList;
@@ -43,12 +44,12 @@ public class DataManager {
             long quantityAvailableBalance = assetUserWalletList.getQuantityAvailableBalance();
             assets = new ArrayList<>();
             for(long i = 0; i < quantityAvailableBalance; i++) {
-                assets.add(new Asset(assetUserWalletList, Asset.Status.CONFIRMED));
+                assets.add(new Asset(assetUserWalletList, 0, Asset.Status.CONFIRMED));
             }
 
             long quantityBookBalance = assetUserWalletList.getQuantityBookBalance() - quantityAvailableBalance;
             for(long i = 0; i < quantityBookBalance; i++) {
-                assets.add(new Asset(assetUserWalletList, Asset.Status.PENDING));
+                assets.add(new Asset(assetUserWalletList, 0, Asset.Status.PENDING));
             }
 
             issuer.setAssets(assets);
@@ -57,20 +58,21 @@ public class DataManager {
         return issuers;
     }
 
-    public List<Asset> getAssets() throws CantLoadWalletException {
+    public List<Asset> getAssets() throws CantLoadWalletException, CantGetTransactionsException {
         List<AssetUserWalletList> assetUserWalletBalances = moduleManager.getAssetUserWalletBalances(walletPublicKey);
         List<Asset> assets = new ArrayList<>();
         Asset asset;
         for(AssetUserWalletList assetUserWalletList : assetUserWalletBalances) {
+            long timestamp = moduleManager.loadAssetUserWallet(walletPublicKey).getAllTransactions(assetUserWalletList.getDigitalAsset().getPublicKey()).get(0).getTimestamp();
             long quantityAvailableBalance = assetUserWalletList.getQuantityAvailableBalance();
             assets = new ArrayList<>();
             for(long i = 0; i < quantityAvailableBalance; i++) {
-                assets.add(new Asset(assetUserWalletList, Asset.Status.CONFIRMED));
+                assets.add(new Asset(assetUserWalletList, timestamp, Asset.Status.CONFIRMED));
             }
 
             long quantityBookBalance = assetUserWalletList.getQuantityBookBalance() - quantityAvailableBalance;
             for(long i = 0; i < quantityBookBalance; i++) {
-                assets.add(new Asset(assetUserWalletList, Asset.Status.PENDING));
+                assets.add(new Asset(assetUserWalletList, timestamp, Asset.Status.PENDING));
             }
         }
         return assets;
