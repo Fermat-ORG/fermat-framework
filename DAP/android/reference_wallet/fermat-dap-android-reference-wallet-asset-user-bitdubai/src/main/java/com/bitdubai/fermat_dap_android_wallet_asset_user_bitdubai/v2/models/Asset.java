@@ -8,6 +8,8 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -20,8 +22,10 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
  */
 public class Asset {
     private AssetUserWalletList assetUserWalletList;
+    private AssetUserWalletTransaction assetUserWalletTransaction;
     private DigitalAsset digitalAsset;
 
+    private String id;
     private byte[] image;
     private String name;
     private double amount;
@@ -54,16 +58,18 @@ public class Asset {
         this.name = name;
     }
 
-    public Asset(AssetUserWalletList assetUserWalletList, long timestamp, Status status) {
+    public Asset(AssetUserWalletList assetUserWalletList, AssetUserWalletTransaction assetUserWalletTransaction) {
         this.assetUserWalletList = assetUserWalletList;
+        this.assetUserWalletTransaction = assetUserWalletTransaction;
         this.digitalAsset = assetUserWalletList.getDigitalAsset();
+        setId(assetUserWalletTransaction.getActualTransactionHash());
         setImage(digitalAsset.getResources().get(0).getResourceBinayData());
         setName(digitalAsset.getName());
         setAmount(assetUserWalletList.getAvailableBalance());
         setDescription(digitalAsset.getDescription());
         setExpDate((Timestamp) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
-        setDate(new Timestamp(timestamp));
-        setStatus(status);
+        setDate(new Timestamp(assetUserWalletTransaction.getTimestamp()));
+        setStatus((assetUserWalletTransaction.getBalanceType().equals(BalanceType.AVAILABLE)) ? Asset.Status.CONFIRMED : Asset.Status.PENDING);
         setActorName(digitalAsset.getIdentityAssetIssuer().getAlias());
         setActorImage(digitalAsset.getIdentityAssetIssuer().getImage());
         setRedeemable((Boolean) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE).getValue());
@@ -181,5 +187,13 @@ public class Asset {
 
     public void setSaleable(boolean saleable) {
         this.saleable = saleable;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
