@@ -304,6 +304,7 @@ public enum Plugins implements FermatPluginsEnum {
 
     //CHT
 
+    CHAT_IDENTITY                       ("CHTID"),
     CHAT_MIDDLEWARE                     ("CHMID"),
     CHAT_NETWORK_SERVICE                ("CHTNS"),
     CHAT_SUP_APP_MODULE                 ("CHTSAM"), CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
@@ -463,6 +464,7 @@ public enum Plugins implements FermatPluginsEnum {
 
             case "BCNNODE"   :  return BITDUBAI_COMMUNICATIONS_NETWORK_NODE     ;
             case "BCNCLIENT" :  return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT   ;
+            case "CHTID":       return CHAT_IDENTITY                            ;
             case "CHMID":       return CHAT_MIDDLEWARE                          ;
             case "CHTNS":       return CHAT_NETWORK_SERVICE                     ;
             case "CHTSAM":      return CHAT_SUP_APP_MODULE                      ;
