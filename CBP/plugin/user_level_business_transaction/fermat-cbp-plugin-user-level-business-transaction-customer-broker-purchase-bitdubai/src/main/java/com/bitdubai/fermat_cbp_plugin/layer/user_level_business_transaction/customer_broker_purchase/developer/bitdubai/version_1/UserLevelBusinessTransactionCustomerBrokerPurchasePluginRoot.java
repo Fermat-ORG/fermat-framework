@@ -36,7 +36,6 @@ import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.cust
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.UserLevelBusinessTransactionCustomerBrokerPurchaseManager;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_purchase.developer.bitdubai.version_1.structure.events.UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
-import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -87,7 +86,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchasePluginRoot extend
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.CONTRACT, plugin = Plugins.CONTRACT_PURCHASE)
     CustomerBrokerContractPurchaseManager customerBrokerContractPurchaseManager;
 
-    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.BITDUBAI_CER_PROVIDER_FILTER)
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.FILTER)
     private CurrencyExchangeProviderFilterManager currencyExchangeRateProviderFilter;
 
     //@NeededPluginReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.SUB_APP_MODULE, plugin = Plugins.NOTIFICATION)
