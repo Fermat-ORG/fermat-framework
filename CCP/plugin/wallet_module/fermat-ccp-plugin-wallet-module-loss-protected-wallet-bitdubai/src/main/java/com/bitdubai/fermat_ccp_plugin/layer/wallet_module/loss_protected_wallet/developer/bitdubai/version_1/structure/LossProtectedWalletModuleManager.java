@@ -1543,8 +1543,6 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
             filteredProviders = exchangeProviderFilterManagerproviderFilter.getProviderReferencesFromCurrencyPair(wantedCurrencyPair);
 
-
-
         } catch (CantGetProviderException e) {
             throw new CantGetCurrencyExchangeProviderException(CantGetCurrencyExchangeException.DEFAULT_MESSAGE,e, "", "Provider error.");
         }
@@ -1580,13 +1578,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
         } catch (SettingsNotFoundException e) {
 
-            BitcoinLossProtectedWalletSettings bitcoinLossProtectedWalletSettings = null;
-
-            try {
-                bitcoinWalletManager.getSettingsManager().persistSettings(walletPublicKey, bitcoinLossProtectedWalletSettings);
-            } catch (CantPersistSettingsException e1) {
-                e1.printStackTrace();
-            }
+            bitcoinWalletManager.createSettingsFile(walletPublicKey);
 
             return null;
         }

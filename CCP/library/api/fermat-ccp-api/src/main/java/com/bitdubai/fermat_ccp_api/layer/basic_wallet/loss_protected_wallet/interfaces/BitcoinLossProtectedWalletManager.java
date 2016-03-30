@@ -15,4 +15,6 @@ public interface BitcoinLossProtectedWalletManager extends FermatManager {
     void createWallet(String walletPublicKey) throws CantCreateWalletException;
 
     SettingsManager<BitcoinLossProtectedWalletSettings> getSettingsManager();
+
+    void createSettingsFile(String walletPublicKey);
 }
