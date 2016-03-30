@@ -1608,7 +1608,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         final String publicKey = WalletsPublicKeys.DAP_USER_WALLET.getCode();
 
-        final String statusBarColor = "#009688";
+        final String statusBarColor = "#1371A7";
         final String titleBarLabelColor = "#ffffff";
         final int titleBarLabelSize = 20;
 
