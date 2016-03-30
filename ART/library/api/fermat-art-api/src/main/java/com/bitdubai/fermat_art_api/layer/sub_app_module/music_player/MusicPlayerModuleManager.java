@@ -1,11 +1,7 @@
-package com.bitdubai.fermat_tky_api.layer.wallet_module;
+package com.bitdubai.fermat_art_api.layer.sub_app_module.music_player;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
-import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
-import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
-import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
-import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDeleteSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDownloadSongException;
@@ -20,11 +16,9 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/17/16.
+ * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/29/16.
  */
-public interface FanWalletModule extends FermatManager{
-
-    //Song Wallet
+public interface MusicPlayerModuleManager extends FermatManager {
     /**
      * This method returns a songs list by SongStatus enum
      * @param songStatus
@@ -96,34 +90,8 @@ public interface FanWalletModule extends FermatManager{
      * @param songId
      * @throws CantDownloadSongException
      */
-    void downloadSong(UUID songId, MusicUser musicUser) throws
+    void downloadSong(UUID songId) throws
             CantDownloadSongException,
             CantUpdateSongDevicePathException,
             CantUpdateSongStatusException;
-
-    //Fan Identity
-
-    /**
-     * Through the method <code>listIdentitiesFromCurrentDeviceUser</code> we can get all the fan
-     * identities linked to the current logged device user.
-     * @return
-     * @throws CantListFanIdentitiesException
-     */
-    List<Fan> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
-
-    //External API
-    /**
-     * This method returns String that contains a swap bot by botId
-     * @param botId represents the bot Id in swapbot site.
-     * @return
-     */
-    Bot getBotByBotId(String botId) throws CantGetBotException;
-
-    /**
-     * This method returns String that contains a swap bot by tokenly username
-     * @param username
-     * @return
-     * @throws CantGetBotException
-     */
-    Bot getBotBySwapbotUsername(String username) throws CantGetBotException;
 }
