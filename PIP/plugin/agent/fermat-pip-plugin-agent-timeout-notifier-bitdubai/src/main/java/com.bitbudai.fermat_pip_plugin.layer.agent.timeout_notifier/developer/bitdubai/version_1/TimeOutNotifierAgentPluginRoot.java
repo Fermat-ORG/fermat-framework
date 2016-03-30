@@ -1,5 +1,6 @@
 package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1;
 
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOutNotifierAgentDatabaseDao;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOutNotifierAgentDeveloperDatabaseFactory;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.exceptions.CantInitializeTimeOutNotifierAgentDatabaseException;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierAgent;
@@ -50,6 +51,7 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
     TimeOutNotifierAgentDeveloperDatabaseFactory timeOutNotifierAgentDeveloperDatabaseFactory;
     TimeOutNotifierAgentPool timeOutNotifierAgentPool;
     TimeOutNotifierManager timeOutNotifierManager;
+    TimeOutNotifierAgentDatabaseDao dao;
 
     /**
      * constructor
@@ -97,10 +99,10 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
         /**
          * Instantiate agents.
          */
-        timeOutNotifierAgentPool = new TimeOutNotifierAgentPool(this.pluginDatabaseSystem, this.pluginId, this.errorManager);
-        timeOutNotifierManager = new TimeOutNotifierManager(this.pluginDatabaseSystem, this.pluginId, this.errorManager, this.timeOutNotifierAgentPool);
+        timeOutNotifierAgentPool = new TimeOutNotifierAgentPool(getDao(), this.errorManager);
+        timeOutNotifierManager = new TimeOutNotifierManager(getDao(), this.errorManager, this.timeOutNotifierAgentPool);
 
-        testAddNewAgent();
+        //testAddNewAgent();
     }
 
 
@@ -115,12 +117,19 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
             owner.setPublicKey(UUID.randomUUID().toString());
             owner.setType(Actors.CBP_CRYPTO_CUSTOMER);
             owner.setName("Test Rodrigo");
-            timeOutNotifierManager.addNew(System.currentTimeMillis(), 40000, "Prueba _Rodrigo 2", owner);
+            timeOutNotifierManager.addNew(System.currentTimeMillis(), 40000, "Prueba Rodrigo 1", owner);
 
             System.out.println("***TimeOutNotifier*** " + timeOutNotifierManager.getTimeOutAgents(owner).toString());
             System.out.println("***TimeOutNotifier*** " + timeOutNotifierManager.getTimeOutAgents().size());
     } catch (Exception e) {
         e.printStackTrace();
     }
+    }
+
+    private TimeOutNotifierAgentDatabaseDao getDao(){
+        if (dao == null)
+            dao = new TimeOutNotifierAgentDatabaseDao(this.pluginDatabaseSystem, this.pluginId);
+
+        return dao;
     }
 }

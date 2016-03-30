@@ -1,14 +1,22 @@
 package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure;
 
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOutNotifierAgentDatabaseDao;
 import com.bitdubai.fermat_api.layer.actor.FermatActor;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantResetTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantStartTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantStopTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutAgent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
  * The Class <code>com.bitdubai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierAgent</code>
@@ -23,6 +31,9 @@ import java.util.UUID;
  */
 public class TimeOutNotifierAgent implements TimeOutAgent {
 
+    /**
+     * class variables
+     */
     private UUID uuid;
     private String name;
     private String description;
@@ -33,10 +44,12 @@ public class TimeOutNotifierAgent implements TimeOutAgent {
     private AgentStatus status;
     private ProtocolStatus protocolStatus;
 
+
     /**
      * default constructor
      */
     public TimeOutNotifierAgent() {
+
     }
 
     @Override
@@ -47,19 +60,13 @@ public class TimeOutNotifierAgent implements TimeOutAgent {
             return false;
     }
 
-    @Override
-    public void startTimeOutAgent() throws CantStartTimeOutAgentException {
 
-    }
+    private final class Agent implements Runnable{
 
-    @Override
-    public void resetTimeOutAgent() throws CantResetTimeOutAgentException {
+        @Override
+        public void run() {
 
-    }
-
-    @Override
-    public void stopTimeOutAgent() throws CantStopTimeOutAgentException {
-
+        }
     }
 
     /**

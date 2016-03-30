@@ -27,22 +27,19 @@ public class TimeOutNotifierAgentPool {
      * class variables
      */
     private List<TimeOutAgent> runningAgents;
-    private TimeOutNotifierAgentDatabaseDao timeOutNotifierAgentDatabaseDao;
+    final private TimeOutNotifierAgentDatabaseDao dao;
 
 
     /**
      * platform variables
      */
-    final PluginDatabaseSystem pluginDatabaseSystem;
-    final UUID pluginId;
     final ErrorManager errorManager;
 
     /**
      * default constructor
      */
-    public TimeOutNotifierAgentPool(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, ErrorManager errorManager) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
+    public TimeOutNotifierAgentPool(TimeOutNotifierAgentDatabaseDao timeOutNotifierAgentDatabaseDao, ErrorManager errorManager) {
+        this.dao = timeOutNotifierAgentDatabaseDao;
         this.errorManager = errorManager;
 
         initialize();
@@ -60,21 +57,12 @@ public class TimeOutNotifierAgentPool {
     private List<TimeOutAgent> loadRunningAgents() {
         List<TimeOutAgent> timeOutAgentList = new ArrayList<>();
         try {
-            timeOutAgentList.addAll(getDao().getTimeOutNotifierAgent(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, AgentStatus.CREATED.getCode(), DatabaseFilterType.NOT_EQUALS));
+            timeOutAgentList.addAll(dao.getTimeOutNotifierAgent(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, AgentStatus.CREATED.getCode(), DatabaseFilterType.NOT_EQUALS));
         } catch (CantExecuteQueryException e) {
             return timeOutAgentList;
         }
 
         return timeOutAgentList;
-    }
-
-
-    private TimeOutNotifierAgentDatabaseDao getDao(){
-             if (timeOutNotifierAgentDatabaseDao == null)
-            timeOutNotifierAgentDatabaseDao = new TimeOutNotifierAgentDatabaseDao(pluginDatabaseSystem, pluginId);
-
-        return timeOutNotifierAgentDatabaseDao;
-
     }
 
     /**
@@ -85,7 +73,7 @@ public class TimeOutNotifierAgentPool {
     public void addRunningAgent(TimeOutAgent timeOutNotifierAgent) throws CantAddNewTimeOutAgentException {
         runningAgents.add(timeOutNotifierAgent);
         try {
-            getDao().addTimeOutNotifierAgent(timeOutNotifierAgent);
+            dao.addTimeOutNotifierAgent(timeOutNotifierAgent);
         } catch (Exception e) {
             //remove it from memory.
             try {
@@ -106,7 +94,7 @@ public class TimeOutNotifierAgentPool {
     public void removeRunningAgent(TimeOutAgent timeOutNotifierAgent) throws CantRemoveExistingTimeOutAgentException {
         runningAgents.remove(timeOutNotifierAgent);
         try {
-            getDao().removeTimeOutNotifierAgent(timeOutNotifierAgent);
+            dao.removeTimeOutNotifierAgent(timeOutNotifierAgent);
         } catch (Exception e) {
             CantRemoveExistingTimeOutAgentException exception = new CantRemoveExistingTimeOutAgentException(e,
                     "Error trying to remove an Agent from the pool.",

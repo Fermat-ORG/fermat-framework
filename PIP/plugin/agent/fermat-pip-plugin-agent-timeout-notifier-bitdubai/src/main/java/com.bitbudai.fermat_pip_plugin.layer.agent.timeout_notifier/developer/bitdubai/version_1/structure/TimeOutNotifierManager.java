@@ -1,18 +1,26 @@
 package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure;
 
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOutNotifierAgentDatabaseDao;
 import com.bitdubai.fermat_api.layer.actor.FermatActor;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantAddNewTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantRemoveExistingTimeOutAgentException;
+import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantResetTimeOutAgentException;
+import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantStartTimeOutAgentException;
+import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantStopTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutAgent;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Executors;
 
 /**
  * Created by rodrigo on 3/27/16.
@@ -20,30 +28,29 @@ import java.util.UUID;
 public class TimeOutNotifierManager  implements TimeOutManager{
 
     /**
-     * platform variables
+     * Class Variables
      */
-    final PluginDatabaseSystem pluginDatabaseSystem;
-    final UUID pluginId;
-    final ErrorManager errorManager;
+    final TimeOutNotifierAgentDatabaseDao dao;
     final TimeOutNotifierAgentPool timeOutNotifierAgentPool;
 
+    /**
+     * platform variables
+     */
+    final ErrorManager errorManager;
 
     /**
      * constructor
-     * @param pluginDatabaseSystem
-     * @param pluginId
      * @param errorManager
      */
-    public TimeOutNotifierManager(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, ErrorManager errorManager, TimeOutNotifierAgentPool timeOutNotifierAgentPool) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
+    public TimeOutNotifierManager(TimeOutNotifierAgentDatabaseDao timeOutNotifierAgentDatabaseDao, ErrorManager errorManager, TimeOutNotifierAgentPool timeOutNotifierAgentPool) {
+        this.dao = timeOutNotifierAgentDatabaseDao;
         this.errorManager = errorManager;
         this.timeOutNotifierAgentPool = timeOutNotifierAgentPool;
     }
 
     @Override
     public TimeOutAgent addNew(long epochTime, long timeout, String name, FermatActor owner) throws CantAddNewTimeOutAgentException {
-        TimeOutNotifierAgent timeOutNotifierAgent = new TimeOutNotifierAgent();
+        TimeOutNotifierAgent timeOutNotifierAgent = new TimeOutNotifierAgent(dao, errorManager);
         timeOutNotifierAgent.setUuid(UUID.randomUUID());
         timeOutNotifierAgent.setName(name);
         timeOutNotifierAgent.setStartTime(epochTime);
@@ -60,6 +67,21 @@ public class TimeOutNotifierManager  implements TimeOutManager{
     @Override
     public void remove(TimeOutAgent timeOutAgent) throws CantRemoveExistingTimeOutAgentException {
         timeOutNotifierAgentPool.removeRunningAgent(timeOutAgent);
+    }
+
+    @Override
+    public void stopTimeOutAgent(TimeOutAgent timeOutAgent) throws CantStopTimeOutAgentException {
+
+    }
+
+    @Override
+    public void startTimeOutAgent(TimeOutAgent timeOutAgent) throws CantStartTimeOutAgentException {
+
+    }
+
+    @Override
+    public void resetTimeOutAgent(TimeOutAgent timeOutAgent) throws CantResetTimeOutAgentException {
+
     }
 
     @Override
@@ -96,4 +118,6 @@ public class TimeOutNotifierManager  implements TimeOutManager{
         }
         return timeOutAgentList;
     }
+
+
 }
