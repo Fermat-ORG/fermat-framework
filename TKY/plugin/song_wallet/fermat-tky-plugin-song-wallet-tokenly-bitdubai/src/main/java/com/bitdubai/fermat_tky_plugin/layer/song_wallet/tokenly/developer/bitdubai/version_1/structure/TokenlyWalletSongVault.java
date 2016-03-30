@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
@@ -68,9 +69,11 @@ public class TokenlyWalletSongVault {
      */
     public TokenlyWalletSongVault(
             PluginFileSystem pluginFileSystem,
-            TokenlyApiManager tokenlyApiManager){
+            TokenlyApiManager tokenlyApiManager,
+            UUID pluginId){
         this.pluginFileSystem = pluginFileSystem;
         this.tokenlyApiManager = tokenlyApiManager;
+        this.pluginId = pluginId;
     }
 
     /**
@@ -195,6 +198,44 @@ public class TokenlyWalletSongVault {
             throw new CantDownloadFileException(
                     e,
                     "Downloading file from URL "+downloadUrl,
+                    "Cannot create the file");
+        }
+    }
+
+    /**
+     * This method returns a byte arrays from the dice storage that represents the song ready to be
+     * played.
+     * @param fileName
+     * @return
+     * @throws CantGetSongException
+     */
+    public byte[] getSongFromDeviceStorage(String fileName)throws CantGetSongException{
+        try{
+
+            System.out.println("TKY: READ " + DIRECTORY_NAME + "/fileName");
+            PluginBinaryFile pluginBinaryFile=pluginFileSystem.getBinaryFile(
+                    pluginId,
+                    DIRECTORY_NAME,
+                    fileName,
+                    FILE_PRIVACY,
+                    FILE_LIFE_SPAN);
+            pluginBinaryFile.loadFromMedia();
+            byte[] bytes = pluginBinaryFile.getContent();
+            return bytes;
+        } catch (FileNotFoundException e) {
+            throw new CantGetSongException(
+                    e,
+                    "Getting file from path "+DIRECTORY_NAME + "/fileName",
+                    "File not found");
+        } catch (CantLoadFileException e) {
+            throw new CantGetSongException(
+                    e,
+                    "Getting file from path "+DIRECTORY_NAME + "/fileName",
+                    "Cannot load the file");
+        } catch (CantCreateFileException e) {
+            throw new CantGetSongException(
+                    e,
+                    "Getting file from path "+DIRECTORY_NAME + "/fileName",
                     "Cannot create the file");
         }
     }
