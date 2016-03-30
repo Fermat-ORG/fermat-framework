@@ -407,14 +407,14 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
 
     private void testDownloadSongsAndRecoverBytesArray(){
         try{
-            testSynchronizeSongs();
+            //testSynchronizeSongs();
             List<WalletSong> availableSongsList = this.tokenlyWalletManager.getAvailableSongs();
             System.out.println("TKY - AVAILABLE List "+availableSongsList);
             WalletSong songToRecover = availableSongsList.get(0);
             WalletSong fullSong=this.tokenlyWalletManager.getSongWithBytes(
                     songToRecover.getSongId());
             byte[] songBytes = fullSong.getSongBytes();
-            FileOutputStream fos = new FileOutputStream("test/"+fullSong.getName());
+            FileOutputStream fos = new FileOutputStream("/storage/emulated/0/Music/test/"+fullSong.getName().replace(" ","_"));
             fos.write(songBytes);
             fos.close();
         } catch (Exception e){
