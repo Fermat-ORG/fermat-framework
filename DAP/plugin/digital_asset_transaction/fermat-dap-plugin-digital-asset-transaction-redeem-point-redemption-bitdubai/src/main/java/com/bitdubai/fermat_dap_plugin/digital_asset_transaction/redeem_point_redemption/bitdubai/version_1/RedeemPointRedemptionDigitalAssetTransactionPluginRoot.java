@@ -30,6 +30,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -64,6 +65,9 @@ public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends Abst
         RedeemPointRedemptionManager,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_ROUTER, plugin = Plugins.INCOMING_CRYPTO)
+    private IncomingCryptoManager incomingCryptoManager;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;
@@ -179,7 +183,8 @@ public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends Abst
                 assetRedeemPointWalletManager,
                 actorAssetUserManager,
                 bitcoinNetworkManager,
-                actorAssetIssuerManager);
+                actorAssetIssuerManager,
+                incomingCryptoManager);
     }
 
     private RedeemPointRedemptionRecorderService createNewRecorderService() throws CantSetObjectException {
