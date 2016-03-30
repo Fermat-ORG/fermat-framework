@@ -2,6 +2,7 @@ package com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDeleteSongException;
@@ -98,4 +99,12 @@ public interface SongWalletTokenlyManager extends FermatManager{
             CantUpdateSongDevicePathException,
             CantUpdateSongStatusException;
 
+    /**
+     * This method returns a WalletSong object that includes a byte array that represents the song
+     * ready to be played.
+     * @param songId
+     * @return
+     * @throws CantGetSongException
+     */
+    WalletSong getSongWithBytes(UUID songId) throws CantGetSongException;
 }
