@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -14,7 +15,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
@@ -66,15 +66,14 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrency
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collection;
-import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 import java.util.UUID;
 
 
@@ -103,9 +102,11 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     }
 
     private Database database;
+    private ErrorManager errorManager;
 
-    public CryptoBrokerWalletDatabaseDao(Database database) {
+    public CryptoBrokerWalletDatabaseDao(Database database, ErrorManager errorManager) {
         this.database = database;
+        this.errorManager = errorManager;
     }
 
     public List<CurrencyMatching> getCryptoBrokerTransactionCurrencyMatchings() throws CantGetTransactionCryptoBrokerWalletMatchingException {
@@ -305,19 +306,22 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                 }
             }
 
-            if (associatedProvider != null) {
-                CurrencyExchangeRateProviderManager provider = providerFilter.getProviderReference(associatedProvider.getPlugin());
-                rate = provider.getCurrentExchangeRate(currencyPair);
-            } else {
-                List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>(providerFilter.getProviderReferencesFromCurrencyPair(currencyPair));
-                if (!providers.isEmpty())
-                    rate = providers.get(0).getCurrentExchangeRate(currencyPair);
+            try {
+                if (associatedProvider != null) {
+                    CurrencyExchangeRateProviderManager provider = providerFilter.getProviderReference(associatedProvider.getPlugin());
+                    rate = provider.getCurrentExchangeRate(currencyPair);
+                } else {
+                    List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>(providerFilter.getProviderReferencesFromCurrencyPair(currencyPair));
+                    if (!providers.isEmpty())
+                        rate = providers.get(0).getCurrentExchangeRate(currencyPair);
+                }
+            } catch (CantGetExchangeRateException e) {
+                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET,
+                        UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
             }
 
         } catch (CantGetProviderException e) {
             throw new CantGetCryptoBrokerQuoteException("Cant Get Provider Exception", e, "", "");
-        } catch (CantGetExchangeRateException e) {
-            throw new CantGetCryptoBrokerQuoteException("Cant Get Exchange Rate Exception", e, "", "");
         } catch (UnsupportedCurrencyPairException e) {
             throw new CantGetCryptoBrokerQuoteException("Unsupported Currency Pair Exception", e, "", "");
         } catch (CantGetCryptoBrokerWalletSettingException e) {
@@ -483,7 +487,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         return transactions;
     }
 
-    public  List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, MoneyType moneyType, int offset, long timeStamp) throws CantGetCryptoBrokerStockTransactionException {
+    public List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, MoneyType moneyType, int offset, long timeStamp) throws CantGetCryptoBrokerStockTransactionException {
         DatabaseTable databaseTable = getStockWalletTransactionTable();
         FiatCurrency fiatCurrency = null;
         CryptoCurrency cryptoCurrency = null;
@@ -524,7 +528,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             for (DatabaseTableRecord record : records) {
                 Long date = record.getLongValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME);
 
-                if( timeStamp <= date && date <= dateend ){
+                if (timeStamp <= date && date <= dateend) {
 
                     if (MoneyType.CRYPTO != MoneyType.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MONEY_TYPE_COLUMN_NAME))) {
                         fiatCurrency = FiatCurrency.getByCode(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
@@ -723,10 +727,10 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             List<DatabaseTableRecord> records = table.getRecords();
 
             for (DatabaseTableRecord record : records) {
-                if(
-                    record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PLATFORM_COLUMN_NAME).equalsIgnoreCase(platform.getCode()) ||
-                    platform == null
-                ){
+                if (
+                        record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_WALLET_ASSOCIATED_PLATFORM_COLUMN_NAME).equalsIgnoreCase(platform.getCode()) ||
+                                platform == null
+                        ) {
                     table.deleteRecord(record);
                 }
             }
