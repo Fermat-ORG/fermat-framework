@@ -38,24 +38,22 @@ public class FanIdentityManager implements TokenlyFanIdentityManagerModule{
     }
 
     @Override
-    public Fan createFanIdentity(String alias, byte[] profileImage, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform) throws CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
+    public Fan createFanIdentity(String userName, byte[] profileImage, String userPassword,  ExternalPlatform externalPlatform) throws CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
         return tokenlyFanIdentityManager.createFanIdentity(
-                alias,
+                userName,
                 profileImage,
-                externalUserName,
-                externalAccessToken,
+                userPassword,
                 externalPlatform);
     }
 
     @Override
-    public void updateFanIdentity(String alias, UUID id, String publicKey, byte[] profileImage, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+    public void updateFanIdentity(String userName,String password, UUID id,String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
         tokenlyFanIdentityManager.updateFanIdentity(
-                alias,
+                userName,
+                password,
                 id,
                 publicKey,
                 profileImage,
-                externalUserName,
-                externalAccessToken,
                 externalPlatform);
     }
 

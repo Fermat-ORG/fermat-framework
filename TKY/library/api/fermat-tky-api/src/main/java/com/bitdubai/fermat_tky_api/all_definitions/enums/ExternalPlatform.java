@@ -51,7 +51,7 @@ public enum ExternalPlatform implements FermatEnum {
         }
         return  platformsNames;
     }
-    public  static ExternalPlatform getExternalPlatformByLabel(String label){
+    public static ExternalPlatform getExternalPlatformByLabel(String label){
         for (ExternalPlatform externalPlatform :
                 values()) {
             if(externalPlatform.name().equals(label.toUpperCase()))

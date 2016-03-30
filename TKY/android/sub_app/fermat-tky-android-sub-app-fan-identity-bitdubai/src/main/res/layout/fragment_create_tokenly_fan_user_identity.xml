@@ -33,7 +33,8 @@
         android:layout_centerHorizontal="true"
         android:orientation="vertical"
         android:id="@+id/linearLayout"
-        android:layout_above="@+id/create_tokenly_fan_identity">
+        android:layout_above="@+id/create_tokenly_fan_identity"
+        android:weightSum="1">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -74,43 +75,45 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="52dp"
             android:layout_marginEnd="@dimen/activity_horizontal_margin"
             android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin">
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:layout_weight="0.29">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/tokeny_acces_token"
+                android:id="@+id/tokenly_acces_password_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="8dp"
                 android:background="@android:color/transparent"
-                android:text="Tokenly Access Token"
+                android:text="Password"
                 android:textColor="#919090"
                 android:textSize="14sp"
                 tools:ignore="HardcodedText" />
 
 
             <EditText
-                android:id="@+id/tokenly_access_token"
+                android:id="@+id/tokenly_access_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/tokeny_acces_token"
-                android:layout_marginTop="4dp"
-                android:hint="Write your access Token"
+                android:hint="Write your access password here"
                 android:lines="1"
                 android:padding="8dp"
                 android:singleLine="true"
                 android:textColor="@android:color/black"
                 android:textColorHint="@android:color/darker_gray"
                 android:textSize="16sp"
-                tools:ignore="HardcodedText" />
+                tools:ignore="HardcodedText"
+                android:layout_below="@+id/tokenly_acces_password_label"
+                android:layout_alignParentStart="true"
+                android:inputType="textPassword" />
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="349dp"
-            android:layout_height="83dp"
+            android:layout_height="104dp"
             android:layout_gravity="center_horizontal">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -120,7 +123,9 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
-                android:text="External Platform" />
+                android:text="External Platform"
+                android:textColor="#000000"
+                tools:ignore="HardcodedText" />
 
             <Spinner
                 android:layout_width="wrap_content"

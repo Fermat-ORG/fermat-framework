@@ -2,9 +2,7 @@ package com.bitdubai.sup_app.tokenly_fan_user_identity.fragments;
 
 import android.app.Activity;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -82,7 +80,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private Menu menuHelp;
     private Fan identitySelected;
     private boolean isUpdate = false;
-    private EditText mFanExternalAccessToken;
+    private EditText mFanExternalPassword;
     private Spinner mFanExternalPlatform;
     private SettingsManager<TokenlyFanPreferenceSettings> settingsManager;
     private TokenlyFanPreferenceSettings tokenlyFanPreferenceSettings = null;
@@ -99,8 +97,6 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        handler = new Handler();
 
         try {
             tokenlyFanUserIdentitySubAppSession = (TokenlyFanUserIdentitySubAppSession) appSession;
@@ -148,16 +144,16 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         View rootLayout = inflater.inflate(R.layout.fragment_create_tokenly_fan_user_identity, container, false);
         initViews(rootLayout);
         setUpIdentity();
-        SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
+       // SharedPreferences pref = getActivity().getSharedPreferences("dont show dialog more", Context.MODE_PRIVATE);
 //        if (!pref.getBoolean("isChecked", false)) {
 //            PresentationTokenlyFanUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationTokenlyFanUserIdentityDialog(getActivity(), null, null);
 //            presentationIntraUserCommunityDialog.show();
 //        }
 
-        if (tokenlyFanPreferenceSettings.isHomeTutorialDialogEnabled()) {
-            PresentationTokenlyFanUserIdentityDialog presentationTokenlyFanUserIdentityDialog = new PresentationTokenlyFanUserIdentityDialog(getActivity(),tokenlyFanUserIdentitySubAppSession, null,moduleManager);
-            presentationTokenlyFanUserIdentityDialog.show();
-        }
+//        if (tokenlyFanPreferenceSettings.isHomeTutorialDialogEnabled()) {
+//            PresentationTokenlyFanUserIdentityDialog presentationTokenlyFanUserIdentityDialog = new PresentationTokenlyFanUserIdentityDialog(getActivity(),tokenlyFanUserIdentitySubAppSession, null,moduleManager);
+//            presentationTokenlyFanUserIdentityDialog.show();
+//        }
 
         return rootLayout;
     }
@@ -215,8 +211,8 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             fanImageByteArray = toByteArray(bitmap);
             fanImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
         }
-        mFanExternalUserName.setText(identitySelected.getExternalUsername());
-        mFanExternalAccessToken.setText(identitySelected.getExternalAccesToken());
+        mFanExternalUserName.setText(identitySelected.getUsername());
+      //  mFanExternalPassword.setText(identitySelected.getApiToken());
         List<String> arraySpinner = ExternalPlatform.getArrayItems();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
         mFanExternalPlatform.setAdapter(adapter);
@@ -236,7 +232,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private void initViews(View layout) {
         createButton = (Button) layout.findViewById(R.id.create_tokenly_fan_identity);
         mFanExternalUserName = (EditText) layout.findViewById(R.id.external_username);
-        mFanExternalAccessToken = (EditText) layout.findViewById(R.id.tokenly_access_token);
+        mFanExternalPassword = (EditText) layout.findViewById(R.id.tokenly_access_password);
         fanImage = (ImageView) layout.findViewById(R.id.tokenly_fan_image);
         mFanExternalPlatform = (Spinner) layout.findViewById(R.id.external_platform);
         relativeLayout = (RelativeLayout) layout.findViewById(R.id.user_image);
@@ -245,13 +241,12 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         List<String> arraySpinner = ExternalPlatform.getArrayItems();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
         mFanExternalPlatform.setAdapter(adapter);
-
         mFanExternalUserName.requestFocus();
+        registerForContextMenu(fanImage);
         fanImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en fanImage.setOnClickListener");
-                registerForContextMenu(fanImage);
                 getActivity().openContextMenu(fanImage);
             }
         });
@@ -298,30 +293,33 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private int createNewIdentity() {
 
         String fanExternalName = mFanExternalUserName.getText().toString();
-        String fanAcessToken = "";
-        ExternalPlatform fanExternalPlatform;
-        if (!mFanExternalAccessToken.getText().toString().isEmpty()){
-            fanAcessToken = mFanExternalAccessToken.getText().toString();
+        String fanPassword = "";
+        if (!mFanExternalPassword.getText().toString().isEmpty()){
+            fanPassword = mFanExternalPassword.getText().toString();
         }
         ExternalPlatform externalPlatform = ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM;
         if(mFanExternalPlatform.isSelected()){
             externalPlatform = ExternalPlatform.getExternalPlatformByLabel(mFanExternalPlatform.getSelectedItem().toString());
         }
 
-        boolean dataIsValid = validateIdentityData(fanExternalName, fanAcessToken, fanImageByteArray, externalPlatform);
+        boolean dataIsValid = validateIdentityData(fanExternalName, fanPassword, fanImageByteArray, externalPlatform);
+
 
         if (dataIsValid) {
             if (moduleManager != null) {
                 try {
                     if (!isUpdate)
-                        moduleManager.createFanIdentity(fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,fanExternalName,fanAcessToken,externalPlatform) ;
+                        moduleManager.createFanIdentity(fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,fanPassword,externalPlatform) ;
                     else
                     if(updateProfileImage)
-                        moduleManager.updateFanIdentity(fanExternalName, identitySelected.getId(), identitySelected.getPublicKey(), fanImageByteArray, fanExternalName, fanAcessToken,externalPlatform);
+                        moduleManager.updateFanIdentity(fanExternalName,fanPassword, identitySelected.getId(), identitySelected.getPublicKey(), fanImageByteArray,externalPlatform);
                     else
-                        moduleManager.updateFanIdentity(fanExternalName, identitySelected.getId(), identitySelected.getPublicKey(), identitySelected.getProfileImage(), fanExternalName, fanAcessToken,externalPlatform);
+                        moduleManager.updateFanIdentity(fanExternalName,fanPassword,identitySelected.getId(), identitySelected.getPublicKey(), identitySelected.getProfileImage(),externalPlatform);
                 } catch (CantCreateFanIdentityException | FanIdentityAlreadyExistsException | CantUpdateFanIdentityException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                } catch (Exception e){
+                    errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                    e.printStackTrace();
                 }
                 return CREATE_IDENTITY_SUCCESS;
             }
@@ -354,17 +352,17 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
     }
 
-    private boolean validateIdentityData(String fanExternalName, String fanAccessToken, byte[] fanImageBytes, ExternalPlatform externalPlatform) {
+    private boolean validateIdentityData(String fanExternalName, String fanPassWord, byte[] fanImageBytes, ExternalPlatform externalPlatform) {
         if (fanExternalName.isEmpty())
             return false;
-        if (fanAccessToken.isEmpty())
+        if (fanPassWord.isEmpty())
             return false;
         if (fanImageBytes == null)
-            return true;
+            return false;
         if (fanImageBytes.length > 0)
             return true;
-        if(externalPlatform != null)
-            return  true;
+//        if(externalPlatform != null)
+//            return  true;
         return true;
     }
 
@@ -372,14 +370,15 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         //    super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            contextMenuInUse = true;
             Bitmap imageBitmap = null;
             ImageView pictureView = fanImage;
+            contextMenuInUse = true;
 
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
                     imageBitmap = (Bitmap) extras.get("data");
+                    updateProfileImage = true;
                     break;
                 case REQUEST_LOAD_IMAGE:
                     Uri selectedImage = data.getData();

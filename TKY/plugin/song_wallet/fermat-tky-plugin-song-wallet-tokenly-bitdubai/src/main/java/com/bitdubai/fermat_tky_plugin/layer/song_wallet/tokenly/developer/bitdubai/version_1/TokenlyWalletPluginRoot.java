@@ -426,9 +426,30 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
     private Fan getTestFanIdentity(){
         Fan fanIdentity = new Fan() {
             @Override
-            public String getAlias() {
+            public String getTokenlyId() {
                 return null;
             }
+
+            @Override
+            public String getUsername() {
+                return null;
+            }
+
+            @Override
+            public String getEmail() {
+                return null;
+            }
+
+            @Override
+            public String getApiToken() {
+                return null;
+            }
+
+            @Override
+            public String getApiSecretKey() {
+                return null;
+            }
+
 
             @Override
             public UUID getId() {
@@ -451,16 +472,6 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             }
 
             @Override
-            public String getExternalUsername() {
-                return null;
-            }
-
-            @Override
-            public String getExternalAccesToken() {
-                return null;
-            }
-
-            @Override
             public ExternalPlatform getExternalPlatform() {
                 return null;
             }
@@ -469,7 +480,7 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             public MusicUser getMusicUser() {
                 MusicUser hardocedUser = new MusicUser() {
                     @Override
-                    public String getId() {
+                    public String getTokenlyId() {
                         return "18873727-da0f-4b50-a213-cc40c6b4562d";
                     }
 
@@ -494,6 +505,11 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
                     }
                 };
                 return hardocedUser;
+            }
+
+            @Override
+            public String getUserPassword() {
+                return null;
             }
         };
         return fanIdentity;

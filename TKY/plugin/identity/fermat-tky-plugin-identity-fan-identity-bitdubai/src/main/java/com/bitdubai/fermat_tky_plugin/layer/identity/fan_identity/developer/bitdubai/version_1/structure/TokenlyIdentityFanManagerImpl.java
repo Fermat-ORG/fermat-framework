@@ -14,6 +14,7 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLogg
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
@@ -143,27 +144,8 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
         }
         return fan;
     }
-    public Fan createNewIdentityFan(String alias, byte[] profileImage) throws CantCreateFanIdentityException {
-        try {
-            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
-            ECCKeyPair keyPair = new ECCKeyPair();
-            UUID id =UUID.randomUUID();
-            String publicKey = keyPair.getPublicKey();
-            String privateKey = keyPair.getPrivateKey();
-
-            getFantIdentityDao().createNewUser(alias, id, publicKey, privateKey, loggedUser, profileImage);
-
-            return new TokenlyFanIdentityImp(alias, id, publicKey, profileImage, pluginFileSystem, pluginId);
-        } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantCreateFanIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", e, "Error getting current logged in device user", "");
-        } catch (Exception e) {
-            throw new CantCreateFanIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    public Fan createNewIdentityFan(String alias, byte[] profileImage,
-                                       String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform) throws CantCreateFanIdentityException {
+    public Fan createNewIdentityFan(User user,String password, byte[] profileImage, ExternalPlatform externalPlatform) throws CantCreateFanIdentityException {
         try {
             DeviceUser deviceUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -172,10 +154,10 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            getFantIdentityDao().createNewUser(alias, id, publicKey, privateKey, deviceUser, profileImage, externalUserName, externalAccessToken, externalPlatform);
+            getFantIdentityDao().createNewUser(user, id, publicKey, privateKey, deviceUser, profileImage, password, externalPlatform);
 
 
-            return new TokenlyFanIdentityImp(alias,id,publicKey,profileImage,externalUserName,externalAccessToken,externalPlatform,pluginFileSystem, pluginId);
+            return new TokenlyFanIdentityImp(user,id,publicKey,profileImage,externalPlatform,pluginFileSystem, pluginId);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateFanIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {
@@ -183,11 +165,9 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
         }
     }
 
-    public void updateIdentityFan(String alias, UUID id, String publicKey, byte[] profileImage,
-                                  String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+    public void updateIdentityFan(User user,String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
         try {
-            getFantIdentityDao().updateIdentityFanUser(id, publicKey, alias, profileImage, externalUserName,
-                    externalAccessToken,externalPlatform);
+            getFantIdentityDao().updateIdentityFanUser(user,password,id, publicKey, profileImage,externalPlatform);
 
         } catch (CantInitializeTokenlyFanIdentityDatabaseException e) {
             e.printStackTrace();

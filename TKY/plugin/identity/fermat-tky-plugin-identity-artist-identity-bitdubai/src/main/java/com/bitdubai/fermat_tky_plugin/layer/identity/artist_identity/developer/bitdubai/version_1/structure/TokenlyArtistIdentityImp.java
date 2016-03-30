@@ -150,11 +150,6 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
      * DealWithPluginFileSystem Interface implementation.
      */
 
-    @Override
-    public String getAlias() {
-        return alias;
-    }
-
     public void setAlias(String alias) {
         this.alias = alias;
     }
@@ -193,16 +188,6 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
         this.imageProfile = imageBytes;
     }
 
-    @Override
-    public String getExternalUsername() {
-        return externalUserName;
-    }
-
-    @Override
-    public String getExternalAccesToken() {
-        return externalAccessToken;
-    }
-
     public void setId(UUID id) {
         this.id = id;
     }
@@ -225,6 +210,11 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
     @Override
     public MusicUser getMusicUser() {
         //TODO: Gabriel implement this. I put this only for compilation
+        return null;
+    }
+
+    @Override
+    public String getUserPassword() {
         return null;
     }
 
@@ -258,5 +248,30 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
     @Override
     public void setPluginId(UUID pluginId) {
         this.pluginId = pluginId;
+    }
+
+    @Override
+    public String getTokenlyId() {
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public String getEmail() {
+        return null;
+    }
+
+    @Override
+    public String getApiToken() {
+        return null;
+    }
+
+    @Override
+    public String getApiSecretKey() {
+        return null;
     }
 }
