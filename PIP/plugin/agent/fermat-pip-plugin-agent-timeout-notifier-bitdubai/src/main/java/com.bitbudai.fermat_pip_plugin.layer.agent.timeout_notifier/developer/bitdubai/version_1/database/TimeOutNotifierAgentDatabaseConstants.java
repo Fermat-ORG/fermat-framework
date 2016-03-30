@@ -38,12 +38,12 @@ public class TimeOutNotifierAgentDatabaseConstants {
     /**
      * agent_owner database table definition.
      */
-    public static final String AGENT_OWNER_TABLE_NAME = "agent_owner";
+    public static final String OWNER_TABLE_NAME = "owners";
 
-    public static final String AGENT_OWNER_OWNER_PUBLICKEY_COLUMN_NAME = "owner_publickey";
-    public static final String AGENT_OWNER_NAME_COLUMN_NAME = "name";
-    public static final String AGENT_OWNER_TYPE_COLUMN_NAME = "type";
+    public static final String OWNER_PUBLICKEY_COLUMN_NAME = "publickey";
+    public static final String OWNER_NAME_COLUMN_NAME = "name";
+    public static final String OWNER_TYPE_COLUMN_NAME = "type";
 
-    public static final String AGENT_OWNER_FIRST_KEY_COLUMN = "owner_publickey";
+    public static final String OWNER_FIRST_KEY_COLUMN = "publickey";
 
 }

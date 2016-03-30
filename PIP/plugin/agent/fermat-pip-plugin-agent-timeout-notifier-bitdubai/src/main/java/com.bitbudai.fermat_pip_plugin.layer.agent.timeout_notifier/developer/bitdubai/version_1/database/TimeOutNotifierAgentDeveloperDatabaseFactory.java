@@ -136,13 +136,13 @@ public class TimeOutNotifierAgentDeveloperDatabaseFactory {
          */
         List<String> agent_ownerColumns = new ArrayList<String>();
 
-        agent_ownerColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_OWNER_PUBLICKEY_COLUMN_NAME);
-        agent_ownerColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_NAME_COLUMN_NAME);
-        agent_ownerColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TYPE_COLUMN_NAME);
+        agent_ownerColumns.add(TimeOutNotifierAgentDatabaseConstants.OWNER_PUBLICKEY_COLUMN_NAME);
+        agent_ownerColumns.add(TimeOutNotifierAgentDatabaseConstants.OWNER_NAME_COLUMN_NAME);
+        agent_ownerColumns.add(TimeOutNotifierAgentDatabaseConstants.OWNER_TYPE_COLUMN_NAME);
         /**
          * Table agent_owner addition.
          */
-        DeveloperDatabaseTable agent_ownerTable = developerObjectFactory.getNewDeveloperDatabaseTable(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TABLE_NAME, agent_ownerColumns);
+        DeveloperDatabaseTable agent_ownerTable = developerObjectFactory.getNewDeveloperDatabaseTable(TimeOutNotifierAgentDatabaseConstants.OWNER_TABLE_NAME, agent_ownerColumns);
         tables.add(agent_ownerTable);
 
 

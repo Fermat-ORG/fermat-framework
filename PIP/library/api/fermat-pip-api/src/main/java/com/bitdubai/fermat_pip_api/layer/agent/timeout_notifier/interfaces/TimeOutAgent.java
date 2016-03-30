@@ -25,13 +25,13 @@ public interface TimeOutAgent {
      * the agent given name for identification.
      * @return the Agent given name
      */
-    String getAgentName();
+    String getName();
 
     /**
      * The agent given Description.
      * @return the Description of the agent
      */
-    String getAgentDescription();
+    String getDescription();
 
     /**
      * The actor type that created this agent
@@ -43,7 +43,7 @@ public interface TimeOutAgent {
      * The current agent status.
      * @return the current agent status.
      */
-    AgentStatus getAgentStatus();
+    AgentStatus getStatus();
 
 
     /**
@@ -64,7 +64,7 @@ public interface TimeOutAgent {
      * an event will be triggered.
      * @return the duration of the time out
      */
-    long getTimeOutDuration();
+    long getDuration();
 
     /**
      * Gets the amount of milliseconds pass since the start and the moment this method is requested.

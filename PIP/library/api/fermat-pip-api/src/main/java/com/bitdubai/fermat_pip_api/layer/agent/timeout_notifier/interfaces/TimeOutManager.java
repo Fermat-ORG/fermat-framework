@@ -53,14 +53,6 @@ public interface TimeOutManager {
      */
     void stopTimeOutAgent(TimeOutAgent timeOutAgent) throws CantStopTimeOutAgentException;
 
-    /**
-     * Resets the counter of the agent if still running. A reset  means that the timeout duration counter
-     * will start again. For example, if TimeOutDuration was 60 minutes and the reset occurs at minute 39,
-     * another 60 minutes must passed for a new notification to be raised.
-     * @param timeOutAgent the agent to reset
-     * @throws CantResetTimeOutAgentException
-     */
-    void resetTimeOutAgent(TimeOutAgent timeOutAgent) throws CantResetTimeOutAgentException;
 
     /**
      * Gets the TimeoutAgent from the specified Id.

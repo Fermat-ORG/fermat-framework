@@ -50,7 +50,7 @@ public class TimeOutNotifierManager  implements TimeOutManager{
 
     @Override
     public TimeOutAgent addNew(long epochTime, long timeout, String name, FermatActor owner) throws CantAddNewTimeOutAgentException {
-        TimeOutNotifierAgent timeOutNotifierAgent = new TimeOutNotifierAgent(dao, errorManager);
+        TimeOutNotifierAgent timeOutNotifierAgent = new TimeOutNotifierAgent();
         timeOutNotifierAgent.setUuid(UUID.randomUUID());
         timeOutNotifierAgent.setName(name);
         timeOutNotifierAgent.setStartTime(epochTime);

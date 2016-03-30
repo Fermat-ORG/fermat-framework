@@ -95,13 +95,13 @@ public class TimeOutNotifierAgentDatabaseFactory {
             /**
              * Create agent_owner table.
              */
-            table = databaseFactory.newTableFactory(ownerId, TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, TimeOutNotifierAgentDatabaseConstants.OWNER_TABLE_NAME);
 
-            table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_OWNER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(TimeOutNotifierAgentDatabaseConstants.OWNER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(TimeOutNotifierAgentDatabaseConstants.OWNER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(TimeOutNotifierAgentDatabaseConstants.OWNER_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
-            table.addIndex(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_FIRST_KEY_COLUMN);
+            table.addIndex(TimeOutNotifierAgentDatabaseConstants.OWNER_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

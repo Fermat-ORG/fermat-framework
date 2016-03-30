@@ -29,7 +29,7 @@ import java.util.concurrent.ScheduledExecutorService;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class TimeOutNotifierAgent implements TimeOutAgent {
+public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
 
     /**
      * class variables
@@ -54,19 +54,15 @@ public class TimeOutNotifierAgent implements TimeOutAgent {
 
     @Override
     public boolean isRunning() {
-        if (this.getAgentStatus() == AgentStatus.STARTED)
+        if (this.getStatus() == AgentStatus.STARTED)
             return true;
         else
             return false;
     }
 
+    @Override
+    public void run() {
 
-    private final class Agent implements Runnable{
-
-        @Override
-        public void run() {
-
-        }
     }
 
     /**
@@ -80,17 +76,17 @@ public class TimeOutNotifierAgent implements TimeOutAgent {
     }
 
     @Override
-    public long getTimeOutDuration() {
+    public long getDuration() {
         return timeOutDuration;
     }
 
     @Override
-    public String getAgentName() {
+    public String getName() {
         return name;
     }
 
     @Override
-    public String getAgentDescription() {
+    public String getDescription() {
         return description;
     }
 
@@ -100,7 +96,7 @@ public class TimeOutNotifierAgent implements TimeOutAgent {
     }
 
     @Override
-    public AgentStatus getAgentStatus() {
+    public AgentStatus getStatus() {
         return status;
     }
 
