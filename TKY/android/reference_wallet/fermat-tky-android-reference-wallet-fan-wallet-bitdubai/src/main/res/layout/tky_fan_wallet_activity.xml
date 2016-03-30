@@ -12,22 +12,28 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways" />
+            app:layout_scrollFlags="scroll|enterAlways"
+            style="@style/HeaderBar"
+            app:theme="@style/ActionBarThemeOverlay"/>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            app:tabTextColor="@color/colortablayaouttext"
+            app:tabSelectedTextColor="@color/colortablayaouttext"
             app:layout_scrollFlags="scroll|enterAlways"
             android:touchscreenBlocksFocus="false"
             app:tabMode="fixed"
-            app:tabGravity="fill"/>
+            app:tabGravity="fill"
+            style="@style/HeaderBar"
+            app:theme="@style/ActionBarThemeOverlay"
+            />
 
     </android.support.design.widget.AppBarLayout>
 
     <!-- Scrollable View -->
-    <sub_app.util.lockableViewPager
+    <com.bitdubai.reference_wallet.fan_wallet.util.LockableViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

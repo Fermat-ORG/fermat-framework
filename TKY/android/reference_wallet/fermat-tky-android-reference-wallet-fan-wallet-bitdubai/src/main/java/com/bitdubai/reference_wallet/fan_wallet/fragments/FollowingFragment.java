@@ -29,6 +29,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_tky_plugin.layer.wallet_module.fan.developer.bitdubai.version_1.structure.FanWalletModuleManager;
 import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.common.adapters.FollowingAdapter;
 import com.bitdubai.reference_wallet.fan_wallet.common.models.FollowingItems;
@@ -46,7 +47,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
     //FermatManager
     private FanWalletSession fanwalletSession;
-    //   private FanWalletModuleManager fanwalletmoduleManager;
+    private FanWalletModuleManager fanwalletmoduleManager;
     private FanWalletSettings fanWalletSettings;
     private ErrorManager errorManager;
 
@@ -64,7 +65,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         return new FollowingFragment();
     }
     public FollowingFragment(){
-        loaditems();
+
     }
 
     @Override
@@ -72,7 +73,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         super.onCreate(savedInstanceState);
         try {
             fanwalletSession = ((FanWalletSession) appSession);
-            //fanwalletmoduleManager = fanwalletSession.getModuleManager();
+            fanwalletmoduleManager = fanwalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
 
@@ -103,7 +104,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.tky_fan_wallet_menu, menu);
-
+        getActivity().getWindow().setBackgroundDrawableResource(R.drawable.fanwallet_background_viewpager);
         final MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
         searchView.setOnQueryTextListener(this);
@@ -141,8 +142,10 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         recyclerView = (RecyclerView) view.findViewById(R.id.rv);
         lManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(lManager);
+        loaditems();
         adapter = new FollowingAdapter(items);
         recyclerView.setAdapter(adapter);
+
 
         swipe_effect();
 
@@ -242,7 +245,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                         p.setColor(Color.parseColor("#388E3C"));
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
                         c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.chat);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_chat);
                         //Start draw left-top to right-bottom     RectF (left,top,right,bottom)
                         RectF icon_dest = new RectF((float) itemView.getLeft() + (width/4) ,(float) itemView.getTop() + 0.75f*width,(float) itemView.getLeft()+ 2f*width,(float)itemView.getBottom() -0.75f*width);
                         c.drawBitmap(icon,null,icon_dest,p);
@@ -250,7 +253,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                         p.setColor(Color.parseColor("#D32F2F"));
                         RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
                         c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.trash);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_trash);
                         RectF icon_dest = new RectF((float) itemView.getRight() - 1.75f*width ,(float) itemView.getTop() + 0.75f*width,(float) itemView.getRight() - width/4,(float)itemView.getBottom() - 0.75f*width);
                         c.drawBitmap(icon,null,icon_dest,p);
                     }

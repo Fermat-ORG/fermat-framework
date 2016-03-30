@@ -3740,7 +3740,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         final String publicKey = WalletsPublicKeys.TKY_FAN_WALLET.getCode();
 
         //final String statusBarColor = "#00b9ff";
-        final String statusBarColor = "#11516F";
+        final String statusBarColor = "#000000";
         final String titleBarLabelColor = "#FFFFFF";
         final String titleBarColor = "#00b9ff";
         final int titleBarLabelSize = 20;

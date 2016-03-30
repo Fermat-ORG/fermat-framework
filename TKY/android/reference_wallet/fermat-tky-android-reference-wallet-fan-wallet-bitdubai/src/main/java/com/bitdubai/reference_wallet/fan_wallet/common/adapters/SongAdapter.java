@@ -8,12 +8,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.common.models.SongItems;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import sub_app.R;
 
 /**
  * Created by Miguel Payarez on 16/03/16.

@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTabHost;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +18,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_tky_plugin.layer.wallet_module.fan.developer.bitdubai.version_1.structure.FanWalletModuleManager;
 import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.preference_settings.FanWalletSettings;
 import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
@@ -31,7 +32,7 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
 
     //FermatManager
     private FanWalletSession fanwalletSession;
-    //   private FanWalletModuleManager fanwalletmoduleManager;
+    private FanWalletModuleManager fanwalletmoduleManager;
     private FanWalletSettings fanWalletSettings;
     private ErrorManager errorManager;
 
@@ -48,9 +49,9 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
 
         try {
             fanwalletSession = ((FanWalletSession) appSession);
-            //fanwalletmoduleManager = fanwalletSession.getModuleManager();
+            fanwalletmoduleManager = fanwalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
+            System.out.println("AQUI ESTOY FAN WALLET");
 
             try {
                 //    fanWalletSettings = fanwalletmoduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
@@ -88,7 +89,9 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
         view= inflater.inflate(R.layout.tky_fan_wallet_activity,container,false);
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        ((ActionBarActivity)getActivity()).setSupportActionBar(toolbar);
+        
+        getActivity().getWindow().setBackgroundDrawableResource(R.drawable.fanwallet_background_viewpager);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
 
 
