@@ -160,7 +160,7 @@ public class NotificationService extends Service {
             mNotifyManager = (NotificationManager)
                     getSystemService(NOTIFICATION_SERVICE);
             if(progress==0 || progress==100){
-                mNotifyManager.cancel(87);
+                mNotifyManager.cancel(publishId);
             }else {
 
 // Displays the progress bar for the first time.
@@ -172,6 +172,9 @@ public class NotificationService extends Service {
                             .setSmallIcon(R.drawable.fermat_logo_310_x_310);
                     Random random = new Random();
                     publishId = random.nextInt();
+                    if(publishId<0){
+                        publishId = publishId*(-1);
+                    }
                     mapNotifications.put(publishId,mBuilder);
                 }else {
                     if(mapNotifications.containsKey(publishId))

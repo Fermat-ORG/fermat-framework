@@ -60,6 +60,7 @@ import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
 import com.bitdubai.android_core.app.common.version_1.communication.CommunicationMessages;
 import com.bitdubai.android_core.app.common.version_1.communication.CommunicationService;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
+import com.bitdubai.android_core.app.common.version_1.navigation_view.FermatActionBarDrawerEventListener;
 import com.bitdubai.android_core.app.common.version_1.provisory.FermatInstalledDesktop;
 import com.bitdubai.android_core.app.common.version_1.provisory.InstalledDesktop;
 import com.bitdubai.android_core.app.common.version_1.provisory.ProvisoryData;
@@ -74,7 +75,6 @@ import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUt
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.DesktopHolderClickCallback;
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
-import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
@@ -241,6 +241,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }
         broadcastManager = new BroadcastManager(this);
         AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
+        if(!AndroidCoreUtils.getInstance().isStarted())
+            AndroidCoreUtils.getInstance().setStarted(true);
         runtimeStructureManager = new RuntimeStructureManager(this);
 
     }
@@ -292,19 +294,19 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void onStop() {
         try {
             super.onStop();
-            try{
-                AndroidCoreUtils.getInstance().clear();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-            /**
-             * Service
-             */
-            if (mNotificationServiceConnected) {
-                unbindService(mServiceConnection);
-                mNotificationServiceConnected = false;
-            }
+//            try{
+//                AndroidCoreUtils.getInstance().clear();
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//
+//            /**
+//             * Service
+//             */
+//            if (mNotificationServiceConnected) {
+//                unbindService(mServiceConnection);
+//                mNotificationServiceConnected = false;
+//            }
 
 
         } catch (Exception e) {
@@ -318,7 +320,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void loadBasicUI(Activity activity,AppConnections appConnections) {
         // rendering UI components
         try {
-
+            Log.i("FERMAT ACTIVITY loadUI", "INICIA " + System.currentTimeMillis());
             TabStrip tabs = activity.getTabStrip();
             TitleBar titleBar = activity.getTitleBar();
             MainMenu mainMenu = activity.getMainMenu();
@@ -326,28 +328,42 @@ public abstract class FermatActivity extends AppCompatActivity implements
             SideMenu sideMenu = activity.getSideMenu();
 
             setMainLayout(sideMenu, activity.getHeader());
+            Log.i("FERMAT ACTIVITY loadUI", "setMainLayout " + System.currentTimeMillis());
 
             setMainMenu(mainMenu);
+            Log.i("FERMAT ACTIVITY loadUI", "setMainMenu " + System.currentTimeMillis());
 
             paintTabs(tabs, activity);
+            Log.i("FERMAT ACTIVITY loadUI", " paintTabs " + System.currentTimeMillis());
 
             paintStatusBar(activity.getStatusBar());
+            Log.i("FERMAT ACTIVITY loadUI", " paintStatusBar " + System.currentTimeMillis());
 
             paintTitleBar(titleBar, activity);
+            Log.i("FERMAT ACTIVITY loadUI", " paintTitleBar " + System.currentTimeMillis());
 
             if(appConnections.getFullyLoadedSession().getModuleManager()!=null && sideMenu!=null) sideMenu.setNotifications(appConnections.getFullyLoadedSession().getModuleManager().getMenuNotifications());
             paintSideMenu(activity, sideMenu, appConnections);
-
+            Log.i("FERMAT ACTIVITY loadUI", " paintSideMenu " + System.currentTimeMillis());
             paintFooter(activity.getFooter(), appConnections.getFooterViewPainter());
+
+            Log.i("FERMAT ACTIVITY loadUI", " paintFooter " + System.currentTimeMillis());
 
             pantHeader(activity.getHeader(), appConnections.getHeaderViewPainter());
 
+            Log.i("FERMAT ACTIVITY loadUI", " pantHeader " + System.currentTimeMillis());
             setScreen(activity);
+
+            Log.i("FERMAT ACTIVITY loadUI", " setScreen " + System.currentTimeMillis());
             // rendering wizards components
             if (tabs != null && tabs.getWizards() != null)
                 setWizards(tabs.getWizards());
             if (activity.getWizards() != null)
                 setWizards(activity.getWizards());
+
+            Log.i("FERMAT ACTIVITY loadUI", " setWizards " + System.currentTimeMillis());
+
+            Log.i("FERMAT ACTIVITY loadUI", "FIN " + System.currentTimeMillis());
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Oooops! recovering from system error",
@@ -762,57 +778,10 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
                     mToolbar.setNavigationIcon(R.drawable.ic_actionbar_menu);
                             /* setting up drawer layout */
-                    mDrawerToggle = new ActionBarDrawerToggle(this,
+                    mDrawerToggle = new FermatActionBarDrawerEventListener(this,
                             mDrawerLayout,
                             mToolbar,
-                            R.string.open, R.string.close) {
-                        @Override
-                        public void onDrawerOpened(View drawerView) {
-                            super.onDrawerOpened(drawerView);
-                            if(adapter!=null){
-                                if(!adapter.getLstCurrentFragments().isEmpty()){
-                                    for (AbstractFermatFragment abstractFermatFragment : adapter.getLstCurrentFragments()) {
-                                        abstractFermatFragment.onDrawerOpen();
-                                    }
-                                }
-                            }
-                            //setTitle(mTitle);
-                            //invalidateOptionsMenu();
-                        }
-
-                        @Override
-                        public void onDrawerClosed(View drawerView) {
-                            super.onDrawerClosed(drawerView);
-                            if(adapter!=null){
-                                if(!adapter.getLstCurrentFragments().isEmpty()){
-                                    for (AbstractFermatFragment abstractFermatFragment : adapter.getLstCurrentFragments()) {
-                                        abstractFermatFragment.onDrawerClose();
-                                    }
-                                }
-                            }
-                            //setTitle(mTitle);
-                            //invalidateOptionsMenu();
-                        }
-
-                        @Override
-                        public void onDrawerSlide(View drawerView, float slideOffset) {
-                            InputMethodManager imm =
-                                    (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                            if (getCurrentFocus() != null && imm != null && imm.isActive()) {
-                                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-                            }
-                            super.onDrawerSlide(drawerView, slideOffset);
-                            float moveFactor = (navigationView.getWidth() * slideOffset);
-                            //findViewById(R.id.content).setTranslationX(moveFactor);
-                            /*if(adapter!=null){
-                                if(!adapter.getLstCurrentFragments().isEmpty()){
-                                    for (AbstractFermatFragment abstractFermatFragment : adapter.getLstCurrentFragments()) {
-                                        abstractFermatFragment.onDrawerSlide(drawerView, slideOffset);
-                                    }
-                                }
-                            }*/
-                        }
-                    };
+                            R.string.open, R.string.close);
 
                     mDrawerLayout.setDrawerListener(mDrawerToggle);
                     mDrawerLayout.post(new Runnable() {
@@ -1352,10 +1321,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         return new FermatInstalledDesktop();
     }
 
-    protected FermatApplicationSession getApplicationSession(){
-        return ApplicationSession.getInstance();
-    }
-
     /**
      * Set up wizards to this activity can be more than one.
      *
@@ -1405,6 +1370,20 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         if(runtimeStructureManager!=null){
             runtimeStructureManager.clear();
+        }
+
+        try{
+            AndroidCoreUtils.getInstance().clear();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        /**
+         * Service
+         */
+        if (mNotificationServiceConnected) {
+            unbindService(mServiceConnection);
+            mNotificationServiceConnected = false;
         }
 
         resetThisActivity();
@@ -1676,7 +1655,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
         }
         if(!mCommunicationServiceConnected){
-            doBindService();
+            //doBindService();
         }
 
 
@@ -1689,7 +1668,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //        networkStateReceiver.removeListener(this);
 
         if(mCommunicationServiceConnected){
-            doUnbindService();
+            //doUnbindService();
         }
     }
 
@@ -1808,13 +1787,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
 
-    final Messenger mMessenger = new Messenger(new IncomingHandler());
+    private final Messenger mMessenger = new Messenger(new IncomingHandler());
     boolean mBound;
 
     /**
      * Service
      */
-    static Messenger mServiceMcu = null;
+    private static Messenger mServiceMcu = null;
     private boolean mCommunicationServiceConnected;
 
 
@@ -1889,12 +1868,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
             Intent intentForMcuService = new Intent();
             Log.d(TAG,"Package: "+CommunicationService.class.getPackage().getName());
             Log.d(TAG,"class cannonical: "+CommunicationService.class.getCanonicalName());
-            Log.d(TAG,"class name: "+CommunicationService.class.getName());
-            Log.d(TAG,"class simple name: "+CommunicationService.class.getSimpleName());
+            Log.d(TAG, "class name: " + CommunicationService.class.getName());
+            Log.d(TAG, "class simple name: " + CommunicationService.class.getSimpleName());
             //intentForMcuService.setClassName(CommunicationService.class.getPackage().getName(), "com.bitdubai.android_core.app.common.version_1.communication.CommunicationService");
 
-            intentForMcuService.setComponent(new ComponentName(CommunicationService.class.getPackage().getName(),CommunicationService.class.getName()));
+            intentForMcuService.setComponent(new ComponentName(CommunicationService.class.getPackage().getName(), CommunicationService.class.getName()));
             Log.d(TAG, "Before bindService");
+
             if (bindService(intentForMcuService, mServiceCommunicationConnection, BIND_AUTO_CREATE)){
                 Log.d(TAG, "Binding to Modem Watcher returned true");
             } else {

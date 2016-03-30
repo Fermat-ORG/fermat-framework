@@ -58,7 +58,7 @@ public class TokenlySongAttNames {
     /**
      * Represents the song usage rights.
      */
-    public static final String USAGE_RIGHTS = "ownership";
+    public static final String USAGE_RIGHTS = "usageRights";
 
     /**
      * Represents the song usage prohibitions.

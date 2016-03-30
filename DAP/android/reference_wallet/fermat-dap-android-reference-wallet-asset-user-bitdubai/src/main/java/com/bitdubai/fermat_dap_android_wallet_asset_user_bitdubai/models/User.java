@@ -46,6 +46,6 @@ public class User {
     @Override
     public boolean equals(Object o) {
         User user = (User) o;
-        return this.getName().equals(user.getName());
+        return this.getActorAssetUser().getActorPublicKey().equals(user.getActorAssetUser().getActorPublicKey());
     }
 }

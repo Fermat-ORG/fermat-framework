@@ -173,6 +173,7 @@ public class BroadcastManager implements BroadcasterInterface {
         if(adapter!=null) {
             for (AbstractFermatFragment fragment :adapter.getLstCurrentFragments()){
                 fragment.onUpdateViewHandler(appCode,code);
+                fragment.onUpdateView(code);
                 fragment.onUpdateViewUIThred(code);
             }
         }
