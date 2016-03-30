@@ -14,6 +14,7 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
 
     private BroadcasterInterface context;
     private ExecutorService executor = Executors.newFixedThreadPool(2);
+    private boolean isStarted = false;
 
 
     private static final AndroidCoreUtils instance = new AndroidCoreUtils() ;
@@ -28,7 +29,12 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
             executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                    context.publish(broadcasterType, code);
+                    try {
+                        if(isStarted)
+                        context.publish(broadcasterType, code);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             });
         }catch (Exception e){
@@ -42,12 +48,18 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
             executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                    context.publish(broadcasterType,appCode,code);
+                    try {
+                        if(isStarted)
+                            context.publish(broadcasterType, appCode, code);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }catch (Exception e){
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -56,7 +68,12 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
             executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                     context.publish(broadcasterType,appCode,bundle);
+                    try {
+                        if(isStarted)
+                        context.publish(broadcasterType, appCode, bundle);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             });
         }catch (Exception e){
@@ -68,6 +85,7 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
     public int publish(final BroadcasterType broadcasterType, final FermatBundle bundle) {
         int id = 0;
         try {
+            if(isStarted)
             id = context.publish(broadcasterType,bundle);
         }catch (Exception e){
             e.printStackTrace();
@@ -88,4 +106,11 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
     }
 
 
+    public void setStarted(boolean started) {
+        this.isStarted = started;
+    }
+
+    public boolean isStarted() {
+        return isStarted;
+    }
 }
