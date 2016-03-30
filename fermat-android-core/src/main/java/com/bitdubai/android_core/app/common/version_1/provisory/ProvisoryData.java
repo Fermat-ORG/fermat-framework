@@ -144,7 +144,7 @@ public class ProvisoryData {
         item2.setPosition(5);
         lstIdentities.add(item2);
 
-
+/*
         installedSubApp = new InstalledSubApp(
                 SubApps.TKY_ARTIST_IDENTITY_SUB_APP,
                 null,
@@ -161,7 +161,7 @@ public class ProvisoryData {
         item2.setPosition(6);
         lstIdentities.add(item2);
 
-
+*/
 
 
         FermatFolder fermatFolder = new FermatFolder("Identities",lstIdentities,2);
