@@ -156,16 +156,18 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public Artist createArtistIdentity(String alias, byte[] profileImage, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
+    public Artist createArtistIdentity(String userName, byte[] profileImage, String password,ExternalPlatform externalPlatform,
+                                       ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
         //TODO: Fix this Gabo. Manuel
         User user=null;
         try{
-            user = tokenlyApiManager.validateTokenlyUser(externalUserName, externalAccessToken);
+            if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
+                user = tokenlyApiManager.validateTokenlyUser(userName, password);
         } catch (CantGetUserException | InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         if(user!=null){
-            return identityArtistManager.createNewIdentityArtist(alias,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+            return identityArtistManager.createNewIdentityArtist(user,password,profileImage,externalPlatform,exposureLevel,artistAcceptConnectionsType);
         }else{
             return null;
         }
@@ -173,8 +175,17 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
 
 
     @Override
-    public void updateArtistIdentity(String alias, UUID id,String publicKey, byte[] profileImage, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
-        identityArtistManager.updateIdentityArtist(alias,id,publicKey,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+    public void updateArtistIdentity(String username,String password, UUID id,String publicKey, byte[] profileImage, ExternalPlatform externalPlatform,
+                                      ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
+        User user=null;
+        try{
+            if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
+                user = tokenlyApiManager.validateTokenlyUser(username, password);
+        } catch (CantGetUserException |InterruptedException | ExecutionException  e) {
+            e.printStackTrace();
+        }
+        if(user != null)
+            identityArtistManager.updateIdentityArtist(user,password, id, publicKey, profileImage,externalPlatform,exposureLevel,artistAcceptConnectionsType);
     }
 
     @Override

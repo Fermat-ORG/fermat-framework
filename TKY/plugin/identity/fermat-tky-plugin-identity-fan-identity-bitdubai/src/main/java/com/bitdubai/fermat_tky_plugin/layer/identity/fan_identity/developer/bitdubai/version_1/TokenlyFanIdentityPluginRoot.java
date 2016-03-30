@@ -80,7 +80,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
     public static final String TOKENLY_FAN_IDENTITY_PROFILE_IMAGE = "tokenlyfanIdentityProfileImage";
     public static final String TOKENLY_FAN_IDENTITY_PRIVATE_KEY = "tokenlyfanIdentityPrivateKey";
 
-    private TokenlyIdentityFanManagerImpl identityArtistManager;
+    private TokenlyIdentityFanManagerImpl identityFanManager;
     /**
      * Default constructor
      */
@@ -91,7 +91,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
     public void start() throws CantStartPluginException {
         try {
             this.serviceStatus = ServiceStatus.STARTED;
-            identityArtistManager = new TokenlyIdentityFanManagerImpl(
+            identityFanManager = new TokenlyIdentityFanManagerImpl(
                     this.errorManager,
                     this.logManager,
                     this.pluginDatabaseSystem,
@@ -145,7 +145,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
 //    }
     @Override
     public List<Fan> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
-        return identityArtistManager.getIdentityFanFromCurrentDeviceUser();
+        return identityFanManager.getIdentityFanFromCurrentDeviceUser();
     }
 
     @Override
@@ -159,7 +159,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
             e.printStackTrace();
         }
         if(user!=null){
-            return identityArtistManager.createNewIdentityFan(user, externalPassword,profileImage, externalPlatform);
+            return identityFanManager.createNewIdentityFan(user, externalPassword,profileImage, externalPlatform);
         }else{
             return null;
         }
@@ -176,12 +176,12 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
             e.printStackTrace();
         }
         if(user != null)
-            identityArtistManager.updateIdentityFan(user,password, id, publicKey, profileImage,externalPlatform);
+            identityFanManager.updateIdentityFan(user,password, id, publicKey, profileImage,externalPlatform);
     }
 
     @Override
     public Fan getFanIdentity(UUID id) throws CantGetFanIdentityException, IdentityNotFoundException {
-        return identityArtistManager.getIdentitFan(id);
+        return identityFanManager.getIdentitFan(id);
     }
 
     @Override

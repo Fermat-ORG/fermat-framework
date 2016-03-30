@@ -23,6 +23,7 @@ import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyW
 import com.bitdubai.reference_wallet.cash_money_wallet.app_connection.CashMoneyWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.app_connection.CryptoBrokerWalletFermatAppConnection;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.app_connection.CryptoCustomerWalletFermatAppConnection;
+import com.bitdubai.reference_wallet.fan_wallet.app_connection.FanWalletFermatAppConnection;
 import com.bitdubai.sub_app.crypto_broker_community.app_connection.CryptoBrokerCommunityFermatAppConnection;
 import com.bitdubai.sub_app.crypto_broker_identity.app_connection.CryptoBrokerIdentityFermatAppConnection;
 import com.bitdubai.sub_app.crypto_customer_community.app_connection.CryptoCustomerCommunityFermatAppConnection;
@@ -147,7 +148,10 @@ public class FermatAppConnectionManager {
             case "public_key_cht_chat":
                 fermatAppConnection = new ChatFermatAppConnection(activity);
                 break;
-
+            //TKY Fan wallet
+            case "fan_wallet":
+                fermatAppConnection = new FanWalletFermatAppConnection(activity);
+                break;
             // Art Sub apps
             case "sub_app_art_artist_community":
                 //fermatAppConnection = new ChatFermatAppConnection(activity);

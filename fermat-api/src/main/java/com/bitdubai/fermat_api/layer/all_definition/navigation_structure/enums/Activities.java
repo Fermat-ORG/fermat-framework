@@ -249,6 +249,11 @@ public enum Activities implements FermatEnum {
     CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL("CSHCMWTD"),
     CSH_CASH_MONEY_WALLET_SETUP("CSHCMWS"),
 
+    //Tky Fan Wallet
+    TKY_FAN_WALLET_MAIN_ACTIVITY("TKYFWMA"),
+    TKY_FAN_WALLET_SONGS_TAB_FRAGMENT("TKYFWSTF"),
+    TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT("TKYFWFTF"),
+
     // Crypto Broker Identity
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY("CBPSACBI"),
     CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_CREATE_IDENTITY("CBPSACBICI"),
@@ -848,6 +853,9 @@ public enum Activities implements FermatEnum {
                 return CCP_BITCOIN_LOSS_PROTECTED_WALLET_MNEMONIC_ACTIVITY;
             case "TKYSUBAPPFANCREATE":
                 return TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT;
+            //TKY fan Wallet
+            case "TKYFWMA":
+                return TKY_FAN_WALLET_MAIN_ACTIVITY;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

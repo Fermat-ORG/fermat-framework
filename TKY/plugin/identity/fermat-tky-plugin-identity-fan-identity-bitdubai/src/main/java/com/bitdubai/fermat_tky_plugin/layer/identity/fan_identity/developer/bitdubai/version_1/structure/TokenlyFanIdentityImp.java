@@ -76,36 +76,6 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
      * @param externalPassword
      * @param externalPlatform
      * @param email
-     * @param pluginFileSystem
-     * @param pluginId
-     */
-    public TokenlyFanIdentityImp(UUID id, String tokenlyID, String publicKey, byte[] imageProfile, String externalUserName, String externalAccessToken, String apiSecretKey, String externalPassword, ExternalPlatform externalPlatform, String email, PluginFileSystem pluginFileSystem, UUID pluginId) {
-        this.id = id;
-        this.tokenlyID = tokenlyID;
-        this.publicKey = publicKey;
-        this.imageProfile = imageProfile;
-        this.externalUserName = externalUserName;
-        this.externalAccessToken = externalAccessToken;
-        this.apiSecretKey = apiSecretKey;
-        this.externalPassword = externalPassword;
-        this.externalPlatform = externalPlatform;
-        this.email = email;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
-    }
-
-    /**
-     * Constructor
-     * @param id
-     * @param tokenlyID
-     * @param publicKey
-     * @param imageProfile
-     * @param externalUserName
-     * @param externalAccessToken
-     * @param apiSecretKey
-     * @param externalPassword
-     * @param externalPlatform
-     * @param email
      */
     public TokenlyFanIdentityImp(UUID id, String tokenlyID, String publicKey, byte[] imageProfile, String externalUserName, String externalAccessToken, String apiSecretKey, String externalPassword, ExternalPlatform externalPlatform, String email) {
         this.id = id;

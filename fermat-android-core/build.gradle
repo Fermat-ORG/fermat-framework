@@ -127,6 +127,8 @@ dependencies {
     compile project(':fermat-csh-android-reference-wallet-cash-money-bitdubai')
     //CHT
     compile project(':fermat-cht-android-sub-app-chat-bitdubai')
+    //TKY
+    compile project(':fermat-tky-android-reference-wallet-fan-wallet-bitdubai')
     //ART
     // compile project(':fermat-art-android-sub-app-artist-identity-bitdubai')
     //TKY
