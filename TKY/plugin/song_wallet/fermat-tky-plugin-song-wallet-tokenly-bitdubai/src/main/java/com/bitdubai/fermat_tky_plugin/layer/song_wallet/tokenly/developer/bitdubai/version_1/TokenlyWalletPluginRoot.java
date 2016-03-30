@@ -210,7 +210,7 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             //testSynchronizeSongs();
             //testAutomaticSyncSongs();
             //testDeleteSong();
-            testDownloadDeletedSong();
+            //testDownloadDeletedSong();
         } catch(CantInitializeDatabaseException e){
             errorManager.reportUnexpectedPluginException(
                     Plugins.TOKENLY_API,
