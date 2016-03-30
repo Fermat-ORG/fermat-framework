@@ -48,7 +48,6 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      *
      * @param name column name to set
      */
-    @Override
     public void setName (String name)
     {
         this.name = name;
@@ -60,7 +59,7 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      * @return DatabaseDataType enum
      */
     @Override
-    public DatabaseDataType getType ()
+    public DatabaseDataType getDataType ()
     {
         return this.type;
     }
@@ -70,7 +69,6 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      * <p>Sets the data type of the column
      * @param type DatabaseDataType enum
      */
-    @Override
     public void setType(DatabaseDataType type)
     {
         this.type = type;
@@ -81,7 +79,6 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      *
      * @param dataTypeSize data size column
      */
-    @Override
     public void setDataTypeSize (int dataTypeSize){
         this.dataTypeSize = dataTypeSize;
     }
@@ -100,7 +97,6 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      *
      * @param primaryKey boolean if primary key
      */
-    @Override
     public void setPrimaryKey (boolean primaryKey){
         this.primaryKey = primaryKey;
     }
@@ -111,7 +107,7 @@ public class DesktopDatabaseTableColumn implements DatabaseTableColumn {
      * @return boolean if primary key
      */
     @Override
-    public boolean getPrimaryKey (){
+    public boolean isPrimaryKey (){
         return primaryKey;
     }
 

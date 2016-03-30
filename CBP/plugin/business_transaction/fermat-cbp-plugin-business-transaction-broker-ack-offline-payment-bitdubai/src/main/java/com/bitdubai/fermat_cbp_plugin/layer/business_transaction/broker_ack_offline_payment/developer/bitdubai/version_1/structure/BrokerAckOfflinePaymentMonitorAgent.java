@@ -60,7 +60,7 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interf
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetBankTransactionParametersRecordException;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReception;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
@@ -421,7 +421,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                 throw new CannotSendContractHashException(e, "Sending contract hash", "Cannot get Bank Transaction Parameter Exception");
             } catch (CantGetCashTransactionParameterException e) {
                 throw new CannotSendContractHashException(e, "Sending contract hash", "Cannot get Cash Transaction Parameter Exception");
-            } catch (CantConfirmNotificationReception e) {
+            } catch (CantConfirmNotificationReceptionException e) {
                 throw new CannotSendContractHashException(e, "Confirm Reception contract", "Error in Transaction Transmission Network Service");
             }
         }

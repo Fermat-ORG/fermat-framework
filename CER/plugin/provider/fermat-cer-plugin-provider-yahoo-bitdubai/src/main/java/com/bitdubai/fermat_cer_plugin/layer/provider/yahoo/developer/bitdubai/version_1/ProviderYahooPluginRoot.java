@@ -90,7 +90,7 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
             dao.initialize();
             dao.initializeProvider("Yahoo");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
         serviceStatus = ServiceStatus.STARTED;
@@ -150,7 +150,7 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
             purchasePrice =  Double.valueOf(aux);
 
         }catch (JSONException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"Yahoo CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
         }
 
@@ -159,7 +159,7 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
         try {
             dao.saveExchangeRate(exchangeRate);
         }catch (CantSaveExchangeRateException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return exchangeRate;
     }
@@ -207,7 +207,7 @@ public class ProviderYahooPluginRoot extends AbstractPlugin implements DatabaseM
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeYahooProviderDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.YAHOO, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }
