@@ -120,6 +120,7 @@ public class TimeOutNotifierAgentDeveloperDatabaseFactory {
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_DESCRIPTION_COLUMN_NAME);
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_OWNER_PUBLICKEY_COLUMN_NAME);
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME);
+        agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_END_TIME_COLUMN_NAME);
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME);
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_ELAPSED_COLUMN_NAME);
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME);
@@ -144,6 +145,20 @@ public class TimeOutNotifierAgentDeveloperDatabaseFactory {
          */
         DeveloperDatabaseTable agent_ownerTable = developerObjectFactory.getNewDeveloperDatabaseTable(TimeOutNotifierAgentDatabaseConstants.OWNER_TABLE_NAME, agent_ownerColumns);
         tables.add(agent_ownerTable);
+
+        /**
+         * Table event_monitor columns.
+         */
+        List<String> event_monitorColumns = new ArrayList<String>();
+
+        event_monitorColumns.add(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_PUBLICKEY_COLUMN_NAME);
+        event_monitorColumns.add(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME);
+        event_monitorColumns.add(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_LAST_UPDATED_COLUMN_NAME);
+        /**
+         * Table event_monitor addition.
+         */
+        DeveloperDatabaseTable event_monitorTable = developerObjectFactory.getNewDeveloperDatabaseTable(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_TABLE_NAME, event_monitorColumns);
+        tables.add(event_monitorTable);
 
 
 

@@ -27,6 +27,7 @@ public class TimeOutNotifierAgentDatabaseConstants {
     public static final String AGENTS_DESCRIPTION_COLUMN_NAME = "description";
     public static final String AGENTS_OWNER_PUBLICKEY_COLUMN_NAME = "owner_publickey";
     public static final String AGENTS_START_TIME_COLUMN_NAME = "start_time";
+    public static final String AGENTS_END_TIME_COLUMN_NAME = "end_time";
     public static final String AGENTS_DURATION_COLUMN_NAME = "duration";
     public static final String AGENTS_ELAPSED_COLUMN_NAME = "elapsed";
     public static final String AGENTS_STATE_COLUMN_NAME = "state";
@@ -45,5 +46,16 @@ public class TimeOutNotifierAgentDatabaseConstants {
     public static final String OWNER_TYPE_COLUMN_NAME = "type";
 
     public static final String OWNER_FIRST_KEY_COLUMN = "publickey";
+
+    /**
+     * event_monitor database table definition.
+     */
+    public static final String EVENT_MONITOR_TABLE_NAME = "event_monitor";
+
+    public static final String EVENT_MONITOR_AGENT_PUBLICKEY_COLUMN_NAME = "agent_publickey";
+    public static final String EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME = "amount_raise";
+    public static final String EVENT_MONITOR_LAST_UPDATED_COLUMN_NAME = "last_updated";
+
+    public static final String EVENT_MONITOR_FIRST_KEY_COLUMN = "agent_publickey";
 
 }

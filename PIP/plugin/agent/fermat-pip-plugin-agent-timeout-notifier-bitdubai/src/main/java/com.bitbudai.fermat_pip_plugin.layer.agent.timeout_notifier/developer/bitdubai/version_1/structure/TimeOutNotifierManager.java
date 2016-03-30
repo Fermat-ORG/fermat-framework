@@ -49,12 +49,11 @@ public class TimeOutNotifierManager  implements TimeOutManager{
     }
 
     @Override
-    public TimeOutAgent addNew(long epochTime, long timeout, String name, FermatActor owner) throws CantAddNewTimeOutAgentException {
+    public TimeOutAgent addNew(long duration, String name, FermatActor owner) throws CantAddNewTimeOutAgentException {
         TimeOutNotifierAgent timeOutNotifierAgent = new TimeOutNotifierAgent();
         timeOutNotifierAgent.setUuid(UUID.randomUUID());
         timeOutNotifierAgent.setName(name);
-        timeOutNotifierAgent.setStartTime(epochTime);
-        timeOutNotifierAgent.setTimeOutDuration(timeout);
+        timeOutNotifierAgent.setDuration(duration);
         timeOutNotifierAgent.setOwner(owner);
         timeOutNotifierAgent.setStatus(AgentStatus.CREATED);
         timeOutNotifierAgent.setProtocolStatus(ProtocolStatus.NO_ACTION_REQUIRED);
@@ -65,24 +64,27 @@ public class TimeOutNotifierManager  implements TimeOutManager{
     }
 
     @Override
+    public TimeOutAgent addNewAndStart(long duration, String agentName, FermatActor owner) throws CantAddNewTimeOutAgentException, CantStartTimeOutAgentException {
+        TimeOutAgent timeOutAgent = this.addNew(duration, agentName, owner);
+        startTimeOutAgent(timeOutAgent);
+        return timeOutAgent;
+    }
+
+    @Override
     public void remove(TimeOutAgent timeOutAgent) throws CantRemoveExistingTimeOutAgentException {
         timeOutNotifierAgentPool.removeRunningAgent(timeOutAgent);
     }
 
     @Override
     public void stopTimeOutAgent(TimeOutAgent timeOutAgent) throws CantStopTimeOutAgentException {
-
+        timeOutNotifierAgentPool.stopTimeOutAgent(timeOutAgent);
     }
 
     @Override
     public void startTimeOutAgent(TimeOutAgent timeOutAgent) throws CantStartTimeOutAgentException {
-
+        timeOutNotifierAgentPool.startTimeOutAgent(timeOutAgent);
     }
 
-    @Override
-    public void resetTimeOutAgent(TimeOutAgent timeOutAgent) throws CantResetTimeOutAgentException {
-
-    }
 
     @Override
     public TimeOutAgent getTimeOutAgent(UUID uuid) {
@@ -113,7 +115,7 @@ public class TimeOutNotifierManager  implements TimeOutManager{
     public List<TimeOutAgent> getTimeOutAgents(AgentStatus status) {
         List<TimeOutAgent> timeOutAgentList = new ArrayList<>();
         for (TimeOutAgent timeOutAgent : timeOutNotifierAgentPool.getRunningAgents()){
-            if (timeOutAgent.getAgentStatus() == status)
+            if (timeOutAgent.getStatus() == status)
                 timeOutAgentList.add(timeOutAgent);
         }
         return timeOutAgentList;

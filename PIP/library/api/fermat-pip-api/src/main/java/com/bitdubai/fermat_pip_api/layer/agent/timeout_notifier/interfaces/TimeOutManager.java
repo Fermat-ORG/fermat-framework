@@ -21,14 +21,23 @@ public interface TimeOutManager {
     /**
      * Adds a new Time Out Manager to the agent pools. Once added, further customization is possible.
      * The Agent can later be started, stopped or reset at will.
-     * @param epochStartTime the Start time configured for this Agent.
-     * @param timeout the elapsed time to monitor for a timeout in milliseconds
+     * @param duration the monitor will run before triggering a timeout event in milliseconds
      * @param agentName the Name of the agent to be added.
      * @param owner a FermatActor that is the owner of the agent.
      * @return the newly created TimeOut Agent
      * @throws CantAddNewTimeOutAgentException
      */
-    TimeOutAgent addNew(long epochStartTime, long timeout, String agentName, FermatActor owner) throws CantAddNewTimeOutAgentException;
+    TimeOutAgent addNew(long duration, String agentName, FermatActor owner) throws CantAddNewTimeOutAgentException;
+
+    /**
+     * Adds a new Time Out Manager to the agent pools. Once added it will be started.
+     * @param duration the monitor will run before triggering a timeout event in milliseconds
+     * @param agentName the Name of the agent to be added.
+     * @param owner a FermatActor that is the owner of the agent.
+     * @return the newly created TimeOut Agent
+     * @throws CantAddNewTimeOutAgentException
+     */
+    TimeOutAgent addNewAndStart(long duration, String agentName, FermatActor owner) throws CantAddNewTimeOutAgentException, CantStartTimeOutAgentException;
 
     /**
      * Removes a configured Agent from the Manager. It is stopped if running.

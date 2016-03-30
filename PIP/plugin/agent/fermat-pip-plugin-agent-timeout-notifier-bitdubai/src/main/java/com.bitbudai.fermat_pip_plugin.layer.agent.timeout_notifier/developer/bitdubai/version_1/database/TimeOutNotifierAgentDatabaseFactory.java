@@ -77,6 +77,7 @@ public class TimeOutNotifierAgentDatabaseFactory {
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_OWNER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_END_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_ELAPSED_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.FALSE);
@@ -109,6 +110,25 @@ public class TimeOutNotifierAgentDatabaseFactory {
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+
+            /**
+             * Create event_monitor table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_TABLE_NAME);
+
+            table.addColumn(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME, DatabaseDataType.INTEGER, 0, Boolean.FALSE);
+            table.addColumn(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_LAST_UPDATED_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+
+            table.addIndex(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
