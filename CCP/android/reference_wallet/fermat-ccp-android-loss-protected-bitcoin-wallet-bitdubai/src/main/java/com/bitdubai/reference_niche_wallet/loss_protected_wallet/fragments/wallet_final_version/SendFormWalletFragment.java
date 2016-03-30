@@ -438,33 +438,33 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         if (walletSelected != null) {
             try {
 
-                        switch (walletSelected.getWalletIcon()){
+                        switch (walletSelected.getWalletName()){
 
-                            case "bitcoin_wallet":
+                            case "Bitcoin Wallet":
                                 Picasso.with(getActivity()).load(R.drawable.bitcoin_wallet_2).transform(new CircleTransform()).into(imageview_wallet);
                                 break;
-                            case "loss_protected_wallet":
+                            case "Loss Protected Wallet":
                                 Picasso.with(getActivity()).load(R.drawable.loss_protected).transform(new CircleTransform()).into(imageview_wallet);
                                 break;
-                            case "crypto_broker":
+                            case "Crypto Broker Wallet":
                                 Picasso.with(getActivity()).load(R.drawable.crypto_broker).transform(new CircleTransform()).into(imageview_wallet);
                             break;
-                            case "crypto_customer":
+                            case "Crypto Customer Wallet":
                                 Picasso.with(getActivity()).load(R.drawable.crypto_customer).transform(new CircleTransform()).into(imageview_wallet);
                                 break;
-                            case "asset_issuer":
+                            case "Asset Issuer":
                                 Picasso.with(getActivity()).load(R.drawable.asset_issuer).transform(new CircleTransform()).into(imageview_wallet);
                                 break;
-                            case  "asset_user":
+                            case  "Asset User":
                                 Picasso.with(getActivity()).load(R.drawable.asset_user_wallet).transform(new CircleTransform()).into(imageview_wallet);
                                 break;
-                            case "redeem_point":
+                            case "Redeem Point":
                                 Picasso.with(getActivity()).load(R.drawable.redeem_point).transform(new CircleTransform()).into(imageview_wallet);
                                 break;
-                            case "banking_wallet":
+                            case "Banking wallet":
                                 Picasso.with(getActivity()).load(R.drawable.bank_wallet_xxhdpi).transform(new CircleTransform()).into(imageview_wallet);
                                 break;
-                            case "cash_wallet":
+                            case "Cash wallet":
                                 Picasso.with(getActivity()).load(R.drawable.cash_wallet_xxhdpi).transform(new CircleTransform()).into(imageview_wallet);
                                 break;
 
