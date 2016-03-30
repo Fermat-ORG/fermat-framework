@@ -241,6 +241,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }
         broadcastManager = new BroadcastManager(this);
         AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
+        if(!AndroidCoreUtils.getInstance().isStarted())
+            AndroidCoreUtils.getInstance().setStarted(true);
         runtimeStructureManager = new RuntimeStructureManager(this);
 
     }
@@ -292,19 +294,19 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void onStop() {
         try {
             super.onStop();
-            try{
-                AndroidCoreUtils.getInstance().clear();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-            /**
-             * Service
-             */
-            if (mNotificationServiceConnected) {
-                unbindService(mServiceConnection);
-                mNotificationServiceConnected = false;
-            }
+//            try{
+//                AndroidCoreUtils.getInstance().clear();
+//            }catch (Exception e){
+//                e.printStackTrace();
+//            }
+//
+//            /**
+//             * Service
+//             */
+//            if (mNotificationServiceConnected) {
+//                unbindService(mServiceConnection);
+//                mNotificationServiceConnected = false;
+//            }
 
 
         } catch (Exception e) {
@@ -1370,6 +1372,20 @@ public abstract class FermatActivity extends AppCompatActivity implements
             runtimeStructureManager.clear();
         }
 
+        try{
+            AndroidCoreUtils.getInstance().clear();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        /**
+         * Service
+         */
+        if (mNotificationServiceConnected) {
+            unbindService(mServiceConnection);
+            mNotificationServiceConnected = false;
+        }
+
         resetThisActivity();
         super.onDestroy();
     }
@@ -1852,12 +1868,13 @@ public abstract class FermatActivity extends AppCompatActivity implements
             Intent intentForMcuService = new Intent();
             Log.d(TAG,"Package: "+CommunicationService.class.getPackage().getName());
             Log.d(TAG,"class cannonical: "+CommunicationService.class.getCanonicalName());
-            Log.d(TAG,"class name: "+CommunicationService.class.getName());
-            Log.d(TAG,"class simple name: "+CommunicationService.class.getSimpleName());
+            Log.d(TAG, "class name: " + CommunicationService.class.getName());
+            Log.d(TAG, "class simple name: " + CommunicationService.class.getSimpleName());
             //intentForMcuService.setClassName(CommunicationService.class.getPackage().getName(), "com.bitdubai.android_core.app.common.version_1.communication.CommunicationService");
 
-            intentForMcuService.setComponent(new ComponentName(CommunicationService.class.getPackage().getName(),CommunicationService.class.getName()));
+            intentForMcuService.setComponent(new ComponentName(CommunicationService.class.getPackage().getName(), CommunicationService.class.getName()));
             Log.d(TAG, "Before bindService");
+
             if (bindService(intentForMcuService, mServiceCommunicationConnection, BIND_AUTO_CREATE)){
                 Log.d(TAG, "Binding to Modem Watcher returned true");
             } else {

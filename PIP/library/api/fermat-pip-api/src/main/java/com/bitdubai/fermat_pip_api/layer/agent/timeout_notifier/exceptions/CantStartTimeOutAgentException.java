@@ -9,6 +9,10 @@ public class CantStartTimeOutAgentException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "There was an error starting the Timeout Agent";
 
+    public CantStartTimeOutAgentException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
     public CantStartTimeOutAgentException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
