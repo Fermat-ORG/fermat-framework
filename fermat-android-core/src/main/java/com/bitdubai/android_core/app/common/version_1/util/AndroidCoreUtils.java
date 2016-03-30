@@ -88,7 +88,7 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
             if(isStarted)
             id = context.publish(broadcasterType,bundle);
         }catch (Exception e){
-            e.printStackTrace();
+//            e.printStackTrace();
         }
         return id;
     }
