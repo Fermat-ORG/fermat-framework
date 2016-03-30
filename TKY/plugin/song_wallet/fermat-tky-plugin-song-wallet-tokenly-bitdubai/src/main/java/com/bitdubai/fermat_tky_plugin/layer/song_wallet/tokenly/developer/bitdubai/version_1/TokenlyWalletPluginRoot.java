@@ -210,6 +210,7 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             //testSynchronizeSongs();
             //testAutomaticSyncSongs();
             //testDeleteSong();
+            testDownloadDeletedSong();
         } catch(CantInitializeDatabaseException e){
             errorManager.reportUnexpectedPluginException(
                     Plugins.TOKENLY_API,
@@ -386,6 +387,17 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             System.out.println("TKY - Deleted List " + deletedSongsList);
         } catch (Exception e){
             System.out.println("TKY: Test Delete song exception");
+            e.printStackTrace();
+        }
+    }
+
+    private void testDownloadDeletedSong(){
+        try{
+            UUID deletedSongId = UUID.fromString("a5a68fe3-923c-42f4-b0b2-6755b7970fd9");
+            Fan fanIdentity = getTestFanIdentity();
+            this.tokenlyWalletManager.downloadSong(deletedSongId, fanIdentity.getMusicUser());
+        } catch (Exception e){
+            System.out.println("TKY: Test download Deleted song exception");
             e.printStackTrace();
         }
     }

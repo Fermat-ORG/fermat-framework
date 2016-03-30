@@ -70,7 +70,7 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             //signatureAuthenticateTest();
             //signatureAndGETTest();
             //getSongsTest();
-            getSongTest();
+            //getSongTest();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.TOKENLY_API,

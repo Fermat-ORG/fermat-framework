@@ -7,6 +7,7 @@ import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_tky_api.all_definitions.util.ObjectChecker;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
@@ -294,11 +295,14 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
      * This Id is assigned by the Song Wallet Tokenly implementation, can be different to the
      * Tokenly Id.
      * @param songId
+     * @param user
      * @throws CantDownloadSongException
      * @throws CantUpdateSongDevicePathException
      */
     @Override
-    public void downloadSong(UUID songId) throws
+    public void downloadSong(
+            UUID songId,
+            MusicUser user) throws
             CantDownloadSongException,
             CantUpdateSongDevicePathException,
             CantUpdateSongStatusException {
@@ -308,9 +312,11 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             ObjectChecker.checkArgument(tokenlyId, "The tokenly Id is null");
             //Get the wallet song from database
             WalletSong walletSong = this.tokenlySongWalletDao.getWalletSongArgumentBySongId(songId);
-            //TODO: Get the song download URL from Tokenly Protected API
+            //Get the song from external api to get the download URL
+            String tokenlySongId = walletSong.getId();
+            Song song = this.tokenlyApiManager.getSongByAuthenticatedUser(user,tokenlySongId);
             //Request download song.
-            String songPath = this.tokenlyWalletSongVault.downloadSong(walletSong);
+            String songPath = this.tokenlyWalletSongVault.downloadSong(song);
             this.tokenlySongWalletDao.updateSongStoragePath(songId, songPath);
             //Update song status
             this.tokenlySongWalletDao.updateSongStatus(songId, SongStatus.AVAILABLE);
@@ -329,6 +335,11 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                     e,
                     "Downloading song by id:"+songId,
                     "Cannot get the wallet song");
+        } catch (CantGetSongException e) {
+            throw new CantDownloadSongException(
+                    e,
+                    "Downloading song by id:"+songId,
+                    "Cannot get the song from external API");
         }
     }
 
