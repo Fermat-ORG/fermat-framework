@@ -303,8 +303,15 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         if (walletFile.exists()){
             BitcoinCryptoNetworkMonitor monitor = runningAgents.get(blockchainNetworkType);
 
+            if (monitor != null)
                 wallet = monitor.getWallet();
-                return wallet;
+            else
+                try {
+                    wallet = Wallet.loadFromFile(walletFile);
+                } catch (UnreadableWalletException e) {
+                    e.printStackTrace();
+                }
+            return wallet;
             }
          else {
             // I will create a new one.
@@ -494,7 +501,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     public Transaction getBitcoinTransaction(BlockchainNetworkType blockchainNetworkType, String transactionHash) {
         Sha256Hash sha256Hash = Sha256Hash.wrap(transactionHash);
-        Transaction transaction = runningAgents.get(blockchainNetworkType).getWallet().getTransaction(sha256Hash);
+        Transaction transaction = runningAgents.get(blockchainNetworkType).getBitcoinTransaction(sha256Hash);
 
         if (transaction == null){
             Wallet wallet = getWallet(blockchainNetworkType, null);
