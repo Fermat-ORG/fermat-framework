@@ -869,6 +869,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         public BlockchainDownloadProgress getBlockchainDownloadProgress() {
             return events.getBlockchainDownloadProgress();
         }
+
+        public Transaction getBitcoinTransaction(Sha256Hash sha256Hash){
+            return this.wallet.getTransaction(sha256Hash);
+        }
     }
 
     /**
@@ -906,6 +910,10 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
     public BlockchainDownloadProgress getBlockchainDownloadProgress(){
         return this.monitorAgent.getBlockchainDownloadProgress();
+    }
+
+    public Transaction getBitcoinTransaction(Sha256Hash sha256Hash){
+        return this.monitorAgent.wallet.getTransaction(sha256Hash);
     }
 
 }
