@@ -331,19 +331,23 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                     }
                 }
             }
+
+//            for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_MERCHANDISE_SUBMIT
+//            {
+//                //Comienzo a recorrer todas las transacciones que esten en Transaction_Status IN_MERCHANDISE_SUBMIT
+//                //Registra el Close Contract siempre y cuando el Transaction_Status de la Transaction Customer Broker Purchase este IN_MERCHANDISE_SUBMIT
+//                for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.MERCHANDISE_SUBMIT)) {
+//                    if (Objects.equals(customerBrokerPurchase.getTransactionId(), customerBrokerContractPurchase.getNegotiatiotId())) {
+//                        System.out.print("\nTEST CONTRACT - USER LEVEL PURCHASE - AGENT - getCustomerBrokerSales()\n");
+//                        closeContractManager.closePurchaseContract(customerBrokerContractPurchase.getContractId());
+//                    }
+//                }
+//            }
             for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_MERCHANDISE_SUBMIT
             {
-                //Comienzo a recorrer todas las transacciones que esten en Transaction_Status IN_MERCHANDISE_SUBMIT
-                //Registra el Close Contract siempre y cuando el Transaction_Status de la Transaction Customer Broker Purchase este IN_MERCHANDISE_SUBMIT
-                for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.MERCHANDISE_SUBMIT)) {
-                    if (Objects.equals(customerBrokerPurchase.getTransactionId(), customerBrokerContractPurchase.getNegotiatiotId())) {
-                        closeContractManager.closePurchaseContract(customerBrokerContractPurchase.getContractId());
-                    }
-                }
-            }
-            for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_MERCHANDISE_SUBMIT
-            {
-                for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.COMPLETED)) {
+                for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.READY_TO_CLOSE)) {
+                    System.out.print("\nTEST CONTRACT - USER LEVEL PURCHASE - AGENT - getCustomerBrokerSales()\n");
+                    closeContractManager.closePurchaseContract(customerBrokerContractPurchase.getContractId());
                     customerBrokerPurchase.setTransactionStatus(TransactionStatus.COMPLETED);
                     userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.saveCustomerBrokerPurchaseTransactionData(customerBrokerPurchase);
                 }
