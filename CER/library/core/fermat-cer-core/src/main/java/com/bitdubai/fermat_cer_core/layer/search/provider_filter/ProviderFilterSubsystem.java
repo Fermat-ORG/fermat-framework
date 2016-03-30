@@ -13,7 +13,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 public class ProviderFilterSubsystem extends AbstractPluginSubsystem {
 
     public ProviderFilterSubsystem() {
-        super(new PluginReference(Plugins.BITDUBAI_CER_PROVIDER_FILTER));
+        super(new PluginReference(Plugins.FILTER));
     }
 
     @Override

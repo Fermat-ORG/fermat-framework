@@ -17,6 +17,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.all_definition.bank_money_transaction.BankTransactionParameters;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
@@ -195,7 +196,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                     @Override
                     public String getPublicKeyWallet() {
-                        return "banking_wallet";
+                        return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
                     }
 
                     @Override
@@ -242,7 +243,7 @@ public class CreateTransactionFragmentDialog extends Dialog implements
 
                     @Override
                     public String getPublicKeyWallet() {
-                        return "banking_wallet";
+                        return WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet";
                     }
 
                     @Override
