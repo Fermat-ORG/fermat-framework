@@ -5,7 +5,7 @@
 
 ## Introduction
 
-Fermat White Paper is a work in progress. Since the project was out of the radar for more than a year there was no need to publish a formal white paper. In preparation to transiting to a fully open community, the white paper was re-written and reviewed. 
+The Fermat White Paper is a work in progress. Since the project was out of the radar for more than a year there was no need to publish a formal white paper. In preparation to transiting to a fully open community, the white paper was re-written and reviewed. 
 
 The first version was written by [Luis Fernando Molina](https://github.com/Luis-Fernando-Molina) and later re-written by Peronet Despeignes with major contributions from Philip Farah and other reviewers.
 
