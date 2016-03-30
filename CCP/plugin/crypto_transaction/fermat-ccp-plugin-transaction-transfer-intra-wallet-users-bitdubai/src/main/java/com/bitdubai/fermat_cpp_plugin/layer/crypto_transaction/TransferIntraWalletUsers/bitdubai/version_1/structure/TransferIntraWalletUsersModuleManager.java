@@ -63,15 +63,8 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
         this.broadcaster = broadcaster;
     }
 
-    //TODO: los try catch tenes que ponerlos englobando toda la funcion, me parece que para que quede mas claro tenes que hacer un
-    //switch para descontar de la loss y otro switch para enviar a la bitcoin
-    //si el primer bloque da error no seguis y avisas al usuario con el broadcaster, mas el envio del error, lo mismo si pasa algo en el segundo bloque
-    //en el caso de q de error cuando le envias los btc a la otra wallet tenes que reversar la trasaccion en la loss eso ya hay un metodo
-    //Lo primero que haces cuando entras al metodo send es guardar la transaccion en la base de datos de este plugin
-    //si pasa el primer bloque le pones un estado, si pasa el segundo estado completado
-    //si da error estado de error
-    //Acordate que la transaccion tiene que tener un tipo Intra Wallets y la transaccion que se guarda en la loss lleva el Exchange rate en cero
 
+    //Acordate que la transaccion tiene que tener un tipo Intra Wallets y la transaccion que se guarda en la loss lleva el Exchange rate en cero
     //hay q ver si no puede completar la transaccion de avisar con una notificacion
     @Override
     public void sendToWallet(
@@ -316,11 +309,20 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             actortype,
                             blockchainNetworkType);
 
-                    BitcoinWalletWallet bitcoinWalletWallet =  this.bitcoinWalletManager.loadWallet(wallet_public_key_sending);
+                    BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(wallet_public_key_sending);
 
-                    bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionWalletRecord2);
-                    bitcoinWalletWallet.getBalance(BalanceType.BOOK).credit(bitcoinWalletTransactionWalletRecord2);
+                    try {
+                        bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionWalletRecord2);
 
+                    }catch (CantRegisterCreditException e){
+                        throw new CantReceiveWalletTransactionException(CantReceiveWalletTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+                    }
+                    try {
+                        bitcoinWalletWallet.getBalance(BalanceType.BOOK).credit(bitcoinWalletTransactionWalletRecord2);
+                    }catch (CantRegisterCreditException e){
+                        bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).debit(bitcoinWalletTransactionWalletRecord2);
+                        throw new CantReceiveWalletTransactionException(CantReceiveWalletTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+                    }
                     break;
                 case BASIC_WALLET_DISCOUNT_WALLET:
                     break;
@@ -343,10 +345,18 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             actortype,
                             blockchainNetworkType);
 
-//TODO: si da error en el credit del book tendria que hacer un debit en el available
-                    bitcoinLossProtectedWallet.getBalance(BalanceType.AVAILABLE).credit(bitcoinLossProtectedWalletTransactionWalletRecord);
-                    bitcoinLossProtectedWallet.getBalance(BalanceType.BOOK).credit(bitcoinLossProtectedWalletTransactionWalletRecord);
-
+                 try {
+                     bitcoinLossProtectedWallet.getBalance(BalanceType.AVAILABLE).credit(bitcoinLossProtectedWalletTransactionWalletRecord);
+                  
+                 }catch (CantRegisterCreditException e){
+                     throw new CantReceiveWalletTransactionException(CantReceiveWalletTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+                 }
+                    try {
+                        bitcoinLossProtectedWallet.getBalance(BalanceType.BOOK).credit(bitcoinLossProtectedWalletTransactionWalletRecord);
+                    }catch (CantRegisterCreditException e){
+                        bitcoinLossProtectedWallet.getBalance(BalanceType.AVAILABLE).debit(bitcoinLossProtectedWalletTransactionWalletRecord);
+                        throw new CantReceiveWalletTransactionException(CantReceiveWalletTransactionException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
+                    }
                     break;
 
 
