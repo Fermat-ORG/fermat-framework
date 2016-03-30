@@ -1,12 +1,18 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models;
 
+import android.text.format.DateUtils;
+
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.Utils;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
@@ -16,16 +22,22 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
  */
 public class Asset {
     private AssetUserWalletList assetUserWalletList;
+    private AssetUserWalletTransaction assetUserWalletTransaction;
     private DigitalAsset digitalAsset;
 
+    private String id;
     private byte[] image;
     private String name;
     private double amount;
     private String description;
     private Timestamp expDate;
+    private Timestamp date;
     private Status status;
     private String actorName;
     private byte[] actorImage;
+    private boolean redeemable;
+    private boolean transferable;
+    private boolean saleable;
 
     public enum Status {
         PENDING("PENDING"),
@@ -46,17 +58,23 @@ public class Asset {
         this.name = name;
     }
 
-    public Asset(AssetUserWalletList assetUserWalletList, Status status) {
+    public Asset(AssetUserWalletList assetUserWalletList, AssetUserWalletTransaction assetUserWalletTransaction) {
         this.assetUserWalletList = assetUserWalletList;
+        this.assetUserWalletTransaction = assetUserWalletTransaction;
         this.digitalAsset = assetUserWalletList.getDigitalAsset();
+        setId(assetUserWalletTransaction.getActualTransactionHash());
         setImage(digitalAsset.getResources().get(0).getResourceBinayData());
         setName(digitalAsset.getName());
         setAmount(assetUserWalletList.getAvailableBalance());
         setDescription(digitalAsset.getDescription());
         setExpDate((Timestamp) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
-        setStatus(status);
+        setDate(new Timestamp(assetUserWalletTransaction.getTimestamp()));
+        setStatus((assetUserWalletTransaction.getBalanceType().equals(BalanceType.AVAILABLE)) ? Asset.Status.CONFIRMED : Asset.Status.PENDING);
         setActorName(digitalAsset.getIdentityAssetIssuer().getAlias());
         setActorImage(digitalAsset.getIdentityAssetIssuer().getImage());
+        setRedeemable((Boolean) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE).getValue());
+        setTransferable((Boolean) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.TRANSFERABLE).getValue());
+        setSaleable((Boolean) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.SALEABLE).getValue());
     }
 
     public byte[] getImage() {
@@ -103,8 +121,20 @@ public class Asset {
         this.expDate = expDate;
     }
 
+    public Timestamp getDate() {
+        return date;
+    }
+
+    public void setDate(Timestamp date) {
+        this.date = date;
+    }
+
     public String getFormattedExpDate() {
         return (expDate == null) ? "No expiration date" : DAPStandardFormats.DATE_FORMAT.format(expDate);
+    }
+
+    public String getFormattedDate() {
+        return (date == null) ? "No date" : Utils.getTimeAgo(date.getTime());
     }
 
     public Status getStatus() {
@@ -133,5 +163,37 @@ public class Asset {
 
     public void setActorImage(byte[] actorImage) {
         this.actorImage = actorImage;
+    }
+
+    public boolean isRedeemable() {
+        return redeemable;
+    }
+
+    public void setRedeemable(boolean redeemable) {
+        this.redeemable = redeemable;
+    }
+
+    public boolean isTransferable() {
+        return transferable;
+    }
+
+    public void setTransferable(boolean transferable) {
+        this.transferable = transferable;
+    }
+
+    public boolean isSaleable() {
+        return saleable;
+    }
+
+    public void setSaleable(boolean saleable) {
+        this.saleable = saleable;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

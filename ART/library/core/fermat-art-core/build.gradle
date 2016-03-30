@@ -11,6 +11,19 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-core-api')
 
+    //Actor Connection
+    compile project(':fermat-art-plugin-actor-connection-artist-bitdubai')
+    compile project(':fermat-art-plugin-actor-connection-fan-bitdubai')
+
+    //Actor Network Service
     compile project(':fermat-art-plugin-actor-network-service-artist-bitdubai')
+
+    //Identity
     compile project(':fermat-art-plugin-identity-artist-bitdubai')
+
+    //SUB APP MODULE
+    compile project(':fermat-art-plugin-sub-app-module-artist-community-bitdubai')
+    compile project(':fermat-art-plugin-sub-app-module-artist-identity-bitdubai')
+    compile project(':fermat-art-plugin-sub-app-module-fan-community-bitdubai')
+    compile project(':fermat-art-plugin-sub-app-module-fan-identity-bitdubai')
 }

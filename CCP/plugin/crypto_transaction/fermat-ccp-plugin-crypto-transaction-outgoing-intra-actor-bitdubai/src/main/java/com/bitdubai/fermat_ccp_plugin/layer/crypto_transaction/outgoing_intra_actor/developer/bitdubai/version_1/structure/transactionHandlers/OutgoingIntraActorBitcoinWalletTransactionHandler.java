@@ -109,7 +109,8 @@ public class OutgoingIntraActorBitcoinWalletTransactionHandler implements Outgoi
                 dao.cancelTransaction(transaction);
                 return;
             case ON_BLOCKCHAIN:
-                bitcoinWallet.getBalance(BalanceType.BOOK).debit(transaction);
+                //debit available balance only in this case
+               // bitcoinWallet.getBalance(BalanceType.BOOK).debit(transaction);
                 dao.setToCryptoStatus(transaction, CryptoStatus.ON_BLOCKCHAIN);
                 return;
             case REVERSED_ON_BLOCKCHAIN:

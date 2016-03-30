@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.crypto_broker_identity.fragments;
 
 import android.app.Fragment;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -141,6 +142,15 @@ public class CryptoBrokerIdentityListFragment extends FermatListFragment<CryptoB
         }
 
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        configureToolbar();
+    }
+
+    private void configureToolbar() {
+        android.support.v7.widget.Toolbar toolbar = getToolbar();
+
+        toolbar.setBackgroundResource(R.color.background_toolbar);
+
     }
 
     @Override

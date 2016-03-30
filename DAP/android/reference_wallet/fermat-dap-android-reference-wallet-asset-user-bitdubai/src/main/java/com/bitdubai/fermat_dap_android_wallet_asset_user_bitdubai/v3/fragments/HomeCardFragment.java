@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.fragments;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
@@ -17,12 +19,16 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
+import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -34,6 +40,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.data
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.common.adapters.HomeCardAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.common.filters.HomeCardAdapterFilter;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.common.holders.HomeCardViewHolder;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
@@ -302,11 +309,93 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            adapter = new HomeCardAdapter(getActivity(), assets, moduleManager);
+            View.OnClickListener onClickListenerRedeem = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM_SELECT_REDEEMPOINTS, appSession.getAppPublicKey());
+                }
+            };
+            View.OnClickListener onClickListenerTransfer = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_TRANSFER_SELECT_USERS_ACTIVITY, appSession.getAppPublicKey());
+                }
+            };
+            View.OnClickListener onClickListenerAppropriate = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    final Asset asset = (Asset) appSession.getData("asset");
+                    new ConfirmDialog.Builder(getActivity(), appSession)
+                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_sure))
+                            .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
+                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                @Override
+                                public void onClick() {
+                                    doAppropriate(asset.getDigitalAsset().getPublicKey());
+                                }
+                            }).build().show();
+                }
+            };
+            View.OnClickListener onClickListenerSell = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY, appSession.getAppPublicKey());
+                }
+            };
+            View.OnClickListener onClickListenerTransactions = new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //TODO
+//                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM_SELECT_REDEEMPOINTS, appSession.getAppPublicKey());
+                }
+            };
+            adapter = new HomeCardAdapter(getActivity(), assets, moduleManager, appSession, onClickListenerRedeem,
+                    onClickListenerTransfer, onClickListenerAppropriate, onClickListenerSell, onClickListenerTransactions);
         } else {
             adapter.changeDataSet(assets);
         }
         return adapter;
+    }
+
+    private void doAppropriate(final String assetPublicKey) {
+        final Activity activity = getActivity();
+        final ProgressDialog dialog = new ProgressDialog(activity);
+        dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
+        dialog.setCancelable(false);
+        dialog.show();
+        FermatWorker task = new FermatWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+//                    manager.distributionAssets(
+//                            asset.getAssetPublicKey(),
+//                            asset.getWalletPublicKey(),
+//                            asset.getActorAssetRedeemPoint()
+//                    );
+                //TODO: only for Appropriate test
+                moduleManager.appropriateAsset(assetPublicKey, null);
+                return true;
+            }
+        };
+        task.setContext(activity);
+        task.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                dialog.dismiss();
+                if (activity != null) {
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_appropriation_ok), Toast.LENGTH_LONG).show();
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                dialog.dismiss();
+                if (activity != null)
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_exception_retry),
+                            Toast.LENGTH_SHORT).show();
+            }
+        });
+        task.execute();
     }
 
     @Override

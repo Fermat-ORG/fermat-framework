@@ -62,7 +62,7 @@
                         android:text="Delivered by"
                         android:textSize="10sp"
                         android:layout_marginBottom="3dp"
-                        android:textColor="@color/card_text_top_secondary"/>
+                        android:textColor="@color/card_text"/>
 
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:id="@+id/cardActorName"
@@ -71,7 +71,7 @@
                         android:text="Frank ISSUER"
                         android:textSize="14sp"
                         android:layout_below="@id/detailAction"
-                        android:textColor="@color/card_text_top_primary"/>
+                        android:textColor="@color/card_text"/>
 
                 </RelativeLayout>
 
@@ -85,7 +85,7 @@
                     android:textSize="10sp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
-                    android:textColor="@color/card_text_top_primary"/>
+                    android:textColor="@color/card_text"/>
 
             </RelativeLayout>
 
@@ -108,7 +108,7 @@
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/cardAssetName"
-                    android:layout_width="210dp"
+                    android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:text="Coupon for 20% discount on Shirts"
                     android:textSize="12sp"
@@ -143,7 +143,7 @@
                     android:text="Confirmed"
                     android:textSize="10sp"
                     android:textColor="@color/card_text"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="2dp"
                     android:layout_alignParentRight="true"/>
 
@@ -152,7 +152,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/detail_check"
-                    android:layout_toLeftOf="@id/cardConfirmedText"/>
+                    android:layout_toLeftOf="@id/cardConfirmedText"
+                    android:layout_marginTop="14dp"/>
 
                 <View
                     android:layout_width="fill_parent"

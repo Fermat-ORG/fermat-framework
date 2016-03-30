@@ -16,6 +16,7 @@ public enum Layers implements FermatEnum {
     ACTOR                          ("ACT"),
     ACTOR_CONNECTION               ("ACC"),
     ACTOR_NETWORK_SERVICE          ("ANS"),
+    AGENT                          ("AGN"),
     API                            ("API"),
     BANK_MONEY_TRANSACTION         ("BMT"),
     BASIC_WALLET                   ("BSW"),
@@ -69,6 +70,7 @@ public enum Layers implements FermatEnum {
             case "ACT":  return ACTOR;
             case "ACC":  return ACTOR_CONNECTION;
             case "ANS":  return ACTOR_NETWORK_SERVICE;
+            case "AGN":  return AGENT;
             case "API":  return API;
             case "BMT":  return BANK_MONEY_TRANSACTION;
             case "BSW":  return BASIC_WALLET;

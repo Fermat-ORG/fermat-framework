@@ -26,6 +26,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.in
  */
 public class WalletRedeemPointFermatAppConnection extends AppConnections<RedeemPointSession> {
 
+
     RedeemPointIdentity redeemPointIdentity;
     AssetRedeemPointWalletSubAppModule manager;
     RedeemPointSession redeemPointSession;
