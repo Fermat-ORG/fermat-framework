@@ -133,10 +133,10 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
         try {
 
             double purchasePrice = 0;
-            ExchangeRate rate = getActualExchangeRate();
+           // ExchangeRate rate = getActualExchangeRate();
 
-            if(rate != null)
-                purchasePrice = rate.getPurchasePrice();
+           // if(rate != null)
+              //  purchasePrice = rate.getPurchasePrice();
 
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
             bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.AVAILABLE,purchasePrice);
