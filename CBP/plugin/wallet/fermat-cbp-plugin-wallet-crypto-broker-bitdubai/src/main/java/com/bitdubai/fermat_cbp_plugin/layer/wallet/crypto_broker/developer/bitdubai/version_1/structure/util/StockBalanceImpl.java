@@ -48,7 +48,7 @@ public class StockBalanceImpl implements StockBalance {
         this.plugin = plugin;
         this.pluginFileSystem = pluginFileSystem;
         this.errorManager = errorManager;
-        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database, errorManager);
+        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.plugin);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
     }

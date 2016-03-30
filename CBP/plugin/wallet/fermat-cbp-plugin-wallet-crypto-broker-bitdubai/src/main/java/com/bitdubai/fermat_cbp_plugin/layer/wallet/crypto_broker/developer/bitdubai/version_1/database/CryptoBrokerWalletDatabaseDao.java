@@ -216,7 +216,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         CryptoBrokerWalletBalanceRecordImpl cryptoBrokerWalletBalanceRecord = null;
         List<CryptoBrokerWalletBalanceRecord> cryptoBrokerWalletBalanceRecords = new ArrayList<>();
 
-        float availableBalanceFrozen = 0;
+        float availableBalanceFrozen;
         try {
             table.loadToMemory();
             for (DatabaseTableRecord records : table.getRecords()) {
