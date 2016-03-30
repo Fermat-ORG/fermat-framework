@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
@@ -13,6 +12,7 @@ import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantGetArtis
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
+import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.TokenlyArtistPreferenceSettings;
 
 import java.util.List;
 import java.util.UUID;
