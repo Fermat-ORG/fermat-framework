@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.identity.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Created by franklin on 29/03/16.
  */
-public interface ChatIdentityManager {
+public interface ChatIdentityManager extends FermatManager {
     /**
      * The method <code>getIdentityAssetUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
      *
