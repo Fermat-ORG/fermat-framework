@@ -137,7 +137,8 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
         this.actorPublicKey         =       actorPublicKey          ;
         this.name                   =       name                    ;
-        this.dapConnectionState     =       dapConnectionState      ;
+        if (dapConnectionState != null)
+            this.dapConnectionState     =       dapConnectionState  ;
 
         if (locationLatitude != null)
             this.locationLatitude       = locationLatitude          ;

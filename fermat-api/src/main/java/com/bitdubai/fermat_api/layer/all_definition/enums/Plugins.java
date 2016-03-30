@@ -174,15 +174,15 @@ public enum Plugins implements FermatPluginsEnum {
     // End CSH Plugins
 
     //Init CER Plugins
-    BITDUBAI_CER_PROVIDER_FILTER                ("BCERPF"  ),
-    BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA      ("BCERPBV"  ),
-    BITDUBAI_CER_PROVIDER_BITFINEX              ("BCERPBF"  ),
-    BITDUBAI_CER_PROVIDER_BTER                  ("BCERPBT"  ),
-    BITDUBAI_CER_PROVIDER_DOLARTODAY            ("BCERPDT"  ),
-    BITDUBAI_CER_PROVIDER_ELCRONISTA            ("BCERPEC"  ),
-    BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK ("BCERPECB" ),
-    BITDUBAI_CER_PROVIDER_LANACION              ("BCERPLN"  ),
-    BITDUBAI_CER_PROVIDER_YAHOO                 ("BCERPYH"  ),
+    FILTER("BCERPF"  ),
+    BITCOINVENEZUELA("BCERPBV"  ),
+    BITFINEX("BCERPBF"  ),
+    BTER("BCERPBT"  ),
+    DOLARTODAY("BCERPDT"  ),
+    ELCRONISTA("BCERPEC"  ),
+    EUROPEAN_CENTRAL_BANK("BCERPECB" ),
+    LANACION("BCERPLN"  ),
+    YAHOO("BCERPYH"  ),
 
     // End CER Plugins
 
@@ -241,11 +241,13 @@ public enum Plugins implements FermatPluginsEnum {
     OUTGOING_EXTRA_USER         ("OEU"),
     OUTGOING_INTRA_ACTOR        ("OIA"),
     TRANSFER_INTRA_WALLET        ("TIW"),
+    TIMEOUT_NOTIFIER            ("TON"),
     PUBLISHER                   ("PBL"),
     REDEEM_POINT                ("RP"),
     REDEEM_POINT_COMMUNITY      ("RPC"),
     REDEEM_POINT_REDEMPTION     ("RPR"),
     SUB_APP_RESOURCES           ("SAR"),
+    SUB_APP_FERMAT_MONITOR      ("FERM"),
     SUB_APP_RUNTIME             ("SPR"),
     USER_REDEMPTION             ("UR"),
     WALLET_COMMUNITY            ("WCOM"),
@@ -268,8 +270,8 @@ public enum Plugins implements FermatPluginsEnum {
     //CBP
     BANK_MONEY_RESTOCK                  ("BMRE"),
     BANK_MONEY_DESTOCK                  ("BMDE"),
-    CASH_MONEY_RESTOCK                  ("CMDE"),
-    CASH_MONEY_DESTOCK                  ("CMRE"),
+    CASH_MONEY_RESTOCK                  ("CMRE"),
+    CASH_MONEY_DESTOCK                  ("CMDE"),
     CONTRACT_PURCHASE                   ("CONTP"),
     CONTRACT_SALE                       ("CONTS"),
     CRYPTO_BROKER_WALLET                ("CBWA"),
@@ -307,10 +309,12 @@ public enum Plugins implements FermatPluginsEnum {
     CHAT_SUP_APP_MODULE                 ("CHTSAM"), CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
 
     // ART
-
-    ACTOR_NETWORK_SERVICE_ARTIST       ("ANSART"),
-    ARTIST_IDENTITY                    ("ARTIDNTY"),
-
+    ARTIST_ACTOR_CONNECTION             ("ARTAAC"),
+    FAN_ACTOR_CONNECTION                ("ARTFAC"),
+    ACTOR_NETWORK_SERVICE_ARTIST        ("ANSART"),
+    ARTIST_IDENTITY                     ("ARTIDNTY"),
+    ART_ARTIST_SUB_APP_MODULE           ("AASAM"),
+    ART_FAN_SUB_APP_MODULE              ("AFSAM"),
 
     //TKY
     TOKENLY_API                         ("TOKAP"),
@@ -391,6 +395,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "RPC"  :   return REDEEM_POINT_COMMUNITY   ;
             case "RPR"  :   return REDEEM_POINT_REDEMPTION  ;
             case "SAR"  :   return SUB_APP_RESOURCES        ;
+            case "FERM"  :   return SUB_APP_FERMAT_MONITOR   ;
             case "SPR"  :   return SUB_APP_RUNTIME          ;
             case "UR"   :   return USER_REDEMPTION          ;
             case "WCOM" :   return WALLET_COMMUNITY         ;
@@ -430,15 +435,15 @@ public enum Plugins implements FermatPluginsEnum {
             case "BCSHMTW": return BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL;
             case "BCSHMWM": return BITDUBAI_CSH_MONEY_WALLET_MODULE;
             case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY;
-            case "BCERPF":  return BITDUBAI_CER_PROVIDER_FILTER;
-            case "BCERPBV": return BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA;
-            case "BCERPBF": return BITDUBAI_CER_PROVIDER_BITFINEX;
-            case "BCERPBT": return BITDUBAI_CER_PROVIDER_BTER;
-            case "BCERPDT": return BITDUBAI_CER_PROVIDER_DOLARTODAY;
-            case "BCERPEC": return BITDUBAI_CER_PROVIDER_ELCRONISTA;
-            case "BCERPECB":return BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK;
-            case "BCERPLN": return BITDUBAI_CER_PROVIDER_LANACION;
-            case "BCERPYH": return BITDUBAI_CER_PROVIDER_YAHOO;
+            case "BCERPF":  return FILTER;
+            case "BCERPBV": return BITCOINVENEZUELA;
+            case "BCERPBF": return BITFINEX;
+            case "BCERPBT": return BTER;
+            case "BCERPDT": return DOLARTODAY;
+            case "BCERPEC": return ELCRONISTA;
+            case "BCERPECB":return EUROPEAN_CENTRAL_BANK;
+            case "BCERPLN": return LANACION;
+            case "BCERPYH": return YAHOO;
             case ("NGTR"):  return NEGOTIATION_TRANSMISSION         ;
             case ("CBNE"):  return CUSTOMER_BROKER_NEW              ;
             case ("CBUP"):  return CUSTOMER_BROKER_UPDATE           ;
@@ -451,6 +456,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "COFP":    return CUSTOMER_OFFLINE_PAYMENT         ;
             case "BAFP":    return BROKER_ACK_OFFLINE_PAYMENT       ;
             case "BAOP":    return BROKER_ACK_ONLINE_PAYMENT        ;
+            case "CAFM":    return CUSTOMER_ACK_OFFLINE_MERCHANDISE ;
             case "CAOM":    return CUSTOMER_ACK_ONLINE_MERCHANDISE  ;
             case "BSOM":    return BROKER_SUBMIT_ONLINE_MERCHANDISE ;
             case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
@@ -464,6 +470,8 @@ public enum Plugins implements FermatPluginsEnum {
             case "CCPODT" :     return CCP_OUTGOING_DRAFT_TRANSACTION           ;
             case "ANSART":      return ACTOR_NETWORK_SERVICE_ARTIST             ;
             case "ARTIDNTY":    return ARTIST_IDENTITY                          ;
+            case "AASAM":       return ART_ARTIST_SUB_APP_MODULE                ;
+            case "AFSAM":       return ART_FAN_SUB_APP_MODULE                   ;
             case "TOKAP":       return TOKENLY_API;
             case "TARTIST":     return TOKENLY_ARTIST                           ;
             case "TFAN":        return TOKENLY_FAN                              ;
@@ -471,6 +479,8 @@ public enum Plugins implements FermatPluginsEnum {
             case "TFSAM":       return TOKENLY_FAN_SUB_APP_MODULE               ;
             case "TFWM":        return TOKENLY_FAN_WALLET_MODULE                ;
             case "TWALLET":     return TOKENLY_WALLET                           ;
+            case "ARTAAC":      return ARTIST_ACTOR_CONNECTION                  ;
+            case "ARTFAC":      return FAN_ACTOR_CONNECTION                     ;
 
             default:
                 throw new InvalidParameterException(
@@ -479,7 +489,6 @@ public enum Plugins implements FermatPluginsEnum {
                 );
         }
     }
-
     @Override
     public String getCode() {
         return this.code;

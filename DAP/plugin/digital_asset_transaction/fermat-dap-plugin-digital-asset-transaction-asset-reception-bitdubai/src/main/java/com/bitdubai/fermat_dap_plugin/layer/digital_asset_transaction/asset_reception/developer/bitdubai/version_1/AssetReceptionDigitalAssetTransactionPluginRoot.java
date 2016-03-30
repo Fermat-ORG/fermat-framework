@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
@@ -56,7 +57,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 /**
@@ -66,6 +66,9 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
         AssetReceptionManager,
         DatabaseManagerForDevelopers,
         LogManagerForDevelopers {
+
+    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_ROUTER, plugin = Plugins.INCOMING_CRYPTO)
+    IncomingCryptoManager incomingCryptoManager;
 
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.WALLET, plugin = Plugins.ASSET_USER)
     AssetUserWalletManager assetUserWalletManager;
@@ -110,9 +113,6 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
     public AssetReceptionDigitalAssetTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
-
-    //TODO: Delete this log object
-    Logger LOG = Logger.getGlobal();
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
@@ -259,15 +259,11 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
                     actorAssetIssuerManager,
                     actorAssetRedeemPointManager,
                     digitalAssetReceptor,
-                    digitalAssetReceptionVault);
+                    digitalAssetReceptionVault,
+                    incomingCryptoManager);
         }
         assetReceptionMonitorAgent.start();
 
-    }
-
-    //TODO: DELETE THIS USELESS METHOD
-    private void printSomething(String information) {
-        LOG.info("ASSET RECEPTION: " + information);
     }
 
     public static LogLevel getLogLevelByClass(String className) {

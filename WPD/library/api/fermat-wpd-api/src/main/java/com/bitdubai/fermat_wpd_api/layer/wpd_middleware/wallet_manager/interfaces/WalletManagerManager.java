@@ -5,8 +5,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantFindProcessException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantGetInstalledWalletException;
@@ -32,6 +36,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
+@PluginInfo(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.DESKTOP_MODULE, plugin = Plugins.WALLET_MANAGER)
 public interface WalletManagerManager extends FermatManager {
 
     /**
@@ -48,7 +53,7 @@ public interface WalletManagerManager extends FermatManager {
      *
      * @return A list with the installed wallets information
      */
-       List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstalledWallets() throws CantListWalletsException;
+       List<InstalledWallet> getInstalledWallets() throws CantListWalletsException;
 
     /**
 
@@ -135,7 +140,7 @@ public interface WalletManagerManager extends FermatManager {
      *  get Installed wallet
      * @return
      */
-    com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException;
+    InstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException;
 
     /**
      * Throw the method <code>getDefaultWallet</code> you can get a default wallet for a specific crypto currency and

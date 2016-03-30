@@ -320,7 +320,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                 //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
                 final String brokerWalletPublicKey = "crypto_broker_wallet";
                 broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_NEW_CONTRACT_NOTIFICATION);
-                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_NEW_CONTRACT_UPDATE_VIEW);
+                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
             }
 
             /**
@@ -337,6 +337,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         customerBrokerSale.setTransactionStatus(TransactionStatus.IN_CONTRACT_SUBMIT);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                     }
                 }
             }
@@ -368,6 +369,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                                 final String brokerWalletPublicKey = "crypto_broker_wallet";
                                 broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
+                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                             }
                         }
                     }
@@ -469,6 +471,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         }
                         customerBrokerSale.setTransactionStatus(TransactionStatus.IN_PAYMENT_SUBMIT);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                     }
                 }
             }
@@ -487,6 +490,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         customerBrokerSale.setTransactionStatus(TransactionStatus.IN_PENDING_MERCHANDISE);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                     }
                 }
             }
@@ -517,6 +521,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                                 final String brokerWalletPublicKey = "crypto_broker_wallet";
                                 broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
+                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                             }
                         }
                     }
@@ -537,6 +542,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         customerBrokerSale.setTransactionStatus(TransactionStatus.IN_MERCHANDISE_SUBMIT);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                     }
                 }
             }
@@ -572,6 +578,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         customerBrokerSale.setTransactionStatus(TransactionStatus.COMPLETED);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                     }
                 }
             }
