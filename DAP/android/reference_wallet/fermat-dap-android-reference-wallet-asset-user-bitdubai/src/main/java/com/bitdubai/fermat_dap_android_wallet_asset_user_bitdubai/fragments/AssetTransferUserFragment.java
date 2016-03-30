@@ -162,6 +162,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
                                         public void onClick() {
                                             int assetsAmount = Integer.parseInt("1");
                                             doTransfer(assetToTransfer.getAssetPublicKey(), users, assetsAmount);
+                                            //changeActivity(Activities.DAP_WALLET_ASSET_USER_V3_HOME, appSession.getAppPublicKey());
                                         }
                                     }).build().show();
 
