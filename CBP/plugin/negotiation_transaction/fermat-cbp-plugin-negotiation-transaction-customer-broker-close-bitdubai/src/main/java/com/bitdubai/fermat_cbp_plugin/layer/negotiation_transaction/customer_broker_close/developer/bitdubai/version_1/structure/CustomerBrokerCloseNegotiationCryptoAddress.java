@@ -24,6 +24,8 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantGetGenerateCryptoAddressException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantGetRequestCryptoAddressException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantNegotiationAddCryptoAdreessException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
@@ -51,18 +53,22 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
     /*Represent the Plugins Version*/
     private PluginVersionReference      pluginVersionReference;
 
+    private  IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+
     public CustomerBrokerCloseNegotiationCryptoAddress(
         CryptoAddressBookManager    cryptoAddressBookManager,
         CryptoVaultManager          cryptoVaultManager,
         WalletManagerManager        walletManagerManager,
         ErrorManager                errorManager,
-        PluginVersionReference      pluginVersionReference
+        PluginVersionReference      pluginVersionReference,
+        IntraWalletUserIdentityManager intraWalletUserIdentityManager
     ){
         this.cryptoAddressBookManager   = cryptoAddressBookManager;
         this.cryptoVaultManager         = cryptoVaultManager;
         this.walletManagerManager       = walletManagerManager;
         this.errorManager               = errorManager;
         this.pluginVersionReference     = pluginVersionReference;
+        this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
     }
 
     //UPDATE THE PURCHASE NEGOTIATION FOR ADD NEW CRYPTO ADDRESS
@@ -226,13 +232,19 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
 
     //RETURN PURCHASE REQUEST THE CRYPTO ADDRESS
     private CustomerBrokerCloseCryptoAddressRequest getRequest(CustomerBrokerPurchaseNegotiation negotiation) throws CantGetRequestCryptoAddressException{
-
+        IntraWalletUserIdentity intraUser;
         try {
+            if(intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
+                throw new CantGetRequestCryptoAddressException(CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, null, CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, "ERROR GET REQUEST THE CRYPTO ADDRESS IN THE NEGOTIATION, UNKNOWN FAILURE.");
+            }else{
+                intraUser= intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+            }
+
             System.out.print("\n\n**** 3.1.1.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. GET REQUEST ****\n");
             CustomerBrokerCloseCryptoAddressRequest request = new CustomerBrokerCloseCryptoAddressRequestImpl(
-                Actors.CBP_CRYPTO_BROKER,
+                Actors.INTRA_USER,
                 Actors.CBP_CRYPTO_CUSTOMER,
-                negotiation.getBrokerPublicKey(),
+                intraUser.getPublicKey(),
                 negotiation.getCustomerPublicKey(),
                 CryptoCurrency.BITCOIN,
                 BlockchainNetworkType.getDefaultBlockchainNetworkType()
@@ -248,17 +260,31 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
 
     //RETURN SALE REQUEST THE CRYPTO ADDRESS
     private CustomerBrokerCloseCryptoAddressRequest getRequest(CustomerBrokerSaleNegotiation negotiation) throws CantGetRequestCryptoAddressException{
-
+        IntraWalletUserIdentity intraUser;
         try {
+
+            if(intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
+                throw new CantGetRequestCryptoAddressException(CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, null, CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, "ERROR GET REQUEST THE CRYPTO ADDRESS IN THE NEGOTIATION, UNKNOWN FAILURE.");
+            }else{
+                intraUser= intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+            }
             System.out.print("\n\n**** 3.1.1.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. GET REQUEST ****\n");
             CustomerBrokerCloseCryptoAddressRequest request = new CustomerBrokerCloseCryptoAddressRequestImpl(
+                    Actors.INTRA_USER,
+                    Actors.CBP_CRYPTO_BROKER,
+                    intraUser.getPublicKey(),
+                    negotiation.getBrokerPublicKey(),
+                    CryptoCurrency.BITCOIN,
+                    BlockchainNetworkType.getDefaultBlockchainNetworkType()
+            );
+            /*CustomerBrokerCloseCryptoAddressRequest request = new CustomerBrokerCloseCryptoAddressRequestImpl(
                 Actors.CBP_CRYPTO_CUSTOMER,
                 Actors.CBP_CRYPTO_BROKER,
                 negotiation.getCustomerPublicKey(),
                 negotiation.getBrokerPublicKey(),
                 CryptoCurrency.BITCOIN,
                 BlockchainNetworkType.getDefaultBlockchainNetworkType()
-            );
+            );*/
 
             return request;
 
@@ -275,8 +301,13 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
         WalletManagerSelector   walletManagerSelector   = new WalletManagerSelector(this.walletManagerManager);
         String                  adreess                 = null;
         CryptoAddress           cryptoAdreess;
-
+        IntraWalletUserIdentity intraUser;
         try {
+            if(intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
+                throw new CantGetRequestCryptoAddressException(CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, null, CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, "ERROR GET REQUEST THE CRYPTO ADDRESS IN THE NEGOTIATION, UNKNOWN FAILURE.");
+            }else{
+                intraUser= intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+            }
             System.out.print("\n\n**** 3.1.1.2.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. GET CRYPTO ADDRESS ****\n");
             CustomerBrokerCloseCryptoAddress customerBrokerCloseCryptoAddress = new CustomerBrokerCloseCryptoAddress(
                     this.cryptoAddressBookManager,
@@ -288,7 +319,7 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
 
             cryptoAdreess   = customerBrokerCloseCryptoAddress.CryptoAddressesNew(request);
             adreess         = cryptoAdreess.getAddress();
-
+            adreess = adreess +":"+intraUser.getPublicKey();
             System.out.print("\n\n**** 3.1.1.2.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - PURCHASE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION TRANSACTION. CRYPTO ADDRESS: "+adreess+" ****\n");
 
         } catch (CantCryptoAddressesNewException e){

@@ -28,6 +28,7 @@ public class CustomerOnlinePaymentBusinessTransactionDatabaseConstants {
     public static final String ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME = "contract_transaction_status";
     public static final String ONLINE_PAYMENT_TIMESTAMP_COLUMN_NAME = "timestamp";
     public static final String ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
+    public static final String ONLINE_PAYMENT_BROKER_INTRA_ACTOR_PUBLIC_KEY_COLUMN_NAME = "broker_intra_actor_public_key";
     public static final String ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME = "wallet_public_key";
     public static final String ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME = "crypto_amount";
     public static final String ONLINE_PAYMENT_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME = "blockchain_network_type";
