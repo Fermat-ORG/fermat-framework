@@ -16,7 +16,7 @@
         android:layout_marginRight="25dp"
         android:layout_marginLeft="25dp"
         android:layout_marginBottom="13dp"
-        card_view:cardCornerRadius="4dp"
+        card_view:cardCornerRadius="10dp"
         card_view:cardElevation="8dp">
 
         <RelativeLayout
@@ -86,7 +86,7 @@
                     android:textSize="10sp"
                     android:layout_marginRight="10dp"
                     android:layout_marginTop="5dp"
-                    android:textColor="@color/card_text_top_secondary"/>
+                    android:textColor="@color/card_text_top_primary"/>
 
             </RelativeLayout>
 
