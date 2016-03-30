@@ -149,10 +149,10 @@ public class ProvisoryData {
                 SubApps.TKY_ARTIST_IDENTITY_SUB_APP,
                 null,
                 null,
-                "tky_sub_app",
+                "sub_app_tky_artist_identity",
                 "Tokenly",
-                "public_key_tky_artist_identity",
-                "tky_sub_app",
+                SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode(),
+                "sub_app_tky_artist_identity",
                 new Version(1, 0, 0),
                 Platforms.TOKENLY);
 

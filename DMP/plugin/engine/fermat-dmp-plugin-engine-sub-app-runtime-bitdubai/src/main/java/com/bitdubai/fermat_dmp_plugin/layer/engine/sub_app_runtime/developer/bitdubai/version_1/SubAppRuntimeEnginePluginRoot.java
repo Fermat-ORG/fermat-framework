@@ -822,7 +822,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSubApp.addPosibleStartActivity(Activities.TKY_ARTIST_IDENTITY_CREATE_PROFILE);
 
             runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Tokenly Fan Identity");
+            runtimeTitleBar.setLabel("Tokenly Artist Identity");
             runtimeTitleBar.setColor("#1189a4");
             runtimeTitleBar.setTitleColor("#ffffff");
             runtimeTitleBar.setLabelSize(18);

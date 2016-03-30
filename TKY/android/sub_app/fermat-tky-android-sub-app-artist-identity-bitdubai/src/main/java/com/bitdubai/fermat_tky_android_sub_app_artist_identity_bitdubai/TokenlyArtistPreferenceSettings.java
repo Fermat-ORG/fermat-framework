@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces;
+package com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;

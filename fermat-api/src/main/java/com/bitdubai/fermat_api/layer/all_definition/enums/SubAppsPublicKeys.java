@@ -40,7 +40,7 @@ public enum SubAppsPublicKeys implements FermatEnum {
     SETTINGS                    ("public_key_settings"),
     //TODO ART PLATAFORM
     ART_ARTIST_IDENTITY          ("public_key_art_artist_identity"),
-    TKY_ARTIST_IDENTITY         ("public_key_tky_artist_identity"),
+    TKY_ARTIST_IDENTITY          ("public_key_tky_artist_identity"),
 
     ;
 
