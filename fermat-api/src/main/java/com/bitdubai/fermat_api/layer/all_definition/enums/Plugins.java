@@ -322,9 +322,14 @@ public enum Plugins implements FermatPluginsEnum {
     TOKENLY_ARTIST_SUB_APP_MODULE       ("TASAM"),
     TOKENLY_FAN_SUB_APP_MODULE          ("TFSAM"),
     TOKENLY_FAN_WALLET_MODULE           ("TFWM"),
-    TOKENLY_WALLET                      ("TWALLET");
+    TOKENLY_WALLET                      ("TWALLET"),
+
+    //Init PIP
+    PIP_FERMAT_MONITOR                  ("PFM");
+    //End PIP
 
     // End  new Plugins
+
 
     private final String code;
 
@@ -479,6 +484,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "TWALLET":     return TOKENLY_WALLET                           ;
             case "ARTAAC":      return ARTIST_ACTOR_CONNECTION                  ;
             case "ARTFAC":      return FAN_ACTOR_CONNECTION                     ;
+            case "PFM":         return PIP_FERMAT_MONITOR                       ;
 
             default:
                 throw new InvalidParameterException(
