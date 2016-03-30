@@ -309,6 +309,7 @@ public class CryptoPaymentRequestDao {
 
     public List<CryptoPayment> listCryptoPaymentRequestsByType(String             walletPublicKey,
                                                                CryptoPaymentType  type           ,
+                                                               BlockchainNetworkType blockchainNetworkType,
                                                                Integer            max            ,
                                                                Integer            offset         ) throws CantListCryptoPaymentRequestsException {
 
@@ -317,6 +318,7 @@ public class CryptoPaymentRequestDao {
 
             cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
             cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TYPE_COLUMN_NAME, type.getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
 
             cryptoPaymentRequestTable.setFilterTop   (max   .toString());
             cryptoPaymentRequestTable.setFilterOffSet(offset.toString());
@@ -340,6 +342,43 @@ public class CryptoPaymentRequestDao {
             throw new CantListCryptoPaymentRequestsException(exception);
         }
     }
+
+    public List<CryptoPayment> listCryptoPaymentRequestsByTypeAndNetwork(String             walletPublicKey,
+                                                               CryptoPaymentType  type           ,
+                                                                BlockchainNetworkType blockchainNetworkType,
+                                                               Integer            max            ,
+                                                               Integer            offset         ) throws CantListCryptoPaymentRequestsException {
+
+        try {
+            DatabaseTable cryptoPaymentRequestTable = database.getTable(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TABLE_NAME);
+
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_WALLET_PUBLIC_KEY_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_TYPE_COLUMN_NAME, type.getCode(), DatabaseFilterType.EQUAL);
+            cryptoPaymentRequestTable.addStringFilter(CryptoPaymentRequestDatabaseConstants.CRYPTO_PAYMENT_REQUEST_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
+
+            cryptoPaymentRequestTable.setFilterTop   (max   .toString());
+            cryptoPaymentRequestTable.setFilterOffSet(offset.toString());
+
+            cryptoPaymentRequestTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = cryptoPaymentRequestTable.getRecords();
+
+            List<CryptoPayment> cryptoPaymentList = new ArrayList<>();
+
+            for (DatabaseTableRecord record : records) {
+                cryptoPaymentList.add(buildCryptoPaymentRequestRecord(record));
+            }
+            return cryptoPaymentList;
+
+        } catch (CantLoadTableToMemoryException e) {
+
+            throw new CantListCryptoPaymentRequestsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch(InvalidParameterException exception){
+
+            throw new CantListCryptoPaymentRequestsException(exception);
+        }
+    }
+
 
     public List<CryptoPayment> listCryptoPaymentRequestsByStateAndType(String             walletPublicKey,
                                                                        CryptoPaymentState state          ,

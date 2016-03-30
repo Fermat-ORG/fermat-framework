@@ -26,4 +26,6 @@ dependencies {
     compile project(':fermat-art-plugin-sub-app-module-artist-identity-bitdubai')
     compile project(':fermat-art-plugin-sub-app-module-fan-community-bitdubai')
     compile project(':fermat-art-plugin-sub-app-module-fan-identity-bitdubai')
+    compile project(':fermat-art-plugin-sub-app-module-fan-identity-bitdubai')
+    compile project(':fermat-art-plugin-sub-app-module-music-player-bitdubai')
 }

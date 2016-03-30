@@ -3,6 +3,7 @@ package com.bitdubai.fermat_tky_api.layer.wallet_module;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
@@ -63,19 +64,19 @@ public interface FanWalletModule extends FermatManager{
      * This checks the time passed between the method execution and the last update, if the actual
      * time - last updated is less than the default update interval, this method not synchronize
      * with external API.
-     * @param tokenlyUsername
+     * @param fanIdentity
      * @throws CantSynchronizeWithExternalAPIException
      */
-    void synchronizeSongs(String tokenlyUsername) throws CantSynchronizeWithExternalAPIException;
+    void synchronizeSongs(Fan fanIdentity) throws CantSynchronizeWithExternalAPIException;
 
     /**
      * This method starts the synchronize songs process.
      * In this case, the synchronize process is started by the user.
      * This method doesn't check the last update field.
-     * @param username
+     * @param fanIdentity
      * @throws CantSynchronizeWithExternalAPIException
      */
-    void synchronizeSongsByUser(String username) throws CantSynchronizeWithExternalAPIException;
+    void synchronizeSongsByUser(Fan fanIdentity) throws CantSynchronizeWithExternalAPIException;
 
     /**
      * This method deletes a song from the wallet and the device storage.
@@ -95,7 +96,7 @@ public interface FanWalletModule extends FermatManager{
      * @param songId
      * @throws CantDownloadSongException
      */
-    void downloadSong(UUID songId) throws
+    void downloadSong(UUID songId, MusicUser musicUser) throws
             CantDownloadSongException,
             CantUpdateSongDevicePathException,
             CantUpdateSongStatusException;

@@ -45,7 +45,7 @@ public class TransferIntraWalletUsersDao {
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     public TransferIntraWalletUsersDao(ErrorManager errorManager,
-                                       PluginDatabaseSystem pluginDatabaseSystemr) {
+                                       PluginDatabaseSystem pluginDatabaseSystem) {
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
