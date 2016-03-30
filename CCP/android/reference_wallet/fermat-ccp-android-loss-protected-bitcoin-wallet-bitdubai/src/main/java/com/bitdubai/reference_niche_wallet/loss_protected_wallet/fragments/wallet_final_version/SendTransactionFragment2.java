@@ -255,16 +255,17 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             //default Exchange rate Provider
 
-            if(bitcoinWalletSettings.getExchangeProvider()==null){
+
+            if(moduleManager.getExchangeProvider(appSession.getAppPublicKey())==null) {
                 List<CurrencyExchangeRateProviderManager> providers = new ArrayList(moduleManager.getExchangeRateProviderManagers());
 
                 exchangeProviderId = providers.get(0).getProviderId();
-                bitcoinWalletSettings.setExchangeProvider(exchangeProviderId);
+                moduleManager.setExchangeProvider(exchangeProviderId,appSession.getAppPublicKey());
 
             }
             else
             {
-                exchangeProviderId =bitcoinWalletSettings.getExchangeProvider();
+                exchangeProviderId =moduleManager.getExchangeProvider(appSession.getAppPublicKey());
             }
 
             settingsManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(),bitcoinWalletSettings);

@@ -19,8 +19,6 @@ public interface LossProtectedWalletManager extends ModuleManager<LossProtectedW
 
     LossProtectedWallet getCryptoWallet() throws CantGetCryptoLossProtectedWalletException;
 
-    UUID getExchangeProvider();
 
-    void setExchangeProvider(UUID idProvider);
 
 }

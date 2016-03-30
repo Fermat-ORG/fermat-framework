@@ -158,7 +158,7 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
     @Override
     public BitcoinLossProtectedWallet loadWallet(String walletId) throws CantLoadWalletException {
         try {
-            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
+            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster, this.getSettingsManager());
 
             UUID internalWalletId = walletIds.get(walletId);
             bitcoinWallet.initialize(internalWalletId);
@@ -176,7 +176,7 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
     @Override
     public void createWallet(String walletId) throws CantCreateWalletException {
         try {
-            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
+            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster, this.getSettingsManager());
 
             UUID internalWalletId = bitcoinWallet.create(walletId);
 
