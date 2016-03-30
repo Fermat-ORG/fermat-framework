@@ -108,7 +108,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
     private BigDecimal priceReference = null;
     private BigDecimal amount = null;
     private String bankAccount = null;
-    private FiatCurrency fiatCurrency = null;
+    private Currency fiatCurrency = null;
     CustomerBrokerSaleImpl customerBrokerSale = null;
 
     public UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(ErrorManager errorManager,
@@ -420,7 +420,12 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                                         bankAccount = getAccountNumberFromClause(clause);
                                         break;
                                     case BROKER_CURRENCY:
-                                        fiatCurrency = FiatCurrency.getByCode(clause.getValue());
+                                        if(CryptoCurrency.codeExists(clause.getValue())){
+                                            fiatCurrency = CryptoCurrency.getByCode(clause.getValue());
+                                        }else{
+                                            fiatCurrency = FiatCurrency.getByCode(clause.getValue());
+                                        }
+
                                         break;
                                 }
                             }
@@ -439,7 +444,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                             } else if (sw == 2) {
                                 bankMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
-                                        fiatCurrency,
+                                        (FiatCurrency)fiatCurrency,
                                         "walletPublicKey",
                                         "walletPublicKey",
                                         bankAccount,
@@ -451,7 +456,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                             } else if (sw == 3) {
                                 cashMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
-                                        fiatCurrency,
+                                        (FiatCurrency)fiatCurrency,
                                         "walletPublicKey",
                                         "walletPublicKey",
                                         "cashReference",
