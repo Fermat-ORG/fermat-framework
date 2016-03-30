@@ -71,7 +71,6 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static android.widget.Toast.makeText;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
-import static com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats.MINIMUN_SATOSHI_AMOUNT;
 
 /**
  * Main Fragment
@@ -157,7 +156,6 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        selectedAsset = null;
     }
 
     private void configureToolbar() {
