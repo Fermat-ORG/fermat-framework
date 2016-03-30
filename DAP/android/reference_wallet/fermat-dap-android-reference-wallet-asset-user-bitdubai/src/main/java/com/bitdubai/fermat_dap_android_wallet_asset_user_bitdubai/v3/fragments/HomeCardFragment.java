@@ -312,13 +312,13 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
             View.OnClickListener onClickListenerRedeem = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM_SELECT_REDEEMPOINTS, appSession.getAppPublicKey());
+                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM, appSession.getAppPublicKey());
                 }
             };
             View.OnClickListener onClickListenerTransfer = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_TRANSFER_SELECT_USERS_ACTIVITY, appSession.getAppPublicKey());
+                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_TRANSFER_ACTIVITY, appSession.getAppPublicKey());
                 }
             };
             View.OnClickListener onClickListenerAppropriate = new View.OnClickListener() {
