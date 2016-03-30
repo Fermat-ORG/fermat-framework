@@ -456,6 +456,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "COFP":    return CUSTOMER_OFFLINE_PAYMENT         ;
             case "BAFP":    return BROKER_ACK_OFFLINE_PAYMENT       ;
             case "BAOP":    return BROKER_ACK_ONLINE_PAYMENT        ;
+            case "CAFM":    return CUSTOMER_ACK_OFFLINE_MERCHANDISE ;
             case "CAOM":    return CUSTOMER_ACK_ONLINE_MERCHANDISE  ;
             case "BSOM":    return BROKER_SUBMIT_ONLINE_MERCHANDISE ;
             case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
