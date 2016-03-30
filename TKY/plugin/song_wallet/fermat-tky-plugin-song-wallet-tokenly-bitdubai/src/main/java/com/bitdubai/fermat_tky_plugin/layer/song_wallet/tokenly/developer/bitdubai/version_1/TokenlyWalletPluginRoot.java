@@ -42,6 +42,7 @@ import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdub
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure.TokenlyWalletManager;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure.TokenlyWalletSongVault;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -196,7 +197,8 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
              */
             tokenlyWalletSongVault = new TokenlyWalletSongVault(
                     pluginFileSystem,
-                    tokenlyApiManager);
+                    tokenlyApiManager,
+                    pluginId);
 
             /**
              * Init plugin manager
@@ -210,6 +212,8 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             //testSynchronizeSongs();
             //testAutomaticSyncSongs();
             //testDeleteSong();
+            //testDownloadDeletedSong();
+            //testDownloadSongsAndRecoverBytesArray();
         } catch(CantInitializeDatabaseException e){
             errorManager.reportUnexpectedPluginException(
                     Plugins.TOKENLY_API,
@@ -386,6 +390,35 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             System.out.println("TKY - Deleted List " + deletedSongsList);
         } catch (Exception e){
             System.out.println("TKY: Test Delete song exception");
+            e.printStackTrace();
+        }
+    }
+
+    private void testDownloadDeletedSong(){
+        try{
+            UUID deletedSongId = UUID.fromString("a5a68fe3-923c-42f4-b0b2-6755b7970fd9");
+            Fan fanIdentity = getTestFanIdentity();
+            this.tokenlyWalletManager.downloadSong(deletedSongId, fanIdentity.getMusicUser());
+        } catch (Exception e){
+            System.out.println("TKY: Test download Deleted song exception");
+            e.printStackTrace();
+        }
+    }
+
+    private void testDownloadSongsAndRecoverBytesArray(){
+        try{
+            //testSynchronizeSongs();
+            List<WalletSong> availableSongsList = this.tokenlyWalletManager.getAvailableSongs();
+            System.out.println("TKY - AVAILABLE List "+availableSongsList);
+            WalletSong songToRecover = availableSongsList.get(0);
+            WalletSong fullSong=this.tokenlyWalletManager.getSongWithBytes(
+                    songToRecover.getSongId());
+            byte[] songBytes = fullSong.getSongBytes();
+            FileOutputStream fos = new FileOutputStream("/storage/emulated/0/Music/test/"+fullSong.getName().replace(" ","_"));
+            fos.write(songBytes);
+            fos.close();
+        } catch (Exception e){
+            System.out.println("TKY: array bytes exception");
             e.printStackTrace();
         }
     }

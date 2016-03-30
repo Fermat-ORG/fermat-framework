@@ -138,6 +138,7 @@ public interface CryptoPaymentRegistry {
      */
     List<CryptoPayment> listCryptoPaymentRequestsByType(String            walletPublicKey,
                                                         CryptoPaymentType type           ,
+                                                        BlockchainNetworkType blockchainNetworkType,
                                                         Integer           max            ,
                                                         Integer           offset         ) throws CantListCryptoPaymentRequestsException;
 
@@ -177,4 +178,21 @@ public interface CryptoPaymentRegistry {
      */
 
     void revertOutgoingRequest(UUID requestId) throws CantUpdateRequestPaymentStateException;
-}
+
+    /**
+     *
+     * @param walletPublicKey
+     * @param type
+     * @param blockchainNetworkType
+     * @param max
+     * @param offset
+     * @return
+     * @throws CantListCryptoPaymentRequestsException
+     */
+    List<CryptoPayment> listCryptoPaymentRequestsByTypeAndNetwork(String walletPublicKey,
+                                                                         CryptoPaymentType type           ,
+                                                                         BlockchainNetworkType blockchainNetworkType,
+                                                                         Integer           max            ,
+                                                                         Integer           offset         ) throws CantListCryptoPaymentRequestsException ;
+
+    }

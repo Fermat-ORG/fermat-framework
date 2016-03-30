@@ -9,6 +9,10 @@ public class CantStopTimeOutAgentException extends FermatException {
 
     public static final String DEFAULT_MESSAGE = "There was an error stpping the timeout Agent. Verify current status.";
 
+    public CantStopTimeOutAgentException(Exception cause, String context, String possibleReason) {
+        super(DEFAULT_MESSAGE, cause, context, possibleReason);
+    }
+
     public CantStopTimeOutAgentException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }

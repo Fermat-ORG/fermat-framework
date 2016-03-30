@@ -3,6 +3,7 @@ package com.bitdubai.fermat_tky_api.layer.wallet_module;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
@@ -95,7 +96,7 @@ public interface FanWalletModule extends FermatManager{
      * @param songId
      * @throws CantDownloadSongException
      */
-    void downloadSong(UUID songId) throws
+    void downloadSong(UUID songId, MusicUser musicUser) throws
             CantDownloadSongException,
             CantUpdateSongDevicePathException,
             CantUpdateSongStatusException;

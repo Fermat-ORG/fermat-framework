@@ -65,6 +65,9 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
     private View rootView;
     private LinearLayout empty;
 
+    SettingsManager<BitcoinWalletSettings> settingsManager;
+
+    BlockchainNetworkType blockchainNetworkType;
 
     /**
      * Create a new instance of this fragment
@@ -99,7 +102,16 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
-//            lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+            settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+
+
+            BitcoinWalletSettings bitcoinWalletSettings;
+            try {
+                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+            }catch (Exception e){
+
+            }
             onRefresh();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -198,7 +210,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             if(refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
 
-            lstPaymentRequest = cryptoWallet.listSentPaymentRequest(walletPublicKey,10,offset);
+            lstPaymentRequest = cryptoWallet.listSentPaymentRequest(walletPublicKey,blockchainNetworkType,10,offset);
             offset+=MAX_TRANSACTIONS;
         } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
