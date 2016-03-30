@@ -8,6 +8,7 @@ import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdub
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -33,6 +34,7 @@ public class WalletSongRecord implements WalletSong {
     private String usageProhibitions;
     private String bitcoinAddress;
     private String other;
+    private String downloadUrl;
 
     /**
      * Default constructor
@@ -356,5 +358,37 @@ public class WalletSongRecord implements WalletSong {
     @Override
     public String getOther() {
         return this.other;
+    }
+
+    /**
+     * Represents the song download URL.
+     * @return
+     */
+    @Override
+    public String getDownloadUrl() {
+        return downloadUrl;
+    }
+
+    @Override
+    public String toString() {
+        return "WalletSongRecord{" +
+                "songStatus=" + songStatus +
+                ", songId=" + songId +
+                ", id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", tokens=" + Arrays.toString(tokens) +
+                ", performers='" + performers + '\'' +
+                ", composers='" + composers + '\'' +
+                ", releaseDate=" + releaseDate +
+                ", lyrics='" + lyrics + '\'' +
+                ", credits='" + credits + '\'' +
+                ", copyright='" + copyright + '\'' +
+                ", ownership='" + ownership + '\'' +
+                ", usageRights='" + usageRights + '\'' +
+                ", usageProhibitions='" + usageProhibitions + '\'' +
+                ", bitcoinAddress='" + bitcoinAddress + '\'' +
+                ", other='" + other + '\'' +
+                ", downloadUrl='" + downloadUrl + '\'' +
+                '}';
     }
 }

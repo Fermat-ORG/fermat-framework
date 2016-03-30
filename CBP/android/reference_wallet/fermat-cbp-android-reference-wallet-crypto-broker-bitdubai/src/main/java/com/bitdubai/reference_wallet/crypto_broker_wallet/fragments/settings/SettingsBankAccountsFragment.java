@@ -18,6 +18,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
@@ -81,7 +82,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
 
 
             List<CryptoBrokerWalletAssociatedSetting> associatedSettings= walletManager.getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");
-            List<BankAccountNumber> bankAccountNumbers = walletManager.getAccounts("banking_wallet");
+            List<BankAccountNumber> bankAccountNumbers = walletManager.getAccounts(WalletsPublicKeys.BNK_BANKING_WALLET.getCode());//"banking_wallet");
             for (final CryptoBrokerWalletAssociatedSetting aux: associatedSettings){
                 for (BankAccountNumber bankAccountNumber: bankAccountNumbers){
                     if (aux.getPlatform()==Platforms.BANKING_PLATFORM){

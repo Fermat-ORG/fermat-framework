@@ -1,5 +1,10 @@
 package com.bitdubai.fermat_api.layer.core;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -20,6 +25,14 @@ public @interface PluginInfo {
 	String createdBy() default "furszy";
 	
 	String lastModified() default "15/03/2016";
+
+	Platforms platform();
+	Layers layer();
+	Plugins plugin();
+	Developers developer()       default Developers.BITDUBAI;
+	String           version()         default "1.0.0";
+
+
 
 
 

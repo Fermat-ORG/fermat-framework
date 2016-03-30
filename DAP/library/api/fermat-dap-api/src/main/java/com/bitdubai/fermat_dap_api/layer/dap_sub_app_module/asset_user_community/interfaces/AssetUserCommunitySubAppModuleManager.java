@@ -122,9 +122,9 @@ public interface AssetUserCommunitySubAppModuleManager extends ModuleManager<Ass
 
     void askActorAssetUserForConnection(List<ActorAssetUser> actorAssetUsers) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException;
 
-    void acceptActorAssetUser(String actorAssetUserInPublicKey, String actorAssetUserToAddPublicKey) throws CantAcceptActorAssetUserException;
+    void acceptActorAssetUser(String actorAssetUserInPublicKey, ActorAssetUser actorAssetToAdd) throws CantAcceptActorAssetUserException;
 
-    void denyConnectionActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToRejectPublicKey) throws CantDenyConnectionActorAssetException;
+    void denyConnectionActorAssetUser(String actorAssetUserLoggedInPublicKey, ActorAssetUser actorAssetToReject) throws CantDenyConnectionActorAssetException;
 
     void disconnectToActorAssetUser(ActorAssetUser user) throws CantDisconnectAssetActorException;
 

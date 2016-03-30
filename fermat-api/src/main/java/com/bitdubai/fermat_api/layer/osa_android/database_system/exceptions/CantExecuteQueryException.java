@@ -14,6 +14,10 @@ public class CantExecuteQueryException extends DatabaseSystemException {
 		super(message, cause, context, possibleReason);
 	}
 
+	public CantExecuteQueryException(final Exception cause, final String context, final String possibleReason) {
+		super(DEFAULT_MESSAGE, cause, context, possibleReason);
+	}
+
 	public CantExecuteQueryException(final String message, final Exception cause) {
 		this(message, cause, "", "");
 	}

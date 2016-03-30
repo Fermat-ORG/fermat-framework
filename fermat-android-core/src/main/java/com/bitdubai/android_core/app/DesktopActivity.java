@@ -184,10 +184,14 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             onBackPressedNotificate();
 
             if(activity.getType() == Activities.DESKTOP_SETTING_FERMAT_NETWORK){
-                String[] ipPort = ((FermatNetworkSettings)getAdapter().getLstCurrentFragments().get(0)).getIpPort();
-                String ip = ipPort[0];
-                String port = ipPort[1];
-                getCloudClient().changeIpAndPortProperties(ip,Integer.parseInt(port));
+                try {
+                    String[] ipPort = ((FermatNetworkSettings) getAdapter().getLstCurrentFragments().get(0)).getIpPort();
+                    String ip = ipPort[0];
+                    String port = ipPort[1];
+                    getCloudClient().changeIpAndPortProperties(ip, Integer.parseInt(port));
+                }catch (Exception e){
+
+                }
             }
 
             if (fragment != null) frgBackType = fragment.getBack();
@@ -432,7 +436,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
                 if (activity.getType() == Activities.CCP_DESKTOP) {
                     findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
-                    addRecentToScreen();
                     initialisePaging();
                 } else {
 
@@ -465,18 +468,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         }catch (Exception e){
             e.printStackTrace();
         }
-    }
-
-    private void addRecentToScreen(){
-        View view = findViewById(R.id.btn_recents);
-        view.setVisibility(View.VISIBLE);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openRecentsScreen();
-            }
-        });
-
     }
 
     private void paintScreen(Activity activity) {
