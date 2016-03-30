@@ -1050,14 +1050,14 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     }
 
     @Override
-    public List<LossProtectedPaymentRequest> listSentPaymentRequest(String walletPublicKey,int max,int offset) throws CantListLossProtectedSentPaymentRequestException {
+    public List<LossProtectedPaymentRequest> listSentPaymentRequest(String walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset) throws CantListLossProtectedSentPaymentRequestException {
         try {
             List<LossProtectedPaymentRequest> lst =  new ArrayList<>();
             LossProtectedWalletModuleWalletContact cryptoWalletWalletContact = null;
             byte[] profilePicture = null;
 
             //find received payment request
-            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(walletPublicKey, CryptoPaymentType.SENT, max, offset)) {
+            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(walletPublicKey, CryptoPaymentType.SENT, blockchainNetworkType,max, offset)) {
 
                 WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
 
@@ -1116,7 +1116,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     }
 
 
-    public List<LossProtectedPaymentRequest> listReceivedPaymentRequest(String walletPublicKey,int max,int offset) throws CantListLossProtectedReceivePaymentRequestException {
+    public List<LossProtectedPaymentRequest> listReceivedPaymentRequest(String walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset) throws CantListLossProtectedReceivePaymentRequestException {
 
         try {
             List<LossProtectedPaymentRequest> lst =  new ArrayList<>();
@@ -1128,6 +1128,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
             for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(
                     walletPublicKey,
                     CryptoPaymentType.RECEIVED,
+                    blockchainNetworkType,
                     max,
                     offset
             )) {
@@ -1348,7 +1349,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
     private CryptoAddress requestCryptoAddressByReferenceWallet(ReferenceWallet referenceWallet,BlockchainNetworkType blockchainNetworkType) throws CantRequestOrRegisterLossProtectedAddressException {
         switch (referenceWallet){
-            case BASIC_WALLET_BITCOIN_WALLET:
+            case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                 return cryptoVaultManager.getAddress(blockchainNetworkType);
             default:
                 throw new CantRequestOrRegisterLossProtectedAddressException(CantRequestOrRegisterLossProtectedAddressException.DEFAULT_MESSAGE, null, "", "ReferenceWallet is not Compatible.");

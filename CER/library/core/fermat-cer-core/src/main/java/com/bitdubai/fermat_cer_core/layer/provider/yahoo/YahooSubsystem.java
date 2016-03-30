@@ -13,7 +13,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 public class YahooSubsystem extends AbstractPluginSubsystem {
 
     public YahooSubsystem() {
-        super(new PluginReference(Plugins.BITDUBAI_CER_PROVIDER_YAHOO));
+        super(new PluginReference(Plugins.YAHOO));
     }
 
     @Override
