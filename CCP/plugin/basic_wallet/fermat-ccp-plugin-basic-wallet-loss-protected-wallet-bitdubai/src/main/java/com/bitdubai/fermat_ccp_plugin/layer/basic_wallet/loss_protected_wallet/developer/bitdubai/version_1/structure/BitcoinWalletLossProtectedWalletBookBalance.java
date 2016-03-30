@@ -140,10 +140,10 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
         try {
             double purchasePrice = 0;
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-            ExchangeRate rate = getActualExchangeRate();
+           // ExchangeRate rate = getActualExchangeRate();
 
-            if(rate != null)
-                purchasePrice = rate.getPurchasePrice();
+         //   if(rate != null)
+             //   purchasePrice = rate.getPurchasePrice();
 
             bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.BOOK,purchasePrice);
             //broadcaster balance amount

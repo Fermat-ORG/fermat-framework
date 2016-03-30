@@ -13,7 +13,7 @@ import java.util.concurrent.Executors;
 public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_android.broadcaster.AndroidCoreUtils {
 
     private BroadcasterInterface context;
-    private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private ExecutorService executor = Executors.newFixedThreadPool(2);
 
 
     private static final AndroidCoreUtils instance = new AndroidCoreUtils() ;

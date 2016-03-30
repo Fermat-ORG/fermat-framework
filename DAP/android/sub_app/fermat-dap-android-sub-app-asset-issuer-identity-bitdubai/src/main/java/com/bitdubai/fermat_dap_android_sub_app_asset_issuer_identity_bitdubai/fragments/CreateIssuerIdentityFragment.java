@@ -115,7 +115,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
                 }
             }
 
-            if(moduleManager.getIdentityAssetIssuer() == null) {
+            if (moduleManager.getIdentityAssetIssuer() == null) {
                 final IssuerIdentitySettings issuerIdentitySettingsTemp = issuerIdentitySettings;
 
                 Handler handlerTimer = new Handler();
@@ -308,6 +308,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
             Bitmap imageBitmap = null;
             ImageView pictureView = mIdentityImage;
             contextMenuInUse = true;
+
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();
@@ -325,7 +326,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error Load Image", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -348,7 +349,7 @@ public class CreateIssuerIdentityFragment extends AbstractFermatFragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        if(!contextMenuInUse) {
+        if (!contextMenuInUse) {
             switch (item.getItemId()) {
                 case CONTEXT_MENU_CAMERA:
                     dispatchTakePictureIntent();
