@@ -74,7 +74,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
     private View noUsersView;
     private Toolbar toolbar;
     private Activity activity;
-    
+
     public static AssetRedeemRedeemFragment newInstance() {
         return new AssetRedeemRedeemFragment();
     }
@@ -137,7 +137,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM, 0, "Redeem")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM_SELECT, 0, "Help")
-                //.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        //.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
     }
 
@@ -152,7 +152,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
             } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM){
                 if (redeemPointSelect != null) {
 
-                new ConfirmDialog.Builder(getActivity(), appSession)
+                    new ConfirmDialog.Builder(getActivity(), appSession)
                             .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
                             .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
                             .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
@@ -161,11 +161,12 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
                                 public void onClick() {
                                     int assetsAmount = Integer.parseInt("1");
                                     doRedeem(assetToRedeem.getAssetPublicKey(), redeemPoints, assetsAmount);
+                                    //changeActivity(Activities.DAP_WALLET_ASSET_USER_V3_HOME, appSession.getAppPublicKey());
                                 }
-                                }).build().show();
+                            }).build().show();
 
                 } else {
-                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_validate_no_user), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_validate_no_rp), Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -274,7 +275,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
     @Override
     public void onItemClickListener(RedeemPoint data, int position) {
         //TODO select redeemPoint
-       //appSession.setData("redeemPoint_selected", data);
+        //appSession.setData("redeemPoint_selected", data);
 
         for (int i=0; i < redeemPoints.size(); i++)
         {
@@ -392,4 +393,3 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         task.execute();
     }
 }
-
