@@ -63,6 +63,8 @@ public class BitcoinWalletLossProtectedWallet implements BitcoinLossProtectedWal
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
     private final Broadcaster broadcaster;
+
+    //TODO: NAT ESTO ESTA NULL Y EN NINGUN MOMENTO SE INICIALIZA EN EL CONSTRUCTOR, ESTO ERA LO QUE TE DECIA.
     private LossProtectedWalletManager lossProtectedWalletManager;
 
     public BitcoinWalletLossProtectedWallet(final ErrorManager errorManager,
