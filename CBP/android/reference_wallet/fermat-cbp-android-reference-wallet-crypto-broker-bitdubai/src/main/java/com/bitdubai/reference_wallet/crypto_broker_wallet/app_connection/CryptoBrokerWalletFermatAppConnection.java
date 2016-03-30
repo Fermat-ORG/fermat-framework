@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.footer.CryptoBrokerWalletFooterPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.header.CryptoBrokerWalletHeaderPainter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.navigationDrawer.CryptoBrokerNavigationViewPainter;
@@ -86,9 +87,13 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Crypto
             case CBW_WAITING_FOR_BROKER_NOTIFICATION:
                 return new CryptoBrokerNotificationPainter("Negotiation Update","You have received a negotiation update, check your wallet.","");
             case CBW_CANCEL_NEGOTIATION_NOTIFICATION:
-                return new CryptoBrokerNotificationPainter("Negotiation Canceled","Check the Contract Story, a customer has canceled a negotiation","");
+                return new CryptoBrokerNotificationPainter("Negotiation Canceled","Check the Contract History, a customer has canceled a negotiation.","");
             case CBW_NEW_CONTRACT_NOTIFICATION:
                 return new CryptoBrokerNotificationPainter("New Contract.","A new contract has been created, check your wallet.","");
+            case CBPBroadcasterConstants.CBW_CONTRACT_CUSTOMER_SENT_PAYMENT:
+                return new CryptoBrokerNotificationPainter("Updated Contract.","The customer has sent you the payment.","");
+            case CBPBroadcasterConstants.CBW_CONTRACT_COMPLETED_NOTIFICATION:
+                return new CryptoBrokerNotificationPainter("Contract Completed","The contract has been completed.","");
             default:
                 return super.getNotificationPainter(code);
         }
