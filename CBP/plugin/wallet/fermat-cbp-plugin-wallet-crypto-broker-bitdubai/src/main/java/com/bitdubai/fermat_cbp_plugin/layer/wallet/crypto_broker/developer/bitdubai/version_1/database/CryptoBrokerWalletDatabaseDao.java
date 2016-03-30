@@ -4,7 +4,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -66,8 +65,6 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrency
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -102,11 +99,9 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     }
 
     private Database database;
-    private ErrorManager errorManager;
 
-    public CryptoBrokerWalletDatabaseDao(Database database, ErrorManager errorManager) {
+    public CryptoBrokerWalletDatabaseDao(Database database) {
         this.database = database;
-        this.errorManager = errorManager;
     }
 
     public List<CurrencyMatching> getCryptoBrokerTransactionCurrencyMatchings() throws CantGetTransactionCryptoBrokerWalletMatchingException {
@@ -288,13 +283,12 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         //Determinar mediante el precio del mercado a como esta esa mercancia
         float priceReference;
         float availableBalanceFroze;
-        ExchangeRate rate = null;
-
         CurrencyPair currencyPair = new CurrencyPairImpl(merchandise, payment);
 
         try {
             List<CryptoBrokerWalletProviderSetting> providerSettings = getCryptoBrokerWalletProviderSettings();
             CryptoBrokerWalletProviderSetting associatedProvider = null;
+            ExchangeRate rate = null;
 
             for (CryptoBrokerWalletProviderSetting setting : providerSettings) {
                 final String currencyFrom = setting.getCurrencyFrom();
@@ -306,19 +300,21 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                 }
             }
 
-            try {
-                if (associatedProvider != null) {
-                    CurrencyExchangeRateProviderManager provider = providerFilter.getProviderReference(associatedProvider.getPlugin());
-                    rate = provider.getCurrentExchangeRate(currencyPair);
-                } else {
-                    List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>(providerFilter.getProviderReferencesFromCurrencyPair(currencyPair));
-                    if (!providers.isEmpty())
-                        rate = providers.get(0).getCurrentExchangeRate(currencyPair);
-                }
-            } catch (CantGetExchangeRateException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET,
-                        UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
+            if (associatedProvider != null) {
+                CurrencyExchangeRateProviderManager provider = providerFilter.getProviderReference(associatedProvider.getPlugin());
+                rate = provider.getCurrentExchangeRate(currencyPair);
+            } else {
+                List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>(providerFilter.getProviderReferencesFromCurrencyPair(currencyPair));
+                if (!providers.isEmpty())
+                    rate = providers.get(0).getCurrentExchangeRate(currencyPair);
             }
+
+            priceReference = (float) (rate != null ? rate.getSalePrice() : 0);
+
+            final float balanceFrozen = getBalanceFrozenByMerchandise(merchandise, null, BalanceType.AVAILABLE, priceReference);
+            final float currentBalance = getCurrentBalanceByMerchandise(BalanceType.AVAILABLE, merchandise.getCode());
+
+            availableBalanceFroze = currentBalance - balanceFrozen;
 
         } catch (CantGetProviderException e) {
             throw new CantGetCryptoBrokerQuoteException("Cant Get Provider Exception", e, "", "");
@@ -326,11 +322,8 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             throw new CantGetCryptoBrokerQuoteException("Unsupported Currency Pair Exception", e, "", "");
         } catch (CantGetCryptoBrokerWalletSettingException e) {
             throw new CantGetCryptoBrokerQuoteException("Cant get the associated Providers", e, "", "");
-        }
-        priceReference = (float) (rate != null ? rate.getSalePrice() : 0);
-
-        try {
-            availableBalanceFroze = getCurrentBalanceByMerchandise(BalanceType.AVAILABLE, merchandise.getCode()) - getBalanceFrozenByMerchandise(merchandise, null, BalanceType.AVAILABLE, priceReference);
+        } catch (CantGetExchangeRateException e) {
+            throw new CantGetCryptoBrokerQuoteException("Cant get Exchange Rate from Provider", e, "", "");
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetCryptoBrokerQuoteException("Cant Load Table", e, "", "");
         }
