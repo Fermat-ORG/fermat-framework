@@ -104,7 +104,7 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
                     this.tokenlyApiManager);
 
             //System.out.println("############\n TKY IDENTITY ARTIST STARTED\n");
-            testCreateArtist();
+            //testCreateArtist();
             //testAskForConnection();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.TOKENLY_ARTIST, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -120,9 +120,9 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
 
     private void testCreateArtist(){
         try {
-            String alias = "perezilla";
+            String alias = "username";
             byte[] image = new byte[0];
-            String password = "milestone";
+            String password = "password";
             ExternalPlatform externalPlatform = ExternalPlatform.TOKENLY;
             ExposureLevel exposureLevel = ExposureLevel.PRIVATE;
             ArtistAcceptConnectionsType artistAcceptConnectionsType = ArtistAcceptConnectionsType.MANUAL;
