@@ -22,6 +22,9 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.fragmentFactory.Cryp
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CANCEL_NEGOTIATION_NOTIFICATION;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_BROKER_ACK_PAYMENT_NOTIFICATION;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_BROKER_SUBMITED_MERCHANDISE;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_COMPLETED_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_NEW_CONTRACT_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_WAITING_FOR_CUSTOMER_NOTIFICATION;
@@ -86,6 +89,12 @@ public class CryptoCustomerWalletFermatAppConnection extends AppConnections<Cryp
                 return new CryptoCustomerNotificationPainter("Negotiation Canceled","Check the Contract Story, a broker has canceled a negotiation.","");
             case CCW_NEW_CONTRACT_NOTIFICATION:
                 return new CryptoCustomerNotificationPainter("New contract.","A new Contract has been created, check your wallet","");
+            case CCW_CONTRACT_BROKER_ACK_PAYMENT_NOTIFICATION:
+                return new CryptoCustomerNotificationPainter("Contract Update","A broker has acknowledged your payment.","");
+            case CCW_CONTRACT_BROKER_SUBMITED_MERCHANDISE:
+                return new CryptoCustomerNotificationPainter("Contract Completed","A Merchandise has been submitted.","");
+            case CCW_CONTRACT_COMPLETED_NOTIFICATION:
+                return new CryptoCustomerNotificationPainter("Contract Completed","The contract has been completed.","");
             default:
                 return super.getNotificationPainter(code);
         }
