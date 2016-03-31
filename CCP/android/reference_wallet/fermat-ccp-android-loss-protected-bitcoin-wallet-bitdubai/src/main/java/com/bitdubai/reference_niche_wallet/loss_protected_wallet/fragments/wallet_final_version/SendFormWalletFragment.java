@@ -113,6 +113,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
     private FermatButton send_button;
     private TextView txt_notes;
     private BitcoinConverter bitcoinConverter;
+    private ImageView imageview_wallet;
 
 
     /**
@@ -120,10 +121,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
      */
     private WalletContactListAdapter contactsAdapter;
 
-    /**
-     * User selected
-     */
-    private LossProtectedWalletContact cryptoWalletWalletContact;
+
 
     private WalletContact walletContact;
     private boolean connectionDialogIsShow;
@@ -136,6 +134,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
     SettingsManager<LossProtectedWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
     String walletName = "";
+    InstalledWallet walletSelected = null;
 
     public static SendFormWalletFragment newInstance() {
         return new SendFormWalletFragment();
@@ -191,18 +190,21 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                     case CONNECTED:
                         setUpUI();
                         setUpActions();
+                        setUpUIData();
                         setUpContactAddapter();
                         break;
                     case DISCONNECTED:
                         showErrorConnectionDialog();
                         setUpUI();
                         setUpActions();
+                        setUpUIData();
                         setUpContactAddapter();
                         break;
                 }
             } else {*/
                 setUpUI();
                 setUpActions();
+                setUpUIData();
                 setUpContactAddapter();
            // }
 
@@ -251,8 +253,9 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         send_button = (FermatButton) rootView.findViewById(R.id.send_button);
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner_name = (Spinner) rootView.findViewById(R.id.spinner_name);
+        imageview_wallet = (ImageView) rootView.findViewById(R.id.wallet_image);
         try {
-            List<InstalledWallet> list= cryptoWallet.getInstalledWallets();
+            final List<InstalledWallet> list= cryptoWallet.getInstalledWallets();
             List<String> walletList = new ArrayList<String>();
             for (int i = 0; i < list.size() ; i++) {
                 walletList.add(list.get(i).getWalletName());
@@ -266,6 +269,8 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
                     walletName = spinner_name.getSelectedItem().toString();
+                    walletSelected = list.get(position);
+                    setUpUIData();
                 }
 
                 @Override
@@ -395,6 +400,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         /**
          * Listeners
          */
+        imageview_wallet.setOnClickListener(this);
         send_button.setOnClickListener(this);
         rootView.findViewById(R.id.scan_qr).setOnClickListener(this);
 
@@ -426,6 +432,58 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
          * Selector
          */
         //send_button.selector(R.drawable.bg_home_accept_normal,R.drawable.bg_home_accept_active, R.drawable.bg_home_accept_normal );
+    }
+
+    private void setUpUIData() {
+
+        if (walletSelected != null) {
+            try {
+
+                        switch (walletSelected.getWalletName()){
+
+                            case "Bitcoin Wallet":
+                                Picasso.with(getActivity()).load(R.drawable.bitcoin_wallet_2).transform(new CircleTransform()).into(imageview_wallet);
+                                break;
+                            case "Loss Protected Wallet":
+                                Picasso.with(getActivity()).load(R.drawable.loss_protected).transform(new CircleTransform()).into(imageview_wallet);
+                                break;
+                            case "Crypto Broker Wallet":
+                                Picasso.with(getActivity()).load(R.drawable.crypto_broker).transform(new CircleTransform()).into(imageview_wallet);
+                            break;
+                            case "Crypto Customer Wallet":
+                                Picasso.with(getActivity()).load(R.drawable.crypto_customer).transform(new CircleTransform()).into(imageview_wallet);
+                                break;
+                            case "Asset Issuer":
+                                Picasso.with(getActivity()).load(R.drawable.asset_issuer).transform(new CircleTransform()).into(imageview_wallet);
+                                break;
+                            case  "Asset User":
+                                Picasso.with(getActivity()).load(R.drawable.asset_user_wallet).transform(new CircleTransform()).into(imageview_wallet);
+                                break;
+                            case "Redeem Point":
+                                Picasso.with(getActivity()).load(R.drawable.redeem_point).transform(new CircleTransform()).into(imageview_wallet);
+                                break;
+                            case "Banking wallet":
+                                Picasso.with(getActivity()).load(R.drawable.bank_wallet_xxhdpi).transform(new CircleTransform()).into(imageview_wallet);
+                                break;
+                            case "Cash wallet":
+                                Picasso.with(getActivity()).load(R.drawable.cash_wallet_xxhdpi).transform(new CircleTransform()).into(imageview_wallet);
+                                break;
+
+                            default:
+                                Picasso.with(getActivity()).load(R.drawable.bitcoin_wallet_2).transform(new CircleTransform()).into(imageview_wallet);
+                                break;
+
+                        }
+
+            } catch (Exception e) {
+                Picasso.with(getActivity()).load(R.drawable.bitcoin_wallet_2).transform(new CircleTransform()).into(imageview_wallet);
+            }
+
+
+        } else {
+            Picasso.with(getActivity()).load(R.drawable.bitcoin_wallet_2).transform(new CircleTransform()).into(imageview_wallet);
+        }
+
     }
 
 

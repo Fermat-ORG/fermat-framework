@@ -67,6 +67,8 @@ public class BitcoinWalletLossProtectedWallet implements BitcoinLossProtectedWal
     private final Broadcaster broadcaster;
     private SettingsManager<BitcoinLossProtectedWalletSettings> settingsManager;
 
+
+
     public BitcoinWalletLossProtectedWallet(final ErrorManager errorManager,
                                     final PluginDatabaseSystem pluginDatabaseSystem,
                                     final PluginFileSystem pluginFileSystem,
