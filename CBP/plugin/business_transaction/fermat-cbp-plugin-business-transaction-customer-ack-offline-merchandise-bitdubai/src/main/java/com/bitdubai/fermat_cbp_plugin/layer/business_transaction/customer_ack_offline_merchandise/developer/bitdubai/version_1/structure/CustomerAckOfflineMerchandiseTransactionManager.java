@@ -71,6 +71,9 @@ public class CustomerAckOfflineMerchandiseTransactionManager implements Customer
                             contractHash + "\n" +
                             "is null");
                 }
+
+                System.out.println("\nTEST CONTRACT - ACK OFFLINE MERCHANDISE - MANAGER - ackMerchandise() - persistContractInDatabase()\n");
+
                 this.customerAckOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(
                         customerBrokerContractPurchase);
 

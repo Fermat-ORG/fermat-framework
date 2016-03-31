@@ -3,6 +3,7 @@ package com.bitdubai.fermat_api.layer.dmp_module.wallet_manager;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.AppManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.structure.WalletManagerModuleInstalledWallet;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface WalletManager extends AppManager {
     
     void enableWallet() throws CantEnableWalletException;
 
-    InstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException;
+    WalletManagerModuleInstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException;
     InstalledWallet getInstalledWalletFromPlatformIdentifier(String platformIdentifier) throws CantCreateNewWalletException, InvalidParameterException;
 
     /**

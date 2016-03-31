@@ -483,65 +483,6 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         return transactions;
     }
 
-    public void dataTestStockHistory(Currency money, MoneyType type, int initRandom){
-
-        BigDecimal amount;
-        BigDecimal availableBalance;
-        BigDecimal bookBalance;
-        BigDecimal priceReference;
-
-        DatabaseTable table = getStockWalletTransactionTable();
-        table.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME, money.getCode(), DatabaseFilterType.EQUAL);
-        try {
-            table.loadToMemory();
-            if(table.getRecords().isEmpty()){
-
-                Calendar calendar = Calendar.getInstance();
-
-                int actualDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-                Random random = new Random();
-                for (int i = 1; i <= actualDayOfMonth; i++) {
-                    random.setSeed(i * initRandom);
-
-                    calendar.set(Calendar.DAY_OF_MONTH, i);
-                    calendar.set(Calendar.HOUR, 5);
-
-                    // System.out.println("VLZ: Fecha dia [" + i + "]: " + calendar.getTime() + " = " + calendar.getTimeInMillis());
-
-                    DatabaseTableRecord record2   = table.getEmptyRecord();
-
-                    amount = new BigDecimal(random.nextDouble() * 100);
-                    availableBalance = new BigDecimal(random.nextDouble() * 100);
-                    bookBalance = new BigDecimal(random.nextDouble() * 100);
-                    priceReference = new BigDecimal(random.nextDouble() * 100);
-
-                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME, amount.toString());
-                    record2.setFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_AVAILABLE_BALANCE_COLUMN_NAME, availableBalance.floatValue());
-                    record2.setFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_RUNNING_BOOK_BALANCE_COLUMN_NAME, bookBalance.floatValue());
-                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_PRICE_REFERENCE_COLUMN_NAME, priceReference.toString());
-
-                    record2.setUUIDValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_ID_COLUMN_NAME, UUID.randomUUID());
-                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME, money.getCode());
-                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MONEY_TYPE_COLUMN_NAME, type.getCode());
-                    record2.setLongValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TIMESTAMP_COLUMN_NAME, calendar.getTimeInMillis());
-                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MEMO_COLUMN_NAME, "Memo "+i);
-                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, BalanceType.AVAILABLE.getCode());
-                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME, TransactionType.CREDIT.getCode());
-                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_COLUMN_NAME, OriginTransaction.SALE.getCode());
-                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME, "OriginTransactionId "+i);
-                    record2.setStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_SEEN_COLUMN_NAME, String.valueOf(true));
-
-                    try {
-                        table.insertRecord(record2);
-                    } catch (CantInsertRecordException e) {}
-                }
-            }
-        } catch (CantLoadTableToMemoryException e) {}
-
-    }
-
-
     public  List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, MoneyType moneyType, int offset, long timeStamp) throws CantGetCryptoBrokerStockTransactionException {
         DatabaseTable databaseTable = getStockWalletTransactionTable();
         FiatCurrency fiatCurrency = null;
@@ -618,11 +559,6 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
 
                     transactions.add(cryptoBrokerStockTransaction);
 
-                }else{
-                    Calendar c = Calendar.getInstance();
-                    c.setTimeInMillis(date);
-                    System.out.println("VLZ: Fuera de rango, timeStamp: [" + timeStamp + "], date: [" + date + "], dateend: [" + dateend + "]");
-                    System.out.println("VLZ:\t date: [" + c.getTime() + "]");
                 }
 
             }

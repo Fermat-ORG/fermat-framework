@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * ScreenPagerAdapter to add new subApp
  */
-public class ScreenPagerAdapter extends FragmentPagerAdapter {
+public class ScreenPagerAdapter extends FragmentPagerAdapter implements FermatUIAdapter {
 
 
     private List<AbstractFermatFragment> fragments;
