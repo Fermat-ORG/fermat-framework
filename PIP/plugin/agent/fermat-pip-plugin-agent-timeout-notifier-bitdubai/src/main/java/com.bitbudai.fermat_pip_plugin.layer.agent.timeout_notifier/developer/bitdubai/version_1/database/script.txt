@@ -36,6 +36,16 @@ databaseTables << [
         firstKey: "agent_owner"
 ]
 
+databaseTables << [
+        name    : "event_monitor",
+        columns : [
+                ["agent_publicKey", "STRING", "100", "true"],
+                ["amount_raise", "INTEGER", "0", "false"],
+                ["last_updated", "LONG_INTEGER", "0", "false"]
+        ],
+        firstKey: "agent_publicKey"
+]
+
 /**
  * No more changes from here.
  */

@@ -66,4 +66,5 @@ public interface SubApp extends FermatApp,FermatStructure {
 
     Map<String,LanguagePackage> getLanguagePackages();
 
+    void clear();
 }

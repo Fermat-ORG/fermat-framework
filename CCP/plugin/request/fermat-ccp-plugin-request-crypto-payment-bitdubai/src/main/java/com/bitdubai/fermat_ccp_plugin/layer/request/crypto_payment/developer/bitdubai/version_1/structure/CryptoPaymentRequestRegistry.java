@@ -473,6 +473,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
     @Override
     public List<CryptoPayment> listCryptoPaymentRequestsByType(String            walletPublicKey,
                                                                CryptoPaymentType type           ,
+                                                               BlockchainNetworkType blockchainNetworkType,
                                                                Integer           max            ,
                                                                Integer           offset         ) throws CantListCryptoPaymentRequestsException {
 
@@ -481,6 +482,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
             return cryptoPaymentRequestDao.listCryptoPaymentRequestsByType(
                     walletPublicKey,
                     type,
+                    blockchainNetworkType,
                     max,
                     offset
             );
@@ -496,6 +498,36 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
         }
 
     }
+
+    @Override
+    public List<CryptoPayment> listCryptoPaymentRequestsByTypeAndNetwork(String            walletPublicKey,
+                                                               CryptoPaymentType type           ,
+                                                                BlockchainNetworkType blockchainNetworkType,
+                                                               Integer           max            ,
+                                                               Integer           offset         ) throws CantListCryptoPaymentRequestsException {
+
+        try {
+
+            return cryptoPaymentRequestDao.listCryptoPaymentRequestsByTypeAndNetwork(
+                    walletPublicKey,
+                    type,
+                    blockchainNetworkType,
+                    max,
+                    offset
+            );
+
+        } catch(CantListCryptoPaymentRequestsException e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw e;
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantListCryptoPaymentRequestsException(e, "", "Unhandled Exception.");
+        }
+
+    }
+
 
     @Override
     public List<CryptoPayment> listCryptoPaymentRequestsByTypeAndState(String             walletPublicKey,
