@@ -30,7 +30,11 @@ public interface BitcoinLossProtectedWalletBalance {
 
     void debit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitException;
 
+    void debit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction,double exchangeRate) throws CantRegisterDebitException;
+
     void credit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException;
+
+    void credit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction,double exchangeRate) throws CantRegisterCreditException;
 
     void revertCredit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException;
 
