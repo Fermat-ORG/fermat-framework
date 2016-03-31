@@ -173,7 +173,10 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
                                 @Override
                                 public void onClick() {
                                     int assetsAmount = Integer.parseInt("1");
+
+
                                     doRedeem(digitalAsset.getAssetPublicKey(), redeemPoints, assetsAmount);
+
                                 }
                             }).build().show();
 
@@ -405,4 +408,3 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         task.execute();
     }
 }
-
