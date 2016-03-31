@@ -442,15 +442,8 @@ public interface CryptoWallet extends Serializable {
      * @param walletPublicKey
      * @return List of PaymentRequest object
      */
-    List<PaymentRequest> listSentPaymentRequest(String  walletPublicKey,int max,int offset) throws CantListSentPaymentRequestException;
+    List<PaymentRequest> listSentPaymentRequest(String  walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset) throws CantListSentPaymentRequestException;
 
-    /**
-     *The method <code>listReceivedPaymentRequest</code> list the wallet receive payments request.
-     *
-     * @param walletPublicKey
-     * @return List of PaymentRequest object
-     */
-    List<PaymentRequest> listReceivedPaymentRequest(String  walletPublicKey,int max,int offset)throws CantListReceivePaymentRequestException;
 
     /**
      * The method <code>listPaymentRequestDateOrder</code> list the wallet payments requests order by date.
@@ -547,4 +540,17 @@ public interface CryptoWallet extends Serializable {
      * @throws CantGetMnemonicTextException
      */
     List<String> getMnemonicText() throws CantGetMnemonicTextException;
+
+    /**
+     * /**
+     *The method <code>listReceivedPaymentRequest</code> list the wallet receive payments request.
+
+     * @param walletPublicKey
+     * @param blockchainNetworkType
+     * @param max
+     * @param offset
+     * @return
+     * @throws CantListReceivePaymentRequestException
+     */
+    List<PaymentRequest> listReceivedPaymentRequest(String walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset) throws CantListReceivePaymentRequestException;
 }

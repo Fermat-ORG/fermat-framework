@@ -82,7 +82,6 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     private LossProtectedWallet cryptoWallet;
     private ErrorManager errorManager;
     private LossProtectedWalletManager cryptoWalletManager;
-    private WalletSettingsManager walletSettingsManager;
 
     /**
      * DATA
@@ -91,7 +90,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     /**
      *  Resources
      */
-    WalletResourcesProviderManager walletResourcesProviderManager;
+
     private LossProtectedWalletSession referenceWalletSession;
     private FermatButton send_button;
     private FermatButton receive_button;
@@ -182,7 +181,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                 if(cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
                     referenceWalletSession.setLastContactSelected(cryptoWalletWalletContact);
                     referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
-                    changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
+                    changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
                 }else{
                     Toast.makeText(getActivity(),"You don't have address to send\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
                 }
@@ -191,7 +190,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                 if(cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
                     referenceWalletSession.setLastContactSelected(cryptoWalletWalletContact);
                     referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
-                    changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
+                    changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
                 }else{
                     Toast.makeText(getActivity(),"You don't have address to request\nplease wait to get it or touch the refresh button",Toast.LENGTH_SHORT).show();
                 }

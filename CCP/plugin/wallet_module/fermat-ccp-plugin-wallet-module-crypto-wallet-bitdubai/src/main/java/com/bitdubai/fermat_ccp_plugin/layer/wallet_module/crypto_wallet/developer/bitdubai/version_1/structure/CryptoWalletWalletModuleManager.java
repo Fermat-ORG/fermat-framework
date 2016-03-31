@@ -991,14 +991,14 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleMana
     }
 
     @Override
-    public List<PaymentRequest> listSentPaymentRequest(String walletPublicKey,int max,int offset) throws CantListSentPaymentRequestException {
+    public List<PaymentRequest> listSentPaymentRequest(String walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset) throws CantListSentPaymentRequestException {
         try {
             List<PaymentRequest> lst =  new ArrayList<>();
             CryptoWalletWalletModuleWalletContact cryptoWalletWalletContact = null;
             byte[] profilePicture = null;
 
             //find received payment request
-            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(walletPublicKey, CryptoPaymentType.SENT, max, offset)) {
+            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(walletPublicKey, CryptoPaymentType.SENT,blockchainNetworkType, max, offset)) {
 
                 WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
 
@@ -1051,8 +1051,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleMana
 
     }
 
-
-    public List<PaymentRequest> listReceivedPaymentRequest(String walletPublicKey,int max,int offset) throws CantListReceivePaymentRequestException {
+    @Override
+    public List<PaymentRequest> listReceivedPaymentRequest(String walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset) throws CantListReceivePaymentRequestException {
 
         try {
             List<PaymentRequest> lst =  new ArrayList<>();
@@ -1061,9 +1061,10 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleMana
             byte[] profilePicture = null;
 
             //find received payment request
-            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(
+            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByTypeAndNetwork(
                     walletPublicKey,
                     CryptoPaymentType.RECEIVED,
+                    blockchainNetworkType,
                     max,
                     offset
             )) {

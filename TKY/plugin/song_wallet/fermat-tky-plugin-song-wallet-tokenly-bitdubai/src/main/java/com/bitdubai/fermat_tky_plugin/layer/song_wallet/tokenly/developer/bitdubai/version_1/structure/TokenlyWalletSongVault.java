@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.DownloadSong;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDeleteSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDownloadSongException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantDownloadFileException;
@@ -76,26 +77,20 @@ public class TokenlyWalletSongVault {
      * This method downloads a song to the wallet and the device storage.
      * This Id is assigned by the Song Wallet Tokenly implementation, can be different to the
      * Tonkenly Id.
-     * @param tokenlyId
+     * @param song
      * @throws CantDownloadSongException
      */
-    public String downloadSong(String tokenlyId) throws CantDownloadSongException {
+    public String downloadSong(Song song) throws CantDownloadSongException {
         try{
             //Get DownloadSOng object from Tokenly public API
-            DownloadSong downloadSong = this.tokenlyApiManager.getDownloadSongBySongId(tokenlyId);
-            String downloadUrl = downloadSong.getDownloadURL();
-            String songName = downloadSong.getName();
+            String downloadUrl = song.getDownloadUrl();
+            String songName = song.getName();
             downloadFile(downloadUrl,songName);
             return DIRECTORY_NAME+"/"+songName;
-        } catch (CantGetSongException e) {
-            throw new CantDownloadSongException(
-                    e,
-                    "Downloading song with id: "+tokenlyId,
-                    "Cannot get Download Song object from Tokenly public API");
         } catch (CantDownloadFileException e) {
             throw new CantDownloadSongException(
                     e,
-                    "Downloading song with id: "+tokenlyId,
+                    "Downloading song with id: "+song.getId(),
                     "Cannot download Song Tokenly Music manager");
         }
     }
@@ -142,6 +137,9 @@ public class TokenlyWalletSongVault {
             URLConnection urlCon = url.openConnection();
             //Get web access.
             InputStream is = urlCon.getInputStream();
+            //Get file size
+            int size = urlCon.getContentLength();
+            System.out.println("TKY - Download size: "+size);
             //Prepare the plugin file system to persist the file
             PluginBinaryFile pluginBinaryFile = pluginFileSystem.createBinaryFile(
                     pluginId,
@@ -153,11 +151,15 @@ public class TokenlyWalletSongVault {
             byte [] data = new byte[1024];
             //Put the inputStream into the array bytes.
             int bytesRead = is.read(data);
+            //File counter
+            int reader = 0;
             List<Byte> byteList = new ArrayList<>();
             while(bytesRead != -1) {
                 for(byte byteRead : data){
                     byteList.add(byteRead);
                 }
+                reader+=bytesRead;
+                //System.out.println("TKY - Download "+reader+" from "+size);
                 bytesRead = is.read(data);
             }
             int byteListSize = byteList.size();

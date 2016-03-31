@@ -53,4 +53,9 @@ public interface FermatAppsManager {
     FermatStructure getLastAppStructure();
 
     List<FermatRecentApp> getRecentsAppsStack();
+
+    /**
+     * Method to clear the runtime navigation structure
+     */
+    void clearRuntime();
 }
