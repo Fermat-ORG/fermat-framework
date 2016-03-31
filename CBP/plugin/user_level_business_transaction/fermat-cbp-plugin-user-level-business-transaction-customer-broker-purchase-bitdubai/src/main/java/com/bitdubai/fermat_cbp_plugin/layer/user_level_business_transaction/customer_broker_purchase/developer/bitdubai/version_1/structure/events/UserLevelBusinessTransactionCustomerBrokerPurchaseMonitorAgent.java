@@ -422,7 +422,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
              */
             for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_MERCHANDISE_SUBMIT
             {
-                for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.COMPLETED)) {
+                for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.READY_TO_CLOSE)) {
 
                     if (Objects.equals(customerBrokerPurchase.getTransactionId(), customerBrokerContractPurchase.getNegotiatiotId())){
                         closeContractManager.closePurchaseContract(customerBrokerContractPurchase.getContractId());
