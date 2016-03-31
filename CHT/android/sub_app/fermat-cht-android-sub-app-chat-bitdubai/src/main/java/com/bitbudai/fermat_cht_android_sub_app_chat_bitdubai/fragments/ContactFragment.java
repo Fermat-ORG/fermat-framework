@@ -508,6 +508,10 @@ public class ContactFragment extends AbstractFermatFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_block_contact) {
+            //Contact con = chatSession.getSelectedContact();
+            return true;
+        }
         if (item.getItemId() == R.id.menu_edit_contact) {
             Contact con = chatSession.getSelectedContact();
           try {
