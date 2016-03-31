@@ -165,44 +165,36 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     }
 
     public void onControlledActivityBack(String activityBackCode){
-        // Check if no view has focus:
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-
-        String frgBackType = null;
-
-        RuntimeManager runtimeManager = null;
-        FermatStructure fermatStructure = null;
-        FermatAppsManager fermatAppsManager = getFermatAppManager();
-        if(activityBackCode!=null){
-            try {
+        try {
+            String frgBackType = null;
+            RuntimeManager runtimeManager = null;
+            FermatStructure fermatStructure = null;
+            FermatAppsManager fermatAppsManager = getFermatAppManager();
+            if (activityBackCode != null) {
                 runtimeManager = fermatAppsManager.selectRuntimeManager(fermatAppsManager.getApp(activityBackCode).getAppType());
                 fermatStructure = runtimeManager.getAppByPublicKey(activityBackCode);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else {
+                fermatStructure = fermatAppsManager.getLastAppStructure();
             }
-
-        }else{
-            fermatStructure = fermatAppsManager.getLastAppStructure();
-        }
-        Activity activity = (fermatStructure != null) ? fermatStructure.getLastActivity() : null;
-        com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = (activity != null) ? activity.getLastFragment() : null;
-        if (fragment != null) frgBackType = fragment.getBack();
-        if (frgBackType != null) {
-            changeFragment(fermatStructure.getPublicKey(), frgBackType);
-        } else if (( (activity != null) ? activity.getBackActivity() : null) != null && activity.getBackAppPublicKey() != null) {
-            if(activityBackCode!=null){
-                changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
-            }else changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
-        } else {
-            Intent intent = new Intent(this, DesktopActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            finish();
-            startActivity(intent);
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            Activity activity = (fermatStructure != null) ? fermatStructure.getLastActivity() : null;
+            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = (activity != null) ? activity.getLastFragment() : null;
+            if (fragment != null) frgBackType = fragment.getBack();
+            if (frgBackType != null) {
+                changeFragment(fermatStructure.getPublicKey(), frgBackType);
+            } else if (((activity != null) ? activity.getBackActivity() : null) != null && activity.getBackAppPublicKey() != null) {
+                if (activityBackCode != null) {
+                    changeActivity(activity.getBackActivity().getCode(), activity.getBackAppPublicKey());
+                } else
+                    changeActivity(activity.getBackActivity().getCode(), activity.getBackAppPublicKey());
+            } else {
+                Intent intent = new Intent(this, DesktopActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                finish();
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -212,13 +204,30 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     }
 
 
+    private Runnable onControlledActivityBackRunnable;
     /**
      * Method call when back button is pressed
      */
-
     @Override
     public void onBackPressed() {
         onBackPressedNotificate();
+        // Check if no view has focus:
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        if(getDrawerLayout()!=null){
+            if(onControlledActivityBackRunnable==null){
+                onControlledActivityBackRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                };
+            }
+            closeDrawerAndRunAnAction(onControlledActivityBackRunnable);
+        }
         onControlledActivityBack(null);
     }
 
@@ -261,7 +270,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 Log.i("APP ACTIVITY loadUI", " TERMINA " + System.currentTimeMillis());
             }else{
                 Log.i("APP ACTIVITY loadUI", " SESSION NULL");
-                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
                 handleExceptionAndRestart();
             }
         } catch (Exception e) {
@@ -297,14 +306,15 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             lastActivity = fermatStructure.getLastActivity();
             nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
             if (!nextActivity.equals(lastActivity)) {
-                removecallbacks();
-                Intent intent = new Intent(this,LoadingScreenActivity.class);
+                resetThisActivity();
+                Intent intent = getIntent(); //new Intent(this,LoadingScreenActivity.class);
                 intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appBackPublicKey);
                 //recreate();
-                startActivity(intent);
+                //startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                //finish();
                 //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                //loadUI(getFermatAppManager().getAppsSession(fermatStructure.getPublicKey()));
+                loadUI(getFermatAppManager().getAppsSession(fermatStructure.getPublicKey()));
             }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
@@ -431,10 +441,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
         try {
             String activityCode = data.getLinkToActivity().getCode();
             String appLickPublicKey = data.getAppLinkPublicKey();
-            if(activityCode.equals("develop_mode")){
-                onBackPressed();
-            }else
-                changeActivity(activityCode,appLickPublicKey);
+            changeActivity(activityCode,appLickPublicKey);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -448,4 +455,5 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 //        imageView.setImageDrawable(new BadgeDrawable.BadgeDrawableBuilder(this).setCount().setPosition(BadgeDrawable.Position.CENTER).build());
         if(tab!=null) tab.setCustomView(view);
     }
+
 }
