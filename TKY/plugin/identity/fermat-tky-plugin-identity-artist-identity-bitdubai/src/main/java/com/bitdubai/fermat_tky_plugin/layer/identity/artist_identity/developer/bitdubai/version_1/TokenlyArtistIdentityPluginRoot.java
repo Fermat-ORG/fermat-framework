@@ -104,7 +104,7 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
                     this.tokenlyApiManager);
 
             //System.out.println("############\n TKY IDENTITY ARTIST STARTED\n");
-            //testCreateArtist();
+            testCreateArtist();
             //testAskForConnection();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.TOKENLY_ARTIST, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -118,26 +118,29 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
 //        }
     }
 
-//    private void testCreateArtist(){
-//        try {
-//            String alias = "Gabo";
-//            byte[] image = new byte[0];
-//            String externalName = "El gabo artist";
-//            String externalAccessToken = "El access token";
-//            ExternalPlatform externalPlatform = ExternalPlatform.TOKENLY;
-//            ExposureLevel exposureLevel = ExposureLevel.PRIVATE;
-//            ArtistAcceptConnectionsType artistAcceptConnectionsType = ArtistAcceptConnectionsType.MANUAL;
-//            Artist artist = createArtistIdentity(alias,image,externalName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
-//            Artist artist1 = getArtistIdentity(artist.getId());
-//            System.out.println("##############################\n");
-//            System.out.println("artist1 = " + XMLParser.parseObject(new TokenlyArtistIdentityImp(artist1.getAlias(),artist1.getId(),artist1.getPublicKey(),artist1.getProfileImage(),artist1.getExternalUsername(),
-//                    artist1.getExternalAccesToken(),artist1.getExternalPlatform(),artist1.getExposureLevel(),artist1.getArtistAcceptConnectionsType())));
-//        } catch (CantCreateArtistIdentityException | ArtistIdentityAlreadyExistsException e) {
-//            e.printStackTrace();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
+    private void testCreateArtist(){
+        try {
+            String alias = "perezilla";
+            byte[] image = new byte[0];
+            String password = "milestone";
+            ExternalPlatform externalPlatform = ExternalPlatform.TOKENLY;
+            ExposureLevel exposureLevel = ExposureLevel.PRIVATE;
+            ArtistAcceptConnectionsType artistAcceptConnectionsType = ArtistAcceptConnectionsType.MANUAL;
+            Artist artist = createArtistIdentity(alias,image,password,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+            Artist artist1 = getArtistIdentity(artist.getId());
+
+            System.out.println("##############################\n");
+            System.out.println("artist1 = " + artist1);
+//            System.out.println("artist1 ="+ XMLParser.parseObject(new TokenlyArtistIdentityImp(artist1.getId(),artist1.getTokenlyId(),artist1.getPublicKey(),artist1.getProfileImage(),artist1.getUsername(),
+//                            artist1.getApiToken(),artist1.getApiSecretKey(),artist1.getExternalPlatform(),artist1.getExposureLevel(),artist1.getArtistAcceptConnectionsType())));
+//
+//            )
+        } catch (CantCreateArtistIdentityException | ArtistIdentityAlreadyExistsException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 //    private void testUpdateArtist(Artist artist){
 //        String externalName = "El gabo artist que envia";
 //        String externalAccessToken = "El access token";
@@ -185,7 +188,7 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
             e.printStackTrace();
         }
         if(user != null)
-            identityArtistManager.updateIdentityArtist(user,password, id, publicKey, profileImage,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+            identityArtistManager.updateIdentityArtist(user, password, id, publicKey, profileImage, externalPlatform,exposureLevel,artistAcceptConnectionsType);
     }
 
     @Override
