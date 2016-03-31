@@ -184,7 +184,8 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         super.onCreateView(inflater, container, savedInstanceState);
         try {
             rootView = inflater.inflate(R.layout.send_wallet_form_base, container, false);
-            NetworkStatus networkStatus = getFermatState().getFermatNetworkStatus();
+            //TODO: Descomentar despues esta dando error el android core
+           /* NetworkStatus networkStatus = getFermatState().getFermatNetworkStatus();
             if (networkStatus != null) {
                 switch (networkStatus) {
                     case CONNECTED:
@@ -199,11 +200,11 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                         setUpContactAddapter();
                         break;
                 }
-            } else {
+            } else {*/
                 setUpUI();
                 setUpActions();
                 setUpContactAddapter();
-            }
+           // }
 
             return rootView;
         } catch (Exception e) {
@@ -447,10 +448,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
             if (getActivity().getCurrentFocus() != null && im.isActive(getActivity().getCurrentFocus())) {
                 im.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
             }
-            if (cryptoWalletWalletContact != null) {
                 sendCrypto();
-            } else
-                Toast.makeText(getActivity(), "Contact not found, please add it.", Toast.LENGTH_LONG).show();
         } else if (id == R.id.btn_expand_send_form) {
             Object[] objects = new Object[1];
             objects[0] = walletContact;
@@ -465,9 +463,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
     //TODO: VER QUE PASA  SI EL CONTACTO NO TIENE UNA WALLET ADDRESS
     private void sendCrypto() {
         try {
-            if (cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
-                CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), cryptoWallet);
-                if (validAddress != null) {
+
                     EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
                     String amount = txtAmount.getText().toString();
 
@@ -509,23 +505,29 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                                     wallet = list.get(i);
                                 }
                             }
-                            if (operator.compareTo(minSatoshis) == 1) {
-                                cryptoWallet.sendToWallet(
-                                        operator.longValueExact(),
-                                        appSession.getAppPublicKey(),
-                                        wallet.getWalletPublicKey(),//RECIVE WALLET KEY
-                                        notes,
-                                        Actors.DEVICE_USER,
-                                        ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
-                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                        blockchainNetworkType
+                            if (wallet != null){
+                                System.out.println("public key"+wallet.getWalletPublicKey());
+                                if (operator.compareTo(minSatoshis) == 1) {
+                                    cryptoWallet.sendToWallet(
+                                            operator.longValueExact(),
+                                            appSession.getAppPublicKey(),
+                                            wallet.getWalletPublicKey(),//RECIVE WALLET KEY
+                                            notes,
+                                            Actors.DEVICE_USER,
+                                            ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
+                                            ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                            blockchainNetworkType
 
-                                        // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
-                                );
-                                Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
-                                onBack(null);
-                            } else {
-                                Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + msg, Toast.LENGTH_LONG).show();
+                                            // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
+                                    );
+                                    Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
+                                    onBack(null);
+                                } else {
+                                    Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + msg, Toast.LENGTH_LONG).show();
+                                }
+
+                            }else{
+                                Toast.makeText(getActivity(), "Wallet Public key not found " , Toast.LENGTH_LONG).show();
                             }
 
 
@@ -542,14 +544,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                     } else {
                         Toast.makeText(getActivity(), "Invalid Amount", Toast.LENGTH_LONG).show();
                     }
-                } else {
-                    Toast.makeText(getActivity(), "Contact don't have an Address\n" +
-                            "please wait 2 minutes", Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(getActivity(), "Contact don't have an Address\nplease wait 2 minutes", Toast.LENGTH_LONG).show();
-            }
-
 
         } catch (Exception e) {
             Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();

@@ -1,7 +1,6 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.mnemonic;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +21,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
+
 
 /**
  * Created by mati on 2016.02.20..
@@ -62,18 +62,25 @@ public class MnemonicFragment extends AbstractFermatFragment {
 
     }
 
-    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        
+        
 
         View view = inflater.inflate(R.layout.mnemonic_fragment_main1,container,false);
 
         FermatTextView txt_mnemonic = (FermatTextView)view.findViewById(R.id.txt_mnemonic);
         FermatButton open_dialog_btn= (FermatButton)view.findViewById(R.id.open_dialog_btn);
-        //get mnemonic text from Crypto Wallet Module
+
 
         try {
-            txt_mnemonic.setText(cryptoWalletManager.getCryptoWallet().getMnemonicText().get(0));
+            //get mnemonic text from Crypto Wallet Module
+            String MnemonicText = "";
+            for(int x=0;x<cryptoWalletManager.getCryptoWallet().getMnemonicText().size();x++) {
+                MnemonicText += cryptoWalletManager.getCryptoWallet().getMnemonicText().get(x)+" ";
+            }
+            txt_mnemonic.setText(MnemonicText);
+
         } catch (CantGetMnemonicTextException e) {
             Toast.makeText(getActivity(), "Error Getting Mnemonic Text", Toast.LENGTH_SHORT).show();
         } catch (CantGetCryptoWalletException e) {
@@ -88,8 +95,6 @@ public class MnemonicFragment extends AbstractFermatFragment {
                 mnemonic_dialog.show();
             }
         });
-
-
         return view;
     }
 }
