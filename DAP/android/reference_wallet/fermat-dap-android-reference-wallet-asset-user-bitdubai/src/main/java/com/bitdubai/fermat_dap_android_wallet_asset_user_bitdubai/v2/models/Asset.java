@@ -68,7 +68,7 @@ public class Asset {
         this.assetUserWalletList = assetUserWalletList;
         this.assetUserWalletTransaction = assetUserWalletTransaction;
         this.digitalAsset = assetUserWalletList.getDigitalAsset();
-        setId(assetUserWalletTransaction.getActualTransactionHash());
+        setId(assetUserWalletTransaction.getTransactionHash());
         if (digitalAsset.getResources().size() != 0) {
             setImage(digitalAsset.getResources().get(0).getResourceBinayData());
         }
