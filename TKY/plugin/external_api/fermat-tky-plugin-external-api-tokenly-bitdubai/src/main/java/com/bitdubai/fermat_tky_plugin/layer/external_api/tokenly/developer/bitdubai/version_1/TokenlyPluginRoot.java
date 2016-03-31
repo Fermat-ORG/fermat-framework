@@ -70,6 +70,7 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             //signatureAuthenticateTest();
             //signatureAndGETTest();
             //getSongsTest();
+            //getSongTest();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.TOKENLY_API,
@@ -244,7 +245,7 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             MusicUser musicUser = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(
                     "username",
                     "password");
-            Song[] songs = TokenlySongProcessor.getSongsyAuthenticatedUser(musicUser);
+            Song[] songs = TokenlySongProcessor.getSongsByAuthenticatedUser(musicUser);
             int n=0;
             for(Song song : songs){
                 System.out.println("TKY - Song "+n+": "+song);
@@ -252,6 +253,18 @@ public class TokenlyPluginRoot extends AbstractPlugin {
             }
         }catch (Exception e) {
             System.out.println("TKY: Test get songs from Tokenly exception");
+            e.printStackTrace();
+        }
+    }
+    private void getSongTest(){
+        try{
+            MusicUser musicUser = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(
+                    "username",
+                    "password");
+            Song song = TokenlySongProcessor.getSongByAuthenticatedUser(musicUser,"3438022c-ec0f-4e57-abb4-8e0b2ea503e0");
+            System.out.println("TKY - song: "+song);
+        } catch (Exception e) {
+            System.out.println("TKY: Test get song from Tokenly exception");
             e.printStackTrace();
         }
     }
