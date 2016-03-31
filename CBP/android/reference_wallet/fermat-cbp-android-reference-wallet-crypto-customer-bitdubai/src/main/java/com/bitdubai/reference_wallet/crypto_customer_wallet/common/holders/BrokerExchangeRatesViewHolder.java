@@ -44,6 +44,17 @@ public class BrokerExchangeRatesViewHolder extends FermatViewHolder {
         String merchandiseCurrency = data.getMerchandiseCurrency().getCode();
         String paymentCurrency = data.getPaymentCurrency().getCode();
 
+
+        //Verificar si el precio del quote es extremadamente pequeno e invertir el quote
+        //Si el precio es 0, no hacer nada pues dara infinito...
+        //TODO: Revisar este hack (abicelis)
+        if(data.getExchangeRate() < 0.5 && data.getExchangeRate() > 0)
+        {
+            exchangeRate = formatter.format(1/data.getExchangeRate());
+            merchandiseCurrency = data.getPaymentCurrency().getCode();
+            paymentCurrency = data.getMerchandiseCurrency().getCode();
+        }
+
         String text = res.getString(R.string.ccw_broker_exchange_rate_for_selling_item, merchandiseCurrency, exchangeRate, paymentCurrency);
         exchangeRateItem.setText(text);
     }
