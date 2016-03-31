@@ -101,7 +101,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
 
             //DEBIT TO WALLET SENDING
 
-            switch (reference_wallet_receiving) {
+            switch (reference_wallet_sending) {
 
                 case BASIC_WALLET_BITCOIN_WALLET:
 
@@ -289,7 +289,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
             TransferIntraWalletUsersWrapper transactionWrapper = dao.getTransaction(id);
 
             //checks what is the corresponding wallet to be debited.
-            switch (reference_wallet_sending) {
+            switch (reference_wallet_receiving) {
 
                 case BASIC_WALLET_BITCOIN_WALLET:
 

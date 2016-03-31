@@ -253,19 +253,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
 
-            //default Exchange rate Provider
-
-            if(bitcoinWalletSettings.getExchangeProvider()==null){
-                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(moduleManager.getExchangeRateProviderManagers());
-
-                exchangeProviderId = providers.get(0).getProviderId();
-                bitcoinWalletSettings.setExchangeProvider(exchangeProviderId);
-
-            }
-            else
-            {
-                exchangeProviderId =bitcoinWalletSettings.getExchangeProvider();
-            }
 
             settingsManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(),bitcoinWalletSettings);
 
@@ -273,6 +260,21 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             final LossProtectedWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
 
+
+            //default Exchange rate Provider
+
+
+          //  if(moduleManager.getExchangeProvider(appSession.getAppPublicKey())==null) {
+                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(moduleManager.getExchangeRateProviderManagers());
+
+                exchangeProviderId = providers.get(0).getProviderId();
+             //   moduleManager.setExchangeProvider(exchangeProviderId,appSession.getAppPublicKey());
+
+           // }
+           // else
+          //  {
+            //    exchangeProviderId =moduleManager.getExchangeProvider(appSession.getAppPublicKey());
+            //}
 
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable(){
