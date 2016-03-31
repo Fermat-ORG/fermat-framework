@@ -32,6 +32,7 @@ public enum NetworkServiceType implements FermatEnum {
     CRYPTO_PAYMENT_REQUEST           ("CPR"),
     CRYPTO_TRANSMISSION              ("CRY_TRANS"),
     INTRA_USER                       ("INT_USR"),
+    FERMAT_MONITOR                   ("FER_MON"),
     TEMPLATE                         ("TEMP"),
     TRANSACTION_TRANSMISSION         ("TRTX"),
     NEGOTIATION_TRANSMISSION         ("NGTR"),
@@ -61,6 +62,7 @@ public enum NetworkServiceType implements FermatEnum {
             case "CPR"       : return CRYPTO_PAYMENT_REQUEST;
             case "CRY_TRANS" : return CRYPTO_TRANSMISSION;
             case "INT_USR"   : return INTRA_USER;
+            case "FER_MON"   : return FERMAT_MONITOR;
             case "TEMP"      : return TEMPLATE;
             case "TRTX"      : return TRANSACTION_TRANSMISSION;
             case "NGTR"      : return NEGOTIATION_TRANSMISSION;

@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 
+import java.util.UUID;
+
 
 /**
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet</code>
@@ -16,5 +18,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 public interface LossProtectedWalletManager extends ModuleManager<LossProtectedWalletSettings, ActiveActorIdentityInformation> {
 
     LossProtectedWallet getCryptoWallet() throws CantGetCryptoLossProtectedWalletException;
+
+
 
 }

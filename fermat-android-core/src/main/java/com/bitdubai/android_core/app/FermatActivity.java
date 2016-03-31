@@ -133,7 +133,6 @@ import static com.bitdubai.android_core.app.common.version_1.util.system.FermatS
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
 import static java.lang.System.gc;
 
 /**
@@ -1551,18 +1550,31 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //        return super.onOptionsItemSelected(item);
 //    }
 
+    private Runnable closeDrawerRunnable;
     @Override
     public void onBackPressed() {
         if(mDrawerLayout!=null) {
-            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-                mDrawerLayout.closeDrawer(GravityCompat.START);
-            } else {
-                super.onBackPressed();
+            if(closeDrawerRunnable==null){
+                closeDrawerRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        onBackPressed();
+                    }
+                };
             }
+            closeDrawerAndRunAnAction(closeDrawerRunnable);
         }else{
             super.onBackPressed();
         }
+    }
 
+    protected void closeDrawerAndRunAnAction(Runnable runnable){
+        if(mDrawerLayout!=null) {
+            if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+                mDrawerActionHandler.postDelayed(runnable, DRAWER_CLOSE_DELAY_MS);
+            }
+        }
     }
 
     /**
@@ -1570,11 +1582,21 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
 
     @Override
-    public void onItemClickListener(com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, int position) {
-        if(getWalletRuntimeManager().getLastWallet() != null)
-            getWalletRuntimeManager().getLastWallet().clear();
+    public void onItemClickListener(final com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem data, final int position) {
+        data.setSelected(true);
+        mNavItemId = data.getItemId();
 
-        onNavigationMenuItemTouchListener(data, position);
+        // allow some time after closing the drawer before performing real navigation
+        // so the user can see what is happening
+        mDrawerLayout.closeDrawer(GravityCompat.START);
+        mDrawerActionHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                onNavigationMenuItemTouchListener(data, position);
+            }
+        }, DRAWER_CLOSE_DELAY_MS);
+        getFermatAppManager().clearRuntime();
+
     }
 
     @Override
@@ -1780,6 +1802,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
     @Override
     public Toolbar getToolbar() {
         return mToolbar;
+    }
+
+
+    public DrawerLayout getDrawerLayout() {
+        return mDrawerLayout;
     }
 
     public RelativeLayout getToolbarHeader() {
