@@ -1,17 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent" 	android:gravity="center" android:orientation="vertical"
-    android:layout_height="fill_parent" android:background="#E5E5E5">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="40dp"
+    >
 
-    <TextView android:text="Please wait while your data gets loaded..."
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:textColor="#000000">
-    </TextView>
-    <ProgressBar android:id="@+id/mainSpinner1" android:layout_gravity="center"
-        android:layout_width="wrap_content" android:layout_height="wrap_content"
-        android:indeterminate="true"
-        style="?android:attr/progressBarStyleInverse">
-    </ProgressBar>
 
-</LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_weight="1"
+        android:paddingRight="40dp"
+        android:paddingLeft="40dp"
+        android:id="@+id/main">
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingRight="10dp"
+            android:orientation="horizontal"
+            >
+
+            <ImageView
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/wallet_red"
+                android:id="@+id/left_wallet"
+                android:paddingRight="50dp"
+                android:layout_marginTop="20dp"
+                />
+
+            <ImageView
+                android:layout_width="240dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/center_wallet"
+                android:paddingRight="40dp"
+                android:paddingLeft="40dp"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/wallet_orange"
+                />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/right_wallet"
+                android:layout_marginTop="60dp"
+                android:src="@drawable/wallet_beige"
+                android:layout_marginLeft="100dp"
+                />
+
+
+        </FrameLayout>
+
+
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="120dp"
+            android:src="@drawable/wallet_green"
+            />
+
+
+
+    </RelativeLayout>
+
+
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="36sp"
+        android:gravity="center"
+        android:text="Loading..."
+        android:layout_weight="1"
+        android:layout_alignBottom="@+id/main"
+        android:layout_marginBottom="20dp"
+        />
+
+
+</RelativeLayout>

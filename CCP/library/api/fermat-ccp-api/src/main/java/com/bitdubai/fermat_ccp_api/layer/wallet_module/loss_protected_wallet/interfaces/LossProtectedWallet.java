@@ -23,6 +23,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetActorLossProtectedTransactionHistoryException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetAllIntraUserLossProtectedConnectionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetAllLossProtectedWalletContactsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetBasicWalletExchangeProviderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeProviderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
@@ -37,6 +38,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSaveLossProtectedTransactionDescriptionException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedCryptoException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSendLossProtectedPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantSetBasicWalletExchangeProviderException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantUpdateLossProtectedWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedInsufficientFundsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.LossProtectedPaymentRequestNotFoundException;
@@ -486,7 +488,7 @@ public interface LossProtectedWallet extends Serializable {
      * @param walletPublicKey
      * @return List of PaymentRequest object
      */
-    List<LossProtectedPaymentRequest> listSentPaymentRequest(String  walletPublicKey,int max,int offset) throws CantListLossProtectedSentPaymentRequestException;
+    List<LossProtectedPaymentRequest> listSentPaymentRequest(String  walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset) throws CantListLossProtectedSentPaymentRequestException;
 
     /**
      *The method <code>listReceivedPaymentRequest</code> list the wallet receive payments request.
@@ -494,7 +496,7 @@ public interface LossProtectedWallet extends Serializable {
      * @param walletPublicKey
      * @return List of PaymentRequest object
      */
-    List<LossProtectedPaymentRequest> listReceivedPaymentRequest(String  walletPublicKey,int max,int offset)throws CantListLossProtectedReceivePaymentRequestException;
+    List<LossProtectedPaymentRequest> listReceivedPaymentRequest(String  walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset)throws CantListLossProtectedReceivePaymentRequestException;
 
 
     /**
@@ -608,4 +610,8 @@ public interface LossProtectedWallet extends Serializable {
      * @throws CantListWalletsException
      */
     List<InstalledWallet> getInstalledWallets() throws CantListWalletsException;
+
+    UUID getExchangeProvider(String walletPublicKey) throws CantGetBasicWalletExchangeProviderException;
+
+    void setExchangeProvider(UUID idProvider,String walletPublicKey) throws CantSetBasicWalletExchangeProviderException;
 }
