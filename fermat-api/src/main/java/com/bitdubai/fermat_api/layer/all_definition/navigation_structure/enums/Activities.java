@@ -351,8 +351,8 @@ public enum Activities implements FermatEnum {
         //    }
         //}
         switch (code) {
-            case "TAI":
-                return Activities.TKY_ARTIST_IDENTITY;
+            case "TAICP":
+                return Activities.TKY_ARTIST_IDENTITY_CREATE_PROFILE;
             case "DAPSARPI":
                 return Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY;
             case "DAPSARPICI":

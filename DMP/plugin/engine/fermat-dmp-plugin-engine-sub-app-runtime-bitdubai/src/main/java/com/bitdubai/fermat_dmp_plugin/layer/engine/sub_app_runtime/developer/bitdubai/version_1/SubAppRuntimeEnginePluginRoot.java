@@ -810,8 +810,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.TKY_ARTIST_IDENTITY_SUB_APP);
-            String tkyFanUserIdentityPublicKey = SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode();
-            runtimeSubApp.setPublicKey(tkyFanUserIdentityPublicKey);
+            String tkyArtistUserIdentityPublicKey = SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode();
+            runtimeSubApp.setPublicKey(tkyArtistUserIdentityPublicKey);
             // Activity: Create New Identity
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.TKY_ARTIST_IDENTITY_CREATE_PROFILE);
@@ -820,7 +820,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
             runtimeSubApp.addPosibleStartActivity(Activities.TKY_ARTIST_IDENTITY_CREATE_PROFILE);
-
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Tokenly Artist Identity");
             runtimeTitleBar.setColor("#1189a4");
@@ -828,16 +827,13 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeTitleBar.setLabelSize(18);
             runtimeTitleBar.setIsTitleTextStatic(true);
             runtimeActivity.setTitleBar(runtimeTitleBar);
-
             statusBar = new StatusBar();
             statusBar.setColor("#1189a4");
             runtimeActivity.setStatusBar(statusBar);
-
             runtimeFragment = new Fragment();
             runtimeFragment.setType(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
             runtimeActivity.addFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
-
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
 

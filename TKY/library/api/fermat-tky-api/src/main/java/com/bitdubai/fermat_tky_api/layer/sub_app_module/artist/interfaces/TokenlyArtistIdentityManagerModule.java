@@ -12,7 +12,8 @@ import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantGetArtis
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
-import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.TokenlyArtistPreferenceSettings;
+
+
 
 import java.util.List;
 import java.util.UUID;

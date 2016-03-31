@@ -3,6 +3,9 @@ package com.bitdubai.fermat_tky_api.all_definitions.enums;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
@@ -47,5 +50,15 @@ public enum ExposureLevel implements FermatEnum {
     @Override
     public String getCode() {
         return code;
+    }
+
+
+    public static List<String> getArrayItems(){
+        List<String> platformsNames = new ArrayList<String>();
+        ExposureLevel[] externalPlatforms = values();
+        for (ExposureLevel externalPlatform : externalPlatforms) {
+            platformsNames.add(externalPlatform.name());
+        }
+        return  platformsNames;
     }
 }
