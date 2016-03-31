@@ -16,68 +16,22 @@ import java.util.UUID;
 public interface TimeOutAgent {
 
     /**
-     * notifies if the agent is running.
-     * @return true if is running, false if not.
-     */
-    boolean isRunning();
-
-    /**
-     * Starts the timeout Agent monitoring process.
-     * @throws CantStartTimeOutAgentException
-     */
-    void startTimeOutAgent() throws CantStartTimeOutAgentException;
-
-    /**
-     * Resets the counter of the agent if still running. A reset  means that the timeout duration counter
-     * will start again. For example, if TimeOutDuration was 60 minutes and the reset occurs at minute 39,
-     * another 60 minutes must passed for a new notification to be raised.
-     * @throws CantResetTimeOutAgentException
-     */
-    void resetTimeOutAgent() throws CantResetTimeOutAgentException;
-
-    /**
-     * Stops the Timeout Agent. No monitoring is done, meaning that no notifications will be raised
-     * at this state.
-     * @throws CantStopTimeOutAgentException
-     */
-    void stopTimeOutAgent() throws CantStopTimeOutAgentException;
-
-    /**
      * gets the internal UUID of the agent
      * @return the internal UUID
      */
     UUID getUUID();
 
     /**
-     * the start time of the Agent as an epoch time in milliseconds.
-     * @return the start time of the agent.
-     */
-    long getEpochStartTime();
-
-    /**
-     * The duration that the Agent will be monitoring for. When this duration is reached since the start time
-     * an event will be triggered.
-     * @return the duration of the time out
-     */
-    long getTimeOutDuration();
-
-    /**
-     * Gets the amount of milliseconds pass since the start and the moment this method is requested.
-     * @return the amount of elapsed time for this agent in milliseconds.
-     */
-    long getElapsedTime();
-
-    /**
      * the agent given name for identification.
      * @return the Agent given name
      */
-    String getAgentName();
+    String getName();
 
     /**
      * The agent given Description.
      * @return the Description of the agent
      */
-    String getAgentDescription();
+    String getDescription();
 
     /**
      * The actor type that created this agent
@@ -89,7 +43,42 @@ public interface TimeOutAgent {
      * The current agent status.
      * @return the current agent status.
      */
-    AgentStatus getAgentStatus();
+    AgentStatus getStatus();
+
+
+    /**
+     * notifies if the agent is running.
+     * @return true if is running, false if not.
+     */
+    boolean isRunning();
+
+
+    /**
+     * the start time of the Agent as an epoch time in milliseconds.
+     * @return the start time of the agent.
+     */
+    long getEpochStartTime();
+
+
+    /**
+     * the end time of the Agent as an epoch time in milliseconds.
+     * @return the end time of the agent.
+     */
+    long getEpochEndTime();
+
+    /**
+     * The duration that the Agent will be monitoring for. When this duration is reached since the start time
+     * an event will be triggered.
+     * @return the duration of the time out
+     */
+    long getDuration();
+
+    /**
+     * Gets the amount of milliseconds pass since the start and the moment this method is requested.
+     * @return the amount of elapsed time for this agent in milliseconds.
+     */
+    long getElapsedTime();
+
 
     /**
      * The notification Protocol status of the raised event.

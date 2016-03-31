@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetS
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
@@ -115,6 +116,9 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interface
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletProviderSetting;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
@@ -166,6 +170,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     private final BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager;
     private final BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager;
     private final BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager;
+    private final BitcoinWalletManager bitcoinWalletManager;
 
     private final SettingsManager<CryptoCustomerWalletPreferenceSettings> settingsManager;
 
@@ -194,6 +199,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                                                                  BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager,
                                                                  BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager,
                                                                  SettingsManager<CryptoCustomerWalletPreferenceSettings> settingsManager,
+                                                                 BitcoinWalletManager bitcoinWalletManager,
 
                                                                  final ErrorManager errorManager,
                                                                  final PluginVersionReference pluginVersionReference) {
@@ -215,6 +221,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         this.brokerAckOfflinePaymentManager = brokerAckOfflinePaymentManager;
         this.brokerSubmitOnlineMerchandiseManager = brokerSubmitOnlineMerchandiseManager;
         this.brokerSubmitOfflineMerchandiseManager = brokerSubmitOfflineMerchandiseManager;
+        this.bitcoinWalletManager = bitcoinWalletManager;
 
         this.settingsManager = settingsManager;
 
@@ -541,6 +548,18 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
+    public long getBalanceBitcoinWallet(String walletPublicKey) {
+        try {
+            return bitcoinWalletManager.loadWallet(walletPublicKey).getBalance(BalanceType.AVAILABLE).getBalance();
+        } catch (CantCalculateBalanceException e) {
+
+        } catch (CantLoadWalletsException e) {
+
+        }
+        return 0;
+    }
+
+    @Override
     public boolean associateIdentity(ActorIdentity customer, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException {
         CustomerIdentityWalletRelationship relationship = actorExtraDataManager.createNewCustomerIdentityWalletRelationship(customer, walletPublicKey);
         return relationship != null;
@@ -724,12 +743,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                     for (QuotesExtraData quotesExtraData : actorExtraData.getQuotes()) {
                         final ActorIdentity brokerIdentity = actorExtraData.getBrokerIdentity();
                         final Currency merchandise = quotesExtraData.getMerchandise();
-
-                        //Verificar si el precio del quote es extremadamente pequeno e invertir el quote
-                        if(quotesExtraData.getPrice() < 0.5)
-                        {
-                            quotesExtraData = new QuotesExtraDataInformation(quotesExtraData.getQuoteId(), quotesExtraData.getPaymentCurrency(), quotesExtraData.getMerchandise(), 1/quotesExtraData.getPrice());
-                        }
 
                         BrokerIdentityBusinessInfo businessInfo = map.get(merchandise);
                         if (businessInfo == null) {
