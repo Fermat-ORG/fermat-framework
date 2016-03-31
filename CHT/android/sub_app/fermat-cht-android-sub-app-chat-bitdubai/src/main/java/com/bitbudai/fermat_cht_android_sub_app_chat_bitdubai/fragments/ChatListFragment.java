@@ -435,90 +435,34 @@ public class ChatListFragment extends AbstractFermatFragment{
         if(id == ChtConstants.CHT_ICON_HELP){
             setUpHelpChat(false);
         }
-//        if (id == R.id.menu_open_chat) {
-//            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-//            return true;
-//        }
-        if (id == R.id.menu_switch_profile) {
-            changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
+        if (id == R.id.menu_search) {
+            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
             return true;
         }
+        if (id == R.id.menu_open_chat) {
+            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+            return true;
+        }
+        if (id == R.id.menu_create_group) {
+            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+            return true;
+        }
+        if (id == R.id.menu_create_broadcasting) {
+            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+           return true;
+        }
+        if (id == R.id.menu_delete_all_chats) {
+            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+           return true;
+        }
+        /*if (id == R.id.menu_switch_profile) {
+            changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
+            return true;
+        }*/
         if (id == R.id.menu_error_report) {
             changeActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
-
-    void specialfilldatabase(){
-        ChatImpl dato;
-        MessageImpl mess;
-        ContactImpl cont=new ContactImpl();
-        Calendar c = Calendar.getInstance();
-        UUID chatid;
-        UUID contactid;
-
-        try {
-            String dateString = "30/09/2014";
-            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-            Date date = sdf.parse(dateString);
-            long startDate = date.getTime();
-        }catch (java.text.ParseException e){
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }catch (Exception e){
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
-
-        try {
-            Long startDate=System.currentTimeMillis();
-            //Chat
-            if(!chatManager.getContacts().isEmpty()) {
-                if(chatManager.getMessages().isEmpty()) {
-                    for (int i = 0; i < chatManager.getContacts().size(); i++) {
-
-                        if(chatManager.getContacts().get(i).getRemoteName().contains("chatlight")) {
-                            chatid = UUID.randomUUID();
-                            contactid = chatManager.getContacts().get(i).getContactId();
-                            mess = new MessageImpl();
-                            mess.setType(TypeMessage.INCOMMING);
-                            mess.setStatus(MessageStatus.DELIVERED);
-                            mess.setChatId(chatid);
-                            mess.setMessage("HOLA A TODOS");
-                            mess.setMessageDate(new Timestamp(startDate));
-                            mess.setMessageId(UUID.randomUUID());
-                            mess.setContactId(contactid);
-                            chatManager.saveMessage(mess);
-                            dato = new ChatImpl(chatid,
-                                    UUID.randomUUID(),
-                                    PlatformComponentType.ACTOR_ASSET_ISSUER,
-                                    chatManager.getNetworkServicePublicKey(),
-                                    chatManager.getContacts().get(i).getRemoteActorType(),
-                                    chatManager.getContacts().get(i).getRemoteActorPublicKey(),
-                                    "Nuevo",
-                                    ChatStatus.VISSIBLE,
-                                    new Timestamp(startDate),
-                                    new Timestamp(startDate));
-                            chatManager.saveChat(dato);
-                        }
-                    }
-                }
-            }else{
-                System.out.println("\n\n################# NO CONTACT ON TABLE ###################");
-            }
-        }
-        catch (CantGetContactException e) {
-            System.out.println("/n/n CHT FILLDATA SAVECONTACT:"+e);
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }catch (CantSaveMessageException e) {
-            System.out.println("/n/n CHT FILLDATA SAVEMESSAGE:"+e);
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }catch (CantSaveChatException e) {
-            System.out.println("/n/n CHT FILLDATA SAVECHAT:"+e);
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }catch (Exception e){
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
-    }
-
-
 }
