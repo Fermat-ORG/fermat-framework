@@ -725,12 +725,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                         final ActorIdentity brokerIdentity = actorExtraData.getBrokerIdentity();
                         final Currency merchandise = quotesExtraData.getMerchandise();
 
-                        //Verificar si el precio del quote es extremadamente pequeno e invertir el quote
-                        if(quotesExtraData.getPrice() < 0.5)
-                        {
-                            quotesExtraData = new QuotesExtraDataInformation(quotesExtraData.getQuoteId(), quotesExtraData.getPaymentCurrency(), quotesExtraData.getMerchandise(), 1/quotesExtraData.getPrice());
-                        }
-
                         BrokerIdentityBusinessInfo businessInfo = map.get(merchandise);
                         if (businessInfo == null) {
                             businessInfo = new CryptoCustomerWalletModuleBrokerIdentityBusinessInfo(brokerIdentity, merchandise);
