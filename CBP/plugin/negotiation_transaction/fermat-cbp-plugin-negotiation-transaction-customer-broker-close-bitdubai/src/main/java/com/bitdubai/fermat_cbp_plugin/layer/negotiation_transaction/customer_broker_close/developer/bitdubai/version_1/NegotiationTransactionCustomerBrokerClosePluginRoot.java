@@ -63,6 +63,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.structure.CustomerBrokerCloseManagerImpl;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -114,6 +115,9 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
 
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM,   layer = Layers.MIDDLEWARE,          plugin = Plugins.WALLET_MANAGER)
     private WalletManagerManager walletManagerManager;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.INTRA_WALLET_USER)
+    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     /*Represent the dataBase*/
     private Database                                                            dataBase;
@@ -169,7 +173,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
                      cryptoVaultManager,
                      walletManagerManager,
                      errorManager,
-                     getPluginVersionReference()
+                     getPluginVersionReference(),intraWalletUserIdentityManager
              );
 
              //Init event recorder service.
@@ -196,7 +200,7 @@ public class NegotiationTransactionCustomerBrokerClosePluginRoot extends Abstrac
                      cryptoAddressBookManager,
                      cryptoVaultManager,
                      walletManagerManager,
-                     getPluginVersionReference()
+                     getPluginVersionReference(),intraWalletUserIdentityManager
              );
              customerBrokerCloseAgent.start();
 

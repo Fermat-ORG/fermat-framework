@@ -56,7 +56,7 @@ public abstract class AbstractTokenlyProcessor {
             return new Date(1961);
         }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-ddHH:mm:ss");
-        String dateString = jsonElement.getAsString();
+        String dateString = jsonElement.getAsString().replace("T", "");
         Date dateFromJson;
         try {
             java.util.Date utilDate = simpleDateFormat.parse(dateString);

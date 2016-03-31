@@ -3,6 +3,7 @@ package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bi
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.exceptions.CantInitializeTimeOutNotifierAgentDatabaseException;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.exceptions.InconsistentResultObtainedInDatabaseQueryException;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierAgent;
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierManager;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.utils.FermatActorImpl;
 import com.bitdubai.fermat_api.layer.actor.FermatActor;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -13,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
@@ -20,7 +22,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutAgent;
 
 import java.util.ArrayList;
@@ -71,7 +75,7 @@ public class TimeOutNotifierAgentDatabaseDao {
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, "TimeOut Notifier");
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, TimeOutNotifierAgentDatabaseConstants.DATABASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -92,7 +96,7 @@ public class TimeOutNotifierAgentDatabaseDao {
                   /*
                    * We create the new database
                    */
-                database = timeOutNotifierAgentDatabaseFactory.createDatabase(pluginId, "TimeOut Notifier");
+                database = timeOutNotifierAgentDatabaseFactory.createDatabase(pluginId);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -108,8 +112,9 @@ public class TimeOutNotifierAgentDatabaseDao {
         timeOutNotifierAgent.setUuid(agentRecord.getUUIDValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_ID_COLUMN_NAME));
         timeOutNotifierAgent.setName(agentRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_NAME_COLUMN_NAME));
         timeOutNotifierAgent.setDescription(agentRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DESCRIPTION_COLUMN_NAME));
-        timeOutNotifierAgent.setStartTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME));
-        timeOutNotifierAgent.setTimeOutDuration(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME));
+        timeOutNotifierAgent.setEpochStartTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME));
+        timeOutNotifierAgent.setEpochEndTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_END_TIME_COLUMN_NAME));
+        timeOutNotifierAgent.setDuration(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME));
         timeOutNotifierAgent.setElapsedTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_ELAPSED_COLUMN_NAME));
         try {
             timeOutNotifierAgent.setStatus(AgentStatus.getByCode(agentRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME)));
@@ -127,9 +132,9 @@ public class TimeOutNotifierAgentDatabaseDao {
 
     private FermatActor getFermatActorFromRecord(DatabaseTableRecord ownerRecord){
         FermatActorImpl owner = new FermatActorImpl();
-        owner.setName(ownerRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_NAME_COLUMN_NAME));
-        owner.setPublicKey(ownerRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_OWNER_PUBLICKEY_COLUMN_NAME));
-        owner.setType(Actors.getByCode(ownerRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TYPE_COLUMN_NAME)));
+        owner.setName(ownerRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.OWNER_NAME_COLUMN_NAME));
+        owner.setPublicKey(ownerRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.OWNER_PUBLICKEY_COLUMN_NAME));
+        owner.setType(Actors.getByCode(ownerRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.OWNER_TYPE_COLUMN_NAME)));
 
         return owner;
     }
@@ -139,13 +144,14 @@ public class TimeOutNotifierAgentDatabaseDao {
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
         record.setUUIDValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_ID_COLUMN_NAME, timeOutNotifierAgent.getUUID());
-        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_NAME_COLUMN_NAME, timeOutNotifierAgent.getAgentName());
-        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DESCRIPTION_COLUMN_NAME, timeOutNotifierAgent.getAgentDescription());
+        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_NAME_COLUMN_NAME, timeOutNotifierAgent.getName());
+        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DESCRIPTION_COLUMN_NAME, timeOutNotifierAgent.getDescription());
         record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_OWNER_PUBLICKEY_COLUMN_NAME, timeOutNotifierAgent.getOwner().getPublicKey());
         record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME, timeOutNotifierAgent.getEpochStartTime());
-        record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME, timeOutNotifierAgent.getTimeOutDuration());
+        record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_END_TIME_COLUMN_NAME, timeOutNotifierAgent.getEpochEndTime());
+        record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME, timeOutNotifierAgent.getDuration());
         record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_ELAPSED_COLUMN_NAME, timeOutNotifierAgent.getElapsedTime());
-        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, timeOutNotifierAgent.getAgentStatus().getCode());
+        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, timeOutNotifierAgent.getStatus().getCode());
         record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_PROTOCOL_STATUS_COLUMN_NAME, timeOutNotifierAgent.getNotificationProtocolStatus().getCode());
         record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_LAST_UPDATE_COLUMN_NAME, getCurrentTime());
 
@@ -157,12 +163,12 @@ public class TimeOutNotifierAgentDatabaseDao {
     }
 
     private DatabaseTableRecord getOwnerRecordFromTimeOutNotifierAgent(FermatActor fermatActor){
-        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TABLE_NAME);
+        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.OWNER_TABLE_NAME);
         DatabaseTableRecord record = databaseTable.getEmptyRecord();
 
-        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_OWNER_PUBLICKEY_COLUMN_NAME, fermatActor.getPublicKey());
-        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_NAME_COLUMN_NAME, fermatActor.getName());
-        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TYPE_COLUMN_NAME, fermatActor.getType().getCode());
+        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.OWNER_PUBLICKEY_COLUMN_NAME, fermatActor.getPublicKey());
+        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.OWNER_NAME_COLUMN_NAME, fermatActor.getName());
+        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.OWNER_TYPE_COLUMN_NAME, fermatActor.getType().getCode());
 
         return record;
     }
@@ -182,8 +188,8 @@ public class TimeOutNotifierAgentDatabaseDao {
 
 
     private boolean isNewOwner(FermatActor owner) throws CantExecuteQueryException{
-        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TABLE_NAME);
-        databaseTable.addStringFilter(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_OWNER_PUBLICKEY_COLUMN_NAME, owner.getPublicKey(), DatabaseFilterType.EQUAL);
+        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.OWNER_TABLE_NAME);
+        databaseTable.addStringFilter(TimeOutNotifierAgentDatabaseConstants.OWNER_PUBLICKEY_COLUMN_NAME, owner.getPublicKey(), DatabaseFilterType.EQUAL);
 
         try {
             databaseTable.loadToMemory();
@@ -213,30 +219,28 @@ public class TimeOutNotifierAgentDatabaseDao {
         DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENTS_TABLE_NAME);
         DatabaseTableRecord record = getRecordFromTimeOutNotifierAgent(timeOutNotifierAgent);
 
-        // I insert the agent
-        try {
-            databaseTable.insertRecord(record);
-        } catch (CantInsertRecordException e) {
-            throw new CantExecuteQueryException(e, "Cant insert agent: " + timeOutNotifierAgent.toString(), "database issue");
+        // I create a transaction to insert both agent and owner
+        DatabaseTransaction transaction = database.newTransaction();
+        transaction.addRecordToInsert(databaseTable, record);
+
+        FermatActor owner = timeOutNotifierAgent.getOwner();
+        if (isNewOwner(owner)){
+            DatabaseTable ownerTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.OWNER_TABLE_NAME);
+            DatabaseTableRecord ownerRecord = getOwnerRecordFromTimeOutNotifierAgent(owner);
+
+            transaction.addRecordToInsert(ownerTable, ownerRecord);
         }
 
-        //if the owner is new I will insert it
-        FermatActor owner = timeOutNotifierAgent.getOwner();
-
-        if (isNewOwner(owner)){
-            DatabaseTable ownerTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TABLE_NAME);
-            DatabaseTableRecord ownerRecord = getOwnerRecordFromTimeOutNotifierAgent(owner);
-            try {
-                ownerTable.insertRecord(ownerRecord);
-            } catch (CantInsertRecordException e) {
-                throw new CantExecuteQueryException(e, "Cant insert owner: " + owner.toString(), "database issue");
-            }
+        try {
+            database.executeTransaction(transaction);
+        } catch (DatabaseTransactionFailedException e) {
+            throw new CantExecuteQueryException(e, "Error executing a database transaction. " + transaction.toString(), "database issue");
         }
     }
 
     private FermatActor getOwner(String publicKey) throws CantExecuteQueryException {
-        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TABLE_NAME);
-        databaseTable.addStringFilter(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_OWNER_PUBLICKEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.OWNER_TABLE_NAME);
+        databaseTable.addStringFilter(TimeOutNotifierAgentDatabaseConstants.OWNER_PUBLICKEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
 
         try {
             databaseTable.loadToMemory();
@@ -302,15 +306,63 @@ public class TimeOutNotifierAgentDatabaseDao {
     }
 
     public void removeTimeOutNotifierAgent (TimeOutAgent timeOutNotifierAgent) throws InconsistentResultObtainedInDatabaseQueryException, CantExecuteQueryException {
+        if (timeOutNotifierAgent == null)
+            thrownMissingParameterException();
+
         if (isNewTimeOutNotifierAgent(timeOutNotifierAgent))
             throw new InconsistentResultObtainedInDatabaseQueryException(null, "Trying to delete an un existing agent." + timeOutNotifierAgent.toString(), "inconsistent data");
 
         DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENTS_TABLE_NAME);
+        databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.AGENTS_ID_COLUMN_NAME, timeOutNotifierAgent.getUUID(), DatabaseFilterType.EQUAL);
+
         DatabaseTableRecord record = getRecordFromTimeOutNotifierAgent(timeOutNotifierAgent);
         try {
             databaseTable.deleteRecord(record);
         } catch (CantDeleteRecordException e) {
             throw new CantExecuteQueryException(e, "Can't delete existing record." + record.toString(), "Database issue");
+        }
+
+        // I will delete any registered event for this Agent
+        removeEventMonitorRecord(timeOutNotifierAgent.getUUID());
+
+    }
+
+    private void removeEventMonitorRecord(UUID uuid) throws CantExecuteQueryException {
+        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_TABLE_NAME);
+        databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.AGENTS_ID_COLUMN_NAME, uuid, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            thrownCantExecuteQueryException(e, databaseTable.getTableName());
+        }
+
+        if (!databaseTable.getRecords().isEmpty()){
+            DatabaseTableRecord record = databaseTable.getRecords().get(0);
+            try {
+                databaseTable.deleteRecord(record);
+            } catch (CantDeleteRecordException e) {
+                throw new CantExecuteQueryException(e, "Error deleting event record. " + uuid.toString(), "database issue");
+            }
+        }
+    }
+
+    private void thrownMissingParameterException() throws CantExecuteQueryException {
+        throw new CantExecuteQueryException (null, "Parameter Can't be null", "Missing parameter");
+    }
+
+    public void updateTimeOutNotifierAgent(TimeOutAgent timeOutAgent) throws CantExecuteQueryException {
+        if (timeOutAgent == null)
+            thrownMissingParameterException();
+
+        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENTS_TABLE_NAME);
+        databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.AGENTS_ID_COLUMN_NAME, timeOutAgent.getUUID(), DatabaseFilterType.EQUAL);
+
+        DatabaseTableRecord record = getRecordFromTimeOutNotifierAgent(timeOutAgent);
+        try {
+            databaseTable.updateRecord(record);
+        } catch (CantUpdateRecordException e) {
+            throw new CantExecuteQueryException(e,"Error updating record. " + record.toString(), "Database error");
         }
     }
 
