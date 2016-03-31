@@ -128,10 +128,14 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                     originTransactionId = records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
 
                     try {
-                        if (MoneyType.CRYPTO.equals(MoneyType.getByCode(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MONEY_TYPE_COLUMN_NAME))) {
-                            currencyGiving = getCurrencyData("BTC", CurrencyTypes.CRYPTO, CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME);
+                        //TODO YORDIN, SE TENIA LA COLUMNA ERRADA Y NO SE ESTABA LLAMANDO EL CONTENIDO DE LA COLUMNA SI NO SU NOMBRE
+                        if (MoneyType.CRYPTO.equals(MoneyType.getByCode(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MONEY_TYPE_COLUMN_NAME)))) {
+//                            if (MoneyType.CRYPTO.equals(MoneyType.getByCode(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MONEY_TYPE_COLUMN_NAME))) {
+                            //TODO YORDIN: NO SE ESTABA LLAMANDO EL CONTENIDO DE LA COLUMNA SI NO SU NOMBRE
+                            currencyGiving = getCurrencyData("BTC", CurrencyTypes.CRYPTO, records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
                         } else
-                            currencyGiving = getCurrencyData("FIAT", CurrencyTypes.FIAT, CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME);
+                            //TODO YORDIN: NO SE ESTABA LLAMANDO EL CONTENIDO DE LA COLUMNA SI NO SU NOMBRE
+                            currencyGiving = getCurrencyData("FIAT", CurrencyTypes.FIAT, records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
                     } catch (InvalidParameterException e) {
                         throw new CantGetTransactionCryptoBrokerWalletMatchingException("Invalid Parameter", e, "", "");
                     }
@@ -148,11 +152,11 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                     originTransactionId = records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
 
                     try {
-                        if (MoneyType.CRYPTO.equals(MoneyType.getByCode(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MONEY_TYPE_COLUMN_NAME))) {
-                            currencyReceiving = getCurrencyData("BTC", CurrencyTypes.CRYPTO, CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME);
+                        if (MoneyType.CRYPTO.equals(MoneyType.getByCode(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MONEY_TYPE_COLUMN_NAME)))){
+                            currencyReceiving = getCurrencyData("BTC", CurrencyTypes.CRYPTO, records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
                             ;
                         } else
-                            currencyReceiving = getCurrencyData("FIAT", CurrencyTypes.FIAT, CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME);
+                            currencyReceiving = getCurrencyData("FIAT", CurrencyTypes.FIAT, records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
                     } catch (InvalidParameterException e) {
                         throw new CantGetTransactionCryptoBrokerWalletMatchingException("Invalid Parameter", e, "", "");
                     }

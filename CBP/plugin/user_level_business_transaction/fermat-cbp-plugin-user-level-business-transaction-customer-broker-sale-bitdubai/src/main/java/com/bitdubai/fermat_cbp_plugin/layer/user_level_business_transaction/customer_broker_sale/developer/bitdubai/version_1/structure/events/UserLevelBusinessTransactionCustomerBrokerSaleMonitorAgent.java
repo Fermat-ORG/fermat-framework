@@ -550,16 +550,17 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
              * Comienzo a recorrer todas las transacciones que esten en Transaction Status IN_MERCHANDISE_SUBMIT
              * Se registra el Close Contract siempre y cuando el Transaction Status de la CustomerBrokerSale este IN_MERCHANDISE_SUBMIT
              */
-            filterTable = getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), transactionStatusColumnName);
+            /*filterTable = getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), transactionStatusColumnName);
             customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
 
             for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
                 for (CustomerBrokerContractSale customerBrokerContractSale : contractSalesMerchandiseSubmit) {
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
+                        System.out.print("\nTEST CONTRACT - USER LEVEL SALE - AGENT - getCustomerBrokerSales()\n");
                         closeContractManager.closeSaleContract(customerBrokerContractSale.getContractId());
                     }
                 }
-            }
+            }*/
 
             /**
              * IN_MERCHANDISE_SUBMIT -> COMPLETED
@@ -568,13 +569,18 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
              */
             filterTable = getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), transactionStatusColumnName);
             customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
-            Collection<CustomerBrokerContractSale> contractSalesCompleted = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.COMPLETED);
+            Collection<CustomerBrokerContractSale> contractSalesCompleted = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.READY_TO_CLOSE);
 
             for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
                 for (CustomerBrokerContractSale customerBrokerContractSale : contractSalesCompleted) {
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
+
+                        System.out.print("\nTEST CONTRACT - USER LEVEL SALE - AGENT - getCustomerBrokerSales()\n");
+                        closeContractManager.closeSaleContract(customerBrokerContractSale.getContractId());
+
                         customerBrokerSale.setTransactionStatus(TransactionStatus.COMPLETED);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+
                         broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                         broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_CONTRACT_COMPLETED_NOTIFICATION);
                     }
