@@ -107,30 +107,34 @@ public class HomeCardViewHolder extends FermatViewHolder {
     private void initActions(Asset asset, View.OnClickListener onClickListenerRedeem,
                              View.OnClickListener onClickListenerTransfer, View.OnClickListener onClickListenerAppropriate,
                              View.OnClickListener onClickListenerSell, View.OnClickListener onClickListenerTransactions) {
-        if (asset.isRedeemable()) {
+        if (asset.isRedeemable() && asset.getStatus().equals(Asset.Status.CONFIRMED)) {
             cardRedeemButton.setVisibility(View.VISIBLE);
             cardRedeemButton.setOnClickListener(onClickListenerRedeem);
         } else {
             cardRedeemButton.setVisibility(View.INVISIBLE);
         }
 
-        if (asset.isTransferable()) {
+        if (asset.isTransferable() && asset.getStatus().equals(Asset.Status.CONFIRMED)) {
             cardTransferButton.setVisibility(View.VISIBLE);
             cardTransferButton.setOnClickListener(onClickListenerTransfer);
         } else {
             cardTransferButton.setVisibility(View.INVISIBLE);
         }
 
-        if (asset.isSaleable()) {
+        if (asset.isSaleable() && asset.getStatus().equals(Asset.Status.CONFIRMED)) {
             cardSellButton.setVisibility(View.VISIBLE);
             cardSellButton.setOnClickListener(onClickListenerSell);
         } else {
             cardSellButton.setVisibility(View.INVISIBLE);
         }
 
-        cardAppropriateButton.setOnClickListener(onClickListenerAppropriate);
-
-        cardTransactionsButton.setOnClickListener(onClickListenerTransactions);
+        if (asset.getStatus().equals(Asset.Status.CONFIRMED)) {
+            cardAppropriateButton.setVisibility(View.VISIBLE);
+            cardAppropriateButton.setOnClickListener(onClickListenerAppropriate);
+            cardTransactionsButton.setOnClickListener(onClickListenerTransactions);
+        } else {
+            cardAppropriateButton.setVisibility(View.INVISIBLE);
+        }
     }
 
     public ImageButton getCardRedeemButton() {
