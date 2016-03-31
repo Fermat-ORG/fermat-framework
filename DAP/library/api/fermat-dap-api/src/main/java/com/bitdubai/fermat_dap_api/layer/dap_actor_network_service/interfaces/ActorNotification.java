@@ -37,4 +37,7 @@ public interface ActorNotification {
     long getSentDate();
 
     BlockchainNetworkType getBlockchainNetworkType();
+
+    String getMessageXML();
+
 }

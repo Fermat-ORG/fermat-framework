@@ -86,8 +86,8 @@ public class ConstructionTest {
                 customerBrokerPurchaseNegotiation,
                 customerBrokerSaleNegotiation,
                 customerBrokerPurchaseNegotiationManager,
-                customerBrokerSaleNegotiationManager
-        );
+                customerBrokerSaleNegotiationManager,
+                broadcaster);
         assertThat(testObj1).isNotNull();
 
     }

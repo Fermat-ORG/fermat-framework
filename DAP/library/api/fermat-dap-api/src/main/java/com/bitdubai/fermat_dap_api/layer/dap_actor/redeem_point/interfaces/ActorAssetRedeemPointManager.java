@@ -4,8 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDisconnectAssetUserActorException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantConnectToActorAssetException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantDisconnectAssetActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantCreateActorRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
@@ -105,13 +105,15 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
 
     List<ActorAssetRedeemPoint> getAllRedeemPointActorConnectedForIssuer(String issuerPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetRedeemPointActorsException;
 
+    void updateOfflineRedeemPointRegisterInNetworkService(List<ActorAssetRedeemPoint> actorAssetUsers) throws CantGetAssetRedeemPointActorsException;
+
     /**
      * The method <code>sendMessage</code> Stablish Connection
      * with Requester and Lists Issuers Delivered
      *
-     * @throws CantConnectToActorAssetUserException
+     * @throws CantConnectToActorAssetException
      */
-    void sendMessage(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToActorAssetUserException;
+    void sendMessage(ActorAssetRedeemPoint requester, List<ActorAssetIssuer> actorAssetIssuers) throws CantConnectToActorAssetException;
 
     void updateRedeemPointDAPConnectionStateActorNetworkService(String actorPublicKey, DAPConnectionState state) throws CantUpdateRedeemPointException, RedeemPointNotFoundException;
 
@@ -157,10 +159,10 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
      * The method <code>disconnectToActorAssetRedeemPoint</code> disconnect an intra user from the connections registry
 //     * @param actorUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
      * @param actorUserToDisconnectPublicKey The public key of the intra user to disconnect as connection
-     * @throws CantDisconnectAssetUserActorException
+     * @throws CantDisconnectAssetActorException
      */
 //    void disconnectToActorAssetRedeemPoint(String actorUserLoggedInPublicKey, String actorUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException;
-    void disconnectToActorAssetRedeemPoint(ActorAssetRedeemPoint actorUserToDisconnectPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetUserActorException;
+    void disconnectToActorAssetRedeemPoint(String actorUserToDisconnectPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantDisconnectAssetActorException;
 
 
     void receivingActorAssetRedeemRequestConnection(String actorAssetUserLoggedInPublicKey,
@@ -170,11 +172,10 @@ public interface ActorAssetRedeemPointManager extends FermatManager {
 
     /**
      * The method <code>cancelActorAssetRedeem</code> cancels an intra user from the connections registry
-     * @param actorAssetUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
      * @param actorAssetUserToCancelPublicKey The public key of the intra user to cancel as connection
-     * @throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCancelIntraWalletUserException
+     * @throws CantCancelConnectionActorAssetException
      */
-    void cancelActorAssetRedeem(String actorAssetUserLoggedInPublicKey, String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException;
+    void cancelActorAssetRedeem(String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException;
 
     /**
      * The method <code>getWaitingYourConnectionActorAssetRedeem</code> shows the list of all intra users

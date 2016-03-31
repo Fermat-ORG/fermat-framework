@@ -1,9 +1,11 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantClearCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSaveCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
@@ -52,6 +54,14 @@ public class CryptoBrokerWalletSettingImpl implements CryptoBrokerWalletSetting 
      * {@inheritDoc}
      */
     @Override
+    public void clearCryptoBrokerWalletSpreadSetting() throws CantClearCryptoBrokerWalletSettingException {
+            cryptoBrokerWalletDatabaseDao.clearCryptoBrokerWalletSpreadSetting();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public CryptoBrokerWalletSettingSpread getCryptoBrokerWalletSpreadSetting() throws CantGetCryptoBrokerWalletSettingException {
         return cryptoBrokerWalletDatabaseDao.getCryptoBrokerWalletSpreadSetting();
     }
@@ -68,6 +78,16 @@ public class CryptoBrokerWalletSettingImpl implements CryptoBrokerWalletSetting 
      * {@inheritDoc}
      */
     @Override
+    public void clearCryptoBrokerWalletAssociatedSetting(Platforms platform) throws CantClearCryptoBrokerWalletSettingException {
+         cryptoBrokerWalletDatabaseDao.clearCryptoBrokerWalletAssociatedSetting(platform);
+    }
+
+
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public List<CryptoBrokerWalletAssociatedSetting> getCryptoBrokerWalletAssociatedSettings() throws CantGetCryptoBrokerWalletSettingException {
         return cryptoBrokerWalletDatabaseDao.getCryptoBrokerWalletAssociatedSettings();
     }
@@ -78,6 +98,14 @@ public class CryptoBrokerWalletSettingImpl implements CryptoBrokerWalletSetting 
     @Override
     public void saveCryptoBrokerWalletProviderSetting(CryptoBrokerWalletProviderSetting cryptoBrokerWalletProviderSetting) throws CantSaveCryptoBrokerWalletSettingException {
         cryptoBrokerWalletDatabaseDao.saveCryptoBrokerWalletProviderSetting(cryptoBrokerWalletProviderSetting);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void clearCryptoBrokerWalletProviderSetting() throws CantClearCryptoBrokerWalletSettingException {
+        cryptoBrokerWalletDatabaseDao.clearCryptoBrokerWalletProviderSetting();
     }
 
     /**

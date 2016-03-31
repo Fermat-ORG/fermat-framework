@@ -77,6 +77,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -849,19 +850,30 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
             CommunicationNetworkServiceLocal communicationNetworkServiceLocal = communicationNetworkServiceConnectionManager.getNetworkServiceLocalInstance(destination.getIdentityPublicKey());
 
             if (communicationNetworkServiceLocal != null) {
-
+                System.out.println("*** 12345 case 7:send msg in NS P2P layer active connection" + new Timestamp(System.currentTimeMillis()));
                 //Send the message
-                communicationNetworkServiceLocal.sendMessage(sender.getIdentityPublicKey(), messageContent);
+                communicationNetworkServiceLocal.sendMessage(
+                        sender.getIdentityPublicKey()    ,
+                        sender.getPlatformComponentType(),
+                        sender.getNetworkServiceType()   ,
+                        messageContent
+                );
 
             } else {
-
+                System.out.println("*** 12345 case 6:send msg in NS P2P layer not active connection" + new Timestamp(System.currentTimeMillis()));
                 /*
                  * Created the message
                  */
-                FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(sender.getIdentityPublicKey(),//Sender
-                        destination.getIdentityPublicKey(), //Receiver
-                        messageContent, //Message Content
-                        FermatMessageContentType.TEXT);//Type
+                FermatMessage fermatMessage = FermatMessageCommunicationFactory.constructFermatMessage(
+                        sender.getIdentityPublicKey(),          //Sender
+                        sender.getPlatformComponentType(),      //Sender Type
+                        sender.getNetworkServiceType()   ,      //Sender NS Type
+                        destination.getIdentityPublicKey(),     //Receiver
+                        destination.getPlatformComponentType(), //Receiver Type
+                        destination.getNetworkServiceType()   , //Receiver NS Type
+                        messageContent,                         //Message Content
+                        FermatMessageContentType.TEXT           //Type
+                );
 
                 /*
                  * Configure the correct status
@@ -1071,66 +1083,26 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
 
     }
 
-    /**
-     * This method is automatically called when the CommunicationSupervisorPendingMessagesAgent is trying to request
-     * a new connection for a message pending to send. This method need construct the profile specific to
-     * the network service work.
-     *
-     * Example: Is the network service work with actor this profile has to mach with the actor.
-     *
-     * <code>
-     *
-     *     @overray
-     *     public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeySender) {
-     *
-     *         return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-     *                                                       .constructPlatformComponentProfileFactory(identityPublicKeySender,
-     *                                                                                                 actor.getAlias(),
-     *                                                                                                 actor.getName(),
-     *                                                                                                 NetworkServiceType.UNDEFINED,
-     *                                                                                                 PlatformComponentType.ACTOR_INTRA_USER,
-     *                                                                                                 "");
-     *
-     *     }
-     *
-     * </code>
-     *
-     * @param identityPublicKeySender
-     * @return PlatformComponentProfile
-     */
-    public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender) {
-        return null;
+    public PlatformComponentProfile getProfileSenderToRequestConnection(final String                senderPublicKey,
+                                                                        final NetworkServiceType    senderNsType   ,
+                                                                        final PlatformComponentType senderType     ) {
+
+        return this.getCommunicationsClientConnection().constructBasicPlatformComponentProfileFactory(
+                senderPublicKey,
+                senderNsType   ,
+                senderType
+        );
     }
 
-    /**
-     * This method is automatically called when the CommunicationSupervisorPendingMessagesAgent is trying to request
-     * a new connection for a message pending to send. This method need construct the profile specific to
-     * the network service work.
-     *
-     * Example: Is the network service work with actor this profile has to mach with the actor.
-     *
-     * <code>
-     *
-     *     @overray
-     *     public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
-     *
-     *         return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-     *                                                       .constructPlatformComponentProfileFactory(identityPublicKeyDestination,
-     *                                                                                                 actor.getAlias(),
-     *                                                                                                 actor.getName(),
-     *                                                                                                 NetworkServiceType.UNDEFINED,
-     *                                                                                                 PlatformComponentType.ACTOR_INTRA_USER,
-     *                                                                                                 "");
-     *
-     *     }
-     *
-     * </code>
-     *
-     * @param identityPublicKeyDestination
-     * @return PlatformComponentProfile
-     */
-    public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
-        return null;
+    public PlatformComponentProfile getProfileDestinationToRequestConnection(final String                receiverPublicKey,
+                                                                             final NetworkServiceType    receiverNsType   ,
+                                                                             final PlatformComponentType receiverType     ) {
+
+        return this.getCommunicationsClientConnection().constructBasicPlatformComponentProfileFactory(
+                receiverPublicKey,
+                receiverNsType   ,
+                receiverType
+        );
     }
 
     /**

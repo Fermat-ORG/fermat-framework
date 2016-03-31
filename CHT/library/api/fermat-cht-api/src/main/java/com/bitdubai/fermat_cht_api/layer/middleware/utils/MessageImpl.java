@@ -25,16 +25,18 @@ public class MessageImpl implements Message {
     public MessageImpl(){}
 
     public MessageImpl(
+            UUID chatId,
             ChatMetadata chatMetadata,
             MessageStatus messageStatus,
             TypeMessage typeMessage,
             UUID contactId
     ){
         messageId=chatMetadata.getMessageId();
-        chatId=chatMetadata.getChatId();
+        this.chatId=chatId;
         message=chatMetadata.getMessage();
         status=messageStatus;
         type=typeMessage;
+//        messageDate=new Timestamp(System.currentTimeMillis());
         messageDate=new Timestamp(
                 chatMetadata.getDate().getTime());
         this.contactId=contactId;

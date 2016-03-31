@@ -18,7 +18,6 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interface
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
-import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -91,7 +90,7 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
 
     //@Override
     public void openContract(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
-                             FiatIndex fiatIndex) throws CantOpenContractException, UnexpectedResultReturnedFromDatabaseException {
+                             float referencePrice) throws CantOpenContractException, UnexpectedResultReturnedFromDatabaseException {
 
         contractType= ContractType.SALE;
         try{
@@ -99,8 +98,10 @@ public class OpenContractBrokerContractManager extends AbstractOpenContract {
             ContractSaleRecord contractRecord=createSaleContractRecord(
                     negotiationClauses,
                     customerBrokerSaleNegotiation,
-                    fiatIndex
+                    referencePrice
                     );
+            /*TODO: INICIAR COMO pausado el estado del contrato (la open contract business transaction es la responsable de iniciar el contrato en
+              TODO: PENDING_PAYMENT una vez se haya validado el hash y los datos del contrato*/
             contractRecord.setStatus(ContractStatus.PENDING_PAYMENT);
             this.openContractBusinessTransactionDao.persistContractRecord(
                     contractRecord,

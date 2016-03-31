@@ -2,6 +2,7 @@ package com.mati.fermat_preference_settings.drawer;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.CompoundButton;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
@@ -10,7 +11,7 @@ import com.mati.fermat_preference_settings.drawer.dialog.SettingsDialog;
 import com.mati.fermat_preference_settings.drawer.holders.SettingEditTextViewHolder;
 import com.mati.fermat_preference_settings.drawer.holders.SettingSwitchViewHolder;
 import com.mati.fermat_preference_settings.drawer.holders.SettingTextOpenDialogViewHolder;
-import com.mati.fermat_preference_settings.drawer.holders.SettingsTextPlusRadio;
+import com.mati.fermat_preference_settings.drawer.holders.SettingsTextPlusRadioHolder;
 import com.mati.fermat_preference_settings.drawer.interfaces.DialogCallback;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
 import com.mati.fermat_preference_settings.drawer.listeners.OnClickListenerSettings;
@@ -61,7 +62,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 fermatViewHolder = new SettingEditTextViewHolder(itemView,type);
                 break;
             case TEXT_PLUS_RADIO_TYPE:
-                fermatViewHolder = new SettingEditTextViewHolder(itemView,type);
+                fermatViewHolder = new SettingsTextPlusRadioHolder(itemView,type);
                 break;
         }
         return fermatViewHolder;
@@ -85,17 +86,25 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
     }
 
     @Override
-    protected void bindHolder(FermatViewHolder holder, PreferenceSettingsItem data, int position) {
-
-
+    protected void bindHolder(FermatViewHolder holder, PreferenceSettingsItem data, final int position) {
 
         switch (holder.getHolderType()){
             case SWITH_TYPE:
                 SettingSwitchViewHolder settingSwitchViewHolder = (SettingSwitchViewHolder) holder;
-                PreferenceSettingsSwithItem preferenceSettingsSwithItem = (PreferenceSettingsSwithItem) data;
+                final PreferenceSettingsSwithItem preferenceSettingsSwithItem = (PreferenceSettingsSwithItem) data;
                 settingSwitchViewHolder.getSettings_switch().setChecked(preferenceSettingsSwithItem.getSwitchChecked());
                 settingSwitchViewHolder.getTextView().setText(preferenceSettingsSwithItem.getText());
-                settingSwitchViewHolder.getSettings_switch().setOnClickListener(new OnClickListenerSettings(this,preferenceSettingsSwithItem,position));
+               // settingSwitchViewHolder.getSettings_switch().setOnClickListener(new OnClickListenerSettings(this, preferenceSettingsSwithItem, position));
+
+                settingSwitchViewHolder.getSettings_switch().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView,
+                                             boolean isChecked) {
+                    getCallback().optionChanged(preferenceSettingsSwithItem, position, isChecked);
+
+                }
+            });
                 break;
             case OPEN_DIALOG_TEXT_TYPE:
                 SettingTextOpenDialogViewHolder settingTextOpenDialogViewHolder = (SettingTextOpenDialogViewHolder) holder;
@@ -116,13 +125,30 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 settingEditTextViewHolder.getTextView().setText(preferenceSettingsEditText.getTitleText());
                 settingEditTextViewHolder.getSettingsEditText().setHint(preferenceSettingsEditText.getEditHint());
                 settingEditTextViewHolder.getSettingsEditText().setText(preferenceSettingsEditText.getEditText());
-                settingEditTextViewHolder.getSettingsEditText().setOnClickListener(new OnClickListenerSettings(this,preferenceSettingsEditText,position));
+                //settingEditTextViewHolder.getSettingsEditText().setOnClickListener(new OnClickListenerSettings(this, preferenceSettingsEditText, position));
+
+                settingEditTextViewHolder.getSettingsEditText().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getCallback().optionSelected(preferenceSettingsEditText, position);
+                    }
+                });
+                settingEditTextViewHolder.getSettingsEditText().setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                    @Override
+                    public void onFocusChange(View v, boolean hasFocus) {
+                        if (hasFocus) {
+                            getCallback().optionSelected(preferenceSettingsEditText, position);
+                        }
+                    }
+                });
+
+
                 break;
             case TEXT_PLUS_RADIO_TYPE:
-                SettingsTextPlusRadio settingsTextPlusRadio = (SettingsTextPlusRadio) holder;
+                SettingsTextPlusRadioHolder settingsTextPlusRadioHolder = (SettingsTextPlusRadioHolder) holder;
                 final PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) data;
-                settingsTextPlusRadio.getRadio().setChecked(preferenceSettingsTextPlusRadioItem.isRadioTouched());
-                settingsTextPlusRadio.getRadio().setText(preferenceSettingsTextPlusRadioItem.getText());
+                settingsTextPlusRadioHolder.getRadio().setChecked(preferenceSettingsTextPlusRadioItem.isRadioTouched());
+                settingsTextPlusRadioHolder.getRadio().setText(preferenceSettingsTextPlusRadioItem.getText());
                 break;
         }
 
@@ -150,10 +176,17 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
 
     @Override
     public void optionSelected(PreferenceSettingsItem preferenceSettingsItem, int position) {
-        fragmentWeakReference.get().onSettingsTouched(preferenceSettingsItem,position);
+        fragmentWeakReference.get().onSettingsTouched(preferenceSettingsItem, position);
+    }
+
+    @Override
+    public void optionChanged(PreferenceSettingsItem preferenceSettingsItem, int position, boolean isChecked) {
+        fragmentWeakReference.get().onSettingsChanged(preferenceSettingsItem, position, isChecked);
     }
 
     public void clear(){
         fragmentWeakReference.clear();
     }
+
+
 }

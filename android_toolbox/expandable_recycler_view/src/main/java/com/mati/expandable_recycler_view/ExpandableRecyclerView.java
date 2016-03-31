@@ -1,5 +1,6 @@
 package com.mati.expandable_recycler_view;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
@@ -8,6 +9,8 @@ import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerA
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentListItem;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
+import com.mati.expandable_recycler_view.holder.ChildViewHolder;
+import com.mati.expandable_recycler_view.holder.GrouperParentViewHolder;
 
 import java.util.List;
 
@@ -15,6 +18,10 @@ import java.util.List;
  * Created by mati on 2016.02.23..
  */
 public class ExpandableRecyclerView<M extends ParentListItem,S extends FermatSession,RE extends ResourceProviderManager> extends FermatWalletExpandableListFragment<M,S,RE> {
+
+
+    private ExpandableAdapter expandableAdapter;
+    private boolean hasMenu;
 
 
 
@@ -28,17 +35,17 @@ public class ExpandableRecyclerView<M extends ParentListItem,S extends FermatSes
 
     @Override
     protected int getLayoutResource() {
-        return 0;//R.layout.base_main;
+        return R.layout.base_main;
     }
 
     @Override
     protected int getSwipeRefreshLayoutId() {
-        return 0;
+        return R.id.swipe_refresh;
     }
 
     @Override
     protected int getRecyclerLayoutId() {
-        return 0;
+        return R.id.open_contracts_recycler_view;
     }
 
     @Override
@@ -63,7 +70,7 @@ public class ExpandableRecyclerView<M extends ParentListItem,S extends FermatSes
 
     @Override
     public ExpandableRecyclerAdapter getAdapter() {
-        return null;
+        return expandableAdapter;
     }
 
     @Override
@@ -71,10 +78,40 @@ public class ExpandableRecyclerView<M extends ParentListItem,S extends FermatSes
         return null;
     }
 
-    public static class Builder{
+    public void setAdapter(ExpandableAdapter adapter) {
+        this.expandableAdapter = adapter;
+    }
 
+    public static class Builder<GROUPER_ITEM extends ParentListItem>{
+
+        private Context context;
         private boolean hasMenu = false;
+        private GrouperParentViewHolder parentHolder;
+        private ChildViewHolder childHolder;
+        private List<GROUPER_ITEM> grouperItemList;
 
+
+        public Builder setHasMenu(boolean hasMenu) {
+            this.hasMenu = hasMenu;
+            return this;
+        }
+
+        public Builder setChildHolder(ChildViewHolder childHolder) {
+            this.childHolder = childHolder;
+            return this;
+        }
+
+        public Builder setParentHolder(GrouperParentViewHolder parentHolder) {
+            this.parentHolder = parentHolder;
+            return this;
+        }
+
+        public ExpandableRecyclerView build() {
+            ExpandableRecyclerView expandableRecyclerView = new ExpandableRecyclerView();
+            ExpandableAdapter expandableAdapter = new ExpandableAdapter(context, grouperItemList, context.getResources(), parentHolder, childHolder);
+            expandableRecyclerView.setAdapter(expandableAdapter);
+            return expandableRecyclerView;
+        }
 
     }
 

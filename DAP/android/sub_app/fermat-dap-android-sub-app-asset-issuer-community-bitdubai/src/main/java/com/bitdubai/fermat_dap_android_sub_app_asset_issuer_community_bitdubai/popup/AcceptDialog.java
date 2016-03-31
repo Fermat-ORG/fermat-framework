@@ -15,11 +15,15 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.models.ActorIssuer;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.SessionConstantsAssetIssuerCommunity;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Added by Jinmy Bohorquez 09/02/2016
@@ -66,8 +70,8 @@ public class AcceptDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
 
-        title.setText("Connect");
-        description.setText("Do you want to accept");
+        title.setText(R.string.connect);
+        description.setText(R.string.connection_request_accept);
         userName.setText(actorIssuer.getRecord().getName());
 
     }
@@ -88,17 +92,13 @@ public class AcceptDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
 
         if (i == R.id.positive_button) {
             try {
-                if (actorIssuer != null) { //&& identity != null) {
-//
-                    getSession().getModuleManager().acceptActorAssetIssuer(
-                            identity.getPublicKey(),//USER LOCAL
-                            actorIssuer.getRecord().getActorPublicKey()//USER OUTSIDE
-                    );
-                    getSession().setData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_ACCEPTED, Boolean.TRUE);
-                    Toast.makeText(getContext(), actorIssuer.getRecord().getName() + " Accepted connection request", Toast.LENGTH_SHORT).show();
-                } else {
-                    super.toastDefaultError();
-                }
+                //&& identity != null) {
+                getSession().getModuleManager().acceptActorAssetIssuer(
+                        identity.getPublicKey(),//ACTOR INSIDE/LOCAL
+                        actorIssuer.getRecord());// ACTOR OUTSIDE/EXTERNAL
+                getSession().setData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_ACCEPTED, Boolean.TRUE);
+                //Toast.makeText(getContext(), actorIssuer.getRecord().getName() + " " + R.string.connection_request_accepted, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(),"Connection has been accepted" , Toast.LENGTH_SHORT).show();
                 dismiss();
             } catch (final CantAcceptActorAssetUserException e) {
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
@@ -108,15 +108,14 @@ public class AcceptDialog extends FermatDialog<AssetIssuerCommunitySubAppSession
 
         } else if (i == R.id.negative_button) {
             try {
-                if (actorIssuer != null) {  //&& identity != null)
-                    getSession().getModuleManager().denyConnectionActorAssetIssuer(
-                            identity.getPublicKey(),
-                            actorIssuer.getRecord().getActorPublicKey());
-                    getSession().setData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_DENIED, Boolean.FALSE);
-                    Toast.makeText(getContext(), actorIssuer.getRecord().getName() + " Deny connection request", Toast.LENGTH_SHORT).show();
-                } else {
-                    super.toastDefaultError();
-                }
+                //&& identity != null)
+                getSession().getModuleManager().denyConnectionActorAssetIssuer(
+                        identity.getPublicKey(),//ACTOR INSIDE/LOCAL
+                        actorIssuer.getRecord());// ACTOR OUTSIDE/EXTERNAL
+//                getSession().setData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_DENIED, Boolean.FALSE);
+//                Toast.makeText(getContext(), actorIssuer.getRecord().getName() + " " + R.string.connection_request_deny, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext()," Connection has been denied" , Toast.LENGTH_SHORT).show();
+
                 dismiss();
             } catch (final CantDenyConnectionActorAssetException e) {
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);

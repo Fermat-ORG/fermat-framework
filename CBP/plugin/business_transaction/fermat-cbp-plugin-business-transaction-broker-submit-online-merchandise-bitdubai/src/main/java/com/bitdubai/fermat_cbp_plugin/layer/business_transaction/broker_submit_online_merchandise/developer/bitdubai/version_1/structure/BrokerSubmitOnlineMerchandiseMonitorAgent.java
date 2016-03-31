@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
@@ -67,6 +68,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -379,7 +381,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
                             ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED,
-                            Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE
+                            Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE, PlatformComponentType.ACTOR_CRYPTO_BROKER,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER
                     );
                     //Updating the business transaction record
                     pendingToSubmitNotificationRecord.setContractTransactionStatus(
@@ -401,7 +403,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
                             ContractTransactionStatus.CONFIRM_ONLINE_CONSIGNMENT,
-                            Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE
+                            Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,PlatformComponentType.ACTOR_CRYPTO_BROKER
                     );
                     //Updating the business transaction record
                     pendingToSubmitConfirmationRecord.setContractTransactionStatus(
@@ -591,6 +593,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
                                     contractHash,
                                     ContractStatus.MERCHANDISE_SUBMIT);
+                            Date date=new Date();
+                            brokerSubmitOnlineMerchandiseBusinessTransactionDao.
+                                    setCompletionDateByContractHash(contractHash, date.getTime());
                             raisePaymentConfirmationEvent(contractHash);
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
@@ -616,6 +621,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                                 customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
                                         contractHash,
                                         ContractStatus.PAYMENT_SUBMIT);
+                                Date date=new Date();
+                                brokerSubmitOnlineMerchandiseBusinessTransactionDao.
+                                        setCompletionDateByContractHash(contractHash, date.getTime());
                                 raisePaymentConfirmationEvent(contractHash);
                             }
                         }

@@ -384,10 +384,18 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
                 public void run() {
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyRequesting()),
-                                getProfileDestinationToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyResponding()),
+                                getProfileSenderToRequestConnection(
+                                        cryptoAddressRequest.getIdentityPublicKeyRequesting(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeRequesting())
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        cryptoAddressRequest.getIdentityPublicKeyResponding(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeResponding())
+                                ),
                                 buildJsonReceivedMessage(cryptoAddressRequest));
-                    } catch (CantSendMessageException e) {
+                    } catch (CantSendMessageException | InvalidParameterException e) {
                         reportUnexpectedException(e);
                     }
                 }
@@ -539,44 +547,6 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
         checkFailedDeliveryTime(remoteParticipant.getIdentityPublicKey());
     }
 
-    @Override
-    public PlatformComponentProfile getProfileSenderToRequestConnection(String identityPublicKeySender) {
-        try {
-
-            Actors actors = cryptoAddressesNetworkServiceDao.getActorTypeFromRequest(identityPublicKeySender);
-            return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                    .constructPlatformComponentProfileFactory(identityPublicKeySender,
-                            "sender_alias",
-                            "sender_name",
-                            NetworkServiceType.UNDEFINED,
-                            platformComponentTypeSelectorByActorType(actors),
-                            "");
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public PlatformComponentProfile getProfileDestinationToRequestConnection(String identityPublicKeyDestination) {
-        try {
-
-            Actors actors = cryptoAddressesNetworkServiceDao.getActorTypeToRequest(identityPublicKeyDestination);
-            return wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()
-                    .constructPlatformComponentProfileFactory(identityPublicKeyDestination,
-                            "destination_alias",
-                            "destionation_name",
-                            NetworkServiceType.UNDEFINED,
-                            platformComponentTypeSelectorByActorType(actors),
-                            "");
-
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     private PlatformComponentType platformComponentTypeSelectorByActorType(final Actors type) throws InvalidParameterException {
 
         switch (type) {
@@ -613,10 +583,18 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
                     public void run() {
                         try {
                             sendNewMessage(
-                                    getProfileSenderToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyRequesting()),
-                                    getProfileDestinationToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyResponding()),
+                                    getProfileSenderToRequestConnection(
+                                            cryptoAddressRequest.getIdentityPublicKeyRequesting(),
+                                            NetworkServiceType.UNDEFINED,
+                                            platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeRequesting())
+                                    ),
+                                    getProfileDestinationToRequestConnection(
+                                            cryptoAddressRequest.getIdentityPublicKeyResponding(),
+                                            NetworkServiceType.UNDEFINED,
+                                            platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeResponding())
+                                    ),
                                     buildJsonRequestMessage(cryptoAddressRequest));
-                        } catch (CantSendMessageException e) {
+                        } catch (CantSendMessageException | InvalidParameterException e) {
                             reportUnexpectedException(e);
                         }
                     }
@@ -750,10 +728,18 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
                 public void run() {
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(identityPublicKeyRequesting),
-                                getProfileDestinationToRequestConnection(identityPublicKeyResponding),
+                                getProfileSenderToRequestConnection(
+                                        cryptoAddressRequest.getIdentityPublicKeyRequesting(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeRequesting())
+                                ),
+                                getProfileDestinationToRequestConnection(
+                                        cryptoAddressRequest.getIdentityPublicKeyResponding(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeResponding())
+                                ),
                                 buildJsonRequestMessage(cryptoAddressRequest));
-                    } catch (CantSendMessageException e) {
+                    } catch (CantSendMessageException | InvalidParameterException e) {
                         reportUnexpectedException(e);
                     }
                 }
@@ -797,10 +783,18 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
                 public void run() {
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyResponding()),
-                                getProfileDestinationToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyRequesting()),
+                                getProfileDestinationToRequestConnection(
+                                        cryptoAddressRequest.getIdentityPublicKeyResponding(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeResponding())
+                                ),
+                                getProfileSenderToRequestConnection(
+                                        cryptoAddressRequest.getIdentityPublicKeyRequesting(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeRequesting())
+                                ),
                                 buildJsonAcceptMessage(cryptoAddressRequest));
-                    } catch (CantSendMessageException e) {
+                    } catch (CantSendMessageException | InvalidParameterException e) {
                         reportUnexpectedException(e);
                     }
                 }
@@ -945,10 +939,18 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
                 public void run() {
                     try {
                         sendNewMessage(
-                                getProfileSenderToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyResponding()),
-                                getProfileDestinationToRequestConnection(cryptoAddressRequest.getIdentityPublicKeyRequesting()),
+                                getProfileDestinationToRequestConnection(
+                                        cryptoAddressRequest.getIdentityPublicKeyResponding(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeResponding())
+                                ),
+                                getProfileSenderToRequestConnection(
+                                        cryptoAddressRequest.getIdentityPublicKeyRequesting(),
+                                        NetworkServiceType.UNDEFINED,
+                                        platformComponentTypeSelectorByActorType(cryptoAddressRequest.getIdentityTypeRequesting())
+                                ),
                                 buildJsonDenyMessage(cryptoAddressRequest));
-                    } catch (CantSendMessageException e) {
+                    } catch (CantSendMessageException | InvalidParameterException e) {
                         reportUnexpectedException(e);
                     }
                 }

@@ -42,11 +42,32 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
         try {
             holder.name.setText(String.format("%s", data.getName()));
             if (data.getCryptoAddress() != null) {
-                holder.connectionState.setVisibility(View.VISIBLE);
+                holder.connectedStateConnected.setVisibility(View.VISIBLE);
+                holder.connectedStateDenied.setVisibility(View.GONE);
+                holder.connectedStateWaiting.setVisibility(View.GONE);
                 holder.connect.setVisibility(View.GONE);
                 //holder.crypto.setText("CryptoAddress: YES");
             } else {
-                holder.connectionState.setVisibility(View.GONE);
+                switch (data.getDapConnectionState()){
+                    case CONNECTING:
+                    case PENDING_LOCALLY:
+                    case PENDING_REMOTELY:
+                        holder.connectedStateWaiting.setVisibility(View.VISIBLE);
+                        holder.connectedStateDenied.setVisibility(View.GONE);
+                        break;
+                    case DENIED_LOCALLY:
+                    case DENIED_REMOTELY:
+                    case CANCELLED_LOCALLY:
+                    case CANCELLED_REMOTELY:
+                        holder.connectedStateWaiting.setVisibility(View.GONE);
+                        holder.connectedStateDenied.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        holder.connectedStateWaiting.setVisibility(View.GONE);
+                        holder.connectedStateDenied.setVisibility(View.GONE);
+
+                }
+                holder.connectedStateConnected.setVisibility(View.GONE);
                 holder.connect.setVisibility(View.VISIBLE);
                 //holder.crypto.setText("CryptoAddress: NO");
             }
@@ -61,6 +82,14 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
             }
             if (data.getDapConnectionState() == DAPConnectionState.CONNECTING) {
                 holder.status.setText(R.string.status_connecting);
+            }
+
+            if (data.getDapConnectionState() == DAPConnectionState.DENIED_LOCALLY || data.getDapConnectionState() == DAPConnectionState.DENIED_REMOTELY) {
+                holder.status.setText(R.string.status_denied);
+            }
+
+            if (data.getDapConnectionState() == DAPConnectionState.CANCELLED_LOCALLY || data.getDapConnectionState() == DAPConnectionState.CANCELLED_REMOTELY) {
+                holder.status.setText(R.string.status_canceled);
             }
 
             holder.connect.setChecked(data.selected);
@@ -91,6 +120,10 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
 
     public void setAdapterChangeListener(AdapterChangeListener<Actor> adapterChangeListener) {
         this.adapterChangeListener = adapterChangeListener;
+    }
+
+    public AdapterChangeListener<Actor> getAdapterChangeListener() {
+        return adapterChangeListener;
     }
 
     public int getSize() {

@@ -7,11 +7,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.ActorAssetUserGroupAlreadyExistException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantAssetUserActorNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantConnectToActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantConnectToActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantCreateAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDeleteAssetUserGroupException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantDisconnectAssetUserActorException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.exceptions.CantDisconnectAssetActorException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantUpdateAssetUserGroupException;
@@ -78,6 +78,8 @@ public interface ActorAssetUserManager extends FermatManager {
      */
     void createActorAssetUserRegisterInNetworkService(List<ActorAssetUser> actorAssetUsers) throws CantCreateAssetUserActorException;
 
+    void updateOfflineUserRegisterInNetworkService(List<ActorAssetUser> actorAssetUsers) throws CantGetAssetUserActorsException;
+
     void createActorAssetUserRegisterInNetworkService(ActorAssetUser actorAssetUsers) throws CantCreateAssetUserActorException;
     /**
      * The method <code>getActorPublicKey</code> get All Information about Actor
@@ -113,9 +115,9 @@ public interface ActorAssetUserManager extends FermatManager {
      * The method <code>connectToActorAssetUser</code> Enable Connection
      * with Issuer (Requester) and Lists Users for get a CryptoAdress (Delivered)
      *
-     * @throws CantConnectToActorAssetUserException
+     * @throws CantConnectToActorAssetException
      */
-    void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers, BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetUserException;
+    void connectToActorAssetUser(DAPActor requester, List<ActorAssetUser> actorAssetUsers, BlockchainNetworkType blockchainNetworkType) throws CantConnectToActorAssetException;
 
     /**
      * The method <code>connectToActorAssetRedeemPoint</code> Enable Connection
@@ -151,7 +153,7 @@ public interface ActorAssetUserManager extends FermatManager {
      * @param actorAssetUserGroupMember
      * @throws CantCreateAssetUserGroupException
      */
-    void addAssetUserToGroup (ActorAssetUserGroupMember actorAssetUserGroupMember) throws CantCreateAssetUserGroupException;
+    void addAssetUserToGroup(ActorAssetUserGroupMember actorAssetUserGroupMember) throws CantCreateAssetUserGroupException;
 
     /**
      * The method <code>removeAssetUserFromGroup</code> Remove a user from group
@@ -174,7 +176,7 @@ public interface ActorAssetUserManager extends FermatManager {
      * @return
      * @throws CantGetAssetUserActorsException
      */
-    List<ActorAssetUser> getListActorAssetUserByGroups (String groupId, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException;
+    List<ActorAssetUser> getListActorAssetUserByGroups(String groupId, BlockchainNetworkType blockchainNetworkType) throws CantGetAssetUserActorsException;
 
     /**
      * The method <code>getListAssetUserGroupsByActorAssetUser</code> Returns a list of groups by asset user
@@ -207,10 +209,10 @@ public interface ActorAssetUserManager extends FermatManager {
      * @throws CantAskConnectionActorAssetException if something goes wrong.
      */
     void askActorAssetUserForConnection(String actorAssetUserIdentityToLinkPublicKey,
-                                        String actorAssetUserToAddName              ,
-                                        String actorAssetUserToAddPublicKey         ,
-                                        byte[] profileImage                         ,
-                                        BlockchainNetworkType blockchainNetworkType ) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException;
+                                        String actorAssetUserToAddName,
+                                        String actorAssetUserToAddPublicKey,
+                                        byte[] profileImage,
+                                        BlockchainNetworkType blockchainNetworkType) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException;
 
 
     /**
@@ -237,9 +239,9 @@ public interface ActorAssetUserManager extends FermatManager {
      * The method <code>connectToActorAssetUser</code> Enable Connection
      * with Issuer (Requester) and Lists Users for get a CryptoAdress (Delivered)
      *
-     * @throws CantConnectToActorAssetUserException
+     * @throws CantConnectToActorAssetException
      */
-    void disconnectToActorAssetUser(String userPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantDeleteRecordException, CantDisconnectAssetUserActorException;
+    void disconnectToActorAssetUser(String actorAssetToDisconnect, BlockchainNetworkType blockchainNetworkType) throws CantDeleteRecordException, CantDisconnectAssetActorException;
 
 //    /**
 //     * The method <code>disconnectIntraWalletUser</code> disconnect an intra user from the connections registry
@@ -257,11 +259,10 @@ public interface ActorAssetUserManager extends FermatManager {
 
     /**
      * The method <code>cancelIntraWalletUser</code> cancels an intra user from the connections registry
-     * @param actorAssetUserLoggedInPublicKey The public key of the intra user identity that is the receptor of the request
      * @param actorAssetUserToCancelPublicKey The public key of the intra user to cancel as connection
-     * @throws com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCancelIntraWalletUserException
+     * @throws CantCancelConnectionActorAssetException
      */
-    void cancelActorAssetUser(String actorAssetUserLoggedInPublicKey, String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException;
+    void cancelActorAssetUser(String actorAssetUserToCancelPublicKey) throws CantCancelConnectionActorAssetException;
 
     /**
      * The method <code>getWaitingYourAcceptanceIntraWalletUsers</code> shows the list of all intra users

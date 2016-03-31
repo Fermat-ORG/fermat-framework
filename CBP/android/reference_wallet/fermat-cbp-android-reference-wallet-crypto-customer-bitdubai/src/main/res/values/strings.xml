@@ -29,8 +29,8 @@
     <string name="ccw_amount_title">Amount: </string>
     <string name="ccw_bank">Bank</string>
     <string name="ccw_bank_name">Bank Name</string>
-    <string name="ccw_bank_account_customer">Bank Account Customer</string>
-    <string name="ccw_bank_account_broker">Bank Account Broker</string>
+    <string name="ccw_bank_account_customer">Customer\'s Bank Account</string>
+    <string name="ccw_bank_account_broker">Broker\'s Bank Account</string>
     <string name="ccw_bank_account_title">Bank Account:</string>
     <string name="ccw_broker_exchange_rate_for_selling_item">%1$s/%2$s: %3$s</string>
     <string name="ccw_broker_information">Broker Information</string>
@@ -38,11 +38,11 @@
     <string name="ccw_cancellation_negotiation">Cancellation Negotiation:</string>
     <string name="ccw_cancellation_reason_title">Cancellation Reason:</string>
     <string name="ccw_cash">Cash</string>
-    <string name="ccw_cash_place_to_delivery_broker">Place To Delivery Broker</string>
-    <string name="ccw_cash_place_to_delivery_customer">Place To Delivery Customer</string>
-    <string name="ccw_cash_place_to_delivery_title">Place To Delivery:</string>
-    <string name="ccw_date_to_delivery_broker">Date To Delivery Broker</string>
-    <string name="ccw_date_to_delivery_customer">Date To Delivery Customer</string>
+    <string name="ccw_cash_place_to_delivery_broker">Payment\'s Delivery Place</string>
+    <string name="ccw_cash_place_to_delivery_customer">Merchandise\'s Reception Place</string>
+    <string name="ccw_cash_place_to_deliver_title">Selected Location:</string>
+    <string name="ccw_date_to_delivery_broker">Date To Deliver Broker</string>
+    <string name="ccw_date_to_delivery_customer">Date To Deliver Customer</string>
     <string name="ccw_check_negotiation_details">Check Negotiation Details</string>
     <string name="ccw_city">City</string>
     <string name="ccw_contract_details_contract_title">SELLING BTC</string>
@@ -84,7 +84,9 @@
     <string name="ccw_select_identity_warning_msg">Need to Select an Identity</string>
     <string name="ccw_selling_details">Selling %1$s %2$s</string>
     <string name="ccw_selling_merchandise">Selling %1$s</string>
-    <string name="ccw_select_providers_warning_msg">Need to Select at least ONE Provider</string>
+    <string name="ccw_same_currencies_providers_warning_msg">Currencies need to be different</string>
+    <string name="ccw_no_providers_for_chosen_currencies_msg">There are no providers available for the selected currencies</string>
+    <string name="ccw_select_providers_warning_msg">You need to select at least ONE Provider</string>
     <string name="ccw_select_stock_wallets_warning_msg">Need to Select at least ONE Wallet</string>
     <string name="ccw_select_stock_merchandise">Select a Stock Merchandise</string>
     <string name="ccw_set_identity_wizard_description">Please choose one identity to use in this wallet. This step can not be undone.</string>
@@ -189,4 +191,6 @@
     <string name="cbw_wizard_locations_dialog_body">Custom text support for dialog in the wizard identities help 2</string>
     <string name="cbw_wizard_locations_dialog_footer">To begin, choose an avatar below. You might change it later with any picture and your alias</string>
     <string name="cbw_wizard_locations_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
+    <string name="ccw_insert_note">Insert Note</string>
+    <string name="sending_to_the_broker">Sending to the Broker</string>
 </resources>

@@ -3,8 +3,11 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPNetworkService;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetExtendedPublicKeyContentMessage;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRegisterActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.asset_issuer.exceptions.CantRequestListActorAssetIssuerRegisteredException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptConnectionActorAssetException;
@@ -22,7 +25,7 @@ import java.util.UUID;
 /**
  * Created by franklin on 15/10/15.
  */
-public interface AssetIssuerActorNetworkServiceManager extends FermatManager, DAPNetworkService {
+public interface AssetIssuerActorNetworkServiceManager extends FermatManager {
     /**
      * Register the ActorAssetUser in the cloud server like online
      *
@@ -71,17 +74,17 @@ public interface AssetIssuerActorNetworkServiceManager extends FermatManager, DA
      * The method <code>acceptConnectionActorAsset</code> send an acceptance message of a connection request.
      *
      * @param actorAssetLoggedInPublicKey The public key of the actor asset accepting the connection request.
-     * @param ActorAssetToAddPublicKey    The public key of the actor asset to add
+     * @param actorAssetAccepted    The public key of the actor asset to add
      */
-    void acceptConnectionActorAsset(String actorAssetLoggedInPublicKey, String ActorAssetToAddPublicKey) throws CantAcceptConnectionActorAssetException;
+    void acceptConnectionActorAsset(String actorAssetLoggedInPublicKey, ActorAssetIssuer actorAssetAccepted) throws CantAcceptConnectionActorAssetException;
 
     /**
      * The method <code>denyConnectionActorAsset</code> send an rejection message of a connection request.
      *
      * @param actorAssetLoggedInPublicKey The public key of the actor asset accepting the connection request.
-     * @param actorAssetToRejectPublicKey The public key of the actor asset to add
+     * @param actorAssetReject The public key of the actor asset to add
      */
-    void denyConnectionActorAsset(String actorAssetLoggedInPublicKey, String actorAssetToRejectPublicKey) throws CantDenyConnectionActorAssetException;
+    void denyConnectionActorAsset(String actorAssetLoggedInPublicKey, ActorAssetIssuer actorAssetReject) throws CantDenyConnectionActorAssetException;
 
     /**
      * The method <coda>disconnectConnectionActorAsset</coda> disconnects and informs the other intra user the disconnecting
@@ -96,10 +99,10 @@ public interface AssetIssuerActorNetworkServiceManager extends FermatManager, DA
      * The method <coda>cancelConnectionActorAsset</coda> cancels and informs the other intra user the cancelling
      *
      * @param actorAssetLoggedInPublicKey The public key of the actor asset cancelling the connection
-     * @param actorAssetToCancelPublicKey The public key of the user to cancel
+     * @param actorAssetToCancel The public key of the user to cancel
      * @throws CantCancelConnectionActorAssetException
      */
-    void cancelConnectionActorAsset(String actorAssetLoggedInPublicKey, String actorAssetToCancelPublicKey) throws CantCancelConnectionActorAssetException;
+    void cancelConnectionActorAsset(String actorAssetLoggedInPublicKey, ActorAssetIssuer actorAssetToCancel) throws CantCancelConnectionActorAssetException;
 
     /**
      * The method <coda>getPendingNotifications</coda> returns all pending notifications
@@ -114,4 +117,8 @@ public interface AssetIssuerActorNetworkServiceManager extends FermatManager, DA
      */
     void confirmActorAssetNotification(UUID notificationID) throws CantConfirmActorAssetNotificationException;
 
-}
+    void buildSendMessage(ActorNotification actorNotification);
+
+    void responseExtended(ActorNotification actorNotification, ExtendedPublicKey extendedPublicKey);
+
+    }

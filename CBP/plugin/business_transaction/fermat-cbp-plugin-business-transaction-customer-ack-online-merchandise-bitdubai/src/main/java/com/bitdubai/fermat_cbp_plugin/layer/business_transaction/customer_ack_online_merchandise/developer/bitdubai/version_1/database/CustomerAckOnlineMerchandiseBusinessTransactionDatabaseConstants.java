@@ -30,6 +30,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants {
     public static final String ACK_ONLINE_MERCHANDISE_CRYPTO_ADDRESS_COLUMN_NAME = "crypto_address";
     public static final String ACK_ONLINE_MERCHANDISE_WALLET_PUBLIC_KEY_COLUMN_NAME = "wallet_public_key";
     public static final String ACK_ONLINE_MERCHANDISE_CRYPTO_AMOUNT_COLUMN_NAME = "crypto_amount";
+    public static final String ACK_ONLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME = "completion_date";
 
     public static final String ACK_ONLINE_MERCHANDISE_FIRST_KEY_COLUMN = "transaction_id";
 

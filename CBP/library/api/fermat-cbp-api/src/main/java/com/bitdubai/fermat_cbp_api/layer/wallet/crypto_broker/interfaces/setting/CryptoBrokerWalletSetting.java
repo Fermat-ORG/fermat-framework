@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantClearCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantSaveCryptoBrokerWalletSettingException;
 
@@ -18,6 +20,12 @@ public interface CryptoBrokerWalletSetting {
      */
     void saveCryptoBrokerWalletSpreadSetting(CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread) throws CantSaveCryptoBrokerWalletSettingException;
     /**
+     * This method clears the instance CryptoBrokerWalletSettingSpread
+     * @return
+     * @exception CantSaveCryptoBrokerWalletSettingException
+     */
+    void clearCryptoBrokerWalletSpreadSetting() throws CantClearCryptoBrokerWalletSettingException;
+    /**
      * This method load the instance saveCryptoBrokerWalletSpreadSetting
      * @param
      * @return CryptoBrokerWalletSettingSpread
@@ -32,6 +40,14 @@ public interface CryptoBrokerWalletSetting {
      * @exception CantSaveCryptoBrokerWalletSettingException
      */
     void saveCryptoBrokerWalletAssociatedSetting(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting) throws CantSaveCryptoBrokerWalletSettingException;
+
+    /**
+     * This method clears the instance CryptoBrokerWalletAssociatedSetting
+     * @return
+     * @exception CantSaveCryptoBrokerWalletSettingException
+     */
+    void clearCryptoBrokerWalletAssociatedSetting(Platforms platform) throws CantClearCryptoBrokerWalletSettingException;
+
     /**
      * This method load the list CryptoBrokerWalletProviderSetting
      * @param
@@ -47,6 +63,13 @@ public interface CryptoBrokerWalletSetting {
      * @exception CantSaveCryptoBrokerWalletSettingException
      */
     void saveCryptoBrokerWalletProviderSetting(CryptoBrokerWalletProviderSetting cryptoBrokerWalletProviderSetting) throws CantSaveCryptoBrokerWalletSettingException;
+
+    /**
+     * This method clears the instance CryptoBrokerWalletProviderSetting
+     * @return
+     * @exception CantSaveCryptoBrokerWalletSettingException
+     */
+    void clearCryptoBrokerWalletProviderSetting() throws CantClearCryptoBrokerWalletSettingException;
     /**
      * This method load the list CryptoBrokerWalletProviderSetting
      * @param

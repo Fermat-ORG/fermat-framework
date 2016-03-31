@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.event_handler;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
@@ -12,11 +11,12 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveEventExcept
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingChat;
+import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.IncomingNewChatStatusUpdate;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.events.OutgoingChat;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
+import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.structure.ChatMiddlewareMonitorAgent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -33,6 +33,7 @@ public class ChatMiddlewareRecorderService implements CHTService {
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
     private ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
     private ErrorManager errorManager;
+    private ChatMiddlewareMonitorAgent chatMiddlewareMonitorAgent;
     /**
      * TransactionService Interface member variables.
      */
@@ -41,8 +42,10 @@ public class ChatMiddlewareRecorderService implements CHTService {
     public ChatMiddlewareRecorderService(
             ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao,
             EventManager eventManager,
-            ErrorManager errorManager) throws CantStartServiceException {
+            ErrorManager errorManager,
+            ChatMiddlewareMonitorAgent chatMiddlewareMonitorAgent) throws CantStartServiceException {
         try {
+            this.chatMiddlewareMonitorAgent = chatMiddlewareMonitorAgent;
             setDatabaseDao(chatMiddlewareDatabaseDao);
             setEventManager(eventManager);
             this.errorManager=errorManager;
@@ -102,10 +105,34 @@ public class ChatMiddlewareRecorderService implements CHTService {
         //Logger LOG = Logger.getGlobal();
         //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
         try{
-            this.chatMiddlewareDatabaseDao.saveNewEvent(
-                    event.getEventType().getCode(),
-                    event.getSource().getCode(),
-                    event.getChatId());
+//            this.chatMiddlewareDatabaseDao.saveNewEvent(
+//                    event.getEventType().getCode(),
+//                    event.getSource().getCode(),
+//                    event.getChatId());
+            chatMiddlewareMonitorAgent.checkIncomingChat(event.getChatMetadata());
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantSaveEventException(
+                    exception,
+                    "Saving OutgoingChat event",
+                    "Unexpected Exception");
+        }
+
+        //LOG.info("CHECK THE DATABASE");
+    }
+
+    public void IncomingNewChatStatusUpdateEventHandler(IncomingNewChatStatusUpdate event) throws CantSaveEventException {
+        //Logger LOG = Logger.getGlobal();
+        //LOG.info("EVENT TEST, I GOT AN EVENT:\n"+event);
+        try{
+//            this.chatMiddlewareDatabaseDao.saveNewEvent(
+//                    event.getEventType().getCode(),
+//                    event.getSource().getCode(),
+//                    event.getChatId());
+            chatMiddlewareMonitorAgent.checkIncomingStatus(event.getChatMetadata());
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CHAT_MIDDLEWARE,
@@ -139,6 +166,13 @@ public class ChatMiddlewareRecorderService implements CHTService {
             fermatEventListener = eventManager.getNewListener(EventType.OUTGOING_CHAT);
             fermatEventHandler = new OutgoingChatEventHandler();
             ((OutgoingChatEventHandler) fermatEventHandler).setChatMiddlewareRecorderService(this);
+            fermatEventListener.setEventHandler(fermatEventHandler);
+            eventManager.addListener(fermatEventListener);
+            listenersAdded.add(fermatEventListener);
+
+            fermatEventListener = eventManager.getNewListener(EventType.INCOMING_STATUS);
+            fermatEventHandler = new IncomingNewChatStatusUpdateEventHandler();
+            ((IncomingNewChatStatusUpdateEventHandler) fermatEventHandler).setChatMiddlewareRecorderService(this);
             fermatEventListener.setEventHandler(fermatEventHandler);
             eventManager.addListener(fermatEventListener);
             listenersAdded.add(fermatEventListener);

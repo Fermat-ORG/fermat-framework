@@ -41,10 +41,7 @@ import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType.S
 final public class NegotiationWrapper {
 
     private CustomerBrokerNegotiationInformation negotiationInfo;
-    private ClauseStatus expirationTimeStatus;
-    private boolean expirationTimeConfirmButtonClicked;
     private Set<ClauseType> confirmedClauses;
-    private long previousExpirationTime;
 
     /**
      * Constructor that wrap the {@link CustomerBrokerNegotiationInformation} object offering handy methods to operate with,
@@ -55,10 +52,7 @@ final public class NegotiationWrapper {
      */
     public NegotiationWrapper(CustomerBrokerNegotiationInformation negotiationInfo, CryptoBrokerWalletSession appSession) {
         this.negotiationInfo = negotiationInfo;
-        expirationTimeStatus = DRAFT;
-        expirationTimeConfirmButtonClicked = false;
         confirmedClauses = new HashSet<>();
-        previousExpirationTime = negotiationInfo.getNegotiationExpirationDate();
 
         final ErrorManager errorManager = appSession.getErrorManager();
         final Map<ClauseType, ClauseInformation> clauses = negotiationInfo.getClauses();
@@ -66,9 +60,6 @@ final public class NegotiationWrapper {
 
         try {
             CryptoBrokerWalletManager walletManager = appSession.getModuleManager().getCryptoBrokerWallet(appSession.getAppPublicKey());
-
-            if (negotiationInfo.getNegotiationExpirationDate() == 0)
-                setExpirationTime(actualTimeInMillis);
 
             if (clauses.get(CUSTOMER_DATE_TIME_TO_DELIVER) == null)
                 addClause(CUSTOMER_DATE_TIME_TO_DELIVER, Long.toString(actualTimeInMillis));
@@ -90,6 +81,9 @@ final public class NegotiationWrapper {
                 } else if (paymentMethod == CASH_ON_HAND || paymentMethod == CASH_DELIVERY) {
                     ArrayList<NegotiationLocations> locations = Lists.newArrayList(walletManager.getAllLocations(SALE));
                     addClause(BROKER_PLACE_TO_DELIVER, locations.isEmpty() ? "" : locations.get(0).getLocation());
+                }else {
+                    addClause(BROKER_CRYPTO_ADDRESS, "");
+                    changeClauseValue(clauses.get(BROKER_CRYPTO_ADDRESS), "");
                 }
             }
 
@@ -114,49 +108,6 @@ final public class NegotiationWrapper {
     }
 
     /**
-     * @return the expiration date in millis
-     */
-    public long getExpirationDate() {
-        return negotiationInfo.getNegotiationExpirationDate();
-    }
-
-    /**
-     * Set the value of the expiration date and update its status in advance
-     *
-     * @param expirationTime the new expiration date in millis
-     */
-    public void setExpirationTime(long expirationTime) {
-        negotiationInfo.setNegotiationExpirationDate(expirationTime);
-
-        if (previousExpirationTime == expirationTime && expirationTimeStatus == DRAFT)
-            expirationTimeStatus = ACCEPTED;
-        else if (previousExpirationTime != expirationTime)
-            expirationTimeStatus = CHANGED;
-    }
-
-    /**
-     * @return the Expiration Date's Status
-     */
-    public ClauseStatus getExpirationTimeStatus() {
-        return expirationTimeStatus;
-    }
-
-    /**
-     * @return <code>true</code> if the expiration date has been confirmed, <code>false</code> otherwise
-     */
-    public boolean isExpirationTimeConfirmed() {
-        return expirationTimeConfirmButtonClicked;
-    }
-
-    /**
-     * Set the expiration date as confirmed  and update its status in advance
-     */
-    public void confirmExpirationDatetime() {
-        setExpirationTime(negotiationInfo.getNegotiationExpirationDate());
-        this.expirationTimeConfirmButtonClicked = true;
-    }
-
-    /**
      * @return <code>true</code> if the negotiation have a note, <code>false</code> otherwise
      */
     public boolean haveNote() {
@@ -177,16 +128,11 @@ final public class NegotiationWrapper {
     /**
      * Verify if all the clauses except the obviations are all confirmed
      *
-     * @param obviations 0 or more clauses to obviate in the verification
-     *
      * @return <code>true</code> if all the clauses are confirmed, <code>false</code> otherwise
      */
-    public boolean isClausesConfirmed(ClauseType... obviations) {
+    public boolean isClausesConfirmed() {
         final Collection<ClauseInformation> clauseList = getClauses().values();
-        final List<ClauseType> obviationList = Arrays.asList(obviations);
-
-        if (!expirationTimeConfirmButtonClicked)
-            return false;
+        final List<ClauseType> obviationList = Arrays.asList(CUSTOMER_CRYPTO_ADDRESS, BROKER_CRYPTO_ADDRESS, BROKER_CURRENCY, CUSTOMER_CURRENCY);
 
         for (ClauseInformation clause : clauseList) {
             if (!isClauseConfirmed(clause) && clause.getStatus() == DRAFT) {

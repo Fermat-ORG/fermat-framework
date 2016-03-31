@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -120,6 +121,14 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
         return cryptoBrokerWalletDatabaseDao.getCryptoBrokerStockTransactionsByMerchandise(merchandise, moneyType, transactionType, balanceType);
     }
 
+    @Override
+    public List<CryptoBrokerStockTransaction> getStockHistory(Currency merchandise, MoneyType moneyType, int offset, long timeStamp) throws CantGetCryptoBrokerStockTransactionException {
+        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
+        cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
+        cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
+        return cryptoBrokerWalletDatabaseDao.getStockHistory(merchandise, moneyType, offset, timeStamp);
+    }
+
     /**
      * This method load the list CryptoBrokerStockTransaction
      *
@@ -204,8 +213,21 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
             throw new CryptoBrokerWalletNotFoundException("Database does not exists", databaseNotFoundException, "WalletId: " + walletId.toString(), "");
         } catch (Exception exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
-        throw new CryptoBrokerWalletNotFoundException(CryptoBrokerWalletNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+            throw new CryptoBrokerWalletNotFoundException(CryptoBrokerWalletNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+
+        inicializeTestData();
     }
+
+    private void inicializeTestData(){
+        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
+        cryptoBrokerWalletDatabaseDao.setPlugin(this.pluginId);
+        cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
+
+        cryptoBrokerWalletDatabaseDao.dataTestStockHistory(CryptoCurrency.BITCOIN, MoneyType.CRYPTO, 5);
+        cryptoBrokerWalletDatabaseDao.dataTestStockHistory(FiatCurrency.US_DOLLAR, MoneyType.BANK, 12);
+        cryptoBrokerWalletDatabaseDao.dataTestStockHistory(FiatCurrency.VENEZUELAN_BOLIVAR, MoneyType.CASH_DELIVERY, 24);
+
     }
 
     /**

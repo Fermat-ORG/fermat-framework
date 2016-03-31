@@ -16,6 +16,10 @@ import java.util.Map;
  */
 public class AssetRedeemPointCommunitySubAppSession extends AbstractFermatSession<InstalledSubApp,RedeemPointCommunitySubAppModuleManager,SubAppResourcesProviderManager>  {
 
+    public static final String BASIC_DATA = "catalog_item_redeem";
+    public static final String PREVIEW_IMGS = "preview_images_redeem";
+    public static final String DEVELOPER_NAME = "developer_name_redeem";
+
     public AssetRedeemPointCommunitySubAppSession() {}
 
 //    private RedeemPointCommunitySubAppModuleManager manager;

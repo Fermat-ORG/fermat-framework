@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -248,7 +249,7 @@ public class RedeemPointActorDao implements Serializable {
         }
     }
 
-    public void deleteCryptoCurrencyFromRedeemPointRegistered(String redeemPoint) throws CantUpdateRedeemPointException, RedeemPointNotFoundException {
+    public void deleteCryptoCurrencyFromRedeemPointRegistered(String redeemPointPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantUpdateRedeemPointException, RedeemPointNotFoundException {
 
         DatabaseTable table;
 
@@ -256,7 +257,7 @@ public class RedeemPointActorDao implements Serializable {
             /**
              * 1) Get the table.
              */
-            table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME);
+            table = this.database.getTable(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_TABLE_NAME);
 
             if (table == null) {
                 /**
@@ -266,23 +267,22 @@ public class RedeemPointActorDao implements Serializable {
             }
 
             // 2) Find the Redeem Point , filter by keys.
-            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME, redeemPoint, DatabaseFilterType.EQUAL);
-
+            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_PUBLIC_KEY_COLUMN_NAME, redeemPointPublicKey, DatabaseFilterType.EQUAL);
+            table.addStringFilter(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             if (table.getRecords().isEmpty()) {
-                throw new RedeemPointNotFoundException("The following public key was not found: " + redeemPoint);
+                throw new RedeemPointNotFoundException("The following public key was not found: " + redeemPointPublicKey);
             }
 
-            // 3) Get Redeem Point record and update state.
-            for (DatabaseTableRecord record : table.getRecords()) {
-
-                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, "");
-                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, "");
-                table.updateRecord(record);
+            // 3) Get Redeem Point record and delete
+            if (!table.getRecords().isEmpty()) {
+                for (DatabaseTableRecord record : table.getRecords()) {
+                    table.deleteRecord(record);
+                }
             }
 
-        } catch (CantLoadTableToMemoryException | CantUpdateRecordException e) {
+        } catch (CantLoadTableToMemoryException | CantDeleteRecordException e) {
             throw new CantUpdateRedeemPointException(e.getMessage(), e, "Redeem Point Actor", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantUpdateRedeemPointException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor", "Cant get developer identity list, unknown failure.");
@@ -383,16 +383,13 @@ public class RedeemPointActorDao implements Serializable {
                 record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
 
-                if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) == null) {
-
                     if (Objects.equals(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME), DAPConnectionState.REGISTERED_OFFLINE.getCode())) {
                         connectionState = DAPConnectionState.REGISTERED_ONLINE;
                     }
-                } else {
+
                     if (Objects.equals(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME), DAPConnectionState.CONNECTED_OFFLINE.getCode())) {
                         connectionState = DAPConnectionState.CONNECTED_ONLINE;
                     }
-                }
 
                 if (connectionState != null)
                     record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, connectionState.getCode());
@@ -436,16 +433,16 @@ public class RedeemPointActorDao implements Serializable {
                         record.setDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME, actorAssetRedeemPoint.getLocationLongitude());
                     }
 
-                    if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
+                   /* if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
                         record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode());//actorAssetUser.getDAPConnectionState().getCode());
-                    } else {
+                    } else {*/
                         record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.REGISTERED_ONLINE.getCode());//actorAssetUser.getDAPConnectionState().getCode());
-                    }
+                    //}
 
-                    if (actorAssetRedeemPoint.getCryptoAddress() != null) {
+                    /*if (actorAssetRedeemPoint.getCryptoAddress() != null) {
                         record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, actorAssetRedeemPoint.getCryptoAddress().getAddress());
                         record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, actorAssetRedeemPoint.getCryptoAddress().getCryptoCurrency().getCode());
-                    }
+                    }*/
 
                     record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
                     record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
@@ -501,9 +498,9 @@ public class RedeemPointActorDao implements Serializable {
             if (table.getRecords().size() > 0) {
                 // 3) Get Asset User record and update state.
                 for (DatabaseTableRecord record : table.getRecords()) {
-                    if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
+                    /*if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
                         dapConnectionState = DAPConnectionState.CONNECTED_OFFLINE;
-                    }
+                    }*/
 
                     record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
 
@@ -548,20 +545,19 @@ public class RedeemPointActorDao implements Serializable {
                 record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, "-");
                 record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_NAME_COLUMN_NAME, actorAssetRedeemPoint.getName());
 
-                if (cryptoAddress != null) {
+               /* if (cryptoAddress != null) {
                     record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
                     record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
-                }
+                }*/
 
-                if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) == null) {
+
                     if (Objects.equals(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME), DAPConnectionState.REGISTERED_OFFLINE.getCode())) {
                         dapConnectionState = DAPConnectionState.REGISTERED_ONLINE;
                     }
-                } else {
+
                     if (Objects.equals(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME), DAPConnectionState.CONNECTED_OFFLINE.getCode())) {
                         dapConnectionState = DAPConnectionState.CONNECTED_ONLINE;
                     }
-                }
 
                 if (dapConnectionState != null)
                     record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
@@ -1134,11 +1130,11 @@ public class RedeemPointActorDao implements Serializable {
 
             this.addRecordsTableRegisteredToList(list, table.getRecords(), blockchainNetworkType);
 
-//            for (ActorAssetRedeemPoint record : list)
-//            {
-//                if (record.getCryptoAddress() != null)
-//                    auxList.add(record);
-//            }
+            for (ActorAssetRedeemPoint record : list)
+            {
+                if (record.getCryptoAddress() != null)
+                    auxList.add(record);
+            }
 
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetRedeemPointsListException(e.getMessage(), e, "Redeem Point Actor Registered", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_TABLE_NAME + " table in memory.");
@@ -1149,7 +1145,8 @@ public class RedeemPointActorDao implements Serializable {
             throw new CantGetRedeemPointsListException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor Registered", "Cant get Redeem Point Actor Registered list, unknown failure.");
         }
         // Return the list values.
-        return list;
+        //return list;
+        return auxList;
     }
 
     public void createNewAssetRedeemRequestRegistered(String actorAssetRedeemLogged,
@@ -1179,7 +1176,7 @@ public class RedeemPointActorDao implements Serializable {
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 record.setLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 //TODO: Evaluar para cuando sea un USER el que realice la solicitud de conexion
-                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ACTOR_TYPE_COLUMN_NAME, Actors.DAP_ASSET_ISSUER.getCode());
+                record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ACTOR_TYPE_COLUMN_NAME, Actors.DAP_ASSET_USER.getCode());
 
                 table.insertRecord(record);
                 /**
@@ -1372,11 +1369,11 @@ public class RedeemPointActorDao implements Serializable {
             address.setHouseNumber(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_HOUSE_NUMBER_COLUMN_NAME));
             redeemPointActorRecord.setAddress(address);
 
-            //SETEAR EL CRYPTOADDRESS
+            /*//SETEAR EL CRYPTOADDRESS
             CryptoAddress cryptoAddress = new CryptoAddress();
             cryptoAddress.setAddress(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME));
             cryptoAddress.setCryptoCurrency(CryptoCurrency.getByCode(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_CURRENCY_COLUMN_NAME)));
-            redeemPointActorRecord.setCryptoAddress(cryptoAddress);
+            redeemPointActorRecord.setCryptoAddress(cryptoAddress);*/
 
             //SETEAR LOCATION
             DeviceLocation location = new DeviceLocation();
@@ -1433,10 +1430,10 @@ public class RedeemPointActorDao implements Serializable {
                 record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_ADDRESS_HOUSE_NUMBER_COLUMN_NAME, redeemPoint.getAddress().getHouseNumber());
         }
         //CRYPTOADDRESS
-        if (redeemPoint.getCryptoAddress() != null) {
+       /* if (redeemPoint.getCryptoAddress() != null) {
             record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_CURRENCY_COLUMN_NAME, redeemPoint.getCryptoAddress().getCryptoCurrency().getCode());
             record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME, redeemPoint.getCryptoAddress().getAddress());
-        }
+        }*/
 
         if (redeemPoint.getContactInformation() != null)
             record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CONTACT_INFORMATION_COLUMN_NAME, redeemPoint.getContactInformation());
@@ -1475,10 +1472,10 @@ public class RedeemPointActorDao implements Serializable {
         }
 
         //CRYPTOADDRESS
-        if (redeemPoint.getCryptoAddress() != null) {
+       /* if (redeemPoint.getCryptoAddress() != null) {
             record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME, redeemPoint.getCryptoAddress().getCryptoCurrency().getCode());
             record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME, redeemPoint.getCryptoAddress().getAddress());
-        }
+        }*/
 
         if (redeemPoint.getContactInformation() != null)
             record.setStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONTACT_INFORMATION_COLUMN_NAME, redeemPoint.getContactInformation());
@@ -1611,12 +1608,12 @@ public class RedeemPointActorDao implements Serializable {
     private ActorAssetRedeemPoint addRecords(List<DatabaseTableRecord> records) throws InvalidParameterException, CantGetRedeemPointActorProfileImageException {
         RedeemPointActorRecord redeemPointActor = null;
         for (DatabaseTableRecord record : records) {
-            CryptoAddress cryptoAddress = null;
+            /*CryptoAddress cryptoAddress = null;
             if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME) != null && !record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME).isEmpty() ) {
                 cryptoAddress = new CryptoAddress(
                         record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CRYPTO_ADDRESS_COLUMN_NAME),
                         CryptoCurrency.getByCode(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
-            }
+            }*/
 
             String publicKey = record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_PUBLIC_KEY_COLUMN_NAME);
 
@@ -1626,7 +1623,7 @@ public class RedeemPointActorDao implements Serializable {
                     DAPConnectionState.getByCode(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_CONNECTION_STATE_COLUMN_NAME)),
                     record.getDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LATITUDE_COLUMN_NAME),
                     record.getDoubleValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LOCATION_LONGITUDE_COLUMN_NAME),
-                    cryptoAddress,
+                    null,
                     record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTRATION_DATE_COLUMN_NAME),
                     record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_LAST_CONNECTION_DATE_COLUMN_NAME),
                     Actors.getByCode(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_ACTOR_TYPE_COLUMN_NAME)),
@@ -1656,12 +1653,12 @@ public class RedeemPointActorDao implements Serializable {
     private ActorAssetRedeemPoint addRecordsRegistered(List<DatabaseTableRecord> records) throws InvalidParameterException, CantGetRedeemPointActorProfileImageException {
         RedeemPointActorRecord redeemPointActor = null;
         for (DatabaseTableRecord record : records) {
-            CryptoAddress cryptoAddress = null;
+            /*CryptoAddress cryptoAddress = null;
             if (record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null && !record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME).isEmpty()) {
                 cryptoAddress = new CryptoAddress(
                         record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME),
                         CryptoCurrency.getByCode(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
-            }
+            }*/
 
             String publicKey = record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_PUBLIC_KEY_COLUMN_NAME);
 
@@ -1681,7 +1678,7 @@ public class RedeemPointActorDao implements Serializable {
                     DAPConnectionState.getByCode(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_CONNECTION_STATE_COLUMN_NAME)),
                     latitude,
                     longitude,
-                    cryptoAddress,
+                    null,
                     record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_REGISTRATION_DATE_COLUMN_NAME),
                     record.getLongValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME),
                     Actors.getByCode(record.getStringValue(RedeemPointActorDatabaseConstants.REDEEM_POINT_REGISTERED_ACTOR_TYPE_COLUMN_NAME)),
@@ -1691,7 +1688,47 @@ public class RedeemPointActorDao implements Serializable {
         return redeemPointActor;
     }
 
-    private void addRecordsTableRegisteredToList(List<ActorAssetRedeemPoint> list, List<DatabaseTableRecord> records, BlockchainNetworkType blockchainNetworkType) throws InvalidParameterException, CantGetRedeemPointActorProfileImageException, CantGetRedeemPointCryptoAddressTableException {
+    public void updateOfflineRedeemPointRegisterInNetworkService(List<ActorAssetRedeemPoint> onlineRedeemPointsInNetworkService) throws CantUpdateRedeemPointException, CantGetRedeemPointsListException {
+
+        try {
+            List<ActorAssetRedeemPoint> list = getAllAssetRedeemPointActorRegistered(null);
+
+            for (ActorAssetRedeemPoint registeredRedeemPoint : list)
+            {
+                if (notInNetworkService(registeredRedeemPoint,onlineRedeemPointsInNetworkService))
+                {
+                    if (registeredRedeemPoint.getDapConnectionState().equals(DAPConnectionState.CONNECTED_ONLINE))
+                        updateAssetRedeemPointDAPConnectionStateActorNetworkService(registeredRedeemPoint, DAPConnectionState.CONNECTED_OFFLINE, registeredRedeemPoint.getCryptoAddress());
+                    else if (registeredRedeemPoint.getDapConnectionState().equals(DAPConnectionState.REGISTERED_ONLINE))
+                        updateAssetRedeemPointDAPConnectionStateActorNetworkService(registeredRedeemPoint, DAPConnectionState.REGISTERED_OFFLINE, registeredRedeemPoint.getCryptoAddress());
+                }
+                else
+                {
+                    if (registeredRedeemPoint.getDapConnectionState().equals(DAPConnectionState.CONNECTED_OFFLINE))
+                        updateAssetRedeemPointDAPConnectionStateActorNetworkService(registeredRedeemPoint, DAPConnectionState.CONNECTED_ONLINE, registeredRedeemPoint.getCryptoAddress());
+                    else if (registeredRedeemPoint.getDapConnectionState().equals(DAPConnectionState.REGISTERED_OFFLINE))
+                        updateAssetRedeemPointDAPConnectionStateActorNetworkService(registeredRedeemPoint, DAPConnectionState.REGISTERED_ONLINE,registeredRedeemPoint.getCryptoAddress());
+                }
+            }
+
+        } catch (CantGetRedeemPointsListException e) {
+            throw new CantGetRedeemPointsListException(e.getMessage(), e, "Redeem Point Actor", "Cant load " + RedeemPointActorDatabaseConstants.REDEEM_POINT_DATABASE_NAME + " table in memory.");
+        } catch (CantUpdateRedeemPointException e) {
+            throw new CantUpdateRedeemPointException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Actor", "Cant update Redeem Point State");
+        }
+
+    }
+
+    private boolean notInNetworkService(ActorAssetRedeemPoint registeredRedeemPoint, List<ActorAssetRedeemPoint> onlineRedeemPointsInNetworkService) {
+
+        for (ActorAssetRedeemPoint onlineRedeemPoint : onlineRedeemPointsInNetworkService) {
+            if (onlineRedeemPoint.getActorPublicKey().equals(registeredRedeemPoint.getActorPublicKey()))
+                return false;
+        }
+        return true;
+    }
+
+    private void addRecordsTableRegisteredToList(List<ActorAssetRedeemPoint> list, List<DatabaseTableRecord> records, BlockchainNetworkType blockchainNetworkType) throws InvalidParameterException, CantGetRedeemPointActorProfileImageException, CantGetRedeemPointCryptoAddressTableException, CantUpdateRedeemPointException {
 
         for (DatabaseTableRecord record : records) {
 //            CryptoAddress cryptoAddress = null;
@@ -1721,10 +1758,34 @@ public class RedeemPointActorDao implements Serializable {
                 getCryptoAddressNetwork(redeemPoint, blockchainNetworkType);
             }
 
+            if (redeemPoint.getCryptoAddress() != null)
+            {
+                if (redeemPoint.getDapConnectionState().equals(DAPConnectionState.REGISTERED_ONLINE)) {
+                    updateAssetRedeemPointDAPConnectionStateActorNetworkService(redeemPoint, DAPConnectionState.CONNECTED_ONLINE, redeemPoint.getCryptoAddress());
+                    redeemPoint.setDapConnectionState(DAPConnectionState.CONNECTED_ONLINE);
+                }
+                else if (redeemPoint.getDapConnectionState().equals(DAPConnectionState.REGISTERED_OFFLINE))
+                {
+                    updateAssetRedeemPointDAPConnectionStateActorNetworkService(redeemPoint, DAPConnectionState.CONNECTED_OFFLINE, redeemPoint.getCryptoAddress());
+                    redeemPoint.setDapConnectionState(DAPConnectionState.CONNECTED_OFFLINE);
+                }
+            }
+            else
+            {
+                if (redeemPoint.getDapConnectionState().equals(DAPConnectionState.CONNECTED_ONLINE)) {
+                    updateAssetRedeemPointDAPConnectionStateActorNetworkService(redeemPoint, DAPConnectionState.REGISTERED_ONLINE, redeemPoint.getCryptoAddress());
+                    redeemPoint.setDapConnectionState(DAPConnectionState.REGISTERED_ONLINE);
+                }
+                else if (redeemPoint.getDapConnectionState().equals(DAPConnectionState.CONNECTED_OFFLINE))
+                {
+                    updateAssetRedeemPointDAPConnectionStateActorNetworkService(redeemPoint, DAPConnectionState.REGISTERED_OFFLINE, redeemPoint.getCryptoAddress());
+                    redeemPoint.setDapConnectionState(DAPConnectionState.REGISTERED_OFFLINE);
+                }
+            }
+
             list.add(redeemPoint);
         }
     }
-
 
 
     private List<String> getRegisteredIssuersListByRepoPublicKey(String repoPublicKey) {

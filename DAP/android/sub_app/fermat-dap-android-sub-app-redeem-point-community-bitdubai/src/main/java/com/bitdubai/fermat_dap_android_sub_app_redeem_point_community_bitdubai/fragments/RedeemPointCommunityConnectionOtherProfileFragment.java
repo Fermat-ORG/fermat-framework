@@ -26,11 +26,13 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.popup.AcceptDialog;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.popup.CancelDialog;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.popup.ConnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.popup.DisconnectDialog;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
 import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantAssetRedeemPointActorNotFoundException;
@@ -76,6 +78,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     private Button connectionRequestSend;
     private Button connectionRequestRejected;
     private Button accept;
+    private Button connectionCancel;
     private DAPConnectionState connectionState;
     private android.support.v7.widget.Toolbar toolbar;
 
@@ -122,6 +125,8 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         connect = (Button) rootView.findViewById(R.id.btn_conect);
         accept = (Button) rootView.findViewById(R.id.btn_connection_accept);
         disconnect = (Button) rootView.findViewById(R.id.btn_disconect);
+        connectionCancel = (Button) rootView.findViewById(R.id.btn_connection_cancel);
+        connectionCancel.setVisibility(View.GONE);
         connectionRequestSend.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
         connect.setVisibility(View.GONE);
@@ -130,6 +135,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         connectionRequestSend.setOnClickListener(this);
         connect.setOnClickListener(this);
         disconnect.setOnClickListener(this);
+        connectionCancel.setOnClickListener(this);
 
         updateButton();
 
@@ -183,74 +189,97 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
         int i = v.getId();
         if (i == R.id.btn_conect) {
             //CommonLogger.info(TAG, "User connection state " + actorRedeem.getConnectionState());
-            ConnectDialog connectDialog;
 //            try {
-            connectDialog = new ConnectDialog(getActivity(),
-                    (AssetRedeemPointCommunitySubAppSession) appSession,
-                    null,
-                    actorRedeem,
-                    null);
-//                        manager.getActiveAssetRedeemPointIdentity());
-            connectDialog.setTitle("Connection Request");
-            connectDialog.setDescription("Do you want to send ");
-            connectDialog.setUsername(actorRedeem.getName());
-            connectDialog.setSecondDescription("a connection request");
-            connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    updateButton();
-                }
-            });
-            connectDialog.show();
+                ConnectDialog connectDialog = new ConnectDialog(getActivity(),
+                        (AssetRedeemPointCommunitySubAppSession) appSession,
+                        null,
+                        actorRedeem,
+                        null);
+
+                connectDialog.setTitle("Connection Request");
+                connectDialog.setDescription("Do you want to send ");
+                connectDialog.setUsername(actorRedeem.getName());
+                connectDialog.setSecondDescription("a connection request");
+                connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateButton();
+                    }
+                });
+                connectDialog.show();
 //            } catch (CantGetIdentityRedeemPointException e) {
 //                e.printStackTrace();
 //            }
         }
+
         if (i == R.id.btn_disconect) {
             //CommonLogger.info(TAG, "User connection state " + actorRedeem.getConnectionState());
-            final DisconnectDialog disconnectDialog;
 //            try {
-            disconnectDialog = new DisconnectDialog(getActivity(),
-                    (AssetRedeemPointCommunitySubAppSession) appSession,
-                    null,
-                    actorRedeem,
-                    null);
-//                        manager.getActiveAssetRedeemPointIdentity());
-            disconnectDialog.setTitle("Disconnect");
-            disconnectDialog.setDescription("Want to disconnect from");
-            disconnectDialog.setUsername(actorRedeem.getName());
-            disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    //connectRequest();
-                    updateButton();
-                }
-            });
-            disconnectDialog.show();
-//            } catch (CantGetIdentityRedeemPointException e) {
-//                e.printStackTrace();
-//            }
-        }
-        if (i == R.id.btn_connection_accept) {
-//            try {
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),
-                    (AssetRedeemPointCommunitySubAppSession) appSession,
-                    null,
-                    actorRedeem,
-                    null);
-//                        manager.getActiveAssetRedeemPointIdentity());
-            notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    updateButton();
-                }
-            });
-            notificationAcceptDialog.show();
+                final DisconnectDialog disconnectDialog = new DisconnectDialog(getActivity(),
+                        (AssetRedeemPointCommunitySubAppSession) appSession,
+                        null,
+                        actorRedeem,
+                        null);
 
+                disconnectDialog.setTitle("Disconnect");
+                disconnectDialog.setDescription("Want to disconnect from");
+                disconnectDialog.setUsername(actorRedeem.getName());
+                disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        //connectRequest();
+                        updateButton();
+                    }
+                });
+                disconnectDialog.show();
 //            } catch (CantGetIdentityRedeemPointException e) {
 //                e.printStackTrace();
 //            }
         }
+
+        if (i == R.id.btn_connection_accept) {
+            try {
+                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),
+                        (AssetRedeemPointCommunitySubAppSession) appSession,
+                        null,
+                        actorRedeem,
+                        manager.getActiveAssetRedeemPointIdentity());
+
+                notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateButton();
+                    }
+                });
+                notificationAcceptDialog.show();
+            } catch (CantGetIdentityRedeemPointException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (i == R.id.btn_connection_cancel) {
+//            try {
+                CancelDialog cancelDialog = new CancelDialog(getActivity(),
+                        (AssetRedeemPointCommunitySubAppSession) appSession,
+                        null,
+                        actorRedeem,
+                        null);
+
+                cancelDialog.setTitle("Cancel Request");
+                cancelDialog.setDescription("Want to cancel the request to");
+                cancelDialog.setUsername(actorRedeem.getName());
+                cancelDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        updateButton();
+                    }
+                });
+                cancelDialog.show();
+//            } catch (CantGetIdentityRedeemPointException e) {
+//                e.printStackTrace();
+//            }
+        }
+
         if (i == R.id.btn_connection_request_send) {
             //CommonLogger.info(TAG, "User connection state " + actorRedeem.getConnectionState());
             Toast.makeText(getActivity(), R.string.dap_other_profile_request_send_toast, Toast.LENGTH_SHORT).show();
@@ -262,16 +291,23 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     }
 
     private void updateButton() {
+        ActorAssetRedeemPoint actorAssetRedeemPoint = null;
         try {
             connectionState = manager.getActorRedeemRegisteredDAPConnectionState(this.actorRedeem.getActorPublicKey());
+            actorAssetRedeemPoint = manager.getActorRedeemPoint(this.actorRedeem.getActorPublicKey());
+
         } catch (CantGetAssetRedeemPointActorsException e) {
             e.printStackTrace();
+        } catch (CantAssetRedeemPointActorNotFoundException e) {
+            e.printStackTrace();
         }
-        updateStateConnection(connectionState);
+
+        updateStateConnection(connectionState, actorAssetRedeemPoint);
         onRefresh();
+
     }
 
-    private void updateStateConnection(DAPConnectionState dapConnectionState) {
+    private void updateStateConnection(DAPConnectionState dapConnectionState, ActorAssetRedeemPoint actorAssetRedeemPoint) {
 
         switch (dapConnectionState) {
             case BLOCKED_LOCALLY:
@@ -282,7 +318,10 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
                 break;
             case CONNECTED_ONLINE:
             case CONNECTED_OFFLINE:
-                disconnectRequest();
+                if (actorAssetRedeemPoint.getCryptoAddress() != null)
+                    disconnectRequest();
+                else
+                    connectRequest();
                 break;
             case DISCONNECTED_LOCALLY:
             case DISCONNECTED_REMOTELY:
@@ -290,7 +329,10 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
             case DENIED_REMOTELY:
             case REGISTERED_ONLINE:
             case REGISTERED_OFFLINE:
-                connectRequest();
+                if (actorAssetRedeemPoint.getCryptoAddress() != null)
+                    disconnectRequest();
+                else
+                    connectRequest();
                 break;
             case PENDING_LOCALLY:
                 connectionAccept();
@@ -303,13 +345,15 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     }
 
     private void connectionSend() {
-        connectionRequestSend.setVisibility(View.VISIBLE);
+        //connectionRequestSend.setVisibility(View.VISIBLE);
+        connectionCancel.setVisibility(View.VISIBLE);
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
     }
 
     private void connectionAccept() {
+        connectionCancel.setVisibility(View.GONE);
         connectionRequestSend.setVisibility(View.GONE);
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
@@ -318,6 +362,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     }
 
     private void connectRequest() {
+        connectionCancel.setVisibility(View.GONE);
         connectionRequestSend.setVisibility(View.GONE);
         connect.setVisibility(View.VISIBLE);
         disconnect.setVisibility(View.GONE);
@@ -325,6 +370,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     }
 
     private void disconnectRequest() {
+        connectionCancel.setVisibility(View.GONE);
         connectionRequestSend.setVisibility(View.GONE);
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.VISIBLE);
@@ -332,6 +378,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
     }
 
     private void connectionRejected() {
+        connectionCancel.setVisibility(View.GONE);
         connectionRequestSend.setVisibility(View.GONE);
         connect.setVisibility(View.GONE);
         disconnect.setVisibility(View.GONE);
@@ -390,6 +437,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
                     actors.add((new Actor(record)));
                 }
             }
+
         } catch (CantGetAssetRedeemPointActorsException e) {
             e.printStackTrace();
         } catch (CantAssetRedeemPointActorNotFoundException e) {
@@ -412,6 +460,7 @@ public class RedeemPointCommunityConnectionOtherProfileFragment extends Abstract
             @Override
             public void onPostExecute(Object... result) {
                 actors = (ArrayList<Actor>) result[0];
+                actorRedeem = actors.get(0);
                 if (actors.get(0).getCryptoAddress() != null) {
                     redeemCryptoAddres.setText(actors.get(0).getCryptoAddress().getAddress());
                     redeemCryptoCurrency.setText(actors.get(0).getCryptoAddress().getCryptoCurrency().getFriendlyName());

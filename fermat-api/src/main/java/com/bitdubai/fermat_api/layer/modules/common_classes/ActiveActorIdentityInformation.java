@@ -2,6 +2,8 @@ package com.bitdubai.fermat_api.layer.modules.common_classes;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
+import java.io.Serializable;
+
 /**
  * The class <code>com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation</code>
  * represents an actor identity with all the basic information.
@@ -15,7 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface ActiveActorIdentityInformation {
+public interface ActiveActorIdentityInformation extends Serializable {
 
     /**
      * @return a string representing the public key.

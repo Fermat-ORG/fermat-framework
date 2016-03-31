@@ -1,12 +1,11 @@
 package com.bitdubai.sub_app.crypto_customer_community.common.popups;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Window;
-
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -40,7 +39,7 @@ public class ListIdentitiesDialog extends FermatDialog<CryptoCustomerCommunitySu
      */
     private CryptoCustomerCommunitySubAppModuleManager manager;
 
-    public ListIdentitiesDialog(final Activity activity,
+    public ListIdentitiesDialog(final Context activity,
                                 final CryptoCustomerCommunitySubAppSession subAppSession,
                                 final SubAppResourcesProviderManager subAppResources) {
 

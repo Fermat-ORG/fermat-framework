@@ -176,6 +176,8 @@ public enum Plugins implements FermatPluginsEnum {
     //Init CER Plugins
     BITDUBAI_CER_PROVIDER_FILTER                ("BCERPF"  ),
     BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA      ("BCERPBV"  ),
+    BITDUBAI_CER_PROVIDER_BITFINEX              ("BCERPBF"  ),
+    BITDUBAI_CER_PROVIDER_BTER                  ("BCERPBT"  ),
     BITDUBAI_CER_PROVIDER_DOLARTODAY            ("BCERPDT"  ),
     BITDUBAI_CER_PROVIDER_ELCRONISTA            ("BCERPEC"  ),
     BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK ("BCERPECB" ),
@@ -187,22 +189,24 @@ public enum Plugins implements FermatPluginsEnum {
     // Init new Plugins
 
     ASSET_APPROPRIATION         ("ASAP"),
+    ASSET_BUYER                 ("ASBU"),
+    ASSET_DIRECT_SELL           ("ASDS"),
     ASSET_DISTRIBUTION          ("ASD"),
-    ASSET_TRANSFER              ("ASTT"),
     ASSET_FACTORY               ("ASF"),
     ASSET_ISSUER                ("ASI"),
     ASSET_ISSUER_COMMUNITY      ("ASIC"),
     ASSET_ISSUING               ("ASIS"),
     ASSET_RECEPTION             ("ASR"),
-    ASSET_SELLER("ASSE"),
-    ASSET_BUYER("ASBU"),
+    ASSET_SELLER                ("ASSE"),
+    ASSET_TRANSFER              ("ASTT"),
+    ASSET_TRANSMISSION          ("AST"),
     ASSET_USER                  ("ASU"),
     ASSET_USER_COMMUNITY        ("ASUC"),
-    ASSET_TRANSMISSION          ("AST"),
     BITCOIN_ASSET_VAULT         ("BAV"),
     BITCOIN_NETWORK             ("BN"),
     BITCOIN_VAULT               ("BV"),
     BITCOIN_WALLET              ("BW"),
+    LOSS_PROTECTED_WALLET       ("LPW"),
     BITCOIN_WATCH_ONLY_VAULT    ("BWOV"),
     BITCOIN_HOLD                ("BHOLD"),
     BITCOIN_UNHOLD              ("BUNHOLD"),
@@ -219,6 +223,7 @@ public enum Plugins implements FermatPluginsEnum {
     CRYPTO_PAYMENT_REQUEST      ("CPR"),
     CRYPTO_TRANSMISSION         ("CT"),
     CRYPTO_WALLET               ("CW"),
+    CRYPTO_LOSS_PROTECTED_WALLET("CLPW"),
     DESKTOP_RUNTIME             ("DER"),
     DEVELOPER                   ("DEV"),
     DEVICE_USER                 ("DU"),
@@ -226,19 +231,22 @@ public enum Plugins implements FermatPluginsEnum {
     INCOMING_CRYPTO             ("IC"),
     INCOMING_EXTRA_USER         ("IEU"),
     INCOMING_INTRA_USER         ("IIU"),
-    INTRA_IDENTITY_USER          ("IIA"),
+    INTRA_IDENTITY_USER         ("IIA"),
     INTRA_WALLET_USER           ("IWU"),
     ISSUER_REDEMPTION           ("IR"),
-    ISSUER_APPROPRIATION("ISAP"),
+    ISSUER_APPROPRIATION        ("ISAP"),
     NOTIFICATION                ("NOT"),
+    NEGOTIATION_DIRECT_SELL     ("NDS"),
     ANDROID_CORE                ("AND"),
     OUTGOING_EXTRA_USER         ("OEU"),
     OUTGOING_INTRA_ACTOR        ("OIA"),
+    TRANSFER_INTRA_WALLET        ("TIW"),
     PUBLISHER                   ("PBL"),
     REDEEM_POINT                ("RP"),
     REDEEM_POINT_COMMUNITY      ("RPC"),
     REDEEM_POINT_REDEMPTION     ("RPR"),
     SUB_APP_RESOURCES           ("SAR"),
+    SUB_APP_FERMAT_MONITOR      ("FERM"),
     SUB_APP_RUNTIME             ("SPR"),
     USER_REDEMPTION             ("UR"),
     WALLET_COMMUNITY            ("WCOM"),
@@ -297,7 +305,23 @@ public enum Plugins implements FermatPluginsEnum {
 
     CHAT_MIDDLEWARE                     ("CHMID"),
     CHAT_NETWORK_SERVICE                ("CHTNS"),
-    CHAT_SUP_APP_MODULE                 ("CHTSAM"), CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT");
+    CHAT_SUP_APP_MODULE                 ("CHTSAM"), CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
+
+    // ART
+
+    ACTOR_NETWORK_SERVICE_ARTIST       ("ANSART"),
+    ARTIST_IDENTITY                    ("ARTIDNTY"),
+    ART_ARTIST_SUB_APP_MODULE          ("AASAM"),
+    ART_FAN_SUB_APP_MODULE             ("AFSAM"),
+
+    //TKY
+    TOKENLY_API                         ("TOKAP"),
+    TOKENLY_ARTIST                      ("TARTIST"),
+    TOKENLY_FAN                         ("TFAN"),
+    TOKENLY_ARTIST_SUB_APP_MODULE       ("TASAM"),
+    TOKENLY_FAN_SUB_APP_MODULE          ("TFSAM"),
+    TOKENLY_FAN_WALLET_MODULE           ("TFWM"),
+    TOKENLY_WALLET                      ("TWALLET");
 
     // End  new Plugins
 
@@ -314,16 +338,15 @@ public enum Plugins implements FermatPluginsEnum {
             case "APR"  :   return SUB_APP_RUNTIME          ;
             case "ASAP" :   return ASSET_APPROPRIATION      ;
             case "ASD"  :   return ASSET_DISTRIBUTION       ;
+            case "ASDS" :   return ASSET_DIRECT_SELL        ;
             case "ASTT"  :  return ASSET_TRANSFER           ;
             case "ASF"  :   return ASSET_FACTORY            ;
             case "ASI"  :   return ASSET_ISSUER             ;
             case "ASIC" :   return ASSET_ISSUER_COMMUNITY   ;
             case "ASIS" :   return ASSET_ISSUING            ;
             case "ASR"  :   return ASSET_RECEPTION          ;
-            case "ASSE":
-                return ASSET_SELLER;
-            case "ASBU":
-                return ASSET_BUYER;
+            case "ASSE":    return ASSET_SELLER;
+            case "ASBU":    return ASSET_BUYER;
             case "ASU"  :   return ASSET_USER               ;
             case "ASUC" :   return ASSET_USER_COMMUNITY     ;
             case "AST"  :   return ASSET_TRANSMISSION       ;
@@ -331,6 +354,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "BN"   :   return BITCOIN_NETWORK          ;
             case "BV"   :   return BITCOIN_VAULT            ;
             case "BW"   :   return BITCOIN_WALLET           ;
+            case "LPW"  :   return LOSS_PROTECTED_WALLET    ;
             case "BWOV" :   return BITCOIN_WATCH_ONLY_VAULT ;
             case "BHOLD":   return BITCOIN_HOLD             ;
             case "BUNHOLD": return BITCOIN_UNHOLD           ;
@@ -347,6 +371,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "CPR"  :   return CRYPTO_PAYMENT_REQUEST   ;
             case "CT"   :   return CRYPTO_TRANSMISSION      ;
             case "CW"   :   return CRYPTO_WALLET            ;
+            case "CLPW" :   return CRYPTO_LOSS_PROTECTED_WALLET            ;
             case "DER"  :   return DESKTOP_RUNTIME          ;
             case "DEV"  :   return DEVELOPER                ;
             case "DU"   :   return DEVICE_USER              ;
@@ -359,13 +384,16 @@ public enum Plugins implements FermatPluginsEnum {
             case "IR"   :   return ISSUER_REDEMPTION        ;
             case "ISAP":    return ISSUER_APPROPRIATION     ;
             case "NOT"  :   return NOTIFICATION             ;
+            case "NDS"  :   return NEGOTIATION_DIRECT_SELL  ;
             case "OEU"  :   return OUTGOING_EXTRA_USER      ;
             case "OIA"  :   return OUTGOING_INTRA_ACTOR     ;
+            case "TIW"  :   return TRANSFER_INTRA_WALLET     ;
             case "PBL"  :   return PUBLISHER                ;
             case "RP"   :   return REDEEM_POINT             ;
             case "RPC"  :   return REDEEM_POINT_COMMUNITY   ;
             case "RPR"  :   return REDEEM_POINT_REDEMPTION  ;
             case "SAR"  :   return SUB_APP_RESOURCES        ;
+            case "FERM"  :   return SUB_APP_FERMAT_MONITOR   ;
             case "SPR"  :   return SUB_APP_RUNTIME          ;
             case "UR"   :   return USER_REDEMPTION          ;
             case "WCOM" :   return WALLET_COMMUNITY         ;
@@ -407,6 +435,8 @@ public enum Plugins implements FermatPluginsEnum {
             case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY;
             case "BCERPF":  return BITDUBAI_CER_PROVIDER_FILTER;
             case "BCERPBV": return BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA;
+            case "BCERPBF": return BITDUBAI_CER_PROVIDER_BITFINEX;
+            case "BCERPBT": return BITDUBAI_CER_PROVIDER_BTER;
             case "BCERPDT": return BITDUBAI_CER_PROVIDER_DOLARTODAY;
             case "BCERPEC": return BITDUBAI_CER_PROVIDER_ELCRONISTA;
             case "BCERPECB":return BITDUBAI_CER_PROVIDER_EUROPEAN_CENTRAL_BANK;
@@ -429,12 +459,23 @@ public enum Plugins implements FermatPluginsEnum {
             case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
             case "MAEN":    return MATCHING_ENGINE;
 
-            case "BCNNODE"   :  return BITDUBAI_COMMUNICATIONS_NETWORK_NODE;
-            case "BCNCLIENT" :  return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT;
+            case "BCNNODE"   :  return BITDUBAI_COMMUNICATIONS_NETWORK_NODE     ;
+            case "BCNCLIENT" :  return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT   ;
             case "CHMID":       return CHAT_MIDDLEWARE                          ;
             case "CHTNS":       return CHAT_NETWORK_SERVICE                     ;
             case "CHTSAM":      return CHAT_SUP_APP_MODULE                      ;
-            case "CCPODT" :return CCP_OUTGOING_DRAFT_TRANSACTION;
+            case "CCPODT" :     return CCP_OUTGOING_DRAFT_TRANSACTION           ;
+            case "ANSART":      return ACTOR_NETWORK_SERVICE_ARTIST             ;
+            case "ARTIDNTY":    return ARTIST_IDENTITY                          ;
+            case "AASAM":       return ART_ARTIST_SUB_APP_MODULE                ;
+            case "AFSAM":       return ART_FAN_SUB_APP_MODULE                   ;
+            case "TOKAP":       return TOKENLY_API;
+            case "TARTIST":     return TOKENLY_ARTIST                           ;
+            case "TFAN":        return TOKENLY_FAN                              ;
+            case "TASAM":       return TOKENLY_ARTIST_SUB_APP_MODULE            ;
+            case "TFSAM":       return TOKENLY_FAN_SUB_APP_MODULE               ;
+            case "TFWM":        return TOKENLY_FAN_WALLET_MODULE                ;
+            case "TWALLET":     return TOKENLY_WALLET                           ;
 
             default:
                 throw new InvalidParameterException(
@@ -443,7 +484,6 @@ public enum Plugins implements FermatPluginsEnum {
                 );
         }
     }
-
     @Override
     public String getCode() {
         return this.code;

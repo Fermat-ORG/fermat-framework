@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_ack_o
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -59,6 +60,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -297,7 +299,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
                             ContractTransactionStatus.ONLINE_MERCHANDISE_ACK,
-                            Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE
+                            Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE, PlatformComponentType.ACTOR_CRYPTO_BROKER,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER
                     );
                     customerAckOnlineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -318,7 +320,7 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
                             ContractTransactionStatus.CONFIRM_ONLINE_ACK_MERCHANDISE,
-                            Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE
+                            Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,PlatformComponentType.ACTOR_CRYPTO_BROKER
                     );
                     customerAckOnlineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(
                             contractHash,
@@ -473,6 +475,9 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                             customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
                                     contractHash,
                                     ContractStatus.READY_TO_CLOSE);
+                            Date date=new Date();
+                            customerAckOnlineMerchandiseBusinessTransactionDao.
+                                    setCompletionDateByContractHash(contractHash, date.getTime());
                             raiseAckConfirmationEvent(contractHash);
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
@@ -497,6 +502,9 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                                 customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
                                         contractHash,
                                         ContractStatus.READY_TO_CLOSE);
+                                Date date=new Date();
+                                customerAckOnlineMerchandiseBusinessTransactionDao.
+                                        setCompletionDateByContractHash(contractHash, date.getTime());
                                 raiseAckConfirmationEvent(contractHash);
                             }
                         }

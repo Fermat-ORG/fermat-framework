@@ -40,6 +40,7 @@ import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.Digit
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.RedeemPointSession;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.SessionConstantsRedeemPoint;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
@@ -73,7 +74,6 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
     //UI
     private View noAssetsView;
     private SearchView searchView;
-    private boolean showNoBalance = true;
 
     public static RedeemPointMainActivityFragment newInstance() {
         return new RedeemPointMainActivityFragment();
@@ -89,7 +89,6 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             errorManager = appSession.getErrorManager();
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -101,11 +100,6 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
-
-        setupBackgroundBitmap(layout);
-        configureToolbar();
-        noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
-        showOrHideNoAssetsView(digitalAssets.isEmpty());
 
         //Initialize settings
         settingsManager = appSession.getModuleManager().getSettingsManager();
@@ -125,9 +119,12 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                 settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
                 moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
+                moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
+        } else {
+            moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
         }
 
         final RedeemPointSettings redeemPointSettingsTemp = settings;
@@ -142,7 +139,14 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             }
         }, 500);
 
-        ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter("");
+        setupBackgroundBitmap(layout);
+        configureToolbar();
+        noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
+
+        digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        showOrHideNoAssetsView(digitalAssets.isEmpty());
+
+        onRefresh();
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -205,7 +209,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             @Override
             public boolean onQueryTextChange(String s) {
                 if (s.equals(searchView.getQuery().toString())) {
-                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter(s);
+                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).filter(s);
                 }
                 return false;
             }
@@ -223,10 +227,6 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
             if (id == SessionConstantsRedeemPoint.IC_ACTION_REDEEM_HELP_PRESENTATION) {
                 setUpPresentation(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
-            } else if (id == R.id.action_wallet_redeem_point_show_no_balance) {
-                showNoBalance = item.getTitle().equals(getResources().getString(R.string.dap_redeem_point_wallet_show_no_balance));
-                item.setTitle((showNoBalance) ? getResources().getString(R.string.dap_redeem_point_wallet_show_all) : getResources().getString(R.string.dap_redeem_point_wallet_show_no_balance));
-                ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter(searchView.getQuery());
             }
 
         } catch (Exception e) {
@@ -343,7 +343,7 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
                 digitalAssets = (ArrayList) result[0];
                 if (adapter != null) {
                     adapter.changeDataSet(digitalAssets);
-                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).setShowNoBalance(showNoBalance).filter("");
+                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).filter(searchView.getQuery().toString());
                 }
                 showOrHideNoAssetsView(digitalAssets.isEmpty());
             }
@@ -364,6 +364,8 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
         if (adapter == null) {
             adapter = new MyAssetsAdapter(getActivity(), digitalAssets, moduleManager);
             adapter.setFermatListEventListener(this);
+        } else {
+            adapter.changeDataSet(digitalAssets);
         }
         return adapter;
     }
@@ -419,6 +421,17 @@ public class RedeemPointMainActivityFragment extends FermatWalletListFragment<Di
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             noAssetsView.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case DAPConstants.DAP_UPDATE_VIEW_ANDROID:
+                onRefresh();
+                break;
+            default:
+                super.onUpdateViewOnUIThread(code);
         }
     }
 }

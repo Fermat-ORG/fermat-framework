@@ -107,7 +107,9 @@ class MonitorAgentExtraData implements Runnable {
         try {
             Collection<ActorExtraData> actors = this.dao.getAllActorExtraData();
             for(ActorExtraData actor : actors){
-                this.cryptoBrokerANSManager.requestQuotes(actor.getCustomerPublicKey(), Actors.CBP_CRYPTO_CUSTOMER, actor.getBrokerIdentity().getPublicKey());
+                if( actor.getQuotes() != null ){
+                    this.cryptoBrokerANSManager.requestQuotes(actor.getCustomerPublicKey(), Actors.CBP_CRYPTO_CUSTOMER, actor.getBrokerIdentity().getPublicKey());
+                }
             }
         } catch (CantGetListActorExtraDataException e) {
             this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);

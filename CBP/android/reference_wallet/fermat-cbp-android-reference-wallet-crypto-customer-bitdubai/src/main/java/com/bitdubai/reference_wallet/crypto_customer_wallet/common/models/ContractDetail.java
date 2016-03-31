@@ -14,16 +14,16 @@ public class ContractDetail {
 
     private int contractStep;
     private ContractStatus contractStatus;
-    private UUID contractId;
+    private String contractId;
     private UUID negotiationId;
 
-    private float paymentOrMerchandiseAmount;
+    private String paymentOrMerchandiseAmount;
     private String paymentOrMerchandiseTypeOfPayment;
     private String paymentOrMerchandiseCurrencyCode;
     private long paymentOrMerchandiseDeliveryDate;
 
-    public ContractDetail(int contractStep, ContractStatus contractStatus, UUID contractId, UUID negotiationId,
-                          float amount, String typeOfPayment, String currencyCode, long deliveryDate) {
+    public ContractDetail(int contractStep, ContractStatus contractStatus, String contractId, UUID negotiationId,
+                          String amount, String typeOfPayment, String currencyCode, long deliveryDate) {
         this.contractStep = contractStep;
         this.contractStatus = contractStatus;
         this.contractId = contractId;
@@ -40,15 +40,15 @@ public class ContractDetail {
     public ContractStatus getContractStatus() {return contractStatus;}
     //public void setContractStatus(ContractStatus contractStatus) {this.contractStatus = contractStatus;}
 
-    public UUID getContractId() {return contractId;}
+    public String getContractId() {return contractId;}
     //public void setContractId(UUID contractId) {this.contractId = contractId;}
 
     public UUID getNegotiationId() {return negotiationId;}
     //public void setNegotiationId(UUID negotiationId) {this.negotiationId = negotiationId;}
 
 
-    public float getPaymentOrMerchandiseAmount() {return paymentOrMerchandiseAmount;}
-    //public void setPaymentOrMerchandiseAmount(float paymentOrMerchandiseAmount) {this.paymentOrMerchandiseAmount = paymentOrMerchandiseAmount;}
+    public String getPaymentOrMerchandiseAmount() {return paymentOrMerchandiseAmount;}
+    //public void setPaymentOrMerchandiseAmount(String paymentOrMerchandiseAmount) {this.paymentOrMerchandiseAmount = paymentOrMerchandiseAmount;}
 
 
     public String getPaymentOrMerchandiseTypeOfPayment() {return paymentOrMerchandiseTypeOfPayment;}

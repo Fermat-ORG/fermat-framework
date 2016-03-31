@@ -63,4 +63,11 @@
 
     <color name="cbw_contract_details_background">#222</color>
     <color name="cbw_background_stock_chart_container">#3c70a9</color>
+
+
+    <color name="ccw_card_background_status_confirm">#f1f1f1</color>
+    <color name="card_background_status_accepted">#2e679c</color>
+    <color name="card_background_status_changed">#39ab89</color>
+    <color name="card_background_status_confirm">#f1f1f1</color>
+    <color name="card_background_status_inactive">#a4a4a4</color>
 </resources>

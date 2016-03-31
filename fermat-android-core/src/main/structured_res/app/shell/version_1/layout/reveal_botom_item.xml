@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+        <ImageButton
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/ic_drawable_p2p_network"
+            android:id="@+id/btn_image"/>
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text"
+            android:gravity="center"
+            android:textSize="11.5sp"
+            android:layout_marginTop="2dp"
+            android:text="Fermat Network"
+            android:textColor="#404041"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/sub_text"
+            android:layout_marginTop="2dp"
+            android:gravity="center"
+            android:textSize="10sp"
+            android:text="1 Node"
+            android:textStyle="bold"
+            android:textColor="#00B398"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -1,12 +1,7 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.app_connection;
 
-import android.app.Activity;
-
-import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
-import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
-import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
-import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
-import com.bitdubai.fermat_android_api.engine.NotificationPainter;
+import android.content.Context;
+import com.bitdubai.fermat_android_api.engine.*;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -19,7 +14,6 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.f
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.navigation_drawer.IssuerCommunityNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_issuer_community.interfaces.AssetIssuerCommunitySubAppModuleManager;
 
 /**
@@ -30,7 +24,7 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections<Asse
     private AssetIssuerCommunitySubAppModuleManager manager;
     private AssetIssuerCommunitySubAppSession assetIssuerCommunitySubAppSession;
 
-    public CommunityAssetIssuerFermatAppConnection(Activity activity) {
+    public CommunityAssetIssuerFermatAppConnection(Context activity) {
         super(activity);
     }
 
@@ -58,7 +52,7 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections<Asse
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new IssuerCommunityNavigationViewPainter(getActivity(), getActiveIdentity());
+        return new IssuerCommunityNavigationViewPainter(getContext(), getActiveIdentity());
     }
 
     @Override
@@ -92,15 +86,15 @@ public class CommunityAssetIssuerFermatAppConnection extends AppConnections<Asse
                         notification = new IssuerAssetCommunityNotificationPainter("Extended Key Arrive", "Was Received for: "+senderActorPublicKey, "", "");
                     }
                     break;
-//                case "CRYPTO-REQUEST":
-//                    if (manager != null) {
-//                        //find last notification by sender actor public key
-////                        ActorAssetUser senderActor = manager.getLastNotification(senderActorPublicKey);
-//                        notification = new UserAssetCommunityNotificationPainter("CryptoAddress Arrive", "A New CryptoAddress was Received From: " + senderActorPublicKey, "", "");
-//                    } else {
-//                        notification = new UserAssetCommunityNotificationPainter("CryptoAddress Arrive", "Was Received for: "+ senderActorPublicKey, "", "");
-//                    }
-//                    break;
+                case "EXTENDED-REQUEST":
+                    if (manager != null) {
+                        //find last notification by sender actor public key
+                        ActorAssetIssuer senderActor = manager.getLastNotification(senderActorPublicKey);
+                        notification = new IssuerAssetCommunityNotificationPainter("New Extended Request", "Was Received From: " + senderActor.getName(), "", "");
+                    } else {
+                        notification = new IssuerAssetCommunityNotificationPainter("New Extended Request", "A new connection request was received.", "", "");
+                    }
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();

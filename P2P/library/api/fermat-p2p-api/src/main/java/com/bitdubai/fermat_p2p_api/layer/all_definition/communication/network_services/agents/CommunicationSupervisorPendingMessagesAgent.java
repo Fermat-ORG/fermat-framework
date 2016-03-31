@@ -85,7 +85,7 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
              * Read all pending message from database
              */
             Map<String, Object> filters = new HashMap<>();
-            filters.put(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.NEW_RECEIVED.getCode());
+            filters.put(CommunicationNetworkServiceDatabaseConstants.INCOMING_MESSAGES_STATUS_COLUMN_NAME, MessagesStatus.NEW_RECEIVED.getCode());
             List<FermatMessage> messages = networkServiceRoot.getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().findAll(filters);
 
             /*
@@ -130,9 +130,17 @@ public class CommunicationSupervisorPendingMessagesAgent extends FermatAgent {
                 if (!poolConnectionsWaitingForResponse.containsKey(fermatMessage.getReceiver())) {
                     if (networkServiceRoot.getCommunicationNetworkServiceConnectionManager().getNetworkServiceLocalInstance(fermatMessage.getReceiver()) == null) {
 
-                        PlatformComponentProfile applicantParticipant = networkServiceRoot.getProfileSenderToRequestConnection(fermatMessage.getSender());
+                        PlatformComponentProfile applicantParticipant = networkServiceRoot.getProfileSenderToRequestConnection(
+                                fermatMessage.getSender(),
+                                fermatMessage.getSenderNsType(),
+                                fermatMessage.getSenderType()
+                        );
 
-                        PlatformComponentProfile remoteParticipant = networkServiceRoot.getProfileDestinationToRequestConnection(fermatMessage.getReceiver());
+                        PlatformComponentProfile remoteParticipant = networkServiceRoot.getProfileDestinationToRequestConnection(
+                                fermatMessage.getReceiver(),
+                                fermatMessage.getReceiverNsType(),
+                                fermatMessage.getReceiverType()
+                        );
 
                         System.out.println("CommunicationSupervisorPendingMessagesAgent ("+networkServiceRoot.getNetworkServiceProfile().getName()+") - Requesting new connection with "+remoteParticipant.getIdentityPublicKey());
                         networkServiceRoot.getCommunicationNetworkServiceConnectionManager().connectTo(applicantParticipant, networkServiceRoot.getNetworkServiceProfile(), remoteParticipant);

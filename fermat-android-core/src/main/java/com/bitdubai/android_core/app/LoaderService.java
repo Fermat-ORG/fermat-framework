@@ -121,7 +121,7 @@ public class LoaderService extends Service {
 
 
     private boolean fermatInit() {
-        Intent intent = new Intent(this, SubAppActivity.class);
+        Intent intent = new Intent(this, AppActivity.class);
         intent.putExtra(START_ACTIVITY_INIT, "init");
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);

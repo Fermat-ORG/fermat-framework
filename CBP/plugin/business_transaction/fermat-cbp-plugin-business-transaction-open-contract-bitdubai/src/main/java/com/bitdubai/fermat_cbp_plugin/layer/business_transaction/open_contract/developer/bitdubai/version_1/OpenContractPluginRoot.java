@@ -33,7 +33,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantStartServiceException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.FiatIndexMock;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.PurchaseNegotiationOfflineMock;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks.SaleNegotiationOfflineMock;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
@@ -45,7 +44,6 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interf
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.events.IncomingConfirmBusinessTransactionResponse;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
-import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseFactory;
@@ -86,10 +84,6 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.TRANSACTION_TRANSMISSION)
     private TransactionTransmissionManager transactionTransmissionManager;
-
-    //This reference is broken the start of this plugin.
-    //@NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WORLD, plugin = Plugins.FIAT_INDEX)
-    //private FiatIndexManager fiatIndexManager;
 
     //This references were commented because this plugins are not started right now, please uncommented when are working
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.NEGOTIATION, plugin = Plugins.NEGOTIATION_PURCHASE)
@@ -435,9 +429,9 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
 
     private void openPurchaseContractTest(){
         CustomerBrokerPurchaseNegotiation negotiationMock=new PurchaseNegotiationOfflineMock();
-        FiatIndex fiatIndex=new FiatIndexMock();
+        //FiatIndex fiatIndex=new FiatIndexMock();
         try {
-            openContractTransactionManager.openPurchaseContract(negotiationMock,fiatIndex);
+            openContractTransactionManager.openPurchaseContract(negotiationMock,1);
         } catch (CantOpenContractException e) {
             System.out.println("OPEN CONTRACT TEST EXCEPTION:");
             e.printStackTrace();
@@ -447,9 +441,9 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
 
     private void openSaleContractTest(){
         CustomerBrokerSaleNegotiation negotiationMock=new SaleNegotiationOfflineMock();
-        FiatIndex fiatIndex=new FiatIndexMock();
+        //FiatIndex fiatIndex=new FiatIndexMock();
         try {
-            openContractTransactionManager.openSaleContract(negotiationMock,fiatIndex);
+            openContractTransactionManager.openSaleContract(negotiationMock,1);
         } catch (CantOpenContractException e) {
             System.out.println("OPEN CONTRACT TEST EXCEPTION:");
             e.printStackTrace();

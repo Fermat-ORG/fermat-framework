@@ -91,14 +91,14 @@ public interface CustomerBrokerSaleNegotiationManager extends FermatManager {
      * @param negotiation
      * @throws CantUpdateCustomerBrokerSaleException
      */
-    void sendToBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException;
+    void waitForBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException;
 
     /**
      *
      * @param negotiation
      * @throws CantUpdateCustomerBrokerSaleException
      */
-    void waitForBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException;
+    void sendToBroker(CustomerBrokerSaleNegotiation negotiation) throws CantUpdateCustomerBrokerSaleException;
 
     /**
      *
@@ -174,60 +174,4 @@ public interface CustomerBrokerSaleNegotiationManager extends FermatManager {
      */
     Collection<NegotiationLocations> getAllLocations() throws CantGetListLocationsSaleException;
 
-    /**
-     *
-     * @param bankAccount
-     * @throws CantCreateBankAccountSaleException
-     */
-    void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountSaleException;
-
-    /**
-     *
-     * @param bankAccount
-     * @throws CantUpdateBankAccountSaleException
-     */
-    void updateBankAccount(NegotiationBankAccount bankAccount) throws CantUpdateBankAccountSaleException;
-
-    /**
-     *
-     * @param bankAccount
-     * @throws CantDeleteBankAccountSaleException
-     */
-    void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountSaleException;
-
-    /**
-     *
-     * @param currency
-     * @return Collection<NegotiationBankAccount>
-     * @throws CantGetListBankAccountsSaleException
-     */
-    Collection<NegotiationBankAccount> getBankAccountByCurrencyType(FiatCurrency currency) throws CantGetListBankAccountsSaleException;
-
-    /**
-     *
-     * @param paymentCurrency
-     * @throws CantCreatePaymentCurrencySaleException
-     */
-    void createNewPaymentCurrency(NegotiationPaymentCurrency paymentCurrency) throws CantCreatePaymentCurrencySaleException;
-
-    /**
-     *
-     * @param paymentCurrency
-     * @throws CantDeletePaymentCurrencySaleException
-     */
-    void deletePaymentCurrency(NegotiationPaymentCurrency paymentCurrency) throws CantDeletePaymentCurrencySaleException;
-
-    /**
-     *
-     * @return Collection<Currency>
-     * @throws CantGetListPaymentCurrencySaleException
-     */
-    Collection<NegotiationPaymentCurrency> getAllPaymentCurrencies() throws CantGetListPaymentCurrencySaleException;
-
-    /**
-     *
-     * @return Collection<FiatCurrency> with the currencies available in the Bank Wallet
-     * @throws CantGetListBankAccountsSaleException
-     */
-    Collection<FiatCurrency> getCurrencyTypeAvailableBankAccount() throws CantGetListBankAccountsSaleException;
 }

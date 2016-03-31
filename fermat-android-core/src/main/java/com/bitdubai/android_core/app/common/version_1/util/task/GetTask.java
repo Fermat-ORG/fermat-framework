@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app.common.version_1.util.task;
 
 import android.app.Service;
+import android.util.Log;
 
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -28,11 +29,14 @@ public class GetTask extends FermatServiceWorker {
         @Override
         protected Object doInBackground() throws Exception {
 
+            Log.i("GetTask", "fermat system");
             final FermatSystem fermatSystem =((ApplicationSession) activityWeakReference.get().getApplication()).getFermatSystem();
 
             if(!fermatSystem.isStarted) {
                 try {
+                    Log.i("GetTask", "fermat system previous to start");
                     fermatSystem.startAllRegisteredPlatforms();
+                    Log.i("GetTask", "fermat system started");
 
                 } catch (CantStartAllRegisteredPlatformsException e) {
                     e.printStackTrace();

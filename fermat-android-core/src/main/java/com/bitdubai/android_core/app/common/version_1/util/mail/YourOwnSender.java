@@ -1,7 +1,6 @@
 package com.bitdubai.android_core.app.common.version_1.util.mail;
 
 import android.content.Context;
-import android.util.Log;
 
 import org.acra.ACRA;
 import org.acra.ACRAConstants;
@@ -35,9 +34,6 @@ public class YourOwnSender implements ReportSender {
 
         GMailSender gMailSender = new GMailSender("fermatmatiasreport@gmail.com","fermat123");
         try {
-            Log.i("APP","body");
-            Log.i("APP",body);
-            Log.i("APP","body");
             gMailSender.sendMail("error report",body,"matiasfurszyfer@gmail.com","matiasfurszyfer@gmail.com");
         } catch (Exception e) {
             e.printStackTrace();
@@ -58,4 +54,11 @@ public class YourOwnSender implements ReportSender {
         }
         return builder.toString();
     }
+
+    public void send(String userTo,String body) throws Exception {
+        if(userTo==null || userTo.equals("")) throw new IllegalArgumentException();
+        GMailSender gMailSender = new GMailSender("fermatmatiasreport@gmail.com","fermat123");
+        gMailSender.sendMail("error report",body,userTo,userTo);
+    }
+
 }

@@ -493,6 +493,39 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
     }
 
     /**
+     * This method returns the pending to submit notifications list
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantGetContractListException
+     */
+    public List<BusinessTransactionRecord> getPendingToSubmitConfirmList() throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantGetContractListException {
+        try{
+            return getBusinessTransactionRecordList(
+                    ContractTransactionStatus.PENDING_ACK_OFFLINE_MERCHANDISE.getCode(),
+                    CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        }catch (CantGetContractListException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
+                    exception,
+                    "Getting value from PendingTosSubmitNotificationList", "");
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ACK_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
+    }
+
+    /**
      * This method returns a CustomerOnlinePaymentRecordList according the arguments.
      * @param key String with the search key.
      * @param keyColumn String with the key column name.
@@ -871,6 +904,78 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
                 ContractTransactionStatus.PENDING_ACK_OFFLINE_MERCHANDISE.getCode());
 
         return record;
+    }
+
+    /**
+     * This method returns the completion date from database.
+     * @param contractHash
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    public long getCompletionDateByContractHash(
+            String contractHash)
+            throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+            DatabaseTable databaseTable=getAckMerchandiseTable();
+            databaseTable.addStringFilter(
+                    CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                            ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return 0;
+            }
+            checkDatabaseRecords(records);
+            long completionDate=records
+                    .get(0)
+                    .getLongValue(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                            ACK_OFFLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME);
+            return completionDate;
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting completion date from database",
+                    "Cannot load the database table");
+        }
+    }
+
+    /**
+     * This method sets the completion date in the database.
+     * @param contractHash
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    public void setCompletionDateByContractHash(
+            String contractHash,
+            long completionDate)
+            throws UnexpectedResultReturnedFromDatabaseException,
+            CantUpdateRecordException {
+        try{
+            DatabaseTable databaseTable=getAckMerchandiseTable();
+            databaseTable.addStringFilter(
+                    CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                            ACK_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return ;
+            }
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record.setLongValue(
+                    CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                            ACK_OFFLINE_MERCHANDISE_COMPLETION_DATE_COLUMN_NAME,
+                    completionDate);
+            databaseTable.updateRecord(record);
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Setting completion date from database",
+                    "Cannot load the database table");
+        }
     }
 
 }

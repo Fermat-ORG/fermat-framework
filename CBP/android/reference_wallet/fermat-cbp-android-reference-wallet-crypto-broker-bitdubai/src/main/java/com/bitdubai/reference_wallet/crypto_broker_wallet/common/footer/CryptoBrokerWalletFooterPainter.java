@@ -1,6 +1,8 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.footer;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v4.view.ViewPager;
@@ -19,14 +21,16 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.StockBarChartPageAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.StockStatisticsData;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import java.lang.ref.WeakReference;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by Nelson Ramirez
@@ -36,13 +40,13 @@ import java.util.List;
 public class CryptoBrokerWalletFooterPainter implements FooterViewPainter, ViewPager.OnPageChangeListener {
 
     private final List<StockStatisticsData> data;
-    private final Activity activity;
+    private final WeakReference<Context> activity;
     private final CryptoBrokerWalletSession session;
     private FermatTextView stockCurrency;
     private FermatTextView stockQuantity;
 
-    public CryptoBrokerWalletFooterPainter(Activity activity, CryptoBrokerWalletSession fullyLoadedSession) {
-        this.activity = activity;
+    public CryptoBrokerWalletFooterPainter(Context activity, CryptoBrokerWalletSession fullyLoadedSession) {
+        this.activity = new WeakReference<>(activity);
         session = fullyLoadedSession;
 
         data = getData();
@@ -52,7 +56,8 @@ public class CryptoBrokerWalletFooterPainter implements FooterViewPainter, ViewP
     public ViewGroup addFooterViewContainer(LayoutInflater layoutInflater, ViewGroup footer_container) {
         ViewGroup layout = (ViewGroup) layoutInflater.inflate(R.layout.cbw_footer_stock_bar_chart, footer_container, true);
 
-        StockBarChartPageAdapter pageAdapter = new StockBarChartPageAdapter(activity.getFragmentManager(), data);
+        final FragmentManager fragmentManager = ((Activity) this.activity.get()).getFragmentManager();
+        StockBarChartPageAdapter pageAdapter = new StockBarChartPageAdapter(fragmentManager, data);
         ViewPager stockViewPager = (ViewPager) layout.findViewById(R.id.cbw_stock_view_pager);
         stockViewPager.setAdapter(pageAdapter);
         stockViewPager.setOffscreenPageLimit(3);

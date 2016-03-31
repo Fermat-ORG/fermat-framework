@@ -82,3 +82,16 @@ project(':fermat-ccp-android-sub-app-intra-wallet-user-community-bitdubai').proj
 
 include ':fermat-ccp-plugin-module-intra-user-identity-bitdubai'
 project(':fermat-ccp-plugin-module-intra-user-identity-bitdubai').projectDir = new File('CCP/plugin/module/fermat-ccp-plugin-module-intra-user-identity-bitdubai')
+
+include ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai'
+project(':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai').projectDir = new File('CCP/plugin/wallet_module/fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai')
+
+include ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai'
+project(':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai').projectDir = new File('CCP/plugin/basic_wallet/fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai')
+
+include ':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai'
+project(':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai').projectDir = new File('CCP/android/reference_wallet/fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai')
+
+include ':fermat-ccp-plugin-transaction-transfer-intra-wallet-users-bitdubai'
+project(':fermat-ccp-plugin-transaction-transfer-intra-wallet-users-bitdubai').projectDir = new File('CCP/plugin/crypto_transaction/fermat-ccp-plugin-transaction-transfer-intra-wallet-users-bitdubai')
+

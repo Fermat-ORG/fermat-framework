@@ -178,10 +178,10 @@ public class AssetUserActorDao implements Serializable {
                         if (actorAssetUserRecord.getLocationLongitude() != null)
                             record.setDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_LOCATION_LONGITUDE_COLUMN_NAME, actorAssetUserRecord.getLocationLongitude());
 
-                        if (actorAssetUserRecord.getCryptoAddress() != null) {
-                            record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME, actorAssetUserRecord.getCryptoAddress().getAddress());
-                            record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME, actorAssetUserRecord.getCryptoAddress().getCryptoCurrency().getCode());
-                        }
+//                        if (actorAssetUserRecord.getCryptoAddress() != null) {
+//                            record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME, actorAssetUserRecord.getCryptoAddress().getAddress());
+//                            record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME, actorAssetUserRecord.getCryptoAddress().getCryptoCurrency().getCode());
+//                        }
 
                         record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
                         record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
@@ -244,10 +244,10 @@ public class AssetUserActorDao implements Serializable {
                 if (actorAssetUserRecord.getLocationLongitude() != null)
                     record.setDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_LOCATION_LONGITUDE_COLUMN_NAME, actorAssetUserRecord.getLocationLongitude());
 
-                if (actorAssetUserRecord.getCryptoAddress() != null) {
-                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME, actorAssetUserRecord.getCryptoAddress().getAddress());
-                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME, actorAssetUserRecord.getCryptoAddress().getCryptoCurrency().getCode());
-                }
+//                if (actorAssetUserRecord.getCryptoAddress() != null) {
+//                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME, actorAssetUserRecord.getCryptoAddress().getAddress());
+//                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME, actorAssetUserRecord.getCryptoAddress().getCryptoCurrency().getCode());
+//                }
 
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME, actorAssetUserRecord.getLastConnectionDate());
 
@@ -298,10 +298,10 @@ public class AssetUserActorDao implements Serializable {
             for (DatabaseTableRecord record : table.getRecords()) {
                 record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CONNECTION_STATE_COLUMN_NAME, dapConnectionState.getCode());
 
-                if (cryptoAddress != null) {
-                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
-                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
-                }
+//                if (cryptoAddress != null) {
+//                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+//                    record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
+//                }
 
                 record.setLongValue(AssetUserActorDatabaseConstants.ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME, milliseconds);
                 table.updateRecord(record);
@@ -378,6 +378,46 @@ public class AssetUserActorDao implements Serializable {
         }
     }
 
+    public void updateOfflineUserRegisterInNetworkService(List<ActorAssetUser> onlineUsersInNetworkService) throws CantGetAssetUsersListException, CantUpdateAssetUserConnectionException {
+
+        try {
+            List<ActorAssetUser> list = getAllAssetUserActorRegistered();
+
+            for (ActorAssetUser registeredUser : list)
+            {
+                if (notInNetworkService(registeredUser,onlineUsersInNetworkService))
+                {
+                    if (registeredUser.getDapConnectionState().equals(DAPConnectionState.CONNECTED_ONLINE))
+                        updateAssetUserDAPConnectionStateActorNetworkService(registeredUser, DAPConnectionState.CONNECTED_OFFLINE, registeredUser.getCryptoAddress());
+                    else if (registeredUser.getDapConnectionState().equals(DAPConnectionState.REGISTERED_ONLINE))
+                        updateAssetUserDAPConnectionStateActorNetworkService(registeredUser, DAPConnectionState.REGISTERED_OFFLINE,registeredUser.getCryptoAddress());
+                }
+                else
+                {
+                    if (registeredUser.getDapConnectionState().equals(DAPConnectionState.CONNECTED_OFFLINE))
+                        updateAssetUserDAPConnectionStateActorNetworkService(registeredUser, DAPConnectionState.CONNECTED_ONLINE, registeredUser.getCryptoAddress());
+                    else if (registeredUser.getDapConnectionState().equals(DAPConnectionState.REGISTERED_OFFLINE))
+                        updateAssetUserDAPConnectionStateActorNetworkService(registeredUser, DAPConnectionState.REGISTERED_ONLINE,registeredUser.getCryptoAddress());
+                }
+            }
+
+        } catch (CantGetAssetUsersListException e) {
+            throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME + " table in memory.");
+        } catch (CantUpdateAssetUserConnectionException e) {
+            throw new CantUpdateAssetUserConnectionException(e.getMessage(), e, "Asset User Actor", "Cant update state in " + AssetUserActorDatabaseConstants.ASSET_USER_TABLE_NAME + "");
+        }
+
+    }
+
+    private boolean notInNetworkService(ActorAssetUser registeredUser, List<ActorAssetUser> onlineUsersInNetworkService) {
+
+        for (ActorAssetUser onlineUser : onlineUsersInNetworkService) {
+            if (onlineUser.getActorPublicKey().equals(registeredUser.getActorPublicKey()))
+                return false;
+        }
+        return true;
+    }
+
     public int createNewAssetUserRegisterInNetworkServiceByList(List<ActorAssetUser> actorAssetUserRecord) throws CantAddPendingActorAssetException {
         int recordInsert = 0;
         try {
@@ -425,7 +465,7 @@ public class AssetUserActorDao implements Serializable {
 
 
 //                        if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
-                            record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.REGISTERED_ONLINE.getCode());//actorAssetUser.getDAPConnectionState().getCode());
+                        record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.REGISTERED_ONLINE.getCode());//actorAssetUser.getDAPConnectionState().getCode());
 //                        } else {
 //                            record.setStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME, DAPConnectionState.CONNECTED_ONLINE.getCode());//actorAssetUser.getDAPConnectionState().getCode());
 //                        }
@@ -982,11 +1022,11 @@ public class AssetUserActorDao implements Serializable {
 
             this.addRecordsTableRegisteredToList(list, table.getRecords(), blockchainNetworkType);
 
-//            for (ActorAssetUser record : list)
-//            {
-//                if (record.getCryptoAddress() != null)
-//                    auxList.add(record);
-//            }
+            for (ActorAssetUser record : list)
+            {
+                if (record.getCryptoAddress() != null)
+                    auxList.add(record);
+            }
 
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetUsersListException(e.getMessage(), e, "Asset User Actor", "Cant load " + AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_TABLE_NAME + " table in memory.");
@@ -996,7 +1036,8 @@ public class AssetUserActorDao implements Serializable {
             throw new CantGetAssetUsersListException(e.getMessage(), FermatException.wrapException(e), "Asset User Actor", "Cant get Asset User Actor list, unknown failure.");
         }
         // Return the list values.
-        return list;
+        //return list;
+        return auxList;
     }
 
     /**
@@ -1125,17 +1166,17 @@ public class AssetUserActorDao implements Serializable {
         AssetUserActorRecord actorAssetUser = null;
 
         for (DatabaseTableRecord record : records) {
-            CryptoAddress cryptoAddress = null;
-            BlockchainNetworkType blockchainNetworkType = null;
-            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
-                cryptoAddress = new CryptoAddress(
-                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME),
-                        CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME)));
-            }
-
-            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME) != null) {
-                blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME));
-            }
+//            CryptoAddress cryptoAddress = null;
+//            BlockchainNetworkType blockchainNetworkType = null;
+//            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
+//                cryptoAddress = new CryptoAddress(
+//                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME),
+//                        CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME)));
+//            }
+//
+//            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME) != null) {
+//                blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME));
+//            }
 
             actorAssetUser = new AssetUserActorRecord(
                     record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_PUBLIC_KEY_COLUMN_NAME),
@@ -1145,17 +1186,19 @@ public class AssetUserActorDao implements Serializable {
                     DAPConnectionState.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_CONNECTION_STATE_COLUMN_NAME)),
                     record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_LOCATION_LATITUDE_COLUMN_NAME),
                     record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_LOCATION_LONGITUDE_COLUMN_NAME),
-                    cryptoAddress,
+                    null,
                     record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTRATION_DATE_COLUMN_NAME),
                     record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME),
-                    blockchainNetworkType,
+                    null,
                     Actors.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_ACTOR_TYPE_COLUMN_NAME)),
                     getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_PUBLIC_KEY_COLUMN_NAME)));
+
+
         }
         return actorAssetUser;
     }
 
-    private void addRecordsTableRegisteredToList(List<ActorAssetUser> list, List<DatabaseTableRecord> records, BlockchainNetworkType blockchainNetworkType) throws InvalidParameterException, CantGetAssetUserActorProfileImageException, CantGetAssetUserCryptoAddressTableExcepcion, CantGetAssetUsersCryptoAddressListException {
+    private void addRecordsTableRegisteredToList(List<ActorAssetUser> list, List<DatabaseTableRecord> records, BlockchainNetworkType blockchainNetworkType) throws InvalidParameterException, CantGetAssetUserActorProfileImageException, CantGetAssetUserCryptoAddressTableExcepcion, CantGetAssetUsersCryptoAddressListException, CantUpdateAssetUserConnectionException {
 
         for (DatabaseTableRecord record : records) {
             Genders genders = Genders.INDEFINITE;
@@ -1179,6 +1222,31 @@ public class AssetUserActorDao implements Serializable {
 
             if (blockchainNetworkType != null) {
                 getCryptoAddressNetwork(user, blockchainNetworkType);
+            }
+
+            if (user.getCryptoAddress() != null)
+            {
+                if (user.getDapConnectionState().equals(DAPConnectionState.REGISTERED_ONLINE)) {
+                    updateAssetUserDAPConnectionStateActorNetworkService(user, DAPConnectionState.CONNECTED_ONLINE, user.getCryptoAddress());
+                    user.setConnectionState(DAPConnectionState.CONNECTED_ONLINE);
+                }
+                else if (user.getDapConnectionState().equals(DAPConnectionState.REGISTERED_OFFLINE))
+                {
+                    updateAssetUserDAPConnectionStateActorNetworkService(user, DAPConnectionState.CONNECTED_OFFLINE, user.getCryptoAddress());
+                    user.setConnectionState(DAPConnectionState.CONNECTED_OFFLINE);
+                }
+            }
+            else
+            {
+                if (user.getDapConnectionState().equals(DAPConnectionState.CONNECTED_ONLINE)) {
+                    updateAssetUserDAPConnectionStateActorNetworkService(user, DAPConnectionState.REGISTERED_ONLINE, user.getCryptoAddress());
+                    user.setConnectionState(DAPConnectionState.REGISTERED_ONLINE);
+                }
+                else if (user.getDapConnectionState().equals(DAPConnectionState.CONNECTED_OFFLINE))
+                {
+                    updateAssetUserDAPConnectionStateActorNetworkService(user, DAPConnectionState.REGISTERED_OFFLINE, user.getCryptoAddress());
+                    user.setConnectionState(DAPConnectionState.REGISTERED_OFFLINE);
+                }
             }
             list.add(user);
             
@@ -1876,17 +1944,17 @@ public class AssetUserActorDao implements Serializable {
     private ActorAssetUser addRecordsTableRegisteredToActorAssetUser(List<DatabaseTableRecord> records) throws InvalidParameterException, CantGetAssetUserActorProfileImageException {
         ActorAssetUser actorAssetUser = null;
         for (DatabaseTableRecord record : records) {
-            CryptoAddress cryptoAddress = null;
-            BlockchainNetworkType blockchainNetworkType = null;
-            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
-                cryptoAddress = new CryptoAddress(
-                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME),
-                        CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
-            }
-
-            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME) != null) {
-                blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME));
-            }
+//            CryptoAddress cryptoAddress = null;
+//            BlockchainNetworkType blockchainNetworkType = null;
+//            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME) != null) {
+//                cryptoAddress = new CryptoAddress(
+//                        record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME),
+//                        CryptoCurrency.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME)));
+//            }
+//
+//            if (record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME) != null) {
+//                blockchainNetworkType = BlockchainNetworkType.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME));
+//            }
 
             Genders genders = Genders.INDEFINITE;
             if (!StringUtils.isBlank(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_GENDER_COLUMN_NAME)))
@@ -1901,10 +1969,10 @@ public class AssetUserActorDao implements Serializable {
                     DAPConnectionState.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME)),
                     record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME),
                     record.getDoubleValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME),
-                    cryptoAddress,
+                    null,
                     record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME),
                     record.getLongValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME),
-                    blockchainNetworkType,
+                    null,
                     Actors.getByCode(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_ACTOR_TYPE_COLUMN_NAME)),
                     getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME)));
         }

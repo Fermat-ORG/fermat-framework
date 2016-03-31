@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantGetCompletionDateException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
@@ -15,7 +16,6 @@ import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.in
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.interfaces.CustomerBrokerSaleNegotiationManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.TransactionTransmissionManager;
-import com.bitdubai.fermat_cbp_api.layer.world.interfaces.FiatIndex;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -105,16 +105,16 @@ public class OpenContractTransactionManager implements OpenContractManager{
 
     @Override
     public void openSaleContract(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,
-                                 FiatIndex fiatIndex) throws CantOpenContractException{
+                                 float referencePrice) throws CantOpenContractException{
         OpenContractBrokerContractManager openContractCustomerContractManager=new OpenContractBrokerContractManager(
                 customerBrokerContractSaleManager,
                 transactionTransmissionManager,
                 openContractBusinessTransactionDao,
                 errorManager);
         try {
-            Object[] arguments={customerBrokerSaleNegotiation, fiatIndex};
+            Object[] arguments={customerBrokerSaleNegotiation, referencePrice};
             ObjectChecker.checkArguments(arguments);
-            openContractCustomerContractManager.openContract(customerBrokerSaleNegotiation, fiatIndex);
+            openContractCustomerContractManager.openContract(customerBrokerSaleNegotiation, referencePrice);
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.OPEN_CONTRACT,
@@ -143,16 +143,16 @@ public class OpenContractTransactionManager implements OpenContractManager{
 
     @Override
     public void openPurchaseContract(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
-                                     FiatIndex fiatIndex) throws CantOpenContractException{
+                                     float referencePrice) throws CantOpenContractException{
         OpenContractCustomerContractManager openContractCustomerContractManager =new OpenContractCustomerContractManager(
                 customerBrokerContractPurchaseManager,
                 transactionTransmissionManager,
                 openContractBusinessTransactionDao,
                 errorManager);
         try {
-            Object[] arguments={customerBrokerPurchaseNegotiation, fiatIndex};
+            Object[] arguments={customerBrokerPurchaseNegotiation, referencePrice};
             ObjectChecker.checkArguments(arguments);
-            openContractCustomerContractManager.openContract(customerBrokerPurchaseNegotiation, fiatIndex);
+            openContractCustomerContractManager.openContract(customerBrokerPurchaseNegotiation, referencePrice);
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.OPEN_CONTRACT,
@@ -178,6 +178,19 @@ public class OpenContractTransactionManager implements OpenContractManager{
         }
 
         //openContract(negotiationId);
+    }
+
+    /**
+     * This method returns the transaction completion date.
+     * If returns 0 the transaction is processing.
+     * @param contractHash
+     * @return
+     * @throws CantGetCompletionDateException
+     */
+    @Override
+    public long getCompletionDate(String contractHash) throws CantGetCompletionDateException {
+        //TODO to implement
+        return 0;
     }
 
 }

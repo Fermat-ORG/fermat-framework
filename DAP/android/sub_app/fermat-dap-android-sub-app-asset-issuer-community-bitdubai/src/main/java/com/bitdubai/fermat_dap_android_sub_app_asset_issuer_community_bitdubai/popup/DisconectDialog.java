@@ -10,11 +10,15 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.models.ActorIssuer;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.AssetIssuerCommunitySubAppSession;
+import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.sessions.SessionConstantsAssetIssuerCommunity;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 
 /**
@@ -99,31 +103,22 @@ public class DisconectDialog extends FermatDialog<AssetIssuerCommunitySubAppSess
         int i = v.getId();
 
         if (i == R.id.positive_button) {
+//            Toast.makeText(getContext(), R.string.disconnected, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Not available for this Actor", Toast.LENGTH_SHORT).show();
 //            try {
-//                //image null
-//                if (actorIssuer != null && identity != null) {
-//
-//                    getSession().getModuleManager().disconnectIntraUSer(identity.getPublicKey(),actorIssuer.getPublicKey());
-//
-//                    SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-//                    prefs.edit().putBoolean("Connected", true).apply();
-//                    Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
-//                    broadcast.putExtra(Constants.BROADCAST_DISCONNECTED_UPDATE, true);
-//                    sendLocalBroadcast(broadcast);
-//
-            Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
-//
-//                } else {
-//                    super.toastDefaultError();
-//                }
+//                //&& identity != null) {
+//                getSession().getModuleManager().acceptActorAssetIssuer(
+//                        identity.getPublicKey(),//ACTOR INSIDE/LOCAL
+//                        actorIssuer.getRecord());// ACTOR OUTSIDE/EXTERNAL
+//                getSession().setData(SessionConstantsAssetIssuerCommunity.IC_ACTION_ISSUER_NOTIFICATIONS_ACCEPTED, Boolean.TRUE);
+//                //Toast.makeText(getContext(), actorIssuer.getRecord().getName() + " " + R.string.connection_request_accepted, Toast.LENGTH_LONG).show();
+//                Toast.makeText(getContext(),"Connection has been accepted" , Toast.LENGTH_SHORT).show();
 //                dismiss();
-//
-//            } catch (final IntraUserDisconnectingFailedException e) {
-//
+//            } catch (final CantAcceptActorAssetUserException e) {
 //                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
 //                super.toastDefaultError();
+//            Toast.makeText(getContext(), R.string.disconnected, Toast.LENGTH_SHORT).show();
 //            }
-
             dismiss();
         } else if (i == R.id.negative_button) {
             dismiss();

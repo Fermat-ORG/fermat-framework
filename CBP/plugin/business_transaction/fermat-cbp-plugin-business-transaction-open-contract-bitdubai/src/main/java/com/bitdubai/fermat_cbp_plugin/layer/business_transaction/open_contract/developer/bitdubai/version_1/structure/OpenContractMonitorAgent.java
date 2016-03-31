@@ -1,6 +1,10 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -8,9 +12,6 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.CantStartAgentException;
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -28,6 +29,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractPurchaseRecord;
@@ -36,6 +39,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.excep
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReception;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendBusinessTransactionHashException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.interfaces.BusinessTransactionMetadata;
@@ -44,16 +48,17 @@ import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.d
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.open_contract.developer.bitdubai.version_1.database.OpenContractBusinessTransactionDatabaseFactory;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 01/12/15.
@@ -90,10 +95,10 @@ public class OpenContractMonitorAgent implements
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
-        this.logManager=logManager;
-        this.transactionTransmissionManager=transactionTransmissionManager;
-        this.customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
-        this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
+        this.logManager = logManager;
+        this.transactionTransmissionManager = transactionTransmissionManager;
+        this.customerBrokerContractPurchaseManager = customerBrokerContractPurchaseManager;
+        this.customerBrokerContractSaleManager = customerBrokerContractSaleManager;
     }
 
     @Override
@@ -110,54 +115,54 @@ public class OpenContractMonitorAgent implements
             this.monitorAgent.Initialize();
         } catch (CantInitializeCBPAgent exception) {
             errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-        }catch (Exception exception){
+        } catch (Exception exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(exception));
         }
 
-        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
+        this.agentThread = new Thread(monitorAgent, this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
 
     @Override
     public void stop() {
-        try{
+        try {
             this.agentThread.interrupt();
-        }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        } catch (Exception exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.OPEN_CONTRACT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
         }
     }
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager=errorManager;
+        this.errorManager = errorManager;
     }
 
     @Override
     public void setEventManager(EventManager eventManager) {
-        this.eventManager=eventManager;
+        this.eventManager = eventManager;
     }
 
     @Override
     public void setLogManager(LogManager logManager) {
-        this.logManager=logManager;
+        this.logManager = logManager;
     }
 
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem=pluginDatabaseSystem;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
     @Override
     public void setPluginId(UUID pluginId) {
-        this.pluginId=pluginId;
+        this.pluginId = pluginId;
     }
 
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable{
+    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
@@ -165,6 +170,7 @@ public class OpenContractMonitorAgent implements
         int iterationNumber = 0;
         OpenContractBusinessTransactionDao openContractBusinessTransactionDao;
         boolean threadWorking;
+        Map<UUID, UUID> transmissionSend = new HashMap<>();
 
         @Override
         public void setErrorManager(ErrorManager errorManager) {
@@ -175,13 +181,14 @@ public class OpenContractMonitorAgent implements
         public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
             this.pluginDatabaseSystem = pluginDatabaseSystem;
         }
+
         @Override
         public void run() {
 
-            threadWorking=true;
+            threadWorking = true;
             logManager.log(OpenContractPluginRoot.getLogLevelByClass(this.getClass().getName()),
                     "Open Contract Monitor Agent: running...", null, null);
-            while(threadWorking){
+            while (threadWorking) {
                 /**
                  * Increase the iteration counter
                  */
@@ -206,17 +213,17 @@ public class OpenContractMonitorAgent implements
             }
 
         }
+
         public void Initialize() throws CantInitializeCBPAgent {
             try {
 
                 database = this.pluginDatabaseSystem.openDatabase(pluginId,
                         OpenContractBusinessTransactionDatabaseConstants.DATABASE_NAME);
-            }
-            catch (DatabaseNotFoundException databaseNotFoundException) {
+            } catch (DatabaseNotFoundException databaseNotFoundException) {
 
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("Database in Open Contract monitor agent doesn't exists");
-                OpenContractBusinessTransactionDatabaseFactory openContractBusinessTransactionDatabaseFactory=new OpenContractBusinessTransactionDatabaseFactory(this.pluginDatabaseSystem);
+                OpenContractBusinessTransactionDatabaseFactory openContractBusinessTransactionDatabaseFactory = new OpenContractBusinessTransactionDatabaseFactory(this.pluginDatabaseSystem);
                 try {
                     database = openContractBusinessTransactionDatabaseFactory.createDatabase(pluginId,
                             OpenContractBusinessTransactionDatabaseConstants.DATABASE_NAME);
@@ -240,118 +247,145 @@ public class OpenContractMonitorAgent implements
             }
         }
 
-        private void doTheMainTask() throws
-                CannotSendContractHashException,
-                CantUpdateRecordException,
-                CantSendContractNewStatusNotificationException {
+        private void doTheMainTask() throws CannotSendContractHashException, CantUpdateRecordException, CantSendContractNewStatusNotificationException {
 
-            try{
-                openContractBusinessTransactionDao=new OpenContractBusinessTransactionDao(
-                        pluginDatabaseSystem,
-                        pluginId,
-                        database,
-                        errorManager);
-                /**
-                 * Check if exist in database new contracts to send
-                 */
-                List<String> contractPendingToSubmitList=openContractBusinessTransactionDao.getPendingToSubmitContractHash();
+            try {
+                openContractBusinessTransactionDao = new OpenContractBusinessTransactionDao(pluginDatabaseSystem, pluginId, database, errorManager);
+
+
                 String contractXML;
-                ContractPurchaseRecord purchaseContract=new ContractPurchaseRecord();
-                ContractSaleRecord saleContract=new ContractSaleRecord();
+                ContractPurchaseRecord purchaseContract = new ContractPurchaseRecord();
+                ContractSaleRecord saleContract = new ContractSaleRecord();
                 ContractType contractType;
-                UUID transactionId;
-                if(!contractPendingToSubmitList.isEmpty()){
-                    for(String hashToSubmit: contractPendingToSubmitList){
-                        System.out.println("OPEN CONTRACT - Hash to submit:\n"+hashToSubmit);
-                        contractXML=openContractBusinessTransactionDao.getContractXML(hashToSubmit);
-                        contractType=openContractBusinessTransactionDao.getContractType(hashToSubmit);
-                        transactionId=openContractBusinessTransactionDao.getTransactionId(hashToSubmit);
-                        switch (contractType){
+                UUID transmissionId = UUID.randomUUID();
+
+                // Check if exist in database new contracts to send
+                List<String> contractPendingToSubmitList = openContractBusinessTransactionDao.getPendingToSubmitContractHash();
+                if (!contractPendingToSubmitList.isEmpty()) {
+                    for (String hashToSubmit : contractPendingToSubmitList) {
+                        System.out.println("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash()\n");
+                        contractXML = openContractBusinessTransactionDao.getContractXML(hashToSubmit);
+                        contractType = openContractBusinessTransactionDao.getContractType(hashToSubmit);
+
+                        switch (contractType) {
                             case PURCHASE:
-                                purchaseContract=(ContractPurchaseRecord)XMLParser.parseXML(
-                                        contractXML,
-                                        purchaseContract);
+                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - PURCHASE\n");
+                                purchaseContract = (ContractPurchaseRecord) XMLParser.parseXML(contractXML, purchaseContract);
                                 transactionTransmissionManager.sendContractHash(
-                                        transactionId,
+                                        transmissionId,
                                         purchaseContract.getPublicKeyCustomer(),
                                         purchaseContract.getPublicKeyBroker(),
                                         hashToSubmit,
                                         purchaseContract.getNegotiationId(),
-                                        Plugins.OPEN_CONTRACT);
+                                        Plugins.OPEN_CONTRACT,
+                                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                                        PlatformComponentType.ACTOR_CRYPTO_BROKER);
                                 break;
                             case SALE:
-                                saleContract=(ContractSaleRecord)XMLParser.parseXML(
-                                        contractXML,
-                                        saleContract);
+                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - SALE\n");
+                                saleContract = (ContractSaleRecord) XMLParser.parseXML(contractXML, saleContract);
                                 transactionTransmissionManager.sendContractHash(
-                                        transactionId,
+                                        transmissionId,
                                         saleContract.getPublicKeyBroker(),
                                         saleContract.getPublicKeyCustomer(),
                                         hashToSubmit,
                                         saleContract.getNegotiationId(),
-                                        Plugins.OPEN_CONTRACT);
+                                        Plugins.OPEN_CONTRACT,
+                                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
                                 break;
                         }
                         //Update the ContractTransactionStatus
-                        openContractBusinessTransactionDao.updateContractTransactionStatus(
-                                hashToSubmit,
-                                ContractTransactionStatus.CHECKING_HASH);
+                        openContractBusinessTransactionDao.updateContractTransactionStatus(hashToSubmit, ContractTransactionStatus.CHECKING_HASH);
+                        transactionTransmissionManager.confirmReception(transmissionId);
                     }
-
                 }
 
-                /**
-                 * Check if pending contract to confirm
-                 */
-                List<String> contractPendingToConfirmList=openContractBusinessTransactionDao.getPendingToConfirmContractHash();
-                if(!contractPendingToConfirmList.isEmpty()){
-                    for(String hashToSubmit: contractPendingToSubmitList){
-                        System.out.println("OPEN CONTRACT - Hash to confirm:\n"+hashToSubmit);
-                        transactionId=openContractBusinessTransactionDao.getTransactionId(hashToSubmit);
-                        contractXML=openContractBusinessTransactionDao.getContractXML(hashToSubmit);
-                        contractType=openContractBusinessTransactionDao.getContractType(hashToSubmit);
-                        switch (contractType){
+                // Check if pending contract to confirm
+                /*List<String> contractPendingToConfirmList = openContractBusinessTransactionDao.getPendingToConfirmContractHash();
+                if (!contractPendingToConfirmList.isEmpty()) {
+                    System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToConfirmContractHash()\n");
+                    for (String hashToSubmit : contractPendingToConfirmList) {
+                        contractXML = openContractBusinessTransactionDao.getContractXML(hashToSubmit);
+                        contractType = openContractBusinessTransactionDao.getContractType(hashToSubmit);
+                        switch (contractType) {
                             case PURCHASE:
-                                purchaseContract=(ContractPurchaseRecord)XMLParser.parseXML(
-                                        contractXML,
-                                        purchaseContract);
-                                transactionTransmissionManager.sendContractStatusNotification(
+                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToConfirmContractHash() - PURCHASE\n");
+                                purchaseContract = (ContractPurchaseRecord) XMLParser.parseXML(contractXML, purchaseContract);
+                                transactionTransmissionManager.confirmNotificationReception(
                                         purchaseContract.getPublicKeyCustomer(),
                                         purchaseContract.getPublicKeyBroker(),
                                         hashToSubmit,
-                                        transactionId.toString(),
-                                        ContractTransactionStatus.CONTRACT_CONFIRMED,
-                                        Plugins.OPEN_CONTRACT);
+                                        transmissionId.toString(),
+                                        Plugins.OPEN_CONTRACT,
+                                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                                        PlatformComponentType.ACTOR_CRYPTO_BROKER);
                                 break;
                             case SALE:
-                                saleContract=(ContractSaleRecord)XMLParser.parseXML(
-                                        contractXML,
-                                        saleContract);
-                                transactionTransmissionManager.sendContractStatusNotification(
-                                        purchaseContract.getPublicKeyBroker(),
-                                        purchaseContract.getPublicKeyCustomer(),
+                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToConfirmContractHash() - SALE\n");
+                                saleContract = (ContractSaleRecord) XMLParser.parseXML(contractXML, saleContract);
+                                transactionTransmissionManager.confirmNotificationReception(
+                                        saleContract.getPublicKeyBroker(),
+                                        saleContract.getPublicKeyCustomer(),
                                         hashToSubmit,
-                                        transactionId.toString(),
-                                        ContractTransactionStatus.CONTRACT_CONFIRMED,
-                                        Plugins.OPEN_CONTRACT);
+                                        transmissionId.toString(),
+                                        Plugins.OPEN_CONTRACT,
+                                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
                                 break;
                         }
                         //Update the ContractTransactionStatus
-                        openContractBusinessTransactionDao.updateContractTransactionStatus(
-                                hashToSubmit,
-                                ContractTransactionStatus.CONTRACT_CONFIRMED);
+                        openContractBusinessTransactionDao.updateContractTransactionStatus(hashToSubmit, ContractTransactionStatus.CONTRACT_ACK_CONFIRMED);
+                        transactionTransmissionManager.confirmReception(transmissionId);
                     }
 
-                }
+                }*/
 
-                /**
-                 * Check if pending events
-                 */
-                List<String> pendingEventsIdList=openContractBusinessTransactionDao.getPendingEvents();
-                for(String eventId : pendingEventsIdList){
+                // Check if pending contract to Ack confirm
+                /*List<String> contractPendingToAckConfirmList = openContractBusinessTransactionDao.getPendingToAskConfirmContractHash();
+                if (!contractPendingToAckConfirmList.isEmpty()) {
+                    System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToAskConfirmContractHash()\n");
+                    for (String hashToSubmit : contractPendingToAckConfirmList) {
+                        contractXML = openContractBusinessTransactionDao.getContractXML(hashToSubmit);
+                        contractType = openContractBusinessTransactionDao.getContractType(hashToSubmit);
+                        switch (contractType) {
+                            case PURCHASE:
+                                purchaseContract = (ContractPurchaseRecord) XMLParser.parseXML(contractXML, purchaseContract);
+                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToAskConfirmContractHash() - PURCHASE\n");
+                                transactionTransmissionManager.ackConfirmNotificationReception(
+                                        purchaseContract.getPublicKeyCustomer(),
+                                        purchaseContract.getPublicKeyBroker(),
+                                        hashToSubmit,
+                                        transmissionId.toString(),
+                                        Plugins.OPEN_CONTRACT,
+                                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                                        PlatformComponentType.ACTOR_CRYPTO_BROKER);
+                                break;
+                            case SALE:
+                                saleContract = (ContractSaleRecord) XMLParser.parseXML(contractXML, saleContract);
+                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToAskConfirmContractHash() - SALE\n");
+
+                                transactionTransmissionManager.ackConfirmNotificationReception(
+                                        saleContract.getPublicKeyBroker(),
+                                        saleContract.getPublicKeyCustomer(),
+                                        hashToSubmit,
+                                        transmissionId.toString(),
+                                        Plugins.OPEN_CONTRACT,
+                                        PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                                        PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
+                                break;
+                        }
+                        //Update the ContractTransactionStatus
+                        openContractBusinessTransactionDao.updateContractTransactionStatus(hashToSubmit, ContractTransactionStatus.CONTRACT_CONFIRMED);
+                        transactionTransmissionManager.confirmReception(transmissionId);
+                    }
+                }*/
+
+                // Check if pending events
+                List<String> pendingEventsIdList = openContractBusinessTransactionDao.getPendingEvents();
+                for (String eventId : pendingEventsIdList) {
                     checkPendingEvent(eventId);
                 }
-
 
             } catch (CantGetContractListException e) {
                 throw new CannotSendContractHashException(
@@ -363,23 +397,21 @@ public class OpenContractMonitorAgent implements
                         e,
                         "Sending contract hash",
                         "Unexpected result in database");
-            }  catch (CantSendBusinessTransactionHashException e) {
+            } catch (CantSendBusinessTransactionHashException e) {
                 throw new CannotSendContractHashException(
                         e,
                         "Sending contract hash",
                         "Error in Transaction Transmission Network Service");
-            }
-            catch (CantSendContractNewStatusNotificationException e) {
-                throw new CantSendContractNewStatusNotificationException(
-                        CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
+
+            } catch (CantConfirmTransactionException e) {
+                throw new CannotSendContractHashException(
                         e,
-                        "Sending contract hash",
+                        "Confirm Reception contract",
                         "Error in Transaction Transmission Network Service");
             }
-
         }
 
-        private void raiseNewContractEvent(String contractHash){
+        private void raiseNewContractEvent(String contractHash) {
             FermatEvent fermatEvent = eventManager.getNewEvent(EventType.NEW_CONTRACT_OPENED);
             NewContractOpened newContractOpened = (NewContractOpened) fermatEvent;
             newContractOpened.setSource(EventSource.BUSINESS_TRANSACTION_OPEN_CONTRACT);
@@ -387,93 +419,138 @@ public class OpenContractMonitorAgent implements
             eventManager.raiseEvent(newContractOpened);
         }
 
-        private void checkPendingEvent(String eventId) throws  UnexpectedResultReturnedFromDatabaseException {
-            try{
-                String eventTypeCode=openContractBusinessTransactionDao.getEventType(eventId);
+        private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
+            try {
                 String contractHash;
-                String negotiationId;
-                String negotiationIdFromDatabase;
                 ContractType contractType;
                 BusinessTransactionMetadata businessTransactionMetadata;
-                ContractTransactionStatus contractTransactionStatus;
-                if(eventTypeCode.equals(EventType.INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH.getCode())){
-                    //Check if contract is created:
-                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
-                    for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
-                        businessTransactionMetadata=record.getInformation();
-                        contractHash=businessTransactionMetadata.getContractHash();
-                        if(openContractBusinessTransactionDao.isContractHashExists(contractHash)){
-                            negotiationId=businessTransactionMetadata.getNegotiationId();
-                            negotiationIdFromDatabase=businessTransactionMetadata.getNegotiationId();
-                            if(negotiationId.equals(negotiationIdFromDatabase)){
-                                contractTransactionStatus=ContractTransactionStatus.PENDING_CONFIRMATION;
-                            } else{
-                                contractTransactionStatus=ContractTransactionStatus.HASH_REJECTED;
+                ContractTransactionStatus contractTransactionStatusRemote;
+
+                String eventTypeCode = openContractBusinessTransactionDao.getEventType(eventId);
+
+                List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
+
+                for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
+
+                    businessTransactionMetadata = record.getInformation();
+                    contractHash = businessTransactionMetadata.getContractHash();
+                    contractTransactionStatusRemote = businessTransactionMetadata.getContractTransactionStatus();
+                    UUID transmissionId = UUID.randomUUID();
+
+                    if (businessTransactionMetadata.getRemoteBusinessTransaction().getCode().equals(Plugins.OPEN_CONTRACT.getCode())) {
+
+                        System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - EVENT - TYPE: " + eventTypeCode + "\n");
+
+                        //EVENT FOR CONTRACT HASH
+                        if (eventTypeCode.equals(EventType.INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH.getCode())) {
+
+                            if (contractTransactionStatusRemote.getCode().equals(ContractTransactionStatus.PENDING_REMOTE_CONFIRMATION.getCode())) {
+
+                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH\n");
+
+                                if (openContractBusinessTransactionDao.isContractHashExists(contractHash)) {
+
+                                    System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH - HASH - VAL\n");
+
+                                    //TODO YORDIN: mismo contenido, nunca entrara al HASH_REJECTED.
+
+                                    //SEND CONFIRM RECEPTION HASH
+                                    transactionTransmissionManager.confirmNotificationReception(
+                                            businessTransactionMetadata.getReceiverId(),
+                                            businessTransactionMetadata.getSenderId(),
+                                            contractHash,
+                                            transmissionId.toString(),
+                                            Plugins.OPEN_CONTRACT,
+                                            businessTransactionMetadata.getReceiverType(),
+                                            businessTransactionMetadata.getSenderType()
+                                    );
+
+                                    //CHANGE STATUS TRANSACTION
+                                    openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_ACK_CONFIRMED);
+
+                                    //CONFIRM TRANSMISSION OF SEND
+                                    transactionTransmissionManager.confirmReception(transmissionId);
+
+                                    //CONFIRM RECEPTION OF TRANSMISSION
+                                    transactionTransmissionManager.confirmReception(record.getTransactionID());
+
+                                    //CONFIRM RECEPTION OF NOTIFICATION EVENT
+                                    openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
+
+                                }
                             }
-                            openContractBusinessTransactionDao.updateContractTransactionStatus(
-                                    contractHash,
-                                    contractTransactionStatus);
-                            openContractBusinessTransactionDao.updateEventStatus(
-                                    contractHash,
-                                    EventStatus.NOTIFIED);
-                            transactionTransmissionManager.confirmReception(record.getTransactionID());
                         }
-                    }
 
-                }
+                        //EVENT FOR CONFIRM CONTRACT HASH
+                        if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())) {
 
-                if(eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT.getCode())){
-                    //Check if contract hash was sent.
-                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
-                    for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
-                        businessTransactionMetadata=record.getInformation();
-                        contractHash=businessTransactionMetadata.getContractHash();
-                        if(openContractBusinessTransactionDao.isContractHashSentConfirmation(contractHash)){
-                            openContractBusinessTransactionDao.updateContractTransactionStatus(
-                                    contractHash,
-                                    ContractTransactionStatus.PENDING_RESPONSE);
-                            openContractBusinessTransactionDao.updateEventStatus(
-                                    contractHash,
-                                    EventStatus.NOTIFIED);
-                            transactionTransmissionManager.confirmReception(record.getTransactionID());
-                        }
-                    }
+                            System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - CONFIRMATION\n");
 
-                }
+                            if (contractTransactionStatusRemote.getCode().equals(ContractTransactionStatus.NOTIFICATION_CONFIRMED.getCode())) {
 
-                if(eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())){
-                    //TODO: check if contract hash was sent.
-                    List<Transaction<BusinessTransactionMetadata>> pendingTransactionList=transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
-                    for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
-                        businessTransactionMetadata=record.getInformation();
-                        contractHash=businessTransactionMetadata.getContractHash();
-                        if(openContractBusinessTransactionDao.isContractHashPendingResponse(contractHash)){
-                            openContractBusinessTransactionDao.updateContractTransactionStatus(
-                                    contractHash,
-                                    ContractTransactionStatus.CONTRACT_OPENED);
-                            openContractBusinessTransactionDao.updateEventStatus(
-                                    contractHash,
-                                    EventStatus.NOTIFIED);
-                            contractType=openContractBusinessTransactionDao.getContractType(contractHash);
-                            switch (contractType){
-                                case PURCHASE:
-                                    customerBrokerContractPurchaseManager.
-                                            updateStatusCustomerBrokerPurchaseContractStatus(
-                                                    contractHash,
-                                                    ContractStatus.PENDING_PAYMENT);
-                                    break;
-                                case SALE:
-                                    customerBrokerContractSaleManager.
-                                            updateStatusCustomerBrokerSaleContractStatus(
-                                                    contractHash,
-                                                    ContractStatus.PENDING_PAYMENT);
+                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - CONFIRMATION - VAL\n");
+
+                                //SEND CONFIRM RECEPTION HASH
+                                transactionTransmissionManager.ackConfirmNotificationReception(
+                                        businessTransactionMetadata.getReceiverId(),
+                                        businessTransactionMetadata.getSenderId(),
+                                        contractHash,
+                                        transmissionId.toString(),
+                                        Plugins.OPEN_CONTRACT,
+                                        businessTransactionMetadata.getReceiverType(),
+                                        businessTransactionMetadata.getSenderType()
+                                );
+
+                                //CHANGE STATUS TRANSACTION
+                                openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_CONFIRMED);
+
+                                //CONFIRM SEND OF TRANSMISSION
+                                transactionTransmissionManager.confirmReception(transmissionId);
+
+                                //CONFIRM RECEPTION OF TRANSMISSION
+                                transactionTransmissionManager.confirmReception(record.getTransactionID());
+
+                                //CONFIRM RECEPTION OF NOTIFICATION EVENT
+                                openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                             }
-                            transactionTransmissionManager.confirmReception(record.getTransactionID());
-                            raiseNewContractEvent(contractHash);
+
+                        }
+
+                        //EVENT FOR ACK CONFIRM CONTRACT HASH
+                        if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT.getCode())) {
+
+                            System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION\n");
+
+                            if (contractTransactionStatusRemote.getCode().equals(ContractTransactionStatus.NOTIFICATION_ACK_CONFIRMED.getCode())) {
+
+                                System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_CONTRACT - ACK CONFIRMATION - VAL\n");
+                                openContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_OPENED);
+                                contractType = openContractBusinessTransactionDao.getContractType(contractHash);
+                                switch (contractType) {
+                                    case PURCHASE:
+                                        customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash,
+                                                ContractStatus.PENDING_PAYMENT);
+                                        break;
+                                    case SALE:
+                                        customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash,
+                                                ContractStatus.PENDING_PAYMENT);
+                                }
+
+                                //CONFIRM RECEPTION OF TRANSMISSION
+                                transactionTransmissionManager.confirmReception(record.getTransactionID());
+
+                                //CONFIRM RECEPTION OF NOTIFICATION EVENT
+                                openContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
+
+                                //RAISE EVENT NEW_CONTRACT_OPENED
+                                if (businessTransactionMetadata.getReceiverType() == PlatformComponentType.ACTOR_CRYPTO_BROKER)
+                                    raiseNewContractEvent(contractHash);
+                            }
+
                         }
                     }
-
                 }
+
                 //TODO: look a better way to deal with this exceptions
             } catch (CantDeliverPendingTransactionsException e) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
@@ -500,8 +577,12 @@ public class OpenContractMonitorAgent implements
                         e,
                         "Checking pending transactions",
                         "Cannot update the sale contract");
+            } catch (CantConfirmNotificationReception e) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        e,
+                        "Sending Confirm contract",
+                        "Error in Transaction Transmission Network Service");
             }
-
         }
 
     }

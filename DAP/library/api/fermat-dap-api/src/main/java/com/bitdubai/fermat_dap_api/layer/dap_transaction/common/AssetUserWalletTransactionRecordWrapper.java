@@ -96,7 +96,7 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
         this.actorToPublicKey = actorToPublicKey;
         this.actorFromType = actorFromType;
         this.actorToType = actorToType;
-        this.amount = cryptoGenesisTransaction.getCryptoAmount() != 0 ? cryptoGenesisTransaction.getCryptoAmount() : digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
+        this.amount = cryptoGenesisTransaction.getCryptoAmount() != 0  ? cryptoGenesisTransaction.getCryptoAmount() : digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
         this.digitalAssetMetadata = digitalAssetMetadata;
         this.memo = memo;
@@ -105,7 +105,8 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
     public AssetUserWalletTransactionRecordWrapper(DigitalAssetMetadata digitalAssetMetadata,
                                                    CryptoTransaction cryptoGenesisTransaction,
                                                    DAPActor actorFrom,
-                                                   DAPActor actorTo) {
+                                                   DAPActor actorTo,
+                                                   String memo) {
         this.digitalAsset = digitalAssetMetadata.getDigitalAsset();
         this.digitalAssetPublicKey = this.digitalAsset.getPublicKey();
         this.name = this.digitalAsset.getName();
@@ -116,9 +117,10 @@ public class AssetUserWalletTransactionRecordWrapper implements AssetUserWalletT
         this.actorToPublicKey = actorTo.getActorPublicKey();
         this.actorFromType = ActorUtils.getActorType(actorFrom);
         this.actorToType = ActorUtils.getActorType(actorTo);
-        this.amount = cryptoGenesisTransaction.getCryptoAmount() != 0 ? cryptoGenesisTransaction.getCryptoAmount() : digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
+        this.amount = cryptoGenesisTransaction.getCryptoAmount() != 0  ? cryptoGenesisTransaction.getCryptoAmount() : digitalAssetMetadata.getDigitalAsset().getGenesisAmount();
         this.transactionId = cryptoGenesisTransaction.getTransactionHash();
         this.digitalAssetMetadata = digitalAssetMetadata;
+        this.memo = memo;
     }
 
     @Override

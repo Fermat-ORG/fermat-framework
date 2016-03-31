@@ -2,14 +2,14 @@ package com.bitdubai.android_core.app;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
+import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManager;
-import com.bitdubai.android_core.app.common.version_1.sessions.FermatSessionManager;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
-import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_core.FermatSystem;
 
 import org.acra.ACRA;
@@ -18,7 +18,6 @@ import org.acra.ReportingInteractionMode;
 import org.acra.annotation.ReportsCrashes;
 
 import java.io.Serializable;
-import java.util.HashMap;
 
 /**
  * Reformated by Matias Furszyfer
@@ -64,16 +63,12 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      */
     public static int applicationState=STATE_NOT_CREATED;
 
-    /**
-     *  SubApps fragment factories
-     */
-    private HashMap<String,FermatFragmentFactory> subAppsFragmentfFactories;
-
-
 
     public static ApplicationSession getInstance(){
         return instance;
     }
+
+    private Thread.UncaughtExceptionHandler defaultUncaughtHandler = Thread.getDefaultUncaughtExceptionHandler();
 
     /**
      *  Application session constructor
@@ -81,8 +76,10 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
     public ApplicationSession() {
         super();
+        instance = this;
         fermatSystem = FermatSystem.getInstance();
-        fermatAppsManager = new FermatAppsManager(this);
+        fermatAppsManager = new FermatAppsManager();
+
 
     }
 
@@ -96,18 +93,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
             fermatSystem = FermatSystem.getInstance();
         }
         return fermatSystem;
-    }
-
-    /**
-     * Method to get FermatSessionManager which can manipulate the active session of apps
-     * @return WalletSessionManager
-     */
-    @Deprecated
-    public FermatSessionManager getFermatSessionManager() {
-        if(fermatAppsManager==null){
-            fermatAppsManager = new FermatAppsManager(this);
-        }
-        return fermatAppsManager.getFermatSessionManager();
     }
 
     /**
@@ -150,14 +135,26 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         ACRA.init(this);
         YourOwnSender yourSender = new YourOwnSender(getApplicationContext());
         ACRA.getErrorReporter().setReportSender(yourSender);
+
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread thread, Throwable e) {
+                handleUncaughtException(thread, e);
+            }
+        });
         super.onCreate();
-        instance = this;
     }
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
        // MultiDex.install(this);
     }
 
+
+    private void handleUncaughtException (Thread thread, Throwable e) {
+        Toast.makeText(this,"Sorry, The app is not working",Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this,StartActivity.class);
+        startActivity(intent);
+    }
 
 
 }

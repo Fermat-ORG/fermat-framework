@@ -3,6 +3,7 @@ package com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bi
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_bch_plugin.layer.crypto_network.bitcoin.developer.bitdubai.version_1.exceptions.BlockchainException;
 
@@ -71,6 +72,7 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
         this.BLOCKCHAIN_PATH = pluginFileSystem.getAppPath();
         this.BLOCKCHAIN_FILENAME = "bitcoin_Blockchain_" + BLOCKCHAIN_NETWORK_TYPE.getCode();
         this.CHECKPOINT_FILENAME = "checkpoints-" + BLOCKCHAIN_NETWORK_TYPE.getCode();
+
 
         /**
          * initialize the objects
@@ -168,7 +170,7 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
 
             Date date = null;
             try {
-                date = format.parse("2016-01-05 01:24:22");
+                date = format.parse("2016-03-10 01:24:22");
             } catch (ParseException e) {
                 e.printStackTrace();
             }

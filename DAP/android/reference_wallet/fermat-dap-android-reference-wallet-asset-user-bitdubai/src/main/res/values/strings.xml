@@ -9,8 +9,6 @@
     <string name="help">Help</string>
     <string name="dap_user_wallet_search">Search</string>
     <string name="dap_user_wallet_search_hint">Asset name</string>
-    <string name="dap_user_wallet_show_no_balance">Hide empty assets</string>
-    <string name="dap_user_wallet_show_all">Show empty assets</string>
     <string name="dap_user_wallet_action_redeem">Redeem Asset</string>
     <string name="dap_user_wallet_action_appropriate">Appropriate Asset</string>
     <string name="dap_user_wallet_action_transfer">Transfer Asset</string>
@@ -68,7 +66,8 @@
     <string name="dap_user_wallet_remaining_assets">Assets Remaining</string>
     <string name="dap_user_wallet_appropriation_ok">Appropriation of the asset has started successfully. The process will be completed in a couple of minutes.</string>
     <string name="dap_user_wallet_sell_ok">Sell of the asset has started successfully. The process will be completed in a couple of minutes.</string>
-    <string name="dap_user_wallet_sell_select_user">Select users</string>
+    <string name="dap_user_wallet_sell_cancel">The Asset has been rejected.</string>
+    <string name="dap_user_wallet_sell_select_user">Select user</string>
     <string name="dap_user_wallet_sell_assets_to_sell">Assets to Sell</string>
     <string name="dap_user_wallet_sell_asset_value">Asset Value</string>
     <string name="dap_user_wallet_sell_total_value">Total Value</string>

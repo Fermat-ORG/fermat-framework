@@ -9,6 +9,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.PaintActivityFeatures;
@@ -24,8 +25,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
-import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 /**
@@ -163,7 +163,7 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
     protected void changeApp(Engine emgine,String fermatAppToConnectPublicKey, Object[] objects) {
-        getFermatScreenSwapper().connectWithOtherApp(emgine,fermatAppToConnectPublicKey, objects);
+        getFermatScreenSwapper().connectWithOtherApp(emgine, fermatAppToConnectPublicKey, objects);
     }
 
     protected FermatScreenSwapper getFermatScreenSwapper() {
@@ -191,16 +191,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         //getFermatScreenSwapper().connectWithOtherApp(emgine, objects);
     }
 
-    protected void selectSubApp(InstalledSubApp installedSubApp){
-        destroy();
-        getFermatScreenSwapper().selectSubApp(installedSubApp);
-    }
-
-    protected void selectWallet(InstalledWallet installedWallet){
-        destroy();
-        getFermatScreenSwapper().selectWallet(installedWallet);
-    }
-
     /**
      * Send local broadcast
      *
@@ -216,9 +206,13 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
 
-    private <S extends SubAppsSession> void destroy(){
+    protected <S extends SubAppsSession> void destroy(){
         onDestroy();
         System.gc();
+    }
+
+    protected void sendErrorReport(String userTo) throws Exception {
+        ((FermatActivityManager)getActivity()).reportError(userTo);
     }
 
     protected final void onBack(String activityCodeBack){
@@ -273,5 +267,38 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
 
     public void onUpdateViewOnUIThread(String code) {
         return;
+    }
+
+    public void onUpdateView(FermatBundle bundle) {
+
+    }
+    public void onUpdateViewUIThred(FermatBundle bundle) {
+
+    }
+    /**
+     * This method will be called when the user press the back button
+     */
+    public void onBackPressed() {
+
+    }
+
+
+    /**
+     *  This method will be called when the user open the drawer if exist
+     */
+    public void onDrawerOpen() {
+
+    }
+
+    /**
+     *  This method will be called when the user close the drawer if exist
+     */
+    public void onDrawerClose() {
+
+    }
+
+    public void onDrawerSlide(View drawerView, float offset)
+    {
+
     }
 }

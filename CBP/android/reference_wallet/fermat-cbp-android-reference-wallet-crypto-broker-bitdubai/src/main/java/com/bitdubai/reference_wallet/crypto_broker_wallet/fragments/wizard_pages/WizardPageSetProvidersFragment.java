@@ -83,6 +83,11 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
+            //Delete potential previous configurations made by this wizard page
+            //So that they can be reconfigured cleanly
+            walletManager.clearCryptoBrokerWalletProviderSetting(appSession.getAppPublicKey());
+
+
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)

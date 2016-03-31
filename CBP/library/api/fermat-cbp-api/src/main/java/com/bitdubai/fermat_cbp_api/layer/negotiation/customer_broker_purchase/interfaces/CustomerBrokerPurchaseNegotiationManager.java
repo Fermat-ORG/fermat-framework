@@ -83,6 +83,13 @@ public interface CustomerBrokerPurchaseNegotiationManager extends FermatManager 
 
     /**
      *
+     * @param negotiation
+     * @throws CantUpdateCustomerBrokerPurchaseNegotiationException
+     */
+    void waitForCustomer(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException;
+
+    /**
+     *
      * @return
      * @throws CantGetListPurchaseNegotiationsException
      */

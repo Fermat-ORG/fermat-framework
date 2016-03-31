@@ -43,6 +43,7 @@ public class MyAssetsViewHolder extends FermatViewHolder {
     public FermatTextView assetBalanceText;
     public FermatTextView btcText;
     public FermatTextView expDateText;
+    public FermatTextView assetUserLockedAssets;
 
     public View negotiationAssetLayout;
     //public FermatTextView negotiationAssetQuantity;
@@ -71,7 +72,8 @@ public class MyAssetsViewHolder extends FermatViewHolder {
 
         negotiationAssetLayout = itemView.findViewById(R.id.negotiationAssetLayout);
         negotiationAssetUnitPrice = (FermatTextView) itemView.findViewById(R.id.negotiationAssetUnitPrice);
-        //negotiationAssetQuantity = (FermatTextView) itemView.findViewById(R.id.negotiationAssetQuantity);
+
+        assetUserLockedAssets = (FermatTextView) itemView.findViewById(R.id.assetUserLockedAssets);
 
     }
 
@@ -118,8 +120,18 @@ public class MyAssetsViewHolder extends FermatViewHolder {
                 pendingText.setVisibility(View.VISIBLE);
             }
 
+
             btcText.setText(String.format("%s BTC", digitalAsset.getFormattedAvailableBalanceBitcoin()));
             expDateText.setText(digitalAsset.getFormattedExpDate());
+
+            if (digitalAsset.getLockedAssets() > 0){
+                assetUserLockedAssets.setVisibility(View.VISIBLE);
+                assetUserLockedAssets.setText((digitalAsset.getLockedAssets() == 1) ?
+                        digitalAsset.getLockedAssets() +" Locked Asset" : digitalAsset.getLockedAssets() +" Locked Assets");
+            }else{
+                assetUserLockedAssets.setVisibility(View.GONE);
+            }
+
         }
     }
 

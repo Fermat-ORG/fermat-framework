@@ -1,0 +1,54 @@
+/**
+ * Please keep the elements ordered alphabetically.
+ * -Type (addon/android/plugin)
+ * -Layer name.
+ * -Name.
+ */
+
+include ':fermat-tky-api'
+project(':fermat-tky-api').projectDir = new File('TKY/library/api/fermat-tky-api')
+
+include ':fermat-tky-core'
+project(':fermat-tky-core').projectDir = new File('TKY/library/core/fermat-tky-core')
+
+//Android
+
+//Android-Reference Wallet
+include ':fermat-tky-android-reference-wallet-fan-wallet-bitdubai'
+project(':fermat-tky-android-reference-wallet-fan-wallet-bitdubai').projectDir = new File('TKY/android/reference_wallet/fermat-tky-android-reference-wallet-fan-wallet-bitdubai')
+
+//Android-subapp-identity
+include ':fermat-tky-android-sub-app-artist-identity-bitdubai'
+project(':fermat-tky-android-sub-app-artist-identity-bitdubai').projectDir = new File('TKY/android/sub_app/fermat-tky-android-sub-app-artist-identity-bitdubai')
+
+include ':fermat-tky-android-sub-app-fan-identity-bitdubai'
+project(':fermat-tky-android-sub-app-fan-identity-bitdubai').projectDir = new File('TKY/android/sub_app/fermat-tky-android-sub-app-fan-identity-bitdubai')
+
+
+
+//PLUGINS
+
+//External API
+include ':fermat-tky-plugin-external-api-tokenly-bitdubai'
+project(':fermat-tky-plugin-external-api-tokenly-bitdubai').projectDir = new File('TKY/plugin/external_api/fermat-tky-plugin-external-api-tokenly-bitdubai')
+
+
+//Identity
+include ':fermat-tky-plugin-identity-artist-identity-bitdubai'
+project(':fermat-tky-plugin-identity-artist-identity-bitdubai').projectDir = new File('TKY/plugin/identity/fermat-tky-plugin-identity-artist-identity-bitdubai')
+include ':fermat-tky-plugin-identity-fan-identity-bitdubai'
+project(':fermat-tky-plugin-identity-fan-identity-bitdubai').projectDir = new File('TKY/plugin/identity/fermat-tky-plugin-identity-fan-identity-bitdubai')
+
+//Song wallet
+include ':fermat-tky-plugin-song-wallet-tokenly-bitdubai'
+project(':fermat-tky-plugin-song-wallet-tokenly-bitdubai').projectDir = new File('TKY/plugin/song_wallet/fermat-tky-plugin-song-wallet-tokenly-bitdubai')
+
+//Sub app module
+include ':fermat-tky-plugin-sub-app-module-artist-identity-bitdubai'
+project(':fermat-tky-plugin-sub-app-module-artist-identity-bitdubai').projectDir = new File('TKY/plugin/sub_app_module/fermat-tky-plugin-sub-app-module-artist-identity-bitdubai')
+include ':fermat-tky-plugin-sub-app-module-fan-identity-bitdubai'
+project(':fermat-tky-plugin-sub-app-module-fan-identity-bitdubai').projectDir = new File('TKY/plugin/sub_app_module/fermat-tky-plugin-sub-app-module-fan-identity-bitdubai')
+
+//Wallet Module
+include ':fermat-tky-plugin-wallet-module-fan-wallet-bitdubai'
+project(':fermat-tky-plugin-wallet-module-fan-wallet-bitdubai').projectDir = new File('TKY/plugin/wallet_module/fermat-tky-plugin-wallet-module-fan-wallet-bitdubai')
