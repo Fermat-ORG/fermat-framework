@@ -45,7 +45,7 @@ public class TransferIntraWalletUsersDao {
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     public TransferIntraWalletUsersDao(ErrorManager errorManager,
-                                       PluginDatabaseSystem pluginDatabaseSystemr) {
+                                       PluginDatabaseSystem pluginDatabaseSystem) {
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
@@ -88,7 +88,7 @@ public class TransferIntraWalletUsersDao {
                                        TransactionState transactionState,
                                        BlockchainNetworkType blockchainNetworkType) throws TransferIntraWalletUsersCantInsertRecordException {
         try {
-            DatabaseTable transactionTable = this.database.getTable(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_DATABASE_NAME);
+            DatabaseTable transactionTable = this.database.getTable(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_TABLE_NAME);
             DatabaseTableRecord recordToInsert = transactionTable.getEmptyRecord();
             loadRecordAsNew(
                     recordToInsert,
@@ -115,7 +115,7 @@ public class TransferIntraWalletUsersDao {
     public void updateTxHash(UUID transactionId,
                              String newHash) throws TransferIntraWalletUsersCantInsertRecordException {
         try {
-            DatabaseTable transactionTable = this.database.getTable(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_DATABASE_NAME);
+            DatabaseTable transactionTable = this.database.getTable(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_TABLE_NAME);
             transactionTable.addStringFilter(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_TRANSACTION_ID_COLUMN_NAME, transactionId.toString(), DatabaseFilterType.EQUAL);
             transactionTable.loadToMemory();
 
@@ -232,7 +232,7 @@ public class TransferIntraWalletUsersDao {
 
 
     private void setToState(TransferIntraWalletUsersWrapper bitcoinTransaction, TransactionState status) throws CantUpdateRecordException, TransferIntraWalletUsersInconsistentTableStateException, CantLoadTableToMemoryException {
-        DatabaseTable transactionTable = this.database.getTable(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_DATABASE_NAME);
+        DatabaseTable transactionTable = this.database.getTable(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_TABLE_NAME);
         DatabaseTableRecord recordToUpdate = getByPrimaryKey(bitcoinTransaction.getTransactionId());
 
         recordToUpdate.setStringValue(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_TRANSACTION_STATUS_COLUMN_NAME, status.getCode());
@@ -243,7 +243,7 @@ public class TransferIntraWalletUsersDao {
 
 
     private DatabaseTableRecord getByPrimaryKey(UUID id) throws CantLoadTableToMemoryException, TransferIntraWalletUsersInconsistentTableStateException {
-        DatabaseTable transactionTable = this.database.getTable(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_DATABASE_NAME);
+        DatabaseTable transactionTable = this.database.getTable(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_TABLE_NAME);
 
         transactionTable.addStringFilter(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_TRANSACTION_ID_COLUMN_NAME, id.toString(), DatabaseFilterType.EQUAL);
         transactionTable.loadToMemory();
@@ -259,7 +259,7 @@ public class TransferIntraWalletUsersDao {
     }
 
     public List<TransferIntraWalletUsersWrapper> getAllInState(TransactionState transactionState) throws CantLoadTableToMemoryException, InvalidParameterException {
-        DatabaseTable transactionTable = this.database.getTable(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_DATABASE_NAME);
+        DatabaseTable transactionTable = this.database.getTable(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_TABLE_NAME);
         transactionTable.addStringFilter(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_TRANSACTION_STATUS_COLUMN_NAME, transactionState.getCode(), DatabaseFilterType.EQUAL);
         transactionTable.loadToMemory();
         List<DatabaseTableRecord> records = transactionTable.getRecords();
@@ -270,7 +270,7 @@ public class TransferIntraWalletUsersDao {
 
 
     public TransferIntraWalletUsersWrapper getTransaction(UUID txId) throws CantLoadTableToMemoryException, InvalidParameterException {
-        DatabaseTable transactionTable = this.database.getTable(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_DATABASE_NAME);
+        DatabaseTable transactionTable = this.database.getTable(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_TABLE_NAME);
         transactionTable.addUUIDFilter(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_TRANSACTION_ID_COLUMN_NAME, txId, DatabaseFilterType.EQUAL);
         transactionTable.loadToMemory();
         List<DatabaseTableRecord> records = transactionTable.getRecords();
@@ -318,7 +318,7 @@ public class TransferIntraWalletUsersDao {
      */
     public String getSendCryptoTransactionHash(UUID transactionId) throws TransferIntraWalletUsersCantGetTransactionHashException {
         try {
-            DatabaseTable transactionTable = this.database.getTable(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_DATABASE_NAME);
+            DatabaseTable transactionTable = this.database.getTable(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_TABLE_NAME);
             transactionTable.addUUIDFilter(TransferIntraWalletUsersDatabaseConstants.TRANSFER_INTRA_WALLET_USERS_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
 
             transactionTable.loadToMemory();

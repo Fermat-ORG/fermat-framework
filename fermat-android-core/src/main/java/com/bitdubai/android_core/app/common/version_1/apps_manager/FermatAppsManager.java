@@ -24,6 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getSubAppRuntimeMiddleware;
+import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
+
 /**
  * Created by Matias Furszyfer on 2016.02.26..
  */
@@ -185,6 +188,16 @@ public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine
     public FermatStructure getLastAppStructure() {
         RecentApp recentApp = findLastElement();
         return selectRuntimeManager(recentApp.getFermatApp().getAppType()).getLastApp();
+    }
+
+
+    @Override
+    public void clearRuntime() {
+        if(getWalletRuntimeManager().getLastWallet() != null)
+            getWalletRuntimeManager().getLastWallet().clear();
+
+        if(getSubAppRuntimeMiddleware().getLastApp() != null)
+            getSubAppRuntimeMiddleware().getLastApp().clear();
     }
 
     /**

@@ -263,9 +263,10 @@ public class OpenContractMonitorAgent implements
                 List<String> contractPendingToSubmitList = openContractBusinessTransactionDao.getPendingToSubmitContractHash();
                 if (!contractPendingToSubmitList.isEmpty()) {
                     for (String hashToSubmit : contractPendingToSubmitList) {
-                        System.out.println("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash()\n");
                         contractXML = openContractBusinessTransactionDao.getContractXML(hashToSubmit);
                         contractType = openContractBusinessTransactionDao.getContractType(hashToSubmit);
+
+                        System.out.println("\nTEST CONTRACT - OPEN CONTRACT - AGENT - doTheMainTask() - getPendingToSubmitContractHash() - contractType: "+contractType+"\n");
 
                         switch (contractType) {
                             case PURCHASE:
