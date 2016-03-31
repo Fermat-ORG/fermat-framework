@@ -59,6 +59,7 @@ public enum EventSource implements FermatEnum {
     NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST  ("NSCPR"),
     NETWORK_SERVICE_CRYPTO_TRANSMISSION     ("NCT"),
     NETWORK_SERVICE_INTRA_ACTOR             ("NSIA"),
+    NETWORK_SERVICE_FERMAT_MONITOR          ("NSFM"),
     NETWORK_SERVICE_INTRA_USER_PLUGIN       ("NIU"),
     NETWORK_SERVICE_MONEY_REQUEST_PLUGIN    ("NMR"),
     NETWORK_SERVICE_MONEY_PLUGIN            ("NSM"),
@@ -128,6 +129,7 @@ public enum EventSource implements FermatEnum {
             case "NCT":    return NETWORK_SERVICE_CRYPTO_TRANSMISSION;
             case "NIU":    return NETWORK_SERVICE_INTRA_USER_PLUGIN;
             case "NSIA":   return NETWORK_SERVICE_INTRA_ACTOR;
+            case "NSFM":   return NETWORK_SERVICE_FERMAT_MONITOR;
             case "NSM":    return NETWORK_SERVICE_MONEY_PLUGIN;
             case "NMR":    return NETWORK_SERVICE_MONEY_REQUEST_PLUGIN;
             case "NTP":    return NETWORK_SERVICE_TEMPLATE_PLUGIN;

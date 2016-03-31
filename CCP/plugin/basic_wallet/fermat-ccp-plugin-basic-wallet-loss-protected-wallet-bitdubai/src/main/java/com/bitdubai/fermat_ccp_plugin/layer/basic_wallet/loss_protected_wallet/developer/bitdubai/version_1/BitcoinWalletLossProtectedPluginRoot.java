@@ -12,11 +12,15 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -37,9 +41,19 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoad
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantInitializeBitcoinLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
+
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSettings;
+
+
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.developerUtils.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantLossProtectedDeliverDatabaseException;
+import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.structure.BitcoinLossProtectedSettings;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.structure.BitcoinWalletLossProtectedWallet;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
+import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
+import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
+import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -153,7 +167,7 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
     @Override
     public BitcoinLossProtectedWallet loadWallet(String walletId) throws CantLoadWalletException {
         try {
-            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
+            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster, this.getSettingsManager());
 
             UUID internalWalletId = walletIds.get(walletId);
             bitcoinWallet.initialize(internalWalletId);
@@ -171,7 +185,7 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
     @Override
     public void createWallet(String walletId) throws CantCreateWalletException {
         try {
-            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
+            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster, this.getSettingsManager());
 
             UUID internalWalletId = bitcoinWallet.create(walletId);
 
@@ -186,8 +200,42 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
         }
     }
 
+    private SettingsManager<BitcoinLossProtectedWalletSettings> settingsManager;
 
+    @Override
+    public SettingsManager<BitcoinLossProtectedWalletSettings> getSettingsManager() {
+        if (this.settingsManager != null)
+            return this.settingsManager;
 
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
+    }
+
+    @Override
+    public void createSettingsFile(String walletPublicKey) {
+        BitcoinLossProtectedWalletSettings bitcoinLossProtectedWalletSettings = new BitcoinLossProtectedSettings(this.pluginFileSystem, this.pluginId);
+
+        try {
+
+            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
+
+            Collection<CurrencyExchangeRateProviderManager> filteredProviders = exchangeProviderFilterManagerproviderFilter.getProviderReferencesFromCurrencyPair(wantedCurrencyPair);
+            List<CurrencyExchangeRateProviderManager> providers = new ArrayList(filteredProviders);
+
+            bitcoinLossProtectedWalletSettings.setExchangeProvider(providers.get(0).getProviderId());
+            this.getSettingsManager().persistSettings(walletPublicKey, bitcoinLossProtectedWalletSettings);
+        } catch (CantPersistSettingsException e1) {
+            e1.printStackTrace();
+        } catch (CantGetProviderException e) {
+            e.printStackTrace();
+        } catch (CantGetProviderInfoException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void loadWalletIdsMap() throws CantStartPluginException {
         PluginTextFile walletIdsFile = getWalletIdsFile();
