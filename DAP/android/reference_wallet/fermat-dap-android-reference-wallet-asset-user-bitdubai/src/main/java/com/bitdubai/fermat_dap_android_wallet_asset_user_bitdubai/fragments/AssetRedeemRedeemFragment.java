@@ -38,9 +38,11 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.RedeemP
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -66,7 +68,9 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
     // Data
     private List<RedeemPoint> redeemPoints;
     private RedeemPoint redeemPointSelect;
-    private DigitalAsset assetToRedeem;
+
+    private Asset assetToRedeem;
+    private DigitalAsset digitalAsset;
 
     SettingsManager<AssetUserSettings> settingsManager;
 
@@ -90,13 +94,22 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
             redeemPoints = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-            assetToRedeem = (DigitalAsset) appSession.getData("asset_data");
+
+            assetToRedeem = (Asset) appSession.getData("asset_data");
+
+            String digitalAssetPublicKey = assetToRedeem.getDigitalAsset().getPublicKey();
+            try {
+                digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
+            } catch (CantLoadWalletException e) {
+                e.printStackTrace();
+            }
+
             activity = getActivity();
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.DAP_ASSET_ISSUER_WALLET,
+                errorManager.reportUnexpectedWalletException(Wallets.DAP_ASSET_USER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
     }
@@ -160,8 +173,10 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
                                 @Override
                                 public void onClick() {
                                     int assetsAmount = Integer.parseInt("1");
-                                    doRedeem(assetToRedeem.getAssetPublicKey(), redeemPoints, assetsAmount);
-                                    //changeActivity(Activities.DAP_WALLET_ASSET_USER_V3_HOME, appSession.getAppPublicKey());
+
+
+                                    doRedeem(digitalAsset.getAssetPublicKey(), redeemPoints, assetsAmount);
+
                                 }
                             }).build().show();
 
@@ -196,12 +211,12 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
     private void configureToolbar() {
         toolbar = getToolbar();
         if (toolbar != null) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.dap_user_wallet_new));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.card_toolbar));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBottom(Color.WHITE);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
-                window.setStatusBarColor(getResources().getColor(R.color.dap_user_wallet_principal));
+                window.setStatusBarColor(getResources().getColor(R.color.card_toolbar));
             }
         }
     }
@@ -378,7 +393,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
                 if (activity != null) {
 //                    refreshUIData();
                     Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_redeem_ok), Toast.LENGTH_LONG).show();
-                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL, appSession.getAppPublicKey());
+                    changeActivity(Activities.DAP_WALLET_ASSET_USER_V3_HOME, appSession.getAppPublicKey());
                 }
             }
 

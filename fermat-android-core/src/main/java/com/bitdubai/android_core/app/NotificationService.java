@@ -160,7 +160,7 @@ public class NotificationService extends Service {
             mNotifyManager = (NotificationManager)
                     getSystemService(NOTIFICATION_SERVICE);
             if(progress==0 || progress==100){
-                mNotifyManager.cancel(87);
+                mNotifyManager.cancel(publishId);
             }else {
 
 // Displays the progress bar for the first time.

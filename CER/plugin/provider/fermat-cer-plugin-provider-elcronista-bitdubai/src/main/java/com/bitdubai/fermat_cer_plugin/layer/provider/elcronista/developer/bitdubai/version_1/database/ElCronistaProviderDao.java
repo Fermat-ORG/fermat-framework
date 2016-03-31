@@ -61,14 +61,14 @@ public class ElCronistaProviderDao {
             try {
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeElCronistaProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
             }
         }catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            errorManager.reportUnexpectedPluginException(Plugins.ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeElCronistaProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantInitializeElCronistaProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + ElCronistaProviderDatabaseConstants.QUERY_HISTORY_TABLE_NAME, "");
         }
     }

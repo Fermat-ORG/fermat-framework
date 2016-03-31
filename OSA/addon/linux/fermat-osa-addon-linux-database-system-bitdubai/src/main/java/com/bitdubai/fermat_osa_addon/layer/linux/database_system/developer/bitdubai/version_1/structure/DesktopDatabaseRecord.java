@@ -55,6 +55,10 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
         return "";
     }
 
+    public void setValues(List<DatabaseRecord> values) {
+        this.values = values;
+    }
+
     /**
      * <p>Get field record value in UUID object
      * @param columnName column name to get back
@@ -81,7 +85,7 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
 
         for (int i = 0; i < values.size(); i++) {
             if(values.get(i).getName().equals(columnName)){
-                return Long.parseLong (values.get(i).getValue());
+                return Long.parseLong(values.get(i).getValue());
             }
         }
         return 0;
@@ -132,12 +136,6 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
         return 0;
     }
 
-    @Override
-    public String getVariableName(String columnName) {
-        return null;
-    }
-
-
     /**
      * <p>Set String field record value
      * @param columnName name of the column to which is assigned the value
@@ -147,9 +145,9 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
     public void setStringValue(String columnName, String value) {
 
         if(values == null)
-            values = new ArrayList<DatabaseRecord>();
+            values = new ArrayList<>();
 
-        DatabaseRecord record = new DesktopRecord();
+        DesktopRecord record = new DesktopRecord();
 
         record.setName(columnName);
         record.setValue(value);
@@ -168,9 +166,9 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
     public void setUUIDValue(String columnName, UUID value) {
 
         if(values == null)
-            values = new ArrayList<DatabaseRecord>();
+            values = new ArrayList<>();
 
-        DatabaseRecord record = new DesktopRecord();
+        DesktopRecord record = new DesktopRecord();
 
         record.setName(columnName);
         record.setValue(value.toString());
@@ -188,9 +186,9 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
     @Override
     public void setLongValue(String columnName, long value) {
         if(values == null)
-            values = new ArrayList<DatabaseRecord>();
+            values = new ArrayList<>();
 
-        DatabaseRecord record = new DesktopRecord();
+        DesktopRecord record = new DesktopRecord();
 
         record.setName(columnName);
         record.setValue(String.valueOf(value));
@@ -209,9 +207,9 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
     @Override
     public void setIntegerValue(String columnName, Integer value) {
         if(values == null)
-            values = new ArrayList<DatabaseRecord>();
+            values = new ArrayList<>();
 
-        DatabaseRecord record = new DesktopRecord();
+        DesktopRecord record = new DesktopRecord();
 
         record.setName(columnName);
         record.setValue(String.valueOf(value));
@@ -224,15 +222,15 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
     /**
      * <p>Set Float field record value
      * @param columnName name of the column to which is assigned the value
-     * @param value
+     * @param value column value in float
      */
     @Override
     public void setFloatValue(String columnName, float value){
 
         if(values == null)
-            values = new ArrayList<DatabaseRecord>();
+            values = new ArrayList<>();
 
-        DatabaseRecord record = new DesktopRecord();
+        DesktopRecord record = new DesktopRecord();
 
         record.setName(columnName);
         record.setValue(Float.toString(value));
@@ -249,9 +247,9 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
     public void setDoubleValue(String columnName, double value){
 
         if(values == null)
-            values = new ArrayList<DatabaseRecord>();
+            values = new ArrayList<>();
 
-        DatabaseRecord record = new DesktopRecord();
+        DesktopRecord record = new DesktopRecord();
 
         record.setName(columnName);
         record.setValue(Double.toString(value));
@@ -259,15 +257,6 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
         values.add(record);
     }
 
-    @Override
-    public void setVariableValue(String columnName, String variableName) {
-
-    }
-
-    @Override
-    public void setSelectField(String columnName) {
-
-    }
 
     @Override
     public void setFermatEnum(String columnName, FermatEnum state) {
@@ -278,12 +267,5 @@ public class DesktopDatabaseRecord implements DatabaseTableRecord {
     public List<DatabaseRecord> getValues(){
         return this.values;
     }
-
-    @Override
-    public void setValues( List<DatabaseRecord> values ){
-        this.values = values;
-    }
-
-
 
 }

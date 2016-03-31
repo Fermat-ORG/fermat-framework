@@ -83,6 +83,11 @@ public class AssetUserWalletTransactionWrapper implements AssetUserWalletTransac
     }
 
     @Override
+    public String getTransactionHash() {
+        return transactionHash;
+    }
+
+    @Override
     public String getGenesisTransaction() {
         return transactionHash;
     }
