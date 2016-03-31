@@ -2,6 +2,7 @@ package com.bitdubai.fermat_pip_plugin.layer.android_core_module.developer.bitdu
 
 
 import com.bitdubai.fermat_api.AndroidCoreManager;
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
@@ -47,6 +48,13 @@ public class AndroidCoreModulePluginRoot extends AbstractPlugin implements Andro
 
     public AndroidCoreModulePluginRoot(){
         super(new PluginVersionReference(new Version()));
+    }
+
+
+    @Override
+    public void start() throws CantStartPluginException {
+        super.start();
+
     }
 
     /**
