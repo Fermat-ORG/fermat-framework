@@ -1,6 +1,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 <!--android:showAsAction="ifRoom"-->
     <item
+        android:id="@+id/menu_block_contact"
+        android:title="@string/menu_block_contact"
+        android:icon="@drawable/ic_action_edit"
+        />
+    <item
         android:id="@+id/menu_edit_contact"
         android:title="@string/menu_edit_contact"
         android:icon="@drawable/ic_action_edit"
