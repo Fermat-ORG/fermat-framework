@@ -2,11 +2,13 @@ package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bi
 
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOutNotifierAgentDatabaseDao;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOutNotifierAgentDeveloperDatabaseFactory;
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.events.TimeOutMonitoringAgent;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.exceptions.CantInitializeTimeOutNotifierAgentDatabaseException;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierAgent;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierAgentPool;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierManager;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.utils.FermatActorImpl;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.actor.FermatActor;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -21,8 +23,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -52,6 +56,7 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
     TimeOutNotifierAgentPool timeOutNotifierAgentPool;
     TimeOutNotifierManager timeOutNotifierManager;
     TimeOutNotifierAgentDatabaseDao dao;
+    TimeOutMonitoringAgent monitoringAgent;
 
     /**
      * constructor
@@ -102,6 +107,16 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
         timeOutNotifierAgentPool = new TimeOutNotifierAgentPool(getDao(), this.errorManager);
         timeOutNotifierManager = new TimeOutNotifierManager(getDao(), this.errorManager, this.timeOutNotifierAgentPool);
 
+        //starts the agent
+        monitoringAgent = new TimeOutMonitoringAgent(getDao(), timeOutNotifierAgentPool, errorManager, eventManager);
+        try {
+            monitoringAgent.start();
+        } catch (CantStartAgentException e) {
+            CantStartPluginException exception = new CantStartPluginException(e, "Unable to start Timeout Monitoring agent", "unknown");
+            errorManager.reportUnexpectedPluginException(Plugins.TIMEOUT_NOTIFIER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
+        }
+
         //testAddNewAgent();
     }
 
@@ -117,7 +132,7 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
             owner.setPublicKey(UUID.randomUUID().toString());
             owner.setType(Actors.CBP_CRYPTO_CUSTOMER);
             owner.setName("Test Rodrigo");
-            timeOutNotifierManager.addNew(System.currentTimeMillis(), 40000, "Prueba Rodrigo 1", owner);
+            timeOutNotifierManager.addNew(40000, "Prueba Rodrigo 1", owner);
 
             System.out.println("***TimeOutNotifier*** " + timeOutNotifierManager.getTimeOutAgents(owner).toString());
             System.out.println("***TimeOutNotifier*** " + timeOutNotifierManager.getTimeOutAgents().size());

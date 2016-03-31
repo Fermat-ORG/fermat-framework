@@ -112,8 +112,9 @@ public class TimeOutNotifierAgentDatabaseDao {
         timeOutNotifierAgent.setUuid(agentRecord.getUUIDValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_ID_COLUMN_NAME));
         timeOutNotifierAgent.setName(agentRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_NAME_COLUMN_NAME));
         timeOutNotifierAgent.setDescription(agentRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DESCRIPTION_COLUMN_NAME));
-        timeOutNotifierAgent.setStartTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME));
-        timeOutNotifierAgent.setTimeOutDuration(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME));
+        timeOutNotifierAgent.setEpochStartTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME));
+        timeOutNotifierAgent.setEpochEndTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_END_TIME_COLUMN_NAME));
+        timeOutNotifierAgent.setDuration(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME));
         timeOutNotifierAgent.setElapsedTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_ELAPSED_COLUMN_NAME));
         try {
             timeOutNotifierAgent.setStatus(AgentStatus.getByCode(agentRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME)));
@@ -147,6 +148,7 @@ public class TimeOutNotifierAgentDatabaseDao {
         record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DESCRIPTION_COLUMN_NAME, timeOutNotifierAgent.getDescription());
         record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_OWNER_PUBLICKEY_COLUMN_NAME, timeOutNotifierAgent.getOwner().getPublicKey());
         record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME, timeOutNotifierAgent.getEpochStartTime());
+        record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_END_TIME_COLUMN_NAME, timeOutNotifierAgent.getEpochEndTime());
         record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME, timeOutNotifierAgent.getDuration());
         record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_ELAPSED_COLUMN_NAME, timeOutNotifierAgent.getElapsedTime());
         record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, timeOutNotifierAgent.getStatus().getCode());
@@ -318,6 +320,30 @@ public class TimeOutNotifierAgentDatabaseDao {
             databaseTable.deleteRecord(record);
         } catch (CantDeleteRecordException e) {
             throw new CantExecuteQueryException(e, "Can't delete existing record." + record.toString(), "Database issue");
+        }
+
+        // I will delete any registered event for this Agent
+        removeEventMonitorRecord(timeOutNotifierAgent.getUUID());
+
+    }
+
+    private void removeEventMonitorRecord(UUID uuid) throws CantExecuteQueryException {
+        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_TABLE_NAME);
+        databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.AGENTS_ID_COLUMN_NAME, uuid, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            thrownCantExecuteQueryException(e, databaseTable.getTableName());
+        }
+
+        if (!databaseTable.getRecords().isEmpty()){
+            DatabaseTableRecord record = databaseTable.getRecords().get(0);
+            try {
+                databaseTable.deleteRecord(record);
+            } catch (CantDeleteRecordException e) {
+                throw new CantExecuteQueryException(e, "Error deleting event record. " + uuid.toString(), "database issue");
+            }
         }
     }
 

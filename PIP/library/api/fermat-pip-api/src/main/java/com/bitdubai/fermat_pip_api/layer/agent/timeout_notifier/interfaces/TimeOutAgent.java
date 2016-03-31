@@ -59,6 +59,13 @@ public interface TimeOutAgent {
      */
     long getEpochStartTime();
 
+
+    /**
+     * the end time of the Agent as an epoch time in milliseconds.
+     * @return the end time of the agent.
+     */
+    long getEpochEndTime();
+
     /**
      * The duration that the Agent will be monitoring for. When this duration is reached since the start time
      * an event will be triggered.

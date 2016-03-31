@@ -38,9 +38,10 @@ public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
     private String name;
     private String description;
     private FermatActor owner;
-    private long startTime;
-    private long timeOutDuration;
+    private long epochStartTime;
+    private long duration;
     private long elapsedTime;
+    private long epochEndTime;
     private AgentStatus status;
     private ProtocolStatus protocolStatus;
 
@@ -77,7 +78,7 @@ public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
 
     @Override
     public long getDuration() {
-        return timeOutDuration;
+        return duration;
     }
 
     @Override
@@ -112,7 +113,12 @@ public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
 
     @Override
     public long getEpochStartTime() {
-        return startTime;
+        return epochStartTime;
+    }
+
+    @Override
+    public long getEpochEndTime() {
+        return epochEndTime;
     }
 
     @Override
@@ -140,12 +146,16 @@ public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
         this.owner = owner;
     }
 
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
+    public void setEpochStartTime(long epochStartTime) {
+        this.epochStartTime = epochStartTime;
     }
 
-    public void setTimeOutDuration(long timeOutDuration) {
-        this.timeOutDuration = timeOutDuration;
+    public void setEpochEndTime(long epochEndTime) {
+        this.epochEndTime = epochEndTime;
+    }
+
+    public void setDuration(long timeOutDuration) {
+        this.duration = timeOutDuration;
     }
 
     public void setElapsedTime(long elapsedTime) {
@@ -167,8 +177,9 @@ public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", owner=" + owner +
-                ", startTime=" + startTime +
-                ", timeOutDuration=" + timeOutDuration +
+                ", startTime=" + epochStartTime +
+                ", endTime=" + epochEndTime +
+                ", timeOutDuration=" + duration +
                 ", elapsedTime=" + elapsedTime +
                 ", status=" + status +
                 ", protocolStatus=" + protocolStatus +
