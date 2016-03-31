@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -355,6 +356,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 typeMessage, noReadMsgs, imgId, errorManager);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
+        registerForContextMenu(list);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -467,29 +469,38 @@ public class ChatListFragment extends AbstractFermatFragment{
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         if (v.getId()==R.id.list) {
-            MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.chat_list_menu, menu);
+            MenuInflater inflater = new MenuInflater(getContext());
+            inflater.inflate(R.menu.chat_list_context_menu, menu);
         }
     }
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-        switch(item.getItemId()) {
-            case R.id.menu_delete_all_chats:
-                // add stuff here
-                return true;
-            case R.id.edit:
-                // edit stuff here
-                return true;
-            case R.id.delete:
-                // remove stuff here
-                return true;
-            default:
-                return super.onContextItemSelected(item);
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int id =item.getItemId();
+        if (id == R.id.menu_delete_chat) {
+            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+            return true;
         }
+        if (id == R.id.menu_clean_chat) {
+            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+            return true;
+        }
+        if (id == R.id.menu_delete_all_chats) {
+            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+            return true;
+        }
+        if (id == R.id.menu_delete_contact) {
+            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+            return true;
+        }
+        if (id == R.id.menu_block_contact) {
+            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+            return true;
+        }
+        return super.onContextItemSelected(item);
     }
 }
