@@ -465,4 +465,31 @@ public class ChatListFragment extends AbstractFermatFragment{
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        if (v.getId()==R.id.list) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.chat_list_menu, menu);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        switch(item.getItemId()) {
+            case R.id.menu_delete_all_chats:
+                // add stuff here
+                return true;
+            case R.id.edit:
+                // edit stuff here
+                return true;
+            case R.id.delete:
+                // remove stuff here
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
 }
