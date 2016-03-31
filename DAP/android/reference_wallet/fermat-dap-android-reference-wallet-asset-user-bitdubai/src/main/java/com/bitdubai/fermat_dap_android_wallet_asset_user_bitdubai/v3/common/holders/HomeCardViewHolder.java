@@ -48,6 +48,11 @@ public class HomeCardViewHolder extends FermatViewHolder {
     private ImageButton cardSellButton;
     private ImageButton cardTransactionsButton;
 
+    private View normalV3Asset;
+    private View negotiationV3Asset;
+    private FermatTextView negotiationAssetName;
+    private FermatTextView v3NegotiationAssetPrice;
+
     /**
      * Constructor
      *
@@ -72,11 +77,16 @@ public class HomeCardViewHolder extends FermatViewHolder {
         cardAppropriateButton = (ImageButton) itemView.findViewById(R.id.cardAppropriateButton);
         cardSellButton = (ImageButton) itemView.findViewById(R.id.cardSellButton);
         cardTransactionsButton = (ImageButton) itemView.findViewById(R.id.cardTransactionsButton);
+        normalV3Asset = itemView.findViewById(R.id.normalV3Asset);
+        negotiationV3Asset = itemView.findViewById(R.id.negotiationV3Asset);
+        negotiationAssetName = (FermatTextView) itemView.findViewById(R.id.negotiationAssetName);
+        v3NegotiationAssetPrice = (FermatTextView) itemView.findViewById(R.id.v3NegotiationAssetPrice);
     }
 
     public void bind(final Asset asset, View.OnClickListener onClickListenerRedeem,
                      View.OnClickListener onClickListenerTransfer, View.OnClickListener onClickListenerAppropriate,
                      View.OnClickListener onClickListenerSell, View.OnClickListener onClickListenerTransactions) {
+
         Bitmap bitmap;
         if (asset.getActorImage() != null && asset.getActorImage().length > 0) {
             bitmap = BitmapFactory.decodeByteArray(asset.getActorImage(), 0, asset.getActorImage().length);
@@ -85,23 +95,34 @@ public class HomeCardViewHolder extends FermatViewHolder {
         }
         bitmap = Bitmap.createScaledBitmap(bitmap, 45, 45, true);
         homeIssuerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(res, bitmap));
-
         cardActorName.setText(asset.getActorName());
         cardTime.setText(asset.getFormattedDate());
 
-        int image = (asset.getStatus().equals(Asset.Status.CONFIRMED)) ? R.drawable.detail_check : R.drawable.detail_uncheck;
-        cardConfirmedImage.setImageResource(image);
-        cardConfirmedText.setText((asset.getStatus().equals(Asset.Status.CONFIRMED)) ? res.getString(R.string.card_confirmed) : res.getString(R.string.card_pending));
 
         byte[] img = (asset.getImage() == null) ? new byte[0] : asset.getImage();
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(cardAssetImage, res, R.drawable.img_asset_without_image, false);
         bitmapWorkerTask.execute(img);
 
-        cardAssetName.setText(asset.getName());
-        cardExpDate.setText(asset.getFormattedExpDate());
+        if(asset.getAssetUserNegotiation() != null){
 
-        initActions(asset, onClickListenerRedeem, onClickListenerTransfer, onClickListenerAppropriate,
-                onClickListenerSell, onClickListenerTransactions);
+            normalV3Asset.setVisibility(View.GONE);
+            negotiationV3Asset.setVisibility(View.VISIBLE);
+            negotiationAssetName.setText(asset.getName());
+            v3NegotiationAssetPrice.setText(String.format("%s BTC", DAPStandardFormats.BITCOIN_FORMAT.format(
+                    BitcoinConverter.convert(Double.valueOf(asset.getAssetUserNegotiation().getAmount()), SATOSHI, BITCOIN))));
+
+        }else {
+
+            int image = (asset.getStatus().equals(Asset.Status.CONFIRMED)) ? R.drawable.detail_check : R.drawable.detail_uncheck;
+            cardConfirmedImage.setImageResource(image);
+            cardConfirmedText.setText((asset.getStatus().equals(Asset.Status.CONFIRMED)) ? res.getString(R.string.card_confirmed) : res.getString(R.string.card_pending));
+
+            cardAssetName.setText(asset.getName());
+            cardExpDate.setText(asset.getFormattedExpDate());
+
+            initActions(asset, onClickListenerRedeem, onClickListenerTransfer, onClickListenerAppropriate,
+                    onClickListenerSell, onClickListenerTransactions);
+        }
     }
 
     private void initActions(Asset asset, View.OnClickListener onClickListenerRedeem,

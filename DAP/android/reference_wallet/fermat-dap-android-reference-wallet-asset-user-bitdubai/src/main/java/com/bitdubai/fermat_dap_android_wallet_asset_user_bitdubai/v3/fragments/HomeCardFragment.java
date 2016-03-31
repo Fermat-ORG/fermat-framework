@@ -33,6 +33,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
@@ -324,7 +326,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
             View.OnClickListener onClickListenerAppropriate = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    final Asset asset = (Asset) appSession.getData("asset");
+                    final Asset asset = (Asset) appSession.getData("asset_data");
                     new ConfirmDialog.Builder(getActivity(), appSession)
                             .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
                             .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_sure))
@@ -409,9 +411,12 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
     @Override
     public List<Asset> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<Asset> assets = new ArrayList<>();
+
         if (moduleManager != null) {
             try {
                 assets = dataManager.getAssets();
+                assets.addAll(dataManager.getAllPendingNegotiations());
+
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)

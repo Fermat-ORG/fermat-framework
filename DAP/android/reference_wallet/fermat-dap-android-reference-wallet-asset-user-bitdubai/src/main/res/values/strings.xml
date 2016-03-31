@@ -41,6 +41,7 @@
     <string name="dap_user_wallet_validate_assets_to_redeem">Must be enter the number of assets to redeem</string>
     <string name="dap_user_wallet_validate_assets_to_redeem_greater">Value can\'t be greater than </string>
     <string name="dap_user_wallet_validate_no_available_assets">There is not assets to redeem</string>
+    <string name="dap_user_wallet_validate_no_rp">No redeem point selected</string>
     <string name="dap_user_wallet_validate_no_redeem_points">No redeem points selected</string>
     <string name="dap_user_wallet_validate_no_users">No users selected</string>
     <string name="dap_user_wallet_validate_no_user">No user selected</string>

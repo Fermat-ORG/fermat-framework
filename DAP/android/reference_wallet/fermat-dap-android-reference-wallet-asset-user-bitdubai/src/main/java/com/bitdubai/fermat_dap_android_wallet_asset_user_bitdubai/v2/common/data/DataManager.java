@@ -1,8 +1,12 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.data;
 
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.AssetUserNegotiation;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Issuer;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.RedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
@@ -15,6 +19,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -83,12 +88,17 @@ public class DataManager {
 //        }
 
         assets = new ArrayList<>();
+        List<Asset> debitAssets = new ArrayList<>();
         for(AssetUserWalletList assetUserWalletList : assetUserWalletBalances) {
             List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet(walletPublicKey).getAllTransactions(assetUserWalletList.getDigitalAsset().getPublicKey());
             for(AssetUserWalletTransaction assetUserWalletTransaction : assetUserWalletTransactions) {
                 if (assetUserWalletTransaction.getMemo().equals("Asset Delivered")
                         && assetUserWalletTransaction.getTransactionType().equals(TransactionType.CREDIT)) {
                     assets.add(new Asset(assetUserWalletList, assetUserWalletTransaction));
+                }
+                if (assetUserWalletTransaction.getTransactionType().equals(TransactionType.DEBIT)
+                        && assetUserWalletTransaction.getBalanceType().equals(BalanceType.AVAILABLE)) {
+                    debitAssets.add(new Asset(assetUserWalletList, assetUserWalletTransaction));
                 }
             }
         }
@@ -105,6 +115,15 @@ public class DataManager {
             }
             if (!b) {
                 newAssets.add(assets.get(i));
+            }
+        }
+
+        for (Asset asset : newAssets) {
+            for (Asset debitAsset : debitAssets) {
+                if (asset.getId().equals(debitAsset.getId())) {
+                    newAssets.remove(asset);
+                    break;
+                }
             }
         }
 
@@ -128,5 +147,33 @@ public class DataManager {
             redeemPoints.add(newUser);
         }
         return redeemPoints;
+    }
+
+    public List<Asset> getAllPendingNegotiations() throws Exception {
+        List<AssetNegotiation> assetNegotiations = moduleManager.getPendingAssetNegotiations();
+        List<Asset> digitalAssets = new ArrayList<>();
+        Asset digitalAsset;
+
+        for (AssetNegotiation asset : assetNegotiations){
+            digitalAsset = new Asset();
+            digitalAsset.getDigitalAsset().setPublicKey(asset.getAssetToOffer().getPublicKey());
+            digitalAsset.setName(asset.getAssetToOffer().getName());
+
+            AssetUserNegotiation userAssetNegotiation = new AssetUserNegotiation();
+            userAssetNegotiation.setId(asset.getNegotiationId());
+            userAssetNegotiation.setAmount(asset.getTotalAmount());
+
+            digitalAsset.setAssetUserNegotiation(userAssetNegotiation);
+            digitalAsset.setExpDate((Timestamp) asset.getAssetToOffer().getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
+
+            digitalAssets.add(digitalAsset);
+
+            List<Resource> resources = asset.getAssetToOffer().getResources();
+            if(resources != null && !resources.isEmpty()){
+                digitalAsset.setImage(resources.get(0).getResourceBinayData());
+            }
+        }
+
+        return digitalAssets;
     }
 }

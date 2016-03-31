@@ -38,7 +38,7 @@
         android:layout_toRightOf="@+id/selectedUserEffect"
         android:paddingRight="8dp"
         android:text="Jinmy Bohorquez"
-        android:textColor="#009688"
+        android:textColor="#0C6089"
         android:textSize="18sp"
         android:textStyle="bold"
         tools:ignore="HardcodedText,RtlSymmetry" />
