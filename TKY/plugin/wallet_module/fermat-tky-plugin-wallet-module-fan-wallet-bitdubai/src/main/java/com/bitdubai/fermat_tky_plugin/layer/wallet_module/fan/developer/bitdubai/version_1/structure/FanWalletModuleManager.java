@@ -4,6 +4,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
@@ -60,13 +61,13 @@ public class FanWalletModuleManager implements FanWalletModule {
     }
 
     @Override
-    public void synchronizeSongs(String tokenlyUsername) throws CantSynchronizeWithExternalAPIException {
-        songWalletTokenlyManager.synchronizeSongs(tokenlyUsername);
+    public void synchronizeSongs(Fan fanIdentity) throws CantSynchronizeWithExternalAPIException {
+        songWalletTokenlyManager.synchronizeSongs(fanIdentity);
     }
 
     @Override
-    public void synchronizeSongsByUser(String username) throws CantSynchronizeWithExternalAPIException {
-        songWalletTokenlyManager.synchronizeSongsByUser(username);
+    public void synchronizeSongsByUser(Fan fanIdentity) throws CantSynchronizeWithExternalAPIException {
+        songWalletTokenlyManager.synchronizeSongsByUser(fanIdentity);
     }
 
     @Override
@@ -75,8 +76,8 @@ public class FanWalletModuleManager implements FanWalletModule {
     }
 
     @Override
-    public void downloadSong(UUID songId) throws CantDownloadSongException, CantUpdateSongDevicePathException, CantUpdateSongStatusException {
-        songWalletTokenlyManager.downloadSong(songId);
+    public void downloadSong(UUID songId, MusicUser musicUser) throws CantDownloadSongException, CantUpdateSongDevicePathException, CantUpdateSongStatusException {
+        songWalletTokenlyManager.downloadSong(songId, musicUser);
     }
 
     @Override

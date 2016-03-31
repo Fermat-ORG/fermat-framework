@@ -315,6 +315,9 @@ public enum Plugins implements FermatPluginsEnum {
     ARTIST_IDENTITY                     ("ARTIDNTY"),
     ART_ARTIST_SUB_APP_MODULE           ("AASAM"),
     ART_FAN_SUB_APP_MODULE              ("AFSAM"),
+    MUSIC_PLAYER_SUB_APP_MODULE         ("ARTMPM"),
+    ARTIST_COMMUNITY_SUB_APP_MODULE     ("ARTACM"),
+    FAN_COMMUNITY_SUB_APP_MODULE        ("ARTFCM"),
 
     //TKY
     TOKENLY_API                         ("TOKAP"),
@@ -323,9 +326,14 @@ public enum Plugins implements FermatPluginsEnum {
     TOKENLY_ARTIST_SUB_APP_MODULE       ("TASAM"),
     TOKENLY_FAN_SUB_APP_MODULE          ("TFSAM"),
     TOKENLY_FAN_WALLET_MODULE           ("TFWM"),
-    TOKENLY_WALLET                      ("TWALLET");
+    TOKENLY_WALLET                      ("TWALLET"),
+
+    //Init PIP
+    PIP_FERMAT_MONITOR                  ("PFM");
+    //End PIP
 
     // End  new Plugins
+
 
     private final String code;
 
@@ -457,6 +465,7 @@ public enum Plugins implements FermatPluginsEnum {
             case "COFP":    return CUSTOMER_OFFLINE_PAYMENT         ;
             case "BAFP":    return BROKER_ACK_OFFLINE_PAYMENT       ;
             case "BAOP":    return BROKER_ACK_ONLINE_PAYMENT        ;
+            case "CAFM":    return CUSTOMER_ACK_OFFLINE_MERCHANDISE ;
             case "CAOM":    return CUSTOMER_ACK_ONLINE_MERCHANDISE  ;
             case "BSOM":    return BROKER_SUBMIT_ONLINE_MERCHANDISE ;
             case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
@@ -481,7 +490,10 @@ public enum Plugins implements FermatPluginsEnum {
             case "TWALLET":     return TOKENLY_WALLET                           ;
             case "ARTAAC":      return ARTIST_ACTOR_CONNECTION                  ;
             case "ARTFAC":      return FAN_ACTOR_CONNECTION                     ;
-
+            case "PFM":         return PIP_FERMAT_MONITOR                       ;
+            case "ARTMPM":      return MUSIC_PLAYER_SUB_APP_MODULE              ;
+            case "ARTACM":      return ARTIST_COMMUNITY_SUB_APP_MODULE          ;
+            case "ARTMCM":      return FAN_COMMUNITY_SUB_APP_MODULE             ;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

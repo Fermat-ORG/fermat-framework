@@ -10,8 +10,6 @@ public enum Specialist {
     ASSET_REDEMPTION_SPECIALIST("ARS"),
     ASSET_USER_SPECIALIST("AUS"),
     CRYPTO_ROUTER_SPECIALIST ("CPR"),
-    CBP_CRYPTO_BROKER_SPECIALIST("CBPCBS"),
-    CBP_CRYPTO_CUSTOMER_SPECIALIST("CBPCCS"),
     EXTRA_USER_SPECIALIST ("EXU"),
     DEVICE_USER_SPECIALIST ("DVU"),
     INTRA_USER_SPECIALIST ("INU"),
@@ -38,8 +36,6 @@ public enum Specialist {
             case "INU": return Specialist.INTRA_USER_SPECIALIST;
             case "REP": return Specialist.REDEEM_POINT_SPECIALIST;
             case "UNK": return Specialist.UNKNOWN_SPECIALIST;
-            case "CBPCBS": return Specialist.CBP_CRYPTO_BROKER_SPECIALIST;
-            case "CBPCCS": return Specialist.CBP_CRYPTO_CUSTOMER_SPECIALIST;
             //Modified by Manuel Perez on 04/08/2015
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the Specialist enum");
 

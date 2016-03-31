@@ -4833,7 +4833,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 //Navigation
 
         //Side Menu
-        runtimeActivity.setSideMenu(loadSideMenuBitcoinWallet(publicKey));
+        runtimeActivity.setSideMenu(loadSideMenuLossProtectedWallet(publicKey));
 
         //fin navigation
 
@@ -4901,7 +4901,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         //Navigation
 
         //Side Menu
-        runtimeActivity.setSideMenu(loadSideMenuBitcoinWallet(publicKey));
+        runtimeActivity.setSideMenu(loadSideMenuLossProtectedWallet(publicKey));
 
         //fin navigation
 
@@ -4948,7 +4948,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_CONTACTS.getKey(), runtimeFragment);
 
         //Side Menu
-        runtimeActivity.setSideMenu(loadSideMenuBitcoinWallet(publicKey));
+        runtimeActivity.setSideMenu(loadSideMenuLossProtectedWallet(publicKey));
 
         //fin navigation
 
@@ -5195,7 +5195,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_FRAGMENT.getKey(), runtimeFragment);
 
         //Side Menu
-        runtimeActivity.setSideMenu(loadSideMenuBitcoinWallet(publicKey));
+        runtimeActivity.setSideMenu(loadSideMenuLossProtectedWallet(publicKey));
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SETTINGS_ACTIVITY_MAIN_NETWORK);
