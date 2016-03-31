@@ -21,6 +21,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantList
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletBalance;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeException;
@@ -51,19 +52,21 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
 
     private Broadcaster broadcaster;
 
+    private SettingsManager<BitcoinLossProtectedWalletSettings> settingsManager;
+
     private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
 
-    private LossProtectedWalletManager lossProtectedWalletManager;
-
     private String WALLET_PUBLIC_KEY = "loss_protected_wallet";
+
+
 
     /**
      * Constructor.
      */
-    public BitcoinWalletLossProtectedWalletBookBalance(final Database database,final Broadcaster broadcaster, final LossProtectedWalletManager lossProtectedWalletManager){
+    public BitcoinWalletLossProtectedWalletBookBalance(final Database database,final Broadcaster broadcaster, final SettingsManager<BitcoinLossProtectedWalletSettings> settingsManager){
         this.database = database;
         this.broadcaster = broadcaster;
-        this.lossProtectedWalletManager = lossProtectedWalletManager;
+        this.settingsManager = settingsManager;
     }
 
 
@@ -173,15 +176,14 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
     {
         final ExchangeRate[] rate = new ExchangeRate[1];
         try {
-            LossProtectedWalletSettings bitcoinWalletSettings = null;
+            BitcoinLossProtectedWalletSettings basicWalletSettings = null;
 
 
             //get walelt setting exchange provider manager
-            SettingsManager<LossProtectedWalletSettings> settingsManager = lossProtectedWalletManager.getSettingsManager();
 
-            bitcoinWalletSettings = settingsManager.loadAndGetSettings(WALLET_PUBLIC_KEY);
+            basicWalletSettings = settingsManager.loadAndGetSettings(WALLET_PUBLIC_KEY);
 
-          final UUID rateProviderManagerId = bitcoinWalletSettings.getExchangeProvider();
+          final UUID rateProviderManagerId = basicWalletSettings.getExchangeProvider();
 
             Thread thread = new Thread(new Runnable(){
                 @Override

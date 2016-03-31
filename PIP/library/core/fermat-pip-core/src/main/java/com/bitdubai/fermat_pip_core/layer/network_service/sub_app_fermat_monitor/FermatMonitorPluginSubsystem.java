@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_core.layer.network_service.sub_app_resources;
+package com.bitdubai.fermat_pip_core.layer.network_service.sub_app_fermat_monitor;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
@@ -14,7 +14,7 @@ public class FermatMonitorPluginSubsystem extends AbstractPluginSubsystem {
 
 
     public FermatMonitorPluginSubsystem() {
-        super(new PluginReference(Plugins.SUB_APP_FERMAT_MONITOR));
+        super(new PluginReference(Plugins.PIP_FERMAT_MONITOR));
     }
 
     @Override
