@@ -417,15 +417,6 @@ public class CloseContractBusinessTransactionDao {
                 CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
                 contractTransactionStatus.getCode());
     }*/
-
-    /**
-     * This method update a database record by contract hash.
-     * @param contractHash
-     * @param statusColumnName
-     * @param newStatus
-     * @throws UnexpectedResultReturnedFromDatabaseException
-     * @throws CantUpdateRecordException
-     */
     /*
     private void updateRecordStatus(String contractHash,
                                     String statusColumnName,
@@ -499,6 +490,38 @@ public class CloseContractBusinessTransactionDao {
                     FermatException.wrapException(exception),
                     "Saving new event.",
                     "Unexpected exception");
+        }
+    }
+
+    public void updateEventStatus(String eventId, EventStatus eventStatus) throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
+        try{
+            DatabaseTable databaseTable=getDatabaseEventsTable();
+            databaseTable.addStringFilter(
+                    CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_ID_COLUMN_NAME,
+                    eventId,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record.setStringValue(
+                    CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
+                    eventStatus.getCode());
+            databaseTable.updateRecord(record);
+        }  catch (CantLoadTableToMemoryException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Updating parameter "+CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
         }
     }
 
