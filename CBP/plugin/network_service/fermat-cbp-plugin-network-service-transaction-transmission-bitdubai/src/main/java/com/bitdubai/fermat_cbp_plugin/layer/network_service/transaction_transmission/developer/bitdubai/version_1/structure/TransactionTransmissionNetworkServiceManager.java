@@ -143,7 +143,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 remoteBusinessTransaction);
 
         try {
-            System.out.print("\nTEST CONTRACT - NS - TRANSACTION TRANSMISSION - MANAGER - sendContractStatusNotification()\n");
+            System.out.print("\nTEST CONTRACT - NS - TRANSACTION TRANSMISSION - MANAGER - sendContractStatusNotification()" +remoteBusinessTransaction+"\n");
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
             sendMessage(businessTransactionMetadata);

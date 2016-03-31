@@ -100,7 +100,7 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
         //Build Provider map
         providerMap = new HashMap<>();
         try {
-            providerMap.put(bitcoinVenezuelaProvider.getProviderId(), bitcoinVenezuelaProvider);
+            //providerMap.put(bitcoinVenezuelaProvider.getProviderId(), bitcoinVenezuelaProvider);
             providerMap.put(bitfinexProvider.getProviderId(), bitfinexProvider);
             //providerMap.put(bterProvider.getProviderId(), bterProvider);
             providerMap.put(dolarTodayProvider.getProviderId(), dolarTodayProvider);
