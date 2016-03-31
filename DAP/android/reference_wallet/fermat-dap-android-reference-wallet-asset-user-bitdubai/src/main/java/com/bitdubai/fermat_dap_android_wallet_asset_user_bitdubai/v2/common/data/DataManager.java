@@ -88,12 +88,17 @@ public class DataManager {
 //        }
 
         assets = new ArrayList<>();
+        List<Asset> debitAssets = new ArrayList<>();
         for(AssetUserWalletList assetUserWalletList : assetUserWalletBalances) {
             List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet(walletPublicKey).getAllTransactions(assetUserWalletList.getDigitalAsset().getPublicKey());
             for(AssetUserWalletTransaction assetUserWalletTransaction : assetUserWalletTransactions) {
                 if (assetUserWalletTransaction.getMemo().equals("Asset Delivered")
                         && assetUserWalletTransaction.getTransactionType().equals(TransactionType.CREDIT)) {
                     assets.add(new Asset(assetUserWalletList, assetUserWalletTransaction));
+                }
+                if (assetUserWalletTransaction.getTransactionType().equals(TransactionType.DEBIT)
+                        && assetUserWalletTransaction.getBalanceType().equals(BalanceType.AVAILABLE)) {
+                    debitAssets.add(new Asset(assetUserWalletList, assetUserWalletTransaction));
                 }
             }
         }
@@ -110,6 +115,15 @@ public class DataManager {
             }
             if (!b) {
                 newAssets.add(assets.get(i));
+            }
+        }
+
+        for (Asset asset : newAssets) {
+            for (Asset debitAsset : debitAssets) {
+                if (asset.getId().equals(debitAsset.getId())) {
+                    newAssets.remove(asset);
+                    break;
+                }
             }
         }
 
