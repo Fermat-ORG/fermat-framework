@@ -21,6 +21,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantList
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletBalance;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCurrencyExchangeException;
@@ -53,17 +54,21 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
 
     private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
 
-    private LossProtectedWalletManager lossProtectedWalletManager;
+    private UUID exchangeProviderId;
 
     private String WALLET_PUBLIC_KEY = "loss_protected_wallet";
+
+
+
 
     /**
      * Constructor.
      */
-    public BitcoinWalletLossProtectedWalletBookBalance(final Database database,final Broadcaster broadcaster, final LossProtectedWalletManager lossProtectedWalletManager){
+    public BitcoinWalletLossProtectedWalletBookBalance(final Database database,final Broadcaster broadcaster, final UUID exchangeProviderId, final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter){
         this.database = database;
         this.broadcaster = broadcaster;
-        this.lossProtectedWalletManager = lossProtectedWalletManager;
+        this.exchangeProviderId = exchangeProviderId;
+        this.exchangeProviderFilterManagerproviderFilter = exchangeProviderFilterManagerproviderFilter;
     }
 
 
@@ -156,6 +161,7 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
         try {
             double purchasePrice = 0;
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
+            ExchangeRate rate = getActualExchangeRate();
             bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.BOOK, purchasePrice);
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
@@ -166,6 +172,8 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
         }
     }
 
+           if(rate != null)
+               purchasePrice = rate.getPurchasePrice();
     //get exchange rate
     @Override
     public void credit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction, double exchangeRate) throws CantRegisterCreditException {
@@ -204,15 +212,9 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
     {
         final ExchangeRate[] rate = new ExchangeRate[1];
         try {
-            LossProtectedWalletSettings bitcoinWalletSettings = null;
+            BitcoinLossProtectedWalletSettings basicWalletSettings = null;
 
-
-            //get walelt setting exchange provider manager
-            SettingsManager<LossProtectedWalletSettings> settingsManager = lossProtectedWalletManager.getSettingsManager();
-
-            bitcoinWalletSettings = settingsManager.loadAndGetSettings(WALLET_PUBLIC_KEY);
-
-          final UUID rateProviderManagerId = bitcoinWalletSettings.getExchangeProvider();
+          final UUID rateProviderManagerId = exchangeProviderId;
 
             Thread thread = new Thread(new Runnable(){
                 @Override
@@ -233,9 +235,7 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
                 }
             });
 
-            } catch (CantGetSettingsException e) {
-                e.printStackTrace();
-            } catch (SettingsNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         return rate[0];

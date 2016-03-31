@@ -21,6 +21,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantList
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantRegisterDebitException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletBalance;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
@@ -50,7 +51,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
 
     private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
 
-    private LossProtectedWalletManager lossProtectedWalletManager;
+   private UUID exchangeProviderId;
 
     private String WALLET_PUBLIC_KEY = "loss_protected_wallet";
 
@@ -61,12 +62,12 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
     /**
      * Constructor.
      */
-    public BitcoinWalletLossProtectedWalletAvailableBalance(final Database database, final Broadcaster broadcaster, final LossProtectedWalletManager lossProtectedWalletManager){
+    public BitcoinWalletLossProtectedWalletAvailableBalance(final Database database, final Broadcaster broadcaster, final UUID exchangeProviderId,final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter){
         this.database = database;
         this.broadcaster = broadcaster;
-        this.lossProtectedWalletManager = lossProtectedWalletManager;
+        this.exchangeProviderId = exchangeProviderId;
+        this.exchangeProviderFilterManagerproviderFilter = exchangeProviderFilterManagerproviderFilter;
     }
-
 
 
     @Override
@@ -149,7 +150,10 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
         try {
 
             double purchasePrice = 0;
+            ExchangeRate rate = getActualExchangeRate();
 
+            if(rate != null)
+                purchasePrice = rate.getPurchasePrice();
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
             bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.AVAILABLE,purchasePrice);
 
@@ -202,13 +206,9 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
         try {
             LossProtectedWalletSettings bitcoinWalletSettings = null;
 
-
             //get walelt setting exchange provider manager
-            SettingsManager<LossProtectedWalletSettings> settingsManager = lossProtectedWalletManager.getSettingsManager();
 
-            bitcoinWalletSettings = settingsManager.loadAndGetSettings(WALLET_PUBLIC_KEY);
-
-            final UUID rateProviderManagerId = bitcoinWalletSettings.getExchangeProvider();
+            final UUID rateProviderManagerId = exchangeProviderId;
 
             Thread thread = new Thread(new Runnable(){
                 @Override
@@ -229,12 +229,11 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
                 }
             });
 
-        } catch (CantGetSettingsException e) {
-            e.printStackTrace();
-        } catch (SettingsNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return rate[0];
     }
+
 
 }

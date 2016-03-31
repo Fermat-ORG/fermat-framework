@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 
 
@@ -34,11 +35,13 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exce
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantRevertLossProtectedTransactionException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletBalance;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionRecord;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionSummary;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
+import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
@@ -63,21 +66,26 @@ public class BitcoinWalletLossProtectedWallet implements BitcoinLossProtectedWal
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
     private final Broadcaster broadcaster;
+    private UUID exchangeProviderId;
+    private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
 
-    //TODO: NAT ESTO ESTA NULL Y EN NINGUN MOMENTO SE INICIALIZA EN EL CONSTRUCTOR, ESTO ERA LO QUE TE DECIA.
-    private LossProtectedWalletManager lossProtectedWalletManager;
+
 
     public BitcoinWalletLossProtectedWallet(final ErrorManager errorManager,
                                     final PluginDatabaseSystem pluginDatabaseSystem,
                                     final PluginFileSystem pluginFileSystem,
                                     final UUID pluginId,
-                                    final  Broadcaster broadcaster) {
+                                    final  Broadcaster broadcaster,
+                                     final UUID exchangeProviderId,
+                                    final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter) {
 
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.broadcaster = broadcaster;
+        this.exchangeProviderId = exchangeProviderId;
+        this.exchangeProviderFilterManagerproviderFilter = exchangeProviderFilterManagerproviderFilter;
     }
 
     //metodo create para crear la base de datos
@@ -284,11 +292,11 @@ public class BitcoinWalletLossProtectedWallet implements BitcoinLossProtectedWal
 
         switch (balanceType) {
             case AVAILABLE:
-                return new BitcoinWalletLossProtectedWalletAvailableBalance(database,this.broadcaster,lossProtectedWalletManager);
+                return new BitcoinWalletLossProtectedWalletAvailableBalance(database,this.broadcaster,exchangeProviderId,exchangeProviderFilterManagerproviderFilter);
             case BOOK:
-                return new BitcoinWalletLossProtectedWalletBookBalance(database,this.broadcaster,lossProtectedWalletManager);
+                return new BitcoinWalletLossProtectedWalletBookBalance(database,this.broadcaster,exchangeProviderId,exchangeProviderFilterManagerproviderFilter);
             default:
-                return new BitcoinWalletLossProtectedWalletAvailableBalance(database,this.broadcaster,lossProtectedWalletManager);
+                return new BitcoinWalletLossProtectedWalletAvailableBalance(database,this.broadcaster,exchangeProviderId,exchangeProviderFilterManagerproviderFilter);
         }
     }
 

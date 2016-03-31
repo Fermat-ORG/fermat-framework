@@ -60,14 +60,14 @@ public class BitfinexProviderDao {
             try {
                 database = databaseFactory.createDatabase(pluginId, pluginId.toString());
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITFINEX, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.BITFINEX, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantInitializeBitfinexProviderDatabaseException("Database could not be opened", cantCreateDatabaseException, "Database Name: " + BitfinexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME, "");
             }
         }catch (CantOpenDatabaseException cantOpenDatabaseException) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITFINEX, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            errorManager.reportUnexpectedPluginException(Plugins.BITFINEX, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeBitfinexProviderDatabaseException("Database could not be opened", cantOpenDatabaseException, "Database Name: " + BitfinexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME, "");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_BITFINEX, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.BITFINEX, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantInitializeBitfinexProviderDatabaseException("Database could not be opened", FermatException.wrapException(e), "Database Name: " + BitfinexProviderDatabaseConstants.CURRENT_EXCHANGE_RATES_TABLE_NAME, "");
         }
     }

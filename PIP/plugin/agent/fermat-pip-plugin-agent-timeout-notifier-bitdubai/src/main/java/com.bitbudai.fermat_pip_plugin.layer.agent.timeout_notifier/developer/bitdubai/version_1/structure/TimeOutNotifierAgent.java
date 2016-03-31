@@ -1,56 +1,68 @@
 package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure;
 
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOutNotifierAgentDatabaseDao;
 import com.bitdubai.fermat_api.layer.actor.FermatActor;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.ProtocolStatus;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantResetTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantStartTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantStopTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutAgent;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 /**
- * Created by rodrigo on 3/28/16.
+ * The Class <code>com.bitdubai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierAgent</code>
+ * is the agent that is started for each subscription from another plugin. When a request comes to start an agent
+ * this class on a new thread monitor and notifies once the time out happens.<p/>
+ * <p/>
+ *
+ * Created by Acosta Rodrigo - (acosta_rodrigo@hotmail.com) on 28/03/16.
+ *
+ * @version 1.0
+ * @since Java JDK 1.7
  */
-public class TimeOutNotifierAgent implements TimeOutAgent {
+public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
 
+    /**
+     * class variables
+     */
     private UUID uuid;
     private String name;
     private String description;
     private FermatActor owner;
-    private long startTime;
-    private long timeOutDuration;
+    private long epochStartTime;
+    private long duration;
     private long elapsedTime;
+    private long epochEndTime;
     private AgentStatus status;
     private ProtocolStatus protocolStatus;
+
 
     /**
      * default constructor
      */
     public TimeOutNotifierAgent() {
+
     }
 
     @Override
     public boolean isRunning() {
-        if (this.getAgentStatus() == AgentStatus.STARTED)
+        if (this.getStatus() == AgentStatus.STARTED)
             return true;
         else
             return false;
     }
 
     @Override
-    public void startTimeOutAgent() throws CantStartTimeOutAgentException {
-
-    }
-
-    @Override
-    public void resetTimeOutAgent() throws CantResetTimeOutAgentException {
-
-    }
-
-    @Override
-    public void stopTimeOutAgent() throws CantStopTimeOutAgentException {
+    public void run() {
 
     }
 
@@ -65,17 +77,17 @@ public class TimeOutNotifierAgent implements TimeOutAgent {
     }
 
     @Override
-    public long getTimeOutDuration() {
-        return timeOutDuration;
+    public long getDuration() {
+        return duration;
     }
 
     @Override
-    public String getAgentName() {
+    public String getName() {
         return name;
     }
 
     @Override
-    public String getAgentDescription() {
+    public String getDescription() {
         return description;
     }
 
@@ -85,7 +97,7 @@ public class TimeOutNotifierAgent implements TimeOutAgent {
     }
 
     @Override
-    public AgentStatus getAgentStatus() {
+    public AgentStatus getStatus() {
         return status;
     }
 
@@ -101,7 +113,12 @@ public class TimeOutNotifierAgent implements TimeOutAgent {
 
     @Override
     public long getEpochStartTime() {
-        return startTime;
+        return epochStartTime;
+    }
+
+    @Override
+    public long getEpochEndTime() {
+        return epochEndTime;
     }
 
     @Override
@@ -129,12 +146,16 @@ public class TimeOutNotifierAgent implements TimeOutAgent {
         this.owner = owner;
     }
 
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
+    public void setEpochStartTime(long epochStartTime) {
+        this.epochStartTime = epochStartTime;
     }
 
-    public void setTimeOutDuration(long timeOutDuration) {
-        this.timeOutDuration = timeOutDuration;
+    public void setEpochEndTime(long epochEndTime) {
+        this.epochEndTime = epochEndTime;
+    }
+
+    public void setDuration(long timeOutDuration) {
+        this.duration = timeOutDuration;
     }
 
     public void setElapsedTime(long elapsedTime) {
@@ -156,8 +177,9 @@ public class TimeOutNotifierAgent implements TimeOutAgent {
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", owner=" + owner +
-                ", startTime=" + startTime +
-                ", timeOutDuration=" + timeOutDuration +
+                ", startTime=" + epochStartTime +
+                ", endTime=" + epochEndTime +
+                ", timeOutDuration=" + duration +
                 ", elapsedTime=" + elapsedTime +
                 ", status=" + status +
                 ", protocolStatus=" + protocolStatus +
