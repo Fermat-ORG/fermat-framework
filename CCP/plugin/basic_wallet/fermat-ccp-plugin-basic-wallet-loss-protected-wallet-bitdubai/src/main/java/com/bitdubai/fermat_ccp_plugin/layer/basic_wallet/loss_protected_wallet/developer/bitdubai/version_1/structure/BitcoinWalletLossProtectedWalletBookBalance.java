@@ -172,18 +172,16 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
         }
     }
 
-           if(rate != null)
-               purchasePrice = rate.getPurchasePrice();
     //get exchange rate
     @Override
     public void credit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction, double exchangeRate) throws CantRegisterCreditException {
         try {
             double purchasePrice = 0;
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-             ExchangeRate rate = getActualExchangeRate();
-
-               if(rate != null)
-               purchasePrice = rate.getPurchasePrice();
+//             ExchangeRate rate = getActualExchangeRate();
+//
+//               if(rate != null)
+//               purchasePrice = rate.getPurchasePrice();
 
             bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.BOOK,purchasePrice);
             //broadcaster balance amount
