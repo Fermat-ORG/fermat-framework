@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSetObjectException;
@@ -31,8 +32,8 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.eve
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractPurchaseRecord;
-import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractSaleRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.ContractPurchaseRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.ContractSaleRecord;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
@@ -250,40 +251,57 @@ public class CloseContractMonitorAgent implements
                 ContractType contractType;
                 String contractXML;
                 String transactionId;
-
+                ContractPurchaseRecord purchaseContract = new ContractPurchaseRecord();
+                ContractSaleRecord saleContract = new ContractSaleRecord();
                 /**
                  * Check if exist in database new close contracts to send
                  */
                 List<String> contractToCloseList = closeContractBusinessTransactionDao.getNewContractToCloseList();
                 for (String hashToSubmit : contractToCloseList) {
+
                     contractType = closeContractBusinessTransactionDao.getContractType(hashToSubmit);
                     contractXML = closeContractBusinessTransactionDao.getContractXML(hashToSubmit);
                     transactionId = closeContractBusinessTransactionDao.getTransactionId(hashToSubmit);
+                    UUID transmissionId = UUID.randomUUID();
+
+                    System.out.println("\nTEST CONTRACT - CLOSE CONTRACT - AGENT - doTheMainTask() - getNewContractToCloseList() \n" +
+                            "- contractType: " +contractType+"\n" +
+                            "- contracXML: \n"+contractXML);
 
                     switch (contractType) {
                         case PURCHASE:
-                            ContractPurchaseRecord purchaseContract = new ContractPurchaseRecord();
+
                             purchaseContract = (ContractPurchaseRecord) XMLParser.parseXML(contractXML, purchaseContract);
+                            System.out.println("\nTEST CONTRACT - CLOSE CONTRACT - AGENT - doTheMainTask() - getNewContractToCloseList() - PURCHASE\n" +
+                                    " - purchaseContract.getPublicKeyCustomer(): "+purchaseContract.getPublicKeyCustomer()+"\n" +
+                                    " - purchaseContract.getPublicKeyBroker(): "+purchaseContract.getPublicKeyBroker()+"\n"+
+                                    purchaseContract.toString()
+                            );
 
                             transactionTransmissionManager.sendContractStatusNotification(
                                     purchaseContract.getPublicKeyCustomer(),
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
-                                    transactionId,
+                                    transmissionId.toString(),
                                     ContractTransactionStatus.CHECKING_CLOSING_CONTRACT,
                                     Plugins.CLOSE_CONTRACT,
                                     PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
                                     PlatformComponentType.ACTOR_CRYPTO_BROKER);
                             break;
                         case SALE:
-                            ContractSaleRecord saleContract = new ContractSaleRecord();
+
                             saleContract = (ContractSaleRecord) XMLParser.parseXML(contractXML, saleContract);
+                            System.out.println("\nTEST CONTRACT - CLOSE CONTRACT - AGENT - doTheMainTask() - getNewContractToCloseList() - SALE\n" +
+                                    " - saleContract.getPublicKeyCustomer(): "+saleContract.getPublicKeyCustomer()+"\n" +
+                                    " - saleContract.getPublicKeyBroker(): "+saleContract.getPublicKeyBroker()+"\n"+
+                                    saleContract.toString()
+                            );
 
                             transactionTransmissionManager.sendContractStatusNotification(
                                     saleContract.getPublicKeyBroker(),
                                     saleContract.getPublicKeyCustomer(),
                                     hashToSubmit,
-                                    transactionId,
+                                    transmissionId.toString(),
                                     ContractTransactionStatus.CHECKING_CLOSING_CONTRACT,
                                     Plugins.CLOSE_CONTRACT,
                                     PlatformComponentType.ACTOR_CRYPTO_BROKER,
@@ -291,8 +309,8 @@ public class CloseContractMonitorAgent implements
                             break;
                     }
 
-                    closeContractBusinessTransactionDao.updateContractTransactionStatus(hashToSubmit, ContractTransactionStatus.
-                            CHECKING_CLOSING_CONTRACT);
+                    closeContractBusinessTransactionDao.updateContractTransactionStatus(hashToSubmit, ContractTransactionStatus.CHECKING_CLOSING_CONTRACT);
+                    transactionTransmissionManager.confirmReception(transmissionId);
                 }
 
                 /**
@@ -300,41 +318,47 @@ public class CloseContractMonitorAgent implements
                  */
                 List<String> contractToConfirmList = closeContractBusinessTransactionDao.getClosingConfirmContractToCloseList();
                 for (String hashToSubmit : contractToConfirmList) {
+
                     contractType = closeContractBusinessTransactionDao.getContractType(hashToSubmit);
                     contractXML = closeContractBusinessTransactionDao.getContractXML(hashToSubmit);
                     transactionId = closeContractBusinessTransactionDao.getTransactionId(hashToSubmit);
+                    UUID transmissionId = UUID.randomUUID();
+
+                    System.out.println("\nTEST CONTRACT - CLOSE CONTRACT - AGENT - doTheMainTask() - getClosingConfirmContractToCloseList()\n");
 
                     switch (contractType) {
                         case PURCHASE:
-                            ContractPurchaseRecord purchaseContract = new ContractPurchaseRecord();
+
+                            System.out.println("\nTEST CONTRACT - CLOSE CONTRACT - AGENT - doTheMainTask() - getClosingConfirmContractToCloseList() - PURCHASE\n");
                             purchaseContract = (ContractPurchaseRecord) XMLParser.parseXML(contractXML, purchaseContract);
 
                             transactionTransmissionManager.confirmNotificationReception(
                                     purchaseContract.getPublicKeyCustomer(),
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
-                                    transactionId,
+                                    transmissionId.toString(),
                                     Plugins.CLOSE_CONTRACT,
                                     PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
                                     PlatformComponentType.ACTOR_CRYPTO_BROKER);
                             break;
                         case SALE:
-                            ContractSaleRecord saleContract = new ContractSaleRecord();
+
+                            System.out.println("\nTEST CONTRACT - CLOSE CONTRACT - AGENT - doTheMainTask() - getClosingConfirmContractToCloseList() - SALE\n");
                             saleContract = (ContractSaleRecord) XMLParser.parseXML(contractXML, saleContract);
 
                             transactionTransmissionManager.confirmNotificationReception(
                                     saleContract.getPublicKeyBroker(),
                                     saleContract.getPublicKeyCustomer(),
                                     hashToSubmit,
-                                    transactionId,
+                                    transmissionId.toString(),
                                     Plugins.CLOSE_CONTRACT,
                                     PlatformComponentType.ACTOR_CRYPTO_BROKER,
                                     PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
                             break;
                     }
 
-                    closeContractBusinessTransactionDao.updateContractTransactionStatus(hashToSubmit, ContractTransactionStatus.
-                            SUBMIT_CLOSING_CONTRACT_CONFIRMATION);
+                    closeContractBusinessTransactionDao.updateContractTransactionStatus(hashToSubmit, ContractTransactionStatus.SUBMIT_CLOSING_CONTRACT_CONFIRMATION);
+                    transactionTransmissionManager.confirmReception(transmissionId);
                 }
 
                 /**
@@ -352,6 +376,8 @@ public class CloseContractMonitorAgent implements
             }   catch (CantSendContractNewStatusNotificationException e) {
                 throw new CannotSendContractHashException(e, "Sending contract hash", "Cannot send notification");
             } catch (CantConfirmNotificationReceptionException e) {
+                throw new CannotSendContractHashException(e, "Sending contract hash", "Cannot send confirmation");
+            } catch (CantConfirmTransactionException e) {
                 throw new CannotSendContractHashException(e, "Sending contract hash", "Cannot send confirmation");
             }
         }
@@ -373,6 +399,9 @@ public class CloseContractMonitorAgent implements
                 ContractType contractType;
 
                 if (eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())) {
+
+                    System.out.print("\nTEST CONTRACT - CLOSE CONTRACT - AGENT - checkPendingEvent() - INCOMING_NEW_CONTRACT_STATUS_UPDATE\n");
+
                     List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                         businessTransactionMetadata = record.getInformation();
@@ -380,7 +409,13 @@ public class CloseContractMonitorAgent implements
                         contractType = closeContractBusinessTransactionDao.getContractType(contractHash);
                         contractTransactionStatus = closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
 
-                        if (contractTransactionStatus == ContractTransactionStatus.CHECKING_CLOSING_CONTRACT) {
+                        System.out.print("\nTEST CONTRACT - CLOSE CONTRACT - AGENT - checkPendingEvent() - INCOMING_NEW_CONTRACT_STATUS_UPDATE" +
+                                "\n - "+contractTransactionStatus.getCode()+".equals("+ContractTransactionStatus.CHECKING_CLOSING_CONTRACT.getCode()+")");
+
+                        if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.CHECKING_CLOSING_CONTRACT.getCode())) {
+
+                            System.out.print("\nTEST CONTRACT - CLOSE CONTRACT - AGENT - checkPendingEvent() - INCOMING_NEW_CONTRACT_STATUS_UPDATE - VAL\n");
+
                             switch (contractType) {
                                 case PURCHASE:
                                     customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.COMPLETED);
@@ -391,6 +426,7 @@ public class CloseContractMonitorAgent implements
                             }
                             closeContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONFIRM_CLOSED_CONTRACT);
                             closeContractBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
+                            closeContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                         }
                     }
@@ -398,14 +434,23 @@ public class CloseContractMonitorAgent implements
 
                 //TODO: check new confirmed closed contract... raise an event.
                 if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())) {
+
+                    System.out.print("\nTEST CONTRACT - CLOSE CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE\n");
+
                     List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                         businessTransactionMetadata = record.getInformation();
                         contractHash = businessTransactionMetadata.getContractHash();
                         contractTransactionStatus = closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
 
-                        if (contractTransactionStatus == ContractTransactionStatus.SUBMIT_CLOSING_CONTRACT_CONFIRMATION) {
+                        System.out.print("\nTEST CONTRACT - CLOSE CONTRACT - AGENT - checkPendingEvent() - INCOMING_NEW_CONTRACT_STATUS_UPDATE" +
+                                "\n - "+contractTransactionStatus.getCode()+".equals("+ContractTransactionStatus.CHECKING_CLOSING_CONTRACT.getCode()+")");
+                        if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.SUBMIT_CLOSING_CONTRACT_CONFIRMATION.getCode()) ||
+                            contractTransactionStatus.getCode().equals(ContractTransactionStatus.CHECKING_CLOSING_CONTRACT.getCode())) {
+
+                            System.out.print("\nTEST CONTRACT - CLOSE CONTRACT - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - VAL\n");
                             closeContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_COMPLETED);
+                            closeContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
                             raiseNewContractClosedEvent();
                         }
