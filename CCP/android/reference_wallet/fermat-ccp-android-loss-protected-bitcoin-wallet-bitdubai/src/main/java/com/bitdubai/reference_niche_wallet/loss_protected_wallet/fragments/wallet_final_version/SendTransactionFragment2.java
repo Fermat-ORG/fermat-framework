@@ -253,19 +253,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
 
-            //default Exchange rate Provider
-
-            if(bitcoinWalletSettings.getExchangeProvider()==null){
-                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(moduleManager.getExchangeRateProviderManagers());
-
-                exchangeProviderId = providers.get(0).getProviderId();
-                bitcoinWalletSettings.setExchangeProvider(exchangeProviderId);
-
-            }
-            else
-            {
-                exchangeProviderId =bitcoinWalletSettings.getExchangeProvider();
-            }
 
             settingsManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(),bitcoinWalletSettings);
 
@@ -273,6 +260,21 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             final LossProtectedWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
 
+
+            //default Exchange rate Provider
+
+
+          //  if(moduleManager.getExchangeProvider(appSession.getAppPublicKey())==null) {
+                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(moduleManager.getExchangeRateProviderManagers());
+
+                exchangeProviderId = providers.get(0).getProviderId();
+             //   moduleManager.setExchangeProvider(exchangeProviderId,appSession.getAppPublicKey());
+
+           // }
+           // else
+          //  {
+            //    exchangeProviderId =moduleManager.getExchangeProvider(appSession.getAppPublicKey());
+            //}
 
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable(){
@@ -347,7 +349,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         rootView = super.onCreateView(inflater, container, savedInstanceState);
         setUp(inflater);
 
-       // getAndShowMarketExchangeRateData(rootView);
+       getAndShowMarketExchangeRateData(rootView);
         return rootView;
     }
 
@@ -414,7 +416,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         Thread thread = new Thread(runnable);
         thread.start();
 
-        final View balance_header = inflater.inflate(R.layout.donut_header, container_header_balance, true);
+        final View balance_header = inflater.inflate(R.layout.loss_donut_header, container_header_balance, true);
 
         container_header_balance.setVisibility(View.VISIBLE);
 
@@ -431,7 +433,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
 
-       //txt_exchange_rate =  (TextView) balance_header.findViewById(R.id.txt_exchange_rate);
+       txt_exchange_rate =  (TextView) balance_header.findViewById(R.id.txt_exchange_rate);
 
         // handler for the background updating
         final Handler progressHandler = new Handler() {
@@ -679,7 +681,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             int id = item.getItemId();
 
             if(id == BitcoinWalletConstants.IC_ACTION_SEND){
-                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,lossProtectedWalletSession.getAppPublicKey());
+                changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_FORM_ACTIVITY,lossProtectedWalletSession.getAppPublicKey());
                 return true;
             }else if(id == BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION){
                 setUpPresentation(settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey()).isPresentationHelpEnabled());

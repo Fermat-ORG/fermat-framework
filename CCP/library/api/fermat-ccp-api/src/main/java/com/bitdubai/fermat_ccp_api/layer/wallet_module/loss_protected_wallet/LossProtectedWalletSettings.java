@@ -106,11 +106,5 @@ public class LossProtectedWalletSettings implements WalletSettings {
         this.lossProtectedEnabled = lossProtectedEnabled;
     }
 
-    public UUID getExchangeProvider() {
-        return this.exchangeProvider;
-    }
 
-    public void setExchangeProvider(UUID exchangeProvider) {
-        this.exchangeProvider = exchangeProvider;
-    }
 }

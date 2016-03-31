@@ -20,10 +20,14 @@ import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -67,6 +71,10 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Loss
     private View rootView;
     private LinearLayout empty;
 
+    SettingsManager<LossProtectedWalletSettings> settingsManager;
+
+    BlockchainNetworkType blockchainNetworkType;
+
     /**
      * Create a new instance of this fragment
      *
@@ -107,6 +115,18 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Loss
                     }
                 }
             });
+
+            settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+
+
+            LossProtectedWalletSettings bitcoinWalletSettings;
+            try {
+                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                this.blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+            }catch (Exception e){
+
+            }
+
             onRefresh();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -247,7 +267,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Loss
             //when refresh offset set 0
             if(refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
-            lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, 10, offset);
+            lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, blockchainNetworkType,10, offset);
             offset+=MAX_TRANSACTIONS;
         } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,

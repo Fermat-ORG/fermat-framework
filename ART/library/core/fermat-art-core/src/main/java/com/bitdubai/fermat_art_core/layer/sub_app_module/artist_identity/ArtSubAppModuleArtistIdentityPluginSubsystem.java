@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_art_core.layer.sub_app_module.artist;
+package com.bitdubai.fermat_art_core.layer.sub_app_module.artist_identity;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;

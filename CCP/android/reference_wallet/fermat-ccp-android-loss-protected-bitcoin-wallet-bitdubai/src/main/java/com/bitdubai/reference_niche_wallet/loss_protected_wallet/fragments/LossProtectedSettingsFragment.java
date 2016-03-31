@@ -94,8 +94,8 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
             //Exchange Rate Provider
 
-            if (bitcoinWalletSettings.getExchangeProvider()!=null)
-                exchangeProviderIdSettings =  bitcoinWalletSettings.getExchangeProvider();
+            if (cryptoWallet.getExchangeProvider(referenceWalletSession.getAppPublicKey())!=null)
+                exchangeProviderIdSettings =  cryptoWallet.getExchangeProvider(referenceWalletSession.getAppPublicKey());
 
             List<PreferenceSettingsTextPlusRadioItem> stringsProviders = new ArrayList<PreferenceSettingsTextPlusRadioItem>();
 
@@ -191,12 +191,12 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
                 //get providers list
                 List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
 
-                bitcoinWalletSettings.setExchangeProvider(providers.get(0).getProviderId());
+                cryptoWallet.setExchangeProvider(providers.get(0).getProviderId(),referenceWalletSession.getAppPublicKey());
 
                 for (CurrencyExchangeRateProviderManager provider :  providers)
                 {
                     if(provider.getProviderName().equals(preferenceSettingsTextPlusRadioItem.getText()))
-                        bitcoinWalletSettings.setExchangeProvider(provider.getProviderId());
+                        cryptoWallet.setExchangeProvider(provider.getProviderId(),referenceWalletSession.getAppPublicKey());
                 }
             }
 
