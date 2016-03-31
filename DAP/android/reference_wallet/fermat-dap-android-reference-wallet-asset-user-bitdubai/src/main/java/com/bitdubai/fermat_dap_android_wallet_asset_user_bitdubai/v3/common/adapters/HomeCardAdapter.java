@@ -57,7 +57,7 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
 
     @Override
     protected void bindHolder(HomeCardViewHolder holder, Asset data, int position) {
-        assetUserSession.setData("asset", data);
+        assetUserSession.setData("asset_data", data);
         holder.bind(data, onClickListenerRedeem, onClickListenerTransfer, onClickListenerAppropriate,
                 onClickListenerSell, onClickListenerTransactions);
     }

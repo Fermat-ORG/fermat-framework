@@ -39,6 +39,8 @@ public class Asset {
     private boolean transferable;
     private boolean saleable;
 
+    private AssetUserNegotiation assetUserNegotiation;
+
     public enum Status {
         PENDING("PENDING"),
         CONFIRMED("CONFIRMED");
@@ -54,6 +56,10 @@ public class Asset {
         }
     }
 
+    public Asset(){
+
+    }
+
     public Asset(String name) {
         this.name = name;
     }
@@ -63,13 +69,15 @@ public class Asset {
         this.assetUserWalletTransaction = assetUserWalletTransaction;
         this.digitalAsset = assetUserWalletList.getDigitalAsset();
         setId(assetUserWalletTransaction.getActualTransactionHash());
-        setImage(digitalAsset.getResources().get(0).getResourceBinayData());
+        if (digitalAsset.getResources().size() != 0) {
+            setImage(digitalAsset.getResources().get(0).getResourceBinayData());
+        }
         setName(digitalAsset.getName());
         setAmount(assetUserWalletList.getAvailableBalance());
         setDescription(digitalAsset.getDescription());
         setExpDate((Timestamp) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
         setDate(new Timestamp(assetUserWalletTransaction.getTimestamp()));
-        setStatus((assetUserWalletTransaction.getBalanceType().equals(BalanceType.AVAILABLE)) ? Asset.Status.CONFIRMED : Asset.Status.PENDING);
+        setStatus((assetUserWalletTransaction.getBalanceType().equals(BalanceType.AVAILABLE)) ? Status.CONFIRMED : Status.PENDING);
         setActorName(digitalAsset.getIdentityAssetIssuer().getAlias());
         setActorImage(digitalAsset.getIdentityAssetIssuer().getImage());
         setRedeemable((Boolean) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE).getValue());
@@ -195,5 +203,13 @@ public class Asset {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public AssetUserNegotiation getAssetUserNegotiation() {
+        return assetUserNegotiation;
+    }
+
+    public void setAssetUserNegotiation(AssetUserNegotiation assetUserNegotiation) {
+        this.assetUserNegotiation = assetUserNegotiation;
     }
 }

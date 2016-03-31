@@ -100,12 +100,15 @@
                 android:layout_margin="15dp"
                 android:layout_centerHorizontal="true"/>
 
+            <!--NormalAsset-->
             <RelativeLayout
+                android:id="@+id/normalV3Asset"
                 android:layout_width="match_parent"
                 android:layout_height="95dp"
                 android:layout_below="@id/cardAssetImage"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp">
+                android:layout_marginRight="15dp"
+                android:visibility="visible">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:id="@+id/cardAssetName"
@@ -206,6 +209,96 @@
                         android:layout_height="30dp"
                         android:src="@drawable/ic_transactions"
                         android:background="@null"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+            <!--assetNegotiation-->
+            <RelativeLayout
+                android:id="@+id/negotiationV3Asset"
+                android:layout_width="match_parent"
+                android:layout_height="95dp"
+                android:layout_below="@id/cardAssetImage"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:visibility="gone">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/assetToBuyV3Text"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Asset to Buy"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="3dp"
+                    android:textColor="@color/card_text_highlight"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/negotiationAssetName"
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:text="Coupon for 20% discount on Shirts"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="3dp"
+                    android:textColor="@color/card_text"
+                    android:layout_below="@+id/assetToBuyV3Text"
+                    />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/negotiationCardExp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Asset Price"
+                    android:textSize="10sp"
+                    android:layout_below="@id/negotiationAssetName"
+                    android:textColor="@color/card_text"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/v3NegotiationAssetPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="60000 Satoshis"
+                    android:layout_alignParentRight="true"
+                    android:textSize="10sp"
+                    android:layout_below="@id/negotiationAssetName"
+                    android:layout_toRightOf="@+id/negotiationCardExp"
+                    android:layout_marginLeft="3dp"
+                    android:textColor="@color/card_text_highlight"/>
+
+
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/card_line"
+                    android:layout_below="@+id/negotiationCardExp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/negotiationCardExp"
+                    android:layout_marginTop="12dp"
+                    android:layout_centerHorizontal="true">
+
+                    <ImageButton
+                        android:id="@+id/v3AcceptNegotiationButton"
+                        android:layout_width="55dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/detail_check"
+                        android:background="@null"/>
+
+                    <ImageButton
+                        android:id="@+id/v3RejectNegotiationButton"
+                        android:layout_width="55dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/detail_reject"
+                        android:background="@null"/>
+
+
 
                 </LinearLayout>
 
