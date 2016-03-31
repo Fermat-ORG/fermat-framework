@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -309,15 +310,18 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             if (moduleManager != null) {
                 try {
                     if (!isUpdate)
-                        moduleManager.createFanIdentity(fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,fanPassword,externalPlatform) ;
+                        //moduleManager.createFanIdentity(fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,fanPassword,externalPlatform) ;
+                        new ManageIdentity(fanExternalName,fanPassword,externalPlatform, ManageIdentity.CREATE_IDENTITY).execute();
                     else
                     if(updateProfileImage)
-                        moduleManager.updateFanIdentity(fanExternalName,fanPassword, identitySelected.getId(), identitySelected.getPublicKey(), fanImageByteArray,externalPlatform);
+                        //moduleManager.updateFanIdentity(fanExternalName, fanPassword, identitySelected.getId(), identitySelected.getPublicKey(), fanImageByteArray, externalPlatform);
+                        new ManageIdentity(fanExternalName,fanPassword,externalPlatform, ManageIdentity.UPDATE_IMAGE_IDENTITY).execute();
                     else
-                        moduleManager.updateFanIdentity(fanExternalName,fanPassword,identitySelected.getId(), identitySelected.getPublicKey(), identitySelected.getProfileImage(),externalPlatform);
-                } catch (CantCreateFanIdentityException | FanIdentityAlreadyExistsException | CantUpdateFanIdentityException e) {
+                        //moduleManager.updateFanIdentity(fanExternalName,fanPassword,identitySelected.getId(), identitySelected.getPublicKey(), identitySelected.getProfileImage(),externalPlatform);
+                        new ManageIdentity(fanExternalName,fanPassword,externalPlatform, ManageIdentity.UPDATE_IDENTITY).execute();
+                } /*catch (CantCreateFanIdentityException | FanIdentityAlreadyExistsException |CantUpdateFanIdentityException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                } catch (Exception e){
+                } */catch (Exception e){
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                     e.printStackTrace();
                 }
@@ -470,6 +474,102 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                     LENGTH_LONG).show();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * Experimental code to get http responses from android.
+     * The main idea is make the cURL request in android background with an AsyncTask
+     */
+    private class ManageIdentity extends AsyncTask {
+        String fanExternalName;
+        String fanPassword;
+        ExternalPlatform externalPlatform;
+        int identityAction;
+        public static final int CREATE_IDENTITY = 0;
+        public static final int UPDATE_IDENTITY = 1;
+        public static final int UPDATE_IMAGE_IDENTITY = 2;
+
+        public ManageIdentity(
+                String fanExternalName,
+                String fanPassword,
+                ExternalPlatform externalPlatform,
+                int identityAction
+                ) {
+            this.fanExternalName = fanExternalName;
+            this.fanPassword = fanPassword;
+            this.externalPlatform = externalPlatform;
+            this.identityAction = identityAction;
+        }
+
+        @Override
+        protected Object doInBackground(Object... arg0) {
+            try{
+                switch (identityAction){
+                    case CREATE_IDENTITY:
+                        createIdentity(fanExternalName,fanPassword,externalPlatform);
+                        break;
+                    case UPDATE_IDENTITY:
+                        updateIdentity(fanExternalName,fanPassword,externalPlatform);
+                        break;
+                    case UPDATE_IMAGE_IDENTITY:
+                        updateIdentityImage(fanExternalName,fanPassword,externalPlatform);
+                        break;
+                }
+
+            } catch (FanIdentityAlreadyExistsException e) {
+                errorManager.reportUnexpectedUIException(
+                        UISource.VIEW,
+                        UnexpectedUIExceptionSeverity.UNSTABLE,
+                        e);
+            } catch (CantCreateFanIdentityException e) {
+                errorManager.reportUnexpectedUIException(
+                        UISource.VIEW,
+                        UnexpectedUIExceptionSeverity.UNSTABLE,
+                        e);
+            } catch (CantUpdateFanIdentityException e) {
+                errorManager.reportUnexpectedUIException(
+                        UISource.VIEW,
+                        UnexpectedUIExceptionSeverity.UNSTABLE,
+                        e);
+            }
+            return null;
+        }
+    }
+
+    private void createIdentity(
+            String fanExternalName,
+            String fanPassword,
+            ExternalPlatform externalPlatform) throws
+            CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
+        moduleManager.createFanIdentity(
+                fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,
+                fanPassword,
+                externalPlatform) ;
+    }
+
+    private void updateIdentity(
+            String fanExternalName,
+            String fanPassword,
+            ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+        moduleManager.updateFanIdentity(
+                fanExternalName,
+                fanPassword, identitySelected.getId(),
+                identitySelected.getPublicKey(),
+                identitySelected.getProfileImage(),
+                externalPlatform);
+    }
+
+    private void updateIdentityImage(
+            String fanExternalName,
+            String fanPassword,
+            ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+        moduleManager.updateFanIdentity(
+                fanExternalName,
+                fanPassword,
+                identitySelected.getId(),
+                identitySelected.getPublicKey(),
+                fanImageByteArray,
+                externalPlatform);
     }
 
 }
