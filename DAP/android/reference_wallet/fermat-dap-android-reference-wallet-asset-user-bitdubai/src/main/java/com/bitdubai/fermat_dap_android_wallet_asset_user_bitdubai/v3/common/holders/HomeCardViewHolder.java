@@ -53,6 +53,9 @@ public class HomeCardViewHolder extends FermatViewHolder {
     private FermatTextView negotiationAssetName;
     private FermatTextView v3NegotiationAssetPrice;
 
+    private View acceptNegotiationButton;
+    private View rejectNegotiationButton;
+
     /**
      * Constructor
      *
@@ -81,11 +84,14 @@ public class HomeCardViewHolder extends FermatViewHolder {
         negotiationV3Asset = itemView.findViewById(R.id.negotiationV3Asset);
         negotiationAssetName = (FermatTextView) itemView.findViewById(R.id.negotiationAssetName);
         v3NegotiationAssetPrice = (FermatTextView) itemView.findViewById(R.id.v3NegotiationAssetPrice);
+        acceptNegotiationButton =  itemView.findViewById(R.id.v3AcceptNegotiationButton);
+        rejectNegotiationButton =  itemView.findViewById(R.id.v3RejectNegotiationButton);
     }
 
     public void bind(final Asset asset, View.OnClickListener onClickListenerRedeem,
                      View.OnClickListener onClickListenerTransfer, View.OnClickListener onClickListenerAppropriate,
-                     View.OnClickListener onClickListenerSell, View.OnClickListener onClickListenerTransactions) {
+                     View.OnClickListener onClickListenerSell, View.OnClickListener onClickListenerTransactions,
+                     View.OnClickListener onClickAcceptNegotiation, View.OnClickListener onClickListenerRejectNegotiation) {
 
         Bitmap bitmap;
         if (asset.getActorImage() != null && asset.getActorImage().length > 0) {
@@ -110,6 +116,10 @@ public class HomeCardViewHolder extends FermatViewHolder {
             negotiationAssetName.setText(asset.getName());
             v3NegotiationAssetPrice.setText(String.format("%s BTC", DAPStandardFormats.BITCOIN_FORMAT.format(
                     BitcoinConverter.convert(Double.valueOf(asset.getAssetUserNegotiation().getAmount()), SATOSHI, BITCOIN))));
+
+            acceptNegotiationButton.setOnClickListener(onClickAcceptNegotiation);
+            rejectNegotiationButton.setOnClickListener(onClickListenerRejectNegotiation);
+
 
         }else {
 

@@ -41,6 +41,10 @@ public class Asset {
 
     private AssetUserNegotiation assetUserNegotiation;
 
+    public void setDigitalAsset(DigitalAsset digitalAsset) {
+        this.digitalAsset = digitalAsset;
+    }
+
     public enum Status {
         PENDING("PENDING"),
         CONFIRMED("CONFIRMED");
