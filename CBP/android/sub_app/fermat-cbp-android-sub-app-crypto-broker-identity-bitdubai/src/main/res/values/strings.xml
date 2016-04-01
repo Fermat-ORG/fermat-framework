@@ -12,12 +12,14 @@
     <string name="publish_identity">Publish identity</string>
     <string name="published">Published</string>
     <string name="not_published">Not Published</string>
-    <string name="empty_identity_list_msg">NO IDENTITIES\nCreate a new one</string>
+    <string name="empty_identity_list_msg">NOT IDENTITIES\nCreate a new one</string>
     <string name="no_matches">No Matches</string>
     <string name="camera_option_context_menu">Camera</string>
     <string name="gallery_option_context_menu">Gallery</string>
     <string name="title_photo_context_menu">Choose mode</string>
-    <string name="dialog_identity_body">Test Body</string>
-    <string name="dialog_identity_subtitle">Test SubTitle</string>
     <string name="dialog_identity_footer">Test Footer</string>
+
+    <string name="cbp_broker_identity_welcome_subTitle">Welcome to the Broker Identity.</string>
+    <string name="cbp_broker_identity_welcome_body">From here you will be able to create an Broker type identity.\n\nThis Identity, will identify you in the system as an broker, and give you access to all tasks and applications you need.\n\nOther broker or customer will be able to request connection to you by finding you with the information you provide here.</string>
+
 </resources>

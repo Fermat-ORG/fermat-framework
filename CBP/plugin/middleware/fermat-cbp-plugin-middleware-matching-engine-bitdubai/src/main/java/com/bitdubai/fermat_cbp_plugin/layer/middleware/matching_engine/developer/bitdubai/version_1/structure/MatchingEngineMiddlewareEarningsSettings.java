@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantDisassociatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantUpdatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairAlreadyAssociatedException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
@@ -45,19 +46,20 @@ public final class MatchingEngineMiddlewareEarningsSettings implements EarningsS
     }
 
     @Override
-    public EarningsPair associatePair(final Currency        earningCurrency,
-                                      final Currency        linkedCurrency ,
-                                      final WalletReference walletReference) throws CantAssociatePairException     ,
-                                                                                    PairAlreadyAssociatedException {
+    public EarningsPair registerPair(final Currency        earningCurrency       ,
+                                     final Currency        linkedCurrency        ,
+                                     final WalletReference earningWalletReference) throws CantAssociatePairException     ,
+                                                                                          PairAlreadyAssociatedException {
 
         try {
 
             final UUID newId = UUID.randomUUID();
 
-            return dao.associateEarningsPair(
+            return dao.registerEarningsPair(
                     newId,
-                    earningCurrency,
-                    linkedCurrency,
+                    earningCurrency       ,
+                    linkedCurrency        ,
+                    earningWalletReference,
                     walletReference
             );
 
@@ -73,8 +75,64 @@ public final class MatchingEngineMiddlewareEarningsSettings implements EarningsS
     }
 
     @Override
-    public void disassociateEarningsPair(UUID earningsPairID) throws CantDisassociatePairException, PairNotFoundException {
+    public void associateEarningsPair(final UUID earningsPairID) throws CantAssociatePairException,
+                                                                        PairNotFoundException     {
 
+        try {
+
+            dao.associateEarningsPair(earningsPairID);
+
+        } catch (final CantAssociatePairException | PairNotFoundException e) {
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantAssociatePairException(e, null, "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public void disassociateEarningsPair(final UUID earningsPairID) throws CantDisassociatePairException,
+                                                                           PairNotFoundException        {
+
+        try {
+
+            dao.disassociateEarningsPair(earningsPairID);
+
+        } catch (final CantDisassociatePairException | PairNotFoundException e) {
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantDisassociatePairException(e, null, "Unhandled Exception.");
+        }
+    }
+
+    @Override
+    public void updateEarningsPair(final UUID            earningsPairID ,
+                                   final WalletReference walletReference) throws CantUpdatePairException,
+                                                                                 PairNotFoundException  {
+
+        try {
+
+            dao.updateEarningsPair(
+                    earningsPairID ,
+                    walletReference
+            );
+
+        } catch (final CantUpdatePairException | PairNotFoundException e) {
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdatePairException(e, null, "Unhandled Exception.");
+        }
     }
 
     @Override
@@ -96,4 +154,5 @@ public final class MatchingEngineMiddlewareEarningsSettings implements EarningsS
             throw new CantListEarningsPairsException(e, null, "Unhandled Exception.");
         }
     }
+
 }

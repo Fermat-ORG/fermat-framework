@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#7858AE">
+
+        <RelativeLayout
+            android:layout_height="100dp"
+            android:layout_width="100dp">
+
+            <ImageView
+                android:id="@+id/assetSellImage"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/img_asset_without_image"
+                android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="5dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetSellNameText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Asset Name"
+                android:layout_marginBottom="15dp"
+                android:textSize="17sp"
+                android:textColor="#b3ffffff"
+                android:fontFamily="regular"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/assetSellRemainingText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="94 Assets Remaining"
+                android:textSize="15sp"
+                android:textColor="#b3ffffff"
+                android:fontFamily="light"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="15dp">
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dap_user_wallet_sell_assets_to_sell"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:id="@+id/textView"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:fontFamily="regular"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+            android:layout_width="175dp"
+            android:layout_height="25dp"
+            android:inputType="number"
+            android:ems="10"
+            android:id="@+id/assetsToSellEditText"
+            android:text="0"
+            android:layout_below="@id/textView"
+            android:layout_marginTop="5dp"
+            android:textSize="15sp"
+            android:textColor="#ffffff"
+            android:fontFamily="regular"
+            android:background="@drawable/bg_delivery_input"/>
+
+
+        <RelativeLayout
+            android:id="@+id/unitPriceLayout"
+            android:layout_below="@+id/assetsToSellEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/bitcoinsLabelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dap_user_wallet_sell_asset_value"
+                android:textColor="#ffffff"
+                android:textSize="14sp"
+                android:fontFamily="regular"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/bitcoins"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:ems="10"
+                android:imeOptions="actionNext"
+                android:inputType="numberDecimal"
+                android:nextFocusDown="@+id/expiration_date"
+                android:layout_marginTop="5dp"
+                android:textSize="15sp"
+                android:textColor="#ffffff"
+                android:fontFamily="regular"
+                android:background="@drawable/bg_delivery_input"
+                android:layout_below="@+id/bitcoinsLabelText"/>
+
+            <Spinner
+                android:id="@+id/bitcoinsSpinner"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/bitcoins"
+                android:layout_alignBottom="@+id/bitcoins"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/bitcoinsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:layout_alignBottom="@+id/bitcoins"
+                android:layout_marginBottom="3dp"
+                android:layout_alignParentRight="true"
+                android:text="0.000000 BTC"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/totalPriceLayout"
+            android:layout_below="@+id/unitPriceLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/bitcoinsTotalLabelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dap_user_wallet_sell_total_value"
+                android:textColor="#ffffff"
+                android:textSize="14sp"
+                android:fontFamily="regular"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
+                android:id="@+id/bitcoinsTotal"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:ems="10"
+                android:imeOptions="actionNext"
+                android:inputType="numberDecimal"
+                android:nextFocusDown="@+id/expiration_date"
+                android:layout_marginTop="5dp"
+                android:textSize="15sp"
+                android:textColor="#ffffff"
+                android:fontFamily="regular"
+                android:background="@drawable/bg_delivery_input"
+                android:layout_below="@+id/bitcoinsTotalLabelText"/>
+
+            <Spinner
+                android:id="@+id/bitcoinsTotalSpinner"
+                android:layout_width="100dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/bitcoinsTotal"
+                android:layout_alignBottom="@+id/bitcoinsTotal"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/bitcoinsTotalText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:layout_alignBottom="@+id/bitcoinsTotal"
+                android:layout_marginBottom="3dp"
+                android:layout_alignParentRight="true"
+                android:text="0.000000 BTC"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/bitcoinTotalLayout"
+            android:layout_below="@+id/totalPriceLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </RelativeLayout>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dap_user_wallet_sell_to"
+            android:layout_below="@id/bitcoinTotalLayout"
+            android:layout_marginTop="15dp"
+            android:id="@+id/textView2"
+            android:textSize="14sp"
+            android:textColor="#ffffff"
+            android:fontFamily="regular"/>
+
+        <RelativeLayout
+            android:id="@+id/selectUsersButton"
+            android:layout_height="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_width="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/textView2"
+            android:background="#5A555C">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/selectedUsersText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dap_user_wallet_sell_select_user"
+                android:textColor="#ffffff"
+                android:textSize="16dp"
+                android:layout_centerVertical="true"/>
+
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/ic_detail_more"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"/>
+
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            android:id="@+id/sellAssetsButton"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_marginTop="50dp"
+            android:layout_below="@+id/selectUsersButton"
+            android:layout_centerHorizontal="true">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/bg_delivery_button_redeem"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/dap_user_wallet_sell_button"
+                android:textSize="17sp"
+                android:fontFamily="regular"
+                android:textColor="#00aeef"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

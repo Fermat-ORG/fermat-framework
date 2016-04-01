@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -101,16 +102,16 @@ public class CloseContractMonitorAgent implements
         //LOG.info("Close contract monitor agent starting");
         monitorAgent = new MonitorAgent();
 
-        ((DealsWithPluginDatabaseSystem) this.monitorAgent).setPluginDatabaseSystem(this.pluginDatabaseSystem);
-        ((DealsWithErrors) this.monitorAgent).setErrorManager(this.errorManager);
+        this.monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
+        this.monitorAgent.setErrorManager(this.errorManager);
 
         try {
-            ((MonitorAgent) this.monitorAgent).Initialize();
+            this.monitorAgent.Initialize();
         } catch (CantInitializeCBPAgent exception) {
             errorManager.reportUnexpectedPluginException(Plugins.CLOSE_CONTRACT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
         }
 
-        this.agentThread = new Thread(monitorAgent);
+        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
@@ -181,6 +182,12 @@ public class CloseContractMonitorAgent implements
                 try {
                     Thread.sleep(SLEEP_TIME);
                 } catch (InterruptedException interruptedException) {
+
+
+                    errorManager.reportUnexpectedPluginException(
+                            Plugins.CLOSE_CONTRACT,
+                            UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                            interruptedException);
                     return;
                 }
 
@@ -208,6 +215,11 @@ public class CloseContractMonitorAgent implements
                         CloseContractBusinessTransactionDatabaseConstants.DATABASE_NAME);
             }
             catch (DatabaseNotFoundException databaseNotFoundException) {
+
+                errorManager.reportUnexpectedPluginException(
+                        Plugins.CLOSE_CONTRACT,
+                        UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        databaseNotFoundException);
 
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("Database in Close Contract monitor agent doesn't exists");
@@ -244,7 +256,7 @@ public class CloseContractMonitorAgent implements
                 closeContractBusinessTransactionDao=new CloseContractBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
-                        database);
+                        database,errorManager);
                 /**
                  * Check if exist in database new close contracts to send
                  */
@@ -271,18 +283,21 @@ public class CloseContractMonitorAgent implements
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
                                     transactionId,
-                                    ContractTransactionStatus.CHECKING_CLOSING_CONTRACT);
+                                    ContractTransactionStatus.CHECKING_CLOSING_CONTRACT,
+                                    Plugins.CLOSE_CONTRACT, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,PlatformComponentType.ACTOR_CRYPTO_BROKER);
                             break;
                         case SALE:
                             saleContract=(ContractSaleRecord) XMLParser.parseXML(
                                     contractXML,
                                     saleContract);
+                            //TODO: revisar estos publickey del sender y receiver
                             transactionTransmissionManager.sendContractStatusNotification(
                                     purchaseContract.getPublicKeyCustomer(),
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
                                     transactionId,
-                                    ContractTransactionStatus.CHECKING_CLOSING_CONTRACT);
+                                    ContractTransactionStatus.CHECKING_CLOSING_CONTRACT,
+                                    Plugins.CLOSE_CONTRACT,PlatformComponentType.ACTOR_CRYPTO_BROKER,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
                             break;
                     }
                 }
@@ -308,7 +323,8 @@ public class CloseContractMonitorAgent implements
                                     purchaseContract.getPublicKeyCustomer(),
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
-                                    transactionId);
+                                    transactionId,
+                                    Plugins.CLOSE_CONTRACT, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER, PlatformComponentType.ACTOR_CRYPTO_BROKER);
                             break;
                         case SALE:
                             saleContract=(ContractSaleRecord) XMLParser.parseXML(
@@ -318,7 +334,8 @@ public class CloseContractMonitorAgent implements
                                     purchaseContract.getPublicKeyCustomer(),
                                     purchaseContract.getPublicKeyBroker(),
                                     hashToSubmit,
-                                    transactionId);
+                                    transactionId,
+                                    Plugins.CLOSE_CONTRACT, PlatformComponentType.ACTOR_CRYPTO_BROKER, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
                             break;
                     }
                 }

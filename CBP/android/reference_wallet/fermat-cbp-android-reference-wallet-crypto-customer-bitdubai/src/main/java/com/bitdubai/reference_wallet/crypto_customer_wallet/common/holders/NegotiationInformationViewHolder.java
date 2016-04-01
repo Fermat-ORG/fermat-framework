@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
@@ -17,21 +18,25 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 import java.util.Map;
 
+import static com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus.SENT_TO_BROKER;
+
+
 /**
  * Created by nelson on 28/10/15.
  */
 public class NegotiationInformationViewHolder extends ChildViewHolder {
-    public ImageView brokerImage;
-    public FermatTextView brokerName;
-    public FermatTextView merchandiseAmount;
-    public FermatTextView merchandise;
-    public FermatTextView paymentMethod;
-    public FermatTextView exchangeRateAmount;
-    public FermatTextView paymentCurrency;
-    public FermatTextView lastUpdateDate;
-    public FermatTextView status;
-    private Resources res;
-    private View itemView;
+    public final ImageView brokerImage;
+    public final FermatTextView brokerName;
+    public final FermatTextView merchandiseAmount;
+    public final FermatTextView merchandise;
+    public final FermatTextView paymentMethod;
+    public final FermatTextView exchangeRateAmount;
+    public final FermatTextView paymentCurrency;
+    public final FermatTextView lastUpdateDate;
+    public final FermatTextView status;
+    public final ProgressBar sendingProgressBar;
+    private final Resources res;
+    private final View itemView;
 
 
     /**
@@ -54,12 +59,14 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         paymentCurrency = (FermatTextView) itemView.findViewById(R.id.ccw_payment_currency);
         lastUpdateDate = (FermatTextView) itemView.findViewById(R.id.ccw_update_date);
         status = (FermatTextView) itemView.findViewById(R.id.ccw_negotiation_status);
+        sendingProgressBar = (ProgressBar) itemView.findViewById(R.id.ccw_sending_progress_bar);
     }
 
     public void bind(CustomerBrokerNegotiationInformation itemInfo) {
 
         CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastNegotiationUpdateDate());
         lastUpdateDate.setText(date);
+
 
         ActorIdentity broker = itemInfo.getBroker();
         brokerImage.setImageDrawable(getImgDrawable(broker.getProfileImage()));
@@ -69,12 +76,13 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         itemView.setBackgroundColor(getStatusBackgroundColor(negotiationStatus));
         status.setText(getStatusStringRes(negotiationStatus));
 
+        int visibility = (negotiationStatus == SENT_TO_BROKER) ? View.VISIBLE : View.INVISIBLE;
+        sendingProgressBar.setVisibility(visibility);
+
         Map<ClauseType, String> negotiationSummary = itemInfo.getNegotiationSummary();
         merchandiseAmount.setText(negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY_QUANTITY));
         exchangeRateAmount.setText(negotiationSummary.get(ClauseType.EXCHANGE_RATE));
         merchandise.setText(negotiationSummary.get(ClauseType.CUSTOMER_CURRENCY));
-//        paymentMethod.setText(negotiationSummary.get(ClauseType.BROKER_PAYMENT_METHOD));
-//        paymentCurrency.setText(negotiationSummary.get(ClauseType.BROKER_CURRENCY));
     }
 
     private int getStatusBackgroundColor(NegotiationStatus status) {
@@ -90,17 +98,14 @@ public class NegotiationInformationViewHolder extends ChildViewHolder {
         return res.getColor(R.color.negotiation_cancelled_list_item_background);
     }
 
-    private int getStatusStringRes(NegotiationStatus status) {
+    protected int getStatusStringRes(NegotiationStatus status) {
         if (status == NegotiationStatus.WAITING_FOR_CUSTOMER || status == NegotiationStatus.SENT_TO_CUSTOMER)
             return R.string.waiting_for_you;
 
-        if (status == NegotiationStatus.WAITING_FOR_BROKER || status == NegotiationStatus.SENT_TO_BROKER)
+        if (status == NegotiationStatus.WAITING_FOR_BROKER)
             return R.string.waiting_for_broker;
 
-        if (status == NegotiationStatus.CLOSED)
-            return R.string.negotiation_closed;
-
-        return R.string.negotiation_cancelled;
+        return R.string.sending_to_the_broker;
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {

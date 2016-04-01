@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 
@@ -15,17 +14,9 @@ public interface AssetUserWalletTransaction {
 
     String getGenesisTransaction();
 
-    CryptoAddress getAddressFrom();
+    DAPActor getActorFrom();
 
-    Actors getActorFromType();
-
-    CryptoAddress getAddressTo();
-
-    Actors getActorToType();
-
-    String getActorToPublicKey();
-
-    String getActorFromPublicKey();
+    DAPActor getActorTo();
 
     BalanceType getBalanceType();
 
@@ -40,4 +31,6 @@ public interface AssetUserWalletTransaction {
     long getRunningAvailableBalance();
 
     String getMemo();
+
+    boolean isLocked();
 }

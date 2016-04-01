@@ -6,43 +6,43 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningTestData;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningsDetailData;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.util.EarningCurrencyCalendarRelationship;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 
 /**
  * Created by nelson on 27/01/16.
  */
 public class EarningsOverviewViewHolder extends FermatViewHolder {
 
-    private final FermatTextView earningValueTextView;
     private final FermatTextView differenceTextView;
     private final FermatTextView dateTextView;
 
     public EarningsOverviewViewHolder(View itemView) {
-        super(itemView);
+        super(itemView, 0);
 
-        earningValueTextView = (FermatTextView) itemView.findViewById(R.id.cbw_earning_value_item);
         differenceTextView = (FermatTextView) itemView.findViewById(R.id.cbw_earning_value_difference_item);
         dateTextView = (FermatTextView) itemView.findViewById(R.id.cbw_earning_value_date_item);
     }
 
-    public void bind(EarningTestData data, int timeField) {
+    public void bind(EarningsDetailData data, TimeFrequency frequency, Currency earningCurrency) {
         final NumberFormat numberFormat = DecimalFormat.getInstance();
 
-        final String diff = numberFormat.format(data.getDifference());
-        final String currencyCode = data.getCurrency().getCode();
-        final double earningValue = data.getEarningValue();
+        final String diff = numberFormat.format(data.getAmount());
+        final String currencyCode = earningCurrency.getCode();
 
-        earningValueTextView.setText(String.format("%s %s", numberFormat.format(earningValue), currencyCode));
-
-        if (data.getDifference() > 0) {
+        if (data.getAmount() > 0) {
             differenceTextView.setText(String.format("+ %s %s", diff, currencyCode));
             differenceTextView.setTextColor(Color.parseColor("#39ab89"));
-        } else if (data.getDifference() < 0) {
+        } else if (data.getAmount() < 0) {
             differenceTextView.setText(String.format("%s %s", diff, currencyCode));
             differenceTextView.setTextColor(Color.parseColor("#d14846"));
         } else {
@@ -51,18 +51,27 @@ public class EarningsOverviewViewHolder extends FermatViewHolder {
         }
 
         CharSequence formattedDate;
-        switch (timeField) {
-            case Calendar.MONTH:
-                formattedDate = DateFormat.format("MMM yyyy", data.getTimestamp());
+        switch (frequency) {
+            case MONTHLY:
+                formattedDate = DateFormat.format("MMM yyyy", getDate(data.getRelationship()));
                 break;
-            case Calendar.DATE:
-                formattedDate = DateFormat.format("dd MMM yyyy", data.getTimestamp());
+            case YEARLY:
+                formattedDate = DateFormat.format("yyyy", getDate(data.getRelationship()));
                 break;
             default:
-                formattedDate = DateFormat.format("MMM yyyy", data.getTimestamp());
+                formattedDate = DateFormat.format("dd MMM yyyy", getDate(data.getRelationship()));
                 break;
         }
 
         dateTextView.setText(formattedDate);
+    }
+
+    private Calendar getDate(EarningCurrencyCalendarRelationship data) {
+
+        return new GregorianCalendar(
+                data.getYear(),
+                data.getMonth(),
+                data.getDay()
+        );
     }
 }

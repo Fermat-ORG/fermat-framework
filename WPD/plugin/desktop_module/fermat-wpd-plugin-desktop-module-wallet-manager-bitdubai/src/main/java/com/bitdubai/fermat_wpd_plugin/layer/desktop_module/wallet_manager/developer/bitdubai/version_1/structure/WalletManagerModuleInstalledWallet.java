@@ -4,6 +4,7 @@ package com.bitdubai.fermat_wpd_plugin.layer.desktop_module.wallet_manager.devel
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
@@ -40,6 +41,7 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
     private int position;
     private int notifications;
     private AppsStatus appStatus;
+    private int bannerRes;
 
 
     public WalletManagerModuleInstalledWallet(WalletCategory walletCategory,WalletType walletType, List<InstalledSkin> skinsId, List<InstalledLanguage> languajesId, String walletIcon, String walletName, String publicKey, String walletPlatformIdentifier, Version version,AppsStatus appsStatus) {
@@ -107,6 +109,16 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
     @Override
     public int getIconResource() {
         return iconResource;
+    }
+
+    @Override
+    public void setBanner(int res) {
+        this.bannerRes = res;
+    }
+
+    @Override
+    public int getBannerRes() {
+        return bannerRes;
     }
 
     @Override
@@ -178,4 +190,16 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
     public AppsStatus getAppStatus() {
         return appStatus;
     }
+
+    @Override
+    public FermatAppType getAppType() {
+        return FermatAppType.WALLET;
+    }
+
+    @Override
+    public byte[] getAppIcon() {
+        return new byte[0];
+    }
+
+
 }

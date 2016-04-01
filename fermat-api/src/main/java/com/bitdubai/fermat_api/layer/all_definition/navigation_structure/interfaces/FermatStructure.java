@@ -5,17 +5,19 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activit
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.FermatAppType;
 
+import java.io.Serializable;
+
 /**
  * Created by Matias Furszyfer on 2016.01.06..
  */
-public interface FermatStructure {
+public interface FermatStructure extends Serializable{
 
     FermatApps getFermatApp();
     FermatAppType getFermatAppType();
 
-    public String getPublicKey();
-    public Activity getActivity(Activities activities);
-    public Activity getStartActivity();
-    public Activity getLastActivity();
-    public void changeActualStartActivity(int option)throws IllegalArgumentException;
+    String getPublicKey();
+    Activity getActivity(Activities activities);
+    Activity getStartActivity();
+    Activity getLastActivity();
+    void changeActualStartActivity(int option)throws IllegalArgumentException;
 }

@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
@@ -55,7 +56,7 @@ import static android.widget.Toast.makeText;
  * @author Francisco Vásquez
  * @version 1.0
  */
-public class ContactDetailFragment extends AbstractFermatFragment implements View.OnClickListener {
+public class ContactDetailFragment extends AbstractFermatFragment<ReferenceWalletSession,ResourceProviderManager> implements View.OnClickListener {
 
 
     /**
@@ -103,8 +104,8 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             addressIsTouch = false;
         }
     };
-    SettingsManager<BitcoinWalletSettings> settingsManager;
-    BlockchainNetworkType blockchainNetworkType;
+    private SettingsManager<BitcoinWalletSettings> settingsManager;
+    private BlockchainNetworkType blockchainNetworkType;
 
 
     public static ContactDetailFragment newInstance() {
@@ -117,7 +118,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            referenceWalletSession = (ReferenceWalletSession) appSession;
+            referenceWalletSession = appSession;
             setHasOptionsMenu(true);
             cryptoWalletWalletContact = referenceWalletSession.getLastContactSelected();
             if(cryptoWalletWalletContact==null){
@@ -188,7 +189,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
         int id = view.getId();
         try{
             if ( id == R.id.send_button) {
-                if(cryptoWalletWalletContact.getReceivedCryptoAddress().size()>0) {
+                if(cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
                     referenceWalletSession.setLastContactSelected(cryptoWalletWalletContact);
                     referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
                     changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
@@ -197,7 +198,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
                 }
             }
             else if( id == R.id.receive_button){
-                if(cryptoWalletWalletContact.getReceivedCryptoAddress().size()>0) {
+                if(cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
                     referenceWalletSession.setLastContactSelected(cryptoWalletWalletContact);
                     referenceWalletSession.setData(SessionConstant.FROM_ACTIONBAR_SEND_ICON_CONTACTS, false);
                     changeActivity(Activities.CCP_BITCOIN_WALLET_REQUEST_FORM_ACTIVITY, referenceWalletSession.getAppPublicKey());
@@ -412,16 +413,19 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
             //update contact address
             cryptoWalletManager = referenceWalletSession.getModuleManager();
 
-            CryptoWalletWalletContact walletContact = cryptoWalletManager.getCryptoWallet().findWalletContactById(UUID.fromString(code),referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+            cryptoWalletWalletContact = cryptoWalletManager.getCryptoWallet().findWalletContactById(UUID.fromString(code), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
 
-            if(walletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
+
+            if(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
             {
-                text_view_address.setText(walletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
+                text_view_address.setText(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress());
                 img_update.setVisibility(View.GONE);
                 receive_button.setVisibility(View.VISIBLE);
                 send_button.setVisibility(View.VISIBLE);
 
             }
+
+            referenceWalletSession.setLastContactSelected(cryptoWalletWalletContact);
 
         }
         catch(Exception e)

@@ -10,11 +10,13 @@ public enum DistributionStatus implements FermatEnum {
 
 
     DELIVERED("DELIVERED"),
+    SENT("SENT"),
     DELIVERING("DELIVERING"),
     INCOMING_CHAT("INCHAT"),
     OUTGOING_CHAT("OUTCHT"),
     INCOMING_MSG("INMSG"),
-    OUTGOING_MSG("OUTMSG")
+    OUTGOING_MSG("OUTMSG"),
+    CANNOT_SEND ("CSED")
     ;
     String code;
 
@@ -40,6 +42,10 @@ public enum DistributionStatus implements FermatEnum {
                 return DistributionStatus.INCOMING_MSG;
             case "OUTMSG":
                 return DistributionStatus.OUTGOING_MSG;
+            case "CSED":
+                return DistributionStatus.CANNOT_SEND;
+            case "SENT":
+                return DistributionStatus.SENT;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the EventStatus enum.");
         }

@@ -26,10 +26,11 @@ public class BankMoneyDestockTransactionImpl implements BankMoneyTransaction {
     TransactionStatusRestockDestock transactionStatus;
     BigDecimal                      priceReference;
     OriginTransaction               originTransaction;
+    String                          originTransactionId;
 
     public BankMoneyDestockTransactionImpl(){
 
-    };
+    }
 
     public BankMoneyDestockTransactionImpl(UUID transactionId,
                                            String actorPublicKey,
@@ -43,7 +44,8 @@ public class BankMoneyDestockTransactionImpl implements BankMoneyTransaction {
                                            Timestamp timeStamp,
                                            TransactionStatusRestockDestock transactionStatus,
                                            BigDecimal priceReference,
-                                           OriginTransaction originTransaction){
+                                           OriginTransaction originTransaction,
+                                           String originTransactionId){
         this.transactionId      = transactionId;
         this.actorPublicKey     = actorPublicKey;
         this.fiatCurrency       = fiatCurrency;
@@ -57,6 +59,7 @@ public class BankMoneyDestockTransactionImpl implements BankMoneyTransaction {
         this.transactionStatus  = transactionStatus;
         this.priceReference     = priceReference;
         this.originTransaction  = originTransaction;
+        this.originTransactionId= originTransactionId;
     }
 
 
@@ -189,5 +192,20 @@ public class BankMoneyDestockTransactionImpl implements BankMoneyTransaction {
     @Override
     public void setOriginTransaction(OriginTransaction originTransaction) {
         this.originTransaction = originTransaction;
+    }
+
+    /**
+     * The property <code>OriginTransactionId</code>  represented the Origin Transaction
+     *
+     * @return the String
+     */
+    @Override
+    public String getOriginTransactionId() {
+        return null;
+    }
+
+    @Override
+    public void setOriginTransactionId(String originTransactionId) {
+
     }
 }

@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.functional;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
@@ -14,47 +13,35 @@ public class AssetIssuerWalletTransactionWrapper implements AssetIssuerWalletTra
     private final String transactionHash;
     private final String assetPublicKey;
     private final TransactionType transactionType;
-    private final CryptoAddress addressFrom;
-    private final CryptoAddress addressTo;
-    private final String actorFromPublicKey;
-    private final String actorToPublicKey;
-    private final Actors actorFromType;
-    private final Actors actorToType;
     private final BalanceType balanceType;
     private final long amount;
     private final long runningBookBalance;
     private final long runningAvailableBalance;
     private final long timeStamp;
     private final String memo;
+    private final DAPActor actorFrom;
+    private final DAPActor actorTo;
 
     public AssetIssuerWalletTransactionWrapper(final String transactionId,
-                                           final String transactionHash,
-                                           final String assetPublicKey,
-                                           final TransactionType transactionType,
-                                           final CryptoAddress addressFrom,
-                                           final CryptoAddress addressTo,
-                                           final String actorFromPublicKey,
-                                           final String actorToPublicKey,
-                                           final Actors actorFromType,
-                                           final Actors actorToType,
-                                           final BalanceType balanceType,
-                                           final long amount,
-                                           final long runningBookBalance,
-                                           final long runningAvailableBalance,
-                                           final long timeStamp,
-                                           final String memo) {
+                                               final String transactionHash,
+                                               final String assetPublicKey,
+                                               final TransactionType transactionType,
+                                               final DAPActor actorFrom,
+                                               final DAPActor actorTo,
+                                               final BalanceType balanceType,
+                                               final long amount,
+                                               final long runningBookBalance,
+                                               final long runningAvailableBalance,
+                                               final long timeStamp,
+                                               final String memo) {
         this.transactionId = transactionId;
         this.assetPublicKey = assetPublicKey;
         this.transactionHash = transactionHash;
         this.transactionType = transactionType;
-        this.addressFrom = addressFrom;
-        this.addressTo = addressTo;
-        this.actorFromPublicKey = actorFromPublicKey;
-        this.actorToPublicKey = actorToPublicKey;
-        this.actorFromType = actorFromType;
-        this.actorToType = actorToType;
         this.balanceType = balanceType;
         this.amount = amount;
+        this.actorFrom = actorFrom;
+        this.actorTo = actorTo;
         this.runningBookBalance = runningBookBalance;
         this.runningAvailableBalance = runningAvailableBalance;
         this.timeStamp = timeStamp;
@@ -68,7 +55,6 @@ public class AssetIssuerWalletTransactionWrapper implements AssetIssuerWalletTra
 
         AssetIssuerWalletTransactionWrapper that = (AssetIssuerWalletTransactionWrapper) o;
 
-        if (!getTransactionId().equals(that.getTransactionId())) return false;
         if (!getTransactionHash().equals(that.getTransactionHash())) return false;
         return getAssetPublicKey().equals(that.getAssetPublicKey());
 
@@ -98,33 +84,13 @@ public class AssetIssuerWalletTransactionWrapper implements AssetIssuerWalletTra
     }
 
     @Override
-    public CryptoAddress getAddressFrom() {
-        return addressFrom;
+    public DAPActor getActorFrom() {
+        return actorFrom;
     }
 
     @Override
-    public Actors getActorFromType() {
-        return actorFromType;
-    }
-
-    @Override
-    public CryptoAddress getAddressTo() {
-        return addressTo;
-    }
-
-    @Override
-    public Actors getActorToType() {
-        return actorToType;
-    }
-
-    @Override
-    public String getActorToPublicKey() {
-        return actorToPublicKey;
-    }
-
-    @Override
-    public String getActorFromPublicKey() {
-        return actorFromPublicKey;
+    public DAPActor getActorTo() {
+        return actorTo;
     }
 
     @Override

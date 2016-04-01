@@ -50,7 +50,7 @@ public class IntraWalletUserNewNotificationsEventHandlers implements FermatEvent
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
         System.out.println("LLEGADA DE NOTIFICACION DE PENDIENTES A INTRA WALLET USER!!!");
-        if (((Service) this.intraUserActorPluginRoot).getStatus() == ServiceStatus.STARTED){
+        if (this.intraUserActorPluginRoot.getStatus() == ServiceStatus.STARTED){
 
             try {
 

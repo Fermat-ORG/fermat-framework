@@ -28,15 +28,18 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantClearAssociatedCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewActorExtraDataException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantCreateNewCustomerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListActorExtraDataException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantGetListCustomerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.CantUpdateActorExtraDataException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.exceptions.RelationshipNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.ActorExtraData;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.CustomerIdentityWalletRelationship;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_customer.interfaces.QuotesExtraData;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantCheckIfExistsException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantGetCryptoCustomerActorProfileImageException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantInitializeCryptoCustomerActorDatabaseException;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_customer.developer.bitdubai.version_1.exceptions.CantPersistProfileImageExtraDataException;
@@ -88,12 +91,9 @@ public class CryptoCustomerActorDao {
                     throw new CantInitializeCryptoCustomerActorDatabaseException(cantCreateDatabaseException.getMessage());
                 }
             }
-
-            new pruebaExtraData(this);
         }
 
         public CustomerIdentityWalletRelationship createNewCustomerIdentityWalletRelationship(ActorIdentity identity, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException {
-
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
                 DatabaseTableRecord recordToInsert   = RelationshipTable.getEmptyRecord();
@@ -115,7 +115,26 @@ public class CryptoCustomerActorDao {
             }
         }
 
-        public Collection<CustomerIdentityWalletRelationship> getAllCustomerIdentityWalletRelationship() throws CantGetListCustomerIdentityWalletRelationshipException {
+        public void clearAssociatedCustomerIdentityWalletRelationship(String walletPublicKey) throws CantClearAssociatedCustomerIdentityWalletRelationshipException {
+
+            DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
+            table.addStringFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
+
+            try {
+                table.loadToMemory();
+                List<DatabaseTableRecord> records = table.getRecords();
+
+                for (DatabaseTableRecord record : records)
+                    table.deleteRecord(record);
+
+            } catch (CantLoadTableToMemoryException e) {
+                throw new CantClearAssociatedCustomerIdentityWalletRelationshipException("Cant load table to memory", e, "", "");
+            } catch (CantDeleteRecordException e) {
+                throw new CantClearAssociatedCustomerIdentityWalletRelationshipException("Cant clear identities from wallet", e, "", "");
+            }
+        }
+
+        public Collection<CustomerIdentityWalletRelationship> getAllCustomerIdentityWalletRelationship() throws CantGetCustomerIdentityWalletRelationshipException {
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
                 RelationshipTable.loadToMemory();
@@ -127,15 +146,15 @@ public class CryptoCustomerActorDao {
                 }
                 return resultados;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetListCustomerIdentityWalletRelationshipException {
+        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetCustomerIdentityWalletRelationshipException {
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
                 RelationshipTable.addStringFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
@@ -147,31 +166,41 @@ public class CryptoCustomerActorDao {
                 }
                 return null;
             } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (InvalidParameterException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+                throw new CantGetCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetListCustomerIdentityWalletRelationshipException {
+        public CustomerIdentityWalletRelationship getCustomerIdentityWalletRelationshipByWallet(final String walletPublicKey) throws CantGetCustomerIdentityWalletRelationshipException,
+                                                                                                                                     RelationshipNotFoundException                      {
+
             try {
                 DatabaseTable RelationshipTable = this.database.getTable(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_TABLE_NAME);
+
                 RelationshipTable.addStringFilter(CryptoCustomerActorDatabaseConstants.CRYPTO_CUSTOMER_ACTOR_RELATIONSHIP_WALLET_COLUMN_NAME, walletPublicKey, DatabaseFilterType.EQUAL);
+
                 RelationshipTable.loadToMemory();
+
                 List<DatabaseTableRecord> records = RelationshipTable.getRecords();
-                RelationshipTable.clearAllFilters();
-                for (DatabaseTableRecord record : records) {
-                    return  constructCryptoCustomerActorRelationshipFromRecord(record);
-                }
-                return null;
-            } catch (CantLoadTableToMemoryException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
-            } catch (InvalidParameterException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+
+
+                if (!records.isEmpty())
+                    return  constructCryptoCustomerActorRelationshipFromRecord(records.get(0));
+                else
+                    return null;
+
+            } catch (final CantLoadTableToMemoryException e) {
+
+                throw new CantGetCustomerIdentityWalletRelationshipException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+            } catch (final InvalidParameterException e) {
+
+                throw new CantGetCustomerIdentityWalletRelationshipException(e, "", "There is a problem with some enum code.");
             } catch (CantGetListClauseException e) {
-                throw new CantGetListCustomerIdentityWalletRelationshipException(e.DEFAULT_MESSAGE, e, "", "");
+
+                throw new CantGetCustomerIdentityWalletRelationshipException(e, "", "There is a problem listing the clauses of relationship.");
             }
         }
 
@@ -226,7 +255,7 @@ public class CryptoCustomerActorDao {
                     try {
                         persistNewCryptoCustomerIdentityProfileImage(actorExtraData.getBrokerIdentity().getPublicKey(), actorExtraData.getBrokerIdentity().getProfileImage());
                     } catch (CantPersistProfileImageExtraDataException e) {
-                        // TODO: manejar las excepciones
+                        throw new CantCreateNewActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
                     }
                 }
             } catch (CantInsertRecordException e) {
@@ -234,7 +263,7 @@ public class CryptoCustomerActorDao {
             }
         }
 
-        public void createActorQoutes(ActorExtraData actorExtraData) throws CantCreateNewActorExtraDataException{
+        public void createActorQuotes(ActorExtraData actorExtraData) throws CantCreateNewActorExtraDataException{
             try {
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
                 DatabaseTableRecord record;
@@ -242,6 +271,7 @@ public class CryptoCustomerActorDao {
                     record = table.getEmptyRecord();
                     record.setUUIDValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_QUOTE_ID_COLUMN_NAME, UUID.randomUUID());
                     record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey());
+                    record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getCustomerPublicKey());
                     record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME, quote.getMerchandise().getCode());
                     record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME, quote.getPaymentCurrency().getCode());
                     record.setFloatValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME, quote.getPrice());
@@ -265,6 +295,7 @@ public class CryptoCustomerActorDao {
                     try {
                         updateCryptoBrokerIdentityProfileImage(actorExtraData.getBrokerIdentity().getPublicKey(), actorExtraData.getBrokerIdentity().getProfileImage());
                     } catch (CantPersistProfileImageExtraDataException e) {
+                        throw new CantUpdateActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
                     }
                 }
             } catch (CantUpdateRecordException e) {
@@ -281,7 +312,7 @@ public class CryptoCustomerActorDao {
                 record.setStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, actorExtraData.getBrokerIdentity().getPublicKey());
                 table.deleteRecord(record);
 
-                this.createActorQoutes(actorExtraData);
+                this.createActorQuotes(actorExtraData);
             } catch (CantDeleteRecordException e) {
                 throw new CantUpdateActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
             } catch (CantCreateNewActorExtraDataException e) {
@@ -295,42 +326,39 @@ public class CryptoCustomerActorDao {
                 table.loadToMemory();
                 List<DatabaseTableRecord> records = table.getRecords();
                 table.clearAllFilters();
-                if (records.isEmpty() ){
-                     return null;
-                }else {
-                    Collection<ActorExtraData> actoresExtraDatas = new ArrayList<ActorExtraData>();
-                    for (DatabaseTableRecord record : records) {
-                        String alias = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME);
-                        String brokerPublicKey = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
-                        String customerPublicKey = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
-                        byte[] image = null;
-                        try {
-                            image = getCryptoCustomerIdentityProfileImagePrivateKey(brokerPublicKey);
-                        } catch (CantGetCryptoCustomerActorProfileImageException e) {
-                            // TODO: manejar las excepciones
-                        }
-                        ActorIdentity identity = new ActorExtraDataIdentity(alias, brokerPublicKey, image);
-                        Collection<QuotesExtraData> quotes = this.getQuotesByIdentity(brokerPublicKey, customerPublicKey);
-                        Map<Currency, Collection<Platforms>> currencies = null;
-                        ActorExtraData data = new ActorExtraDataInformation(
-                                customerPublicKey,
-                                identity,
-                                quotes,
-                                currencies
-                        );
-                        actoresExtraDatas.add(data);
+                Collection<ActorExtraData> actoresExtraDatas = new ArrayList<ActorExtraData>();
+                for (DatabaseTableRecord record : records) {
+                    String alias = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME);
+                    String brokerPublicKey = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
+                    String customerPublicKey = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
+                    byte[] image = null;
+                    try {
+                        image = getCryptoCustomerIdentityProfileImagePrivateKey(brokerPublicKey);
+                    } catch (CantGetCryptoCustomerActorProfileImageException e) {
+                        throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
                     }
-                    return actoresExtraDatas;
+                    ActorIdentity identity = new ActorExtraDataIdentity(alias, brokerPublicKey, image);
+                    Collection<QuotesExtraData> quotes = this.getQuotesByIdentity(brokerPublicKey, customerPublicKey);
+                    Map<Currency, Collection<Platforms>> currencies = null;
+                    ActorExtraData data = new ActorExtraDataInformation(
+                            customerPublicKey,
+                            identity,
+                            quotes,
+                            currencies
+                    );
+                    actoresExtraDatas.add(data);
                 }
+                return actoresExtraDatas;
             } catch (CantLoadTableToMemoryException e) {
                 throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
             }
         }
 
-        public ActorExtraData getActorExtraDataByPublicKey(String _publicKey) throws CantGetListActorExtraDataException {
+        public ActorExtraData getActorExtraDataByPublicKey(String customerPublicKey, String brokerPublicKey) throws CantGetListActorExtraDataException {
             try {
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_TABLE_NAME);
-                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, _publicKey, DatabaseFilterType.EQUAL);
+                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, customerPublicKey, DatabaseFilterType.EQUAL);
+                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerPublicKey, DatabaseFilterType.EQUAL);
                 table.loadToMemory();
                 List<DatabaseTableRecord> records = table.getRecords();
                 table.clearAllFilters();
@@ -339,16 +367,14 @@ public class CryptoCustomerActorDao {
                 }else {
                     for (DatabaseTableRecord record : records) {
                         String alias = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_ALIAS_COLUMN_NAME);
-                        String publicKey = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME);
-                        String customerPublicKey = record.getStringValue(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME);
                         byte[] image = null;
                         try {
-                            image = getCryptoCustomerIdentityProfileImagePrivateKey(publicKey);
+                            image = getCryptoCustomerIdentityProfileImagePrivateKey(brokerPublicKey);
                         } catch (CantGetCryptoCustomerActorProfileImageException e) {
-                            // TODO: manejar las excepciones
+                            throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
                         }
-                        ActorIdentity identity = new ActorExtraDataIdentity(alias, publicKey, image);
-                        Collection<QuotesExtraData> quotes = this.getQuotesByIdentity(publicKey, customerPublicKey);
+                        ActorIdentity identity = new ActorExtraDataIdentity(alias, brokerPublicKey, image);
+                        Collection<QuotesExtraData> quotes = this.getQuotesByIdentity(brokerPublicKey, customerPublicKey);
                         Map<Currency, Collection<Platforms>> currencies = null;
                         ActorExtraData data = new ActorExtraDataInformation(
                                 customerPublicKey,
@@ -382,7 +408,7 @@ public class CryptoCustomerActorDao {
                         try {
                             image = getCryptoCustomerIdentityProfileImagePrivateKey(publicKey);
                         } catch (CantGetCryptoCustomerActorProfileImageException e) {
-                            // TODO: manejar las excepciones
+                            throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e, "", "");
                         }
                         return new ActorExtraDataIdentity(alias, publicKey, image);
                     }
@@ -404,71 +430,76 @@ public class CryptoCustomerActorDao {
             }
             List<DatabaseTableRecord> records = table.getRecords();
             table.clearAllFilters();
-            if (records.isEmpty() ){
-                return null;
-            }else {
-                Collection<QuotesExtraData> quotes = new ArrayList<>();
-                for (DatabaseTableRecord record : records) {
-                    Currency mer = null;
-                    Currency pay = null;
+            Collection<QuotesExtraData> quotes = new ArrayList<>();
+            for (DatabaseTableRecord record : records) {
+                Currency mer = null;
+                Currency pay = null;
+                try {
+                    mer = FiatCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME));
+                } catch (InvalidParameterException e) {
                     try {
-                        mer = FiatCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME));
-                    } catch (InvalidParameterException e) {
-                        try {
-                            mer = CryptoCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME));
-                        } catch (InvalidParameterException e1) {
-                            throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
-                        }
+                        mer = CryptoCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_MERCHANDISE_COLUMN_NAME));
+                    } catch (InvalidParameterException e1) {
+                        throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
                     }
-                    try {
-                        pay = FiatCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME));
-                    } catch (InvalidParameterException e) {
-                        try {
-                            pay = CryptoCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME));
-                        } catch (InvalidParameterException e1) {
-                            throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
-                        }
-                    }
-                    Float pri = record.getFloatValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME);
-                    QuotesExtraData quote = new QuotesExtraDataInformation(UUID.randomUUID(), mer, pay, pri);
-                    quotes.add(quote);
                 }
-                return quotes;
+                try {
+                    pay = FiatCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME));
+                } catch (InvalidParameterException e) {
+                    try {
+                        pay = CryptoCurrency.getByCode(record.getStringValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PAYMENT_CURRENCY_COLUMN_NAME));
+                    } catch (InvalidParameterException e1) {
+                        throw new CantGetListActorExtraDataException(e.DEFAULT_MESSAGE, e1, "", "");
+                    }
+                }
+                Float pri = record.getFloatValue(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_PRICE_COLUMN_NAME);
+                QuotesExtraData quote = new QuotesExtraDataInformation(UUID.randomUUID(), mer, pay, pri);
+                quotes.add(quote);
             }
+            return quotes;
         }
 
-        public boolean existBrokerExtraData(String publicKey){
+        public boolean existBrokerExtraData(final String brokerPublicKey  ,
+                                            final String customerPublicKey) throws CantCheckIfExistsException {
+
             try {
+
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_TABLE_NAME);
-                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+
+                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME  , brokerPublicKey  , DatabaseFilterType.EQUAL);
+                table.addStringFilter(CryptoCustomerActorDatabaseConstants.ACTOR_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, customerPublicKey, DatabaseFilterType.EQUAL);
+
                 table.loadToMemory();
+
                 List<DatabaseTableRecord> records = table.getRecords();
-                table.clearAllFilters();
-                if (records.isEmpty() ){
-                    return false;
-                }else {
-                    return true;
-                }
+
+                return !records.isEmpty();
+
             } catch (CantLoadTableToMemoryException e) {
-                return false;
+
+                throw new CantCheckIfExistsException(e, "brokerPublicKey: "+brokerPublicKey+" - customerPublicKey: "+customerPublicKey, "Error checking if broker extra DATA exists.");
             }
         }
 
-        public boolean existBrokerExtraDataQuotes(String brokerPublicKey, String customerPublicKey){
+        public boolean existBrokerExtraDataQuotes(final String brokerPublicKey  ,
+                                                  final String customerPublicKey) throws CantCheckIfExistsException {
+
             try {
+
                 DatabaseTable table = this.database.getTable(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_TABLE_NAME);
-                table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME, brokerPublicKey, DatabaseFilterType.EQUAL);
+
+                table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_BROKER_PUBLIC_KEY_COLUMN_NAME  , brokerPublicKey  , DatabaseFilterType.EQUAL);
                 table.addStringFilter(CryptoCustomerActorDatabaseConstants.QUOTE_EXTRA_DATA_CUSTOMER_PUBLIC_KEY_COLUMN_NAME, customerPublicKey, DatabaseFilterType.EQUAL);
+
                 table.loadToMemory();
+
                 List<DatabaseTableRecord> records = table.getRecords();
-                table.clearAllFilters();
-                if (records.isEmpty() ){
-                    return false;
-                }else {
-                    return true;
-                }
+
+                return !records.isEmpty();
+
             } catch (CantLoadTableToMemoryException e) {
-                return false;
+
+                throw new CantCheckIfExistsException(e, "brokerPublicKey: "+brokerPublicKey+" - customerPublicKey: "+customerPublicKey, "Error checking if broker extra data QUOTES exists.");
             }
         }
 

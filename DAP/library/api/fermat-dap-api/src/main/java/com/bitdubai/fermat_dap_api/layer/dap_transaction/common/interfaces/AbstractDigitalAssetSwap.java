@@ -51,7 +51,7 @@ public abstract class AbstractDigitalAssetSwap implements DigitalAssetSwap {
     }
 
     public CryptoTransaction foundCryptoTransaction(DigitalAssetMetadata digitalAssetMetadata) throws CantGetCryptoTransactionException {
-        return AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, digitalAssetMetadata);
+        return AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, digitalAssetMetadata, null, null);
     }
 
     public boolean isAvailableBalanceInAssetVault(long genesisAmount, String genesisTransaction) {

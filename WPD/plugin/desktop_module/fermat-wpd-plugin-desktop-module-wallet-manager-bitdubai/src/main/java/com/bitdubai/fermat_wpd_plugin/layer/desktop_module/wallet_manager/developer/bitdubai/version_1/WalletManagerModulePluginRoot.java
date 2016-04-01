@@ -18,9 +18,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
@@ -49,6 +51,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
@@ -117,11 +120,15 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.IDENTITY         , plugin = Plugins.INTRA_WALLET_USER)
     private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
+    @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.LOSS_PROTECTED_WALLET)
+    private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
+
     /**
      * WalletManager Interface member variables.
      */
     String deviceUserPublicKey = "";
     String walletPublicKey = "reference_wallet";
+    String lossProtectedwalletPublicKey = "loss_protected_wallet";
 
     List<InstalledWallet> userWallets;
 
@@ -150,6 +157,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
          */
         //TODO: Verificar si este bloque de codigo es necesario que quede aca
         boolean existWallet = false;
+        boolean existWalletLoss = false;
         try {
             //load user's wallets ids
             this.loadUserWallets(deviceUserPublicKey);
@@ -160,7 +168,10 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                 Map.Entry mapEntry = (Map.Entry) iterator.next();
                 if (mapEntry.getValue().toString().equals(walletPublicKey))
                     existWallet = true;
+                if (mapEntry.getValue().toString().equals(lossProtectedwalletPublicKey))
+                    existWalletLoss = true;
             }
+
 
             if (!existWallet) {
                 //Create new Bitcoin Wallet
@@ -168,6 +179,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                 try {
 
                     bitcoinWalletManager.createWallet(walletPublicKey);
+
 
                     //Save wallet id on file
 
@@ -184,6 +196,29 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                 }
             }
 
+            //create loss protected wallet
+
+
+            if (!existWalletLoss) {
+                  try {
+
+
+                    bitcoinLossProtectedWalletManager.createWallet(lossProtectedwalletPublicKey);
+
+                    //Save wallet id on file
+
+                    try {
+                        this.persistWallet(walletPublicKey);
+                    } catch (CantPersistWalletException cantPersistWalletException) {
+                        throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                    }
+
+                } catch (CantCreateWalletException cantCreateWalletException) {
+                    throw new CantStartPluginException(cantCreateWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
+
+                }
+            }
             this.serviceStatus = ServiceStatus.STARTED;
 
 
@@ -288,6 +323,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
      * @return A list with the installed wallets information
      * @throws WalletsListFailedToLoadException
      */
+    @Override
     public List<InstalledWallet> getInstalledWallets() throws WalletsListFailedToLoadException{
         List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
 
@@ -456,6 +492,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
     }
 
 
+
     //TODO: revisar si esta interface Wallet Manager se va a usar (Natalia)
     /**
      * WalletManager Interface implementation.
@@ -464,25 +501,25 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
 
 
     //TODO: Analizar este metodo deberia reemplazarce por el metodo getInstalledWallets de la interface WalletManagerModule que ya esta implementado (Natalia)
-        @Override
-        public List<InstalledWallet> getUserWallets() {
-        // Harcoded para testear el circuito más arriba
-        InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
-                WalletType.REFERENCE,
-                new ArrayList<InstalledSkin>(),
-                new ArrayList<InstalledLanguage>(),
-                "reference_wallet_icon",
-                "Bitcoin Wallet",
-                "reference_wallet",
-                "wallet_platform_identifier",
-                new Version(1,0,0),
-                AppsStatus.getDefaultStatus()
-        );
-
-        List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
-        lstInstalledWallet.add(installedWallet);
-        return lstInstalledWallet;
-    }
+//        @Override
+//        public List<InstalledWallet> getUserWallets() {
+//        // Harcoded para testear el circuito más arriba
+//        InstalledWallet installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+//                WalletType.REFERENCE,
+//                new ArrayList<InstalledSkin>(),
+//                new ArrayList<InstalledLanguage>(),
+//                "reference_wallet_icon",
+//                "Bitcoin Wallet",
+//                "reference_wallet",
+//                "wallet_platform_identifier",
+//                new Version(1,0,0),
+//                AppsStatus.getDefaultStatus()
+//        );
+//
+//        List<InstalledWallet> lstInstalledWallet = new ArrayList<InstalledWallet>();
+//        lstInstalledWallet.add(installedWallet);
+//        return lstInstalledWallet;
+//    }
 
     @Override
     public void createDefaultWallets(String deviceUserPublicKey) throws CantCreateDefaultWalletsException {
@@ -540,7 +577,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "reference_wallet_icon",
                         "Bitcoin Reference Wallet",
-                        "reference_wallet",
+                        WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -552,7 +589,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "asset_issuer",
                         "asset issuer",
-                        "asset_issuer",
+                        WalletsPublicKeys.DAP_ISSUER_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -564,7 +601,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "asset_user",
                         "asset user",
-                        "asset_user",
+                        WalletsPublicKeys.DAP_USER_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -576,7 +613,20 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "redeem_point",
                         "redeem point",
-                        "redeem_point",
+                        WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(),
+                        "wallet_platform_identifier",
+                        new Version(1,0,0),
+                        AppsStatus.getDefaultStatus());
+                break;
+
+            case "loss_protected_wallet":
+                installedWallet = new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
+                        WalletType.REFERENCE,
+                        new ArrayList<InstalledSkin>(),
+                        new ArrayList<InstalledLanguage>(),
+                        "loss_protected_wallet_icon",
+                        "Loss Protected Wallet",
+                        WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -603,7 +653,7 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
                         new ArrayList<InstalledLanguage>(),
                         "reference_wallet_icon",
                         "Bitcoin Reference Wallet",
-                        "reference_wallet",
+                        WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode(),
                         FermatApps.BITCOIN_REFERENCE_WALLET.getCode(),
                         new Version(1,0,0),
                         AppsStatus.getDefaultStatus());
@@ -785,6 +835,15 @@ public class WalletManagerModulePluginRoot extends AbstractPlugin implements
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    @Override
+    public FermatApp getApp(String publicKey) throws Exception {
+        try {
+            return getInstalledWallet(publicKey);
+        } catch (CantCreateNewWalletException e) {
+            throw new Exception(e);
+        }
     }
 }
 

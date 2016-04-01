@@ -26,4 +26,8 @@ public interface AssetUserWalletList {
     long getQuantityAvailableBalance();
 
     void setQuantityAvailableBalance(long quantityAvailableBalance);
+
+    int getLockedAssets();
+
+    void setLockedAssets(int lockedAssets);
 }

@@ -1,11 +1,16 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -23,8 +28,30 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     private Collection<Clause>clauses;
     private String            cancelReason;
     private String            memo;
+    private boolean           dataHasChanged;
 
-    public CustomerBrokerPurchaseNegotiationImpl(){};
+    public CustomerBrokerPurchaseNegotiationImpl(){}
+
+    public CustomerBrokerPurchaseNegotiationImpl(CustomerBrokerPurchaseNegotiation negotiationInfo) {
+        dataHasChanged = false;
+
+        startDate = negotiationInfo.getStartDate();
+        lastNegotiationUpdateDate = negotiationInfo.getLastNegotiationUpdateDate();
+        negotiationExpirationDate = negotiationInfo.getNegotiationExpirationDate();
+        nearExpirationDatetime = negotiationInfo.getNearExpirationDatetime();
+        cancelReason = negotiationInfo.getCancelReason();
+        memo = negotiationInfo.getMemo();
+        customerPublicKey = negotiationInfo.getCustomerPublicKey();
+        brokerPublicKey = negotiationInfo.getBrokerPublicKey();
+        negotiationId = negotiationInfo.getNegotiationId();
+        status = negotiationInfo.getStatus();
+        try {
+            clauses = negotiationInfo.getClauses();
+        } catch (CantGetListClauseException e) {
+            clauses = new ArrayList<>();
+        }
+    }
+
 
     /**
      * @return the broker public key
@@ -151,5 +178,45 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     @Override
     public String getMemo() {
         return memo;
+    }
+
+
+    public boolean dataHasChanged() {
+        return dataHasChanged;
+    }
+
+    public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo){
+        dataHasChanged = dataHasChanged || !Objects.equals(cancelReason, negotiationInfo.getCancelReason());
+        cancelReason = negotiationInfo.getCancelReason();
+
+        dataHasChanged = dataHasChanged || !Objects.equals(memo, negotiationInfo.getMemo());
+        memo = negotiationInfo.getMemo();
+
+        Collection<ClauseInformation> values = negotiationInfo.getClauses().values();
+        dataHasChanged = dataHasChanged || (clauses.size() != values.size());
+
+        clauses = new ArrayList<>();
+        for (final ClauseInformation value : values) {
+            dataHasChanged = dataHasChanged || (value.getStatus() == ClauseStatus.CHANGED);
+            clauses.add(new CryptoCustomerWalletModuleClausesImpl(value, customerPublicKey));
+        }
+
+        this.status = NegotiationStatus.SENT_TO_BROKER;
+    }
+
+    @Override
+    public String toString() {
+        return com.google.common.base.Objects.toStringHelper(this).
+                add("startDate", startDate).
+                add("lastNegotiationUpdateDate",lastNegotiationUpdateDate).
+                add("nearExpirationDatetime", nearExpirationDatetime).
+                add("cancelReason", cancelReason).
+                add("memo", memo).
+                add("customerPublicKey", customerPublicKey).
+                add("brokerPublicKey", brokerPublicKey).
+                add("negotiationId", negotiationId).
+                add("status", status).
+                add("clauses", clauses).
+                toString();
     }
 }

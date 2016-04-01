@@ -2,6 +2,8 @@ package com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point;
 
 import android.util.Base64;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
@@ -20,20 +22,22 @@ import java.util.List;
  */
 public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
-    private String              actorPublicKey      ;
-    private String              name                ;
-    private long                registrationDate    ;
-    private long                lastConnectionDate  ;
-    private DAPConnectionState  dapConnectionState  ;
-    private CryptoAddress       cryptoAddress       ;
-    private Location            location            ;
-    private Double              locationLatitude    ;
-    private Double              locationLongitude   ;
-    private String              contactInformation  ;
-    private String              hoursOfOperation    ;
-    private Address             address             ;
-    private byte[]              profileImage        ;
-    private List<String>        registeredIssuers;
+    private String                  actorPublicKey      ;
+    private String                  name                ;
+    private long                    registrationDate    ;
+    private long                    lastConnectionDate  ;
+    private DAPConnectionState      dapConnectionState  ;
+    private CryptoAddress           cryptoAddress       ;
+    private Location                location            ;
+    private Double                  locationLatitude    ;
+    private Double                  locationLongitude   ;
+    private String                  contactInformation  ;
+    private String                  hoursOfOperation    ;
+    private Address                 address             ;
+    private Actors                  actorsType          = Actors.DAP_ASSET_REDEEM_POINT;
+    private byte[]                  profileImage        ;
+    private BlockchainNetworkType   blockchainNetworkType;
+    private List<String>            registeredIssuers   ;
 
     {
         registeredIssuers = new ArrayList<>();
@@ -85,8 +89,10 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
         this.name               = name                                  ;
         this.actorPublicKey     = actorPublicKey                        ;
-        this.profileImage       = profileImage.clone()                  ;
+
+        this.setProfileImage(profileImage);
         this.registrationDate   = registrationDate                      ;
+
         this.dapConnectionState = DAPConnectionState.REGISTERED_ONLINE  ;
 
     }
@@ -99,6 +105,8 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
                                   final CryptoAddress cryptoAddress,
                                   final Long registrationDate,
                                   final Long lastConnectionDate,
+                                  final Actors actorsType,
+                                  final BlockchainNetworkType blockchainNetworkType,
                                   final byte[] profileImage) {
         this(actorPublicKey,
                 name,
@@ -108,6 +116,8 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
                 cryptoAddress,
                 registrationDate,
                 lastConnectionDate,
+                actorsType,
+                blockchainNetworkType,
                 profileImage,
                 new ArrayList<String>());
     }
@@ -120,12 +130,15 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
                                   final CryptoAddress cryptoAddress,
                                   final Long registrationDate,
                                   final Long lastConnectionDate,
+                                  final Actors actorsType,
+                                  final BlockchainNetworkType blockchainNetworkType,
                                   final byte[] profileImage,
                                   final List<String> registeredIssuers) {
 
         this.actorPublicKey         =       actorPublicKey          ;
         this.name                   =       name                    ;
-        this.dapConnectionState     =       dapConnectionState      ;
+        if (dapConnectionState != null)
+            this.dapConnectionState     =       dapConnectionState  ;
 
         if (locationLatitude != null)
             this.locationLatitude       = locationLatitude          ;
@@ -134,10 +147,16 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
 
         if(cryptoAddress != null)
             this.cryptoAddress          = cryptoAddress             ;
+        if(blockchainNetworkType != null)
+            this.blockchainNetworkType  =    blockchainNetworkType  ;
+
+        this.actorsType             =       actorsType              ;
 
         this.registrationDate       =       registrationDate        ;
         this.lastConnectionDate     =       lastConnectionDate      ;
-        this.profileImage           =       profileImage.clone()    ;
+
+        this.setProfileImage(profileImage);
+
         this.registeredIssuers = registeredIssuers;
     }
 
@@ -154,7 +173,9 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         this.contactInformation = jsonObject.get("contactInformation").getAsString();
         this.hoursOfOperation = jsonObject.get("hoursOfOperation").getAsString();
         this.address = gson.fromJson(jsonObject.get("address").getAsString(), Address.class);
+        this.actorsType = gson.fromJson(jsonObject.get("actorsType").getAsString(), Actors.class);
         this.profileImage = Base64.decode(jsonObject.get("profileImage").getAsString(), Base64.DEFAULT);
+        this.blockchainNetworkType = gson.fromJson(jsonObject.get("blockchainNetworkType").getAsString(), BlockchainNetworkType.class);
         this.registeredIssuers = gson.fromJson(jsonObject.get("registeredIssuers").getAsString(), List.class);
     }
 
@@ -180,6 +201,16 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    /**
+     * The method <code>getType</code> gives us the Enum of the represented a Actor
+     *
+     * @return Enum Actors
+     */
+    @Override
+    public Actors getType() {
+        return actorsType;
     }
 
     public void setName(String name) {
@@ -226,7 +257,19 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
     }
 
     public void setProfileImage(byte[] profileImage) {
-        this.profileImage = profileImage;
+        if(profileImage != null)
+            this.profileImage = profileImage.clone();
+        else
+            this.profileImage = new byte[0];
+    }
+
+    public BlockchainNetworkType getBlockchainNetworkType() {
+        return blockchainNetworkType;
+    }
+
+    public void setBlockchainNetworkType(BlockchainNetworkType blockchainNetworkType) {
+        if(blockchainNetworkType != null)
+            this.blockchainNetworkType = blockchainNetworkType;
     }
 
     /**
@@ -350,9 +393,11 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
         jsonObject.addProperty("locationLatitude",      locationLatitude.toString());
         jsonObject.addProperty("locationLongitude",     locationLongitude.toString());
         jsonObject.addProperty("cryptoAddress",         cryptoAddress.toString());
-        jsonObject.addProperty("contactInformation",                  contactInformation);
-        jsonObject.addProperty("hoursOfOperation",                  hoursOfOperation);
-        jsonObject.addProperty("address",                  address.toString());
+        jsonObject.addProperty("contactInformation",    contactInformation);
+        jsonObject.addProperty("hoursOfOperation",      hoursOfOperation);
+        jsonObject.addProperty("address",               address.toString());
+        jsonObject.addProperty("actorsType",            actorsType.toString());
+        jsonObject.addProperty("blockchainNetworkType", blockchainNetworkType.toString());
         jsonObject.addProperty("profileImage",          Base64.encodeToString(profileImage, Base64.DEFAULT));
         jsonObject.addProperty("registeredIssuers", String.valueOf(registeredIssuers));
         return gson.toJson(jsonObject);
@@ -376,6 +421,8 @@ public class RedeemPointActorRecord implements ActorAssetRedeemPoint {
                 ", contactInformation='"    + contactInformation + '\'' +
                 ", hoursOfOperation='"      + hoursOfOperation + '\'' +
                 ", address="                + address +
+                ", actorsType="             + actorsType +
+                ", blockchainNetworkType="  + blockchainNetworkType +
                 ", profileImage="           + profileImageRedeem +
                 ", registeredIssuers="      + registeredIssuers +
                 '}';

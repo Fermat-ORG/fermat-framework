@@ -6,11 +6,14 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.daos.OutgoingMessageDao;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkServiceLocal;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
@@ -60,25 +63,30 @@ public final class CommunicationNetworkServiceLocal implements Observer, Network
      *
      * @param communicationNetworkServiceConnectionManager
      */
-    public CommunicationNetworkServiceLocal(CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager, PlatformComponentProfile remoteComponentProfile) {
+    public CommunicationNetworkServiceLocal(CommunicationNetworkServiceConnectionManager communicationNetworkServiceConnectionManager, PlatformComponentProfile remoteComponentProfile, ErrorManager errorManager) {
         this.communicationNetworkServiceConnectionManager = communicationNetworkServiceConnectionManager;
         this.remoteComponentProfile                       = remoteComponentProfile;
-        this.errorManager                                 = communicationNetworkServiceConnectionManager.getNetworkServiceRoot().getErrorManager();
+        this.errorManager                                 = errorManager;
         this.outgoingMessageDao                           = communicationNetworkServiceConnectionManager.getOutgoingMessageDao();
     }
 
-
-    /**
-     * (non-javadoc)
-     */
-    public void sendMessage(final String senderIdentityPublicKey, final String messageContent) {
+    public void sendMessage(final String                senderIdentityPublicKey,
+                            final PlatformComponentType senderType             ,
+                            final NetworkServiceType    senderNsType             ,
+                            final String                messageContent         ) {
 
         try {
 
-            FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(senderIdentityPublicKey,  //Sender NetworkService
-                                                                                                    remoteComponentProfile.getIdentityPublicKey(),   //Receiver
-                                                                                                    messageContent,                //Message Content
-                                                                                                    FermatMessageContentType.TEXT);//Type
+            FermatMessage fermatMessage  = FermatMessageCommunicationFactory.constructFermatMessage(
+                    senderIdentityPublicKey,                           // Sender NetworkService
+                    senderType,                                        // Sender type
+                    senderNsType,                                      // Sender NS type
+                    remoteComponentProfile.getIdentityPublicKey(),     // Receiver
+                    remoteComponentProfile.getPlatformComponentType(), // Receiver Type
+                    remoteComponentProfile.getNetworkServiceType(),    // Receiver NS type
+                    messageContent,                                    // Message Content
+                    FermatMessageContentType.TEXT                      // Type
+            );
             /*
              * Configure the correct status
              */
@@ -105,10 +113,19 @@ public final class CommunicationNetworkServiceLocal implements Observer, Network
      */
     private void onMessageReceived(FermatMessage incomingMessage) {
 
-        /*
-         * process the new message receive
-         */
-        communicationNetworkServiceConnectionManager.getNetworkServiceRoot().onNewMessagesReceive(incomingMessage);
+        try {
+
+            /*
+             * process the new message receive
+             */
+            communicationNetworkServiceConnectionManager.getNetworkServiceRoot().onNewMessagesReceive(incomingMessage);
+
+            ((FermatMessageCommunication) incomingMessage).setFermatMessagesStatus(FermatMessagesStatus.READ);
+            communicationNetworkServiceConnectionManager.getIncomingMessageDao().update(incomingMessage);
+
+        } catch (CantUpdateRecordDataBaseException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

@@ -3,61 +3,39 @@ package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_iss
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
-import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingTransactionDao;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
+import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDAO;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 29/09/15.
+ * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/03/16.
  */
-public class AssetIssuingRecorderService implements DealsWithEvents, AssetTransactionService {
+public class AssetIssuingRecorderService {
 
-    /**
-     * DealsWithEvents Interface member variables.
-     */
-    private EventManager eventManager;
-    private List<FermatEventListener> listenersAdded = new ArrayList<>();
-    //Asset Issuing database registry
-    AssetIssuingTransactionDao assetIssuingTransactionDao;
-    /**
-     * TransactionService Interface member variables.
-     */
+    //VARIABLE DECLARATION
+    private final EventManager eventManager;
+    private final AssetIssuingDAO assetIssuingDAO;
+
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
+    private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
-    public AssetIssuingRecorderService(AssetIssuingTransactionDao assetIssuingTransactionDao, EventManager eventManager) throws CantStartServiceException {
-        try {
-            setAssetIssuingDao(assetIssuingTransactionDao);
-            setEventManager(eventManager);
-        } catch (CantSetObjectException exception) {
-            throw new CantStartServiceException(exception, "Cannot set the asset issuing database handler", "The database handler is null");
-        }
-    }
+    //CONSTRUCTORS
 
-    private void setAssetIssuingDao(AssetIssuingTransactionDao assetIssuingTransactionDao) throws CantSetObjectException {
-        if (assetIssuingTransactionDao == null) {
-            throw new CantSetObjectException("The AssetIssuingDao is null");
-        }
-        this.assetIssuingTransactionDao = assetIssuingTransactionDao;
-    }
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
+    public AssetIssuingRecorderService(EventManager eventManager, AssetIssuingDAO assetIssuingDAO) {
         this.eventManager = eventManager;
+        this.assetIssuingDAO = assetIssuingDAO;
     }
 
+    //PUBLIC METHODS
     public void receiveNewEvent(FermatEvent event) throws CantSaveEventException {
-        this.assetIssuingTransactionDao.saveNewEvent(event.getEventType().getCode(), event.getSource().getCode());
+        assetIssuingDAO.saveNewEvent(event);
     }
 
-    @Override
     public void start() throws CantStartServiceException {
 
         try {
@@ -94,7 +72,6 @@ public class AssetIssuingRecorderService implements DealsWithEvents, AssetTransa
 
     }
 
-    @Override
     public void stop() {
         removeRegisteredListeners();
         this.serviceStatus = ServiceStatus.STOPPED;
@@ -107,8 +84,12 @@ public class AssetIssuingRecorderService implements DealsWithEvents, AssetTransa
         listenersAdded.clear();
     }
 
-    @Override
+    //PRIVATE METHODS
+
+    //GETTER AND SETTERS
+
     public ServiceStatus getStatus() {
         return this.serviceStatus;
     }
+    //INNER CLASSES
 }

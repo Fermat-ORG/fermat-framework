@@ -96,6 +96,10 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     static final int ID_BTN_INTRA_USER = 23;
     private static final int CONTEXT_MENU_NO_PHOTO = 4;
     private static final int UNIQUE_FRAGMENT_GROUP_ID = 17;
+
+    com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton;
+    FloatingActionMenu actionMenu;
+
     CreateContactFragmentDialog dialog;
     View rootView;
     //Type face font
@@ -211,13 +215,13 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         // in Activity Context
         FrameLayout frameLayout = new FrameLayout(getActivity());
 
-        FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
 
         frameLayout.setLayoutParams(lbs);
 
         ImageView icon = new ImageView(getActivity());
         frameLayout.addView(icon);
-        com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
+        actionButton = new com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton.Builder(getActivity())
                 .setContentView(frameLayout)
                 .setBackgroundDrawable(R.drawable.btn_contact_selector)
                 .build();
@@ -235,8 +239,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         SubActionButton button2 = itemBuilder.setContentView(itemIcon2).setBackgroundDrawable(getResources().getDrawable(R.drawable.intra_user_button)).setText("Fermat User").build();
         button2.setId(ID_BTN_INTRA_USER);
 
-
-        FloatingActionMenu actionMenu = new FloatingActionMenu.Builder(getActivity())
+         actionMenu = new FloatingActionMenu.Builder(getActivity())
                 .addSubActionView(button1)
                 .addSubActionView(button2)
                 .attachTo(actionButton)
@@ -882,5 +885,33 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         }
 
     }
+
+    @Override
+    public void onDrawerOpen() {
+
+        //close add contacts menu - FloatingActionButton
+
+    }
+
+   /* @Override
+    public void onDrawerSlide(View drawerView, float offset){
+
+        try{
+
+            if(offset == 1) {
+                actionButton.setAlpha(0);
+                actionMenu.close(false);
+            }
+            esle
+            {
+                actionButton.setAlpha(1);
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }*/
 
 }

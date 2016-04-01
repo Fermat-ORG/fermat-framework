@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_restock.developer.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
@@ -30,6 +32,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -86,7 +89,7 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
                 while (isRunning())
                     process();
             }
-        });
+        }, this.getClass().getSimpleName());
     }
 
     /**
@@ -175,7 +178,6 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
 //            }
 //        }
 //    }
-
     private void doTheMainTask() {
         try {
             // I define the filter to null for all
@@ -203,13 +205,11 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
                         break;
                     case IN_EJECUTION:
                         //Luego cambiar el status al registro de la transaccion leido
-                        if (holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId()).getCode() == BankTransactionStatus.CONFIRMED.getCode())
-                        {
+                        if (Objects.equals(holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId()).getCode(), BankTransactionStatus.CONFIRMED.getCode())) {
                             bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_HOLD);
                             stockTransactionBankMoneyRestockFactory.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
                         }
-                        if (holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId()).getCode() == BankTransactionStatus.REJECTED.getCode())
-                        {
+                        if (Objects.equals(holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId()).getCode(), BankTransactionStatus.REJECTED.getCode())) {
                             bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
                             stockTransactionBankMoneyRestockFactory.saveBankMoneyRestockTransactionData(bankMoneyTransaction);
                         }
@@ -220,7 +220,7 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de Bank Hold y si lo consigue entonces le cambia el status de IN_WALLET y hace el credito
                         BankTransactionStatus bankTransactionStatus = holdManager.getHoldTransactionsStatus(bankMoneyTransaction.getTransactionId());
-                        if (BankTransactionStatus.CONFIRMED.getCode() == bankTransactionStatus.getCode()) {
+                        if (Objects.equals(BankTransactionStatus.CONFIRMED.getCode(), bankTransactionStatus.getCode())) {
 
                             WalletTransactionWrapper walletTransactionRecordBook = new WalletTransactionWrapper(
                                     bankMoneyTransaction.getTransactionId(),
@@ -234,7 +234,9 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
                                     new Date().getTime() / 1000,
                                     bankMoneyTransaction.getConcept(),
                                     bankMoneyTransaction.getPriceReference(),
-                                    bankMoneyTransaction.getOriginTransaction());
+                                    bankMoneyTransaction.getOriginTransaction(),
+                                    bankMoneyTransaction.getOriginTransactionId(),
+                                    false);
 
                             WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
                                     bankMoneyTransaction.getTransactionId(),
@@ -248,7 +250,9 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
                                     new Date().getTime() / 1000,
                                     bankMoneyTransaction.getConcept(),
                                     bankMoneyTransaction.getPriceReference(),
-                                    bankMoneyTransaction.getOriginTransaction());
+                                    bankMoneyTransaction.getOriginTransaction(),
+                                    bankMoneyTransaction.getOriginTransactionId(),
+                                    false);
 
                             //TODO:Solo para testear
                             bankMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
@@ -284,6 +288,8 @@ public class BusinessTransactionBankMoneyRestockMonitorAgent extends FermatAgent
         } catch (CantMakeHoldTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetHoldTransactionException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }

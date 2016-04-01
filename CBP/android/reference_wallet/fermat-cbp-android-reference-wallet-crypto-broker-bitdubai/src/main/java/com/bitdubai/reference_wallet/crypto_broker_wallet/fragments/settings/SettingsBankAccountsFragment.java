@@ -16,9 +16,12 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
@@ -56,6 +59,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
 
     List<BankAccountNumber> accounts;
     List<BankAccountNumber> viewAccounts;
+    List<String> accountsStrings;
 
 
     public static SettingsBankAccountsFragment newInstance() {
@@ -68,6 +72,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
 
         accounts = new ArrayList<>();
         viewAccounts = new ArrayList<>();
+        accountsStrings = new ArrayList<>();
         //bankWallets = new ArrayList<>();
 
         try {
@@ -75,6 +80,19 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
+
+            List<CryptoBrokerWalletAssociatedSetting> associatedSettings= walletManager.getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");
+            List<BankAccountNumber> bankAccountNumbers = walletManager.getAccounts(WalletsPublicKeys.BNK_BANKING_WALLET.getCode());//"banking_wallet");
+            for (final CryptoBrokerWalletAssociatedSetting aux: associatedSettings){
+                for (BankAccountNumber bankAccountNumber: bankAccountNumbers){
+                    if (aux.getPlatform()==Platforms.BANKING_PLATFORM){
+                        if (aux.getBankAccount().equals(bankAccountNumber.getAccount())){
+                            accountsStrings.add(bankAccountNumber.getAccount());
+                            accounts.add(bankAccountNumber);
+                        }
+                    }
+                }
+            }
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -97,6 +115,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
         adapter = new BankAccountsAdapter(getActivity(), accounts);
         adapter.setDeleteButtonListener(this);
         recyclerView.setAdapter(adapter);
+        adapter.changeDataSet(accounts);
 
         emptyView = layout.findViewById(R.id.cbw_selected_bank_accounts_empty_view);
         final View bankButton = layout.findViewById(R.id.cbw_select_bank_accounts);
@@ -116,9 +135,10 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
                 changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS, appSession.getAppPublicKey());
             }
         });
-
+        showOrHideRecyclerView();
         return layout;
     }
+
     private void configureToolbar() {
         Toolbar toolbar = getToolbar();
 
@@ -139,8 +159,10 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
         builder.setPositiveButton(R.string.cbw_delete_caps, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                accounts.remove(position);
+                accounts.remove(i);
+                accountsStrings.remove(i);
                 adapter.changeDataSet(accounts);
+                saveSetting();
                 showOrHideRecyclerView();
             }
         });
@@ -166,14 +188,19 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
             }
             String walletPublicKey = "";
 
+            walletManager.clearAssociatedWalletSettings(appSession.getAppPublicKey(), Platforms.BANKING_PLATFORM);
 
             for (BankAccountNumber accountNumber : accounts) {
+
                 for (InstalledWallet wallet : filteredList) {
-                    if (accountNumber.getAccount().equals(walletManager.getAccounts(wallet.getWalletPublicKey()))) {
-                        walletPublicKey = wallet.getWalletPublicKey();
-                        break;
+                    for (BankAccountNumber auxAccountNumber1 : walletManager.getAccounts(wallet.getWalletPublicKey())) {
+                        if (accountNumber.getAccount().equals(auxAccountNumber1.getAccount())) {
+                            walletPublicKey = wallet.getWalletPublicKey();
+                            break;
+                        }
                     }
                 }
+
                 Platforms platform = Platforms.BANKING_PLATFORM;
                 CryptoBrokerWalletAssociatedSetting associatedSetting = walletManager.newEmptyCryptoBrokerWalletAssociatedSetting();
                 associatedSetting.setBrokerPublicKey(appSession.getAppPublicKey());
@@ -182,7 +209,10 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
                 associatedSetting.setPlatform(platform);
                 associatedSetting.setMoneyType(MoneyType.BANK);
                 associatedSetting.setBankAccount(accountNumber.getAccount());
+                associatedSetting.setMerchandise(accountNumber.getCurrencyType());
+
                 walletManager.saveWalletSettingAssociated(associatedSetting, appSession.getAppPublicKey());
+
             }
         } catch (FermatException ex) {
             Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
@@ -236,7 +266,9 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
 
     private void showBankAccountsDialog(List<InstalledWallet> installedWallets) {
         try {
-
+            if (viewAccounts.size()>0){
+                viewAccounts.clear();
+            }
             for (InstalledWallet wallet : installedWallets) {
                 viewAccounts.addAll(walletManager.getAccounts(wallet.getWalletPublicKey()));
             }
@@ -246,9 +278,14 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
             accountsDialog.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
                 @Override
                 public void onItemSelected(BankAccountNumber selectedAccount) {
-                    accounts.add(selectedAccount);
-                    adapter.changeDataSet(accounts);
-                    showOrHideRecyclerView();
+                    if( !accountsStrings.contains(selectedAccount.getAccount()) ){
+                        accountsStrings.add(selectedAccount.getAccount());
+                        accounts.add(selectedAccount);
+                        adapter.changeDataSet(accounts);
+                        showOrHideRecyclerView();
+                    }else{
+                        Toast.makeText(SettingsBankAccountsFragment.this.getActivity(), "Account already exists", Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 

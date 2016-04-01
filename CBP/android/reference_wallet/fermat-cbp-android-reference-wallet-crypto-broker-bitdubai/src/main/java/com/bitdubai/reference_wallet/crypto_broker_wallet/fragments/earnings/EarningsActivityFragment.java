@@ -5,67 +5,56 @@ import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.PopupMenu;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsCurrencyPairsAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsOverviewAdapter;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.EarningTestData;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.EarningsDetailsPageAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
+import com.viewpagerindicator.LinePageIndicator;
 
-import java.math.BigDecimal;
-import java.text.NumberFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.List;
+
+import static com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets.CBP_CRYPTO_BROKER_WALLET;
+import static com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT;
+import static com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, WalletResourcesProviderManager>
-        implements FermatListItemListeners<EarningsPair>, View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+        implements FermatListItemListeners<EarningsPair> {
 
     // Constants
     private static final String TAG = "EarningsActivity";
 
     // Data
     private List<EarningsPair> earningsPairs;
-    private Currency selectedCurrency;
 
     // Fermat Managers
     private ErrorManager errorManager;
     private CryptoBrokerWalletManager walletManager;
 
-    // UI
-    private RecyclerView earningsOverviewRecyclerView;
-    private RecyclerView currencyPairsRecyclerView;
-    private EarningsOverviewAdapter earningsOverviewAdapter;
     private EarningsCurrencyPairsAdapter currencyPairsAdapter;
-    private FermatTextView currentValue;
-    private FermatTextView previousValue;
-    private ImageView sortByButton;
-    private PopupMenu popupMenu;
-    private FermatTextView timeFieldTextView;
+    private EarningsDetailsPageAdapter earningDetailsAdapter;
+    private ViewPager earningDetailsViewPager;
 
 
     public static EarningsActivityFragment newInstance() {
@@ -81,13 +70,14 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
             walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
-            earningsPairs = TestData.getEarningsPairs();
+            earningsPairs = getEarningsPairs();
 
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
-                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+                errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET, DISABLES_THIS_FRAGMENT, ex);
+            else
+                Log.e(TAG, ex.getMessage(), ex);
         }
     }
 
@@ -97,91 +87,39 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
 
         configureToolbar();
 
-        currentValue = (FermatTextView) layout.findViewById(R.id.cbw_current_earning_value);
-        previousValue = (FermatTextView) layout.findViewById(R.id.cbw_previous_earning_value);
-        timeFieldTextView = (FermatTextView) layout.findViewById(R.id.cbw_earning_time_field);
-        timeFieldTextView.setText("Month");
+        if (earningsPairs.isEmpty()) {
+            layout.findViewById(R.id.cbw_no_earnings_container).setVisibility(View.VISIBLE);
+            layout.findViewById(R.id.cbw_earnings_container).setVisibility(View.GONE);
+        } else {
+            currencyPairsAdapter = new EarningsCurrencyPairsAdapter(getActivity(), earningsPairs);
+            currencyPairsAdapter.setFermatListEventListener(this);
 
-        sortByButton = (ImageView) layout.findViewById(R.id.cbw_earnings_sort_by_button);
-        sortByButton.setOnClickListener(this);
+            final RecyclerView currencyPairsRecyclerView = (RecyclerView) layout.findViewById(R.id.cbw_earning_currency_pairs_recycler_view);
+            currencyPairsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+            currencyPairsRecyclerView.setAdapter(currencyPairsAdapter);
 
-        currencyPairsAdapter = new EarningsCurrencyPairsAdapter(getActivity(), earningsPairs);
-        currencyPairsAdapter.setFermatListEventListener(this);
-        currencyPairsRecyclerView = (RecyclerView) layout.findViewById(R.id.cbw_earning_currency_pairs_recycler_view);
-        currencyPairsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-        currencyPairsRecyclerView.setAdapter(currencyPairsAdapter);
 
-        final EarningsPair earningsPair = earningsPairs.get(0);
-        final Currency earningCurrency = earningsPair.getEarningCurrency();
-        final List<EarningTestData> dataSet = TestData.getEarnings(earningCurrency, Calendar.MONTH);
-        earningsOverviewAdapter = new EarningsOverviewAdapter(getActivity(), dataSet);
-        earningsOverviewRecyclerView = (RecyclerView) layout.findViewById(R.id.earning_overview_recycler_view);
-        earningsOverviewRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        earningsOverviewRecyclerView.setAdapter(earningsOverviewAdapter);
+            final EarningsPair earningsPair = earningsPairs.get(0);
+            earningDetailsAdapter = new EarningsDetailsPageAdapter(getFragmentManager(), earningsPair, appSession);
 
-        onItemClickListener(earningsPair, 0);
+            earningDetailsViewPager = (ViewPager) layout.findViewById(R.id.cbw_earning_details_view_pager);
+            earningDetailsViewPager.setOffscreenPageLimit(3);
+            earningDetailsViewPager.setAdapter(earningDetailsAdapter);
+
+            final LinePageIndicator indicator = (LinePageIndicator) layout.findViewById(R.id.cbw_earning_details_view_pager_indicator);
+            indicator.setViewPager(earningDetailsViewPager);
+
+            onItemClickListener(earningsPair, 0);
+        }
 
         return layout;
     }
 
     @Override
-    public void onClick(View view) {
-        if (view.getId() == R.id.cbw_earnings_sort_by_button) {
-            if (popupMenu == null) {
-                popupMenu = new PopupMenu(getActivity(), sortByButton);
-                popupMenu.inflate(R.menu.cbw_earning_sort_by_menu);
-                popupMenu.setOnMenuItemClickListener(this);
-            }
-
-            popupMenu.show();
-        }
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem menuItem) {
-
-        if (menuItem.getItemId() == R.id.cbw_sort_by_month) {
-            int timeField = Calendar.MONTH;
-            List<EarningTestData> earnings = TestData.getEarnings(selectedCurrency, timeField);
-            earningsOverviewAdapter.setTimeField(timeField);
-            earningsOverviewAdapter.changeDataSet(earnings);
-            timeFieldTextView.setText("Month");
-            return true;
-        }
-
-        if (menuItem.getItemId() == R.id.cbw_sort_by_day) {
-            int timeField = Calendar.DATE;
-            List<EarningTestData> earnings = TestData.getEarnings(selectedCurrency, timeField);
-            earningsOverviewAdapter.setTimeField(timeField);
-            earningsOverviewAdapter.changeDataSet(earnings);
-            timeFieldTextView.setText("Day");
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public void onItemClickListener(EarningsPair data, int position) {
-        selectedCurrency = data.getEarningCurrency();
-
-        List<EarningTestData> earnings = TestData.getEarnings(selectedCurrency, Calendar.MONTH);
-        earningsOverviewAdapter.changeDataSet(earnings);
-
-        double currentEarning = TestData.getCurrentEarning(selectedCurrency);
-        String currentEarningFormatted = NumberFormat.getInstance().format(currentEarning);
-        currentValue.setText(String.format("%s %s", currentEarningFormatted, selectedCurrency.getCode()));
-
-        if (!earnings.isEmpty()) {
-            double previousEarningValue = earnings.get(0).getEarningValue();
-
-            double previousEarning = getEarningDifference(currentEarning, previousEarningValue);
-            String previousEarningFormatted = NumberFormat.getInstance().format(previousEarning);
-            String format = previousEarning <= 0 ? "%s %s" : "+ %s %s";
-            previousValue.setText(String.format(format, previousEarningFormatted, selectedCurrency.getCode()));
-        }
-
+    public void onItemClickListener(EarningsPair selectedEarningsPair, int position) {
         currencyPairsAdapter.setSelectedItem(position);
+        earningDetailsAdapter.changeDataSet(selectedEarningsPair);
+        earningDetailsViewPager.setCurrentItem(0);
     }
 
     @Override
@@ -199,10 +137,21 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
         if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
-    private double getEarningDifference(double currentEarningValue, double previousEarningValue) {
-        BigDecimal earningValueBigDec = BigDecimal.valueOf(currentEarningValue);
-        BigDecimal previousEarningValueBigDec = BigDecimal.valueOf(previousEarningValue);
+    private List<EarningsPair> getEarningsPairs() {
+        final List<EarningsPair> data = new ArrayList<>();
 
-        return earningValueBigDec.subtract(previousEarningValueBigDec).doubleValue();
+        try {
+            //final List<EarningsPair> earningsPairs = TestData.getEarningsPairs(); // TODO: just for test purposes
+            final List<EarningsPair> earningsPairs = walletManager.getEarningsPairs(appSession.getAppPublicKey());
+            data.addAll(earningsPairs);
+        } catch (Exception ex) {
+            data.addAll(TestData.getEarningsPairs());// TODO: just for test purposes
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            else
+                Log.e(TAG, ex.getMessage(), ex);
+        }
+
+        return data;
     }
 }

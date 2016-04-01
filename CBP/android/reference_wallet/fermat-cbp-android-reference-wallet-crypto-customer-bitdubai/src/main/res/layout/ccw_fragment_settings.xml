@@ -10,7 +10,7 @@
     <LinearLayout
         android:id="@+id/settings_my_location"
         android:layout_width="350dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:background="@color/ccw_wizard_color"
@@ -27,20 +27,21 @@
             android:layout_weight="1"
             android:gravity="left"
             android:text="MY LOCATIONS"
-            android:textSize="16dp"
+            android:textSize="14sp"
             android:textColor="@color/white"/>
 
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ccw_arrow_right_selected"
+            android:layout_gravity="center_vertical"
             tools:ignore="contentDescription"/>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/settings_bank_account"
         android:layout_width="350dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:background="@color/ccw_wizard_color"
@@ -57,20 +58,21 @@
             android:layout_weight="1"
             android:gravity="left"
             android:text="BANK ACCOUNTS"
-            android:textSize="16dp"
+            android:textSize="14sp"
             android:textColor="@color/white"/>
 
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ccw_arrow_right_selected"
+            android:layout_gravity="center_vertical"
             tools:ignore="contentDescription"/>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/settings_wallet_managment"
+        android:id="@+id/wallet_management"
         android:layout_width="350dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:background="@color/ccw_wizard_color"
@@ -78,7 +80,8 @@
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"
         android:paddingStart="16dp"
-        android:paddingTop="8dp">
+        android:paddingTop="8dp"
+        android:visibility="gone">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="0dp"
@@ -94,13 +97,14 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ccw_arrow_right_selected"
+            android:layout_gravity="center_vertical"
             tools:ignore="contentDescription"/>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/settings_public_information"
+        android:id="@+id/settings_providers"
         android:layout_width="350dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
         android:background="@color/ccw_wizard_color"
@@ -116,13 +120,14 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="left"
-            android:text="CURRENCY PREFERENCES"
-            android:textSize="16dp"
+            android:text="PROVIDERS"
+            android:textSize="14sp"
             android:textColor="@color/white"/>
 
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ccw_arrow_right_selected"
             tools:ignore="contentDescription"/>
     </LinearLayout>

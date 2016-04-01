@@ -22,6 +22,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -32,12 +33,13 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.settings.CryptoBrokerCommunitySettings;
+import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_broker_community.developer.bitdubai.version_1.structure.CryptoBrokerCommunitySubAppModuleInformation;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_broker_community.R;
 import com.bitdubai.sub_app.crypto_broker_community.adapters.AppListAdapter;
-import com.bitdubai.sub_app.crypto_broker_community.common.CryptoBrokerCommunityInformationImpl;
+import com.bitdubai.sub_app.crypto_broker_community.common.popups.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_broker_community.session.CryptoBrokerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_broker_community.util.CommonLogger;
 
@@ -74,6 +76,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     //Flags
     private boolean isRefreshing = false;
     private boolean launchActorCreationDialog = false;
+    private boolean launchListIdentitiesDialog = false;
 
     //UI
     private View rootView;
@@ -87,7 +90,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
     public static ConnectionsWorldFragment newInstance() {
         return new ConnectionsWorldFragment();
     }
-
 
 
 
@@ -122,23 +124,22 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                     e.printStackTrace();
                 }
             }
-           // moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
-
+            //Check if a default identity is configured
             try{
-                CryptoBrokerCommunitySelectableIdentity i = moduleManager.getSelectedActorIdentity();
-                if(i == null)
-                    launchActorCreationDialog = true;
-            }catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e){
+                moduleManager.getSelectedActorIdentity();
+            }catch (CantGetSelectedActorIdentityException e){
+                //There are no identities in device
                 launchActorCreationDialog = true;
+            }catch (ActorIdentityNotSelectedException e){
+                //There are identities in device, but none selected
+                launchListIdentitiesDialog = true;
             }
 
             //Get notification requests count
             //mNotificationsCount = moduleManager.listCryptoBrokersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
             //mNotificationsCount = 4;
             //new FetchCountTask().execute();
-
-            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -171,8 +172,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
-            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
 
             if(launchActorCreationDialog) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
@@ -184,25 +183,33 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
                         .setTextFooter(R.string.cbp_cbc_launch_action_creation_dialog_footer)
                         .setTextNameLeft(R.string.cbp_cbc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.cbp_cbc_launch_action_creation_name_right)
+                        .setImageRight(R.drawable.ic_profile_male)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
-                                invalidate();            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
-                                onRefresh();
-                            }
-                        });
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        invalidate();
+                        onRefresh();
+                    }
+                });
                 presentationDialog.show();
+            }
+            else if(launchListIdentitiesDialog)
+            {
+                ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(getActivity(), appSession, null);
+                listIdentitiesDialog.show();
+                listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        invalidate();
+                        onRefresh();
+                    }
+                });
+                listIdentitiesDialog.show();
             }
             else
             {
-                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
-                invalidate();            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
+                invalidate();
                 onRefresh();
             }
 
@@ -288,18 +295,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
         List<CryptoBrokerCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchNewCryptoBroker(moduleManager.getSelectedActorIdentity());
-
-            List<CryptoBrokerCommunityInformation> result = cryptoBrokerCommunitySearch.getResult();
-
-            //MOCK!
-            for(int i = 1 ; i <= 5 ; i++){
-                result.add(new CryptoBrokerCommunityInformationImpl("pk-"+i, "broker"+i, new byte[0]));
-            }
-
+            List<CryptoBrokerCommunityInformation> result = moduleManager.listWorldCryptoBrokers(moduleManager.getSelectedActorIdentity(), MAX, offset);
             dataSet.addAll(result);
             offset = dataSet.size();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -309,10 +307,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoBroke
 
     @Override
     public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
-
         appSession.setData(ACTOR_SELECTED, data);
         changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
-
     }
 
     @Override

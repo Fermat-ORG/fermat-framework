@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantUpdateBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.IdentityBrokerPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantCreateCryptoBrokerException;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.exceptions.CantHideCryptoBrokerException;
@@ -34,7 +35,7 @@ public interface CryptoBrokerIdentityModuleManager extends ModuleManager<Identit
      *
      * @param cryptoBrokerIdentity
      */
-    void updateCryptoBrokerIdentity(CryptoBrokerIdentityInformation cryptoBrokerIdentity);
+    void updateCryptoBrokerIdentity(CryptoBrokerIdentityInformation cryptoBrokerIdentity) throws CantUpdateBrokerIdentityException;
 
     /**
      * The method <code>publishIdentity</code> is used to publish a Broker identity

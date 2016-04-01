@@ -2,8 +2,10 @@ package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_u
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.bitcoin_wallet.interfaces.BitcoinWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_transmission.interfaces.CryptoTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantGetCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
@@ -32,6 +34,8 @@ public class IncomingIntraUserRelayAgent {
     private CryptoAddressBookManager  cryptoAddressBookManager;
     private IncomingIntraUserRegistry registry;
     private  CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
+    private Broadcaster broadcaster;
+    private BitcoinLossProtectedWalletManager lossProtectedWalletManager;
 
 
 
@@ -40,7 +44,9 @@ public class IncomingIntraUserRelayAgent {
                                        BitcoinWalletManager      bitcoinWalletManager,
                                        CryptoAddressBookManager  cryptoAddressBookManager,
                                        IncomingIntraUserRegistry registry,
-                                       CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager) {
+                                       CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,
+                                       Broadcaster broadcaster,
+                                       BitcoinLossProtectedWalletManager lossProtectedWalletManager) {
 
         this.registry                 = registry;
         this.errorManager             = errorManager;
@@ -48,11 +54,13 @@ public class IncomingIntraUserRelayAgent {
         this.bitcoinWalletManager     = bitcoinWalletManager;
         this.cryptoAddressBookManager = cryptoAddressBookManager;
         this.cryptoTransmissionNetworkServiceManager = cryptoTransmissionNetworkServiceManager;
+        this.broadcaster               = broadcaster;
+        this.lossProtectedWalletManager  = lossProtectedWalletManager;
 
     }
 
     public void start() throws com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.exceptions.CantStartIncomingIntraUserRelayAgentException {
-        this.relayAgent = new RelayAgent(bitcoinWalletManager, cryptoAddressBookManager, errorManager,eventManager, registry,cryptoTransmissionNetworkServiceManager);
+        this.relayAgent = new RelayAgent(bitcoinWalletManager, cryptoAddressBookManager, errorManager,eventManager, registry,cryptoTransmissionNetworkServiceManager,broadcaster,lossProtectedWalletManager);
         try {
             this.relayAgent.initialize();
             this.agentThread = new Thread(this.relayAgent);
@@ -83,18 +91,22 @@ public class IncomingIntraUserRelayAgent {
         private final CryptoAddressBookManager      cryptoAddressBookManager;
         private final IncomingIntraUserRegistry registry;
         private final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager;
+        private final Broadcaster broadcaster;
+        private final BitcoinLossProtectedWalletManager lossProtectedWalletManager;
 
         private com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserTransactionHandler transactionHandler;
 
         private static final int SLEEP_TIME = 10000;
 
-        public RelayAgent(final BitcoinWalletManager bitcoinWalletManager, final CryptoAddressBookManager cryptoAddressBookManager, final ErrorManager errorManager,EventManager eventManager, final IncomingIntraUserRegistry registry, final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager){
+        public RelayAgent(final BitcoinWalletManager bitcoinWalletManager, final CryptoAddressBookManager cryptoAddressBookManager, final ErrorManager errorManager,EventManager eventManager, final IncomingIntraUserRegistry registry, final CryptoTransmissionNetworkServiceManager cryptoTransmissionNetworkServiceManager,Broadcaster broadcaster,BitcoinLossProtectedWalletManager lossProtectedWalletManager){
             this.registry                 = registry;
             this.errorManager             = errorManager;
             this.eventManager             = eventManager;
             this.bitcoinWalletManager     = bitcoinWalletManager;
             this.cryptoAddressBookManager = cryptoAddressBookManager;
             this.cryptoTransmissionNetworkServiceManager  = cryptoTransmissionNetworkServiceManager;
+            this.broadcaster             =  broadcaster;
+            this.lossProtectedWalletManager = lossProtectedWalletManager;
 
         }
 
@@ -110,7 +122,7 @@ public class IncomingIntraUserRelayAgent {
          * MonitorAgent interface implementation.
          */
         private void initialize () {
-            this.transactionHandler = new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserTransactionHandler(this.eventManager,this.bitcoinWalletManager,this.cryptoAddressBookManager,cryptoTransmissionNetworkServiceManager);
+            this.transactionHandler = new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.structure.IncomingIntraUserTransactionHandler(this.eventManager,this.bitcoinWalletManager,this.cryptoAddressBookManager,cryptoTransmissionNetworkServiceManager, this.broadcaster,lossProtectedWalletManager);
         }
 
         /**
@@ -162,7 +174,7 @@ public class IncomingIntraUserRelayAgent {
                         transactionHandler.handleTransaction(transaction);
                         registry.setToApplied(transaction.getCryptoTransaction().getTransactionID());
                         System.out.println("TTF - INTRA USER RELAY: TRANSACTION APPLIED");
-                    } catch (IncomingIntraUserCantExecuteTransactionException | CantLoadWalletException | CantGetCryptoAddressBookRecordException | IncomingIntraUserCantAccessTransactionsException e) {
+                    } catch (IncomingIntraUserCantExecuteTransactionException | CantLoadWalletsException | CantGetCryptoAddressBookRecordException | IncomingIntraUserCantAccessTransactionsException e) {
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_INCOMING_INTRA_USER_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                     }
                 }

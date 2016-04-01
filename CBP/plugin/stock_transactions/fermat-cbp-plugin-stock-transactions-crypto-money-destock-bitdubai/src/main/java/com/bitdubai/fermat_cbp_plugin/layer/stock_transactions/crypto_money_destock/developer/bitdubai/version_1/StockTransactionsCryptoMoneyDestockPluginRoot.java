@@ -84,6 +84,7 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
             database.closeDatabase();
         } catch (CantOpenDatabaseException | DatabaseNotFoundException | CantStartAgentException e) {
             try {
+                startMonitorAgent();
                 StockTransactionsCryptoMoneyDestockDatabaseFactory stockTransactionsCryptoMoneyDestockDatabaseFactory = new StockTransactionsCryptoMoneyDestockDatabaseFactory(this.pluginDatabaseSystem);
                 stockTransactionsCryptoMoneyDestockDatabaseFactory.createDatabase(this.pluginId, StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {

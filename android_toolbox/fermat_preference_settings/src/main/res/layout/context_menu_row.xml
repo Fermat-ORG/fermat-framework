@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+    <RadioButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_context_menu_text"
+        android:id="@+id/radio_context"
         tools:text="menu1"
         android:textSize="20sp"
-        android:paddingLeft="16dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="32dp"
         android:paddingTop="7dp"
         android:paddingBottom="7dp"/>
 

@@ -28,7 +28,7 @@ public class MessageMock implements Message {
 
     @Override
     public void setMessageId(UUID messageId) {
-
+        //Not implemented in this mock.
     }
 
     @Override
@@ -79,5 +79,15 @@ public class MessageMock implements Message {
     @Override
     public void setMessageDate(Timestamp messageDate) {
 
+    }
+
+    @Override
+    public UUID getContactId() {
+        return UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
+    }
+
+    @Override
+    public void setContactId(UUID contactId) {
+        //Not implemented in this mock.
     }
 }

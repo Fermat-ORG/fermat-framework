@@ -57,11 +57,12 @@ public class AssetWalletIssuerDatabaseConstant {
     // ASSET MOVEMENTS TABLE
     public static final String ASSET_MOVEMENTS_TABLE_NAME = "asset_movements";
     public static final String ASSET_MOVEMENTS_ENTRY_ID = "uniqueId";
-    public static final String ASSET_MOVEMENTS_METADATA_ID = "metadataId";
+    public static final String ASSET_MOVEMENTS_ASSET_PUBLIC_KEY = "asset_public_key";
     public static final String ASSET_MOVEMENTS_ACTOR_FROM_PUBLIC_KEY = "actorFromPublicKey";
     public static final String ASSET_MOVEMENTS_ACTOR_FROM_TYPE = "actorFromType";
     public static final String ASSET_MOVEMENTS_ACTOR_TO_PUBLIC_KEY = "actorToPublicKey";
     public static final String ASSET_MOVEMENTS_ACTOR_TO_TYPE = "actorToType";
     public static final String ASSET_MOVEMENTS_TIMESTAMP = "timestamp";
+    public static final String ASSET_MOVEMENTS_TYPE = "movement_type";
 
 }

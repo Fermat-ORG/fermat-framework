@@ -2,7 +2,7 @@ package com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime;
 
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Matias Furszyfer on 2015.09.16..
@@ -10,9 +10,9 @@ import java.util.List;
 public interface DesktopRuntimeManager extends RuntimeManager {
 
 
-    public DesktopObject getLastDesktopObject();
+    DesktopObject getLastDesktopObject();
 
-    public DesktopObject getDesktopObject(String desktopObjectType);
+    DesktopObject getDesktopObject(String desktopObjectType);
 
-    public List<DesktopObject> listDesktops();
+    Map<String,DesktopObject> listDesktops();
 }

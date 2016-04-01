@@ -97,4 +97,18 @@ public interface StockTransaction {
      * @return OriginTransaction
      */
     OriginTransaction getOriginTransaction();
+
+    /**
+     * The method <code>getOriginTransactionId</code> returns the origin transaction
+     *
+     * @return String
+     */
+    String getOriginTransactionId();
+
+    /**
+     * The method <code>getSeen</code> returns the origin transaction
+     *
+     * @return boolean
+     */
+    boolean getSeen();
 }

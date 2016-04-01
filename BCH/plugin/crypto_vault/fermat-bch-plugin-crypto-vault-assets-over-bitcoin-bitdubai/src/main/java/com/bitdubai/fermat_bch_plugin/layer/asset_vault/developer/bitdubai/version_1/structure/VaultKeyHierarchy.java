@@ -2,15 +2,21 @@ package com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.vers
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.KeyHierarchy;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVaultDao;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDao;
-import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.exceptions.CantInitializeAssetsOverBitcoinCryptoVaultDatabaseException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import org.bitcoinj.core.ECKey;
 import org.bitcoinj.crypto.ChildNumber;
@@ -24,8 +30,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.annotation.Nullable;
-
 /**
  * The Class <code>com.bitdubai.fermat_bch_plugin.layer.cryptovault.assetsoverbitcoin.developer.bitdubai.version_1.structure.VaultKeyHierarchy</code>
  * Defines the internal Hierarchy object used on the Crypto Vault. The hierarchy is created from a root key each time the platform
@@ -37,7 +41,7 @@ import javax.annotation.Nullable;
  * @version 1.0
  * @since Java JDK 1.7
  */
-class VaultKeyHierarchy extends DeterministicHierarchy {
+class VaultKeyHierarchy extends KeyHierarchy {
 
     /**
      * Holds the list of Accounts and master keys of the hierarchy
@@ -54,16 +58,18 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      */
     PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
+    ErrorManager errorManager;
 
     /**
      * Constructor
      * @param rootKey (m) key
      */
-    public VaultKeyHierarchy(DeterministicKey rootKey, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public VaultKeyHierarchy(DeterministicKey rootKey, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, ErrorManager errorManager) {
         super(rootKey);
         accountsMasterKeys = new HashMap<>();
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
+        this.errorManager = errorManager;
     }
 
     /**
@@ -101,6 +107,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param hierarchyAccount
      * @return a new hierarchy used to generate bitcoin addresses
      */
+    @Override
     public DeterministicHierarchy getKeyHierarchyFromAccount(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount hierarchyAccount){
         DeterministicHierarchy deterministicHierarchy = new DeterministicHierarchy(getAddressKeyFromAccount(hierarchyAccount));
         return deterministicHierarchy;
@@ -120,7 +127,9 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         try {
             ecKey = getNextAvailableKey(hierarchyAccount);
         } catch (CantExecuteDatabaseOperationException e) {
-            throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "There was an error getting the actual unused Key depth to derive a new key.", "database problem.");
+            GetNewCryptoAddressException exception = new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, "There was an error getting the actual unused Key depth to derive a new key.", "database problem.");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
         }
         /**
          * I will create the CryptoAddress with the key I just got
@@ -141,7 +150,7 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
          * I will update the detailed key maintenance information by adding this generated address to the table.
          */
         try {
-            updateKeyDetailedStatsWithNewAddress(hierarchyAccount.getId(), ecKey, cryptoAddress);
+            updateKeyDetailedStatsWithNewAddress(hierarchyAccount.getId(), ecKey, cryptoAddress, blockchainNetworkType);
         } catch (UnexpectedResultReturnedFromDatabaseException e) {
             throw new GetNewCryptoAddressException(GetNewCryptoAddressException.DEFAULT_MESSAGE, e, null, null);
         }
@@ -154,10 +163,11 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param hierarchyAccountId
      * @param ecKey
      * @param cryptoAddress
+     * @param blockchainNetworkType
      */
-    private void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) throws UnexpectedResultReturnedFromDatabaseException {
+    private void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress, BlockchainNetworkType blockchainNetworkType) throws UnexpectedResultReturnedFromDatabaseException {
         try {
-            getDao().updateKeyDetailedStatsWithNewAddress(hierarchyAccountId, ecKey, cryptoAddress);
+            getDao().updateKeyDetailedStatsWithNewAddress(hierarchyAccountId, ecKey, cryptoAddress, blockchainNetworkType);
         } catch (CantExecuteDatabaseOperationException e) {
             /**
              * will continue because this is not critical.
@@ -261,27 +271,8 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
      * @param account
      * @return
      */
-    public List<ECKey> getDerivedKeys(com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount account){
-        DeterministicHierarchy keyHierarchy = getKeyHierarchyFromAccount(account);
-        List<ECKey> childKeys = new ArrayList<>();
-
-        /**
-         * I will get how many keys are already generated for this account.
-         */
-        int generatedKeys;
-        try {
-            generatedKeys  = this.getDao().getCurrentGeneratedKeys(account.getId());
-        } catch (CantExecuteDatabaseOperationException e) {
-            generatedKeys = 200;
-        }
-        for (int i = 0; i < generatedKeys; i++) {
-            // I derive the key at position i
-            DeterministicKey derivedKey = keyHierarchy.deriveChild(keyHierarchy.getRootKey().getPath(), true, false, new ChildNumber(i, false));
-            // I add this key to the ECKey list
-            childKeys.add(ECKey.fromPrivate(derivedKey.getPrivKey()));
-        }
-
-        return childKeys;
+    public List<ECKey> getDerivedKeys(HierarchyAccount account){
+        return this.getDerivedPrivateKeys(account);
     }
 
     public CryptoAddress getRedeemPointBitcoinAddress(HierarchyAccount hierarchyAccount, int position, BlockchainNetworkType blockchainNetworkType) throws GetNewCryptoAddressException {
@@ -301,5 +292,10 @@ class VaultKeyHierarchy extends DeterministicHierarchy {
         CryptoAddress cryptoAddress = new CryptoAddress(address, CryptoCurrency.BITCOIN);
 
         return cryptoAddress;
+    }
+
+    @Override
+    public CryptoVaultDao getCryptoVaultDao() {
+        return this.getDao();
     }
 }

@@ -20,31 +20,36 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.OpenContractsExpandableAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.GrouperItem;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.TestData;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_CONTRACT_UPDATE_VIEW;
+
+
 /**
  * A simple {@link Fragment} subclass.
  */
-public class OpenContractsTabFragment extends FermatWalletExpandableListFragment<GrouperItem>
+public class OpenContractsTabFragment extends FermatWalletExpandableListFragment<GrouperItem, CryptoBrokerWalletSession, ResourceProviderManager>
         implements FermatListItemListeners<ContractBasicInformation> {
 
     // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
     private CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
+
+    private View emptyListViewsContainer;
 
     // Data
     private ArrayList<GrouperItem<ContractBasicInformation>> openContractList;
@@ -85,11 +90,13 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
-
+        emptyListViewsContainer = layout.findViewById(R.id.empty);
         if (openContractList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
-            View emptyListViewsContainer = layout.findViewById(R.id.empty);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }else{
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyListViewsContainer.setVisibility(View.GONE);
         }
     }
 
@@ -154,17 +161,19 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
             List<ContractBasicInformation> waitingForBroker = new ArrayList<>();
 
             try {
-                grouperText = getActivity().getString(R.string.waiting_for_the_customer);
-                waitingForCustomer.addAll(TestData.getContractsWaitingForCustomer());
-                // TODO waitingForCustomer.addAll(walletManager.getContractsWaitingForCustomer(10, 0));
-                grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
-                data.add(grouper);
 
-                grouperText = getActivity().getString(R.string.waiting_for_you);
-                waitingForBroker.addAll(TestData.getContractsWaitingForBroker());
-                // TODO waitingForBroker.addAll(walletManager.getContractsWaitingForBroker(10, 0));
-                grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
-                data.add(grouper);
+                waitingForBroker.addAll(moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey()).getContractsWaitingForBroker(10, 0));
+                waitingForCustomer.addAll(moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey()).getContractsWaitingForCustomer(10, 0));
+
+                if (!waitingForCustomer.isEmpty() || !waitingForBroker.isEmpty()) {
+                    grouperText = getActivity().getString(R.string.waiting_for_you);
+                    grouper = new GrouperItem<>(grouperText, waitingForBroker, true);
+                    data.add(grouper);
+
+                    grouperText = getActivity().getString(R.string.waiting_for_the_customer);
+                    grouper = new GrouperItem<>(grouperText, waitingForCustomer, true);
+                    data.add(grouper);
+                }
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -188,7 +197,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
     @Override
     public void onItemClickListener(ContractBasicInformation data, int position) {
         appSession.setData("contract_data", data);
-        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_OPEN_CONTRACT_DETAILS, appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CONTRACT_DETAILS, appSession.getAppPublicKey());
     }
 
     @Override
@@ -206,6 +215,13 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
                     adapter.changeDataSet(openContractList);
             }
         }
+        if (openContractList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE);
+            emptyListViewsContainer.setVisibility(View.VISIBLE);
+        }else{
+            recyclerView.setVisibility(View.VISIBLE);
+            emptyListViewsContainer.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -214,6 +230,15 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             CommonLogger.exception(TAG, ex.getMessage(), ex);
+        }
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case CBW_NEW_CONTRACT_UPDATE_VIEW:
+                onRefresh();
+                break;
         }
     }
 }

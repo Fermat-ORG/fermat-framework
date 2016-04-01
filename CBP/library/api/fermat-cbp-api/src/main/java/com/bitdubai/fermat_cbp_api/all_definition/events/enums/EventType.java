@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_cbp_api.all_definition.events.GenericCBPFermatEvent;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.events.CryptoBrokerActorConnectionNewConnectionEvent;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestNewsEvent;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.events.CryptoBrokerConnectionRequestUpdatesEvent;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.events.NewContractClosed;
@@ -51,6 +52,9 @@ public enum EventType implements FermatEventEnum {
     },
     CUSTOMER_ACK_MERCHANDISE_CONFIRMED("CAMC"){
         public final FermatEvent getNewEvent() { return new CustomerAckMerchandiseConfirmed(this); }
+    },
+    CRYPTO_BROKER_ACTOR_CONNECTION_NEW_CONNECTION("CBACNC") {
+        public final FermatEvent getNewEvent() { return new CryptoBrokerActorConnectionNewConnectionEvent(this); }
     },
     CRYPTO_BROKER_CONNECTION_REQUEST_NEWS("CBCRNWS") {
         public final FermatEvent getNewEvent() { return new CryptoBrokerConnectionRequestNewsEvent(this); }

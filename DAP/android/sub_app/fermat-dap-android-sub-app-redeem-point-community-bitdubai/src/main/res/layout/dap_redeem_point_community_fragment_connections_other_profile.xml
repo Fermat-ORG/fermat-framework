@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:fillViewport="true">
 
     <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
         android:background="@drawable/bg_other_profile"
         android:orientation="vertical">
 
@@ -54,7 +51,7 @@
                 android:drawableStart="@drawable/ic_profile_connect"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
-                android:text="Connect"
+                android:text="@string/dap_other_profile_connect"
                 android:textColor="#ffffff"
                 android:visibility="visible"
                 tools:ignore="HardcodedText" />
@@ -66,7 +63,7 @@
                 android:background="@drawable/bg_shape_grey"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
-                android:text="Accept Connection"
+                android:text="@string/dap_other_profile_accept_button"
                 android:textColor="#ffffff"
                 android:visibility="gone"
                 tools:ignore="HardcodedText" />
@@ -82,7 +79,7 @@
                 android:drawableStart="@drawable/ic_profile_disconnect"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
-                android:text="Disconnect"
+                android:text="@string/dap_other_profile_disconect"
                 android:textColor="#0072bc"
                 android:visibility="gone"
                 tools:ignore="HardcodedText" />
@@ -94,7 +91,18 @@
                 android:background="@drawable/bg_shape_grey"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
-                android:text="Request Sent"
+                android:text="@string/dap_other_profile_request_send"
+                android:textColor="#ffffff"
+                android:visibility="gone"
+                tools:ignore="HardcodedText" />
+            <Button
+                android:id="@+id/btn_connection_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_shape_blue"
+                android:paddingLeft="18dp"
+                android:paddingRight="18dp"
+                android:text="Cancel Request"
                 android:textColor="#ffffff"
                 android:visibility="gone"
                 tools:ignore="HardcodedText" />
@@ -106,7 +114,7 @@
                 android:background="@drawable/bg_shape_grey"
                 android:paddingLeft="18dp"
                 android:paddingRight="18dp"
-                android:text="Connection Rejected"
+                android:text="@string/dap_other_profile_connection_rejected"
                 android:textColor="#ffffff"
                 android:visibility="gone"
                 tools:ignore="HardcodedText" />
@@ -127,7 +135,7 @@
                 android:layout_marginTop="32dp"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
-                android:text="Name"
+                android:text="@string/dap_other_profile_name"
                 android:textColor="#0072bc"
                 android:textSize="12sp"
                 tools:ignore="HardcodedText" />
@@ -149,37 +157,6 @@
                 android:layout_marginTop="8dp"
                 android:background="#b5b5b7" />
 
-
-
-<!--            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="32dp"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:text="Status"
-                android:textColor="#0072bc"
-                android:textSize="12sp"
-                tools:ignore="HardcodedText" />
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/userPhrase"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="User Phrase"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:textColor="#292929"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:background="#b5b5b7" />
--->
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -187,7 +164,7 @@
                 android:layout_marginTop="32dp"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
-                android:text="CryptoAddress"
+                android:text="@string/dap_other_profile_cryptoaddres"
                 android:textColor="#0072bc"
                 android:textSize="12sp"
                 tools:ignore="HardcodedText" />
@@ -216,7 +193,7 @@
                 android:layout_marginTop="32dp"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
-                android:text="CryptoCurrency"
+                android:text="@string/dap_other_profile_crypto_currency"
                 android:textColor="#0072bc"
                 android:textSize="12sp"
                 tools:ignore="HardcodedText" />
@@ -245,16 +222,16 @@
                 android:layout_marginTop="32dp"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
-                android:text="Registration Date"
+                android:text="BlockchainNetworkType"
                 android:textColor="#0072bc"
                 android:textSize="12sp"
                 tools:ignore="HardcodedText" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/redeemRegistrationDate"
+                android:id="@+id/blockchainNetworkType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="Registration Date"
+                android:hint="blockchainNetworkType"
                 android:paddingLeft="6dp"
                 android:paddingRight="6dp"
                 android:textColor="#292929"
@@ -267,8 +244,35 @@
                 android:layout_marginTop="8dp"
                 android:background="#b5b5b7" />
 
-    </LinearLayout>
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="32dp"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:text="@string/dap_other_profile_last_connection_date"
+                android:textColor="#0072bc"
+                android:textSize="12sp"
+                tools:ignore="HardcodedText" />
 
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/redeemLastConnectionDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Last Connection Date"
+                android:paddingLeft="6dp"
+                android:paddingRight="6dp"
+                android:textColor="#292929"
+                android:textSize="14sp"
+                tools:ignore="HardcodedText" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="8dp"
+                android:background="#b5b5b7" />
+
+        </LinearLayout>
     </LinearLayout>
 </ScrollView>

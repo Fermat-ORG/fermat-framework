@@ -28,6 +28,7 @@ public class CryptoBrokerStockTransactionTestData implements CryptoBrokerStockTr
     private long timestamp;
     private BalanceType balanceType;
     private TransactionType transactionType;
+    private String originTransactionId;
 
 
     public CryptoBrokerStockTransactionTestData(Random random, Currency merchandise, Calendar calendar) {
@@ -47,6 +48,7 @@ public class CryptoBrokerStockTransactionTestData implements CryptoBrokerStockTr
         timestamp = calendar.getTimeInMillis();
         balanceType = BalanceType.AVAILABLE;
         transactionType = TransactionType.CREDIT;
+        originTransactionId = "originTransactionId";
     }
 
     @Override
@@ -127,6 +129,26 @@ public class CryptoBrokerStockTransactionTestData implements CryptoBrokerStockTr
     @Override
     public OriginTransaction getOriginTransaction() {
         return null;
+    }
+
+    /**
+     * The method <code>getOriginTransactionId</code> returns the origin transaction
+     *
+     * @return String
+     */
+    @Override
+    public String getOriginTransactionId() {
+        return originTransactionId;
+    }
+
+    /**
+     * The method <code>getSeen</code> returns the origin transaction
+     *
+     * @return boolean
+     */
+    @Override
+    public boolean getSeen() {
+        return false;
     }
 
     public void setBookBalance(BigDecimal bookBalance) {

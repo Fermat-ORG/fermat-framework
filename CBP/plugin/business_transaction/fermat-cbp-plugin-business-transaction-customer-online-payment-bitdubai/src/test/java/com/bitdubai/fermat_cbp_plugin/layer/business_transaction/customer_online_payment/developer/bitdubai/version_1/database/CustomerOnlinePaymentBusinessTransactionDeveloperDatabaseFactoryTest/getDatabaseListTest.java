@@ -1,9 +1,8 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactoryTest;
 
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_online_payment.developer.bitdubai.version_1.database.CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory;
 
 import org.junit.Before;
@@ -14,7 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 /**
@@ -27,17 +26,15 @@ public class getDatabaseListTest {
     @Mock
     DeveloperObjectFactory developerObjectFactory;
     @Mock
-    private Database mockDatabase;
+    DeveloperDatabase developerDatabase;
     private UUID testId;
-    private String testDataBaseName;
-    private CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory;
+    private CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory
+            customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory;
     public void setUpTestValues(){
         testId = UUID.randomUUID();
-        testDataBaseName = CustomerOnlinePaymentBusinessTransactionDatabaseConstants.DATABASE_NAME;
     }
     public void setUpGeneralMockitoRules() throws Exception{
-        when(mockPluginDatabaseSystem.createDatabase(testId, testDataBaseName)).thenReturn(mockDatabase);
-
+        when(developerObjectFactory.getNewDeveloperDatabase("Customer Online Payment",testId.toString())).thenReturn(developerDatabase);
     }
     @Before
     public void setUp() throws Exception{
@@ -45,8 +42,10 @@ public class getDatabaseListTest {
         setUpGeneralMockitoRules();
     }
     @Test
-    public void getDatabaseListTest_Should_Return_Not_Null() throws Exception{
-        customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory = new CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory(mockPluginDatabaseSystem,testId);
-        assertNotNull(customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory));
+    public void getDatabaseListTest_Should_Return_ArrayList() throws Exception{
+        customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory =
+                new CustomerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory(mockPluginDatabaseSystem,testId);
+        assertEquals(java.util.ArrayList.class, customerOnlinePaymentBusinessTransactionDeveloperDatabaseFactory.
+                getDatabaseList(developerObjectFactory).getClass());
     }
 }

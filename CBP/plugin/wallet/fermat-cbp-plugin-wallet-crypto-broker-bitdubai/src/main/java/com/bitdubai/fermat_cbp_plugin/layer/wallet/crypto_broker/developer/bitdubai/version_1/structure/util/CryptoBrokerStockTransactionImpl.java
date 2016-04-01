@@ -31,6 +31,8 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
     private final String memo;
     private final BigDecimal priceReference;
     private final OriginTransaction originTransaction;
+    private String originTransactionId;
+    private boolean seen;
 
     /**
      * Constructor for CryptoBrokerStockTransactionImpl
@@ -50,6 +52,8 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
      * @param memo
      * @param priceReference
      * @param originTransaction
+     * @param originTransactionId
+     * @param seen
      */
     public CryptoBrokerStockTransactionImpl(final BigDecimal runningBookBalance,
                                             final BigDecimal runningAvailableBalance,
@@ -66,7 +70,9 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
                                             final long timestamp,
                                             final String memo,
                                             final BigDecimal priceReference,
-                                            final OriginTransaction originTransaction) {
+                                            final OriginTransaction originTransaction,
+                                            String originTransactionId,
+                                            boolean seen) {
         this.runningBookBalance = runningBookBalance;
         this.runningAvailableBalance = runningAvailableBalance;
         this.previousBookBalance = previousBookBalance;
@@ -83,6 +89,8 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
         this.memo = memo;
         this.priceReference = priceReference;
         this.originTransaction = originTransaction;
+        this.originTransactionId = originTransactionId;
+        this.seen = seen;
     }
 
     /**
@@ -211,5 +219,21 @@ public class CryptoBrokerStockTransactionImpl implements CryptoBrokerStockTransa
     @Override
     public OriginTransaction getOriginTransaction() {
         return originTransaction;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getOriginTransactionId() {
+        return this.originTransactionId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getSeen() {
+        return this.seen;
     }
 }

@@ -23,6 +23,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.processors.CompleteRegistrationComponentTyrusPacketProcessor</code>
  * <p/>
@@ -104,6 +106,16 @@ public class CompleteRegistrationComponentTyrusPacketProcessor extends FermatTyr
              */
             getWsCommunicationsTyrusCloudClientChannel().setIsRegister(Boolean.TRUE);
             System.out.println("CompleteRegistrationComponentTyrusPacketProcessor - getWsCommunicationsTyrusCloudClientChannel().isRegister() " + getWsCommunicationsTyrusCloudClientChannel().isRegister());
+
+            try {
+
+                /*
+                 * Wait 2 second to avoid that the Network Services are Initialized completely
+                 */
+                TimeUnit.SECONDS.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
         }
 

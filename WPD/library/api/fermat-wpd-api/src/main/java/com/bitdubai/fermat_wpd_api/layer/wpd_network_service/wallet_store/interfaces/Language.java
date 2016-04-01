@@ -16,30 +16,30 @@ public interface Language {
     /**
      * Language identifiers
      */
-    public UUID getLanguageId();
-    public UUID getWalletId(); //Todo: Refactor a String para que acepte PublicKey
-    public Languages getLanguageName();
-    public String getLanguageLabel();
+    UUID getLanguageId();
+    UUID getWalletId(); //Todo: Refactor a String para que acepte PublicKey
+    Languages getLanguageName();
+    String getLanguageLabel();
 
     /**
      * Language file information
      */
-    public int getLanguagePackageSizeInBytes();
+    int getLanguagePackageSizeInBytes();
     //public URL getFileURL(); //Eliminar
 
     /**
      * Version information, current, Initial and Final.
      */
-    public Version getVersion();
-    public Version getInitialWalletVersion();
-    public Version getFinalWalletVersion();
+    Version getVersion();
+    Version getInitialWalletVersion();
+    Version getFinalWalletVersion();
 
     /**
      * Translator information
      */
-    public TranslatorIdentity getTranslator();
+    TranslatorIdentity getTranslator();
 
-    public boolean isDefault();
+    boolean isDefault();
 
 
 }

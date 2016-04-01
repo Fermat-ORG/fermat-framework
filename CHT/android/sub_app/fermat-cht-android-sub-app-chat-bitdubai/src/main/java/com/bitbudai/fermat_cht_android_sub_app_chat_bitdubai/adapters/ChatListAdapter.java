@@ -1,8 +1,12 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Path;
+import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +19,19 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Chat List Adapter
@@ -30,58 +41,109 @@ import java.util.Date;
  *
  */
 
-//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
-public class ChatListAdapter extends ArrayAdapter<String> {
-    //private final LayoutInflater inflater;
-    List<ChatsList> chatsList = new ArrayList<>();
-    //  HashMap<Integer,List<String>> chatinfo=new HashMap<Integer,List<String>>();
-    private final String[] chatinfo;   //work
-    private final Integer[] imgid;
+public class ChatListAdapter extends ArrayAdapter {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
-//    public ChatListAdapter(Context context) {
-//        super(context);
-//    }
-//
-//    public ChatListAdapter(Context context, List<ChatsList> chatsList) {
-//        super(context, chatsList);
-//        //inflater = LayoutInflater.from(context);
-//    }
-    public ChatListAdapter(Context context, String[] chatinfo,Integer[] imgid) {
-        super(context, R.layout.chat_list_listview, chatinfo);
-        this.chatinfo = chatinfo;   //wotk //   this.chatinfo.putAll(chatinfo);
-        this.imgid = imgid;
-        //   System.out.println("**********LISTA2:"+chatinfo.get(0).get(0)+" - "+chatinfo.get(0).get(1)+" - "+chatinfo.get(0).get(2));
+    ArrayList<String> contactName=new ArrayList<>();
+    ArrayList<String> message=new ArrayList<>();
+    ArrayList<String> dateMessage=new ArrayList<>();
+    ArrayList<UUID> chatId=new ArrayList<>();
+    ArrayList<UUID> contactId=new ArrayList<>();
+    ArrayList<String> status=new ArrayList<>();
+    ArrayList<String> typeMessage=new ArrayList<>();
+    ArrayList<Integer> noReadMsgs=new ArrayList<>();
+    ArrayList<Bitmap> imgId=new ArrayList<>();
+    private ErrorManager errorManager;
+    //Typeface tf;
+
+    public ChatListAdapter(Context context, ArrayList<String> contactName,
+                           ArrayList message,
+                           ArrayList dateMessage,
+                           ArrayList chatId,
+                           ArrayList contactId,
+                           ArrayList status,
+                           ArrayList typeMessage,
+                           ArrayList noReadMsgs,
+                           ArrayList imgId, ErrorManager errorManager) {
+        super(context, R.layout.chat_list_listview, contactName );
+        //tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
+        this.contactName = contactName;
+        this.message = message;
+        this.dateMessage = dateMessage;
+        this.chatId = chatId;
+        this.contactId = contactId;
+        this.status = status;
+        this.typeMessage = typeMessage;
+        this.noReadMsgs = noReadMsgs;
+        this.imgId=imgId;
+        this.errorManager=errorManager;
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View item = inflater.inflate(R.layout.chat_list_listview, null, true);
+        try {
+            ImageView imagen = (ImageView) item.findViewById(R.id.image);//imagen.setImageResource(imgid.get(position));
+            imagen.setImageBitmap(Utils.getRoundedShape(imgId.get(position), 400));
 
-        ImageView imagen = (ImageView) item.findViewById(R.id.image);
-        imagen.setImageResource(imgid[position]);
+            TextView contactname = (TextView) item.findViewById(R.id.tvtitle);
+            contactname.setText(contactName.get(position));
+            //contactname.setTypeface(tf, Typeface.NORMAL);
 
-        TextView contactname = (TextView) item.findViewById(R.id.tvtitle);
+            TextView lastmessage = (TextView) item.findViewById(R.id.tvdesc);
+            lastmessage.setText(message.get(position));
 
-        contactname.setText(chatinfo[position].split("@@")[0]);//    contactname.setText(chatinfo.get(0).get(0));
 
-        TextView lastmessage = (TextView) item.findViewById(R.id.tvdesc);
+            TextView dateofmessage = (TextView) item.findViewById(R.id.tvdate);
+            dateofmessage.setText(dateMessage.get(position));
 
-        lastmessage.setText(chatinfo[position].split("@@")[1].split("##")[0]);        //   lastmessage.setText(chatinfo.get(0).get(1));
-        TextView dateofmessage = (TextView) item.findViewById(R.id.tvdate);
+            ImageView imagetick = (ImageView) item.findViewById(R.id.imagetick);//imagen.setImageResource(imgid.get(position));
+            imagetick.setImageResource(0);
+            if(typeMessage.get(position).equals(TypeMessage.OUTGOING.toString())){
+                imagetick.setVisibility(View.VISIBLE);
+                if (status.get(position).equals(MessageStatus.SEND.toString()) /*|| status.get(position).equals(MessageStatus.CREATED.toString())*/)
+                {    imagetick.setImageResource(R.drawable.cht_ticksent);}
+                else if (status.get(position).equals(MessageStatus.DELIVERED.toString()) || status.get(position).equals(MessageStatus.RECEIVE.toString()))
+                {    imagetick.setImageResource(R.drawable.cht_tickdelivered);}
+                else if (status.get(position).equals(MessageStatus.READ.toString()))
+                {    imagetick.setImageResource(R.drawable.cht_tickread);}
+            }else
+                imagetick.setVisibility(View.GONE);
 
-        dateofmessage.setText(chatinfo[position].split("@@")[1].split("##")[1]);//   dateofmessage.setText(chatinfo.get(0).get(2));
+            TextView tvnumber = (TextView) item.findViewById(R.id.tvnumber);
+            if(noReadMsgs.get(position)>0)
+            {
+                tvnumber.setText(noReadMsgs.get(position).toString());
+                tvnumber.setVisibility(View.VISIBLE);
+            }else
+                tvnumber.setVisibility(View.GONE);
+
+        }catch (Exception e)
+        {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
         return (item);
     }
-     /*public void refreshEvents(Parameters[] datos) {
 
-        for(int i=0; i<datos.length; i++) {
-            this.datos[i]=datos[i];
-        }
-
+    public void refreshEvents(ArrayList contactName,
+                              ArrayList message,
+                              ArrayList dateMessage,
+                              ArrayList chatId,
+                              ArrayList contactId,
+                              ArrayList status,
+                              ArrayList typeMessage,
+                              ArrayList noReadMsgs,
+                              ArrayList imgId) {
+        this.contactName = contactName;
+        this.message = message;
+        this.dateMessage = dateMessage;
+        this.chatId = chatId;
+        this.contactId = contactId;
+        this.status = status;
+        this.typeMessage = typeMessage;
+        this.noReadMsgs = noReadMsgs;
+        this.imgId=imgId;
         notifyDataSetChanged();
-
-    }*/
-
+    }
 //    @Override
 //    protected ChatHolder createHolder(View itemView, int type) {
 //        return new ChatHolder(itemView);

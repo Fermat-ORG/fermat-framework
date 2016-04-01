@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true">
+
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/bg_other_profile"
@@ -90,6 +96,17 @@
             android:textColor="#ffffff"
             android:visibility="gone"
             tools:ignore="HardcodedText" />
+        <Button
+            android:id="@+id/btn_connection_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_shape_blue"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:text="Cancel Request"
+            android:textColor="#ffffff"
+            android:visibility="gone"
+            tools:ignore="HardcodedText" />
 
         <Button
             android:id="@+id/btn_connection_request_reject"
@@ -98,172 +115,168 @@
             android:background="@drawable/bg_shape_grey"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
-            android:text="Connection Rejected"
+            android:text="Connection Canceled"
             android:textColor="#ffffff"
             android:visibility="gone"
             tools:ignore="HardcodedText" />
 
     </RelativeLayout>
 
-    <ScrollView
-        android:layout_width="fill_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fillViewport="true">
+        android:orientation="vertical"
+        android:paddingLeft="18dp"
+        android:paddingRight="18dp"
+        android:scrollbarAlwaysDrawVerticalTrack="true">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingLeft="18dp"
-            android:paddingRight="18dp"
-            android:scrollbarAlwaysDrawVerticalTrack="true">
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="32dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="Name"
+            android:textColor="#0072bc"
+            android:textSize="12sp"
+            tools:ignore="HardcodedText" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="32dp"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:text="Name"
-                android:textColor="#0072bc"
-                android:textSize="12sp"
-                tools:ignore="HardcodedText" />
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="Janeth Williams"
+            android:textColor="#292929"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:text="Janeth Williams"
-                android:textColor="#292929"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:background="#b5b5b7" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="#b5b5b7" />
 
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="32dp"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:text="CryptoAddress"
-                android:textColor="#0072bc"
-                android:textSize="12sp"
-                tools:ignore="HardcodedText" />
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="32dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="CryptoAddress"
+            android:textColor="#0072bc"
+            android:textSize="12sp"
+            tools:ignore="HardcodedText" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/cryptoAddress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="cryptoAddress"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:textColor="#292929"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cryptoAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="cryptoAddress"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:textColor="#292929"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:background="#b5b5b7" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="#b5b5b7" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="32dp"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:text="CryptoCurrency"
-                android:textColor="#0072bc"
-                android:textSize="12sp"
-                tools:ignore="HardcodedText" />
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="32dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="CryptoCurrency"
+            android:textColor="#0072bc"
+            android:textSize="12sp"
+            tools:ignore="HardcodedText" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/cryptoCurrency"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="cryptoCurrency"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:textColor="#292929"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cryptoCurrency"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="cryptoCurrency"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:textColor="#292929"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:background="#b5b5b7" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="#b5b5b7" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="32dp"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:text="BlockchainNetworkType"
-                android:textColor="#0072bc"
-                android:textSize="12sp"
-                tools:ignore="HardcodedText" />
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="32dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="BlockchainNetworkType"
+            android:textColor="#0072bc"
+            android:textSize="12sp"
+            tools:ignore="HardcodedText" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/blockchainNetworkType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="blockchainNetworkType"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:textColor="#292929"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/blockchainNetworkType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="blockchainNetworkType"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:textColor="#292929"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:background="#b5b5b7" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="#b5b5b7" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="32dp"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:text="Registration Date"
-                android:textColor="#0072bc"
-                android:textSize="12sp"
-                tools:ignore="HardcodedText" />
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="32dp"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:text="Last Connection Date"
+            android:textColor="#0072bc"
+            android:textSize="12sp"
+            tools:ignore="HardcodedText" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:id="@+id/userRegistrationDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:hint="RegistrationDate"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:textColor="#292929"
-                android:textSize="14sp"
-                tools:ignore="HardcodedText" />
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/userLastConnectionDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="Last Connection Date"
+            android:paddingLeft="6dp"
+            android:paddingRight="6dp"
+            android:textColor="#292929"
+            android:textSize="14sp"
+            tools:ignore="HardcodedText" />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginTop="8dp"
-                android:background="#b5b5b7" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="#b5b5b7" />
 
-        </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
+
 </LinearLayout>
+</ScrollView>

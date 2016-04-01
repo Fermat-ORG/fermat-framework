@@ -38,6 +38,7 @@ import com.bitdubai.fermat_dap_core.DAPPlatform;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
+import com.bitdubai.fermat_tky_core.TKYPlatform;
 import com.bitdubai.fermat_wpd_core.WPDPlatform;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -93,7 +94,7 @@ public final class FermatSystem {
             this.start(osContext, osaPlatform);
         } catch (FermatException e) {
 
-            System.out.println(e.toString());
+            System.err.println(e.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -127,17 +128,23 @@ public final class FermatSystem {
 
         try {
 
+            //TODO Desactivacion debido a un tema de P2P
+            //fermatSystemContext.registerPlatform(new ARTPlatform());
+
             fermatSystemContext.registerPlatform(new BCHPlatform());
-//            fermatSystemContext.registerPlatform(new BNKPlatform());
-//            fermatSystemContext.registerPlatform(new CBPPlatform());
+            fermatSystemContext.registerPlatform(new BNKPlatform());
+            fermatSystemContext.registerPlatform(new CBPPlatform());
             fermatSystemContext.registerPlatform(new CCPPlatform());
-//            fermatSystemContext.registerPlatform(new CERPlatform());
-//            fermatSystemContext.registerPlatform(new CHTPlatform());
-//            fermatSystemContext.registerPlatform(new CSHPlatform());
+            fermatSystemContext.registerPlatform(new CERPlatform());
+            fermatSystemContext.registerPlatform(new CHTPlatform());
+            fermatSystemContext.registerPlatform(new CSHPlatform());
             fermatSystemContext.registerPlatform(new DAPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
+            fermatSystemContext.registerPlatform(new TKYPlatform());
             fermatSystemContext.registerPlatform(new WPDPlatform());
+
+
 
 
         } catch(CantRegisterPlatformException e) {
@@ -443,7 +450,7 @@ public final class FermatSystem {
             try {
                 fermatPluginManager.startPluginAndReferences(plugin.getKey());
             } catch (Exception e) {
-                System.out.println(e.toString());
+                System.err.println(e.toString());
             }
         }
 

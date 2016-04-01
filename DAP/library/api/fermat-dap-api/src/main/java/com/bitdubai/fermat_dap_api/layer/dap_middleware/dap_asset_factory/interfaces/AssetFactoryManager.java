@@ -93,5 +93,5 @@ public interface AssetFactoryManager extends FermatManager {
      */
     boolean isReadyToPublish(String assetPublicKey) throws CantPublishAssetFactoy;
 
-    public List<IdentityAssetIssuer> getActiveIdentities();
+    List<IdentityAssetIssuer> getActiveIdentities();
 }

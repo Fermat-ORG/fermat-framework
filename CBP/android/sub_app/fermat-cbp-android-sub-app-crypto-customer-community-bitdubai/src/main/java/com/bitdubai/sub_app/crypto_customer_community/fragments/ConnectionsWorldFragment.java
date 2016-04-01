@@ -22,6 +22,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -32,12 +33,13 @@ import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communit
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.settings.CryptoCustomerCommunitySettings;
+import com.bitdubai.fermat_cbp_plugin.layer.sub_app_module.crypto_customer_community.developer.bitdubai.version_1.structure.CryptoCustomerCommunitySubAppModuleInformation;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.crypto_customer_community.R;
 import com.bitdubai.sub_app.crypto_customer_community.adapters.AppListAdapter;
-import com.bitdubai.sub_app.crypto_customer_community.common.CryptoCustomerCommunityInformationImpl;
+import com.bitdubai.sub_app.crypto_customer_community.common.popups.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
 import com.bitdubai.sub_app.crypto_customer_community.util.CommonLogger;
 
@@ -69,6 +71,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
     //Flags
     private boolean isRefreshing = false;
     private boolean launchActorCreationDialog = false;
+    private boolean launchListIdentitiesDialog = false;
 
     //UI
     private View rootView;
@@ -117,23 +120,22 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
                     e.printStackTrace();
                 }
             }
-           // moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
-
+            //Check if a default identity is configured
             try{
-                CryptoCustomerCommunitySelectableIdentity i = moduleManager.getSelectedActorIdentity();
-                if(i == null)
-                    launchActorCreationDialog = true;
-            }catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e){
+                moduleManager.getSelectedActorIdentity();
+            }catch (CantGetSelectedActorIdentityException e){
+                //There are no identities in device
                 launchActorCreationDialog = true;
+            }catch (ActorIdentityNotSelectedException e){
+                //There are identities in device, but none selected
+                launchListIdentitiesDialog = true;
             }
 
             //Get notification requests count
             //mNotificationsCount = moduleManager.listCryptoCustomersPendingLocalAction(moduleManager.getSelectedActorIdentity(), MAX, offset).size();
             //mNotificationsCount = 4;
             //new FetchCountTask().execute();
-
-            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -166,8 +168,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
-            //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-
 
             if(launchActorCreationDialog) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
@@ -177,23 +177,34 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
                         .setSubTitle(R.string.cbp_ccc_launch_action_creation_dialog_sub_title)
                         .setBody(R.string.cbp_ccc_launch_action_creation_dialog_body)
                         .setTextFooter(R.string.cbp_ccc_launch_action_creation_dialog_footer)
+                        .setTextNameLeft(R.string.cbp_ccc_launch_action_creation_name_left)
+                        .setTextNameRight(R.string.cbp_ccc_launch_action_creation_name_right)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-                                invalidate();
-                                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
-                                onRefresh();
-                            }
-                        });
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        invalidate();
+                        onRefresh();
+                    }
+                });
                 presentationDialog.show();
+            }
+            else if(launchListIdentitiesDialog)
+            {
+                ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(getActivity(), appSession, null);
+                listIdentitiesDialog.show();
+                listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        invalidate();
+                        onRefresh();
+                    }
+                });
+                listIdentitiesDialog.show();
             }
             else
             {
-                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                 invalidate();
-                //moduleManager.setAppPublicKey(appSession.getAppPublicKey());
                 onRefresh();
             }
 
@@ -279,18 +290,9 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
         List<CryptoCustomerCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            CryptoCustomerCommunitySearch cryptoCustomerCommunitySearch = moduleManager.searchNewCryptoCustomer(moduleManager.getSelectedActorIdentity());
-            List<CryptoCustomerCommunityInformation> result = cryptoCustomerCommunitySearch.getResult();
-
-
-            //MOCK!
-            for(int i = 1 ; i <= 5 ; i++){
-                result.add(new CryptoCustomerCommunityInformationImpl("pk-"+i, "custmr"+i, new byte[0]));
-            }
-
+            List<CryptoCustomerCommunityInformation> result = moduleManager.listWorldCryptoCustomers(moduleManager.getSelectedActorIdentity(), MAX, offset);
             dataSet.addAll(result);
             offset = dataSet.size();
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -299,65 +301,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<CryptoCusto
     }
 
 
-
-
-
-    /**
-     * OptionMenu implementation.
-     */
-//    private void updateOptionMenuNotificationsBadge(int count) {
-//        mNotificationsCount = count;
-//
-//        // force the ActionBar to relayout its MenuItems.
-//        // onCreateOptionsMenu(Menu) will be called again.
-//        getActivity().invalidateOptionsMenu();
-//    }
-//
-//
-//
-//    @Override
-//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//
-//        super.onCreateOptionsMenu(menu, inflater);
-//
-//        menu.add(0, Constants.SELECT_IDENTITY, 0, "send").setIcon(R.drawable.ic_actionbar_send)
-//                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        try {
-//
-//            int id = item.getItemId();
-//
-//            if(id == Constants.SELECT_IDENTITY){
-//                final ListIdentitiesDialog progressDialog = new ListIdentitiesDialog(getActivity(), appSession, appResourcesProviderManager);
-//                progressDialog.setTitle("Select an Identity");
-//                progressDialog.setCancelable(false);
-//                progressDialog.show();
-//                return true;
-//            }
-//
-//        } catch (Exception e) {
-//            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-//            makeText(getActivity(), "Oooops! recovering from system error",
-//                    Toast.LENGTH_SHORT).show();
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
-
-
-
-
-
-
     @Override
     public void onItemClickListener(CryptoCustomerCommunityInformation data, int position) {
-
         appSession.setData(ACTOR_SELECTED, data);
         changeActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
-
     }
 
     @Override

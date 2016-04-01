@@ -18,6 +18,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.Draft
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantGetDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGenerateTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
@@ -57,7 +58,7 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
      * @return
      * @throws CantSendAssetBitcoinsToUserException
      */
-    String sendAssetBitcoins(String genesisTransactionHash, String genesisBlockHash, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException;
+    String sendAssetBitcoins(String genesisTransactionHash, String genesisBlockHash, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantSendAssetBitcoinsToUserException;
 
     /**
      * Gets the amount of unused keys that are available from the master account.
@@ -113,16 +114,15 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
      * @return the Transaction Hash of the new transaction
      * @throws CantCreateBitcoinTransactionException
      */
-    String createBitcoinTransaction (String inputTransaction, CryptoAddress addressTo) throws CantCreateBitcoinTransactionException;
+    String createBitcoinTransaction (String inputTransaction, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateBitcoinTransactionException;
 
     /**
      * generates a final transaction based on a draft transaction and prepares it to be broadcasted.
      * @param draftTransaction the completed and signed transaction
-     * @param fermatTrId the internal transaction id
      * @return the final transactionHash
      * @throws CantCreateBitcoinTransactionException
      */
-    String createBitcoinTransaction (DraftTransaction draftTransaction, UUID fermatTrId) throws CantCreateBitcoinTransactionException;
+    String createBitcoinTransaction (DraftTransaction draftTransaction) throws CantCreateBitcoinTransactionException;
 
 
     /**
@@ -132,7 +132,7 @@ public interface AssetVaultManager extends FermatManager, PlatformCryptoVault {
      * @return a DraftTransaction class
      * @throws CantCreateDraftTransactionException
      */
-    DraftTransaction createDraftTransaction (String inputTransaction, CryptoAddress addressTo) throws CantCreateDraftTransactionException;
+    DraftTransaction createDraftTransaction (String inputTransaction, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateDraftTransactionException;
 
 
     /**

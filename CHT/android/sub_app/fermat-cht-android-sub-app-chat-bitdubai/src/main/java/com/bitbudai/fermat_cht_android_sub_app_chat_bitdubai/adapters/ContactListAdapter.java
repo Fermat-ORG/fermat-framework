@@ -1,22 +1,44 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Path;
+import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.app.ListActivity;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.Toast;
+import android.widget.AdapterView.OnItemClickListener;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
+//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactsListFragment;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-//import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
 
 /**
  * Contact List Adapter
@@ -26,50 +48,140 @@ import java.util.UUID;
  *
  */
 
-//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
-public class ContactListAdapter extends ArrayAdapter<String> {
+public class ContactListAdapter extends ArrayAdapter<String> {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
 
     List<ContactList> contactsList = new ArrayList<>();
     ArrayList<String> contactinfo=new ArrayList<String>();
-    ArrayList<Integer> contacticon=new ArrayList<Integer>();
+    ArrayList<Bitmap> contacticon=new ArrayList<Bitmap>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
+    private ChatManager chatManager;
+    private FermatSession appSession;
+    private ErrorManager errorManager;
+    private ChatModuleManager moduleManager;
+    private ChatSession chatSession;
+    private ContactsListFragment contactsListFragment;
+    private Context context;
+    private Context mContext;
+    ImageView imagen;
+    TextView contactname;
+    int position;
+    private AdapterCallback mAdapterCallback;
+    Typeface tf;
 
-    public ContactListAdapter(Context context, ArrayList contactinfo, ArrayList contacticon, ArrayList contactid) {
+    public ContactListAdapter(Context context, ArrayList contactinfo, ArrayList contacticon, ArrayList contactid,
+                              ChatManager chatManager, ChatModuleManager moduleManager,
+                              ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, AdapterCallback mAdapterCallback) {
         super(context, R.layout.contact_list_item, contactinfo);
+        //tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
         this.contactinfo = contactinfo;
         this.contacticon = contacticon;
         this.contactid = contactid;
+        this.chatManager=chatManager;
+        this.moduleManager=moduleManager;
+        this.errorManager=errorManager;
+        this.chatSession=chatSession;
+        this.appSession=appSession;
+        this.mContext=context;
+        try {
+            this.mAdapterCallback = mAdapterCallback;
+        }catch (Exception e)
+        {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT,UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,e);
+        }
     }
 
     public View getView(int position, View convertView, ViewGroup parent) {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View item = inflater.inflate(R.layout.contact_list_item, null, true);
+        try {
+            imagen = (ImageView) item.findViewById(R.id.icon);//imagen.setImageResource(contacticon.get(position));//contacticon[position]);
+            imagen.setImageBitmap(getRoundedShape(contacticon.get(position), 400));//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
 
-        ImageView imagen = (ImageView) item.findViewById(R.id.icon);
-        imagen.setImageResource(contacticon.get(position));//contacticon[position]);
+            contactname = (TextView) item.findViewById(R.id.text1);
+            contactname.setText(contactinfo.get(position));
+            //contactname.setTypeface(tf, Typeface.NORMAL);
 
-        TextView contactname = (TextView) item.findViewById(R.id.text1);
-        contactname.setText(contactinfo.get(position));
+            final int pos=position;
+            imagen.setOnClickListener(new View.OnClickListener() {
+               // int pos = position;
+                @Override
+                public void onClick(View v) {
+                    try {
+                            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(pos)));
+                            mAdapterCallback.onMethodCallback();//solution to access to changeactivity. j
+                        } catch (CantGetContactException e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        } catch (Exception e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }
+                }
+            });
 
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
         return item;
+    }
+
+    public static interface AdapterCallback {
+        void onMethodCallback();
     }
 
     public void refreshEvents(ArrayList contactinfo, ArrayList contacticon, ArrayList contactid) {
         this.contactinfo=contactinfo;
         this.contacticon=contacticon;
-        this.contacticon=contacticon;
+        this.contactid=contactid;
         notifyDataSetChanged();
     }
-     /*public void refreshEvents(Parameters[] datos) {
 
-        for(int i=0; i<datos.length; i++) {
-            this.datos[i]=datos[i];
+    public static Bitmap decodeFile(Context context,int resId) {
+        // decode image size
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(context.getResources(), resId, o);
+        // Find the correct scale value. It should be the power of 2.
+        final int REQUIRED_SIZE = 300;
+        int width_tmp = o.outWidth, height_tmp = o.outHeight;
+        int scale = 1;
+        while (true)
+        {
+            if (width_tmp / 2 < REQUIRED_SIZE
+                    || height_tmp / 2 < REQUIRED_SIZE)
+                break;
+            width_tmp /= 2;
+            height_tmp /= 2;
+            scale++;
         }
+        // decode with inSampleSize
+        BitmapFactory.Options o2 = new BitmapFactory.Options();
+        o2.inSampleSize = scale;
+        return BitmapFactory.decodeResource(context.getResources(), resId, o2);
+    }
 
-        notifyDataSetChanged();
+    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage,int width) {
+        // TODO Auto-generated method stub
+        int targetWidth = width;
+        int targetHeight = width;
+        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
+                targetHeight,Bitmap.Config.ARGB_8888);
 
-    }*/
+        Canvas canvas = new Canvas(targetBitmap);
+        Path path = new Path();
+        path.addCircle(((float) targetWidth - 1) / 2,
+                ((float) targetHeight - 1) / 2,
+                (Math.min(((float) targetWidth),
+                        ((float) targetHeight)) / 2),
+                Path.Direction.CCW);
+        canvas.clipPath(path);
+        Bitmap sourceBitmap = scaleBitmapImage;
+        canvas.drawBitmap(sourceBitmap,
+                new Rect(0, 0, sourceBitmap.getWidth(),
+                        sourceBitmap.getHeight()),
+                new Rect(0, 0, targetWidth,
+                        targetHeight), null);
+        return targetBitmap;
+    }
 
 //    @Override
 //    protected ChatHolder createHolder(View itemView, int type) {

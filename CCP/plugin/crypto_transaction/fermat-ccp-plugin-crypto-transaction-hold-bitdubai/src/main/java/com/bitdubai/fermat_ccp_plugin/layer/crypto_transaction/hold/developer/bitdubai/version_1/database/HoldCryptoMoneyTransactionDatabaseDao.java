@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -13,6 +14,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
 import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.hold.interfaces.CryptoHoldTransaction;
 import com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.hold.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
@@ -82,6 +84,7 @@ public class HoldCryptoMoneyTransactionDatabaseDao {
         record.setLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME, cryptoHoldTransaction.getTimestampAcknowledged());
         record.setLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_CONFIRM_REJECT_COLUMN_NAME, cryptoHoldTransaction.getTimestampConfirmedRejected());
         record.setStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME, cryptoHoldTransaction.getStatus().getCode());
+        record.setStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME, cryptoHoldTransaction.getBlockchainNetworkType().getCode());
 
         return record;
     }
@@ -118,16 +121,22 @@ public class HoldCryptoMoneyTransactionDatabaseDao {
         holdCryptoMoneyTransaction.setTimestampAcknowledged(crtyptoHoldTransactionRecord.getLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME));
         holdCryptoMoneyTransaction.setTimestampConfirmedRejected(crtyptoHoldTransactionRecord.getLongValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TIMESTAMP_ACKNOWLEDGE_COLUMN_NAME));
         holdCryptoMoneyTransaction.setStatus(CryptoTransactionStatus.getByCode(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_STATUS_COLUMN_NAME)));
+        holdCryptoMoneyTransaction.setBlockchainNetworkType(BlockchainNetworkType.getByCode(crtyptoHoldTransactionRecord.getStringValue(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_BLOCK_CHAIN_NETWORK_TYPE_COLUMN_NAME)));
 
         return holdCryptoMoneyTransaction;
     }
 
     public void saveHoldCryptoTransactionData(CryptoHoldTransaction cryptoHoldTransaction) throws DatabaseOperationException, MissingHoldCryptoDataException {
 
-        try
-        {
+        try {
             database = openDatabase();
-            DatabaseTransaction transaction = database.newTransaction();
+        } catch (CantOpenDatabaseException e) {
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error CantOpenDatabaseException.", null);
+        } catch (CantCreateDatabaseException e) {
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error CantCreateDatabaseException.", null);
+        }
+
+        DatabaseTransaction transaction = database.newTransaction();
 
             DatabaseTable table = getDatabaseTable(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TABLE_NAME);
             DatabaseTableRecord holdCryptoRecord = getHoldCryptoRecord(cryptoHoldTransaction);
@@ -136,19 +145,28 @@ public class HoldCryptoMoneyTransactionDatabaseDao {
             filter.setValue(cryptoHoldTransaction.getTransactionId().toString());
             filter.setColumn(HoldCryptoMoneyTransactionDatabaseConstants.HOLD_TRANSACTION_ID_COLUMN_NAME);
 
+        try {
             if (isNewRecord(table, filter))
                 transaction.addRecordToInsert(table, holdCryptoRecord);
             else {
                 table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
                 transaction.addRecordToUpdate(table, holdCryptoRecord);
             }
+        } catch (CantLoadTableToMemoryException e) {
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error CantLoadTableToMemoryException.", null);
+        }
 
-            //I execute the transaction and persist the database side of the asset.
+        //I execute the transaction and persist the database side of the asset.
+        try {
             database.executeTransaction(transaction);
-
+        } catch (DatabaseTransactionFailedException e) {
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error DatabaseTransactionFailedException.", null);
+        }
+        /*
         }catch (Exception e) {
             throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "Error trying to save the Hold Crypto Transaction in the database.", null);
         }
+        */
     }
 
     public List<CryptoHoldTransaction> getHoldCryptoTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException

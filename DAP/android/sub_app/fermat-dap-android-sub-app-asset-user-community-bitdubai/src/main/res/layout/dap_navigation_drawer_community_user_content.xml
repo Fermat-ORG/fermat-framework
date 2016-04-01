@@ -3,43 +3,58 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#0072bb"
-    android:orientation="vertical"
-    android:paddingLeft="24dp"
-    android:paddingRight="24dp">
+    android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/row_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/imageView_icon"
-            android:layout_width="20dp"
+            android:layout_width="35dp"
             android:layout_height="20dp"
             android:layout_gravity="center"
-            android:background="#0072bb"
+            android:paddingLeft="24dp"
+            android:paddingRight="14dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/ic_action_filters"
+            android:visibility="visible"
             tools:ignore="ContentDescription" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/textView_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#0072bb"
+            android:layout_weight="1"
             android:paddingBottom="14dp"
-            android:paddingLeft="16dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
             android:paddingTop="14dp"
             android:text="Home"
             android:textColor="#ffffff"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
+        <View
+            android:id="@+id/badge"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:paddingLeft="24dp"
+            android:paddingRight="14dp"
+            android:scaleType="centerCrop"
+            android:layout_weight="3" />
+
     </LinearLayout>
 
     <View
+        android:id="@+id/navigation_row_divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#ffffff" />
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/cbw_divider_shape" />
 
 </LinearLayout>

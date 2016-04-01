@@ -3,6 +3,9 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceConnectionIncubation;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.NetworkServiceAgent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
@@ -15,7 +18,7 @@ import java.util.Map;
 /**
  * Created by mati on 2015.10.30..
  */
-public abstract class AbstractNetworkServiceProcessorAgent<N extends NetworkService> extends FermatAgent implements NetworkServiceAgent{
+public abstract class AbstractNetworkServiceProcessorAgent<N extends NetworkService> extends FermatAgent implements NetworkServiceAgent {
 
 
     private long sendThreadSleepTime = 15000;
@@ -95,7 +98,7 @@ public abstract class AbstractNetworkServiceProcessorAgent<N extends NetworkServ
     private void sendCycle() {
         try {
             if(networkServicePluginRoot.isRegister()) processSend();
-            toSend.sleep(sendThreadSleepTime);
+            Thread.sleep(sendThreadSleepTime);
         } catch (InterruptedException e) {
             reportUnexpectedError(FermatException.wrapException(e));
         } catch(Exception e) {
@@ -106,7 +109,7 @@ public abstract class AbstractNetworkServiceProcessorAgent<N extends NetworkServ
     private void receiveCycle() {
         try {
             if(networkServicePluginRoot.isRegister()) processReceive();
-            toReceive.sleep(receiveThreadSleepTime);
+            Thread.sleep(receiveThreadSleepTime);
         } catch (InterruptedException e) {
             reportUnexpectedError(FermatException.wrapException(e));
         } catch(Exception e) {

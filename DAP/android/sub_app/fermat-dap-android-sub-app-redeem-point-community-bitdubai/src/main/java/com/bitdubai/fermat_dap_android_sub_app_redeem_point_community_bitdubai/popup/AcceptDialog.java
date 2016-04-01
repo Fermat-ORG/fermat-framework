@@ -10,11 +10,16 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.models.Actor;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.AssetRedeemPointCommunitySubAppSession;
+import com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.sessions.SessionConstantRedeemPointCommunity;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantAcceptActorAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantDenyConnectionActorAssetException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 
 /**
  * Added by Jinmy Bohorquez 11/02/2016
@@ -26,13 +31,13 @@ public class AcceptDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSe
      * UI components
      */
     private final Actor actor;
-    private final RedeemPointIdentity identity            ;
+    private final RedeemPointIdentity identity;
 
-    private FermatTextView title      ;
+    private FermatTextView title;
     private FermatTextView description;
-    private FermatTextView userName   ;
-    private FermatButton   positiveBtn;
-    private FermatButton   negativeBtn;
+    private FermatTextView userName;
+    private FermatButton positiveBtn;
+    private FermatButton negativeBtn;
 
     public AcceptDialog(final Activity activity,
                         final AssetRedeemPointCommunitySubAppSession assetUserCommunitySubAppSession,
@@ -43,20 +48,19 @@ public class AcceptDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSe
         super(activity, assetUserCommunitySubAppSession, subAppResources);
 
         this.actor = actor;
-        this.identity             = identity            ;
+        this.identity = identity;
     }
-
 
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        title       = (FermatTextView) findViewById(R.id.title          );
-        description = (FermatTextView) findViewById(R.id.description    );
-        userName    = (FermatTextView) findViewById(R.id.user_name      );
-        positiveBtn = (FermatButton)   findViewById(R.id.positive_button);
-        negativeBtn = (FermatButton)   findViewById(R.id.negative_button);
+        title = (FermatTextView) findViewById(R.id.title);
+        description = (FermatTextView) findViewById(R.id.description);
+        userName = (FermatTextView) findViewById(R.id.user_name);
+        positiveBtn = (FermatButton) findViewById(R.id.positive_button);
+        negativeBtn = (FermatButton) findViewById(R.id.negative_button);
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
@@ -83,38 +87,42 @@ public class AcceptDialog extends FermatDialog<AssetRedeemPointCommunitySubAppSe
         int i = v.getId();
 
         if (i == R.id.positive_button) {
-
-//            try {
-//                if (actor != null && identity != null) {
+            try {
+                if (actor != null) { //&& identity != null) {
 //
-//                    getSession().getModuleManager().acceptIntraUser(identity.getPublicKey(), actor.getName(), actor.getPublicKey(), actor.getProfileImage());
-//                    getSession().setData(SessionConstantsAssetUserCommunity.NOTIFICATION_ACCEPTED,Boolean.TRUE);
+                    getSession().getModuleManager().acceptActorAssetRedeem(
+                            identity.getPublicKey(),  // ACTOR INSIDE/LOCAL
+                            actor // ACTOR OUTSIDE/EXTERNAL
+                    );
+                    getSession().setData(SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_NOTIFICATIONS_ACCEPTED, Boolean.TRUE);
                     Toast.makeText(getContext(), actor.getName() + " Accepted connection request", Toast.LENGTH_SHORT).show();
-//                } else {
-//                    super.toastDefaultError();
-//                }
-//                dismiss();
-//            } catch (final CantAcceptRequestException e) {
-//
-//                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-//                super.toastDefaultError();
-//            }
+                } else {
+                    super.toastDefaultError();
+                }
+                dismiss();
+            } catch (final CantAcceptActorAssetUserException e) {
+                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
+            }
             dismiss();
 
         } else if (i == R.id.negative_button) {
-//            try {
-//                if (actor != null && identity != null)
-//                    //getSession().getModuleManager().denyConnection(identity.getPublicKey(), actor.getPublicKey());
-//                else {
-//                    super.toastDefaultError();
-//                }
-//                dismiss();
-//            } catch (final IntraUserConnectionDenialFailedException e) {
-//
-//                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-//                super.toastDefaultError();
-//            }
-            Toast.makeText(getContext(), actor.getName() + " Deny connection request", Toast.LENGTH_SHORT).show();
+            try {
+                if (actor != null) {  //&& identity != null)
+                    getSession().getModuleManager().denyConnectionActorAssetRedeem(
+                            identity.getPublicKey(),  // ACTOR INSIDE/LOCAL
+                            actor // ACTOR OUTSIDE/EXTERNAL
+                    );
+//                    getSession().setData(SessionConstantRedeemPointCommunity.IC_ACTION_REDEEM_NOTIFICATIONS_DENIED, Boolean.FALSE);
+                    Toast.makeText(getContext(), actor.getName() + " Deny connection request", Toast.LENGTH_SHORT).show();
+                } else {
+                    super.toastDefaultError();
+                }
+                dismiss();
+            } catch (final CantDenyConnectionActorAssetException e) {
+                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
+            }
             dismiss();
         }
     }

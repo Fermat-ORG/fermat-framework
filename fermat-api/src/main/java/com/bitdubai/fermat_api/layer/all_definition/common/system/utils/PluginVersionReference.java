@@ -3,12 +3,10 @@ package com.bitdubai.fermat_api.layer.all_definition.common.system.utils;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatPluginsEnum;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
-import java.util.regex.Pattern;
+import java.io.Serializable;
 
 /**
  * The class <code>com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference</code>
@@ -16,7 +14,7 @@ import java.util.regex.Pattern;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 23/10/2015.
  */
-public class PluginVersionReference {
+public class PluginVersionReference implements Serializable {
 
     private static final String KEY_SEPARATOR = "+";
 
@@ -49,7 +47,6 @@ public class PluginVersionReference {
         PluginReference pluginReference = new PluginReference(layerReference, pluginEnum);
 
         this.pluginDeveloperReference = new PluginDeveloperReference(pluginReference, developer);
-        ;
         this.version = version;
     }
 

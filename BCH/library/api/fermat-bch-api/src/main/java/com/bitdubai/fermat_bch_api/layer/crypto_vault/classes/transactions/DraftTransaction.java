@@ -16,7 +16,11 @@ import java.util.Map;
  * Created by rodrigo on 2/10/16.
  */
 public class DraftTransaction {
+
     private Transaction bitcoinTransaction;
+    private CryptoAddress sellerCryptoAddress;
+    private CryptoAddress buyerCryptoAddress;
+    private long value;
 
     /**
      * constructor
@@ -35,14 +39,12 @@ public class DraftTransaction {
      * @return
      */
     public long getValue(){
-        long totalValue = 0;
-        for (TransactionInput transactionInput : bitcoinTransaction.getInputs()){
-            totalValue = totalValue + transactionInput.getValue().getValue();
-        }
-
-        return totalValue;
+        return value;
     }
 
+    public void addValue(long value) {
+        this.value = this.value + value;
+    }
 
     /**
      * returns the funds that are distributed for each CryptoAddress specified in the transaction
@@ -76,6 +78,32 @@ public class DraftTransaction {
     public BlockchainNetworkType getNetworkType() {
         return BitcoinNetworkSelector.getBlockchainNetworkType(bitcoinTransaction.getParams());
     }
+
+    public CryptoAddress getSellerCryptoAddress() {
+        return sellerCryptoAddress;
+    }
+
+    public void setSellerCryptoAddress(CryptoAddress sellerCryptoAddress) {
+        this.sellerCryptoAddress = sellerCryptoAddress;
+    }
+
+    public CryptoAddress getBuyerCryptoAddress() {
+        return buyerCryptoAddress;
+    }
+
+    public void setBuyerCryptoAddress(CryptoAddress buyerCryptoAddress) {
+        this.buyerCryptoAddress = buyerCryptoAddress;
+    }
+
+    public Transaction getBitcoinTransaction() {
+        return bitcoinTransaction;
+    }
+
+
+    public void setBitcoinTransaction(Transaction bitcoinTransaction) {
+        this.bitcoinTransaction = bitcoinTransaction;
+    }
+
     /**
      * Serializes the bitcoin transaction
      * @return
@@ -84,5 +112,17 @@ public class DraftTransaction {
         return bitcoinTransaction.bitcoinSerialize();
     }
 
-
+    @Override
+    public String toString() {
+        StringBuilder output = new StringBuilder(this.getTxHash());
+        output.append(" on " + this.getNetworkType().getCode() + " network.");
+        output.append(System.lineSeparator());
+        output.append(this.getBitcoinTransaction().toString());
+        output.append(System.lineSeparator());
+        for (Map.Entry<CryptoAddress, Long> entry : this.getFundsDistribution().entrySet()){
+            output.append(entry.getValue() + " for "+ entry.getKey().getAddress().toString());
+            output.append(System.lineSeparator());
+        }
+        return output.toString();
+    }
 }

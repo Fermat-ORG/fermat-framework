@@ -34,6 +34,9 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.devel
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.IOException;
 import java.net.URI;
@@ -79,8 +82,13 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     /**
      * Represent the SERVER_IP
      */
-    public static final String SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
-//      public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
+    private String SERVER_IP;
+    //public static final String SERVER_IP = ServerConf.SERVER_IP_DEVELOPER_LOCAL;
+
+    /**
+     * Represent the PORT
+     */
+    private Integer PORT;
 
     /**
      * Represent the executor
@@ -196,12 +204,17 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                             return;
                         }
 
+                        /*
+                         * Initialize the Ip And Port to connect to the CLoud Server
+                         */
+                        initializeConfigurationPropertiesFile();
+
                         System.out.println("WsCommunicationsCloudClientPluginRoot - Starting plugin");
 
                         /*
                          * Construct the URI
                          */
-                        this.uri = new URI(ServerConf.WS_PROTOCOL + WsCommunicationsCloudClientPluginRoot.SERVER_IP + ":" + ServerConf.DEFAULT_PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
+                        this.uri = new URI(ServerConf.WS_PROTOCOL + SERVER_IP + ":" + PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
 
                         /*
                          * Initialize the identity for the cloud client
@@ -222,7 +235,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
                                 try {
 
-                                    wsCommunicationsTyrusCloudClientConnection = new WsCommunicationsTyrusCloudClientConnection(uri, eventManager, locationManager, clientIdentity);
+                                    wsCommunicationsTyrusCloudClientConnection = new WsCommunicationsTyrusCloudClientConnection(uri, eventManager, locationManager, clientIdentity, (WsCommunicationsCloudClientPluginRoot)getInstance());
                                     wsCommunicationsTyrusCloudClientConnection.initializeAndConnect();
 
                                     /*
@@ -258,17 +271,24 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      *
      * @throws URISyntaxException
      */
-    public void connectClient() throws URISyntaxException, IOException, DeploymentException {
+    @Override
+    public void reloadConnectClient() throws Exception {
 
         System.out.println(" WsCommunicationsCloudClientPluginRoot - ****************************************************************");
-        System.out.println(" WsCommunicationsCloudClientPluginRoot - ReConnecting with the cloud server. Server IP ("+SERVER_IP+")");
+        System.out.println(" WsCommunicationsCloudClientPluginRoot - ReConnecting with the cloud server. Server IP ("+SERVER_IP+")  Port "+PORT);
         System.out.println(" WsCommunicationsCloudClientPluginRoot - ****************************************************************");
+
+        /*
+         * reset Url to server
+         */
+        uri = new URI(ServerConf.WS_PROTOCOL + SERVER_IP + ":" + PORT + ServerConf.WEB_SOCKET_CONTEXT_PATH);
 
         if (wsCommunicationsTyrusCloudClientConnection != null){
+            wsCommunicationsTyrusCloudClientConnection.setNotTryToReconnectToCloud();
             wsCommunicationsTyrusCloudClientConnection.closeMainConnection();
         }
 
-        wsCommunicationsTyrusCloudClientConnection = new WsCommunicationsTyrusCloudClientConnection(uri,eventManager, locationManager, clientIdentity);
+        wsCommunicationsTyrusCloudClientConnection = new WsCommunicationsTyrusCloudClientConnection(uri,eventManager, locationManager, clientIdentity, (WsCommunicationsCloudClientPluginRoot) getInstance());
         wsCommunicationsTyrusCloudClientConnection.initializeAndConnect();
 
     }
@@ -343,6 +363,48 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
         networkState = state;
     }
 
+    /*
+     * set the ipAddress and the port to connect to the Cloud Server
+     */
+    @Override
+    public void changeIpAndPortProperties(String ipAddress, Integer port) {
+
+        this.SERVER_IP = (ipAddress != null) ? ipAddress : ServerConf.SERVER_IP_PRODUCTION;
+        this.PORT = (port != null && port > 0) ? port : ServerConf.DEFAULT_PORT;
+
+        /*
+         * Set the ipAddress and the port in the File Text
+         */
+        try {
+            editServerIpAndPortProperties(SERVER_IP, PORT);
+            reloadConnectClient();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /*
+     * change default values the ipAddress and the port to connect to the Cloud Server
+     */
+    @Override
+    public void resetIpAndPortDefault() {
+
+        this.SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
+        this.PORT = ServerConf.DEFAULT_PORT;
+
+        /*
+         * Set the ipAddress and the port in the File Text
+         */
+        try {
+            editServerIpAndPortProperties(ServerConf.SERVER_IP_PRODUCTION, ServerConf.DEFAULT_PORT);
+            reloadConnectClient();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     /**
      * Initialize the clientIdentity of this plugin
      */
@@ -372,7 +434,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
              */
             try {
 
-                System.out.println("No previous clientIdentity finder - Proceed to create new one");
+                System.out.println("No previous clientIdentity found - Proceed to create new one");
 
                 /*
                  * Create the new clientIdentity
@@ -405,6 +467,142 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
         }
 
+    }
+
+    /**
+     * Initialize the Ip And Port to connect to the CLoud Server
+     */
+    private void initializeConfigurationPropertiesFile() throws CantStartPluginException {
+
+        System.out.println("Calling the method - initializeConfigurationPropertiesFile() ");
+
+        try{
+
+            System.out.println("Loading ServerIpAndPort");
+
+            /*
+            * Load the file with the configuration
+            */
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "server_conf", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            String content = pluginTextFile.getContent();
+
+            /*
+             *  get content from json String
+             */
+            JsonParser parser = new JsonParser();
+            JsonObject jsonObject = parser.parse(content).getAsJsonObject();
+
+            /*
+             * we set the SERVER_IP and PORT from text file json
+             */
+            try {
+                SERVER_IP = jsonObject.get("ip").getAsString();
+                PORT = jsonObject.get("port").getAsInt();
+            }catch (Exception e){
+                SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
+                PORT =  ServerConf.DEFAULT_PORT;
+            }
+
+        }catch (FileNotFoundException e){
+
+             /*
+             * The file no exist may be the first time the plugin is running on this device,
+             * We need to create the new configuration
+             */
+            try {
+
+                System.out.println("No previous ServerIpAndPort found - Proceed to create new one");
+
+                /*
+                 * we construct the Json to text file Content
+                 */
+                Gson gson = new Gson();
+                JsonObject jsonObject = new JsonObject();
+                jsonObject.addProperty("ip",ServerConf.SERVER_IP_PRODUCTION);
+                jsonObject.addProperty("port", ServerConf.DEFAULT_PORT);
+
+                /*
+                 * set to default value
+                 */
+                SERVER_IP = ServerConf.SERVER_IP_PRODUCTION;
+                PORT =  ServerConf.DEFAULT_PORT;
+
+                 /*
+                 * save into the file
+                 */
+                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "private", "server_conf", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                pluginTextFile.setContent(gson.toJson(jsonObject));
+                pluginTextFile.persistToMedia();
+
+
+            }catch (Exception exception){
+                /*
+                 * The file cannot be created. I can not handle this situation.
+                 */
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                throw new CantStartPluginException(exception.getLocalizedMessage());
+            }
+
+        }catch (CantCreateFileException cantCreateFileException){
+
+              /*
+             * The file cannot be load. I can not handle this situation.
+             */
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
+            throw new CantStartPluginException(cantCreateFileException.getLocalizedMessage());
+
+        }
+
+
+    }
+
+    /*
+     * Set the ipAddress and the port in the File Text
+     */
+    private void editServerIpAndPortProperties(String ipAddress, Integer port) throws Exception{
+
+        try{
+
+             /*
+            * Load the file with the configuration
+            */
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "server_conf", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginTextFile.loadFromMedia();
+            String content = pluginTextFile.getContent();
+
+            /*
+             * we construct the Json to text file Content
+             */
+            Gson gson = new Gson();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("ip",ipAddress);
+            jsonObject.addProperty("port", port);
+
+            /*
+             * edit the content
+             */
+            pluginTextFile.setContent(gson.toJson(jsonObject));
+            pluginTextFile.persistToMedia();
+
+        }catch(Exception exception){
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw new Exception(exception.getLocalizedMessage());
+        }
+
+    }
+
+    /*
+     * get the Server Ip
+     */
+    public String getServerIp() {
+        return SERVER_IP;
+    }
+
+    /*
+     * get the Server Port
+     */
+    public Integer getServerPort(){
+        return PORT;
     }
 
 }

@@ -43,6 +43,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantE
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.developer_utils.AssetTransferDeveloperDatabaseFactory;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.database.AssetTransferDAO;
 import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.database.AssetTransferDatabaseConstants;
@@ -205,7 +206,6 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
                     logManager,
                     digitalAssetTransferVault,
                     assetTransmissionNetworkServiceManager,
-                    assetIssuerActorNetworkServiceManager,
                     actorAssetUserManager,
                     assetIssuerWalletManager);
         }
@@ -215,7 +215,7 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
     @Override
     public void transferAssets(HashMap<DigitalAssetMetadata, ActorAssetUser> digitalAssetsToDistribute, String walletPublicKey) throws CantTransferDigitalAssetsException {
         printSomething("The Wallet public key is hardcoded");
-        walletPublicKey = "walletPublicKeyTest";
+        walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
         this.assetTransferTransactionManager.transferAssets(digitalAssetsToDistribute, walletPublicKey);
     }
 

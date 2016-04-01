@@ -2,10 +2,12 @@ package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.app_connectio
 
 import android.app.Activity;
 
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -19,15 +21,18 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.factory.Wallet
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.navigation_drawer.UserWalletNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
  */
-public class WalletAssetUserFermatAppConnection extends AppConnections {
+public class WalletAssetUserFermatAppConnection extends AppConnections<AssetUserSession> {
 
     IdentityAssetUser identityAssetUser;
+    AssetUserWalletSubAppModuleManager manager;
+    AssetUserSession assetUserSession;
 
-    public WalletAssetUserFermatAppConnection(Activity activity) {
+    public WalletAssetUserFermatAppConnection(Context activity) {
         super(activity);
         this.identityAssetUser = identityAssetUser;
     }
@@ -56,7 +61,7 @@ public class WalletAssetUserFermatAppConnection extends AppConnections {
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        return new UserWalletNavigationViewPainter(getActivity(), getActiveIdentity());
+        return new UserWalletNavigationViewPainter(getContext(), getActiveIdentity());
     }
 
     @Override
@@ -67,5 +72,42 @@ public class WalletAssetUserFermatAppConnection extends AppConnections {
     @Override
     public FooterViewPainter getFooterViewPainter() {
         return null;
+    }
+
+    @Override
+    public NotificationPainter getNotificationPainter(String code) {
+        NotificationPainter notification = null;
+        try {
+            this.assetUserSession = (AssetUserSession) this.getSession();
+            if (assetUserSession != null)
+                manager = assetUserSession.getModuleManager();
+            String[] params = code.split("_");
+            String notificationType = params[0];
+            String senderActorPublicKey = params[1];
+
+            switch (notificationType) {
+                case "ASSET-USER-DEBIT":
+//                    if (manager != null) {
+                    //find last notification by sender actor public key
+//                        ActorAssetIssuer senderActor = manager.getLastNotification(senderActorPublicKey);
+//                        notification = new WalletAssetIssuerNotificationPainter("New Extended Key", "Was Received From: " + senderActor.getName(), "", "");
+//                    } else {
+                    notification = new WalletAssetUserNotificationPainter("Wallet User - Debit", senderActorPublicKey, "", "");
+//                    }
+                    break;
+                case "ASSET-USER-CREDIT":
+//                    if (manager != null) {
+                    //find last notification by sender actor public key
+//                        ActorAssetIssuer senderActor = manager.getLastNotification(senderActorPublicKey);
+//                        notification = new WalletAssetIssuerNotificationPainter("New Extended Request", "Was Received From: " + senderActor.getName(), "", "");
+//                    } else {
+                    notification = new WalletAssetUserNotificationPainter("Wallet User Credit", senderActorPublicKey, "", "");
+//                    }
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return notification;
     }
 }

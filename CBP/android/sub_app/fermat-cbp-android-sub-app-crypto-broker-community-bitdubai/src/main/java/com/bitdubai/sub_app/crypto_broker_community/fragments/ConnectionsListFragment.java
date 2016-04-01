@@ -186,7 +186,7 @@ public class ConnectionsListFragment extends AbstractFermatFragment<CryptoBroker
     @Override
     public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
         appSession.setData(ACTOR_SELECTED, data);
-        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
+        changeActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override

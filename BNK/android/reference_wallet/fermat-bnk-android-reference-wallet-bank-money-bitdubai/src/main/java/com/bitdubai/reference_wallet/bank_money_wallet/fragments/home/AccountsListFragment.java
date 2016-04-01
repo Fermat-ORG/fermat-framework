@@ -70,8 +70,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(
-                        Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+                errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
         accountsList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
@@ -83,7 +82,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
         header = (FermatTextView)layout.findViewById(R.id.textView_header_text);
         header.setText(moduleManager.getBankingWallet().getBankName());
         presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
-                .setBannerRes(R.drawable.bw_banner)
+                .setBannerRes(R.drawable.bw_banner_1).setIconRes(R.drawable.bw_icon)
                 .setBody(R.string.bnk_bank_money_wallet_account_body)
                 .setTitle("prueba Title")
                .setSubTitle(R.string.bnk_bank_money_wallet_account_subTitle)
@@ -104,6 +103,7 @@ public class AccountsListFragment extends FermatWalletListFragment<BankAccountNu
             }
         }catch (FermatException e){
             makeText(getActivity(), "Oops! recovering from system error", Toast.LENGTH_SHORT).show();
+            errorManager.reportUnexpectedWalletException(Wallets.BNK_BANKING_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }
     }
 

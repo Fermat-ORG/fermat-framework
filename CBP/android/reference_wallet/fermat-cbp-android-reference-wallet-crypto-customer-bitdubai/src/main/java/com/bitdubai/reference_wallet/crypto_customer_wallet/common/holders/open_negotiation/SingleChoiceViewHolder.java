@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -15,7 +16,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 
 /**
  *Created by Yordin Alayn on 22.01.16.
- * Based in AmountToBuyViewHolder of Star_negotiation by nelson
+ * Based in SingleChoiceViewHolder of Star_negotiation by nelson
  */
 public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnClickListener {
 
@@ -40,7 +41,6 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     public void setViewResources(int titleRes, int positionImgRes, int... stringResources) {
         titleTextView.setText(titleRes);
-        //TODO ACA DA EXCEPTION: Process: com.bitdubai.fermat, PID: 3128 java.lang.OutOfMemoryError: Failed to allocate a 1849612 byte allocation with 1595744 free bytes and 1558KB until OOM
         clauseNumberImageView.setImageResource(positionImgRes);
         descriptionTextView.setText(stringResources[0]);
     }
@@ -48,7 +48,7 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     public void onClick(View view) {
         if (listener != null)
-            listener.onClauseCLicked(buttonValue, clause, clausePosition);
+            listener.onClauseClicked(buttonValue, clause, clausePosition);
     }
 
     @Override
@@ -92,15 +92,17 @@ public class SingleChoiceViewHolder extends ClauseViewHolder implements View.OnC
         String friendlyValue = clauseValue;
 
         final ClauseType type = clause.getType();
-        if (type.equals(ClauseType.CUSTOMER_CURRENCY) || type.equals(ClauseType.BROKER_CURRENCY)) {
-            try {
+        try {
+            if (type == ClauseType.CUSTOMER_CURRENCY || type == ClauseType.BROKER_CURRENCY) {
                 if (FiatCurrency.codeExists(clauseValue))
                     friendlyValue = FiatCurrency.getByCode(clauseValue).getFriendlyName() + "(" + clauseValue + ")";
                 else if (CryptoCurrency.codeExists(clauseValue))
                     friendlyValue = CryptoCurrency.getByCode(clauseValue).getFriendlyName() + "(" + clauseValue + ")";
 
-            } catch (FermatException ignore) {
+            } else if (type == ClauseType.CUSTOMER_PAYMENT_METHOD || type == ClauseType.BROKER_PAYMENT_METHOD) {
+                friendlyValue = MoneyType.getByCode(clauseValue).getFriendlyName();
             }
+        } catch (FermatException ignore) {
         }
 
         return friendlyValue;

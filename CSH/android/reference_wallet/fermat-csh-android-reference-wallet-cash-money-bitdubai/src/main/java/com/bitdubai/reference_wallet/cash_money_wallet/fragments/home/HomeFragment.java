@@ -4,7 +4,9 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -70,7 +72,10 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
     FermatTextView availableTextView;
     FermatTextView availableCurrencyTextView;
     FermatTextView bookCurrencyTextView;
-    LinearLayout bookBalanceContainer;
+    View bookBalanceHr;
+    LinearLayout bookBalanceAmountCode;
+    FermatTextView bookBalanceText;
+    LinearLayout topLip;
     com.getbase.floatingactionbutton.FloatingActionsMenu fab;
     com.getbase.floatingactionbutton.FloatingActionButton fabWithdraw;
     CreateTransactionFragmentDialog transactionFragmentDialog;
@@ -108,7 +113,10 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
         this.availableTextView = (FermatTextView) layout.findViewById(R.id.textView_available_amount);
         this.bookCurrencyTextView = (FermatTextView) layout.findViewById(R.id.textView_available_currency);
         this.availableCurrencyTextView = (FermatTextView) layout.findViewById(R.id.textView_book_currency);
-        this.bookBalanceContainer = (LinearLayout) layout.findViewById(R.id.csh_home_balance_book_container);
+        this.bookBalanceHr = layout.findViewById(R.id.csh_home_balance_book_hr);
+        this.bookBalanceAmountCode = (LinearLayout) layout.findViewById(R.id.csh_home_balance_book_amount_code);
+        this.bookBalanceText = (FermatTextView) layout.findViewById(R.id.csh_home_balance_book_text);
+        this.topLip = (LinearLayout) layout.findViewById(R.id.csh_home_top_lip);
         this.fab = (com.getbase.floatingactionbutton.FloatingActionsMenu) layout.findViewById(R.id.fab_multiple_actions);
         this.fabWithdraw = (com.getbase.floatingactionbutton.FloatingActionButton) layout.findViewById(R.id.fab_withdraw);
         updateWalletBalances();
@@ -339,15 +347,30 @@ implements FermatListItemListeners<CashMoneyWalletTransaction>, DialogInterface.
 
         bookTextView.setText(String.valueOf(this.walletBalances.getBookBalance()));
         availableTextView.setText(String.valueOf(this.walletBalances.getAvailableBalance()));
-
+        int topLipHeight = 0;
 
         //Hide book balance if balances are equal
-        if(this.walletBalances.getAvailableBalance().compareTo(this.walletBalances.getAvailableBalance()) == 0)
-            this.bookBalanceContainer.setVisibility(View.INVISIBLE);
-        else
-            this.bookBalanceContainer.setVisibility(View.VISIBLE);
+        if(this.walletBalances.getAvailableBalance().compareTo(this.walletBalances.getBookBalance()) == 0){
+            this.bookBalanceHr.setVisibility(View.GONE);
+            this.bookBalanceAmountCode.setVisibility(View.GONE);
+            this.bookBalanceText.setVisibility(View.GONE);
+            topLipHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 180, getResources().getDisplayMetrics());;
+            topLip.setBackground(getResources().getDrawable(R.drawable.csh_top_lip_medium));
+        }else {
+            this.bookBalanceHr.setVisibility(View.VISIBLE);
+            this.bookBalanceAmountCode.setVisibility(View.VISIBLE);
+            this.bookBalanceText.setVisibility(View.VISIBLE);
+            topLipHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 240, getResources().getDisplayMetrics());;
+            topLip.setBackground(getResources().getDrawable(R.drawable.csh_top_lip_big));
+        }
+
+        //Change toplip height
+        ViewGroup.LayoutParams params = topLip.getLayoutParams();
+        params.height = topLipHeight;
+        topLip.setLayoutParams(params);
 
 
+        topLip.invalidate();
         bookTextView.invalidate();
         availableTextView.invalidate();
     }

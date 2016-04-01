@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
@@ -16,14 +15,13 @@ import java.util.UUID;
 /**
  * Created by franklin on 27/09/15.
  */
-public class AssetIssuerWalletDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public class AssetIssuerWalletDatabaseFactory {
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.
      */
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
+    public AssetIssuerWalletDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -136,10 +134,14 @@ public class AssetIssuerWalletDatabaseFactory implements DealsWithPluginDatabase
     private DatabaseTableFactory createAssetMovementTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException {
         DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TABLE_NAME);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ENTRY_ID, DatabaseDataType.STRING, 255, true);
-        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_METADATA_ID, DatabaseDataType.STRING, 255, false);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ASSET_PUBLIC_KEY, DatabaseDataType.STRING, 255, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_PUBLIC_KEY, DatabaseDataType.STRING, 255, false);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_FROM_TYPE, DatabaseDataType.STRING, 15, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_PUBLIC_KEY, DatabaseDataType.STRING, 255, false);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_ACTOR_TO_TYPE, DatabaseDataType.STRING, 15, false);
         table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TIMESTAMP, DatabaseDataType.LONG_INTEGER, 0, false);
+        table.addColumn(AssetWalletIssuerDatabaseConstant.ASSET_MOVEMENTS_TYPE, DatabaseDataType.STRING, 255, false);
+
         return table;
     }
 }

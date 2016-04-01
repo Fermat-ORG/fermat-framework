@@ -10,6 +10,7 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.AmountToBuyViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.start_negotiation.ClauseViewHolder;
@@ -39,7 +40,7 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
     private CustomerBrokerNegotiationInformation negotiationInformation;
     private StartNegotiationActivityFragment footerListener;
     ClauseViewHolder.Listener clauseListener;
-    private List <BrokerCurrencyQuotationImpl> marketRateList;
+    private List <IndexInfoSummary> marketRateList;
 
 
     public StartNegotiationAdapter(Context context, CustomerBrokerNegotiationInformation negotiationInformation ) {
@@ -189,7 +190,7 @@ public class StartNegotiationAdapter extends FermatAdapter<ClauseInformation, Fe
         this.clauseListener = clauseListener;
     }
 
-    public void setMarketRateList(List <BrokerCurrencyQuotationImpl> marketRateList){
+    public void setMarketRateList(List <IndexInfoSummary> marketRateList){
         this.marketRateList = marketRateList;
     }
 
