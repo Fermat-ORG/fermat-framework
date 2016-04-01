@@ -13,7 +13,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 public class BterSubsystem extends AbstractPluginSubsystem {
 
     public BterSubsystem() {
-        super(new PluginReference(Plugins.BITDUBAI_CER_PROVIDER_BTER));
+        super(new PluginReference(Plugins.BTER));
     }
 
     @Override

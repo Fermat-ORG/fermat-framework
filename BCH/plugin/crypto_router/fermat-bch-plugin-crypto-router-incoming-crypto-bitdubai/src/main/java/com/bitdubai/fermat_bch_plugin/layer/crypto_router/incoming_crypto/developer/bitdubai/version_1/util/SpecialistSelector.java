@@ -66,6 +66,10 @@ public class SpecialistSelector {
                      * so I will inform the redemption specialist.
                      */
                         return Specialist.ASSET_REDEMPTION_SPECIALIST;
+                case CBP_CRYPTO_BROKER:
+                    return Specialist.INTRA_USER_SPECIALIST;
+                case CBP_CRYPTO_CUSTOMER:
+                    return Specialist.INTRA_USER_SPECIALIST;
                 default:
                     // Here we have a serious problem
                     throw new CantSelectSpecialistException("NO SPECIALIST FOUND", null, "Actor: " + cryptoAddressBookRecord.getDeliveredToActorType() + " with code " + cryptoAddressBookRecord.getDeliveredToActorType().getCode(), "Actor not considered in switch statement");

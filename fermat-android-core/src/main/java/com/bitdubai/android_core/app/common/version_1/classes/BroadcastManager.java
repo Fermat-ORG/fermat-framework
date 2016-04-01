@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
 import java.lang.ref.WeakReference;
+import java.util.UUID;
 
 /**
  * Created by Matias Furszyfer on 2016.02.04..
@@ -20,9 +21,11 @@ public class BroadcastManager implements BroadcasterInterface {
 
     private static final String TAG = "broadcaster-manager";
     WeakReference<FermatActivity> fermatActivity;
+    private final UUID id;
 
     public BroadcastManager(FermatActivity fermatActivity) {
         this.fermatActivity = new WeakReference<FermatActivity>(fermatActivity);
+        id = UUID.randomUUID();
     }
 
     public void setFermatActivity(FermatActivity fermatActivity) {
@@ -147,6 +150,11 @@ public class BroadcastManager implements BroadcasterInterface {
         return id;
     }
 
+    @Override
+    public UUID getId() {
+        return id;
+    }
+
     private void updateView(FermatBundle bundle) {
         TabsPagerAdapter adapter = fermatActivity.get().getAdapter();
         if(adapter!=null) {
@@ -173,6 +181,7 @@ public class BroadcastManager implements BroadcasterInterface {
         if(adapter!=null) {
             for (AbstractFermatFragment fragment :adapter.getLstCurrentFragments()){
                 fragment.onUpdateViewHandler(appCode,code);
+                fragment.onUpdateView(code);
                 fragment.onUpdateViewUIThred(code);
             }
         }

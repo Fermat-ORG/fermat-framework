@@ -20,6 +20,7 @@ public enum EventSource implements FermatEnum {
     ACTOR_NETWORK_SERVICE_CRYPTO_BROKER     ("ACB"),
     ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER   ("ACC"),
     ACTOR_NETWORK_SERVICE_ARTIST            ("ANSA"),
+    ARTIST_ACTOR_CONNECTION                 ("ARTAC"),
     BROKER_ACK_OFFLINE_PAYMENT              ("BAFP"),
     BROKER_ACK_ONLINE_PAYMENT               ("BAOP"),
     BROKER_SUBMIT_OFFLINE_MERCHANDISE       ("BSFM"),
@@ -59,6 +60,7 @@ public enum EventSource implements FermatEnum {
     NETWORK_SERVICE_CRYPTO_PAYMENT_REQUEST  ("NSCPR"),
     NETWORK_SERVICE_CRYPTO_TRANSMISSION     ("NCT"),
     NETWORK_SERVICE_INTRA_ACTOR             ("NSIA"),
+    NETWORK_SERVICE_FERMAT_MONITOR          ("NSFM"),
     NETWORK_SERVICE_INTRA_USER_PLUGIN       ("NIU"),
     NETWORK_SERVICE_MONEY_REQUEST_PLUGIN    ("NMR"),
     NETWORK_SERVICE_MONEY_PLUGIN            ("NSM"),
@@ -93,6 +95,7 @@ public enum EventSource implements FermatEnum {
             case "ACB":    return ACTOR_NETWORK_SERVICE_CRYPTO_BROKER;
             case "ACC":    return ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER;
             case "ANSA":   return ACTOR_NETWORK_SERVICE_ARTIST;
+            case "ARTAC":   return ARTIST_ACTOR_CONNECTION;
             case "BAFP":   return BROKER_ACK_OFFLINE_PAYMENT;
             case "BAOP":   return BROKER_ACK_ONLINE_PAYMENT;
             case "BSFM":   return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
@@ -128,6 +131,7 @@ public enum EventSource implements FermatEnum {
             case "NCT":    return NETWORK_SERVICE_CRYPTO_TRANSMISSION;
             case "NIU":    return NETWORK_SERVICE_INTRA_USER_PLUGIN;
             case "NSIA":   return NETWORK_SERVICE_INTRA_ACTOR;
+            case "NSFM":   return NETWORK_SERVICE_FERMAT_MONITOR;
             case "NSM":    return NETWORK_SERVICE_MONEY_PLUGIN;
             case "NMR":    return NETWORK_SERVICE_MONEY_REQUEST_PLUGIN;
             case "NTP":    return NETWORK_SERVICE_TEMPLATE_PLUGIN;

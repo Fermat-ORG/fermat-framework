@@ -23,6 +23,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventExcept
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.BusinessTransactionRecord;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.exceptions.CantInitializeBrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseException;
@@ -468,7 +469,9 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
         List<BusinessTransactionRecord> businessTransactionRecordList =new ArrayList<>();
         BusinessTransactionRecord businessTransactionRecord;
         for(String contractHash : pendingContractHash){
-            businessTransactionRecord = getBusinessTransactionRecord(contractHash);
+            if(key.equals(ContractTransactionStatus.PENDING_OFFLINE_MERCHANDISE_CONFIRMATION.getCode()))
+                businessTransactionRecord = getBusinessTransactionRecordSummary(contractHash);
+            else businessTransactionRecord = getBusinessTransactionRecord(contractHash);
             businessTransactionRecordList.add(businessTransactionRecord);
         }
         return businessTransactionRecordList;
@@ -518,6 +521,79 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
      * @return
      * @throws UnexpectedResultReturnedFromDatabaseException
      */
+    public BusinessTransactionRecord getBusinessTransactionRecordSummary(String contractHash)
+            throws
+            UnexpectedResultReturnedFromDatabaseException {
+
+        try{
+            DatabaseTable databaseTable=getDatabaseSubmitTable();
+            ContractTransactionStatus contractTransactionStatus;
+            BusinessTransactionRecord businessTransactionRecord = new BusinessTransactionRecord();
+            databaseTable.addStringFilter(
+                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record = records.get(0);
+
+
+            businessTransactionRecord.setTransactionId(record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME));
+
+            businessTransactionRecord.setContractHash(record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME));
+
+            businessTransactionRecord.setBrokerPublicKey(record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME));
+
+            businessTransactionRecord.setCustomerPublicKey(record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
+
+            contractTransactionStatus=ContractTransactionStatus.getByCode(record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
+            businessTransactionRecord.setContractTransactionStatus(contractTransactionStatus);
+
+            businessTransactionRecord.setTransactionHash(contractHash);
+
+            return businessTransactionRecord;
+        } catch (CantLoadTableToMemoryException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Cannot load the database table");
+        } catch (InvalidParameterException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting value from database",
+                    "Invalid parameter in ContractTransactionStatus");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Getting value from database",
+                    "Unexpected error");
+        }
+
+    }
+
+    /**
+     * This method returns the BusinessTransactionRecord from a given contractHashId.
+     * The BusinessTransactionRecord contains all the Submit Online Merchandise table record.
+     * @param contractHash
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
     public BusinessTransactionRecord getBusinessTransactionRecord(String contractHash)
             throws
             UnexpectedResultReturnedFromDatabaseException {
@@ -541,66 +617,56 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             checkDatabaseRecords(records);
             DatabaseTableRecord record = records.get(0);
-            businessTransactionRecord.setBrokerPublicKey(
-                    record.getStringValue(
-                            BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                                    SUBMIT_OFFLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME));
-            businessTransactionRecord.setContractHash(record.getStringValue(
-                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                            SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME));
-            contractTransactionStatus=ContractTransactionStatus.getByCode(record.getStringValue(
-                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                            SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
+
+            businessTransactionRecord.setBrokerPublicKey(record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME));
+
+            businessTransactionRecord.setContractHash(record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME));
+
+            contractTransactionStatus=ContractTransactionStatus.getByCode(record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME));
             businessTransactionRecord.setContractTransactionStatus(contractTransactionStatus);
-            businessTransactionRecord.setCustomerPublicKey(
-                    record.getStringValue(
-                            BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                                    SUBMIT_OFFLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
+
+            businessTransactionRecord.setCustomerPublicKey(record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
             businessTransactionRecord.setTransactionHash(contractHash);
-            businessTransactionRecord.setTransactionId(
-                    record.getStringValue(
-                            BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                                    SUBMIT_OFFLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME));
+
+            businessTransactionRecord.setTransactionId(record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME));
+
             //Represents the external wallet
-            businessTransactionRecord.setExternalWalletPublicKey(
-                    record.getStringValue(
-                            BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                                    SUBMIT_OFFLINE_MERCHANDISE_WALLET_PUBLIC_KEY_COLUMN_NAME));
+            String walletPublicKey = record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_WALLET_PUBLIC_KEY_COLUMN_NAME);
+            businessTransactionRecord.setExternalWalletPublicKey(walletPublicKey);
+
             //Represents the amount
-            businessTransactionRecord.setCryptoAmount(
-                    record.getLongValue(
-                            BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                                    SUBMIT_OFFLINE_MERCHANDISE_AMOUNT_COLUMN_NAME));
-            businessTransactionRecord.setCBPWalletPublicKey(
-                    record.getStringValue(
-                            BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                                    SUBMIT_OFFLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME
-                    )
-            );
-            referencePriceFromDatabase=record.getDoubleValue(
-                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
-                            SUBMIT_OFFLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME
-            );
+            businessTransactionRecord.setCryptoAmount(record.getLongValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_AMOUNT_COLUMN_NAME));
+
+            //Represent cbpWalletPublicKey
+            String cbpWalletPublicKey = record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME);
+            businessTransactionRecord.setCBPWalletPublicKey(cbpWalletPublicKey);
+
+            //Represent referencePrice
+            referencePriceFromDatabase=record.getDoubleValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME);
             referencePrice=BigDecimal.valueOf(referencePriceFromDatabase);
-            businessTransactionRecord.setPriceReference(
-                    referencePrice
-            );
-            String paymentTypeString=record.getStringValue(
-                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME
-                            );
-            currencyType = FiatCurrency.getByCode(
-                    paymentTypeString
-                    );
-            businessTransactionRecord.setCurrencyType(
-                    currencyType
-            );
-            String currencyTypeCode=record.getStringValue(
-                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_PAYMENT_TYPE_COLUMN_NAME
-                            );
-            merchandiseType = MoneyType.getByCode(
-                    currencyTypeCode
-            );
+            businessTransactionRecord.setPriceReference(referencePrice);
+
+            //Represent currencyType
+            String paymentTypeString=record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME);
+            currencyType = FiatCurrency.getByCode(paymentTypeString);
+            businessTransactionRecord.setCurrencyType(currencyType);
+
+            //Represent merchandiseType
+            String currencyTypeCode=record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                    SUBMIT_OFFLINE_MERCHANDISE_PAYMENT_TYPE_COLUMN_NAME);
+            merchandiseType = MoneyType.getByCode(currencyTypeCode);
             businessTransactionRecord.setPaymentType(merchandiseType);
+
             return businessTransactionRecord;
         } catch (CantLoadTableToMemoryException e) {
             errorManager.reportUnexpectedPluginException(
@@ -631,8 +697,10 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
     }
 
     public void updateBusinessTransactionRecord(BusinessTransactionRecord businessTransactionRecord)
-            throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
+        throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException
+    {
         try{
+
             DatabaseTable databaseTable=getDatabaseSubmitTable();
             String contractHash= businessTransactionRecord.getContractHash();
             databaseTable.addStringFilter(
@@ -645,6 +713,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
             DatabaseTableRecord record=records.get(0);
             record=buildDatabaseTableRecord(record, businessTransactionRecord);
             databaseTable.updateRecord(record);
+
         }  catch (CantLoadTableToMemoryException exception) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
@@ -664,6 +733,60 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
                     "Getting value from database",
                     "Unexpected results in database");
         }
+    }
+
+    /**
+     * This method updates the ContractTransactionStatus by a contractHash
+     * @param contractHash
+     * @param contractTransactionStatus
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantUpdateRecordException
+     */
+    public void updateContractTransactionStatus(String contractHash, ContractTransactionStatus contractTransactionStatus)
+        throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
+        try{
+
+            ObjectChecker.checkArgument(contractHash);
+
+            DatabaseTable databaseTable=getDatabaseSubmitTable();
+
+            databaseTable.addStringFilter(
+                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+
+            databaseTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+
+            record.setStringValue(
+                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    contractTransactionStatus.getCode());
+
+            databaseTable.updateRecord(record);
+
+        }  catch (CantLoadTableToMemoryException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Updating databaseTableRecord from a BusinessTransactionRecord",
+                    "Unexpected results in database");
+        }catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Getting value from database",
+                    "Unexpected results in database");
+        }
+
     }
 
     /**
@@ -742,6 +865,41 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
         try{
             return getCustomerOfflinePaymentRecordList(
                     ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION.getCode(),
+                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+                            SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME);
+        }catch(CantGetContractListException exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new CantGetContractListException(CantCreateDatabaseException.DEFAULT_MESSAGE,
+                    exception,
+                    "Getting value from getPendingToSubmitNotificationList","");
+        }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(exception,
+                    "Unexpected error",
+                    "Check the cause");
+        }
+    }
+
+    /**
+     * This method returns the pending to submit notifications transactions
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantGetContractListException
+     */
+    public List<BusinessTransactionRecord> getPendingToSubmitConfirmList() throws
+            UnexpectedResultReturnedFromDatabaseException,
+            CantGetContractListException {
+        try{
+            return getCustomerOfflinePaymentRecordList(
+                    ContractTransactionStatus.PENDING_OFFLINE_MERCHANDISE_CONFIRMATION.getCode(),
                     BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
                             SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
@@ -1031,11 +1189,12 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
             CustomerBrokerContractPurchase customerBrokerContractPurchase){
+
         UUID transactionId=UUID.randomUUID();
+
         record.setUUIDValue(
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_TRANSACTION_ID_COLUMN_NAME,
                 transactionId);
-        //For the business transaction this value represents the contract hash.
         record.setStringValue(
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
                 customerBrokerContractPurchase.getContractId());
@@ -1047,7 +1206,28 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
                 customerBrokerContractPurchase.getPublicKeyBroker());
         record.setStringValue(
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
-                ContractTransactionStatus.PENDING_OFFLINE_DE_STOCK.getCode());
+                ContractTransactionStatus.PENDING_OFFLINE_MERCHANDISE_CONFIRMATION.getCode());
+//        record.setLongValue(
+//                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_AMOUNT_COLUMN_NAME,
+//                0);
+//        record.setDoubleValue(
+//                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_REFERENCE_PRICE_COLUMN_NAME,
+//                0);
+//        record.setStringValue(
+//                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME,
+//                "");
+//        record.setStringValue(
+//                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME,
+//                "");
+//        record.setStringValue(
+//                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_PAYMENT_TYPE_COLUMN_NAME,
+//                "");
+//        record.setStringValue(
+//                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_WALLET_PUBLIC_KEY_COLUMN_NAME,
+//                "");
+//        record.setLongValue(
+//                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_TIMESTAMP_COLUMN_NAME,
+//                0);
 
         return record;
     }

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -20,9 +21,11 @@ import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
+import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces.ObjectChecker;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enums.ContractType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.close_contract.developer.bitdubai.version_1.exceptions.CantInitializeCloseContractBusinessTransactionDatabaseException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
@@ -349,7 +352,63 @@ public class CloseContractBusinessTransactionDao {
         }
     }
 
-    public void updateContractTransactionStatus(String contractHash,
+    /**
+     * This method updates the ContractTransactionStatus by a contractHash
+     * @param contractHash
+     * @param contractTransactionStatus
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     * @throws CantUpdateRecordException
+     */
+    public void updateContractTransactionStatus(String contractHash, ContractTransactionStatus contractTransactionStatus)
+            throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
+        try{
+
+            System.out.println("\nTEST CONTRACT - CLOSE CONTRACT - DAO - updateContractTransactionStatus() \n");
+
+            ObjectChecker.checkArgument(contractHash);
+
+            DatabaseTable databaseTable=getDatabaseContractTable();
+
+            databaseTable.addStringFilter(
+                    CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash,
+                    DatabaseFilterType.EQUAL);
+
+            databaseTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+
+            record.setStringValue(
+                    CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
+                    contractTransactionStatus.getCode());
+
+            databaseTable.updateRecord(record);
+
+        }  catch (CantLoadTableToMemoryException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Updating databaseTableRecord from a BusinessTransactionRecord",
+                    "Unexpected results in database");
+        }catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Getting value from database",
+                    "Unexpected results in database");
+        }
+
+    }
+
+    /*public void updateContractTransactionStatus(String contractHash,
                                                 ContractTransactionStatus contractTransactionStatus)
             throws
             UnexpectedResultReturnedFromDatabaseException,
@@ -357,16 +416,8 @@ public class CloseContractBusinessTransactionDao {
         updateRecordStatus(contractHash,
                 CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
                 contractTransactionStatus.getCode());
-    }
-
-    /**
-     * This method update a database record by contract hash.
-     * @param contractHash
-     * @param statusColumnName
-     * @param newStatus
-     * @throws UnexpectedResultReturnedFromDatabaseException
-     * @throws CantUpdateRecordException
-     */
+    }*/
+    /*
     private void updateRecordStatus(String contractHash,
                                     String statusColumnName,
                                     String newStatus) throws
@@ -389,6 +440,7 @@ public class CloseContractBusinessTransactionDao {
             throw new UnexpectedResultReturnedFromDatabaseException(exception, "Updating parameter "+statusColumnName,"");
         }
     }
+    */
 
     private void checkDatabaseRecords(List<DatabaseTableRecord> records) throws
             UnexpectedResultReturnedFromDatabaseException {
@@ -441,4 +493,84 @@ public class CloseContractBusinessTransactionDao {
         }
     }
 
+    public void updateEventStatus(String eventId, EventStatus eventStatus) throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
+        try{
+            DatabaseTable databaseTable=getDatabaseEventsTable();
+            databaseTable.addStringFilter(
+                    CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_ID_COLUMN_NAME,
+                    eventId,
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record.setStringValue(
+                    CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME,
+                    eventStatus.getCode());
+            databaseTable.updateRecord(record);
+        }  catch (CantLoadTableToMemoryException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
+            throw new UnexpectedResultReturnedFromDatabaseException(
+                    exception,
+                    "Updating parameter "+CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_EVENTS_RECORDED_STATUS_COLUMN_NAME,"");
+        }catch (Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CLOSE_CONTRACT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    e);
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Unexpected Result","Check the cause");
+        }
+    }
+
+    public long getCompletionDateByContractHash(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+            DatabaseTable databaseTable=getDatabaseContractTable();
+            databaseTable.addStringFilter(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash, DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                return 0;
+            }
+            checkDatabaseRecords(records);
+            DatabaseTableRecord databaseTableRecord = records.get(0);
+            return databaseTableRecord.getLongValue(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_COMPLETION_DATE_COLUMN_NAME);
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,
+                    "Getting completion date from database",
+                    "Cannot load the database table");
+        }
+    }
+
+    /**
+     * This method sets the completion date in the database.
+     * @param contractHash
+     * @return
+     * @throws UnexpectedResultReturnedFromDatabaseException
+     */
+    public void setCompletionDateByContractHash(String contractHash, long completionDate)
+            throws UnexpectedResultReturnedFromDatabaseException, CantUpdateRecordException {
+        try{
+            DatabaseTable databaseTable=getDatabaseContractTable();
+            databaseTable.addStringFilter(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_HASH_COLUMN_NAME,
+                    contractHash, DatabaseFilterType.EQUAL);
+
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty())
+                return ;
+
+            checkDatabaseRecords(records);
+            DatabaseTableRecord record=records.get(0);
+            record.setLongValue(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_COMPLETION_DATE_COLUMN_NAME, completionDate);
+            databaseTable.updateRecord(record);
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e, "Setting completion date from database", "Cannot load the database table");
+        }
+    }
 }

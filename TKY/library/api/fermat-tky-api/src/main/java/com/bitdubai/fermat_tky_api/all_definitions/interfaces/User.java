@@ -9,7 +9,7 @@ public interface User {
      * This method returns the tokenly id.
      * @return
      */
-    String getId();
+    String getTokenlyId();
 
     /**
      * This method returns the tokenly username.
@@ -34,5 +34,6 @@ public interface User {
      * @return
      */
     String getApiSecretKey();
+
 
 }

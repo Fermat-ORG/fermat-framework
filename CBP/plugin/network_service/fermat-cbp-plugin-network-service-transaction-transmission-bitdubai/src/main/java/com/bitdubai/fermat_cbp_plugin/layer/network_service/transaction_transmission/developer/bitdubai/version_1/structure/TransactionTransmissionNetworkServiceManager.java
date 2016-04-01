@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractTransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.BusinessTransactionTransactionType;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.enums.TransactionTransmissionStates;
-import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReception;
+import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendBusinessTransactionHashException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendContractNewStatusNotificationException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.PendingRequestNotFoundException;
@@ -143,7 +143,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
                 remoteBusinessTransaction);
 
         try {
-            System.out.print("\nTEST CONTRACT - NS - TRANSACTION TRANSMISSION - MANAGER - sendContractStatusNotification()\n");
+            System.out.print("\nTEST CONTRACT - NS - TRANSACTION TRANSMISSION - MANAGER - sendContractStatusNotification()" +remoteBusinessTransaction+"\n");
             transactionTransmissionContractHashDao.saveBusinessTransmissionRecord(businessTransactionMetadata);
 
             sendMessage(businessTransactionMetadata);
@@ -172,7 +172,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             String transactionId,
             Plugins remoteBusinessTransaction,
             PlatformComponentType senderComponent,
-            PlatformComponentType receiverComponent) throws CantConfirmNotificationReception {
+            PlatformComponentType receiverComponent) throws CantConfirmNotificationReceptionException {
 
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
@@ -202,14 +202,14 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             sendMessage(businessTransactionMetadata);
 
         } catch (CantInsertRecordDataBaseException e) {
-            throw new CantConfirmNotificationReception(
-                    CantConfirmNotificationReception.DEFAULT_MESSAGE,
+            throw new CantConfirmNotificationReceptionException(
+                    CantConfirmNotificationReceptionException.DEFAULT_MESSAGE,
                     e,
                     "Cannot persists the contract hash in table",
                     "database corrupted");
         } catch (Exception e) {
-                throw new CantConfirmNotificationReception(
-                    CantConfirmNotificationReception.DEFAULT_MESSAGE,
+                throw new CantConfirmNotificationReceptionException(
+                    CantConfirmNotificationReceptionException.DEFAULT_MESSAGE,
                     e,
                     "Cannot persists the contract hash in table",
                     "Unhandled Exception.");
@@ -224,7 +224,7 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             String transactionId,
             Plugins remoteBusinessTransaction,
             PlatformComponentType senderComponent,
-            PlatformComponentType receiverComponent) throws CantConfirmNotificationReception {
+            PlatformComponentType receiverComponent) throws CantConfirmNotificationReceptionException {
 
         Date date = new Date();
         Timestamp timestamp = new Timestamp(date.getTime());
@@ -254,14 +254,14 @@ public class TransactionTransmissionNetworkServiceManager implements Transaction
             sendMessage(businessTransactionMetadata);
 
         } catch (CantInsertRecordDataBaseException e) {
-            throw new CantConfirmNotificationReception(
-                    CantConfirmNotificationReception.DEFAULT_MESSAGE,
+            throw new CantConfirmNotificationReceptionException(
+                    CantConfirmNotificationReceptionException.DEFAULT_MESSAGE,
                     e,
                     "Cannot persists the contract hash in table",
                     "database corrupted");
         } catch (Exception e) {
-            throw new CantConfirmNotificationReception(
-                    CantConfirmNotificationReception.DEFAULT_MESSAGE,
+            throw new CantConfirmNotificationReceptionException(
+                    CantConfirmNotificationReceptionException.DEFAULT_MESSAGE,
                     e,
                     "Cannot persists the contract hash in table",
                     "Unhandled Exception.");
