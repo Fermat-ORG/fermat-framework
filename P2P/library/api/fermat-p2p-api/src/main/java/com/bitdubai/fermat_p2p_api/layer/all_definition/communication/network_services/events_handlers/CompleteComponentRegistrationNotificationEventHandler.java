@@ -50,8 +50,17 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
     @Override
     public void handleEvent(FermatEvent platformEvent) throws FermatException {
 
+
         if (this.networkService.getStatus() == ServiceStatus.STARTED) {
             CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent = (CompleteComponentRegistrationNotificationEvent) platformEvent;
+
+
+            if (networkService.getNetworkServiceProfile() == null)
+                System.out.println("********************************************************** \n\n plugin "+this.networkService.getPluginVersionReference()+"\n networkService.getNetworkServiceProfile() == null \n\n\n **********************************************************");
+
+            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered() == null)
+                System.out.println("********************************************************** \n\n plugin "+this.networkService.getPluginVersionReference()+"\n completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered() == null \n\n\n **********************************************************");
+
             if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == networkService.getNetworkServiceProfile().getNetworkServiceType() ||
                     completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT) {
                 /*

@@ -4,12 +4,10 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.Service;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
-import  com.bitdubai.fermat_api.layer.dmp_module.notification.NotificationType;
 import com.bitdubai.fermat_pip_api.layer.module.notification.interfaces.NotificationManagerMiddleware;
 
 /**
@@ -28,11 +26,10 @@ public class CloudClientNotificationHandler implements FermatEventHandler {
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
 
         CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent =(CompleteComponentRegistrationNotificationEvent) fermatEvent;
-        System.out.println("PROBANDO EVENTO MATI, PARA NOTIFICACIONES DE COMMUNICATION_CLOUD_CLIENT");
 
         if(completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT) {
 
-            System.out.println("PROBANDO EVENTO MATI, PARA NOTIFICACIONES DE ROBERT");
+            System.out.println("*********************************************** NOTIFICACIONES DE COMMUNICATION_CLOUD_CLIENT");
 
             if (((Service) this.notificationManager).getStatus() == ServiceStatus.STARTED) {
 
