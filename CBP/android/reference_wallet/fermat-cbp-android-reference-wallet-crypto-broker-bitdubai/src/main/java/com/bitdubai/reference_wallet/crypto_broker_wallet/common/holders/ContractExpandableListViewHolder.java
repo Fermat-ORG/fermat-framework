@@ -55,8 +55,10 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
     public void bind(ContractBasicInformation itemInfo) {
 
         ContractStatus contractStatus = itemInfo.getStatus();
+        boolean nearExpirationDatetime = itemInfo.getNearExpirationDatetime();
         itemView.setBackgroundColor(getStatusBackgroundColor(contractStatus));
-        status.setText(getStatusStringRes(contractStatus));
+        status.setText(getStatusStringRes(contractStatus, nearExpirationDatetime));
+        status.setTextColor(getStatusColor(contractStatus, nearExpirationDatetime));
         contractAction.setText(getContractActionDescription(itemInfo, contractStatus));
         customerName.setText(itemInfo.getCryptoCustomerAlias());
         try {
@@ -96,14 +98,24 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
         return res.getString(R.string.sending);
     }
 
-    private int getStatusStringRes(ContractStatus status) {
+    private int getStatusStringRes(ContractStatus status, boolean nearExpirationDatetime) {
         if (status == ContractStatus.CANCELLED)
             return R.string.contract_cancelled;
 
         if (status == ContractStatus.PENDING_PAYMENT)
             return R.string.waiting_for_the_customer;
 
+        if(nearExpirationDatetime)
+            return R.string.about_to_expire;
+
         return R.string.waiting_for_you;
+
+    }
+
+    private int getStatusColor(ContractStatus status, boolean nearExpirationDatetime) {
+        if (status != ContractStatus.CANCELLED && status != ContractStatus.PENDING_PAYMENT && nearExpirationDatetime)
+            return res.getColor(R.color.cbw_contract_status_about_to_expire);
+        return res.getColor(R.color.cbw_contract_status_normal);
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {

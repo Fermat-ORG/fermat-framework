@@ -32,7 +32,7 @@
     <string name="ccw_bank_account_customer">Customer\'s Bank Account</string>
     <string name="ccw_bank_account_broker">Broker\'s Bank Account</string>
     <string name="ccw_bank_account_title">Bank Account:</string>
-    <string name="ccw_broker_exchange_rate_for_selling_item">%1$s/%2$s: %3$s</string>
+    <string name="ccw_broker_exchange_rate_for_selling_item">1 %1$s @ %2$s %3$s</string>
     <string name="ccw_broker_information">Broker Information</string>
     <string name="ccw_cancel_caps">CANCEL</string>
     <string name="ccw_cancellation_negotiation">Cancellation Negotiation:</string>
@@ -162,6 +162,7 @@
 
     <string name="unit_number" translatable="false">1</string>
 
+    <string name="about_to_expire">About to expire</string>
     <string name="waiting_for_you">Waiting for you</string>
     <string name="waiting_for_broker">Waiting for the Broker</string>
     <string name="wizard_locations_title">Add Your Locations</string>

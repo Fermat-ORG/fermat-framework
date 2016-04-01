@@ -238,6 +238,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
             // The FragmentManager will restore the old Fragments so we don't
             // need to create any new ones here.
         }
+
+        bindServices();
+
         broadcastManager = new BroadcastManager(this);
         AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
         if(!AndroidCoreUtils.getInstance().isStarted())
@@ -825,14 +828,14 @@ public abstract class FermatActivity extends AppCompatActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        try {
-            if(broadcastManager!=null)broadcastManager.resume(this);
-            else broadcastManager = new BroadcastManager(this);
-            AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if(broadcastManager!=null)broadcastManager.resume(this);
+//            else broadcastManager = new BroadcastManager(this);
+//            AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
 
@@ -1372,7 +1375,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }
 
         try{
-            AndroidCoreUtils.getInstance().clear();
+            broadcastManager.stop();
+            AndroidCoreUtils.getInstance().clear(broadcastManager);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -1670,15 +1674,15 @@ public abstract class FermatActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-        if(!mNotificationServiceConnected) {
-            Intent intent = new Intent(this, NotificationService.class);
-            intent.putExtra(NotificationService.LOG_TAG, "Activity 1");
-            startService(intent);
-            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-        }
-        if(!mCommunicationServiceConnected){
-            //doBindService();
-        }
+//        if(!mNotificationServiceConnected) {
+//            Intent intent = new Intent(this, NotificationService.class);
+//            intent.putExtra(NotificationService.LOG_TAG, "Activity 1");
+//            startService(intent);
+//            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+//        }
+//        if(!mCommunicationServiceConnected){
+//            //doBindService();
+//        }
 
 
     }
@@ -1931,6 +1935,22 @@ public abstract class FermatActivity extends AppCompatActivity implements
             unbindService(mServiceCommunicationConnection);
             mCommunicationServiceConnected = false;
             Log.d(TAG, "Unbinding.");
+        }
+    }
+
+
+    /**
+     *
+     */
+    void bindServices(){
+        if(!mNotificationServiceConnected) {
+            Intent intent = new Intent(this, NotificationService.class);
+            intent.putExtra(NotificationService.LOG_TAG, "Activity 1");
+            startService(intent);
+            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        }
+        if(!mCommunicationServiceConnected){
+            //doBindService();
         }
     }
 

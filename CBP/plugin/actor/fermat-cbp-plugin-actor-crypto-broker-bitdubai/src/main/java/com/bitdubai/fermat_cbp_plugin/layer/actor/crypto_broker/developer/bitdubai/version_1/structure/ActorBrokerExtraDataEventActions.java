@@ -83,8 +83,8 @@ public class ActorBrokerExtraDataEventActions {
     }
 
     public List<CryptoBrokerQuote> getExtraData(String brokerPublicKey) throws CantGetExtraDataActorException {
+        List<CryptoBrokerQuote> quotes = new ArrayList<>();
         try {
-            List<CryptoBrokerQuote> quotes = new ArrayList<>();
             BrokerIdentityWalletRelationship relationship = this.cryptoBrokerActorDao.getBrokerIdentityWalletRelationshipByIdentity(brokerPublicKey);
             String wallerPublicKey = relationship.getWallet();
             CryptoBrokerWallet wallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(wallerPublicKey);
@@ -94,18 +94,17 @@ public class ActorBrokerExtraDataEventActions {
                 for(CryptoBrokerWalletAssociatedSetting setting_2 : settings) {
                     Currency currencyPayment = setting_2.getMerchandise();
                     if(merchandise != currencyPayment){
-                        Quote quote = wallet.getQuote(merchandise, 1f, currencyPayment);
-                        quotes.add(
-                            new CryptoBrokerQuote(
-                                (Currency) quote.getMerchandise(),
-                                quote.getFiatCurrency(),
-                                quote.getPriceReference()
-                            )
-                        );
+                        try {
+                            Quote quote = wallet.getQuote(merchandise, 1f, currencyPayment);
+                            quotes.add(new CryptoBrokerQuote(quote));
+                        } catch (CantGetCryptoBrokerQuoteException e) {
+                            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference,
+                                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                        }
                     }
                 }
             }
-            return quotes;
+
         } catch (CantGetCryptoBrokerWalletSettingException e) {
             this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
@@ -115,9 +114,8 @@ public class ActorBrokerExtraDataEventActions {
         } catch (CantGetListBrokerIdentityWalletRelationshipException e) {
             this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
-        } catch (CantGetCryptoBrokerQuoteException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
         }
+
+        return quotes;
     }
 }

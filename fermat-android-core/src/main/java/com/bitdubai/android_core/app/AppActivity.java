@@ -306,19 +306,23 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             lastActivity = fermatStructure.getLastActivity();
             nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
             if (!nextActivity.equals(lastActivity)) {
-                removecallbacks();
-                Intent intent = new Intent(this,LoadingScreenActivity.class);
+                resetThisActivity();
+                Intent intent = getIntent(); //new Intent(this,LoadingScreenActivity.class);
                 intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appBackPublicKey);
                 //recreate();
-                startActivity(intent);
+                //startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                finish();
+                //finish();
                 //overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                //loadUI(getFermatAppManager().getAppsSession(fermatStructure.getPublicKey()));
+                loadUI(getFermatAppManager().getAppsSession(fermatStructure.getPublicKey()));
             }
         } catch (Exception e) {
-            getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+            if(activityName.equals("develop_mode"))
+                onBackPressed();
+            else {
+                getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
+                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+            }
         } catch (Throwable throwable) {
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error. Throwable", Toast.LENGTH_LONG).show();
             throwable.printStackTrace();

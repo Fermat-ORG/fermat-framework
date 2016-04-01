@@ -113,7 +113,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
                     fiatCurrencyType,
                     merchandiseType);
 
-            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - MANAGER - submitMerchandise() AMOUNT: "+amount+")\n");
+            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - MANAGER - submitMerchandise()\n");
 
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             errorManager.reportUnexpectedPluginException(
