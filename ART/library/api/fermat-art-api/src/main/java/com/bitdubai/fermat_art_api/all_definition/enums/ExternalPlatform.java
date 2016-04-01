@@ -16,7 +16,7 @@ public enum ExternalPlatform implements FermatEnum {
     /**
      * sets the default platform that will be used at start up.
      */
-    private static final ExternalPlatform DEFAULT_EXTERNAL_PLATFORM = ExternalPlatform.TOKENLY;
+    public static final ExternalPlatform DEFAULT_EXTERNAL_PLATFORM = ExternalPlatform.TOKENLY;
 
     String code;
     ExternalPlatform(String code){
