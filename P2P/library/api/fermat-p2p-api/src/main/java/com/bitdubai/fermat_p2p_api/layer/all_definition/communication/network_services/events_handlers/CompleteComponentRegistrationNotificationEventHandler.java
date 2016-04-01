@@ -23,7 +23,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CompleteComponentRegistrationNotificationEventHandler implements FermatEventHandler {
+public class CompleteComponentRegistrationNotificationEventHandler implements FermatEventHandler<CompleteComponentRegistrationNotificationEvent> {
 
     /*
     * Represent the networkService
@@ -44,16 +44,13 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
      *
      * @see FermatEventHandler#handleEvent(FermatEvent)
      *
-     * @param platformEvent
+     * @param completeComponentRegistrationNotificationEvent
      * @throws Exception
      */
     @Override
-    public void handleEvent(FermatEvent platformEvent) throws FermatException {
-
+    public void handleEvent(CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent) throws FermatException {
 
         if (this.networkService.getStatus() == ServiceStatus.STARTED) {
-            CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent = (CompleteComponentRegistrationNotificationEvent) platformEvent;
-
 
             if (networkService.getNetworkServiceProfile() == null)
                 System.out.println("********************************************************** \n\n plugin "+this.networkService.getPluginVersionReference()+"\n networkService.getNetworkServiceProfile() == null \n\n\n **********************************************************");

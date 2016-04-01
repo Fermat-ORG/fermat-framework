@@ -22,7 +22,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class VPNConnectionLooseNotificationEventHandler implements FermatEventHandler {
+public class VPNConnectionLooseNotificationEventHandler implements FermatEventHandler<VPNConnectionLooseNotificationEvent> {
 
     /**
      * Represent the networkService
@@ -42,9 +42,8 @@ public class VPNConnectionLooseNotificationEventHandler implements FermatEventHa
      * @see FermatEventHandler#handleEvent(FermatEvent)
      */
     @Override
-    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+    public void handleEvent(VPNConnectionLooseNotificationEvent vpnConnectionLooseNotificationEvent) throws FermatException {
         if (this.networkService.getStatus() == ServiceStatus.STARTED) {
-            VPNConnectionLooseNotificationEvent vpnConnectionLooseNotificationEvent = (VPNConnectionLooseNotificationEvent) fermatEvent;
             if (vpnConnectionLooseNotificationEvent.getNetworkServiceApplicant() == networkService.getNetworkServiceProfile().getNetworkServiceType()) {
                 this.networkService.handleVPNConnectionLooseNotificationEvent(vpnConnectionLooseNotificationEvent);
             }

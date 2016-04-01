@@ -21,7 +21,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class VPNConnectionCloseNotificationEventHandler implements FermatEventHandler {
+public class VPNConnectionCloseNotificationEventHandler implements FermatEventHandler<VPNConnectionCloseNotificationEvent> {
 
     /**
      * Represent the networkService
@@ -41,9 +41,8 @@ public class VPNConnectionCloseNotificationEventHandler implements FermatEventHa
      * @see FermatEventHandler#handleEvent(FermatEvent)
      */
     @Override
-    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+    public void handleEvent(VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent) throws FermatException {
         if (this.networkService.getStatus() == ServiceStatus.STARTED) {
-            VPNConnectionCloseNotificationEvent vpnConnectionCloseNotificationEvent = (VPNConnectionCloseNotificationEvent) fermatEvent;
             if (vpnConnectionCloseNotificationEvent.getNetworkServiceApplicant() == networkService.getNetworkServiceProfile().getNetworkServiceType()) {
                 this.networkService.handleVpnConnectionCloseNotificationEvent(vpnConnectionCloseNotificationEvent);
             }

@@ -21,7 +21,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ClientSuccessfulReconnectNotificationEventHandler implements FermatEventHandler {
+public class ClientSuccessfulReconnectNotificationEventHandler implements FermatEventHandler<ClientSuccessReconnectNotificationEvent> {
 
     /**
      * Represent the networkService
@@ -41,10 +41,10 @@ public class ClientSuccessfulReconnectNotificationEventHandler implements Fermat
      * @see FermatEventHandler#handleEvent(FermatEvent)
      */
     @Override
-    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+    public void handleEvent(ClientSuccessReconnectNotificationEvent fermatEvent) throws FermatException {
 
         if (this.networkService.getStatus() == ServiceStatus.STARTED) {
-            this.networkService.handleClientSuccessfulReconnectNotificationEvent((ClientSuccessReconnectNotificationEvent) fermatEvent);
+            this.networkService.handleClientSuccessfulReconnectNotificationEvent(fermatEvent);
         }
 
     }

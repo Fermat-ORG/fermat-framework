@@ -22,7 +22,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class FailureComponentConnectionRequestNotificationEventHandler implements FermatEventHandler {
+public class FailureComponentConnectionRequestNotificationEventHandler implements FermatEventHandler<FailureComponentConnectionRequestNotificationEvent> {
 
     /**
      * Represent the networkService
@@ -43,14 +43,13 @@ public class FailureComponentConnectionRequestNotificationEventHandler implement
      *
      * @see FermatEventHandler#handleEvent(FermatEvent)
      *
-     * @param platformEvent
+     * @param failureComponentConnectionRequestNotificationEvent
      * @throws Exception
      */
     @Override
-    public void handleEvent(FermatEvent platformEvent) throws FermatException {
+    public void handleEvent(FailureComponentConnectionRequestNotificationEvent failureComponentConnectionRequestNotificationEvent) throws FermatException {
 
         if (this.networkService.getStatus() == ServiceStatus.STARTED) {
-            FailureComponentConnectionRequestNotificationEvent failureComponentConnectionRequestNotificationEvent = (FailureComponentConnectionRequestNotificationEvent) platformEvent;
             if (failureComponentConnectionRequestNotificationEvent.getNetworkServiceApplicant().getPlatformComponentType()  == networkService.getNetworkServiceProfile().getPlatformComponentType() &&
                     failureComponentConnectionRequestNotificationEvent.getNetworkServiceApplicant().getNetworkServiceType() == networkService.getNetworkServiceProfile().getNetworkServiceType()){
 

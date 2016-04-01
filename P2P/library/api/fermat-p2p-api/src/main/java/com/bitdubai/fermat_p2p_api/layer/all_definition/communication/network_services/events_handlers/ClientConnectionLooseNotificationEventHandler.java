@@ -21,7 +21,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ClientConnectionLooseNotificationEventHandler implements FermatEventHandler {
+public class ClientConnectionLooseNotificationEventHandler implements FermatEventHandler<ClientConnectionLooseNotificationEvent> {
 
     /**
      * Represent the networkService
@@ -41,9 +41,9 @@ public class ClientConnectionLooseNotificationEventHandler implements FermatEven
      * @see FermatEventHandler#handleEvent(FermatEvent)
      */
     @Override
-    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if (this.networkService.getStatus() == ServiceStatus.STARTED) {
-            this.networkService.handleClientConnectionLooseNotificationEvent((ClientConnectionLooseNotificationEvent) fermatEvent);
-        }
+    public void handleEvent(ClientConnectionLooseNotificationEvent fermatEvent) throws FermatException {
+
+        if (this.networkService.getStatus() == ServiceStatus.STARTED)
+            this.networkService.handleClientConnectionLooseNotificationEvent(fermatEvent);
     }
 }
