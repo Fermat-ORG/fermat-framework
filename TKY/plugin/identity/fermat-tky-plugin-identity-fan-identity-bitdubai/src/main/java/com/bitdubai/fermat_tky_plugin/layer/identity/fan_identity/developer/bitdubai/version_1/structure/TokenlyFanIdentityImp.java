@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.TokenlyFanIdentityPluginRoot;
 
@@ -20,13 +22,16 @@ import java.util.UUID;
  */
 public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWithPluginIdentity, Fan {
 
-    private String alias;
     private UUID id;
+    private String tokenlyID;
     private String publicKey;
     private byte[] imageProfile;
     private String externalUserName;
     private String externalAccessToken;
+    private String apiSecretKey;
+    private String externalPassword;
     private ExternalPlatform externalPlatform;
+    private String email;
     /**
      * DealsWithPluginFileSystem Interface member variables.
      */
@@ -39,82 +44,75 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
 
     /**
      *
-     * @param alias
+     * @param user
      * @param id
      * @param publicKey
-     * @param externalUserName
-     * @param externalAccessToken
+     * @param imageProfile
      * @param externalPlatform
-     * @param pluginFileSystem
-     * @param pluginId
      */
-    public TokenlyFanIdentityImp(String alias, UUID id, String publicKey, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, PluginFileSystem pluginFileSystem, UUID pluginId) {
-        this.alias = alias;
+    public TokenlyFanIdentityImp(User user, UUID id, String publicKey, byte[] imageProfile, ExternalPlatform externalPlatform,PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.id = id;
+        this.tokenlyID = user.getTokenlyId();
         this.publicKey = publicKey;
-        this.externalUserName = externalUserName;
-        this.externalAccessToken = externalAccessToken;
+        this.imageProfile = imageProfile;
+        this.externalUserName = user.getUsername();
+        this.externalAccessToken = user.getApiToken();
+        this.apiSecretKey = user.getApiSecretKey();
+        this.email = user.getEmail();
         this.externalPlatform = externalPlatform;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
     }
 
     /**
-     *
-     * @param alias
+     * Constructor
      * @param id
+     * @param tokenlyID
      * @param publicKey
      * @param imageProfile
      * @param externalUserName
      * @param externalAccessToken
+     * @param apiSecretKey
+     * @param externalPassword
      * @param externalPlatform
+     * @param email
      */
-    public TokenlyFanIdentityImp(String alias, UUID id, String publicKey, byte[] imageProfile, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform) {
-        this.alias = alias;
+    public TokenlyFanIdentityImp(UUID id, String tokenlyID, String publicKey, byte[] imageProfile, String externalUserName, String externalAccessToken, String apiSecretKey, String externalPassword, ExternalPlatform externalPlatform, String email) {
         this.id = id;
+        this.tokenlyID = tokenlyID;
         this.publicKey = publicKey;
         this.imageProfile = imageProfile;
         this.externalUserName = externalUserName;
         this.externalAccessToken = externalAccessToken;
+        this.apiSecretKey = apiSecretKey;
+        this.externalPassword = externalPassword;
         this.externalPlatform = externalPlatform;
+        this.email = email;
     }
-
     /**
-     *
-     * @param alias
+     * Constructor
      * @param id
+     * @param tokenlyID
+     * @param publicKey
      * @param imageProfile
      * @param externalUserName
      * @param externalAccessToken
+     * @param apiSecretKey
      * @param externalPlatform
+     * @param email
      * @param pluginFileSystem
      * @param pluginId
      */
-    public TokenlyFanIdentityImp(String alias, UUID id, String publicKey, byte[] imageProfile, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, PluginFileSystem pluginFileSystem, UUID pluginId) {
-        this.alias = alias;
+    public TokenlyFanIdentityImp(UUID id, String tokenlyID, String publicKey, byte[] imageProfile, String externalUserName, String externalAccessToken, String apiSecretKey, ExternalPlatform externalPlatform, String email, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.id = id;
+        this.tokenlyID = tokenlyID;
         this.publicKey = publicKey;
         this.imageProfile = imageProfile;
         this.externalUserName = externalUserName;
         this.externalAccessToken = externalAccessToken;
+        this.apiSecretKey = apiSecretKey;
         this.externalPlatform = externalPlatform;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
-    }
-
-    /**
-     *
-     * @param alias
-     * @param id
-     * @param imageProfile
-     * @param pluginFileSystem
-     * @param pluginId
-     */
-    public TokenlyFanIdentityImp(String alias, UUID id, String publicKey, byte[] imageProfile, PluginFileSystem pluginFileSystem, UUID pluginId) {
-        this.alias = alias;
-        this.id = id;
-        this.publicKey = publicKey;
-        this.imageProfile = imageProfile;
+        this.email = email;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
     }
@@ -126,19 +124,6 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
 
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
-    }
-
-    /**
-     * DealWithPluginFileSystem Interface implementation.
-     */
-
-    @Override
-    public String getAlias() {
-        return alias;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
     }
 
     @Override
@@ -176,12 +161,12 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
     }
 
     @Override
-    public String getExternalUsername() {
+    public String getUsername() {
         return externalUserName;
     }
 
     @Override
-    public String getExternalAccesToken() {
+    public String getApiToken() {
         return externalAccessToken;
     }
 
@@ -190,18 +175,39 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
     }
 
 
-    public void setExternalUserName(String externalUserName) {
+    public void setUserName(String externalUserName) {
         this.externalUserName = externalUserName;
     }
 
 
-    public void setExternalAccessToken(String externalAccessToken) {
+    public void setApiToken(String externalAccessToken) {
         this.externalAccessToken = externalAccessToken;
     }
 
     @Override
     public ExternalPlatform getExternalPlatform() {
         return externalPlatform;
+    }
+
+    @Override
+    public MusicUser getMusicUser() {
+        /**
+         * TODO: harcoded User. I'll use this for testing, please, Gabriel, remove this when this
+         * method is full implemented.
+         */
+        //TODO: Hardoced User
+        MusicUser hardocedUser = new TokenlyUserImp(
+                "18873727-da0f-4b50-a213-cc40c6b4562d",
+                "pereznator",
+                "darkpriestrelative@gmail.com",
+                "Tvn1yFjTsisMHnlI",
+                "K0fW5UfvrrEVQJQnK27FbLgtjtWHjsTsq3kQFB6Y");
+        return hardocedUser;
+    }
+
+    @Override
+    public String getUserPassword() {
+        return externalPassword;
     }
 
     public void setExternalPlatform(ExternalPlatform externalPlatform) {
@@ -216,5 +222,40 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
     @Override
     public void setPluginId(UUID pluginId) {
         this.pluginId = pluginId;
+    }
+
+    @Override
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getExternalPassword() {
+        return externalPassword;
+    }
+
+    public void setExternalPassword(String externalPassword) {
+        this.externalPassword = externalPassword;
+    }
+
+    @Override
+    public String getApiSecretKey() {
+        return apiSecretKey;
+    }
+
+    public void setApiSecretKey(String apiSecretKey) {
+        this.apiSecretKey = apiSecretKey;
+    }
+
+    @Override
+    public String getTokenlyId() {
+        return tokenlyID;
+    }
+
+    public void setTokenlyID(String tokenlyID) {
+        this.tokenlyID = tokenlyID;
     }
 }

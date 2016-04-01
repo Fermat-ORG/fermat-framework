@@ -8,7 +8,11 @@ import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongExce
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetUserException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Album;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.DownloadSong;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
+
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/03/16.
@@ -50,6 +54,24 @@ public interface TokenlyApiManager extends FermatManager {
      * @param userKey
      * @return
      */
-    User validateTokenlyUser(String username, String userKey) throws CantGetUserException;
+    User validateTokenlyUser(String username, String userKey) throws CantGetUserException, ExecutionException, InterruptedException;
+
+    /**
+     * This method returns a song array. This songs are provided by the Tokenly protected API, only
+     * authenticated users can get the songs.
+     * @param musicUser
+     * @return
+     */
+    Song[] getSongsByAuthenticatedUser(MusicUser musicUser) throws CantGetAlbumException;
+
+    /**
+     * This method returns a song. This song is provided by the Tokenly protected API, only
+     * authenticated users can get the song.
+     * @param musicUser
+     * @param tokenlySongId
+     * @return
+     * @throws CantGetSongException
+     */
+    Song getSongByAuthenticatedUser(MusicUser musicUser, String tokenlySongId) throws CantGetSongException;
 
 }

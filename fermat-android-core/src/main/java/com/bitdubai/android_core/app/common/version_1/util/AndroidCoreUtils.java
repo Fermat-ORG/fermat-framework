@@ -4,6 +4,9 @@ import com.bitdubai.android_core.app.common.version_1.util.interfaces.Broadcaste
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -12,8 +15,9 @@ import java.util.concurrent.Executors;
  */
 public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_android.broadcaster.AndroidCoreUtils {
 
-    private BroadcasterInterface context;
-    private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private Map<UUID,BroadcasterInterface> context;
+    private ExecutorService executor = Executors.newFixedThreadPool(2);
+    private boolean isStarted = false;
 
 
     private static final AndroidCoreUtils instance = new AndroidCoreUtils() ;
@@ -22,13 +26,25 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
         return instance;
     }
 
+    public AndroidCoreUtils() {
+        this.context = new HashMap<>();
+    }
+
     @Override
     public void publish(final BroadcasterType broadcasterType, final String code) {
         try {
             executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                    if(context!=null) context.publish(broadcasterType, code);
+                    try {
+                        if(isStarted) {
+                            for (BroadcasterInterface broadcasterInterface : context.values()) {
+                                broadcasterInterface.publish(broadcasterType, code);
+                            }
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             });
         }catch (Exception e){
@@ -42,12 +58,21 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
             executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                    if(context!=null) context.publish(broadcasterType,appCode,code);
+                    try {
+                        if(isStarted) {
+                            for (BroadcasterInterface broadcasterInterface : context.values()) {
+                                broadcasterInterface.publish(broadcasterType, appCode, code);
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }catch (Exception e){
             e.printStackTrace();
         }
+
     }
 
     @Override
@@ -56,7 +81,15 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
             executor.submit(new Runnable() {
                 @Override
                 public void run() {
-                    if(context!=null) context.publish(broadcasterType,appCode,bundle);
+                    try {
+                        if(isStarted) {
+                            for (BroadcasterInterface broadcasterInterface : context.values()) {
+                                broadcasterInterface.publish(broadcasterType, appCode, bundle);
+                            }
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
             });
         }catch (Exception e){
@@ -67,25 +100,41 @@ public class AndroidCoreUtils implements com.bitdubai.fermat_api.layer.osa_andro
     @Override
     public int publish(final BroadcasterType broadcasterType, final FermatBundle bundle) {
         int id = 0;
-        try {
-            id = (context!=null)? context.publish(broadcasterType,bundle):0;
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+//        try {
+//            if(isStarted){
+//                for (BroadcasterInterface broadcasterInterface : context.values()) {
+//                    id = broadcasterInterface.publish(broadcasterType,bundle);
+//                }
+//            }
+//        }catch (Exception e){
+////            e.printStackTrace();
+//        }
         return id;
     }
 
-    public BroadcasterInterface getContext() {
+    public Map<UUID,BroadcasterInterface> getListeners() {
         return context;
     }
 
+    /**
+     *
+     * @param context
+     * @return the id
+     */
     public void setContextAndResume(BroadcasterInterface context) {
-        this.context = context;
+        this.context.put(context.getId(), context) ;
     }
 
-    public void clear(){
-        this.context = null;
+    public void clear(BroadcasterInterface context){
+        this.context.remove(context.getId());
     }
 
 
+    public void setStarted(boolean started) {
+        this.isStarted = started;
+    }
+
+    public boolean isStarted() {
+        return isStarted;
+    }
 }

@@ -13,7 +13,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 public class ElCronistaSubsystem extends AbstractPluginSubsystem {
 
     public ElCronistaSubsystem() {
-        super(new PluginReference(Plugins.BITDUBAI_CER_PROVIDER_ELCRONISTA));
+        super(new PluginReference(Plugins.ELCRONISTA));
     }
 
     @Override

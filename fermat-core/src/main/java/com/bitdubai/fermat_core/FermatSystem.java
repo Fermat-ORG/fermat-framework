@@ -38,7 +38,6 @@ import com.bitdubai.fermat_dap_core.DAPPlatform;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
-import com.bitdubai.fermat_tky_core.TKYPlatform;
 import com.bitdubai.fermat_wpd_core.WPDPlatform;
 
 import java.util.concurrent.ConcurrentHashMap;
@@ -51,35 +50,38 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class FermatSystem {
 
-    private static FermatSystem INSTANCE = null;
+    private static volatile FermatSystem INSTANCE = null;
 
     private FermatSystemContext fermatSystemContext;
     private FermatAddonManager  fermatAddonManager ;
     private FermatPluginManager fermatPluginManager;
     public boolean isStarted;
 
-    private synchronized static void createInstance() {
-
+    private static void createInstance() {
         if (INSTANCE == null)
             INSTANCE = new FermatSystem();
     }
 
     private synchronized static void createInstance(final Object           osContext  ,
                                                     final AbstractPlatform osaPlatform) {
-
         if (INSTANCE == null)
             INSTANCE = new FermatSystem(osContext, osaPlatform);
     }
 
     public static FermatSystem getInstance() {
-        if (INSTANCE == null) createInstance();
+        synchronized (FermatSystem.class) {
+            if (INSTANCE == null) createInstance();
+        }
+
         return INSTANCE;
     }
 
     public static FermatSystem getInstance(final Object           osContext  ,
                                            final AbstractPlatform osaPlatform) {
 
-        if (INSTANCE == null) createInstance(osContext, osaPlatform);
+        synchronized (FermatSystem.class) {
+            if (INSTANCE == null) createInstance(osContext, osaPlatform);
+        }
         return INSTANCE;
     }
 
@@ -141,7 +143,7 @@ public final class FermatSystem {
             fermatSystemContext.registerPlatform(new DAPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
-            fermatSystemContext.registerPlatform(new TKYPlatform());
+            //fermatSystemContext.registerPlatform(new TKYPlatform());
             fermatSystemContext.registerPlatform(new WPDPlatform());
 
 

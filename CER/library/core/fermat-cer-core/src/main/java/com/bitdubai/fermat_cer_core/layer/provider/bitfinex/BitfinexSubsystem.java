@@ -13,7 +13,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 public class BitfinexSubsystem extends AbstractPluginSubsystem {
 
     public BitfinexSubsystem() {
-        super(new PluginReference(Plugins.BITDUBAI_CER_PROVIDER_BITFINEX));
+        super(new PluginReference(Plugins.BITFINEX));
     }
 
     @Override

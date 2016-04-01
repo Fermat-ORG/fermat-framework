@@ -86,7 +86,7 @@ public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
 
     @Override
     public void addColumn(String columnName, DatabaseDataType dataType, int dataTypeSize, boolean primaryKey) {
-        DatabaseTableColumn tableColumn = new DesktopDatabaseTableColumn();
+        DesktopDatabaseTableColumn tableColumn = new DesktopDatabaseTableColumn();
         tableColumn.setName(columnName);
         tableColumn.setDataTypeSize(dataTypeSize);
         tableColumn.setType(dataType);
