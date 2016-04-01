@@ -345,6 +345,7 @@ public enum Plugins implements FermatPluginsEnum {
 
         switch (code) {
 
+            case "AND"  :   return ANDROID_CORE          ;
             case "APR"  :   return SUB_APP_RUNTIME          ;
             case "ASAP" :   return ASSET_APPROPRIATION      ;
             case "ASD"  :   return ASSET_DISTRIBUTION       ;
