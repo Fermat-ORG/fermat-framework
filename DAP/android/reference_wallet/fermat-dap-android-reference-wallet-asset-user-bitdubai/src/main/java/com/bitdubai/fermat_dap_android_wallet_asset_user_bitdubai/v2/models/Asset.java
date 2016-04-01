@@ -216,4 +216,8 @@ public class Asset {
     public void setAssetUserNegotiation(AssetUserNegotiation assetUserNegotiation) {
         this.assetUserNegotiation = assetUserNegotiation;
     }
+
+    public AssetUserWalletTransaction getAssetUserWalletTransaction() {
+        return assetUserWalletTransaction;
+    }
 }
