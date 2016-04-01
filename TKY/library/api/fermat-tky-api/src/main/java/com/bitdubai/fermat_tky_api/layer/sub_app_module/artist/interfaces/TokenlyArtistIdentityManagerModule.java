@@ -32,10 +32,9 @@ public interface TokenlyArtistIdentityManagerModule extends ModuleManager<Tokenl
 
     /**
      *
-     * @param alias
+     * @param userName
      * @param profileImage
-     * @param externalUserName
-     * @param externalAccessToken
+     * @param password
      * @param externalPlatform
      * @param exposureLevel
      * @param artistAcceptConnectionsType
@@ -44,28 +43,25 @@ public interface TokenlyArtistIdentityManagerModule extends ModuleManager<Tokenl
      * @throws ArtistIdentityAlreadyExistsException
      */
     Artist createArtistIdentity(
-            String alias, byte[] profileImage,
-            String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform,
+            String userName, byte[] profileImage, String password,ExternalPlatform externalPlatform,
             ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws
             CantCreateArtistIdentityException,
             ArtistIdentityAlreadyExistsException;
 
     /**
      *
-     * @param alias
+     * @param username
+     * @param password
      * @param id
      * @param publicKey
      * @param profileImage
-     * @param externalUserName
-     * @param externalAccessToken
      * @param externalPlatform
      * @param exposureLevel
      * @param artistAcceptConnectionsType
      * @throws CantUpdateArtistIdentityException
      */
     void updateArtistIdentity(
-            String alias, UUID id,String publicKey, byte[] profileImage,
-            String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform,
+            String username,String password, UUID id,String publicKey, byte[] profileImage, ExternalPlatform externalPlatform,
             ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws
             CantUpdateArtistIdentityException;
 

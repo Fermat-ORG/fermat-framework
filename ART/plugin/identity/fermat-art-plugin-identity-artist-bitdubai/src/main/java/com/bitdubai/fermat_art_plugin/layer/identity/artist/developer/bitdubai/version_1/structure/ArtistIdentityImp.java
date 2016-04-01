@@ -132,11 +132,6 @@ public class ArtistIdentityImp implements DealsWithPluginFileSystem, DealsWithPl
      * DealWithPluginFileSystem Interface implementation.
      */
 
-    @Override
-    public String getAlias() {
-        return alias;
-    }
-
     public void setAlias(String alias) {
         this.alias = alias;
     }

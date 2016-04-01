@@ -39,7 +39,7 @@ public class UserRecord implements User{
      * @return
      */
     @Override
-    public String getId() {
+    public String getTokenlyId() {
         return this.id;
     }
 
