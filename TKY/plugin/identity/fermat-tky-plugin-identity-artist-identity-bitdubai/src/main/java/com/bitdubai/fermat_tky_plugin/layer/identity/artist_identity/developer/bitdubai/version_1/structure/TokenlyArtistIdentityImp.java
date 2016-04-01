@@ -12,6 +12,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.TokenlyArtistIdentityPluginRoot;
 
@@ -22,12 +24,15 @@ import java.util.UUID;
  */
 public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, DealsWithPluginIdentity, Artist {
 
-    private String alias;
     private UUID id;
+    private String tokenlyID;
     private String publicKey;
     private byte[] imageProfile;
     private String externalUserName;
     private String externalAccessToken;
+    private String apiSecretKey;
+    private String externalPassword;
+    private String email;
     private ExternalPlatform externalPlatform;
     private ExposureLevel exposureLevel;
     private ArtistAcceptConnectionsType artistAcceptConnectionsType;
@@ -43,23 +48,21 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
 
     /**
      *
-     * @param alias
+     * @param user
      * @param id
      * @param publicKey
-     * @param externalUserName
-     * @param externalAccessToken
+     * @param imageProfile
      * @param externalPlatform
-     * @param exposureLevel
-     * @param artistAcceptConnectionsType
-     * @param pluginFileSystem
-     * @param pluginId
      */
-    public TokenlyArtistIdentityImp(String alias, UUID id,String publicKey, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType, PluginFileSystem pluginFileSystem, UUID pluginId) {
-        this.alias = alias;
+    public TokenlyArtistIdentityImp(User user, UUID id, String publicKey, byte[] imageProfile, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType,PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.id = id;
+        this.tokenlyID = user.getTokenlyId();
         this.publicKey = publicKey;
-        this.externalUserName = externalUserName;
-        this.externalAccessToken = externalAccessToken;
+        this.imageProfile = imageProfile;
+        this.externalUserName = user.getUsername();
+        this.externalAccessToken = user.getApiToken();
+        this.apiSecretKey = user.getApiSecretKey();
+        this.email = user.getEmail();
         this.externalPlatform = externalPlatform;
         this.exposureLevel = exposureLevel;
         this.artistAcceptConnectionsType = artistAcceptConnectionsType;
@@ -67,70 +70,60 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
         this.pluginId = pluginId;
     }
 
+
     /**
-     *
-     * @param alias
+     * Constructor
      * @param id
+     * @param tokenlyID
      * @param publicKey
      * @param imageProfile
      * @param externalUserName
      * @param externalAccessToken
+     * @param apiSecretKey
+     * @param externalPassword
      * @param externalPlatform
-     * @param exposureLevel
-     * @param artistAcceptConnectionsType
+     * @param email
      */
-    public TokenlyArtistIdentityImp(String alias, UUID id, String publicKey, byte[] imageProfile, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) {
-        this.alias = alias;
+    public TokenlyArtistIdentityImp(UUID id, String tokenlyID, String publicKey, byte[] imageProfile, String externalUserName, String externalAccessToken, String apiSecretKey, String externalPassword, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType,String email) {
         this.id = id;
+        this.tokenlyID = tokenlyID;
         this.publicKey = publicKey;
         this.imageProfile = imageProfile;
         this.externalUserName = externalUserName;
         this.externalAccessToken = externalAccessToken;
+        this.apiSecretKey = apiSecretKey;
+        this.externalPassword = externalPassword;
         this.externalPlatform = externalPlatform;
         this.exposureLevel = exposureLevel;
         this.artistAcceptConnectionsType = artistAcceptConnectionsType;
+        this.email = email;
     }
-
     /**
-     *
-     * @param alias
+     * Constructor
      * @param id
+     * @param tokenlyID
+     * @param publicKey
      * @param imageProfile
      * @param externalUserName
      * @param externalAccessToken
+     * @param apiSecretKey
      * @param externalPlatform
-     * @param exposureLevel
-     * @param artistAcceptConnectionsType
+     * @param email
      * @param pluginFileSystem
      * @param pluginId
      */
-    public TokenlyArtistIdentityImp(String alias, UUID id,String publicKey, byte[] imageProfile, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType, PluginFileSystem pluginFileSystem, UUID pluginId) {
-        this.alias = alias;
+    public TokenlyArtistIdentityImp(UUID id, String tokenlyID, String publicKey, byte[] imageProfile, String externalUserName, String externalAccessToken, String apiSecretKey, ExternalPlatform externalPlatform, String email,ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType, PluginFileSystem pluginFileSystem, UUID pluginId) {
         this.id = id;
+        this.tokenlyID = tokenlyID;
         this.publicKey = publicKey;
         this.imageProfile = imageProfile;
         this.externalUserName = externalUserName;
         this.externalAccessToken = externalAccessToken;
+        this.apiSecretKey = apiSecretKey;
         this.externalPlatform = externalPlatform;
+        this.email = email;
         this.exposureLevel = exposureLevel;
         this.artistAcceptConnectionsType = artistAcceptConnectionsType;
-        this.pluginFileSystem = pluginFileSystem;
-        this.pluginId = pluginId;
-    }
-
-    /**
-     *
-     * @param alias
-     * @param id
-     * @param imageProfile
-     * @param pluginFileSystem
-     * @param pluginId
-     */
-    public TokenlyArtistIdentityImp(String alias, UUID id,String publicKey, byte[] imageProfile, PluginFileSystem pluginFileSystem, UUID pluginId) {
-        this.alias = alias;
-        this.id = id;
-        this.publicKey = publicKey;
-        this.imageProfile = imageProfile;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
     }
@@ -142,19 +135,6 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
 
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
-    }
-
-    /**
-     * DealWithPluginFileSystem Interface implementation.
-     */
-
-    @Override
-    public String getAlias() {
-        return alias;
-    }
-
-    public void setAlias(String alias) {
-        this.alias = alias;
     }
 
     @Override
@@ -191,16 +171,6 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
         this.imageProfile = imageBytes;
     }
 
-    @Override
-    public String getExternalUsername() {
-        return externalUserName;
-    }
-
-    @Override
-    public String getExternalAccesToken() {
-        return externalAccessToken;
-    }
-
     public void setId(UUID id) {
         this.id = id;
     }
@@ -218,6 +188,17 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
     @Override
     public ExternalPlatform getExternalPlatform() {
         return externalPlatform;
+    }
+
+    @Override
+    public MusicUser getMusicUser() {
+        //TODO: Gabriel implement this. I put this only for compilation
+        return null;
+    }
+
+    @Override
+    public String getUserPassword() {
+        return null;
     }
 
     public void setExternalPlatform(ExternalPlatform externalPlatform) {
@@ -250,5 +231,30 @@ public class TokenlyArtistIdentityImp implements DealsWithPluginFileSystem, Deal
     @Override
     public void setPluginId(UUID pluginId) {
         this.pluginId = pluginId;
+    }
+
+    @Override
+    public String getTokenlyId() {
+        return this.tokenlyID;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.externalUserName;
+    }
+
+    @Override
+    public String getEmail() {
+        return this.email;
+    }
+
+    @Override
+    public String getApiToken() {
+        return this.externalAccessToken;
+    }
+
+    @Override
+    public String getApiSecretKey() {
+        return this.apiSecretKey;
     }
 }

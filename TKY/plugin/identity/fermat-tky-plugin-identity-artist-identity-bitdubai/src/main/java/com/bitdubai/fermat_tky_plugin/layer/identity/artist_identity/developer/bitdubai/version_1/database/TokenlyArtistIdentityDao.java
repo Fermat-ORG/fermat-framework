@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -27,6 +28,7 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
@@ -139,68 +141,18 @@ public class TokenlyArtistIdentityDao implements DealsWithPluginDatabaseSystem {
      * second i insert the record in database
      * third i save the profile image file
      *
-     * @param alias
+     * @param user
      * @param id
      * @param privateKey
      * @param deviceUser
      * @param profileImage
      * @throws CantCreateNewDeveloperException
      */
-    public void createNewUser(String alias, UUID id,String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage) throws CantCreateNewDeveloperException {
-
-        try {
-            if (aliasExists(alias)) {
-                throw new CantCreateNewDeveloperException("Cant create new Redeem Point Identity, alias exists.");
-            }
-
-            persistNewUserPrivateKeysFile(publicKey, privateKey);
-
-            DatabaseTable table = this.database.getTable(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_TABLE_NAME);
-            DatabaseTableRecord record = table.getEmptyRecord();
-
-            record.setUUIDValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME, id);
-            record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey);
-            record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ALIAS_COLUMN_NAME, alias);
-            record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
-
-            table.insertRecord(record);
-
-            if (profileImage != null)
-                persistNewUserProfileImage(publicKey, profileImage);
-
-        } catch (CantInsertRecordException e) {
-            // Cant insert record.
-            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Redeem Point Identity", "Cant create new Redeem Point, insert database problems.");
-
-        } catch (CantPersistPrivateKeyException e) {
-            // Cant insert record.
-            throw new CantCreateNewDeveloperException(e.getMessage(), e, "ARedeem Point Identity", "Cant create new Redeem Point, persist private key error.");
-
-        } catch (Exception e) {
-            // Failure unknown.
-
-            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Identity", "Cant create new Redeem Point, unknown failure.");
-        }
-    }
-
-    /**
-     * first i persist private key on a file
-     * second i insert the record in database
-     * third i save the profile image file
-     *
-     * @param alias
-     * @param id
-     * @param privateKey
-     * @param deviceUser
-     * @param profileImage
-     * @throws CantCreateNewDeveloperException
-     */
-    public void createNewUser(String alias, UUID id,String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage,
-                              String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform,
+    public void createNewUser(User user, UUID id,String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage,String password, ExternalPlatform externalPlatform,
                               ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateNewDeveloperException {
 
         try {
-            if (aliasExists(alias)) {
+            if (aliasExists(user.getUsername())) {
                 throw new CantCreateNewDeveloperException("Cant create new Redeem Point Identity, alias exists.");
             }
 
@@ -210,11 +162,14 @@ public class TokenlyArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             DatabaseTableRecord record = table.getEmptyRecord();
 
             record.setUUIDValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME, id);
+            record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_ID_COLUMN_NAME, user.getTokenlyId());
             record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey);
             record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
-            record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ALIAS_COLUMN_NAME, alias);
-            record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_USER_NAME_COLUMN_NAME, externalUserName);
-            record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_ACCESS_TOKEN_COLUMN_NAME, externalAccessToken);
+            record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_SECRET_KEY_COLUMN_NAME, user.getApiSecretKey());
+            record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_PASSWORD_COLUMN_NAME,  CryptoHasher.performSha256(password));
+            record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_USER_NAME_COLUMN_NAME, user.getUsername());
+            record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ACCESS_TOKEN_COLUMN_NAME, user.getApiToken());
+            record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EMAIL_COLUMN_NAME, user.getEmail());
             record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME, externalPlatform.getCode());
             record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME, exposureLevel.getCode());
             record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ACEEPTS_CONNECTIONS_TYPE_COLUMN_NAME, artistAcceptConnectionsType.getCode());
@@ -240,8 +195,7 @@ public class TokenlyArtistIdentityDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
-    public void updateIdentityArtistUser(UUID id,String publickey, String alias, byte[] profileImage,
-                                         String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform,
+    public void updateIdentityArtistUser(User user, String password, UUID id,String publickey, byte[] profileImage, ExternalPlatform externalPlatform,
                                          ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
         try {
             /**
@@ -265,10 +219,13 @@ public class TokenlyArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             for (DatabaseTableRecord record : table.getRecords()) {
                 //set new values
                 record.setUUIDValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME, id);
+                record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_ID_COLUMN_NAME, user.getTokenlyId());
                 record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publickey);
-                record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ALIAS_COLUMN_NAME, alias);
-                record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_USER_NAME_COLUMN_NAME, externalUserName);
-                record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_ACCESS_TOKEN_COLUMN_NAME, externalAccessToken);
+                record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_SECRET_KEY_COLUMN_NAME, user.getApiSecretKey());
+                record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_PASSWORD_COLUMN_NAME,  CryptoHasher.performSha256(password));
+                record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_USER_NAME_COLUMN_NAME, user.getUsername());
+                record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ACCESS_TOKEN_COLUMN_NAME, user.getApiToken());
+                record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EMAIL_COLUMN_NAME, user.getEmail());
                 record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME, externalPlatform.getCode());
                 record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME, exposureLevel.getCode());
                 record.setStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ACEEPTS_CONNECTIONS_TYPE_COLUMN_NAME, artistAcceptConnectionsType.getCode());
@@ -320,22 +277,25 @@ public class TokenlyArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             for (DatabaseTableRecord record : table.getRecords()) {
 
                 // Add records to list.
-                /*list.add(new IdentityAssetRedeemPointImpl(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
+                /*list.add(new IdentityAssetRedeemPointImpl(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_SECRET_KEY_COLUMN_NAME),
                         record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME),
                         getArtistIdentityPrivateKey(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME)),
                         getArtistProfileImagePrivateKey(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME)),
                         pluginFileSystem,
                         pluginId), );*/
-                list.add(new TokenlyArtistIdentityImp(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
-                        record.getUUIDValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME),
+                list.add(new TokenlyArtistIdentityImp(record.getUUIDValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_ID_COLUMN_NAME),
                         record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_USER_NAME_COLUMN_NAME),
-                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_ACCESS_TOKEN_COLUMN_NAME),
+                        getArtistProfileImagePrivateKey(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_USER_NAME_COLUMN_NAME),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ACCESS_TOKEN_COLUMN_NAME),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_SECRET_KEY_COLUMN_NAME),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_PASSWORD_COLUMN_NAME),
                         ExternalPlatform.getByCode(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME)),
                         ExposureLevel.getByCode(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME)),
                         ArtistAcceptConnectionsType.getByCode(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ACEEPTS_CONNECTIONS_TYPE_COLUMN_NAME)),
-                        pluginFileSystem,
-                        pluginId));
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EMAIL_COLUMN_NAME)
+                        ));
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantListArtistIdentitiesException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_TABLE_NAME + " table in memory.");
@@ -380,17 +340,18 @@ public class TokenlyArtistIdentityDao implements DealsWithPluginDatabaseSystem {
 
                 // Add records to list.
                 /*artist = new IdentityAssetRedeemPointImpl(
-                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_SECRET_KEY_COLUMN_NAME),
                         record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME),
                         getArtistProfileImagePrivateKey(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME)));*/
-                artist = new TokenlyArtistIdentityImp(
-                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
-                        record.getUUIDValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME),
+                artist = new  TokenlyArtistIdentityImp(record.getUUIDValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_ID_COLUMN_NAME),
                         record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        getArtistProfileImagePrivateKey(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME)),
-                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_USER_NAME_COLUMN_NAME),
-                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_ACCESS_TOKEN_COLUMN_NAME),
+                        getArtistProfileImagePrivateKey(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_USER_NAME_COLUMN_NAME),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ACCESS_TOKEN_COLUMN_NAME),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_SECRET_KEY_COLUMN_NAME),
                         ExternalPlatform.getByCode(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME)),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EMAIL_COLUMN_NAME),
                         ExposureLevel.getByCode(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME)),
                         ArtistAcceptConnectionsType.getByCode(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ACEEPTS_CONNECTIONS_TYPE_COLUMN_NAME)),
                         pluginFileSystem,
@@ -439,17 +400,18 @@ public class TokenlyArtistIdentityDao implements DealsWithPluginDatabaseSystem {
 
                 // Add records to list.
                 /*artist = new IdentityAssetRedeemPointImpl(
-                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_SECRET_KEY_COLUMN_NAME),
                         record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME),
                         getArtistProfileImagePrivateKey(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME)));*/
-                artist = new TokenlyArtistIdentityImp(
-                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
-                        record.getUUIDValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME),
+                artist = new  TokenlyArtistIdentityImp(record.getUUIDValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_ID_COLUMN_NAME),
                         record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        getArtistProfileImagePrivateKey(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ID_COLUMN_NAME)),
-                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_USER_NAME_COLUMN_NAME),
-                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_ACCESS_TOKEN_COLUMN_NAME),
+                        getArtistProfileImagePrivateKey(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_USER_NAME_COLUMN_NAME),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ACCESS_TOKEN_COLUMN_NAME),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_SECRET_KEY_COLUMN_NAME),
                         ExternalPlatform.getByCode(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME)),
+                        record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EMAIL_COLUMN_NAME),
                         ExposureLevel.getByCode(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME)),
                         ArtistAcceptConnectionsType.getByCode(record.getStringValue(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ACEEPTS_CONNECTIONS_TYPE_COLUMN_NAME)),
                         pluginFileSystem,
@@ -561,7 +523,7 @@ public class TokenlyArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists");
             }
 
-            table.addStringFilter(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
+            table.addStringFilter(TokenlyArtistIdentityDatabaseConstants.TOKENLY_ARTIST_IDENTITY_SECRET_KEY_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             return table.getRecords().size() > 0;

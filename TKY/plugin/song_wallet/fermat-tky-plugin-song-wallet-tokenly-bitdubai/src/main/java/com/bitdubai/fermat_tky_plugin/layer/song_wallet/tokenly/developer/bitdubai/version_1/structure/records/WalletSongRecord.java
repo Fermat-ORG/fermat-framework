@@ -19,6 +19,7 @@ public class WalletSongRecord implements WalletSong {
     //WALLET SONG FIELDS
     private SongStatus songStatus;
     private UUID songId;
+    private byte[] songBytes;
     //TOKENLY SONG FIELDS
     private String id;
     private String name;
@@ -125,6 +126,64 @@ public class WalletSongRecord implements WalletSong {
             String usageRights,
             String usageProhibitions,
             String bitcoinAddress,
+            String other,
+            String downloadUrl) throws
+            CanGetTokensArrayFromSongWalletException {
+        this.songStatus = songStatus;
+        this.songId = songId;
+        this.id = id;
+        this.name = name;
+        //Set the Array tokens from a String XML
+        setTokens(tokensXML);
+        this.performers = performers;
+        this.composers = composers;
+        this.releaseDate = releaseDate;
+        this.lyrics = lyrics;
+        this.credits = credits;
+        this.copyright = copyright;
+        this.ownership = ownership;
+        this.usageRights = usageRights;
+        this.usageProhibitions = usageProhibitions;
+        this.bitcoinAddress = bitcoinAddress;
+        this.other = other;
+        this.downloadUrl = downloadUrl;
+    }
+
+    /**
+     * Constructor that uses String to define String[] tokens
+     * @param songStatus
+     * @param songId
+     * @param id
+     * @param name
+     * @param tokensXML
+     * @param performers
+     * @param composers
+     * @param releaseDate
+     * @param lyrics
+     * @param credits
+     * @param copyright
+     * @param ownership
+     * @param usageRights
+     * @param usageProhibitions
+     * @param bitcoinAddress
+     * @param other
+     */
+    public WalletSongRecord(
+            SongStatus songStatus,
+            UUID songId,
+            String id,
+            String name,
+            String tokensXML,
+            String performers,
+            String composers,
+            Date releaseDate,
+            String lyrics,
+            String credits,
+            String copyright,
+            String ownership,
+            String usageRights,
+            String usageProhibitions,
+            String bitcoinAddress,
             String other) throws
             CanGetTokensArrayFromSongWalletException {
         this.songStatus = songStatus;
@@ -144,6 +203,7 @@ public class WalletSongRecord implements WalletSong {
         this.usageProhibitions = usageProhibitions;
         this.bitcoinAddress = bitcoinAddress;
         this.other = other;
+        this.downloadUrl = "";
     }
 
     /**
@@ -174,7 +234,40 @@ public class WalletSongRecord implements WalletSong {
         this.usageProhibitions = song.getUsageProhibitions();
         this.bitcoinAddress = song.getBitcoinAddress();
         this.other = song.getOther();
+        this.downloadUrl = song.getDownloadUrl();
 
+    }
+
+    /**
+     * Constructor with parameters.
+     * Can be used to set the complete song to UI.
+     * @param walletSong
+     * @param songBytes
+     */
+    public WalletSongRecord(
+            WalletSong walletSong,
+            byte[] songBytes){
+        //Set the WalletSong fields
+        this.songStatus = walletSong.getSongStatus();
+        this.songId = walletSong.getSongId();
+        this.songBytes = songBytes;
+        //Set the song fields
+        this.id = walletSong.getId();
+        this.name = walletSong.getName();
+        this.tokens = walletSong.getTokens();
+        this.performers = walletSong.getPerformers();
+        this.composers = walletSong.getComposers();
+        this.releaseDate = walletSong.getReleaseDate();
+        this.lyrics = walletSong.getLyrics();
+        this.credits = walletSong.getCredits();
+        this.copyright = walletSong.getCopyright();
+        this.ownership = walletSong.getOwnership();
+        this.usageRights = walletSong.getUsageRights();
+        this.usageProhibitions = walletSong.getUsageProhibitions();
+        this.bitcoinAddress = walletSong.getBitcoinAddress();
+        this.other = walletSong.getOther();
+        //Set an empty string in this constructor.
+        this.downloadUrl = "";
     }
 
     //WALLET SONG IMPLEMENTATIONS
@@ -196,6 +289,18 @@ public class WalletSongRecord implements WalletSong {
     @Override
     public UUID getSongId() {
         return this.songId;
+    }
+
+    /**
+     * This method returns a byte array that represents the song ready to be played.
+     * @return
+     */
+    @Override
+    public byte[] getSongBytes() {
+        if(songBytes==null){
+            return new byte[0];
+        }
+        return this.songBytes;
     }
 
     //TOKENLY SONG IMPLEMENTATIONS
@@ -244,8 +349,10 @@ public class WalletSongRecord implements WalletSong {
      */
     public void setTokens(String songTokens) throws CanGetTokensArrayFromSongWalletException {
         if(songTokens==null||songTokens.isEmpty()){
-            throw new CanGetTokensArrayFromSongWalletException(
-                    "The XML with the tokens is null or empty");
+            /*throw new CanGetTokensArrayFromSongWalletException(
+                    "The XML with the tokens is null or empty");*/
+            this.tokens=new String[0];
+            return;
         }
         try{
             String[] tokensFromXML=new String[0];
