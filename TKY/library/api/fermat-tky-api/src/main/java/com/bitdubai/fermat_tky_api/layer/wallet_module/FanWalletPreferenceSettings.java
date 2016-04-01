@@ -1,4 +1,4 @@
-package com.bitdubai.reference_wallet.fan_wallet.preference_settings;
+package com.bitdubai.fermat_tky_api.layer.wallet_module;
 
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.exceptions.CantGetDefaultSkinException;
@@ -10,11 +10,19 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfac
 import java.util.UUID;
 
 /**
- * Created by Miguel Payarez on 14/03/16.
+ * Created by Miguel Payarez on 30/03/16.
  */
-public class FanWalletSettings implements WalletSettings {
+public class FanWalletPreferenceSettings implements WalletSettings {
 
+    private boolean isHomeTutorialDialogEnabled;
 
+    public boolean isHomeTutorialDialogEnabled() {
+        return isHomeTutorialDialogEnabled;
+    }
+
+    public void setIsHomeTutorialDialogEnabled(boolean isHomeTutorialDialogEnabled) {
+        this.isHomeTutorialDialogEnabled = isHomeTutorialDialogEnabled;
+    }
     @Override
     public UUID getDefaultLanguage() throws CantGetDefaultLanguageException, CantLoadWalletSettings {
         return null;
@@ -37,6 +45,8 @@ public class FanWalletSettings implements WalletSettings {
 
     @Override
     public void setIsPresentationHelpEnabled(boolean b) {
+
+        isHomeTutorialDialogEnabled=b;
 
     }
 }
