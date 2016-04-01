@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.location_system;
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 
 /**
  * Created by Natalia on 30/04/2015.
@@ -17,7 +17,7 @@ public class DeviceLocation implements Location {
     private Double longitude;
     private Long time;
     private Double altitude;
-    private LocationProvider provider;
+    private LocationSource provider;
 
     // Public constructor declarations.
     public DeviceLocation(){
@@ -35,9 +35,9 @@ public class DeviceLocation implements Location {
      * @param longitude Double actual device longitude
      * @param time Long actual device location time
      * @param altitude Double actual device  altitude
-     * @param provider enum LocationProvider actual location provider network
+     * @param provider enum LocationSource actual location provider network
      */
-   public DeviceLocation(Double latitude, Double longitude, Long time, Double altitude, LocationProvider provider){
+   public DeviceLocation(Double latitude, Double longitude, Long time, Double altitude, LocationSource provider){
        this.latitude = latitude;
        this.longitude = longitude;
        this.time = time;
@@ -107,18 +107,28 @@ public class DeviceLocation implements Location {
     /**
      *<p>This method gets de actual location network provider
      *
-     * @return LocationProvider enum
+     * @return LocationSource enum
      */
     @Override
-    public LocationProvider getProvider() {
+    public LocationSource getSource() {
         return provider;
+    }
+
+    @Override
+    public Double getAccuracy() {
+        return 0.0;
+    }
+
+    @Override
+    public Double getAltitudeAccuracy() {
+        return 0.0;
     }
 
     /**
      * Set the Provider
      * @param provider
      */
-    public void setProvider(LocationProvider provider) {
+    public void setProvider(LocationSource provider) {
         this.provider = provider;
     }
 

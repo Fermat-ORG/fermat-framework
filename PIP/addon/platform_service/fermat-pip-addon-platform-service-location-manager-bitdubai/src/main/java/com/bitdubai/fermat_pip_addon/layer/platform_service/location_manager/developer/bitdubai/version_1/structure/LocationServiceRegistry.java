@@ -110,7 +110,7 @@ public class LocationServiceRegistry {
 
     private DatabaseTableRecord parseTo(Location location) {
         DatabaseTableRecord record = database.getTable(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_NAME).getEmptyRecord();
-        record.setStringValue(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_PROVIDER_COLUMN, location.getProvider().toString());
+        record.setStringValue(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_PROVIDER_COLUMN, location.getSource().toString());
         record.setLongValue(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_TIME_COLUMN, location.getTime());
         record.setDoubleValue(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_LATITUDE_COLUMN, location.getLatitude());
         record.setDoubleValue(LocationServiceDatabaseConstants.LOCATION_SERVICE_TABLE_LONGITUDE_COLUMN, location.getLongitude());

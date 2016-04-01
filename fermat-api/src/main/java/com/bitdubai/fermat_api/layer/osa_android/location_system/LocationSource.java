@@ -14,31 +14,33 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  *  @since   07/05/15.
  * */
 
-public enum LocationProvider implements FermatEnum {
+public enum LocationSource implements FermatEnum {
 
-    GPS    ("GPS"),
-    NETWORK("NET"),
+    GPS           ("GPS"),
+    NETWORK       ("NET"),
+    IP_CALCULATED ("IPC"),
 
     ;
 
     private final String code;
 
-    LocationProvider(final String code){
+    LocationSource(final String code){
 
         this.code = code;
     }
 
-    public static LocationProvider getByCode(String code) throws InvalidParameterException {
+    public static LocationSource getByCode(String code) throws InvalidParameterException {
 
         switch (code){
 
             case "GPS": return GPS;
             case "NET": return NETWORK;
+            case "IPC": return IP_CALCULATED;
 
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
-                        "This Code Is Not Valid for the LocationProvider enum"
+                        "This Code Is Not Valid for the LocationSource enum"
                 );
         }
     }
