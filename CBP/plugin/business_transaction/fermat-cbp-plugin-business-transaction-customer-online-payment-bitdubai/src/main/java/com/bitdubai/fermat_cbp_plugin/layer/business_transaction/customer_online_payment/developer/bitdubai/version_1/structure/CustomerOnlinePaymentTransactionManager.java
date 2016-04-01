@@ -195,14 +195,18 @@ public class CustomerOnlinePaymentTransactionManager implements CustomerOnlinePa
 
             CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = getCustomerBrokerPurchaseNegotiation(contractPurchase.getNegotiatiotId());
             String brokerCryptoAddress = getBrokerCryptoAddressString(customerBrokerPurchaseNegotiation);
+            String aux[] = brokerCryptoAddress.split(":");
+            String address,intraActorPK;
+            address=aux[0];
+            intraActorPK = aux[1];
             long cryptoAmount = getCryptoAmount(customerBrokerPurchaseNegotiation);
 
             this.customerOnlinePaymentBusinessTransactionDao.persistContractInDatabase(
                     contractPurchase,
-                    brokerCryptoAddress,
+                    address,
                     walletPublicKey,
                     cryptoAmount,
-                    blockchainNetworkType);
+                    blockchainNetworkType,intraActorPK);
 
         } catch (CantGetListCustomerBrokerContractPurchaseException e) {
             errorManager.reportUnexpectedPluginException(

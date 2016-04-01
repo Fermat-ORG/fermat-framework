@@ -28,6 +28,7 @@ import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdub
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantPersistSongException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantPersistSynchronizeDateException;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure.records.WalletSongRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -314,7 +315,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             WalletSong walletSong = this.tokenlySongWalletDao.getWalletSongArgumentBySongId(songId);
             //Get the song from external api to get the download URL
             String tokenlySongId = walletSong.getId();
-            Song song = this.tokenlyApiManager.getSongByAuthenticatedUser(user,tokenlySongId);
+            Song song = this.tokenlyApiManager.getSongByAuthenticatedUser(user, tokenlySongId);
             //Request download song.
             String songPath = this.tokenlyWalletSongVault.downloadSong(song);
             this.tokenlySongWalletDao.updateSongStoragePath(songId, songPath);
@@ -340,6 +341,32 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                     e,
                     "Downloading song by id:"+songId,
                     "Cannot get the song from external API");
+        }
+    }
+
+    /**
+     * This method returns a WalletSong object that includes a byte array that represents the song
+     * ready to be played.
+     * @param songId
+     * @return
+     * @throws CantGetSongException
+     */
+    @Override
+    public WalletSong getSongWithBytes(UUID songId) throws CantGetSongException {
+        try{
+            //Get the song form database
+            WalletSong walletSong = this.tokenlySongWalletDao.getWalletSongArgumentBySongId(songId);
+            //Get the song from device storage
+            byte[] songBytes = this.tokenlyWalletSongVault.getSongFromDeviceStorage(
+                    walletSong.getName());
+            //Create a WalletSongRecord with all the data fulled.
+            WalletSong fullWalletSong = new WalletSongRecord(walletSong,songBytes);
+            return fullWalletSong;
+        } catch (CantGetWalletSongException e) {
+            throw new CantGetSongException(
+                    e,
+                    "Getting song by id:"+songId,
+                    "Cannot get the wallet song from database");
         }
     }
 
