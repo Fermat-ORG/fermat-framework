@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -61,6 +62,7 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
     private ServiceDAO subAppFermatMonitorServiceDAO;
     private ConnectionDAO subAppFermatMonitorConnectionDAO;
     private SystemDataDAO subAppFermatMonitorSystemDataDAO;
+    private ComponentDAO subappFermatMonitorComponentDAO;
 
     private Database dataBaseCommunication;
 
@@ -94,15 +96,13 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
             systemMonitorNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
             //DAO
-            subAppFermatMonitorServiceDAO = new ServiceDAO((Database) pluginDatabaseSystem);
-            subAppFermatMonitorServiceDAO.initializeDatabase(pluginId,SystemMonitorNetworkServiceDatabaseConstants.DATABASE_NAME);
+            subAppFermatMonitorServiceDAO = new ServiceDAO(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
 
-            subAppFermatMonitorConnectionDAO = new ConnectionDAO((Database) pluginDatabaseSystem);
-            subAppFermatMonitorConnectionDAO.initializeDatabase(pluginId, SystemMonitorNetworkServiceDatabaseConstants.DATABASE_NAME);
+            subAppFermatMonitorConnectionDAO = new ConnectionDAO(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
 
-            subAppFermatMonitorSystemDataDAO = new SystemDataDAO((Database) pluginDatabaseSystem);
-            subAppFermatMonitorSystemDataDAO.initializeDatabase(pluginId, SystemMonitorNetworkServiceDatabaseConstants.DATABASE_NAME);
+            subAppFermatMonitorSystemDataDAO = new SystemDataDAO(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
 
+            subappFermatMonitorComponentDAO = new ComponentDAO(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
 
 
 
@@ -223,6 +223,7 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
 
 
     public void saveComponentRegistration(CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent) {
+        PlatformComponentProfile fas;
 
     }
 
