@@ -45,7 +45,7 @@
     <string name="dap_user_wallet_validate_no_redeem_points">No redeem points selected</string>
     <string name="dap_user_wallet_validate_no_users">No users selected</string>
     <string name="dap_user_wallet_validate_no_user">No user selected</string>
-    <string name="dap_user_wallet_validate_no_rp">No redeem point selected</string>
+
     <string name="dap_user_wallet_validate_not_enought_assets">There is not enought assets to redeem</string>
     <string name="dap_user_wallet_identity">Identity must be created</string>
     <string name="dap_user_wallet_validate_sell_quantity_zero">Must be enter number of assets to sell</string>

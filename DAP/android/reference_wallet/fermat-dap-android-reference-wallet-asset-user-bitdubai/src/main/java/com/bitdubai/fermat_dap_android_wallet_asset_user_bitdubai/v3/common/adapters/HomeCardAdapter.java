@@ -29,11 +29,15 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
     private View.OnClickListener onClickListenerAppropriate;
     private View.OnClickListener onClickListenerSell;
     private View.OnClickListener onClickListenerTransactions;
+    private View.OnClickListener onClickListenerAcceptNegotiation;
+    private View.OnClickListener onClickListenerRejectNegotiation;
+
 
     public HomeCardAdapter(Context context, List<Asset> digitalAssets, AssetUserWalletSubAppModuleManager manager,
                            FermatSession appSession, View.OnClickListener onClickListenerRedeem, View.OnClickListener onClickListenerTransfer,
                            View.OnClickListener onClickListenerAppropriate, View.OnClickListener onClickListenerSell,
-                           View.OnClickListener onClickListenerTransactions) {
+                           View.OnClickListener onClickListenerTransactions,View.OnClickListener onClickListenerAcceptNegotiation,
+                           View.OnClickListener onClickListenerRejectNegotiation) {
         super(context, digitalAssets);
         this.manager = manager;
         this.dataSet = digitalAssets;
@@ -43,6 +47,8 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
         this.onClickListenerAppropriate = onClickListenerAppropriate;
         this.onClickListenerSell = onClickListenerSell;
         this.onClickListenerTransactions = onClickListenerTransactions;
+        this.onClickListenerAcceptNegotiation = onClickListenerAcceptNegotiation;
+        this.onClickListenerRejectNegotiation = onClickListenerRejectNegotiation;
     }
 
     @Override
@@ -59,7 +65,8 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
     protected void bindHolder(HomeCardViewHolder holder, Asset data, int position) {
         assetUserSession.setData("asset_data", data);
         holder.bind(data, onClickListenerRedeem, onClickListenerTransfer, onClickListenerAppropriate,
-                onClickListenerSell, onClickListenerTransactions);
+                onClickListenerSell, onClickListenerTransactions, onClickListenerAcceptNegotiation,
+                onClickListenerRejectNegotiation);
     }
 
     @Override

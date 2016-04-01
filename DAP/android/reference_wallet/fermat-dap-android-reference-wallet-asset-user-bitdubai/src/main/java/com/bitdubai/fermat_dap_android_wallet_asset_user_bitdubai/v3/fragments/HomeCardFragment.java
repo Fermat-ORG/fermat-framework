@@ -32,27 +32,33 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.Utils;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.data.DataManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.common.adapters.HomeCardAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.common.filters.HomeCardAdapterFilter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.common.holders.HomeCardViewHolder;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.exceptions.CantProcessBuyingTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static android.widget.Toast.makeText;
 
@@ -60,7 +66,7 @@ import static android.widget.Toast.makeText;
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 3/17/16.
  */
 public class HomeCardFragment extends FermatWalletListFragment<Asset> {
-
+    private Activity activity;
     // Data
     private List<Asset> assets;
     private DataManager dataManager;
@@ -73,6 +79,8 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
     private AssetUserWalletSubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<AssetUserSettings> settingsManager;
+
+    private long bitcoinWalletBalanceSatoshis;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,11 +109,18 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
         //Initialize settings
         initSettings();
 
+        activity = new Activity();
+
         configureToolbar();
         noAssetsView = layout.findViewById(R.id.dap_v3_wallet_asset_user_home_no_assets);
 
         assets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
         showOrHideNoAssetsView(assets.isEmpty());
+        try {
+            bitcoinWalletBalanceSatoshis = moduleManager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(moduleManager));
+        } catch (Exception e) {
+           // bitcoinBalanceText.setText(getResources().getString(R.string.dap_user_wallet_buy_no_available));
+        }
 
         onRefresh();
     }
@@ -330,7 +345,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
                     new ConfirmDialog.Builder(getActivity(), appSession)
                             .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
                             .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_sure))
-                            .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
+                            .setColorStyle(getResources().getColor(R.color.card_toolbar))
                             .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                                 @Override
                                 public void onClick() {
@@ -352,8 +367,38 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
 //                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM_SELECT_REDEEMPOINTS, appSession.getAppPublicKey());
                 }
             };
+            View.OnClickListener onClickListenerAcceptNegotiation = new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    final Asset asset = (Asset) appSession.getData("asset_data");
+
+                    if (isValidBuy(asset)) {
+                        new ConfirmDialog.Builder(getActivity(), appSession)
+                                .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                                .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_asset_buy))
+                                .setColorStyle(getResources().getColor(R.color.card_toolbar))
+                                .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                    @Override
+                                    public void onClick() {
+
+                                        doBuy(asset.getAssetUserNegotiation().getId());
+                                    }
+                                }).build().show();
+                    }
+                }
+
+            };
+            View.OnClickListener onClickListenerRejectNegotiation = new View.OnClickListener(){
+                @Override
+                public void onClick(View v) {
+                    final Asset asset = (Asset) appSession.getData("asset_data");
+                    doDecline(asset);
+                }
+            };
+
             adapter = new HomeCardAdapter(getActivity(), assets, moduleManager, appSession, onClickListenerRedeem,
-                    onClickListenerTransfer, onClickListenerAppropriate, onClickListenerSell, onClickListenerTransactions);
+                    onClickListenerTransfer, onClickListenerAppropriate, onClickListenerSell, onClickListenerTransactions, onClickListenerAcceptNegotiation,
+                    onClickListenerRejectNegotiation);
         } else {
             adapter.changeDataSet(assets);
         }
@@ -407,6 +452,108 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
         }
         return layoutManager;
     }
+
+
+    private boolean isValidBuy(Asset asset) {
+
+        if (asset.getAssetUserNegotiation().getAmount() > bitcoinWalletBalanceSatoshis) {
+            makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_buy_available),
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void doBuy(final UUID uuid) {
+        try {
+            moduleManager.acceptAsset(uuid);
+            onRefresh();
+            Toast.makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_sell_ok), Toast.LENGTH_LONG).show();
+        } catch (CantProcessBuyingTransactionException e) {
+            e.printStackTrace();
+        }
+
+        /*final ProgressDialog dialog = new ProgressDialog(activity);
+        dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
+        dialog.setCancelable(false);
+        dialog.show();
+        FermatWorker task = new FermatWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                //moduleManager.startSell(user.getActorAssetUser(), amountPerUnity, amountTotal, quantityToSell, digitalAsset.getAssetPublicKey());
+                moduleManager.acceptAsset(uuid);
+                return true;
+            }
+        };
+
+        task.setContext(activity);
+        task.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                dialog.dismiss();
+                if (activity != null) {
+//                    refreshUIData();
+                    onRefresh();
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_sell_ok), Toast.LENGTH_LONG).show();
+
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                dialog.dismiss();
+                if (activity != null)
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_exception_retry),
+                            Toast.LENGTH_SHORT).show();
+            }
+        });
+        task.execute();*/
+    }
+
+    private void doDecline(final Asset digitalAsset) {
+        try {
+            moduleManager.declineAsset(digitalAsset.getAssetUserNegotiation().getId());
+            onRefresh();
+            Toast.makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_sell_cancel), Toast.LENGTH_LONG).show();
+        } catch (CantProcessBuyingTransactionException e) {
+            e.printStackTrace();
+        }
+
+        /*final ProgressDialog dialog = new ProgressDialog(activity);
+        dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
+        dialog.setCancelable(false);
+        dialog.show();
+        FermatWorker task = new FermatWorker() {
+            @Override
+            protected Object doInBackground() throws Exception {
+                moduleManager.declineAsset(digitalAsset.getAssetUserNegotiation().getId());
+                return true;
+            }
+        };
+
+        task.setContext(activity);
+        task.setCallBack(new FermatWorkerCallBack() {
+            @Override
+            public void onPostExecute(Object... result) {
+                dialog.dismiss();
+                if (activity != null) {
+                    onRefresh();
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_sell_cancel), Toast.LENGTH_LONG).show();
+
+                }
+            }
+
+            @Override
+            public void onErrorOccurred(Exception ex) {
+                dialog.dismiss();
+                if (activity != null)
+                    Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_exception_retry),
+                            Toast.LENGTH_SHORT).show();
+            }
+        });
+        task.execute();*/
+    }
+
 
     @Override
     public List<Asset> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {

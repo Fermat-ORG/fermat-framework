@@ -23,6 +23,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -88,17 +89,12 @@ public class DataManager {
 //        }
 
         assets = new ArrayList<>();
-        List<Asset> debitAssets = new ArrayList<>();
         for(AssetUserWalletList assetUserWalletList : assetUserWalletBalances) {
             List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet(walletPublicKey).getAllTransactions(assetUserWalletList.getDigitalAsset().getPublicKey());
             for(AssetUserWalletTransaction assetUserWalletTransaction : assetUserWalletTransactions) {
                 if (assetUserWalletTransaction.getMemo().equals("Asset Delivered")
                         && assetUserWalletTransaction.getTransactionType().equals(TransactionType.CREDIT)) {
                     assets.add(new Asset(assetUserWalletList, assetUserWalletTransaction));
-                }
-                if (assetUserWalletTransaction.getTransactionType().equals(TransactionType.DEBIT)
-                        && assetUserWalletTransaction.getBalanceType().equals(BalanceType.AVAILABLE)) {
-                    debitAssets.add(new Asset(assetUserWalletList, assetUserWalletTransaction));
                 }
             }
         }
@@ -115,15 +111,6 @@ public class DataManager {
             }
             if (!b) {
                 newAssets.add(assets.get(i));
-            }
-        }
-
-        for (Asset asset : newAssets) {
-            for (Asset debitAsset : debitAssets) {
-                if (asset.getId().equals(debitAsset.getId())) {
-                    newAssets.remove(asset);
-                    break;
-                }
             }
         }
 
@@ -155,9 +142,16 @@ public class DataManager {
         Asset digitalAsset;
 
         for (AssetNegotiation asset : assetNegotiations){
+            List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet(walletPublicKey).getAllTransactions(asset.getAssetToOffer().getPublicKey());
+
+
             digitalAsset = new Asset();
-            digitalAsset.getDigitalAsset().setPublicKey(asset.getAssetToOffer().getPublicKey());
+            digitalAsset.setDigitalAsset(asset.getAssetToOffer());
             digitalAsset.setName(asset.getAssetToOffer().getName());
+            digitalAsset.setAmount(1);
+            digitalAsset.setId(asset.getNegotiationId().toString());
+            digitalAsset.setDate(new Timestamp(new Date().getTime()));
+            digitalAsset.setStatus(Asset.Status.PENDING);
 
             AssetUserNegotiation userAssetNegotiation = new AssetUserNegotiation();
             userAssetNegotiation.setId(asset.getNegotiationId());
