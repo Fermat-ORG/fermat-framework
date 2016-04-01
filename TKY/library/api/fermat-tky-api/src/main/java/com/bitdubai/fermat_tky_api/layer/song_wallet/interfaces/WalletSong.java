@@ -32,4 +32,10 @@ public interface WalletSong extends Song {
      */
     String getTokensXML();
 
+    /**
+     * This method returns a byte array that represents the song ready to be played.
+     * @return
+     */
+    byte[] getSongBytes();
+
 }

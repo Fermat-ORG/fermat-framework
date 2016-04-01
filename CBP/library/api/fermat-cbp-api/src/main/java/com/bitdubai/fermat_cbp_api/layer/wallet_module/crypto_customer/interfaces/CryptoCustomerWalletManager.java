@@ -73,6 +73,13 @@ import java.util.UUID;
 public interface CryptoCustomerWalletManager extends WalletManager {
 
     /**
+     * Returns the Balance this BitcoinWalletBalance belongs to. (Can be available or book)
+     *
+     * @return A BigDecimal, containing the balance.
+     */
+    long getBalanceBitcoinWallet(String walletPublicKey);
+
+    /**
      * associate an Identity to this wallet
      *
      * @param customer        the Crypto Customer ID who is going to be associated with this wallet

@@ -262,19 +262,21 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
 
             //default Exchange rate Provider
+            try {
+                    if(moduleManager.getExchangeProvider()==null) {
+                        List<CurrencyExchangeRateProviderManager> providers = new ArrayList(moduleManager.getExchangeRateProviderManagers());
 
+                        exchangeProviderId = providers.get(0).getProviderId();
+                        moduleManager.setExchangeProvider(exchangeProviderId);
 
-          //  if(moduleManager.getExchangeProvider(appSession.getAppPublicKey())==null) {
-                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(moduleManager.getExchangeRateProviderManagers());
-
-                exchangeProviderId = providers.get(0).getProviderId();
-             //   moduleManager.setExchangeProvider(exchangeProviderId,appSession.getAppPublicKey());
-
-           // }
-           // else
-          //  {
-            //    exchangeProviderId =moduleManager.getExchangeProvider(appSession.getAppPublicKey());
-            //}
+                    }
+                    else
+                   {
+                        exchangeProviderId =moduleManager.getExchangeProvider();
+                   }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable(){

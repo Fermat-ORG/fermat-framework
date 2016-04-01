@@ -67,4 +67,7 @@
 
     <color name="ccw_contract_details_background">#222</color>
 
+    <color name="ccw_contract_status_normal">#6b7378</color>
+    <color name="ccw_contract_status_about_to_expire">#B93B3C</color>
+
 </resources>
