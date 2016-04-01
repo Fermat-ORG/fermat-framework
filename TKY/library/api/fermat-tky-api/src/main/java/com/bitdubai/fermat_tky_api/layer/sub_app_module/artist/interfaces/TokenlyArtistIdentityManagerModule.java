@@ -44,8 +44,11 @@ public interface TokenlyArtistIdentityManagerModule extends ModuleManager<Tokenl
      * @throws ArtistIdentityAlreadyExistsException
      */
     Artist createArtistIdentity(
-            String userName, byte[] profileImage, String password,ExternalPlatform externalPlatform,
-            ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws
+            String userName,
+            byte[] profileImage,
+            String password,ExternalPlatform externalPlatform,
+            ExposureLevel exposureLevel,
+            ArtistAcceptConnectionsType artistAcceptConnectionsType) throws
             CantCreateArtistIdentityException,
             ArtistIdentityAlreadyExistsException;
 

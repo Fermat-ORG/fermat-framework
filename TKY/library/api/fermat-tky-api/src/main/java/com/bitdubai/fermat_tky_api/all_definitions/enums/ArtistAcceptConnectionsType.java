@@ -24,6 +24,9 @@ public enum ArtistAcceptConnectionsType implements FermatEnum {
         this.code=code;
     }
 
+
+    public static final ArtistAcceptConnectionsType DEFAULT_ARTIST_ACCEPT_CONNECTION_TYPE = ArtistAcceptConnectionsType.AUTOMATIC;
+
     //PUBLIC METHODS
 
     public static ArtistAcceptConnectionsType getByCode(String code) throws InvalidParameterException {

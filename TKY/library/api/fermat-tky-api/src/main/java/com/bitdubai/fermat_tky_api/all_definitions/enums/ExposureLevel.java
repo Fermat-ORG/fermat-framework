@@ -20,7 +20,7 @@ public enum ExposureLevel implements FermatEnum {
     /**
      * sets the default exposure level that will be used at start up.
      */
-    private static final ExposureLevel DEFAULT_EXPOSURE_LEVEL = ExposureLevel.PUBLIC;
+    public static final ExposureLevel DEFAULT_EXPOSURE_LEVEL = ExposureLevel.PUBLIC;
 
     String code;
     ExposureLevel(String code){
@@ -38,6 +38,7 @@ public enum ExposureLevel implements FermatEnum {
                 null, "Code Received: " + code,
                 "This Code Is Not Valid for the ExposureLevel enum.");
     }
+
 
     @Override
     public String toString() {
