@@ -20,6 +20,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantClosePurchaseNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantCloseSaleNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
@@ -62,6 +63,8 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
     /*Represent the Plugins Version*/
     private PluginVersionReference                                  pluginVersionReference;
 
+    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+
     public CustomerBrokerCloseManagerImpl(
             CustomerBrokerCloseNegotiationTransactionDatabaseDao    customerBrokerCloseNegotiationTransactionDatabaseDao,
             CustomerBrokerPurchaseNegotiationManager                customerBrokerPurchaseNegotiationManager,
@@ -70,7 +73,8 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
             CryptoVaultManager                                      cryptoVaultManager,
             WalletManagerManager                                    walletManagerManager,
             ErrorManager                                            errorManager,
-            PluginVersionReference                                  pluginVersionReference
+            PluginVersionReference                                  pluginVersionReference,
+            IntraWalletUserIdentityManager intraWalletUserIdentityManager
     ){
         this.customerBrokerCloseNegotiationTransactionDatabaseDao   = customerBrokerCloseNegotiationTransactionDatabaseDao;
         this.customerBrokerPurchaseNegotiationManager               = customerBrokerPurchaseNegotiationManager;
@@ -80,6 +84,7 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
         this.walletManagerManager                                   = walletManagerManager;
         this.errorManager                                           = errorManager;
         this.pluginVersionReference                                 = pluginVersionReference;
+        this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
     }
 
     @Override
@@ -97,7 +102,7 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
                     cryptoVaultManager,
                     walletManagerManager,
                     errorManager,
-                    pluginVersionReference
+                    pluginVersionReference,intraWalletUserIdentityManager
             );
             customerBrokerClosePurchaseNegotiationTransaction.sendPurchaseNegotiationTranasction(customerBrokerPurchaseNegotiation);
 
@@ -126,7 +131,7 @@ public class CustomerBrokerCloseManagerImpl implements CustomerBrokerCloseManage
                     cryptoVaultManager,
                     walletManagerManager,
                     errorManager,
-                    pluginVersionReference
+                    pluginVersionReference,intraWalletUserIdentityManager
             );
             customerBrokerCloseSaleNegotiationTransaction.sendSaleNegotiationTranasction(customerBrokerSaleNegotiation);
 

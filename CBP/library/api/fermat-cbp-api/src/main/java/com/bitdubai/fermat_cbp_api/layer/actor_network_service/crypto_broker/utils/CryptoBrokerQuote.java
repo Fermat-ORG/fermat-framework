@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.ut
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerInfo;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
+
 
 /**
  * The class <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.utils.CryptoBrokerQuote</code>
@@ -22,6 +24,12 @@ public final class CryptoBrokerQuote implements CryptoBrokerInfo {
         this.merchandise     = merchandise    ;
         this.paymentCurrency = paymentCurrency;
         this.price           = price          ;
+    }
+
+    public CryptoBrokerQuote(Quote quote){
+        this.merchandise     = (Currency) quote.getMerchandise();
+        this.paymentCurrency = quote.getFiatCurrency();
+        this.price           = quote.getPriceReference();
     }
 
     public final Currency getMerchandise() {
