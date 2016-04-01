@@ -338,19 +338,28 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
     protected void onNetworkServiceRegistered() {
 
         artistActorNetworkServiceManager.setPlatformComponentProfile(this.getNetworkServiceProfile());
+        testCreateAndList();
+
+    }
+
+    private void testCreateAndList(){
         ECCKeyPair identity = new ECCKeyPair();
         try {
             artistActorNetworkServiceManager.exposeIdentity(new ArtistExposingData(identity.getPublicKey(), "El Gabo", new byte[0]));
             ArtistSearch artistActorNetworkServiceSearch = artistActorNetworkServiceManager.getSearch();
+            Thread.sleep(5000);
             List<ArtistExposingData> artistExposingDatas = artistActorNetworkServiceSearch.getResult();
             for (ArtistExposingData artistExposingData:
-                 artistExposingDatas) {
+                    artistExposingDatas) {
                 System.out.println("#############################\nArtistas registrados:"+artistExposingData.getAlias()+"\nPublicKey:"+artistExposingData.getPublicKey());
             }
         } catch (CantExposeIdentityException e) {
             e.printStackTrace();
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantListArtistsException e) {
+            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (InterruptedException e) {
             e.printStackTrace();
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }

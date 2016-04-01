@@ -140,6 +140,15 @@ public class ActorConnectionManager implements ArtistActorConnectionManager {
                     platformComponentType = PlatformComponentType.ART_FAN;
                     break;
             }
+            PlatformComponentType platformComponentTypeReceiving = PlatformComponentType.ART_ARTIST;
+            switch (actorReceiving.getActorType()){
+                case ART_ARTIST:
+                    platformComponentTypeReceiving = PlatformComponentType.ART_ARTIST;
+                    break;
+                case ART_FAN:
+                    platformComponentTypeReceiving = PlatformComponentType.ART_FAN;
+                    break;
+            }
 
             final ArtistConnectionInformation connectionInformation = new ArtistConnectionInformation(
                     newConnectionId,
@@ -148,6 +157,7 @@ public class ActorConnectionManager implements ArtistActorConnectionManager {
                     actorSending.getAlias(),
                     actorSending.getImage(),
                     actorReceiving.getPublicKey(),
+                    platformComponentTypeReceiving,
                     currentTime
             );
 

@@ -46,7 +46,7 @@ public final class ArtistActorNetworkServiceSearch extends ArtistSearch {
 
             DiscoveryQueryParameters discoveryQueryParameters = communicationsClientConnection.constructDiscoveryQueryParamsFactory(
                     PlatformComponentType.ART_ARTIST, // PlatformComponentType you want to find
-                    NetworkServiceType   .UNDEFINED,           // NetworkServiceType you want to find
+                    NetworkServiceType.ARTIST_ACTOR,           // NetworkServiceType you want to find
                     null,                                      // alias
                     null,                                      // identityPublicKey
                     null,                                      // location
