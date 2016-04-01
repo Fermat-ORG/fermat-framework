@@ -19,6 +19,7 @@ import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentit
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantUpdateChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -45,6 +46,9 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractPlugin implement
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
+    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CHAT_IDENTITY)
+    private ChatIdentityManager chatIdentityManager;
+
     public ChatIdentitySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
@@ -55,13 +59,22 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractPlugin implement
         return null;
     }
 
+    /**
+     * Through the method <code>getSelectedActorIdentity</code> we can get the selected actor identity.
+     *
+     * @return an instance of the selected actor identity.
+     * @throws CantGetSelectedActorIdentityException if something goes wrong.
+     * @throws ActorIdentityNotSelectedException     if there's no actor identity selected.
+     */
+    @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         return null;
     }
 
+
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-
+        chatIdentityManager.createNewIdentityChat(name, profile_img);
     }
 
     @Override
@@ -74,22 +87,32 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractPlugin implement
         return new int[0];
     }
 
-    public List<ChatIdentity> getIdentityAssetUsersFromCurrentDeviceUser() throws CantListChatIdentityException {
-        return null;
+
+    /**
+     * The method <code>getIdentityAssetUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
+     *
+     * @return the list of Chat users associated to the current logged in Device User.
+     * @throws CantListChatIdentityException if something goes wrong.
+     */
+    @Override
+    public List<ChatIdentity> getIdentityChatUsersFromCurrentDeviceUser() throws CantListChatIdentityException {
+        return chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
     }
 
     @Override
-    public ChatIdentity getIdentityAssetUser() throws CantGetChatIdentityException {
-        return null;
+    public ChatIdentity getIdentityChatUser() throws CantGetChatIdentityException {
+        return chatIdentityManager.getIdentityChatUser();
     }
 
     @Override
     public ChatIdentity createNewIdentityChat(String alias, byte[] profileImage) throws CantCreateNewChatIdentityException {
+        chatIdentityManager.createNewIdentityChat(alias, profileImage);
+        //TODO:Revisar metodo en Identity BackEnd, para que devuelva una instancia ChatIdentity
         return null;
     }
 
     @Override
     public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateChatIdentityException {
-
+        chatIdentityManager.updateIdentityChat(identityPublicKey, identityAlias, profileImage);
     }
 }
