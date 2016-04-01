@@ -71,7 +71,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by Joaquin Carrasquero on 12/02/16, email: jc.juaco@gmail.com.
  */
-public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkServiceBase implements
+public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServiceBase implements
         CryptoAddressesManager,
         DatabaseManagerForDevelopers {
 
@@ -107,7 +107,7 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
 
 
 
-    public CryptoAddressNetworkServicePluginRootNew() {
+    public CryptoAddressNetworkServicePluginRoot() {
 
         super(new PluginVersionReference(new Version()),
 
@@ -532,7 +532,7 @@ public class CryptoAddressNetworkServicePluginRootNew extends AbstractNetworkSer
         try {
             for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
-                System.out.println("CryptoAddressNetworkServicePluginRootNew - Trying to register to: " + platformComponentProfile.getAlias());
+                System.out.println("CryptoAddressNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
             }
         }catch (Exception e){
             e.printStackTrace();
