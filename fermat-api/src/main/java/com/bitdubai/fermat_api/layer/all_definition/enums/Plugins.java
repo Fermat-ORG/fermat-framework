@@ -17,13 +17,6 @@ public enum Plugins implements FermatPluginsEnum {
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     BITDUBAI_BITCOIN_CRYPTO_NETWORK             ("BBTCCNET"     ),
-    BITDUBAI_BITCOIN_CRYPTO_NETWORK2            ("BBTCCNET2"    ),
-    BITDUBAI_BLOCKCHAIN_INFO_WORLD              ("BBLOCKIW"     ),
-    BITDUBAI_CLOUD_CHANNEL                      ("BCLOUDC"      ),
-    BITDUBAI_COINAPULT_WORLD                    ("BCOINAW"      ),
-    BITDUBAI_CRYPTO_INDEX                       ("BCRYPTOINW"   ),
-    BITDUBAI_LICENSE_MANAGER                    ("BLICM"        ),
-    BITDUBAI_SHAPE_SHIFT_WORLD                  ("BSHAPESW"     ),
 
     BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL    ("BWSCCLIENTCH" ),
     BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER      ("BWSCCLSERVER" ),
@@ -306,7 +299,8 @@ public enum Plugins implements FermatPluginsEnum {
 
     CHAT_MIDDLEWARE                     ("CHMID"),
     CHAT_NETWORK_SERVICE                ("CHTNS"),
-    CHAT_SUP_APP_MODULE                 ("CHTSAM"), CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
+    CHAT_SUP_APP_MODULE                 ("CHTSAM"),
+    CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
 
     // ART
     ARTIST_ACTOR_CONNECTION             ("ARTAAC"),
@@ -345,6 +339,7 @@ public enum Plugins implements FermatPluginsEnum {
 
         switch (code) {
 
+            case "AND"  :   return ANDROID_CORE          ;
             case "APR"  :   return SUB_APP_RUNTIME          ;
             case "ASAP" :   return ASSET_APPROPRIATION      ;
             case "ASD"  :   return ASSET_DISTRIBUTION       ;
@@ -465,7 +460,6 @@ public enum Plugins implements FermatPluginsEnum {
             case "COFP":    return CUSTOMER_OFFLINE_PAYMENT         ;
             case "BAFP":    return BROKER_ACK_OFFLINE_PAYMENT       ;
             case "BAOP":    return BROKER_ACK_ONLINE_PAYMENT        ;
-            case "CAFM":    return CUSTOMER_ACK_OFFLINE_MERCHANDISE ;
             case "CAOM":    return CUSTOMER_ACK_ONLINE_MERCHANDISE  ;
             case "BSOM":    return BROKER_SUBMIT_ONLINE_MERCHANDISE ;
             case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
@@ -500,7 +494,9 @@ public enum Plugins implements FermatPluginsEnum {
                         "This Code Is Not Valid for the Plugins enum"
                 );
         }
+
     }
+
     @Override
     public String getCode() {
         return this.code;
