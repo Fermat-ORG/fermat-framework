@@ -94,15 +94,9 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
             systemMonitorNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
             //DAO
-            subAppFermatMonitorServiceDAO = new ServiceDAO((Database) pluginDatabaseSystem);
-            subAppFermatMonitorServiceDAO.initializeDatabase(pluginId,SystemMonitorNetworkServiceDatabaseConstants.DATABASE_NAME);
-
-            subAppFermatMonitorConnectionDAO = new ConnectionDAO((Database) pluginDatabaseSystem);
-            subAppFermatMonitorConnectionDAO.initializeDatabase(pluginId, SystemMonitorNetworkServiceDatabaseConstants.DATABASE_NAME);
-
-            subAppFermatMonitorSystemDataDAO = new SystemDataDAO((Database) pluginDatabaseSystem);
-            subAppFermatMonitorSystemDataDAO.initializeDatabase(pluginId, SystemMonitorNetworkServiceDatabaseConstants.DATABASE_NAME);
-
+            subAppFermatMonitorServiceDAO    = new ServiceDAO   (dataBaseCommunication);
+            subAppFermatMonitorConnectionDAO = new ConnectionDAO(dataBaseCommunication);
+            subAppFermatMonitorSystemDataDAO = new SystemDataDAO(dataBaseCommunication);
 
 
 
@@ -155,6 +149,14 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
             e.printStackTrace();
         } catch (CantInitializeSystemMonitorNetworkServiceDataBaseException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(
+                    e,
+                    "",
+                    "Unhandled error during the start of the plug-in."
+            );
         }
 
     }

@@ -15,6 +15,7 @@
     <string name="buy">Buying</string>
     <string name="unit_number" translatable="false">1</string>
     <string name="waiting_for_you">Waiting for you</string>
+    <string name="about_to_expire">About to expire</string>
     <string name="waiting_for_the_customer">Waiting for the Customer</string>
     <string name="negotiation_closed">Close</string>
     <string name="negotiation_cancelled">Cancelled</string>
