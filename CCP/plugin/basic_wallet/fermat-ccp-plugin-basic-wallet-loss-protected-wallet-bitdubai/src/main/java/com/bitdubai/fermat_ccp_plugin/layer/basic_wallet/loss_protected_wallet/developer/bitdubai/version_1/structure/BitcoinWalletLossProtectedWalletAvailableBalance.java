@@ -113,13 +113,29 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
         try {
 
             double purchasePrice = 0;
-            ExchangeRate rate = getActualExchangeRate();
+            bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
+            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.AVAILABLE, purchasePrice);
+            //broadcaster balance amount
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
+        } catch(CantRegisterDebitException exception){
+            throw exception;
+        } catch(Exception exception){
+            throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
 
-            if(rate != null)
-                purchasePrice = rate.getPurchasePrice();
+    @Override
+    public void debit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction,double exchangeRate) throws CantRegisterDebitException {
+        try {
+
+            double purchasePrice = 0;
+            //  ExchangeRate rate = getActualExchangeRate();
+
+//            if(rate != null)
+//                purchasePrice = rate.getPurchasePrice();
 
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.AVAILABLE,purchasePrice);
+            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.AVAILABLE, purchasePrice);
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
         } catch(CantRegisterDebitException exception){
@@ -138,6 +154,27 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
 
             if(rate != null)
                 purchasePrice = rate.getPurchasePrice();
+            bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
+            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.AVAILABLE,purchasePrice);
+
+            //broadcaster balance amount
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
+        } catch(CantRegisterCreditException exception){
+            throw exception;
+        } catch(Exception exception){
+            throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
+    public void credit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction, double exchangeRate) throws CantRegisterCreditException {
+        try {
+
+            double purchasePrice = 0;
+            // ExchangeRate rate = getActualExchangeRate();
+
+            // if(rate != null)
+            //  purchasePrice = rate.getPurchasePrice();
 
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
             bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.AVAILABLE,purchasePrice);
@@ -167,6 +204,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
     {
         final ExchangeRate[] rate = new ExchangeRate[1];
         try {
+            LossProtectedWalletSettings bitcoinWalletSettings = null;
 
             //get walelt setting exchange provider manager
 
