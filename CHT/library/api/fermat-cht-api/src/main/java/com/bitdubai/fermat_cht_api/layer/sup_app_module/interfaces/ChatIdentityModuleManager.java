@@ -24,7 +24,7 @@ public interface ChatIdentityModuleManager extends ModuleManager<ChatPreferenceS
      * @return the list of Chat users associated to the current logged in Device User.
      * @throws CantListChatIdentityException if something goes wrong.
      */
-    List<ChatIdentity> getIdentityAssetUsersFromCurrentDeviceUser() throws CantListChatIdentityException;
+    List<ChatIdentity> getIdentityChatUsersFromCurrentDeviceUser() throws CantListChatIdentityException;
 
     /**
      * The method <code>getIdentityAssetIssuer</code> will give Identity Asset Issuer associated
@@ -32,7 +32,7 @@ public interface ChatIdentityModuleManager extends ModuleManager<ChatPreferenceS
      * @return Identity Chat associated.
      * @throws CantGetChatIdentityException if something goes wrong.
      */
-    ChatIdentity getIdentityAssetUser() throws CantGetChatIdentityException;
+    ChatIdentity getIdentityChatUser() throws CantGetChatIdentityException;
 
     /**
      * The method <code>createNewIdentityChat</code> creates a new intra wallet user Identity for the logged in Device User and returns the
