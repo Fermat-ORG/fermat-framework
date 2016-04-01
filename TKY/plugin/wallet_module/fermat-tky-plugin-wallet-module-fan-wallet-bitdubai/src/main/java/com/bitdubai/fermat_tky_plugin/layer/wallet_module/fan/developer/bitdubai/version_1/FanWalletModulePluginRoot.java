@@ -4,18 +4,13 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -27,7 +22,7 @@ import com.bitdubai.fermat_tky_plugin.layer.wallet_module.fan.developer.bitdubai
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/03/16.
  */
-public class FanWalletModulePluginRoot extends AbstractPlugin implements ModuleManager {
+public class FanWalletModulePluginRoot extends AbstractPlugin {
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
     @NeededPluginReference(platform = Platforms.TOKENLY, layer = Layers.SONG_WALLET,plugin = Plugins.TOKENLY_WALLET)
@@ -50,7 +45,7 @@ public class FanWalletModulePluginRoot extends AbstractPlugin implements ModuleM
      * This method is used by the fermat-core to get the plugin manager in execution time.
      * @return
      */
-    public FermatManager getManager(){
+    public ModuleManager getManager(){
         return this.fanWalletModuleManager;
     }
 
@@ -82,31 +77,6 @@ public class FanWalletModulePluginRoot extends AbstractPlugin implements ModuleM
     }
     public void stop(){
         this.serviceStatus = ServiceStatus.STOPPED;
-    }
-
-    @Override
-    public SettingsManager getSettingsManager() {
-        return null;
-    }
-
-    @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return null;
-    }
-
-    @Override
-    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-
-    }
-
-    @Override
-    public void setAppPublicKey(String publicKey) {
-
-    }
-
-    @Override
-    public int[] getMenuNotifications() {
-        return new int[0];
     }
 }
 
