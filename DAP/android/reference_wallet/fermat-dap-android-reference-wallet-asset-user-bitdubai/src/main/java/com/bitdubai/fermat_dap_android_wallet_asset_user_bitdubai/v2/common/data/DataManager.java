@@ -24,9 +24,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 2/24/16.
@@ -72,58 +74,34 @@ public class DataManager {
 
     public List<Asset> getAssets() throws CantLoadWalletException, CantGetTransactionsException {
         List<AssetUserWalletList> assetUserWalletBalances = moduleManager.getAssetUserWalletBalances(walletPublicKey);
-        List<Asset> assets = new ArrayList<>();
-//        Asset asset;
-//        for(AssetUserWalletList assetUserWalletList : assetUserWalletBalances) {
-//            long timestamp = moduleManager.loadAssetUserWallet(walletPublicKey).getAllTransactions(assetUserWalletList.getDigitalAsset().getPublicKey()).get(0).getTimestamp();
-//            long quantityAvailableBalance = assetUserWalletList.getQuantityAvailableBalance();
-//            assets = new ArrayList<>();
-//            for(long i = 0; i < quantityAvailableBalance; i++) {
-//                assets.add(new Asset(assetUserWalletList, timestamp, Asset.Status.CONFIRMED));
-//            }
-//
-//            long quantityBookBalance = assetUserWalletList.getQuantityBookBalance() - quantityAvailableBalance;
-//            for(long i = 0; i < quantityBookBalance; i++) {
-//                assets.add(new Asset(assetUserWalletList, timestamp, Asset.Status.PENDING));
-//            }
-//        }
 
-        assets = new ArrayList<>();
-        List<Asset> debitAssets = new ArrayList<>();
+        List<Asset> assets = new ArrayList<>();
+        Set<String> hashes = new HashSet<>();
         for(AssetUserWalletList assetUserWalletList : assetUserWalletBalances) {
             List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet(walletPublicKey).getAllTransactions(assetUserWalletList.getDigitalAsset().getPublicKey());
             for(AssetUserWalletTransaction assetUserWalletTransaction : assetUserWalletTransactions) {
-                if (assetUserWalletTransaction.getMemo().equals("Asset Delivered")
-                        && assetUserWalletTransaction.getTransactionType().equals(TransactionType.CREDIT)) {
-                    assets.add(new Asset(assetUserWalletList, assetUserWalletTransaction));
-                }
-                if (assetUserWalletTransaction.getTransactionType().equals(TransactionType.DEBIT)
-                        && assetUserWalletTransaction.getBalanceType().equals(BalanceType.AVAILABLE)) {
-                    debitAssets.add(new Asset(assetUserWalletList, assetUserWalletTransaction));
-                }
+                hashes.add(assetUserWalletTransaction.getTransactionHash());
+                assets.add(new Asset(assetUserWalletList, assetUserWalletTransaction));
             }
         }
 
         List<Asset> newAssets = new ArrayList<>();
-        for (int i = 0; i < assets.size(); i++) {
-            boolean b = false;
-            for (int j = i+1; j < assets.size(); j++) {
-                if (assets.get(i).getId().equals(assets.get(j).getId())) {
-                    newAssets.add(assets.get(j));
-                    assets.remove(j);
-                    b = true;
+
+        for (String hash : hashes) {
+            List<Asset> sublist = new ArrayList<>();
+            for (Asset asset : assets) {
+                if (asset.getId().equals(hash)) {
+                    sublist.add(asset);
                 }
             }
-            if (!b) {
-                newAssets.add(assets.get(i));
-            }
-        }
-
-        for (Asset asset : newAssets) {
-            for (Asset debitAsset : debitAssets) {
-                if (asset.getId().equals(debitAsset.getId())) {
-                    newAssets.remove(asset);
-                    break;
+            if (sublist.size() == 1) {
+                newAssets.add(sublist.get(0));
+            } else if (sublist.size() > 1) {
+                for (int i = sublist.size() - 1; i >= 0; i--) {
+                    if (sublist.get(i).getStatus().equals(Asset.Status.CONFIRMED)) {
+                        newAssets.add(sublist.get(i));
+                        break;
+                    }
                 }
             }
         }
