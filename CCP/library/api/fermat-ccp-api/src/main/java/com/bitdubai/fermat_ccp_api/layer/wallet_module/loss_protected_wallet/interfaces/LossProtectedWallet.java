@@ -611,7 +611,7 @@ public interface LossProtectedWallet extends Serializable {
      */
     List<InstalledWallet> getInstalledWallets() throws CantListWalletsException;
 
-    UUID getExchangeProvider(String walletPublicKey) throws CantGetBasicWalletExchangeProviderException;
+    UUID getExchangeProvider() throws CantGetBasicWalletExchangeProviderException;
 
-    void setExchangeProvider(UUID idProvider,String walletPublicKey) throws CantSetBasicWalletExchangeProviderException;
+    void setExchangeProvider(UUID idProvider) throws CantSetBasicWalletExchangeProviderException;
 }

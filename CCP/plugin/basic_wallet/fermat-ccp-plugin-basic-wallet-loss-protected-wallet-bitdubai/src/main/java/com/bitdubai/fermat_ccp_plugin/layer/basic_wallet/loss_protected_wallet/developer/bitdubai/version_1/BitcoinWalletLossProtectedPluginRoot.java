@@ -12,15 +12,11 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseT
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -38,22 +34,16 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantGetExchangeProviderIdException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantInitializeBitcoinLossProtectedWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantSaveExchangeProviderIdException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
-
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSettings;
 
 
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.developerUtils.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantLossProtectedDeliverDatabaseException;
-import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.structure.BitcoinLossProtectedSettings;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.structure.BitcoinWalletLossProtectedWallet;
-import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
-import com.bitdubai.fermat_cer_api.all_definition.utils.CurrencyPairImpl;
-import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
-import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
-import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -90,6 +80,7 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
 
 
     private static final String WALLET_IDS_FILE_NAME = "walletsIds";
+    private static final String EXCHANGE_PROVIDER_FILE_NAME = "exchangeproviderid";
     private Map<String, UUID> walletIds = new HashMap<>();
 
     public BitcoinWalletLossProtectedPluginRoot() {
@@ -167,7 +158,7 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
     @Override
     public BitcoinLossProtectedWallet loadWallet(String walletId) throws CantLoadWalletException {
         try {
-            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster, this.getSettingsManager());
+            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster,this.getExchangeProviderId(), this.exchangeProviderFilterManagerproviderFilter);
 
             UUID internalWalletId = walletIds.get(walletId);
             bitcoinWallet.initialize(internalWalletId);
@@ -185,7 +176,7 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
     @Override
     public void createWallet(String walletId) throws CantCreateWalletException {
         try {
-            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster, this.getSettingsManager());
+            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster, this.getExchangeProviderId(), this.exchangeProviderFilterManagerproviderFilter);
 
             UUID internalWalletId = bitcoinWallet.create(walletId);
 
@@ -200,40 +191,45 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
         }
     }
 
-    private SettingsManager<BitcoinLossProtectedWalletSettings> settingsManager;
 
     @Override
-    public SettingsManager<BitcoinLossProtectedWalletSettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
+    public UUID getExchangeProviderId() throws CantGetExchangeProviderIdException {
+        try {
+            UUID providerId = null;
+            PluginTextFile providerIdsFile = pluginFileSystem.getTextFile(pluginId, DeviceDirectory.LOCAL_WALLETS.getName(), EXCHANGE_PROVIDER_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            providerIdsFile.loadFromMedia();
 
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
+            if(providerIdsFile.getContent().length() > 0)
+                providerId = UUID.fromString(providerIdsFile.getContent());
 
-        return this.settingsManager;
+            return providerId;
+
+        } catch (FileNotFoundException | CantCreateFileException exception) {
+            try {
+                PluginTextFile providerIdsFile = pluginFileSystem.createTextFile(pluginId, DeviceDirectory.LOCAL_WALLETS.getName(), EXCHANGE_PROVIDER_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                providerIdsFile.persistToMedia();
+                return null;
+            } catch (CantCreateFileException | CantPersistFileException e) {
+                throw new CantGetExchangeProviderIdException(CantGetExchangeProviderIdException.DEFAULT_MESSAGE, e, "CantPersistFileException", null);
+            }
+        } catch (CantLoadFileException exception) {
+            throw new CantGetExchangeProviderIdException(CantGetExchangeProviderIdException.DEFAULT_MESSAGE, exception, "CantLoadFileException", null);
+        }
     }
 
-    @Override
-    public void createSettingsFile(String walletPublicKey) {
-        BitcoinLossProtectedWalletSettings bitcoinLossProtectedWalletSettings = new BitcoinLossProtectedSettings(this.pluginFileSystem, this.pluginId);
 
+    @Override
+    public void saveExchangeProviderIdFile(UUID providerId) throws CantSaveExchangeProviderIdException {
         try {
 
-            CurrencyPair wantedCurrencyPair = new CurrencyPairImpl(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR);
+            PluginTextFile providerIdsFile = pluginFileSystem.createTextFile(pluginId, DeviceDirectory.LOCAL_WALLETS.getName(), EXCHANGE_PROVIDER_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            providerIdsFile.setContent(String.valueOf(providerId));
+            providerIdsFile.persistToMedia();
 
-            Collection<CurrencyExchangeRateProviderManager> filteredProviders = exchangeProviderFilterManagerproviderFilter.getProviderReferencesFromCurrencyPair(wantedCurrencyPair);
-            List<CurrencyExchangeRateProviderManager> providers = new ArrayList(filteredProviders);
-
-            bitcoinLossProtectedWalletSettings.setExchangeProvider(providers.get(0).getProviderId());
-            this.getSettingsManager().persistSettings(walletPublicKey, bitcoinLossProtectedWalletSettings);
-        } catch (CantPersistSettingsException e1) {
-            e1.printStackTrace();
-        } catch (CantGetProviderException e) {
-            e.printStackTrace();
-        } catch (CantGetProviderInfoException e) {
-            e.printStackTrace();
+        } catch (CantPersistFileException e) {
+            throw new CantSaveExchangeProviderIdException(CantSaveExchangeProviderIdException.DEFAULT_MESSAGE, e, "CantPersistFileException", null);
+        } catch (CantCreateFileException e) {
+            throw new CantSaveExchangeProviderIdException(CantSaveExchangeProviderIdException.DEFAULT_MESSAGE, e, "CantCreateFileException", null);
         }
     }
 
@@ -248,6 +244,8 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
             }
         }
     }
+
+
 
     private PluginTextFile getWalletIdsFile() throws CantStartPluginException {
         try {
@@ -266,6 +264,9 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
     }
+
+
+
 
 }
 
