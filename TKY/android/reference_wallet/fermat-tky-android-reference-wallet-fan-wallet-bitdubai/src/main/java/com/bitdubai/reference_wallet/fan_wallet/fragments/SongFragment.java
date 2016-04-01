@@ -674,8 +674,30 @@ public class SongFragment extends AbstractFermatFragment {
 
     private Fan getTestFanIdentity(){
         Fan fanIdentity = new Fan() {
+
+
             @Override
-            public String getAlias() {
+            public String getTokenlyId() {
+                return null;
+            }
+
+            @Override
+            public String getUsername() {
+                return null;
+            }
+
+            @Override
+            public String getEmail() {
+                return null;
+            }
+
+            @Override
+            public String getApiToken() {
+                return null;
+            }
+
+            @Override
+            public String getApiSecretKey() {
                 return null;
             }
 
@@ -699,15 +721,6 @@ public class SongFragment extends AbstractFermatFragment {
 
             }
 
-            @Override
-            public String getExternalUsername() {
-                return null;
-            }
-
-            @Override
-            public String getExternalAccesToken() {
-                return null;
-            }
 
             @Override
             public ExternalPlatform getExternalPlatform() {
@@ -717,9 +730,10 @@ public class SongFragment extends AbstractFermatFragment {
             @Override
             public MusicUser getMusicUser() {
                 MusicUser hardocedUser = new MusicUser() {
+
                     @Override
-                    public String getId() {
-                        return "18873727-da0f-4b50-a213-cc40c6b4562d";
+                    public String getTokenlyId() {
+                        return null;
                     }
 
                     @Override
@@ -743,6 +757,11 @@ public class SongFragment extends AbstractFermatFragment {
                     }
                 };
                 return hardocedUser;
+            }
+
+            @Override
+            public String getUserPassword() {
+                return null;
             }
         };
         return fanIdentity;
