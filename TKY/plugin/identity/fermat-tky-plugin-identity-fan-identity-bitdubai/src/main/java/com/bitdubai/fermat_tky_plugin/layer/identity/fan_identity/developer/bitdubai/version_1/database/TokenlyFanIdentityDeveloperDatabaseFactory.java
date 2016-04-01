@@ -126,11 +126,14 @@ public class TokenlyFanIdentityDeveloperDatabaseFactory implements DealsWithPlug
         List<String> ArtistUserColumns = new ArrayList<String>();
 
         ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME);
+        ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ID_COLUMN_NAME);
         ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
-        ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ALIAS_COLUMN_NAME);
-        ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_USER_NAME_COLUMN_NAME);
-        ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ACCESS_TOKEN_COLUMN_NAME);
+        ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_SECRET_KEY_COLUMN_NAME);
+        ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PASSWORD_COLUMN_NAME);
+        ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_USER_NAME_COLUMN_NAME);
+        ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ACCESS_TOKEN_COLUMN_NAME);
+        ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EMAIL_COLUMN_NAME);
         ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
         /**
          * Table Asset User addition.

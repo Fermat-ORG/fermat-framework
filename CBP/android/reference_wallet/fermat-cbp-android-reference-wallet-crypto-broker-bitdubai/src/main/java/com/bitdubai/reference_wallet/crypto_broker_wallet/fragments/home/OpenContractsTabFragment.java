@@ -35,7 +35,8 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.util.CommonLogger;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_CONTRACT_UPDATE_VIEW;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEGOTIATION_UPDATE_VIEW;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW;
 
 
 /**
@@ -236,7 +237,10 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
     @Override
     public void onUpdateViewOnUIThread(String code) {
         switch (code) {
-            case CBW_NEW_CONTRACT_UPDATE_VIEW:
+            case CBW_CONTRACT_UPDATE_VIEW:
+                onRefresh();
+                break;
+            case CBW_NEGOTIATION_UPDATE_VIEW:
                 onRefresh();
                 break;
         }
