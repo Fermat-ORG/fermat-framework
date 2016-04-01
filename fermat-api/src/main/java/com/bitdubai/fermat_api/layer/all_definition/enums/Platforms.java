@@ -44,6 +44,7 @@ public enum Platforms implements FermatEnum {
 
         switch (code) {
 
+            case "ART":  return ART_PLATFORM;
             case "BCH":  return BLOCKCHAINS;
             case "BNK":  return BANKING_PLATFORM;
             case "CP":   return COMMUNICATION_PLATFORM;
