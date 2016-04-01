@@ -168,12 +168,13 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
                     new ConfirmDialog.Builder(getActivity(), appSession)
                             .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
                             .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
-                            .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
+                            .setColorStyle(getResources().getColor(R.color.card_toolbar))
                             .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                                 @Override
                                 public void onClick() {
                                     int assetsAmount = Integer.parseInt("1");
                                     doRedeem(digitalAsset.getAssetPublicKey(), redeemPoints, assetsAmount);
+
                                 }
                             }).build().show();
 
@@ -405,4 +406,3 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         task.execute();
     }
 }
-
