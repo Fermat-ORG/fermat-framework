@@ -109,7 +109,7 @@ public class BitcoinWalletLossProtectedWalletDao {
         }
     }
 
-    public long getAvailableBalance(BlockchainNetworkType blockchainNetworkType,long exchangeRate) throws CantListTransactionsException {
+    public long getAvailableBalance(BlockchainNetworkType blockchainNetworkType,String exchangeRate) throws CantListTransactionsException {
         try {
 
             long availableBalance = 0;

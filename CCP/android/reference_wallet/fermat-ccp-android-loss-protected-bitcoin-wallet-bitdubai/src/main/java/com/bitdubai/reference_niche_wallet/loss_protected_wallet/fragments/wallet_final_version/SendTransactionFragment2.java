@@ -881,7 +881,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private long loadBalance(BalanceType balanceType){
         long balance = 0;
         try {
-            balance = lossProtectedWalletSession.getModuleManager().getCryptoWallet().getBalance(balanceType, lossProtectedWalletSession.getAppPublicKey(),blockchainNetworkType,exchangeRate);
+            balance =  lossProtectedWalletSession.getModuleManager().getCryptoWallet().getBalance(balanceType, lossProtectedWalletSession.getAppPublicKey(),blockchainNetworkType,String.valueOf(exchangeRate));
             System.out.println("THE BALANCE IS " + balance);
 
         } catch (CantGetLossProtectedBalanceException e) {

@@ -8,13 +8,7 @@ import java.util.UUID;
 /**
  * Created by GAbriel Araujo 16/03/16.
  */
-public interface Identity {
-
-    /**
-     * This method returns the identity alias.
-     * @return
-     */
-    String getAlias();
+public interface Identity extends User{
 
     /**
      * This method returns the identity id.
@@ -40,18 +34,6 @@ public interface Identity {
     void setNewProfileImage(final byte[] imageBytes);
 
     /**
-     * This method returns the external platform username
-     * @return
-     */
-    String getExternalUsername();
-
-    /**
-     * This method returns the external access token
-     * @return
-     */
-    String getExternalAccesToken();
-
-    /**
      * This method returns the external platform that the identity uses to redeem tokens.
      * @return
      */
@@ -62,5 +44,11 @@ public interface Identity {
      * @return
      */
     MusicUser getMusicUser();
+
+    /**
+     * This method returns the user hashed password for this account.
+     * @return
+     */
+    String getUserPassword();
 
 }

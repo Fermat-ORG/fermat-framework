@@ -49,6 +49,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerCloseConfirmationNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerCloseNegotiationTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -114,6 +115,8 @@ public class CustomerBrokerCloseAgent  implements
     /*Represent the Plugins Version*/
     private PluginVersionReference                      pluginVersionReference;
 
+    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+
     public CustomerBrokerCloseAgent(
         PluginDatabaseSystem                        pluginDatabaseSystem,
         LogManager                                  logManager,
@@ -128,7 +131,8 @@ public class CustomerBrokerCloseAgent  implements
         CryptoAddressBookManager                    cryptoAddressBookManager,
         CryptoVaultManager                          cryptoVaultManager,
         WalletManagerManager                        walletManagerManager,
-        PluginVersionReference                      pluginVersionReference
+        PluginVersionReference                      pluginVersionReference,
+        IntraWalletUserIdentityManager intraWalletUserIdentityManager
     ){
         this.pluginDatabaseSystem                       = pluginDatabaseSystem;
         this.logManager                                 = logManager;
@@ -144,6 +148,7 @@ public class CustomerBrokerCloseAgent  implements
         this.cryptoVaultManager                         = cryptoVaultManager;
         this.walletManagerManager                       = walletManagerManager;
         this.pluginVersionReference                     = pluginVersionReference;
+        this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
     }
 
     /*IMPLEMENTATION CBPTransactionAgent*/
@@ -446,7 +451,7 @@ public class CustomerBrokerCloseAgent  implements
                                                 cryptoVaultManager,
                                                 walletManagerManager,
                                                 errorManager,
-                                                pluginVersionReference
+                                                pluginVersionReference,intraWalletUserIdentityManager
                                         );
                                         customerBrokerClosePurchaseNegotiationTransaction.receivePurchaseNegotiationTranasction(transactionId, purchaseNegotiation);
                                         break;
@@ -461,7 +466,7 @@ public class CustomerBrokerCloseAgent  implements
                                                 cryptoVaultManager,
                                                 walletManagerManager,
                                                 errorManager,
-                                                pluginVersionReference
+                                                pluginVersionReference,intraWalletUserIdentityManager
                                         );
                                         customerBrokerCloseSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
                                         break;
@@ -486,7 +491,7 @@ public class CustomerBrokerCloseAgent  implements
                                                 cryptoVaultManager,
                                                 walletManagerManager,
                                                 errorManager,
-                                                pluginVersionReference
+                                                pluginVersionReference,intraWalletUserIdentityManager
                                         );
                                         customerBrokerClosePurchaseNegotiationTransaction.receivePurchaseConfirm(purchaseNegotiation);
                                         break;
@@ -501,7 +506,7 @@ public class CustomerBrokerCloseAgent  implements
                                                 cryptoVaultManager,
                                                 walletManagerManager,
                                                 errorManager,
-                                                pluginVersionReference
+                                                pluginVersionReference,intraWalletUserIdentityManager
                                         );
                                         customerBrokerCloseSaleNegotiationTransaction.receiveSaleConfirm(saleNegotiation);
                                         break;

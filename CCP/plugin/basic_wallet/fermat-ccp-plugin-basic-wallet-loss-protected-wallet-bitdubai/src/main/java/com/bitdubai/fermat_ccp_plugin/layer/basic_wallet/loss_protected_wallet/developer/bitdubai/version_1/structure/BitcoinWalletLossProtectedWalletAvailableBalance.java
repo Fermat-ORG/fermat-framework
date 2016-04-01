@@ -84,7 +84,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
 
 
     @Override
-    public long getBalance(BlockchainNetworkType blockchainNetworkType, long exchangeRate) throws CantCalculateBalanceException {
+    public long getBalance(BlockchainNetworkType blockchainNetworkType, String exchangeRate) throws CantCalculateBalanceException {
         try {
 
             //calculate how many btc can spend based on the exchangeRate
