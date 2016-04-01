@@ -108,7 +108,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
     private BigDecimal priceReference = null;
     private BigDecimal amount = null;
     private String bankAccount = null;
-    private FiatCurrency fiatCurrency = null;
+    private Currency fiatCurrency = null;
     CustomerBrokerSaleImpl customerBrokerSale = null;
 
     public UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(ErrorManager errorManager,
@@ -254,6 +254,10 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
         try {
             final String transactionStatusColumnName = UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME;
             List<CustomerBrokerSale> customerBrokerSales;
+            // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
+            //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
+            final String brokerWalletPublicKey = "crypto_broker_wallet";
+
 
             CryptoBrokerWalletSetting walletSettings = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKeyTest").getCryptoWalletSetting();
             CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread = walletSettings.getCryptoBrokerWalletSpreadSetting();
@@ -315,12 +319,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                 //Actualiza el Transaction_Status de la Transaction Customer Broker Sale a IN_OPEN_CONTRACT
                 customerBrokerSale.setTransactionStatus(TransactionStatus.IN_OPEN_CONTRACT);
                 userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
-
-                // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
-                //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
-                final String brokerWalletPublicKey = "crypto_broker_wallet";
                 broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_NEW_CONTRACT_NOTIFICATION);
-                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_NEW_CONTRACT_UPDATE_VIEW);
+                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
             }
 
             /**
@@ -337,6 +337,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         customerBrokerSale.setTransactionStatus(TransactionStatus.IN_CONTRACT_SUBMIT);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                     }
                 }
             }
@@ -365,9 +366,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                             if (new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
                                 lastNotificationTime = new Date().getTime();
-
-                                final String brokerWalletPublicKey = "crypto_broker_wallet";
                                 broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
+                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                             }
                         }
                     }
@@ -420,7 +420,12 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                                         bankAccount = getAccountNumberFromClause(clause);
                                         break;
                                     case BROKER_CURRENCY:
-                                        fiatCurrency = FiatCurrency.getByCode(clause.getValue());
+                                        if(CryptoCurrency.codeExists(clause.getValue())){
+                                            fiatCurrency = CryptoCurrency.getByCode(clause.getValue());
+                                        }else{
+                                            fiatCurrency = FiatCurrency.getByCode(clause.getValue());
+                                        }
+
                                         break;
                                 }
                             }
@@ -439,7 +444,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                             } else if (sw == 2) {
                                 bankMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
-                                        fiatCurrency,
+                                        (FiatCurrency)fiatCurrency,
                                         "walletPublicKey",
                                         "walletPublicKey",
                                         bankAccount,
@@ -451,7 +456,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                             } else if (sw == 3) {
                                 cashMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
-                                        fiatCurrency,
+                                        (FiatCurrency)fiatCurrency,
                                         "walletPublicKey",
                                         "walletPublicKey",
                                         "cashReference",
@@ -464,6 +469,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         }
                         customerBrokerSale.setTransactionStatus(TransactionStatus.IN_PAYMENT_SUBMIT);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_CONTRACT_CUSTOMER_SUBMITTED_PAYMENT_NOTIFICATION);
                     }
                 }
             }
@@ -482,6 +489,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         customerBrokerSale.setTransactionStatus(TransactionStatus.IN_PENDING_MERCHANDISE);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                     }
                 }
             }
@@ -509,9 +517,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                             if (new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
                                 lastNotificationTime = new Date().getTime();
-
-                                final String brokerWalletPublicKey = "crypto_broker_wallet";
                                 broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION);
+                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                             }
                         }
                     }
@@ -532,6 +539,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         customerBrokerSale.setTransactionStatus(TransactionStatus.IN_MERCHANDISE_SUBMIT);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
                     }
                 }
             }
@@ -542,16 +550,17 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
              * Comienzo a recorrer todas las transacciones que esten en Transaction Status IN_MERCHANDISE_SUBMIT
              * Se registra el Close Contract siempre y cuando el Transaction Status de la CustomerBrokerSale este IN_MERCHANDISE_SUBMIT
              */
-            filterTable = getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), transactionStatusColumnName);
+            /*filterTable = getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), transactionStatusColumnName);
             customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
 
             for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
                 for (CustomerBrokerContractSale customerBrokerContractSale : contractSalesMerchandiseSubmit) {
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
+                        System.out.print("\nTEST CONTRACT - USER LEVEL SALE - AGENT - getCustomerBrokerSales()\n");
                         closeContractManager.closeSaleContract(customerBrokerContractSale.getContractId());
                     }
                 }
-            }
+            }*/
 
             /**
              * IN_MERCHANDISE_SUBMIT -> COMPLETED
@@ -560,13 +569,20 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
              */
             filterTable = getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), transactionStatusColumnName);
             customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
-            Collection<CustomerBrokerContractSale> contractSalesCompleted = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.COMPLETED);
+            Collection<CustomerBrokerContractSale> contractSalesCompleted = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.READY_TO_CLOSE);
 
             for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
                 for (CustomerBrokerContractSale customerBrokerContractSale : contractSalesCompleted) {
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
+
+                        System.out.print("\nTEST CONTRACT - USER LEVEL SALE - AGENT - getCustomerBrokerSales()\n");
+                        closeContractManager.closeSaleContract(customerBrokerContractSale.getContractId());
+
                         customerBrokerSale.setTransactionStatus(TransactionStatus.COMPLETED);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
+
+                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
+                        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CBW_CONTRACT_COMPLETED_NOTIFICATION);
                     }
                 }
             }

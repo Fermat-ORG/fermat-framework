@@ -8,9 +8,13 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BrokerCurrencyQuotation;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -49,7 +53,7 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         final String currencyToBuy = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
         final String currencyToPay = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
 
-        String marketRate = getMarketRate(clauses);
+        String marketRate = getMarketRateValue(clauses);
 
         markerRateReference.setText(String.format("1 %1$s / %2$s %3$s", currencyToBuy, marketRate, currencyToPay));
         yourExchangeRateValueLeftSide.setText(String.format("1 %1$s /", currencyToBuy));
@@ -92,12 +96,44 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
         return R.id.ccw_card_view_title;
     }
 
-    private String getMarketRate(Map<ClauseType, ClauseInformation> clauses) {
-        BrokerCurrencyQuotation brokerCurrencyQuotation = new BrokerCurrencyQuotation(marketRateList);
-        String customerCurrency = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
-        String brokerCurrency = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
 
-        return brokerCurrencyQuotation.getExchangeRate(customerCurrency, brokerCurrency);
+
+    private String getMarketRateValue(Map<ClauseType, ClauseInformation> clauses) {
+
+        String currencyOver = clauses.get(ClauseType.CUSTOMER_CURRENCY).getValue();
+        String currencyUnder = clauses.get(ClauseType.BROKER_CURRENCY).getValue();
+
+        ExchangeRate currencyQuotation = getExchangeRate(currencyOver, currencyUnder);
+        String exchangeRateStr = "0.0";
+
+        if (currencyQuotation == null) {
+            currencyQuotation = getExchangeRate(currencyUnder, currencyOver);
+            if (currencyQuotation != null) {
+                BigDecimal exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
+                exchangeRate = (new BigDecimal(1)).divide(exchangeRate, 8, RoundingMode.HALF_UP);
+                exchangeRateStr = DecimalFormat.getInstance().format(exchangeRate.doubleValue());
+            }
+        } else {
+            BigDecimal exchangeRate = new BigDecimal(currencyQuotation.getSalePrice());
+            exchangeRateStr = DecimalFormat.getInstance().format(exchangeRate.doubleValue());
+        }
+
+        return exchangeRateStr;
+    }
+
+    private ExchangeRate getExchangeRate(String currencyAlfa, String currencyBeta) {
+
+        if (marketRateList != null)
+            for (IndexInfoSummary item : marketRateList) {
+                final ExchangeRate exchangeRateData = item.getExchangeRateData();
+                final String toCurrency = exchangeRateData.getToCurrency().getCode();
+                final String fromCurrency = exchangeRateData.getFromCurrency().getCode();
+
+                if (fromCurrency.equals(currencyAlfa) && toCurrency.equals(currencyBeta))
+                    return exchangeRateData;
+            }
+
+        return null;
     }
 
 }

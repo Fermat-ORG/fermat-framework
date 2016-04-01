@@ -55,8 +55,10 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
     public void bind(ContractBasicInformation itemInfo) {
 
         ContractStatus contractStatus = itemInfo.getStatus();
+        boolean nearExpirationDatetime = itemInfo.getNearExpirationDatetime();
         itemView.setBackgroundColor(getStatusBackgroundColor(contractStatus));
-        status.setText(getStatusStringRes(contractStatus));
+        status.setText(getStatusStringRes(contractStatus, nearExpirationDatetime));
+        status.setTextColor(getStatusColor(contractStatus, nearExpirationDatetime));
         contractAction.setText(getContractActionDescription(itemInfo, contractStatus));
         customerName.setText(itemInfo.getCryptoBrokerAlias());
         try {
@@ -95,17 +97,28 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
         return res.getString(R.string.sending);
     }
 
-    private int getStatusStringRes(ContractStatus status) {
+    private int getStatusStringRes(ContractStatus status, boolean nearExpirationDatetime) {
         if (status == ContractStatus.CANCELLED)
             return R.string.contract_cancelled;
 
-        if (status == ContractStatus.PENDING_PAYMENT)
-            return R.string.waiting_for_you;
+        if (status == ContractStatus.PENDING_PAYMENT){
+            if(nearExpirationDatetime)
+                return R.string.about_to_expire;
+            else
+                return R.string.waiting_for_you;
+        }
 
         return R.string.waiting_for_broker;
     }
 
-    private Drawable getImgDrawable(byte[] customerImg) {
+    private int getStatusColor(ContractStatus status, boolean nearExpirationDatetime) {
+        if (status == ContractStatus.PENDING_PAYMENT && nearExpirationDatetime)
+            return res.getColor(R.color.ccw_contract_status_about_to_expire);
+        return res.getColor(R.color.ccw_contract_status_normal);
+    }
+
+
+        private Drawable getImgDrawable(byte[] customerImg) {
         if (customerImg != null && customerImg.length > 0)
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 
