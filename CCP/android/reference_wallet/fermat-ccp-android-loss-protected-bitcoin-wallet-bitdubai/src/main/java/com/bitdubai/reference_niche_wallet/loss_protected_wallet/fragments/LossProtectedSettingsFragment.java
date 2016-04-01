@@ -69,7 +69,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
     @Override
     protected List<PreferenceSettingsItem> setSettingsItems() {
         BlockchainNetworkType blockchainNetworkType= null;
-        UUID exchangeProviderIdSettings = null;
+        UUID exchangeProviderId = null;
         List<PreferenceSettingsItem> list = new ArrayList<>();
         try{
 
@@ -94,8 +94,8 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
             //Exchange Rate Provider
 
-            if (cryptoWallet.getExchangeProvider(referenceWalletSession.getAppPublicKey())!=null)
-                exchangeProviderIdSettings =  cryptoWallet.getExchangeProvider(referenceWalletSession.getAppPublicKey());
+            if (cryptoWallet.getExchangeProvider()!=null)
+                exchangeProviderId=  cryptoWallet.getExchangeProvider();
 
             List<PreferenceSettingsTextPlusRadioItem> stringsProviders = new ArrayList<PreferenceSettingsTextPlusRadioItem>();
 
@@ -105,7 +105,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
             int position = 11;
             for (CurrencyExchangeRateProviderManager provider :  providers)
             {
-                stringsProviders.add(new PreferenceSettingsTextPlusRadioItem(position,provider.getProviderName(),(provider.getProviderId().equals(exchangeProviderIdSettings)) ? true : false));
+                stringsProviders.add(new PreferenceSettingsTextPlusRadioItem(position,provider.getProviderName(),(provider.getProviderId().equals(exchangeProviderId)) ? true : false));
                 position++;
             }
 
@@ -191,12 +191,12 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
                 //get providers list
                 List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
 
-                cryptoWallet.setExchangeProvider(providers.get(0).getProviderId(),referenceWalletSession.getAppPublicKey());
+                cryptoWallet.setExchangeProvider(providers.get(0).getProviderId());
 
                 for (CurrencyExchangeRateProviderManager provider :  providers)
                 {
                     if(provider.getProviderName().equals(preferenceSettingsTextPlusRadioItem.getText()))
-                        cryptoWallet.setExchangeProvider(provider.getProviderId(),referenceWalletSession.getAppPublicKey());
+                        cryptoWallet.setExchangeProvider(provider.getProviderId());
                 }
             }
 
