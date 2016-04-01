@@ -1,8 +1,14 @@
 package com.bitdubai.fermat_art_plugin.layer.sub_app_module.music_player.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDeleteSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDownloadSongException;
@@ -11,6 +17,7 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongStatu
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantSynchronizeWithExternalAPIException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongStatusException;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.SongWalletTokenlyManager;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 
 import java.util.List;
@@ -21,50 +28,81 @@ import java.util.UUID;
  */
 public class MusicPlayerManager implements MusicPlayerModuleManager {
     private final ErrorManager errorManager;
-    private final MusicPlayerModuleManager musicPlayerModuleManager;
+    private final SongWalletTokenlyManager songWalletTokenlyManager;
 
-    public MusicPlayerManager(ErrorManager errorManager, MusicPlayerModuleManager musicPlayerModuleManager) {
+    public MusicPlayerManager(ErrorManager errorManager, SongWalletTokenlyManager songWalletTokenlyManager) {
         this.errorManager = errorManager;
-        this.musicPlayerModuleManager = musicPlayerModuleManager;
+        this.songWalletTokenlyManager = songWalletTokenlyManager;
     }
+
 
     @Override
     public List<WalletSong> getSongsBySongStatus(SongStatus songStatus) throws CantGetSongListException {
-        return musicPlayerModuleManager.getSongsBySongStatus(songStatus);
+        return songWalletTokenlyManager.getSongsBySongStatus(songStatus);
     }
 
     @Override
     public List<WalletSong> getAvailableSongs() throws CantGetSongListException {
-        return musicPlayerModuleManager.getAvailableSongs();
+        return songWalletTokenlyManager.getAvailableSongs();
     }
 
     @Override
     public List<WalletSong> getDeletedSongs() throws CantGetSongListException {
-        return musicPlayerModuleManager.getDeletedSongs();
+        return songWalletTokenlyManager.getDeletedSongs();
     }
 
     @Override
     public SongStatus getSongStatus(UUID songId) throws CantGetSongStatusException {
-        return musicPlayerModuleManager.getSongStatus(songId);
+        return songWalletTokenlyManager.getSongStatus(songId);
     }
 
     @Override
     public void synchronizeSongs(Fan fanIdentity) throws CantSynchronizeWithExternalAPIException {
-        musicPlayerModuleManager.synchronizeSongs(fanIdentity);
+        songWalletTokenlyManager.synchronizeSongs(fanIdentity);
     }
 
     @Override
     public void synchronizeSongsByUser(Fan fanIdentity) throws CantSynchronizeWithExternalAPIException {
-        musicPlayerModuleManager.synchronizeSongsByUser(fanIdentity);
+        songWalletTokenlyManager.synchronizeSongsByUser(fanIdentity);
     }
 
     @Override
     public void deleteSong(UUID songId) throws CantDeleteSongException, CantUpdateSongStatusException {
-        musicPlayerModuleManager.deleteSong(songId);
+        songWalletTokenlyManager.deleteSong(songId);
     }
 
     @Override
-    public void downloadSong(UUID songId) throws CantDownloadSongException, CantUpdateSongDevicePathException, CantUpdateSongStatusException {
-        musicPlayerModuleManager.downloadSong(songId);
+    public void downloadSong(UUID songId, MusicUser musicUser) throws CantDownloadSongException, CantUpdateSongDevicePathException, CantUpdateSongStatusException {
+        songWalletTokenlyManager.downloadSong(songId,musicUser);
+    }
+
+    @Override
+    public WalletSong getSongWithBytes(UUID songId) throws CantGetSongException {
+        return songWalletTokenlyManager.getSongWithBytes(songId);
+    }
+
+    @Override
+    public SettingsManager getSettingsManager() {
+        return null;
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        return null;
+    }
+
+    @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
     }
 }
