@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 
@@ -40,6 +41,16 @@ public abstract class ArtistSearch {
      */
     public abstract List<ArtistExposingData> getResult() throws CantListArtistsException;
 
+    /**
+     * Through the method <code>getResult</code> we can get the results of the search,
+     * Like we're not setting max and offset we will return all the crypto brokers that match
+     * with the parameters set.
+     *
+     * @param actorTypeToLookFor
+     * @return
+     * @throws CantListArtistsException
+     */
+    public abstract List<ArtistExposingData> getResult(PlatformComponentType actorTypeToLookFor) throws CantListArtistsException;
     /**
      * Through the method <code>getResult</code> we can get the results of the search,
      * filtered by the parameters set.
