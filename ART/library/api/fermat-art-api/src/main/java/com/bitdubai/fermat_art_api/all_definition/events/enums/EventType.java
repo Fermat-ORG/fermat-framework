@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventLi
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
+import com.bitdubai.fermat_art_api.layer.actor_connection.artist.events.ArtistActorConnectionNewConnectionEvent;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.events.ArtistConnectionRequestNewsEvent;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.events.ArtistConnectionRequestUpdatesEvent;
 
@@ -14,6 +15,12 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist
  */
 public enum EventType implements FermatEventEnum {
 
+    /**
+     * Please for doing the code more readable, keep the elements of the enum ordered.
+     */
+    ARTIST_ACTOR_CONNECTION_NEW_CONNECTION_EVENT("AACNCE"){
+        public final FermatEvent getNewEvent() {return new ArtistActorConnectionNewConnectionEvent(this);}
+    },
     ARTIST_CONNECTION_REQUEST_NEWS("ARCRN"){
         public final FermatEvent getNewEvent() { return new ArtistConnectionRequestNewsEvent(this); }
     },
@@ -29,7 +36,8 @@ public enum EventType implements FermatEventEnum {
     }
 
     @Override // by default
-    public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) { return new GenericEventListener(this, fermatEventMonitor); }
+    public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+        return new GenericEventListener(this, fermatEventMonitor); }
 
     @Override
     public final String getCode() {
