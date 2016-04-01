@@ -183,8 +183,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
         super.onCreateView(inflater, container, savedInstanceState);
         try {
             rootView = inflater.inflate(R.layout.send_wallet_form_base, container, false);
-            //TODO: Descomentar despues esta dando error el android core
-           /* NetworkStatus networkStatus = getFermatState().getFermatNetworkStatus();
+            NetworkStatus networkStatus = getFermatState().getFermatNetworkStatus();
             if (networkStatus != null) {
                 switch (networkStatus) {
                     case CONNECTED:
@@ -201,12 +200,12 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                         setUpContactAddapter();
                         break;
                 }
-            } else {*/
+            } else {
                 setUpUI();
                 setUpActions();
                 setUpUIData();
                 setUpContactAddapter();
-           // }
+            }
 
             return rootView;
         } catch (Exception e) {
@@ -517,8 +516,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
 
     }
 
-
-    //TODO: VER QUE PASA  SI EL CONTACTO NO TIENE UNA WALLET ADDRESS
     private void sendCrypto() {
         try {
 

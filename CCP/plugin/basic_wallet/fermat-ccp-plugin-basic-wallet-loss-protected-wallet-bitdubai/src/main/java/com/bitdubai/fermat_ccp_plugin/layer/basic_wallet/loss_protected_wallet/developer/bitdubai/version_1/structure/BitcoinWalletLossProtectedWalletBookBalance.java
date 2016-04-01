@@ -119,35 +119,19 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
         *  se quiere aplicar existe. Si no existe aplica los cambios normalmente, pero si existe
         *  debería ignorar la transacción.
         */
+
+
     @Override
     public void debit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitException {
         try {
-              double purchasePrice = 0;
-
-            bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.BOOK,purchasePrice);
-            //broadcaster balance amount
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
-        } catch(CantRegisterDebitException exception){
-            throw exception;
-        } catch(Exception exception){
-            throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
-    }
-
-    @Override
-    public void debit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction,double exchangeRate) throws CantRegisterDebitException {
-        try {
             double purchasePrice = 0;
-//            ExchangeRate rate = getActualExchangeRate();
-//
-//            if(rate != null)
-//                purchasePrice = rate.getPurchasePrice();
 
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.BOOK,purchasePrice);
+            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.BOOK, purchasePrice);
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
+            //get exchange rate on background
+            setActualExchangeRate(cryptoTransaction.getTransactionId());
         } catch(CantRegisterDebitException exception){
             throw exception;
         } catch(Exception exception){
@@ -155,37 +139,17 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
         }
     }
 
-    //get exchange rate
     @Override
     public void credit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction) throws CantRegisterCreditException {
         try {
             double purchasePrice = 0;
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-            ExchangeRate rate = getActualExchangeRate();
+
             bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.BOOK, purchasePrice);
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
-        } catch(CantRegisterCreditException exception){
-            throw exception;
-        } catch(Exception exception){
-            throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
-        }
-    }
-
-    //get exchange rate
-    @Override
-    public void credit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction, double exchangeRate) throws CantRegisterCreditException {
-        try {
-            double purchasePrice = 0;
-            bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-//             ExchangeRate rate = getActualExchangeRate();
-//
-//               if(rate != null)
-//               purchasePrice = rate.getPurchasePrice();
-
-            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.BOOK,purchasePrice);
-            //broadcaster balance amount
-            broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
+            //get exchange rate on background
+            setActualExchangeRate(cryptoTransaction.getTransactionId());
         } catch(CantRegisterCreditException exception){
             throw exception;
         } catch(Exception exception){
@@ -206,13 +170,15 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
 
     }
 
-    private ExchangeRate getActualExchangeRate()
+    private void setActualExchangeRate(final UUID transactionId)
     {
         final ExchangeRate[] rate = new ExchangeRate[1];
         try {
-            BitcoinLossProtectedWalletSettings basicWalletSettings = null;
 
-          final UUID rateProviderManagerId = exchangeProviderId;
+            //get setting exchange provider manager
+            //update transaction rate
+
+            final UUID rateProviderManagerId = exchangeProviderId;
 
             Thread thread = new Thread(new Runnable(){
                 @Override
@@ -223,21 +189,30 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
                         //your exchange rate.
                         rate[0] = rateProviderManager.getCurrentExchangeRate(wantedCurrencyPair);
 
+                        //update transaction record
+                        bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
+                        bitcoinWalletBasicWalletDao.updateTransactionRate(transactionId, rate[0] .getPurchasePrice());
+
                     } catch (CantGetExchangeRateException e) {
+                        e.printStackTrace();
 
                     } catch (UnsupportedCurrencyPairException e) {
+                        e.printStackTrace();
 
                     }catch(Exception e){
-
+                        e.printStackTrace();
                     }
                 }
             });
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        return rate[0];
+            thread.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
+
 
 
 }
