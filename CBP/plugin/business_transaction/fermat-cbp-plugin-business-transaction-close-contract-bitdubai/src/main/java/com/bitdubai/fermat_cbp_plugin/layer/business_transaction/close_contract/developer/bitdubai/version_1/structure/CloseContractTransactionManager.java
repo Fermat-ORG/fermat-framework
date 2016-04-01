@@ -69,6 +69,7 @@ public class CloseContractTransactionManager implements CloseContractManager {
             CustomerBrokerContractSale customerBrokerContractSale = this.customerBrokerContractSaleManager.
                     getCustomerBrokerContractSaleForContractId(contractHash);
 
+            System.out.print("\nTEST CONTRACT - CLOSE CONTRACT - MANAGER - closeSaleContract()\n");
             this.closeContractBusinessTransactionDao.persistContractRecord(customerBrokerContractSale, ContractType.SALE);
 
         } catch (CantGetListCustomerBrokerContractSaleException e) {
@@ -92,12 +93,12 @@ public class CloseContractTransactionManager implements CloseContractManager {
     public void closePurchaseContract(String contractHash) throws CantCloseContractException {
         try {
             ObjectChecker.checkArgument(contractHash, "The contractHash argument is null");
-            CustomerBrokerContractPurchase customerBrokerContractPurchase = this.customerBrokerContractPurchaseManager.
-                    getCustomerBrokerContractPurchaseForContractId(contractHash);
+            CustomerBrokerContractPurchase customerBrokerContractPurchase = this.customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
 
             ContractStatus contractStatus = customerBrokerContractPurchase.getStatus();
 
-            if (contractStatus.getCode().equals(ContractStatus.MERCHANDISE_SUBMIT.getCode()))
+            if (contractStatus.getCode().equals(ContractStatus.READY_TO_CLOSE.getCode()))
+//            if (contractStatus.getCode().equals(ContractStatus.MERCHANDISE_SUBMIT.getCode()))
                 this.closeContractBusinessTransactionDao.persistContractRecord(customerBrokerContractPurchase, ContractType.PURCHASE);
             else {
                 throw new CantCloseContractException("The contract with the hash\n" + contractHash +

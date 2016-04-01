@@ -34,9 +34,13 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantGetExchangeProviderIdException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantInitializeBitcoinLossProtectedWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantSaveExchangeProviderIdException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
+
+
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.developerUtils.DeveloperDatabaseFactory;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantLossProtectedDeliverDatabaseException;
 import com.bitdubai.fermat_ccp_plugin.layer.basic_wallet.loss_protected_wallet.developer.bitdubai.version_1.structure.BitcoinWalletLossProtectedWallet;
@@ -76,6 +80,7 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
 
 
     private static final String WALLET_IDS_FILE_NAME = "walletsIds";
+    private static final String EXCHANGE_PROVIDER_FILE_NAME = "exchangeproviderid";
     private Map<String, UUID> walletIds = new HashMap<>();
 
     public BitcoinWalletLossProtectedPluginRoot() {
@@ -153,7 +158,7 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
     @Override
     public BitcoinLossProtectedWallet loadWallet(String walletId) throws CantLoadWalletException {
         try {
-            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
+            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster,this.getExchangeProviderId(), this.exchangeProviderFilterManagerproviderFilter);
 
             UUID internalWalletId = walletIds.get(walletId);
             bitcoinWallet.initialize(internalWalletId);
@@ -171,7 +176,7 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
     @Override
     public void createWallet(String walletId) throws CantCreateWalletException {
         try {
-            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster);
+            BitcoinWalletLossProtectedWallet bitcoinWallet = new BitcoinWalletLossProtectedWallet(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId,this.broadcaster, this.getExchangeProviderId(), this.exchangeProviderFilterManagerproviderFilter);
 
             UUID internalWalletId = bitcoinWallet.create(walletId);
 
@@ -187,7 +192,46 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
     }
 
 
+    @Override
+    public UUID getExchangeProviderId() throws CantGetExchangeProviderIdException {
+        try {
+            UUID providerId = null;
+            PluginTextFile providerIdsFile = pluginFileSystem.getTextFile(pluginId, DeviceDirectory.LOCAL_WALLETS.getName(), EXCHANGE_PROVIDER_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            providerIdsFile.loadFromMedia();
 
+            if(providerIdsFile.getContent().length() > 0)
+                providerId = UUID.fromString(providerIdsFile.getContent());
+
+            return providerId;
+
+        } catch (FileNotFoundException | CantCreateFileException exception) {
+            try {
+                PluginTextFile providerIdsFile = pluginFileSystem.createTextFile(pluginId, DeviceDirectory.LOCAL_WALLETS.getName(), EXCHANGE_PROVIDER_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                providerIdsFile.persistToMedia();
+                return null;
+            } catch (CantCreateFileException | CantPersistFileException e) {
+                throw new CantGetExchangeProviderIdException(CantGetExchangeProviderIdException.DEFAULT_MESSAGE, e, "CantPersistFileException", null);
+            }
+        } catch (CantLoadFileException exception) {
+            throw new CantGetExchangeProviderIdException(CantGetExchangeProviderIdException.DEFAULT_MESSAGE, exception, "CantLoadFileException", null);
+        }
+    }
+
+
+    @Override
+    public void saveExchangeProviderIdFile(UUID providerId) throws CantSaveExchangeProviderIdException {
+        try {
+
+            PluginTextFile providerIdsFile = pluginFileSystem.createTextFile(pluginId, DeviceDirectory.LOCAL_WALLETS.getName(), EXCHANGE_PROVIDER_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            providerIdsFile.setContent(String.valueOf(providerId));
+            providerIdsFile.persistToMedia();
+
+        } catch (CantPersistFileException e) {
+            throw new CantSaveExchangeProviderIdException(CantSaveExchangeProviderIdException.DEFAULT_MESSAGE, e, "CantPersistFileException", null);
+        } catch (CantCreateFileException e) {
+            throw new CantSaveExchangeProviderIdException(CantSaveExchangeProviderIdException.DEFAULT_MESSAGE, e, "CantCreateFileException", null);
+        }
+    }
 
     private void loadWalletIdsMap() throws CantStartPluginException {
         PluginTextFile walletIdsFile = getWalletIdsFile();
@@ -200,6 +244,8 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
             }
         }
     }
+
+
 
     private PluginTextFile getWalletIdsFile() throws CantStartPluginException {
         try {
@@ -218,6 +264,9 @@ public class BitcoinWalletLossProtectedPluginRoot extends AbstractPlugin impleme
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
     }
+
+
+
 
 }
 

@@ -17,13 +17,6 @@ public enum Plugins implements FermatPluginsEnum {
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
     BITDUBAI_BITCOIN_CRYPTO_NETWORK             ("BBTCCNET"     ),
-    BITDUBAI_BITCOIN_CRYPTO_NETWORK2            ("BBTCCNET2"    ),
-    BITDUBAI_BLOCKCHAIN_INFO_WORLD              ("BBLOCKIW"     ),
-    BITDUBAI_CLOUD_CHANNEL                      ("BCLOUDC"      ),
-    BITDUBAI_COINAPULT_WORLD                    ("BCOINAW"      ),
-    BITDUBAI_CRYPTO_INDEX                       ("BCRYPTOINW"   ),
-    BITDUBAI_LICENSE_MANAGER                    ("BLICM"        ),
-    BITDUBAI_SHAPE_SHIFT_WORLD                  ("BSHAPESW"     ),
 
     BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL    ("BWSCCLIENTCH" ),
     BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER      ("BWSCCLSERVER" ),
@@ -306,7 +299,8 @@ public enum Plugins implements FermatPluginsEnum {
 
     CHAT_MIDDLEWARE                     ("CHMID"),
     CHAT_NETWORK_SERVICE                ("CHTNS"),
-    CHAT_SUP_APP_MODULE                 ("CHTSAM"), CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
+    CHAT_SUP_APP_MODULE                 ("CHTSAM"),
+    CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
 
     // ART
     ARTIST_ACTOR_CONNECTION             ("ARTAAC"),
@@ -315,6 +309,9 @@ public enum Plugins implements FermatPluginsEnum {
     ARTIST_IDENTITY                     ("ARTIDNTY"),
     ART_ARTIST_SUB_APP_MODULE           ("AASAM"),
     ART_FAN_SUB_APP_MODULE              ("AFSAM"),
+    MUSIC_PLAYER_SUB_APP_MODULE         ("ARTMPM"),
+    ARTIST_COMMUNITY_SUB_APP_MODULE     ("ARTACM"),
+    FAN_COMMUNITY_SUB_APP_MODULE        ("ARTFCM"),
 
     //TKY
     TOKENLY_API                         ("TOKAP"),
@@ -323,9 +320,14 @@ public enum Plugins implements FermatPluginsEnum {
     TOKENLY_ARTIST_SUB_APP_MODULE       ("TASAM"),
     TOKENLY_FAN_SUB_APP_MODULE          ("TFSAM"),
     TOKENLY_FAN_WALLET_MODULE           ("TFWM"),
-    TOKENLY_WALLET                      ("TWALLET");
+    TOKENLY_WALLET                      ("TWALLET"),
+
+    //Init PIP
+    PIP_FERMAT_MONITOR                  ("PFM");
+    //End PIP
 
     // End  new Plugins
+
 
     private final String code;
 
@@ -337,6 +339,7 @@ public enum Plugins implements FermatPluginsEnum {
 
         switch (code) {
 
+            case "AND"  :   return ANDROID_CORE          ;
             case "APR"  :   return SUB_APP_RUNTIME          ;
             case "ASAP" :   return ASSET_APPROPRIATION      ;
             case "ASD"  :   return ASSET_DISTRIBUTION       ;
@@ -481,14 +484,19 @@ public enum Plugins implements FermatPluginsEnum {
             case "TWALLET":     return TOKENLY_WALLET                           ;
             case "ARTAAC":      return ARTIST_ACTOR_CONNECTION                  ;
             case "ARTFAC":      return FAN_ACTOR_CONNECTION                     ;
-
+            case "PFM":         return PIP_FERMAT_MONITOR                       ;
+            case "ARTMPM":      return MUSIC_PLAYER_SUB_APP_MODULE              ;
+            case "ARTACM":      return ARTIST_COMMUNITY_SUB_APP_MODULE          ;
+            case "ARTMCM":      return FAN_COMMUNITY_SUB_APP_MODULE             ;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
                         "This Code Is Not Valid for the Plugins enum"
                 );
         }
+
     }
+
     @Override
     public String getCode() {
         return this.code;
