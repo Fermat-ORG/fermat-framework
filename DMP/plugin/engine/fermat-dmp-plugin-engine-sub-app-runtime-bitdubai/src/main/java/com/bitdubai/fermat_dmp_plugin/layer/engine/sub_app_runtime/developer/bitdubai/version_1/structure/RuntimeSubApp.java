@@ -124,6 +124,11 @@ public class RuntimeSubApp implements SubApp {
     }
 
     @Override
+    public void clear() {
+
+    }
+
+    @Override
     public String getAppName() {
         return type.getCode();
     }
