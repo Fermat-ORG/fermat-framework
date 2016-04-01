@@ -1,7 +1,5 @@
-package com.bitdubai.fermat_tky_api.layer.wallet_module;
+package com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
@@ -22,8 +20,9 @@ import java.util.UUID;
 
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/17/16.
+ * Edited by Miguel Payarez on 30/03/16.
  */
-public interface FanWalletModule extends ModuleManager{
+public interface FanWalletModule {
 
     //Song Wallet
     /**
