@@ -13,7 +13,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteComponentRegistrationNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.CompleteComponentRegistrationNotificationEventHandler</code>
@@ -36,8 +35,8 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
      *
      * @param networkService
      */
-    public CompleteComponentRegistrationNotificationEventHandler(NetworkService networkService) {
-        this.networkService = (AbstractNetworkServiceBase) networkService;
+    public CompleteComponentRegistrationNotificationEventHandler(AbstractNetworkServiceBase networkService) {
+        this.networkService = networkService;
     }
 
     /**

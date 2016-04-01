@@ -83,7 +83,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by mati on 2016.02.05..
  */
-public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServiceBase implements IntraUserManager,
+public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBase implements IntraUserManager,
         LogManagerForDevelopers,
         DatabaseManagerForDevelopers {
 
@@ -125,7 +125,7 @@ public class IntraActorNetworkServicePluginRootNew extends AbstractNetworkServic
      * Constructor with parameters
      *
      */
-    public IntraActorNetworkServicePluginRootNew() {
+    public IntraActorNetworkServicePluginRoot() {
         super(new PluginVersionReference(new Version()),
                 EventSource.NETWORK_SERVICE_INTRA_ACTOR,
                 PlatformComponentType.NETWORK_SERVICE,

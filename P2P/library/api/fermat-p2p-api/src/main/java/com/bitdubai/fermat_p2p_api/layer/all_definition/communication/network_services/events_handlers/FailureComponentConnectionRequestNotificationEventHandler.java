@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureComponentConnectionRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.event_handlers.FailureComponentConnectionRequestNotificationEventHandler</code>
@@ -35,8 +34,8 @@ public class FailureComponentConnectionRequestNotificationEventHandler implement
      *
      * @param networkService
      */
-    public FailureComponentConnectionRequestNotificationEventHandler(NetworkService networkService){
-        this.networkService = (AbstractNetworkServiceBase) networkService;
+    public FailureComponentConnectionRequestNotificationEventHandler(AbstractNetworkServiceBase networkService){
+        this.networkService = networkService;
     }
 
     /**

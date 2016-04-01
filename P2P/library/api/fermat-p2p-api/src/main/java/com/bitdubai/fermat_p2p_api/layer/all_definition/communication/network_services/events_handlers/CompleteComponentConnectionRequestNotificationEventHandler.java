@@ -35,8 +35,8 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
      *
      * @param networkService
      */
-    public CompleteComponentConnectionRequestNotificationEventHandler(NetworkService networkService) {
-        this.networkService = (AbstractNetworkServiceBase) networkService;
+    public CompleteComponentConnectionRequestNotificationEventHandler(AbstractNetworkServiceBase networkService) {
+        this.networkService = networkService;
     }
 
     /**

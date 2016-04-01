@@ -19,9 +19,6 @@ import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.EventType;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.CryptoAddressDealers;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.enums.ProtocolState;
@@ -51,9 +48,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.dev
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.ReceivedMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.structure.AddressesConstants;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CommunicationNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInitializeNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -124,14 +118,6 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
     @Override
     protected void onStart() {
-        /**
-         * Initialize DB
-         */
-        try {
-            initializeCommunicationDb();
-        } catch (CantInitializeNetworkServiceDatabaseException e) {
-            e.printStackTrace();
-        }
 
         /**
          * Initialize Developer Database Factory
@@ -169,43 +155,6 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
         super.stop();
         executorService.shutdownNow();
     }
-
-    /**
-     * This method initialize the database
-     *
-     * @throws CantInitializeNetworkServiceDatabaseException
-     */
-    private void initializeCommunicationDb() throws CantInitializeNetworkServiceDatabaseException {
-
-        try {
-
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
-
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeNetworkServiceDatabaseException(cantOpenDatabaseException);
-
-        } catch (DatabaseNotFoundException e) {
-
-            CommunicationNetworkServiceDatabaseFactory communicationLayerNetworkServiceDatabaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
-
-            try {
-
-                this.dataBase = communicationLayerNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-            } catch (CantCreateDatabaseException cantCreateDatabaseException) {
-
-                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateDatabaseException);
-                throw new CantInitializeNetworkServiceDatabaseException(cantCreateDatabaseException);
-
-            }
-        }
-
-    }
-
-
-
 
     @Override
     public void onNewMessagesReceive(FermatMessage newFermatMessageReceive) {

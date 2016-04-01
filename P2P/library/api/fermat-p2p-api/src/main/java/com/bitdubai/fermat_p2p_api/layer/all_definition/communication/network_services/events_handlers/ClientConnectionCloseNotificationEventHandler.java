@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
 
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler</code>
@@ -33,8 +32,8 @@ public class ClientConnectionCloseNotificationEventHandler implements FermatEven
      * Constructor with parameter
      * @param networkService
      */
-    public ClientConnectionCloseNotificationEventHandler(NetworkService networkService){
-        this.networkService = (AbstractNetworkServiceBase) networkService;
+    public ClientConnectionCloseNotificationEventHandler(AbstractNetworkServiceBase networkService){
+        this.networkService = networkService;
     }
 
     /**
