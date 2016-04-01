@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="95dp">
+
+    <RelativeLayout
+        android:id="@+id/homeIssuerImageLayout"
+        android:layout_width="77dp"
+        android:layout_height="77dp"
+        android:background="@drawable/bg_circular_home_issuer"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="10dp">
+
+        <ImageView
+            android:id="@+id/homeIssuerImage"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/homeIssuerNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Frank Contreras Issuer"
+        android:textColor="@color/dap_user_wallet_home_issuer_font"
+        android:textSize="16sp"
+        android:layout_toRightOf="@+id/homeIssuerImageLayout"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="25dp"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/homeIssuerNumAssets"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2 assets"
+        android:textColor="@color/dap_user_wallet_home_issuer_font"
+        android:layout_toRightOf="@+id/homeIssuerImageLayout"
+        android:layout_below="@+id/homeIssuerNameText"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="3dp"/>
+
+    <ImageView
+        android:id="@+id/homeIssuerArrow"
+        android:layout_width="24dp"
+        android:layout_height="18dp"
+        android:src="@drawable/ic_arrow_down_blue"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="15dp"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/dap_user_wallet_home_issuer_line"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"/>
+
+</RelativeLayout>
