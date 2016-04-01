@@ -23,6 +23,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
  * contains the basic functionality of a Fermat Network Service.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 29/10/2015.
+ *
  */
 public abstract class AbstractNetworkService extends AbstractPlugin implements NetworkService {
 

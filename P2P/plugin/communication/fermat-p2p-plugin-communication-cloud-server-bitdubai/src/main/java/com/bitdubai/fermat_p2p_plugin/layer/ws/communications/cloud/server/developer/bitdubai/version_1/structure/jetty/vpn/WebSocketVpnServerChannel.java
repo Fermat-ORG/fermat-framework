@@ -24,6 +24,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.devel
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ShareMemoryCacheForVpnClientsConnections;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.WebSocketVpnIdentity;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -31,6 +32,7 @@ import org.apache.commons.lang.ClassUtils;
 import org.apache.log4j.Logger;
 
 import java.io.IOException;
+import java.text.DateFormat;
 
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
@@ -185,22 +187,22 @@ public class WebSocketVpnServerChannel {
 
             if (receiveFermatPacket.getFermatPacketType() == FermatPacketType.MESSAGE_TRANSMIT) {
 
-            /*
-             * Get the FermatMessage from the message content and decrypt
-             */
+                /*
+                 * Get the FermatMessage from the message content and decrypt
+                 */
                 String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), vpnServerIdentity.getPrivateKey());
 
-            /*
-             * Construct the fermat message object
-             */
+                /*
+                 * Construct the fermat message object
+                 */
                 FermatMessageCommunication fermatMessage = (FermatMessageCommunication) new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
 
 
                 LOG.debug("fermatMessage = " + fermatMessage);
 
-            /*
-            * Construct a new fermat packet whit the same message and different destination
-            */
+                /*
+                * Construct a new fermat packet whit the same message and different destination
+                */
                 FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnClientConnection.getVpnClientIdentity(), //Destination
                         vpnServerIdentity.getPublicKey(),           //Sender
                         fermatMessage.toJson(),                     //Message Content
@@ -209,21 +211,21 @@ public class WebSocketVpnServerChannel {
 
                 String key = fermatMessage.getReceiver() + fermatMessage.getSender();
 
-            /*
-             * Get the connection of the destination
-             */
+                /*
+                 * Get the connection of the destination
+                 */
                 VpnClientConnection clientConnectionDestination = ShareMemoryCacheForVpnClientsConnections.getMyRemote(vpnClientConnection.getNetworkServiceType(), key);
 
-            /*
-             * If the connection to client destination available
-             */
+                /*
+                 * If the connection to client destination available
+                 */
                 if (clientConnectionDestination != null && clientConnectionDestination.getSession().isOpen()) {
 
                     LOG.info("Sending msg to: " + clientConnectionDestination.getParticipant().getAlias());
 
-               /*
-                * Send the encode packet to the destination
-                */
+                   /*
+                    * Send the encode packet to the destination
+                    */
                     clientConnectionDestination.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
                 }
