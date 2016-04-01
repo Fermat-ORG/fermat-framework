@@ -124,7 +124,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
 
 
     private WalletContact walletContact;
-    private boolean connectionDialogIsShow;
     private boolean onFocus;
     private Spinner spinner;
     private Spinner spinner_name;
@@ -205,7 +204,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                 setUpUI();
                 setUpActions();
                 setUpUIData();
-                setUpContactAddapter();
            // }
 
             return rootView;
@@ -258,7 +256,9 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
             final List<InstalledWallet> list= cryptoWallet.getInstalledWallets();
             List<String> walletList = new ArrayList<String>();
             for (int i = 0; i < list.size() ; i++) {
-                walletList.add(list.get(i).getWalletName());
+               if (list.get(i).getWalletName().equals("Bitcoin Wallet")){
+                   walletList.add(list.get(i).getWalletName());
+               }
             }
             ArrayAdapter<String> walletDataAdapter = new ArrayAdapter<>(getActivity(),
                     R.layout.list_item_spinner, walletList);
@@ -487,12 +487,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
     }
 
 
-    private void setUpContactAddapter() {
-        contactsAdapter = new WalletContactListAdapter(getActivity(), R.layout.wallets_bitcoin_fragment_contacts_list_item, getWalletContactList());
-
-    }
-
-
     @Override
     public void onClick(View v) {
 
@@ -569,7 +563,7 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                                     cryptoWallet.sendToWallet(
                                             operator.longValueExact(),
                                             appSession.getAppPublicKey(),
-                                            wallet.getWalletPublicKey(),//RECIVE WALLET KEY
+                                            wallet.getWalletPublicKey(),//RECEIVE WALLET KEY
                                             notes,
                                             Actors.DEVICE_USER,
                                             ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
@@ -610,34 +604,6 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
 
     }
 
-    /**
-     * Obtain the wallet contacts from the cryptoWallet
-     *
-     * @return
-     */
-    private List<WalletContact> getWalletContactList() {
-        List<WalletContact> contacts = new ArrayList<>();
-        try {
-            List<LossProtectedWalletContact> walletContactRecords = appSession.getModuleManager().getCryptoWallet().listAllActorContactsAndConnections(appSession.getAppPublicKey(), appSession.getIntraUserModuleManager().getPublicKey());
-            for (LossProtectedWalletContact wcr : walletContactRecords) {
-
-                String contactAddress = "";
-                if (wcr.getReceivedCryptoAddress().get(blockchainNetworkType) != null)
-                    contactAddress = wcr.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
-                contacts.add(new WalletContact(wcr.getContactId(), wcr.getActorPublicKey(), wcr.getActorName(), contactAddress, wcr.isConnection(), wcr.getProfilePicture()));
-            }
-
-        } catch (CantListCryptoWalletIntraUserIdentityException e) {
-            e.printStackTrace();
-        } catch (CantGetAllLossProtectedWalletContactsException e) {
-            e.printStackTrace();
-        } catch (CantGetCryptoLossProtectedWalletException e) {
-            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            showMessage(getActivity(), "CantGetAllWalletContactsException- " + e.getMessage());
-            ;
-        }
-        return contacts;
-    }
 
 
     @Override
