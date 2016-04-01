@@ -40,7 +40,7 @@ public class TokenlyUserImp implements MusicUser {
      * @return
      */
     @Override
-    public String getId() {
+    public String getTokenlyId() {
         return this.id;
     }
 

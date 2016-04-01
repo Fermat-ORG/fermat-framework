@@ -804,8 +804,81 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             /*
              *TKY ARTIST IDENTITY
              */
-            createTkyArtistIdentityNavigationStructure();
+            //createTkyArtistIdentityNavigationStructure();
 
+
+
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.TKY_ARTIST_IDENTITY_SUB_APP);
+            String tkyArtistUserIdentityPublicKey = SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode();
+            runtimeSubApp.setPublicKey(tkyArtistUserIdentityPublicKey);
+            // Activity: Create New Identity
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.TKY_ARTIST_IDENTITY_CREATE_PROFILE);
+            runtimeActivity.setActivityType(Activities.TKY_ARTIST_IDENTITY_CREATE_PROFILE.getCode());
+            //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeSubApp.addPosibleStartActivity(Activities.TKY_ARTIST_IDENTITY_CREATE_PROFILE);
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Tokenly Artist Identity");
+            runtimeTitleBar.setColor("#1189a4");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setLabelSize(18);
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            statusBar = new StatusBar();
+            statusBar.setColor("#1189a4");
+            runtimeActivity.setStatusBar(statusBar);
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
+            runtimeActivity.addFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+
+
+
+
+
+            /*
+             *TKY FAN IDENTITY
+             */
+
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.TKY_FAN_IDENTITY_SUB_APP);
+            String tkyFanUserIdentityPublicKey = SubAppsPublicKeys.TKY_FAN_IDENTITY.getCode();
+            runtimeSubApp.setPublicKey(tkyFanUserIdentityPublicKey);
+            // Activity: Create New Identity
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT);
+            runtimeActivity.setActivityType(Activities.TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getCode());
+            //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeSubApp.addPosibleStartActivity(Activities.TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Tokenly Fan Identity");
+            runtimeTitleBar.setColor("#1189a4");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setLabelSize(18);
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#1189a4");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getKey());
+
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+
+            /*
+
+             */
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.CWP_INTRA_USER_IDENTITY);
             String intraUserIdentityPublicKey = SubAppsPublicKeys.CCP_IDENTITY.getCode();

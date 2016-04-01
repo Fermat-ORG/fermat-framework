@@ -89,7 +89,7 @@ public class TokenlyWalletSongVault {
             String downloadUrl = song.getDownloadUrl();
             String songName = song.getName();
             downloadFile(downloadUrl,songName);
-            return DIRECTORY_NAME+"/"+songName;
+            return DIRECTORY_NAME+"/"+songName.replace(" ","_");
         } catch (CantDownloadFileException e) {
             throw new CantDownloadSongException(
                     e,
@@ -105,6 +105,8 @@ public class TokenlyWalletSongVault {
      */
     public void deleteSong(String songName) throws CantDeleteSongException {
         try{
+            //Remove spaces
+            songName = songName.replace(" ","_");
             //Prepare the plugin file system to persist the file
             PluginBinaryFile pluginBinaryFile = pluginFileSystem.createBinaryFile(
                     pluginId,
@@ -136,6 +138,8 @@ public class TokenlyWalletSongVault {
     public void downloadFile(String downloadUrl, String fileName) throws CantDownloadFileException{
         try{
             //TODO: study if this method will fix better in external API
+            //Remove spaces
+            fileName = fileName.replace(" ","_");
             URL url = new URL(downloadUrl);
             URLConnection urlCon = url.openConnection();
             //Get web access.
@@ -211,8 +215,9 @@ public class TokenlyWalletSongVault {
      */
     public byte[] getSongFromDeviceStorage(String fileName)throws CantGetSongException{
         try{
-
-            System.out.println("TKY: READ " + DIRECTORY_NAME + "/fileName");
+            //Remove spaces
+            fileName = fileName.replace(" ","_");
+            System.out.println("TKY: READ " + DIRECTORY_NAME + "/"+fileName);
             PluginBinaryFile pluginBinaryFile=pluginFileSystem.getBinaryFile(
                     pluginId,
                     DIRECTORY_NAME,
