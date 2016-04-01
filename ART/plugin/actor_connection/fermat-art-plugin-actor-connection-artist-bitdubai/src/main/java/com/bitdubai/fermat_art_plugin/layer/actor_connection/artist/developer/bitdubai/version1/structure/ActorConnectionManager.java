@@ -44,7 +44,7 @@ public class ActorConnectionManager implements ArtistActorConnectionManager {
     /**
      * Represents the Actor Network service manager.
      */
-    private final ArtistManager artistActorNetworkManager;
+    private final ArtistManager artistActorNetworkServiceManager;
     /**
      * Represents the plugin database dao.
      */
@@ -59,11 +59,11 @@ public class ActorConnectionManager implements ArtistActorConnectionManager {
     private final PluginVersionReference pluginVersionReference;
 
     public ActorConnectionManager(
-            final ArtistManager artistActorNetworkManager,
+            final ArtistManager artistActorNetworkServiceManager,
             final ArtistActorConnectionDao artistActorConnectionDao,
             final ErrorManager errorManager,
             final PluginVersionReference pluginVersionReference) {
-        this.artistActorNetworkManager = artistActorNetworkManager;
+        this.artistActorNetworkServiceManager = artistActorNetworkServiceManager;
         this.artistActorConnectionDao  = artistActorConnectionDao;
         this.errorManager = errorManager;
         this.pluginVersionReference = pluginVersionReference;
@@ -154,7 +154,7 @@ public class ActorConnectionManager implements ArtistActorConnectionManager {
             /**
              * I'll send the request through the network service.
              */
-            artistActorNetworkManager.requestConnection(connectionInformation);
+            artistActorNetworkServiceManager.requestConnection(connectionInformation);
         } catch (final UnsupportedActorTypeException unsupportedActorTypeException) {
             errorManager.reportUnexpectedPluginException(
                     pluginVersionReference,
@@ -224,7 +224,7 @@ public class ActorConnectionManager implements ArtistActorConnectionManager {
                 case CONNECTED:
                     // disconnect from an actor through network service and after that mark as DISCONNECTED LOCALLY
                     // TODO HAVE IN COUNT THAT YOU HAVE TO DISCONNECT FROM AN SPECIFIC TYPE OF ACTOR,.
-                    artistActorNetworkManager.disconnect(connectionId);
+                    artistActorNetworkServiceManager.disconnect(connectionId);
                     artistActorConnectionDao.changeConnectionState(
                             connectionId,
                             ConnectionState.DISCONNECTED_LOCALLY
@@ -302,7 +302,7 @@ public class ActorConnectionManager implements ArtistActorConnectionManager {
                     break;
                 case PENDING_LOCALLY_ACCEPTANCE:
                     // deny connection through network service and after that mark as DENIED LOCALLY
-                    artistActorNetworkManager.denyConnection(connectionId);
+                    artistActorNetworkServiceManager.denyConnection(connectionId);
                     artistActorConnectionDao.changeConnectionState(
                             connectionId,
                             ConnectionState.DENIED_LOCALLY
@@ -380,7 +380,7 @@ public class ActorConnectionManager implements ArtistActorConnectionManager {
                     break;
                 case PENDING_REMOTELY_ACCEPTANCE:
                     // cancel connection through network service and after that mark as CANCELLED LOCALLY
-                    artistActorNetworkManager.cancelConnection(connectionId);
+                    artistActorNetworkServiceManager.cancelConnection(connectionId);
                     artistActorConnectionDao.changeConnectionState(
                             connectionId,
                             ConnectionState.CANCELLED_LOCALLY
@@ -460,7 +460,7 @@ public class ActorConnectionManager implements ArtistActorConnectionManager {
                     break;
                 case PENDING_LOCALLY_ACCEPTANCE:
                     // cancel connection through network service and after that mark as CANCELLED LOCALLY
-                    artistActorNetworkManager.acceptConnection(connectionId);
+                    artistActorNetworkServiceManager.acceptConnection(connectionId);
                     artistActorConnectionDao.changeConnectionState(
                             connectionId,
                             ConnectionState.CONNECTED
