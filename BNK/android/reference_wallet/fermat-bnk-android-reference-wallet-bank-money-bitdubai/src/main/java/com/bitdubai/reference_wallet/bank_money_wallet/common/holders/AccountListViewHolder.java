@@ -9,6 +9,8 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAc
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet_module.interfaces.BankMoneyWalletModuleManager;
 import com.bitdubai.reference_wallet.bank_money_wallet.R;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by memo on 10/12/15.
  */
@@ -51,9 +53,10 @@ public class AccountListViewHolder extends FermatViewHolder {
         account.setText(itemInfo.getAccount());
         alias.setText(itemInfo.getAlias());
         //currency.setText(itemInfo.getMoneyType().getCode());
-
-        availableBalance.setText(String.valueOf(moduleManager.getBankingWallet().getAvailableBalance(itemInfo.getAccount())) + " " + itemInfo.getCurrencyType().getCode());
-        bookBalance.setText(String.valueOf(moduleManager.getBankingWallet().getBookBalance(itemInfo.getAccount())) + " " + itemInfo.getCurrencyType().getCode());
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(8);
+        availableBalance.setText(df.format(moduleManager.getBankingWallet().getAvailableBalance(itemInfo.getAccount())) + " " + itemInfo.getCurrencyType().getCode());
+        bookBalance.setText(df.format(moduleManager.getBankingWallet().getBookBalance(itemInfo.getAccount())) + " " + itemInfo.getCurrencyType().getCode());
         if(availableBalance.getText().equals(bookBalance.getText())){
             bookBalance.setVisibility(View.GONE);
             bookText.setVisibility(View.GONE);

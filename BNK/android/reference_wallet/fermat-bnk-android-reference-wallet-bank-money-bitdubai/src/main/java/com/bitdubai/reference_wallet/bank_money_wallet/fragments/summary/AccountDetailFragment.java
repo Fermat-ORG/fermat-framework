@@ -37,6 +37,7 @@ import com.bitdubai.reference_wallet.bank_money_wallet.session.BankMoneyWalletSe
 import com.bitdubai.reference_wallet.bank_money_wallet.util.CommonLogger;
 import com.bitdubai.reference_wallet.bank_money_wallet.util.ReferenceWalletConstants;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -159,8 +160,10 @@ public class AccountDetailFragment extends FermatWalletListFragment<BankMoneyTra
 
         accountText.setText(bankAccountNumber.getAccount());
         aliasText.setText(bankAccountNumber.getAlias());
-        availableTextView.setText(String.valueOf(moduleManager.getBankingWallet().getAvailableBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
-        bookTextView.setText(String.valueOf(moduleManager.getBankingWallet().getBookBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
+        DecimalFormat df = new DecimalFormat("#");
+        df.setMaximumFractionDigits(8);
+        availableTextView.setText(df.format(moduleManager.getBankingWallet().getAvailableBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
+        bookTextView.setText(df.format(moduleManager.getBankingWallet().getBookBalance(bankAccountNumber.getAccount())) + " " + bankAccountNumber.getCurrencyType().getCode());
         balanceText.setTextColor(getResources().getColor(R.color.text_color_soft_blue));
         if (availableTextView.getText().equals(bookTextView.getText())) {
             bookTextView.setVisibility(View.GONE);
