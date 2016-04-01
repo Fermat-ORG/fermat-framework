@@ -4,6 +4,4 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-pip-api')
     compile project(':fermat-tky-api')
-    //External Base64 library
-    compile 'com.google.android:android:4.1.1.4'
 }
