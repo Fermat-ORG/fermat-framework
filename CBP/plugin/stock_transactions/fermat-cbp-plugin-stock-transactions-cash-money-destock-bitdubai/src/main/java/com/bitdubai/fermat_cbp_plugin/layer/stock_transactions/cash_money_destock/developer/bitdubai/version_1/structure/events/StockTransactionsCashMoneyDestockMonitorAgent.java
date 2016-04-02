@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destock.developer.bitdubai.version_1.structure.events;
 
-import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
@@ -10,7 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CashMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddDebitCryptoBrokerWalletException;
@@ -74,7 +73,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
                 while (isRunning())
                     process();
             }
-        });
+        }, this.getClass().getSimpleName());
     }
 
     @Override
@@ -86,7 +85,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
 
         //this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
-        this.status=AgentStatus.STARTED;
+        this.status = AgentStatus.STARTED;
     }
 
     @Override
@@ -115,6 +114,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
             }
         }
     }
+
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
@@ -156,7 +156,6 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
 //            }
 //        }
 //    }
-
     private void doTheMainTask() {
         try {
             // I define the filter to null for all
@@ -169,7 +168,7 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
                         cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
                         stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
                         break;
-                    case IN_WALLET:
+                    case IN_WALLET: {
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
@@ -178,28 +177,32 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
                                 cashMoneyTransaction.getFiatCurrency(),
                                 BalanceType.BOOK,
                                 TransactionType.DEBIT,
-                                CurrencyType.CASH_DELIVERY_MONEY,
+                                MoneyType.CASH_DELIVERY,
                                 cashMoneyTransaction.getCbpWalletPublicKey(),
                                 cashMoneyTransaction.getActorPublicKey(),
                                 cashMoneyTransaction.getAmount(),
                                 new Date().getTime() / 1000,
                                 cashMoneyTransaction.getConcept(),
                                 cashMoneyTransaction.getPriceReference(),
-                                cashMoneyTransaction.getOriginTransaction());
+                                cashMoneyTransaction.getOriginTransaction(),
+                                cashMoneyTransaction.getOriginTransactionId(),
+                                false);
 
                         WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
                                 cashMoneyTransaction.getTransactionId(),
                                 cashMoneyTransaction.getFiatCurrency(),
                                 BalanceType.AVAILABLE,
                                 TransactionType.DEBIT,
-                                CurrencyType.CASH_DELIVERY_MONEY,
+                                MoneyType.CASH_DELIVERY,
                                 cashMoneyTransaction.getCbpWalletPublicKey(),
                                 cashMoneyTransaction.getActorPublicKey(),
                                 cashMoneyTransaction.getAmount(),
                                 new Date().getTime() / 1000,
                                 cashMoneyTransaction.getConcept(),
                                 cashMoneyTransaction.getPriceReference(),
-                                cashMoneyTransaction.getOriginTransaction());
+                                cashMoneyTransaction.getOriginTransaction(),
+                                cashMoneyTransaction.getOriginTransactionId(),
+                                false);
 
                         //TODO:Solo para testear
                         cashMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
@@ -207,8 +210,8 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
                         cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
                         cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
                         stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
-
-                        break;
+                    }
+                    break;
                     case IN_UNHOLD:
                         //Llamar al metodo de la interfaz public del manager de la wallet CBP
                         //Luego cambiar el status al registro de la transaccion leido
@@ -232,23 +235,65 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
                         break;
                     case IN_EJECUTION:
                         CashTransactionStatus castTransactionStatus = cashUnholdTransactionManager.getCashUnholdTransactionStatus(cashMoneyTransaction.getTransactionId());
-                        if (castTransactionStatus.CONFIRMED.getCode() == castTransactionStatus.getCode()) {
+
+                        if (CashTransactionStatus.CONFIRMED == castTransactionStatus) {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
                             stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
                         }
-                        if (castTransactionStatus.REJECTED.getCode() == castTransactionStatus.getCode()) {
+                        if (CashTransactionStatus.REJECTED == castTransactionStatus) {
                             cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
                             stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
                         }
                         break;
+                    case REJECTED: {
+                        WalletTransactionWrapper walletTransactionRecordBook = new WalletTransactionWrapper(
+                                cashMoneyTransaction.getTransactionId(),
+                                cashMoneyTransaction.getFiatCurrency(),
+                                BalanceType.BOOK,
+                                TransactionType.CREDIT,
+                                MoneyType.CASH_DELIVERY,
+                                cashMoneyTransaction.getCbpWalletPublicKey(),
+                                cashMoneyTransaction.getActorPublicKey(),
+                                cashMoneyTransaction.getAmount(),
+                                new Date().getTime() / 1000,
+                                cashMoneyTransaction.getConcept(),
+                                cashMoneyTransaction.getPriceReference(),
+                                cashMoneyTransaction.getOriginTransaction(),
+                                cashMoneyTransaction.getOriginTransactionId(),
+                                false);
+
+                        WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
+                                cashMoneyTransaction.getTransactionId(),
+                                cashMoneyTransaction.getFiatCurrency(),
+                                BalanceType.AVAILABLE,
+                                TransactionType.CREDIT,
+                                MoneyType.CASH_DELIVERY,
+                                cashMoneyTransaction.getCbpWalletPublicKey(),
+                                cashMoneyTransaction.getActorPublicKey(),
+                                cashMoneyTransaction.getAmount(),
+                                new Date().getTime() / 1000,
+                                cashMoneyTransaction.getConcept(),
+                                cashMoneyTransaction.getPriceReference(),
+                                cashMoneyTransaction.getOriginTransaction(),
+                                cashMoneyTransaction.getOriginTransactionId(),
+                                false);
+
+                        //TODO:Solo para testear
+                        cashMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecordBook, BalanceType.BOOK);
+                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(cashMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
+                        cashMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
+                        stockTransactionCashMoneyDestockFactory.saveCashMoneyDestockTransactionData(cashMoneyTransaction);
+                        break;
+                    }
                 }
             }
         } catch (CryptoBrokerWalletNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetStockCryptoBrokerWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantAddDebitCryptoBrokerWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (DatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (InvalidParameterException e) {
@@ -258,6 +303,8 @@ public class StockTransactionsCashMoneyDestockMonitorAgent extends FermatAgent {
         } catch (CantCreateUnholdTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetUnholdTransactionException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.CASH_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }

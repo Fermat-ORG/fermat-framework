@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
-import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 
@@ -23,4 +22,6 @@ public interface Message {
     void setType(TypeMessage type);
     Timestamp getMessageDate();
     void setMessageDate(Timestamp messageDate);
+    UUID getContactId();
+    void setContactId(UUID contactId);
 }

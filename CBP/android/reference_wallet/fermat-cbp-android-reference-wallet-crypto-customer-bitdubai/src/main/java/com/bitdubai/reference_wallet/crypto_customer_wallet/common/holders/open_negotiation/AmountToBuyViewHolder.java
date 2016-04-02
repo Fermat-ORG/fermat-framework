@@ -72,7 +72,7 @@ public class AmountToBuyViewHolder extends ClauseViewHolder implements View.OnCl
     @Override
     public void onClick(View view) {
         if (listener != null)
-            listener.onClauseCLicked(buyingValue, clause, clausePosition);
+            listener.onClauseClicked(buyingValue, clause, clausePosition);
     }
 
     @Override

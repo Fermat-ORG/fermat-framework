@@ -11,11 +11,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -36,11 +36,13 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.adapters.MyAssetsAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.filters.MyAssetsAdapterFilter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.SessionConstantsAssetIssuer;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.AssetIssuerSettings;
@@ -85,22 +87,24 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
-        errorManager = appSession.getErrorManager();
-        settingsManager = appSession.getModuleManager().getSettingsManager();
+        try {
+            appSession.setData("users", null);
 
-        digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-        appSession.setData("users",null);
+            moduleManager = ((AssetIssuerSession) appSession).getModuleManager();
+            errorManager = appSession.getErrorManager();
+            settingsManager = appSession.getModuleManager().getSettingsManager();
+
+        } catch (Exception ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.DAP_ASSET_ISSUER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+        }
     }
 
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
-
-        setupBackgroundBitmap(layout);
-        configureToolbar();
-        noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
-        showOrHideNoAssetsView(digitalAssets.isEmpty());
 
         //Initialize settings
         settingsManager = appSession.getModuleManager().getSettingsManager();
@@ -110,6 +114,7 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
         } catch (Exception e) {
             settings = null;
         }
+
         if (settings == null) {
             settings = new AssetIssuerSettings();
             settings.setIsContactsHelpEnabled(true);
@@ -119,9 +124,12 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                 settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
                 moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
+                moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
+        } else {
+            moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
         }
 
         final AssetIssuerSettings assetIssuerSettingsTemp = settings;
@@ -135,6 +143,15 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
                 }
             }
         }, 500);
+
+        setupBackgroundBitmap(layout);
+        configureToolbar();
+        noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
+
+        digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        showOrHideNoAssetsView(digitalAssets.isEmpty());
+
+        onRefresh();
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -196,13 +213,13 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
             @Override
             public boolean onQueryTextChange(String s) {
                 if (s.equals(searchView.getQuery().toString())) {
-                    ((MyAssetsAdapter) getAdapter()).getFilter().filter(s);
+                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).filter(s);
                 }
                 return false;
             }
         });
-        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_asset_issuer_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SessionConstantsAssetIssuer.IC_ACTION_ISSUER_HELP_PRESENTATION, 2, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
 //        super.onCreateOptionsMenu(menu, inflater);
 //        searchView = (SearchView) menu.getItem(1).getActionView();
@@ -313,9 +330,10 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 digitalAssets = (ArrayList) result[0];
-                if (adapter != null)
+                if (adapter != null) {
                     adapter.changeDataSet(digitalAssets);
-
+                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).filter(searchView.getQuery().toString());
+                }
                 showOrHideNoAssetsView(digitalAssets.isEmpty());
             }
         }
@@ -335,6 +353,8 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
         if (adapter == null) {
             adapter = new MyAssetsAdapter(getActivity(), digitalAssets, moduleManager);
             adapter.setFermatListEventListener(this);
+        } else {
+            adapter.changeDataSet(digitalAssets);
         }
         return adapter;
     }
@@ -390,5 +410,15 @@ public class MyAssetsActivityFragment extends FermatWalletListFragment<DigitalAs
             noAssetsView.setVisibility(View.GONE);
         }
     }
-}
 
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case DAPConstants.DAP_UPDATE_VIEW_ANDROID:
+                onRefresh();
+                break;
+            default:
+                super.onUpdateViewOnUIThread(code);
+        }
+    }
+}

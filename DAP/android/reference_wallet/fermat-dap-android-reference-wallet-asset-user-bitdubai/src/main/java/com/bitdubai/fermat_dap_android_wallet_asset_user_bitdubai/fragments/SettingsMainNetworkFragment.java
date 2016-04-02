@@ -88,6 +88,9 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
             }
             if (settings != null) {
                 listElementSpinner = settings.getBlockchainNetwork();
+            } else {
+                listElementSpinner = new ArrayList<>();
+                listElementSpinner.add(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
 
             setUpUi();
@@ -142,8 +145,8 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment implemen
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_SETTINGS_NETWORK, 0, "help").setIcon(R.drawable.dap_asset_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_SETTINGS_NETWORK, 0, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override

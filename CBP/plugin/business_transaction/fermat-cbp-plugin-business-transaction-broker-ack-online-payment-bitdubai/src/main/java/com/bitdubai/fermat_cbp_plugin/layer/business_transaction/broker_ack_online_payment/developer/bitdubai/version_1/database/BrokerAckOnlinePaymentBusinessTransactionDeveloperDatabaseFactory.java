@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_online_payment.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -85,6 +86,8 @@ public class BrokerAckOnlinePaymentBusinessTransactionDeveloperDatabaseFactory i
                    * The database cannot be created. I can not handle this situation.
                    */
                 throw new CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException(cantCreateDatabaseException.getMessage());
+            }catch(Exception exception){
+                throw new CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException(CantInitializeBrokerAckOnlinePaymentBusinessTransactionDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception),"Unexpected error","Check the cause");
             }
         }
     }
@@ -114,6 +117,8 @@ public class BrokerAckOnlinePaymentBusinessTransactionDeveloperDatabaseFactory i
         onlinePaymentColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME);
         onlinePaymentColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME);
         onlinePaymentColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_CRYPTO_AMOUNT_COLUMN_NAME);
+        onlinePaymentColumns.add(BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME);
+
         /**
          * Table Online Payment addition.
          */

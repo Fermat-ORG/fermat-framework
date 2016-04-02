@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.request.customer_broker_purchase.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.RequestStatus;
 import com.bitdubai.fermat_cbp_api.layer.request.customer_broker_purchase.interfaces.RequestCustomerBrokerPurchase;
 
@@ -14,18 +14,18 @@ public class CustomerBrokerPurchaseRequest implements RequestCustomerBrokerPurch
     private UUID requestId;
     private String requestSenderPublicKey;
     private String requestDestinationPublicKey;
-    private CurrencyType merchandiseCurrency;
+    private MoneyType merchandiseCurrency;
     private float merchandiseAmount;
-    private CurrencyType paymentCurrency;
+    private MoneyType paymentCurrency;
     private RequestStatus requestStatus;
 
     public CustomerBrokerPurchaseRequest(
             UUID requestId,
             String requestSenderPublicKey,
             String requestDestinationPublicKey,
-            CurrencyType merchandiseCurrency,
+            MoneyType merchandiseCurrency,
             float merchandiseAmount,
-            CurrencyType paymentCurrency,
+            MoneyType paymentCurrency,
             RequestStatus requestStatus){
 
         this.requestId = requestId;
@@ -53,7 +53,7 @@ public class CustomerBrokerPurchaseRequest implements RequestCustomerBrokerPurch
     }
 
     @Override
-    public CurrencyType getMerchandiseCurrency() {
+    public MoneyType getMerchandiseCurrency() {
         return merchandiseCurrency;
     }
 
@@ -63,7 +63,7 @@ public class CustomerBrokerPurchaseRequest implements RequestCustomerBrokerPurch
     }
 
     @Override
-    public CurrencyType getPaymentCurrency() {
+    public MoneyType getPaymentCurrency() {
         return paymentCurrency;
     }
 

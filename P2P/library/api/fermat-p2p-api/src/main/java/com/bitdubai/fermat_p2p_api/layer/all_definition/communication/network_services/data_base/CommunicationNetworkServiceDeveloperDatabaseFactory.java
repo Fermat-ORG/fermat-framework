@@ -148,11 +148,15 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory implement
 
         outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_ID_COLUMN_NAME);
         outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_ID_COLUMN_NAME);
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_TYPE_COLUMN_NAME);
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SENDER_NS_TYPE_COLUMN_NAME);
         outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_ID_COLUMN_NAME);
-
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_TYPE_COLUMN_NAME);
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_RECEIVER_NS_TYPE_COLUMN_NAME);
         outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TYPE_COLUMN_NAME);
         outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_SHIPPING_TIMESTAMP_COLUMN_NAME);
         outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_DELIVERY_TIMESTAMP_COLUMN_NAME);
+        outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_FAIL_COUNT_COLUMN_NAME);
         outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_STATUS_COLUMN_NAME);
         outgoingmessagesColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TEXT_CONTENT_COLUMN_NAME);
         /**
@@ -160,54 +164,6 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory implement
          */
         DeveloperDatabaseTable outgoingmessagesTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_MESSAGES_TABLE_NAME, outgoingmessagesColumns);
         tables.add(outgoingmessagesTable);
-
-        /**
-         * Table outgoing messages columns.
-         */
-        List<String> outgoingNotificationsColumns = new ArrayList<String>();
-
-        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME);
-        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME);
-        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
-        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME);
-        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME);
-        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
-        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
-        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
-        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
-        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME);
-        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME);
-        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
-        /**
-         * Table outgoing messages addition.
-         */
-        DeveloperDatabaseTable outgoingNotificationsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME, outgoingNotificationsColumns);
-        tables.add(outgoingNotificationsTable);
-
-        /**
-         * Table outgoing messages columns.
-         */
-        List<String> incomingNotificationsColumns = new ArrayList<String>();
-
-        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME);
-        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME);
-        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
-        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME);
-        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME);
-        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
-        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
-        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
-        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
-        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PHRASE_COLUMN_NAME);
-        incomingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME);
-        outgoingNotificationsColumns.add(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
-
-
-        /**
-         * Table outgoing messages addition.
-         */
-        DeveloperDatabaseTable incomingNotificationsTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TABLE_NAME, incomingNotificationsColumns);
-        tables.add(incomingNotificationsTable);
 
         return tables;
     }
@@ -247,14 +203,11 @@ public final class CommunicationNetworkServiceDeveloperDatabaseFactory implement
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
             /**
              * if there was an error, I will returned an empty list.
-             */
-            database.closeDatabase();
+             */;
             return returnedRecords;
-        } catch (Exception e){
-            database.closeDatabase();
+        } catch (Exception e){;
             return returnedRecords;
         }
-        database.closeDatabase();
         return returnedRecords;
     }
 

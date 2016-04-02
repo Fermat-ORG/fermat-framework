@@ -55,9 +55,11 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -189,6 +191,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
     public void setUpReferences() {
+        dataSet = new ArrayList<>();
         rootView.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -491,15 +494,27 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         if (dataSet != null && !dataSet.isEmpty()) {
             if (searchEditText != null && !searchEditText.getText().toString().isEmpty()) {
                 //noinspection unchecked
-                dataSetFiltered = (List<IntraUserInformation>) CollectionUtils.find(dataSet, new org.apache.commons.collections.Predicate() {
+                /*dataSetFiltered = (List<IntraUserInformation>) CollectionUtils.find(dataSet, new org.apache.commons.collections.Predicate() {
                     @Override
                     public boolean evaluate(Object object) {
                         IntraUserInformation intraUserInformation = (IntraUserInformation) object;
                         return intraUserInformation.getName().toLowerCase().contains(charSequence);
                     }
-                });
-            } else
+                });*/
+
+
+                dataSetFiltered = new ArrayList<IntraUserInformation>();
+                for (IntraUserInformation intraUser : dataSet) {
+
+                    if(intraUser.getName().toLowerCase().contains(charSequence.toString().toLowerCase()))
+                        dataSetFiltered.add(intraUser);
+
+                }
+
+
+            } else {
                 dataSetFiltered = null;
+            }
         }
         return dataSetFiltered;
     }
@@ -507,8 +522,44 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     private synchronized List<IntraUserInformation> getMoreData() {
         List<IntraUserInformation> dataSet = new ArrayList<>();
-        try {
-            dataSet.addAll(moduleManager.getSuggestionsToContact(MAX, offset));
+
+         try {
+            //verifico la cache para mostrar los que tenia antes y los nuevos
+
+            List<IntraUserInformation> userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
+            List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
+             //dataSet.addAll(userList);
+
+            if(userCacheList.size() == 0)
+            {
+                dataSet.addAll(userList);
+            }
+            else
+            {
+                if(userList.size() == 0)
+                {
+                    dataSet.addAll(userCacheList);
+                }
+                else
+                {
+                    for (IntraUserInformation intraUserCache : userCacheList) {
+                        boolean exist = false;
+                        for (IntraUserInformation intraUser : userList) {
+                            if(intraUserCache.getPublicKey().equals(intraUser.getPublicKey())){
+                                exist = true;
+                                break;
+                            }
+                        }
+                        if(!exist)
+                            userList.add(intraUserCache);
+                    }
+                    //guardo el cache
+
+                    moduleManager.saveCacheIntraUsersSuggestions(userList);
+                    dataSet.addAll(userList);
+                }
+            }
+
             offset = dataSet.size();
 
         } catch (CantGetIntraUsersListException e) {
@@ -603,6 +654,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
     private void showCriptoUsersCache() {
+
+        IntraUserModuleManager moduleManager = intraUserSubAppSession.getModuleManager();
+        if(moduleManager==null){
+            getActivity().onBackPressed();
+        }else{
+            invalidate();
+        }
         if (dataSet.isEmpty()) {
             showEmpty(true, emptyView);
             swipeRefresh.post(new Runnable() {
@@ -663,6 +721,21 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         }
     }
 
+    @Override
+    public void onUpdateViewOnUIThread(String code){
+        try
+        {
+            //update intra user list
+            if(code.equals("ACCEPTED_CONEXION"))
+              onRefresh();
+
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+    }
 
 }
 

@@ -13,7 +13,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 public class BitcoinVenezuelaSubsystem extends AbstractPluginSubsystem {
 
     public BitcoinVenezuelaSubsystem() {
-        super(new PluginReference(Plugins.BITDUBAI_CER_PROVIDER_BITCOINVENEZUELA));
+        super(new PluginReference(Plugins.BITCOINVENEZUELA));
     }
 
     @Override

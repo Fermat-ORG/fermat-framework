@@ -3,7 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/linearLayout"
+    android:background="#d6d6d6" >
 
     <View
         android:layout_width="match_parent"
@@ -13,7 +15,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:ignore="UselessParent">
+        tools:ignore="UselessParent"
+        android:background="#d6d6d6" >
 
 
 
@@ -21,6 +24,7 @@
             android:id="@+id/preference_settings_main_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@null"
             />
 
 

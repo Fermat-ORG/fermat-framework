@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.app_connection;
 
-import android.app.Activity;
-
+import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
@@ -22,7 +21,7 @@ import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.se
  */
 public class RedeemPointFermatAppConnection extends AppConnections{
 
-    public RedeemPointFermatAppConnection(Activity activity) {
+    public RedeemPointFermatAppConnection(Context activity) {
         super(activity);
     }
 

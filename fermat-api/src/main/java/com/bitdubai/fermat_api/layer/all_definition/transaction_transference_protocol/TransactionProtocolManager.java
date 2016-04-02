@@ -11,7 +11,7 @@ import java.util.UUID;
  * Created by eze on 09/06/15.
  */
 public interface TransactionProtocolManager <E> extends FermatManager {
-    public void confirmReception(UUID transactionID) throws CantConfirmTransactionException;
-    public List<Transaction<E>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException;
+    void confirmReception(UUID transactionID) throws CantConfirmTransactionException;
+    List<Transaction<E>> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException;
 
 }

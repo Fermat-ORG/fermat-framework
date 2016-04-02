@@ -6,10 +6,15 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents;
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.JsonDateDeserializer;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.JsonDateSerializer;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -42,6 +47,26 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     private String sender;
 
     /**
+     * Represent the senderType
+     */
+    private transient PlatformComponentType senderType;
+
+    /**
+     * Represent the receiverType
+     */
+    private transient PlatformComponentType receiverType;
+
+    /**
+     * Represent the senderNsType
+     */
+    private transient NetworkServiceType senderNsType;
+
+    /**
+     * Represent the receiverNsType
+     */
+    private transient NetworkServiceType receiverNsType;
+
+    /**
      * Represent the receiver of the message
      */
     private String receiver;
@@ -62,9 +87,14 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     private Timestamp deliveryTimestamp;
 
     /**
+     * Represent the failCount
+     */
+    private transient int failCount = 0;
+
+    /**
      * Represent the status
      */
-    private FermatMessagesStatus fermatMessagesStatus;
+    private transient FermatMessagesStatus fermatMessagesStatus;
 
     /**
      * Represent the signature
@@ -81,7 +111,8 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
      */
     public FermatMessageCommunication() {
        super();
-        this.id = UUID.randomUUID();
+       this.id = UUID.randomUUID();
+       this.failCount = new Integer(0);
     }
 
     /**
@@ -107,6 +138,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
         this.sender = sender;
         this.shippingTimestamp = shippingTimestamp;
         this.signature = signature;
+        this.failCount = new Integer(0);
     }
 
     /**
@@ -247,6 +279,22 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
 
     /**
      * (no-javadoc)
+     * @see FermatMessage#getFailCount()
+     */
+    public int getFailCount() {
+        return failCount;
+    }
+
+    /**
+     * Set the failCount
+     * @param failCount
+     */
+    public void setFailCount(Integer failCount) {
+        this.failCount = failCount;
+    }
+
+    /**
+     * (no-javadoc)
      * @see FermatMessage#getSignature()
      */
     @Override
@@ -269,7 +317,8 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     @Override
     public String toJson() {
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new JsonDateSerializer())
+                                     .registerTypeAdapter(Timestamp.class, new JsonDateDeserializer()).create();
         return gson.toJson(this);
     }
 
@@ -280,7 +329,8 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     @Override
     public FermatMessage fromJson(String json) {
 
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new JsonDateSerializer())
+                                     .registerTypeAdapter(Timestamp.class, new JsonDateDeserializer()).create();
         return gson.fromJson(json, FermatMessageCommunication.class);
     }
 
@@ -293,15 +343,7 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
         if (this == o) return true;
         if (!(o instanceof FermatMessageCommunication)) return false;
         FermatMessageCommunication that = (FermatMessageCommunication) o;
-        return Objects.equals(getId(), that.getId()) &&
-                Objects.equals(getSender(), that.getSender()) &&
-                Objects.equals(getReceiver(), that.getReceiver()) &&
-                Objects.equals(getContent(), that.getContent()) &&
-                Objects.equals(getShippingTimestamp(), that.getShippingTimestamp()) &&
-                Objects.equals(getDeliveryTimestamp(), that.getDeliveryTimestamp()) &&
-                Objects.equals(getFermatMessagesStatus(), that.getFermatMessagesStatus()) &&
-                Objects.equals(getSignature(), that.getSignature()) &&
-                Objects.equals(getFermatMessageContentType(), that.getFermatMessageContentType());
+        return Objects.equals(getId(), that.getId());
     }
 
     /**
@@ -311,6 +353,40 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getSender(), getReceiver(), getContent(), getShippingTimestamp(), getDeliveryTimestamp(), getFermatMessagesStatus(), getSignature(), getFermatMessageContentType());
+    }
+
+    @Override
+    public PlatformComponentType getSenderType() {
+        return senderType;
+    }
+
+    public void setSenderType(PlatformComponentType senderType) {
+        this.senderType = senderType;
+    }
+
+    @Override
+    public PlatformComponentType getReceiverType() {
+        return receiverType;
+    }
+
+    public void setReceiverType(PlatformComponentType receiverType) {
+        this.receiverType = receiverType;
+    }
+
+    public NetworkServiceType getSenderNsType() {
+        return senderNsType;
+    }
+
+    public void setSenderNsType(NetworkServiceType senderNsType) {
+        this.senderNsType = senderNsType;
+    }
+
+    public NetworkServiceType getReceiverNsType() {
+        return receiverNsType;
+    }
+
+    public void setReceiverNsType(NetworkServiceType receiverNsType) {
+        this.receiverNsType = receiverNsType;
     }
 
     /**
@@ -328,7 +404,12 @@ public class FermatMessageCommunication implements FermatMessage, Serializable {
                 ", deliveryTimestamp=" + deliveryTimestamp +
                 ", fermatMessagesStatus=" + fermatMessagesStatus +
                 ", signature='" + signature + '\'' +
+                ", failCount='" + failCount + '\'' +
                 ", fermatMessageContentType=" + fermatMessageContentType +
+                ", senderType=" + senderType +
+                ", receiverType=" + receiverType +
+                ", senderNsType=" + senderNsType +
+                ", receiverNsType=" + receiverNsType +
                 '}';
     }
 }

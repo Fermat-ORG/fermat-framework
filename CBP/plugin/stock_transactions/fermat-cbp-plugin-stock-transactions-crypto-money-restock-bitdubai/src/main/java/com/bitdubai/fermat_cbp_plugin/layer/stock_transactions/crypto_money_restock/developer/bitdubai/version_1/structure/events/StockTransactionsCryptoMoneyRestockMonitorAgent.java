@@ -1,17 +1,18 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.events;
 
-import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
+import com.bitdubai.fermat_api.CantStopAgentException;
+import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CryptoMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddDebitCryptoBrokerWalletException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
@@ -22,13 +23,14 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_rest
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.utils.CryptoTransactionParametersWrapper;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.utils.WalletTransactionWrapper;
 import com.bitdubai.fermat_ccp_api.all_definition.enums.CryptoTransactionStatus;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.exceptions.CantCreateUnHoldTransactionException;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.exceptions.CantGetUnHoldTransactionException;
-import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.Unhold.interfaces.CryptoUnholdTransactionManager;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.exceptions.CantCreateUnHoldTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.exceptions.CantGetUnHoldTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.unhold.interfaces.CryptoUnholdTransactionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.Date;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -37,7 +39,7 @@ import java.util.logging.Logger;
  * contains the logic for handling agent transactional
  * Created by franklin on 17/11/15.
  */
-public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent {
+public class StockTransactionsCryptoMoneyRestockMonitorAgent extends FermatAgent {
     //TODO: Manejo de Eventos
 
     private Thread agentThread;
@@ -48,6 +50,8 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent {
     private final CryptoUnholdTransactionManager cryptoUnholdTransactionManager;
     private final StockTransactionCryptoMoneyRestockFactory stockTransactionCryptoMoneyRestockFactory;
     private UUID pluginId;
+
+    public final int SLEEP_TIME = 5000;
 
     public StockTransactionsCryptoMoneyRestockMonitorAgent(ErrorManager errorManager,
                                                            StockTransactionCryptoMoneyRestockManager stockTransactionCryptoMoneyRestockManager,
@@ -62,6 +66,14 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent {
         this.cryptoUnholdTransactionManager = cryptoUnholdTransactionManager;
         this.stockTransactionCryptoMoneyRestockFactory = new StockTransactionCryptoMoneyRestockFactory(pluginDatabaseSystem, pluginId);
         this.pluginId                                  = pluginId;
+
+        this.agentThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (isRunning())
+                    process();
+            }
+        }, this.getClass().getSimpleName());
     }
 
     @Override
@@ -69,58 +81,80 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent {
         Logger LOG = Logger.getGlobal();
         LOG.info("Bank Money Restock Transaction monitor agent starting");
 
-        final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
-
-        this.agentThread = new Thread(monitorAgent);
+//        final MonitorAgent monitorAgent = new MonitorAgent(errorManager);
+//
+//        this.agentThread = new Thread(monitorAgent);
         this.agentThread.start();
+        super.start();
     }
 
     @Override
-    public void stop() {
+    public void stop() throws CantStopAgentException {
         this.agentThread.interrupt();
+        super.stop();
+    }
+
+    public void process() {
+
+        while (isRunning()) {
+
+            try {
+                Thread.sleep(SLEEP_TIME);
+            } catch (InterruptedException interruptedException) {
+                cleanResources();
+                return;
+            }
+
+            doTheMainTask();
+
+            if (agentThread.isInterrupted()) {
+                cleanResources();
+                return;
+            }
+        }
     }
 
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private final class MonitorAgent implements Runnable {
-
-        private final ErrorManager errorManager;
-        public final int SLEEP_TIME = 5000;
-        int iterationNumber = 0;
-        boolean threadWorking;
-
-        public MonitorAgent(final ErrorManager errorManager) {
-
-            this.errorManager = errorManager;
-        }
-
-        @Override
-        public void run() {
-            threadWorking = true;
-            while (threadWorking) {
-                /**
-                 * Increase the iteration counter
-                 */
-                iterationNumber++;
-                try {
-                    Thread.sleep(SLEEP_TIME);
-
-                    /**
-                     * now I will check if there are pending transactions to raise the event
-                     */
-
-                    doTheMainTask();
-                } catch (InterruptedException e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                } catch (Exception e) {
-                    errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                }
-
-            }
-        }
-    }
+//    private final class MonitorAgent implements Runnable {
+//
+//        private final ErrorManager errorManager;
+//        public final int SLEEP_TIME = 5000;
+//        int iterationNumber = 0;
+//        boolean threadWorking;
+//
+//        public MonitorAgent(final ErrorManager errorManager) {
+//
+//            this.errorManager = errorManager;
+//        }
+//
+//        @Override
+//        public void run() {
+//            threadWorking = true;
+//            while (threadWorking) {
+//                /**
+//                 * Increase the iteration counter
+//                 */
+//                iterationNumber++;
+//                try {
+//                    Thread.sleep(SLEEP_TIME);
+//
+//                    /**
+//                     * now I will check if there are pending transactions to raise the event
+//                     */
+//
+//                    doTheMainTask();
+//                } catch (InterruptedException e) {
+//                    errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                } catch (Exception e) {
+//                    errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+//                }
+//
+//            }
+//        }
+//    }
 
     private void doTheMainTask() {
         try {
@@ -140,7 +174,8 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent {
                                 cryptoMoneyTransaction.getActorPublicKey(),
                                 cryptoMoneyTransaction.getAmount(),
                                 cryptoMoneyTransaction.getMemo(),
-                                pluginId.toString());
+                                pluginId.toString(),
+                                cryptoMoneyTransaction.getBlockchainNetworkType());
                         cryptoUnholdTransactionManager.createCryptoUnholdTransaction(cryptoTransactionParametersWrapper);
 
                         cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_EJECUTION);
@@ -162,7 +197,7 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent {
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
                         CryptoTransactionStatus cryptoTransactionStatus = cryptoUnholdTransactionManager.getCryptoUnholdTransactionStatus(cryptoMoneyTransaction.getTransactionId());
-                        if (CryptoTransactionStatus.CONFIRMED.getCode() == cryptoTransactionStatus.getCode()) {
+                        if (Objects.equals(CryptoTransactionStatus.CONFIRMED.getCode(), cryptoTransactionStatus.getCode())) {
                             cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
                             WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(
 
@@ -170,19 +205,21 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent {
                                     cryptoMoneyTransaction.getCryptoCurrency(),
                                     BalanceType.AVAILABLE,
                                     TransactionType.CREDIT,
-                                    CurrencyType.CRYPTO_MONEY,
+                                    MoneyType.CRYPTO,
                                     cryptoMoneyTransaction.getCbpWalletPublicKey(),
                                     cryptoMoneyTransaction.getActorPublicKey(),
                                     cryptoMoneyTransaction.getAmount(),
                                     new Date().getTime() / 1000,
                                     cryptoMoneyTransaction.getConcept(),
                                     cryptoMoneyTransaction.getPriceReference(),
-                                    cryptoMoneyTransaction.getOriginTransaction());
+                                    cryptoMoneyTransaction.getOriginTransaction(),
+                                    cryptoMoneyTransaction.getOriginTransactionId(),
+                                    false);
 
                             //TODO:Solo para testear
                             cryptoMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
-                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.BOOK);
-                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecord, BalanceType.AVAILABLE);
+                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.BOOK);
+                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.AVAILABLE);
 
                             cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
                             stockTransactionCryptoMoneyRestockFactory.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);
@@ -198,7 +235,7 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetStockCryptoBrokerWalletException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CantAddDebitCryptoBrokerWalletException e) {
+        } catch (CantAddCreditCryptoBrokerWalletException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (DatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -210,6 +247,14 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent implements Agent {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantGetUnHoldTransactionException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_MONEY_RESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
+    }
+
+    private void cleanResources() {
+        /**
+         * Disconnect from database and explicitly set all references to null.
+         */
     }
 }

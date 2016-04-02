@@ -9,18 +9,42 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
-import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.*;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.*;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantApproveCryptoPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CantRejectCryptoPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.CryptoPaymentRequestNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantApproveRequestPaymentException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantDeleteWalletContactException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantFindWalletContactException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetActorTransactionHistoryException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllIntraUserConnectionsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetBalanceException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListPaymentRequestDateOrderException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListReceivePaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListSentPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantRefuseRequestPaymentException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantRequestCryptoAddressException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantSaveTransactionDescriptionException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantSendCryptoException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantSendCryptoPaymentRequestException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantUpdateWalletContactException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.InsufficientFundsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.PaymentRequestNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.RequestPaymentInsufficientFundsException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.TransactionNotFoundException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.WalletContactNotFoundException;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.BlockingDeque;
 
 /**
  * The interface <code>com.bitdubai.fermat_dmp_plugin.layer.wallet_module.crypto_wallet.CryptoWallet</code>
@@ -135,7 +159,6 @@ public interface CryptoWallet extends Serializable {
                                                           String        walletPublicKey,
                                                           CryptoCurrency walletCryptoCurrency,
                                                           BlockchainNetworkType blockchainNetworkType) throws CantCreateWalletContactException, ContactNameAlreadyExistsException;
-        ;
 
     /**
      *
@@ -153,15 +176,15 @@ public interface CryptoWallet extends Serializable {
      * @param blockchainNetworkType
      */
 
-    public void sendAddressExchangeRequest(String        actorAlias,
-                                           Actors        actorConnectedType,
-                                           String        actorConnectedPublicKey,
-                                           byte[]        actorPhoto,
-                                           Actors        actorWalletType ,
-                                           String        identityWalletPublicKey,
-                                           String        walletPublicKey,
-                                           CryptoCurrency walletCryptoCurrency,
-                                           BlockchainNetworkType blockchainNetworkType);
+    void sendAddressExchangeRequest(String actorAlias,
+                                    Actors actorConnectedType,
+                                    String actorConnectedPublicKey,
+                                    byte[] actorPhoto,
+                                    Actors actorWalletType,
+                                    String identityWalletPublicKey,
+                                    String walletPublicKey,
+                                    CryptoCurrency walletCryptoCurrency,
+                                    BlockchainNetworkType blockchainNetworkType);
 
     /**
      * Create a new contact with a photo for an specific wallet
@@ -265,7 +288,6 @@ public interface CryptoWallet extends Serializable {
                                             String walletPublicKey,
                                             ReferenceWallet walletType,
                                             BlockchainNetworkType blockchainNetworkType) throws CantRequestCryptoAddressException;
-    // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
 
     CryptoAddress requestAddressToNewExtraUser(String deliveredByActorPublicKey,
                                                Actors deliveredByActorType,
@@ -275,7 +297,7 @@ public interface CryptoWallet extends Serializable {
                                                String vaultIdentifier,
                                                String walletPublicKey,
                                                ReferenceWallet walletType) throws CantRequestCryptoAddressException;
-    // TODO ADD BLOCKCHAIN CRYPTO NETWORK ENUM (TO VALIDATE WITH THE SPECIFIC NETWORK).
+
 
     void send(long cryptoAmount,
               CryptoAddress destinationAddress,
@@ -420,15 +442,8 @@ public interface CryptoWallet extends Serializable {
      * @param walletPublicKey
      * @return List of PaymentRequest object
      */
-    List<PaymentRequest> listSentPaymentRequest(String  walletPublicKey,int max,int offset) throws CantListSentPaymentRequestException;
+    List<PaymentRequest> listSentPaymentRequest(String  walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset) throws CantListSentPaymentRequestException;
 
-    /**
-     *The method <code>listReceivedPaymentRequest</code> list the wallet receive payments request.
-     *
-     * @param walletPublicKey
-     * @return List of PaymentRequest object
-     */
-    List<PaymentRequest> listReceivedPaymentRequest(String  walletPublicKey,int max,int offset)throws CantListReceivePaymentRequestException;
 
     /**
      * The method <code>listPaymentRequestDateOrder</code> list the wallet payments requests order by date.
@@ -466,9 +481,9 @@ public interface CryptoWallet extends Serializable {
      * @throws CantListCryptoWalletIntraUserIdentityException
      */
 
-    List<CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException;
+    ArrayList<CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException;
 
-    List<IntraWalletUserIdentity> getActiveIdentities();
+    ArrayList<IntraWalletUserIdentity> getActiveIdentities();
 
     /**
      * Through the method <code>sendCryptoPaymentRequest</code> you can generate and send a crypto payment request.
@@ -498,7 +513,44 @@ public interface CryptoWallet extends Serializable {
 
     void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException;
 
-    public void registerIdentities();
+     void registerIdentities();
 
-    public CryptoWalletWalletContact findWalletContactByName(String alias,String walletPublicKey,String intraUserLoggedInPublicKey) throws CantFindWalletContactException, WalletContactNotFoundException;
+     CryptoWalletWalletContact findWalletContactByName(String alias,String walletPublicKey,String intraUserLoggedInPublicKey) throws CantFindWalletContactException, WalletContactNotFoundException;
+
+    /**
+     *
+     * @param transactionId
+     * @return
+     * @throws CantListTransactionsException
+     */
+    CryptoWalletTransaction getTransaction(UUID transactionId,String walletPublicKey,String intraUserLoggedInPublicKey) throws CantListTransactionsException;
+
+
+    /**
+     *
+     * @param requestId
+     * @return
+     * @throws CantListReceivePaymentRequestException
+     */
+    PaymentRequest getPaymentRequest(UUID requestId) throws CantListReceivePaymentRequestException;
+
+    /**
+     * Through the method <code>getMnemonicText</code> you can get the Mnemonic Text from Vault
+     * @return List<String>
+     * @throws CantGetMnemonicTextException
+     */
+    List<String> getMnemonicText() throws CantGetMnemonicTextException;
+
+    /**
+     * /**
+     *The method <code>listReceivedPaymentRequest</code> list the wallet receive payments request.
+
+     * @param walletPublicKey
+     * @param blockchainNetworkType
+     * @param max
+     * @param offset
+     * @return
+     * @throws CantListReceivePaymentRequestException
+     */
+    List<PaymentRequest> listReceivedPaymentRequest(String walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset) throws CantListReceivePaymentRequestException;
 }

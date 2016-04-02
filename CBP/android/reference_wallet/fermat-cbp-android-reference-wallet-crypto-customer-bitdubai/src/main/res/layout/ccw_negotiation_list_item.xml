@@ -177,5 +177,14 @@
             android:textSize="@dimen/ccw_title_text_size"
             tools:text="BTC"/>
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/ccw_sending_progress_bar"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:indeterminate="true"
+        android:layout_marginTop="8dp"
+        android:layout_below="@+id/ccw_update_date"
+        android:layout_alignParentEnd="true"/>
 </RelativeLayout>
 

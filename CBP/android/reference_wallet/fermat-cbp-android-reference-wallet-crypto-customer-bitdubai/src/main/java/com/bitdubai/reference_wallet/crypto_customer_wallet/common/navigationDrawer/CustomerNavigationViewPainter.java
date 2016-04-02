@@ -1,6 +1,6 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.navigationDrawer;
 
-import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
@@ -9,22 +9,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.util.FragmentsCommons;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by mati on 2015.11.24..
@@ -37,10 +40,10 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     private CryptoCustomerWalletSession session;
     private ErrorManager errorManager;
     private CryptoCustomerWalletManager walletManager;
-    private Activity activity;
+    private WeakReference<Context> activity;
 
-    public CustomerNavigationViewPainter(Activity activity, CryptoCustomerWalletSession session) {
-        this.activity = activity;
+    public CustomerNavigationViewPainter(Context activity, CryptoCustomerWalletSession session) {
+        this.activity = new WeakReference<Context>(activity);
         this.session = session;
 
         errorManager = session.getErrorManager();
@@ -62,7 +65,8 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     @Override
     public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
         try {
-            return FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, actorIdentity);
+            return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentity);
         } catch (CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }
@@ -72,7 +76,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            return new CryptoCustomerWalletNavigationViewAdapter(activity);
+            return new CryptoCustomerWalletNavigationViewAdapter(activity.get());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -83,7 +87,15 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
     public ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater, ViewGroup base) {
         RelativeLayout layout = (RelativeLayout) layoutInflater.inflate(R.layout.ccw_navigation_view_bottom, base, true);
         FermatTextView bitcoinBalance = (FermatTextView) layout.findViewById(R.id.ccw_navigation_view_bitcoin_balance);
-        bitcoinBalance.setText("0.3521 BTC");
+
+        //bitcoinBalance.setText("0.3521 BTC");
+
+        long balance = walletManager.getBalanceBitcoinWallet(session.getAppPublicKey());
+
+        balance /= 1000000;
+
+        bitcoinBalance.setText(balance+" BTC");
+
 
         return layout;
     }
@@ -96,7 +108,7 @@ public class CustomerNavigationViewPainter implements NavigationViewPainter {
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.getResources(), R.drawable.ccw_navigation_drawer_background, options);
+                    activity.get().getResources(), R.drawable.ccw_navigation_drawer_background, options);
         } catch (OutOfMemoryError error) {
             error.printStackTrace();
         }

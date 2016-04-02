@@ -34,6 +34,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.GroupCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.adapters.UserCommunityAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.dialogs.ConfirmDeleteDialog;
+import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.holders.GroupViewHolder;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.interfaces.PopupMenu;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models.Actor;
@@ -65,7 +66,7 @@ import static android.widget.Toast.makeText;
  * Created by Nerio on 06/01/16.
  */
 public class UserCommunityGroupFragment extends AbstractFermatFragment implements
-        SwipeRefreshLayout.OnRefreshListener, android.widget.PopupMenu.OnMenuItemClickListener {
+        SwipeRefreshLayout.OnRefreshListener {
 
     private static AssetUserCommunitySubAppModuleManager manager;
     private static final int MAX = 20;
@@ -83,7 +84,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
     private LinearLayout emptyView;
     private int offset = 0;
     private CreateGroupFragmentDialog dialog;
-    private Group selectedGroup;
+
 
     SettingsManager<AssetUserSettings> settingsManager;
     /**
@@ -116,25 +117,20 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
-        adapter = new GroupCommunityAdapter(getActivity());
-        adapter.setAdapterChangeListener(new AdapterChangeListener<Group>() {
+        adapter = new GroupCommunityAdapter(getActivity()){
             @Override
-            public void onDataSetChanged(List<Group> dataSet) {
-                groups = dataSet;
-            }
-        });
-        adapter.setMenuItemClick(new PopupMenu() {
-            @Override
-            public void onMenuItemClickListener(View menuView, Group group, int position) {
-                selectedGroup = group;
-                android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(getActivity(), menuView);
-                MenuInflater inflater = popupMenu.getMenuInflater();
-                inflater.inflate(R.menu.dap_community_user_group_menu, popupMenu.getMenu());
+            protected void bindHolder(GroupViewHolder holder, final Group data, int position) {
+                super.bindHolder(holder, data, position);
 
-                popupMenu.setOnMenuItemClickListener(UserCommunityGroupFragment.this);
-                popupMenu.show();
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        appSession.setData("group_selected", data);
+                        changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT, appSession.getAppPublicKey());
+                    }
+                });
             }
-        });
+        };
 
         recyclerView.setAdapter(adapter);
         swipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_group);
@@ -186,8 +182,8 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP, 0, "help").setIcon(R.drawable.dap_community_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SessionConstantsAssetUserCommunity.IC_ACTION_USER_COMMUNITY_HELP_GROUP, 0, "Help").setIcon(R.drawable.dap_community_user_help_icon)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
     }
 
@@ -209,87 +205,10 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
 //        selectedAsset = null;
     }
 
-    protected void initViews(View layout) {
-        Log.i(TAG, "recycler view setup");
-        if (layout == null)
-            return;
-        recyclerView = (RecyclerView) layout.findViewById(R.id.gridViewGroup);
-        if (recyclerView != null) {
-            recyclerView.setHasFixedSize(true);
-            layoutManager = new GridLayoutManager(getActivity(), 2, GridLayoutManager.VERTICAL, false);
-            recyclerView.setLayoutManager(layoutManager);
-
-            adapter = new GroupCommunityAdapter(getActivity());
-            adapter.setAdapterChangeListener(new AdapterChangeListener<Group>() {
-                @Override
-                public void onDataSetChanged(List<Group> dataSet) {
-                    groups = dataSet;
-                }
-            });
-
-         /*   adapter.setMenuItemClick(new PopupMenu() {
-                @Override
-                public void onMenuItemClickListener(View menuView, Group group, int position) {
-                    selectedGroup = group;
-                    android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(getActivity(), menuView);
-                    MenuInflater inflater = popupMenu.getMenuInflater();
-                    inflater.inflate(R.menu.dap_community_user_group_menu, popupMenu.getMenu());
-
-                    popupMenu.setOnMenuItemClickListener(UserCommunityGroupFragment.this);
-                    popupMenu.show();
-                }
-            });*/
-//            adapter = new AssetFactoryAdapter(getActivity());
-//            adapter.setMenuItemClick(new PopupMenu() {
-//                @Override
-//                public void onMenuItemClickListener(View menuView, AssetFactory project, int position) {
-//                    selectedAsset = project;
-//                    /*Showing up popup menu*/
-//                    android.widget.PopupMenu popupMenu = new android.widget.PopupMenu(getActivity(), menuView);
-//                    MenuInflater inflater = popupMenu.getMenuInflater();
-//                    inflater.inflate(R.menu.asset_factory_main, popupMenu.getMenu());
-//                    try {
-//                        if (!manager.isReadyToPublish(selectedAsset.getAssetPublicKey())) {
-//                            popupMenu.getMenu().findItem(R.id.action_publish).setVisible(false);
-//                        }
-//                    } catch (CantPublishAssetFactoy cantPublishAssetFactoy) {
-//                        cantPublishAssetFactoy.printStackTrace();
-//                        popupMenu.getMenu().findItem(R.id.action_publish).setVisible(false);
-//                    }
-//                    popupMenu.setOnMenuItemClickListener(EditableAssetsFragment.this);
-//                    popupMenu.show();
-//                }
-//            });
-            recyclerView.setAdapter(adapter);
-
-        }
-        swipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_group);
-        if (swipeRefreshLayout != null) {
-            isRefreshing = false;
-            swipeRefreshLayout.setRefreshing(false);
-            swipeRefreshLayout.setColorSchemeColors(Color.BLUE, Color.BLUE, Color.BLUE, Color.BLUE);
-            swipeRefreshLayout.setOnRefreshListener(this);
-        }
-
-        // fab action button create
-        ActionButton create = (ActionButton) layout.findViewById(R.id.create);
-        create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                /* create new asset factory project */
-//                selectedAsset = null;
-//                changeActivity(Activities.DAP_ASSET_EDITOR_ACTIVITY.getCode(), appSession.getAppPublicKey(), getAssetForEdit());
-                lauchCreateGroupDialog();
-            }
-        });
-        create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
-        create.setVisibility(View.VISIBLE);
-    }
-
     private void setUpPresentation(boolean checkButton) {
         //        try {
         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBannerRes(R.drawable.banner_asset_user)
+                .setBannerRes(R.drawable.banner_asset_user_community)
                 .setIconRes(R.drawable.asset_user_comunity)
                 .setVIewColor(R.color.dap_community_user_view_color)
                 .setTitleTextColor(R.color.dap_community_user_view_color)
@@ -362,7 +281,7 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
 
     private void lauchCreateGroupDialog(){
         dialog = new CreateGroupFragmentDialog(
-                getActivity(),manager,selectedGroup);
+                getActivity(),manager,null);
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
@@ -430,65 +349,11 @@ public class UserCommunityGroupFragment extends AbstractFermatFragment implement
         if (result != null && result.size() > 0) {
             for (ActorAssetUserGroup record : result) {
                 Group group = new Group(record);
-                group.setMembers(manager.getListActorAssetUserByGroups(group.getGroupName()).size());
+                group.setMembers(manager.getListActorAssetUserByGroups(group.getGroupId()).size());
                 dataSet.add(group);
             }
         }
         return dataSet;
     }
 
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        if (item.getItemId() == R.id.action_edit) {
-            lauchCreateGroupDialog();
-        }
-        else if (item.getItemId() == R.id.action_delete)
-        {
-            appSession.setData("group_ID", selectedGroup.getGroupId());
-            ConfirmDeleteDialog dialog = new ConfirmDeleteDialog(getActivity(), (AssetUserCommunitySubAppSession) appSession, appResourcesProviderManager);
-            dialog.setYesBtnListener(new ConfirmDeleteDialog.OnClickAcceptListener() {
-                @Override
-                public void onClick() {
-                    String groupSelectedID;
-                    try {
-                        groupSelectedID = (String) appSession.getData("group_ID");
-                        List<ActorAssetUser> userList = manager.getListActorAssetUserByGroups(groupSelectedID);
-                        for (ActorAssetUser user : userList){
-
-                            AssetUserGroupMemberRecord actorGroup = new AssetUserGroupMemberRecord();
-                            actorGroup.setGroupId(groupSelectedID);
-                            actorGroup.setActorPublicKey(user.getActorPublicKey());
-                            manager.removeActorAssetUserFromGroup(actorGroup);
-
-                        }
-
-                        manager.deleteGroup(groupSelectedID);
-                        Toast.makeText(getActivity(), "Group deleted.", Toast.LENGTH_SHORT).show();
-                        onRefresh();
-                    } catch (CantDeleteAssetUserGroupException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getActivity(), "This group couldn't be deleted.", Toast.LENGTH_SHORT).show();
-                    } catch (RecordsNotFoundException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getActivity(), "Group not found.", Toast.LENGTH_SHORT).show();
-                    }catch (CantGetAssetUserActorsException e) {
-                        e.printStackTrace();
-                        Toast.makeText(getActivity(), "Can't get users from group.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-            dialog.show();
-
-            //Toast.makeText(getActivity(), "Group deleted.", Toast.LENGTH_SHORT).show();
-        }
-        else if (item.getItemId() == R.id.action_group_members)
-        {
-            appSession.setData("group_selected", selectedGroup);
-            changeActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_ADMINISTRATIVE_GROUP_USERS_FRAGMENT, appSession.getAppPublicKey());
-        }
-
-        selectedGroup = null;
-        onRefresh();
-        return false;
-    }
 }

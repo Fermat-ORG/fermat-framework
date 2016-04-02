@@ -40,12 +40,36 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
     @Override
     protected void bindHolder(final UserViewHolder holder, final Actor data, final int position) {
         try {
+            holder.name.setText(String.format("%s", data.getName()));
             if (data.getCryptoAddress() != null) {
-                holder.name.setText(String.format("%s", data.getName()));
-                holder.crypto.setText("CryptoAddress: YES");
+                holder.connectedStateConnected.setVisibility(View.VISIBLE);
+                holder.connectedStateDenied.setVisibility(View.GONE);
+                holder.connectedStateWaiting.setVisibility(View.GONE);
+                holder.connect.setVisibility(View.GONE);
+                //holder.crypto.setText("CryptoAddress: YES");
             } else {
-                holder.name.setText(String.format("%s", data.getName()));
-                holder.crypto.setText("CryptoAddress: NO");
+                switch (data.getDapConnectionState()){
+                    case CONNECTING:
+                    case PENDING_LOCALLY:
+                    case PENDING_REMOTELY:
+                        holder.connectedStateWaiting.setVisibility(View.VISIBLE);
+                        holder.connectedStateDenied.setVisibility(View.GONE);
+                        break;
+                    case DENIED_LOCALLY:
+                    case DENIED_REMOTELY:
+                    case CANCELLED_LOCALLY:
+                    case CANCELLED_REMOTELY:
+                        holder.connectedStateWaiting.setVisibility(View.GONE);
+                        holder.connectedStateDenied.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        holder.connectedStateWaiting.setVisibility(View.GONE);
+                        holder.connectedStateDenied.setVisibility(View.GONE);
+
+                }
+                holder.connectedStateConnected.setVisibility(View.GONE);
+                holder.connect.setVisibility(View.VISIBLE);
+                //holder.crypto.setText("CryptoAddress: NO");
             }
 
             if (data.getDapConnectionState() == DAPConnectionState.REGISTERED_ONLINE || data.getDapConnectionState() == DAPConnectionState.CONNECTED_ONLINE) {
@@ -60,8 +84,16 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
                 holder.status.setText(R.string.status_connecting);
             }
 
+            if (data.getDapConnectionState() == DAPConnectionState.DENIED_LOCALLY || data.getDapConnectionState() == DAPConnectionState.DENIED_REMOTELY) {
+                holder.status.setText(R.string.status_denied);
+            }
+
+            if (data.getDapConnectionState() == DAPConnectionState.CANCELLED_LOCALLY || data.getDapConnectionState() == DAPConnectionState.CANCELLED_REMOTELY) {
+                holder.status.setText(R.string.status_canceled);
+            }
+
             holder.connect.setChecked(data.selected);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.connect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dataSet.get(position).selected = !dataSet.get(position).selected;
@@ -73,18 +105,13 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
 
             byte[] profileImage = data.getProfileImage();
 
-            //TODO: chamo esto te va a tirar error si es nula la imagen :p, el leght no lo va a poder sacar
-//            if (profileImage != null && profileImage.length > 0) {
-//                holder.thumbnail.setImageDrawable(new BitmapDrawable(context.getResources(),
-//                        BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length)));
-//            }
 
             if (profileImage != null) {
                 if (profileImage.length > 0) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
                     holder.thumbnail.setImageBitmap(bitmap);
-                } else Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
-            } else Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
+                } else Picasso.with(context).load(R.drawable.asset_user_comunity).into(holder.thumbnail);
+            } else Picasso.with(context).load(R.drawable.asset_user_comunity).into(holder.thumbnail);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -93,6 +120,10 @@ public class UserCommunityAdapter extends FermatAdapter<Actor, UserViewHolder> {
 
     public void setAdapterChangeListener(AdapterChangeListener<Actor> adapterChangeListener) {
         this.adapterChangeListener = adapterChangeListener;
+    }
+
+    public AdapterChangeListener<Actor> getAdapterChangeListener() {
+        return adapterChangeListener;
     }
 
     public int getSize() {

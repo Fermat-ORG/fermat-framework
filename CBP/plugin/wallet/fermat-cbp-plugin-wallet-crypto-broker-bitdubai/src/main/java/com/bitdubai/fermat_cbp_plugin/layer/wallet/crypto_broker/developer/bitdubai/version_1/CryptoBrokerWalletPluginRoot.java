@@ -64,7 +64,7 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.BITDUBAI_CER_PROVIDER_FILTER)
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.SEARCH, plugin = Plugins.FILTER)
     private CurrencyExchangeProviderFilterManager providerFilter;
 
 
@@ -231,6 +231,7 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
         try {
             CryptoBrokerWalletImpl cryptoBrokerWalletImpl = new CryptoBrokerWalletImpl(errorManager, pluginDatabaseSystem, pluginFileSystem, pluginId, providerFilter);
 
+            walletPublicKey = "walletPublicKeyTest"; // TODO. solo para pruebas, hay que quitarlo despues
             UUID internalWalletId = cryptoBrokerWallet.get(walletPublicKey);
             cryptoBrokerWalletImpl.initialize(internalWalletId);
             return cryptoBrokerWalletImpl;
@@ -272,8 +273,8 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
 //            }
 //
 //            @Override
-//            public CurrencyType getCurrencyType() {
-//                return CurrencyType.BANK_MONEY;
+//            public MoneyType getMoneyType() {
+//                return MoneyType.BANK;
 //            }
 //
 //            @Override
@@ -343,8 +344,8 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
 //            }
 //
 //            @Override
-//            public CurrencyType getCurrencyType() {
-//                return CurrencyType.BANK_MONEY;
+//            public MoneyType getMoneyType() {
+//                return MoneyType.BANK;
 //            }
 //
 //            @Override
@@ -430,8 +431,15 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
             walletFile.loadFromMedia();
             return walletFile;
         } catch (FileNotFoundException | CantCreateFileException exception) {
+
+            // if not found, i will create it
             return createWalletFile();
         } catch (CantLoadFileException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
+        }
+         catch (Exception exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
     }
@@ -448,7 +456,12 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
             walletFile.persistToMedia();
             return walletFile;
         } catch (CantCreateFileException | CantPersistFileException exception) {
+            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
         }
+     catch (Exception exception) {
+        this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+        throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, null, null);
+    }
     }
 }

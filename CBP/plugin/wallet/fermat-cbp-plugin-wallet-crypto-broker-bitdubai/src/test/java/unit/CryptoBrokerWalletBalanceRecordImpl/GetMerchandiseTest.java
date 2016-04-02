@@ -1,6 +1,6 @@
 package unit.CryptoBrokerWalletBalanceRecordImpl;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.CryptoBrokerWalletBalanceRecordImpl;
 
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class GetMerchandiseTest {
     @Test
     public void getMerchandise(){
         CryptoBrokerWalletBalanceRecordImpl cryptoBrokerWalletBalanceRecord = mock(CryptoBrokerWalletBalanceRecordImpl.class);
-        when(cryptoBrokerWalletBalanceRecord.getMerchandise()).thenReturn(CurrencyType.CRYPTO_MONEY);
+        when(cryptoBrokerWalletBalanceRecord.getMerchandise()).thenReturn(MoneyType.CRYPTO);
         assertThat(cryptoBrokerWalletBalanceRecord.getMerchandise()).isNotNull();
     }
 

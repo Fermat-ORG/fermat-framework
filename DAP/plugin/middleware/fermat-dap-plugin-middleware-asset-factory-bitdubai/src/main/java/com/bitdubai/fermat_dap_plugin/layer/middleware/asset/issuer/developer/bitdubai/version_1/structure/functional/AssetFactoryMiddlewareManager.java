@@ -28,6 +28,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.except
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantSaveAssetFactoryException;
 import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.CantPublishAssetException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
@@ -117,7 +118,7 @@ public final class AssetFactoryMiddlewareManager {
             getAssetFactoryMiddlewareDao().saveAssetFactoryData(assetFactory);
             if (assetFactory.getResources() != null) {
                 for (Resource resource : assetFactory.getResources()) {
-                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+                    PluginBinaryFile imageFile = pluginFileSystem.createBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                     imageFile.setContent(resource.getResourceBinayData());
                     imageFile.persistToMedia();
                 }
@@ -618,7 +619,7 @@ public final class AssetFactoryMiddlewareManager {
     }
 
     public PluginBinaryFile getAssetFactoryResource(Resource resource) throws FileNotFoundException, CantCreateFileException {
-        return pluginFileSystem.getBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PUBLIC, FileLifeSpan.PERMANENT);
+        return pluginFileSystem.getBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
     }
 
     public boolean isReadyToPublish(String asssetPublicKey) throws CantPublishAssetException {
@@ -659,12 +660,10 @@ public final class AssetFactoryMiddlewareManager {
             if (assetFactory.getState() == State.DRAFT) {
                 DigitalAsset digitalAsset = new DigitalAsset();
                 DigitalAssetContract digitalAssetContract = new DigitalAssetContract();
-                ContractProperty redeemable = new ContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE, null);
-                redeemable.setValue(assetFactory.getIsRedeemable());
-                ContractProperty expirationDate = new ContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, null);
-                expirationDate.setValue(assetFactory.getExpirationDate());
-                digitalAssetContract.setContractProperty(redeemable);
-                digitalAssetContract.setContractProperty(expirationDate);
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.REDEEMABLE, assetFactory.getIsRedeemable());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE, assetFactory.getExpirationDate());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.SALEABLE, assetFactory.getIsRedeemable());
+                digitalAssetContract.addPropertyValue(DigitalAssetContractPropertiesConstants.TRANSFERABLE, assetFactory.getIsRedeemable());
                 digitalAsset.setContract(digitalAssetContract);
                 digitalAsset.setName(assetFactory.getName());
                 digitalAsset.setDescription(assetFactory.getDescription());
@@ -674,7 +673,7 @@ public final class AssetFactoryMiddlewareManager {
                 digitalAsset.setIdentityAssetIssuer(identityAssetIssuerManager.getIdentityAssetIssuer());
                 digitalAsset.setResources(assetFactory.getResources());
                 markAssetFactoryState(State.PENDING_FINAL, assetFactory.getAssetPublicKey());
-                assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), assetFactory.getWalletPublicKey(), assetFactory.getNetworkType());
+                assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), /* Issuer Wallet PK */WalletUtilities.WALLET_PUBLIC_KEY, /* BTC Wallet PK*/assetFactory.getWalletPublicKey(), assetFactory.getNetworkType());
             } else {
                 throw new CantPublishAssetException(CantPublishAssetException.DEFAULT_MESSAGE);
             }

@@ -72,7 +72,7 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
 
     @Override
     public void start() throws CantStartPluginException {
-        stockTransactionBankMoneyDestockManager = new StockTransactionBankMoneyDestockManager(pluginDatabaseSystem, pluginId);
+        stockTransactionBankMoneyDestockManager = new StockTransactionBankMoneyDestockManager(pluginDatabaseSystem, pluginId, errorManager);
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_DATABASE_NAME);
 
@@ -91,7 +91,8 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
                 errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
             } catch (Exception exception) {
-                throw new CantStartPluginException("Cannot start stockTransactionBankMoneyRestockPlugin plugin.", FermatException.wrapException(exception), null, null);
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+                throw new CantStartPluginException("Unhandled Exception.", FermatException.wrapException(exception), null, null);
             }
         }
         this.serviceStatus = ServiceStatus.STARTED;
@@ -140,7 +141,7 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
-        //if (businessTransactionBankMoneyDestockMonitorAgent == null) {
+        if (businessTransactionBankMoneyDestockMonitorAgent == null) {
             businessTransactionBankMoneyDestockMonitorAgent = new BusinessTransactionBankMoneyDestockMonitorAgent(
                     errorManager,
                     stockTransactionBankMoneyDestockManager,
@@ -152,7 +153,11 @@ public class BusinessTransactionBankMoneyDestockPluginRoot extends AbstractPlugi
 
             businessTransactionBankMoneyDestockMonitorAgent.start();
         serviceStatus = ServiceStatus.STARTED;
-        //} else businessTransactionBankMoneyDestockMonitorAgent.start();
+        }
+        else {
+            businessTransactionBankMoneyDestockMonitorAgent.start();
+            serviceStatus = ServiceStatus.STARTED;
+        }
     }
 
 }

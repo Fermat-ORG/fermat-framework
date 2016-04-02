@@ -32,4 +32,12 @@ public abstract class AbstractP2PFermatEvent implements FermatEvent {
     public EventSource getSource() {
         return this.eventSource;
     }
+
+    @Override
+    public String toString() {
+        return "AbstractP2PFermatEvent{" +
+                "p2pEventType=" + p2pEventType +
+                ", eventSource=" + eventSource +
+                '}';
+    }
 }

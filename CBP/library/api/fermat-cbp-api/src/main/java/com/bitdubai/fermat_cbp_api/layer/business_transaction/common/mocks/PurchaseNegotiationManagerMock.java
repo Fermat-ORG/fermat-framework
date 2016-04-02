@@ -1,8 +1,9 @@
 package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.mocks;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ActorType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
@@ -59,6 +60,11 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
     }
 
     @Override
+    public void waitForCustomer(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
+        //Not implemented in this mock
+    }
+
+    @Override
     public void waitForBroker(CustomerBrokerPurchaseNegotiation negotiation) throws CantUpdateCustomerBrokerPurchaseNegotiationException {
         //Not implemented in this mock
     }
@@ -82,7 +88,7 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
     }
 
     @Override
-    public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsBySendAndWaiting() throws CantGetListPurchaseNegotiationsException {
+    public Collection<CustomerBrokerPurchaseNegotiation> getNegotiationsBySendAndWaiting(ActorType actorType) throws CantGetListPurchaseNegotiationsException {
         return null;
     }
 
@@ -92,7 +98,7 @@ public class PurchaseNegotiationManagerMock implements CustomerBrokerPurchaseNeg
     }
 
     @Override
-    public ClauseType getNextClauseTypeByCurrencyType(CurrencyType paymentMethod) throws CantGetNextClauseTypeException {
+    public ClauseType getNextClauseTypeByCurrencyType(MoneyType paymentMethod) throws CantGetNextClauseTypeException {
         return null;
     }
 

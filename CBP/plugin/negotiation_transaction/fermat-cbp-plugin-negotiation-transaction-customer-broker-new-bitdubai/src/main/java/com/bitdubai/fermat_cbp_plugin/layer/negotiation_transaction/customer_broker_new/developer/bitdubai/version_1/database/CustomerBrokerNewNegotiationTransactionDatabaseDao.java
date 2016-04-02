@@ -409,6 +409,26 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
     }
 
     //GET EVENT TYPE OF TRANSACTION
+    public String getEventStatus(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
+
+        try{
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_TABLE_NAME);
+            table.addUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+            checkDatabaseRecords(records);
+            String value=records.get(0).getStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_EVENT_STATUS_COLUMN_NAME);
+
+            return value;
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Getting value from database","Cannot load the database table");
+        }
+
+    }
+
+    //GET EVENT TYPE OF TRANSACTION
     public String getEvent(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
 
         try{
@@ -477,7 +497,7 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
 //            System.out.print("\n\n**** 19.1) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT ****\n");
 
         }  catch (CantLoadTableToMemoryException e) {
-            throw new CantRegisterCustomerBrokerNewEventException(e.DEFAULT_MESSAGE, e, "Customer Broker New Negotiation Transaction Update Event Status Not Found", "unknown failure");
+            throw new CantRegisterCustomerBrokerNewEventException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "Customer Broker New Negotiation Transaction Update Event Status Not Found", "unknown failure");
         }
     }
     /*END EVENT*/

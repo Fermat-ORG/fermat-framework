@@ -37,6 +37,7 @@ public interface CashMoneyRestockManager extends FermatManager {
             BigDecimal amount,
             String memo,
             BigDecimal priceReference,
-            OriginTransaction originTransaction
+            OriginTransaction originTransaction,
+            String originTransactionId
         ) throws com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.exceptions.CantCreateCashMoneyRestockException;
 }

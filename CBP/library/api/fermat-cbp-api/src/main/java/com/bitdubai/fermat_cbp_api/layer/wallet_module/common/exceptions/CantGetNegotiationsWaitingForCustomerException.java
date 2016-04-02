@@ -37,4 +37,8 @@ public class CantGetNegotiationsWaitingForCustomerException extends FermatExcept
     public CantGetNegotiationsWaitingForCustomerException(Exception cause) {
         super(DEFAULT_MESSAGE, cause, "", "");
     }
+
+    public CantGetNegotiationsWaitingForCustomerException(String message) {
+        super(message, null, "N/A", "");
+    }
 }

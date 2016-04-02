@@ -48,6 +48,14 @@ project(':fermat-dap-plugin-sub-app-module-redeem-point-community-bitdubai').pro
 include ':fermat-dap-plugin-middleware-asset-factory-bitdubai'
 project(':fermat-dap-plugin-middleware-asset-factory-bitdubai').projectDir = new File('DAP/plugin/middleware/fermat-dap-plugin-middleware-asset-factory-bitdubai')
 
+// negotiation transaction
+include ':fermat-dap-plugin-negotiation-transaction-direct-sell-negotiation-bitdubai'
+project(':fermat-dap-plugin-negotiation-transaction-direct-sell-negotiation-bitdubai').projectDir = new File('DAP/plugin/negotiation_transaction/fermat-dap-plugin-negotiation-transaction-direct-sell-negotiation-bitdubai')
+
+// business transaction
+include ':fermat-dap-plugin-business-transaction-asset-direct-sell-bitdubai'
+project(':fermat-dap-plugin-business-transaction-asset-direct-sell-bitdubai').projectDir = new File('DAP/plugin/business_transaction/fermat-dap-plugin-business-transaction-asset-direct-sell-bitdubai')
+
 // digital asset transaction
 include ':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai'
 project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-issuing-bitdubai')
@@ -60,6 +68,12 @@ project(':fermat-dap-plugin-digital-asset-transaction-asset-transfer-bitdubai').
 
 include ':fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai'
 project(':fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-reception-bitdubai')
+
+include ':fermat-dap-plugin-funds-transaction-asset-seller-bitdubai'
+project(':fermat-dap-plugin-funds-transaction-asset-seller-bitdubai').projectDir = new File('DAP/plugin/funds_transaction/fermat-dap-plugin-funds-transaction-asset-seller-bitdubai')
+
+include ':fermat-dap-plugin-funds-transaction-asset-buyer-bitdubai'
+project(':fermat-dap-plugin-funds-transaction-asset-buyer-bitdubai').projectDir = new File('DAP/plugin/funds_transaction/fermat-dap-plugin-funds-transaction-asset-buyer-bitdubai')
 
 include ':fermat-dap-plugin-digital-asset-transaction-issuer-redemption-bitdubai'
 project(':fermat-dap-plugin-digital-asset-transaction-issuer-redemption-bitdubai').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-issuer-redemption-bitdubai')

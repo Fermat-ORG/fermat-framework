@@ -7,22 +7,22 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
  * Created by ciencias on 21.01.15.
  * Modified by Manuel Perez on 03/08/2015.
  * Updated by Leon Acosta (laion.cj91@gmail.com) on 31/01/2016.
+ * Updated by Nelson Ramirez (nelsonalfo@gmail.com) on 26/02/2016.
  */
 public enum TimeFrequency implements FermatEnum {
 
-    DAILY   ("DY"),
-    MONTHLY ("MN"),
-    NONE    ("NN"),
-    WEEKLY  ("WK"),
-    YEARLY  ("YR"),
-
+    DAILY   ("DY", "Daily"),
+    MONTHLY ("MN", "Monthly"),
+    NONE    ("NN", "None"),
+    WEEKLY  ("WK", "Weekly"),
+    YEARLY  ("YR", "Yearly"),
     ;
 
-    private final String code;
+    private final String code, friendlyName;
 
-    TimeFrequency(final String code) {
-
+    TimeFrequency(final String code, final String friendlyName) {
         this.code = code;
+        this.friendlyName = friendlyName;
     }
 
     public static TimeFrequency getByCode(final String code) throws InvalidParameterException {
@@ -48,4 +48,7 @@ public enum TimeFrequency implements FermatEnum {
         return this.code;
     }
 
+    public String getFriendlyName() {
+        return friendlyName;
+    }
 }

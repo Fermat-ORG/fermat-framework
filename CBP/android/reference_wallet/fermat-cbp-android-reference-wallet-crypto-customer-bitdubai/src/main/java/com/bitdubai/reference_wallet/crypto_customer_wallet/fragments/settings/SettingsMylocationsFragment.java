@@ -2,9 +2,12 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.settings;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
@@ -27,6 +32,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.Sing
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -39,7 +45,7 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
     private static final String TAG = "settingsMyLocations";
 
     // Data
-    private List<String> locationList;
+    private List<String> locationList = new ArrayList<>();
 
     // UI
     private RecyclerView recyclerView;
@@ -64,13 +70,25 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
             walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
 
+
+            //Try to load appSession data
             Object data = appSession.getData(CryptoCustomerWalletSession.LOCATION_LIST);
-            if (data == null) {
-                locationList = new ArrayList<>();
+            if(data == null) {
+
+                //Get saved locations from settings
+                Collection<NegotiationLocations> listAux= walletManager.getAllLocations(NegotiationType.PURCHASE);
+                for (NegotiationLocations locationAux : listAux){
+                    locationList.add(locationAux.getLocation());
+                }
+
+                //Save locations to appSession data
                 appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
             } else {
                 locationList = (List<String>) data;
             }
+
+
+            //Checking something here
             if(locationList.size()>0) {
                 int pos = locationList.size() - 1;
                 if (locationList.get(pos).equals("settings") || locationList.get(pos).equals("wizard")) {
@@ -117,10 +135,21 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
                 saveSettingAndGoNextStep();
             }
         });
-
+        configureToolbar();
         showOrHideRecyclerView();
 
         return layout;
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
     }
 
     @Override
@@ -150,8 +179,15 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
             Toast.makeText(getActivity(), R.string.ccw_add_location_warning_msg, Toast.LENGTH_SHORT).show();
             return;
         }
-
         try {
+
+            //Save locationList to appSession
+            appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
+
+            //Clear previous locations from settings
+            walletManager.clearLocations();
+
+            //Save locations to settings
             for (String location : locationList) {
                 walletManager.createNewLocation(location, appSession.getAppPublicKey());
             }

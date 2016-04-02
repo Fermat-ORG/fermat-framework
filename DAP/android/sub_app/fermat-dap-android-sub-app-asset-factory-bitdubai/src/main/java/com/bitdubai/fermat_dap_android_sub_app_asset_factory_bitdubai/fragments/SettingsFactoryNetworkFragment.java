@@ -86,6 +86,9 @@ public class SettingsFactoryNetworkFragment extends AbstractFermatFragment imple
             }
             if (settings != null) {
                 listElementSpinner = settings.getBlockchainNetwork();
+            } else {
+                listElementSpinner = new ArrayList<>();
+                listElementSpinner.add(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
 
             setUpUi();

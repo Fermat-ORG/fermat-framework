@@ -7,20 +7,60 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetIssuerCompleteRegistrationNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetNetworkServicePendingNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetRedeemPointCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetUserCompleteRegistrationNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewRequestActorNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewReceiveMessageActorNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.ReceivedNewDigitalAssetMetadataNotificationEvent;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetIssuerCompleteRegistrationNotificationEventListener;
+import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetNetworkServicePendingsNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetRedeemPointCompleteRegistrationNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetUserCompleteRegistrationNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ActorAssetUserRequestListRegisteredNetworksNotificationEventListener;
+import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.NewReceiveExtendedNotificationEventListener;
 import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.NewReceiveMessageActorNotificationEventListener;
+import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.ReceivedNewDigitalAssetMetadataNotificationEventListener;
+import com.bitdubai.fermat_dap_api.layer.all_definition.listeners.RequestActorConnectionNotificationEventListener;
 
 /**
  * Created by Nerio on 27/10/15.
  */
 public enum EventType implements FermatEventEnum {
+
+    ACTOR_ASSET_REQUEST_CONNECTIONS("AARC") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new RequestActorConnectionNotificationEventListener(this, eventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new NewRequestActorNotificationEvent(this);
+        }
+
+    },
+
+    RECEIVE_NEW_DAP_MESSAGE("RNDAMN") {
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new ReceivedNewDigitalAssetMetadataNotificationEventListener(this, eventMonitor);
+        }
+
+        public FermatEvent getNewEvent() {
+            return new ReceivedNewDigitalAssetMetadataNotificationEvent(this);
+        }
+    },
+
+    ACTOR_ASSET_NETWORK_SERVICE_NEW_NOTIFICATIONS("AANSNN") {
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new ActorAssetNetworkServicePendingsNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return new ActorAssetNetworkServicePendingNotificationEvent(this);
+        }
+    },
 
     COMPLETE_REQUEST_LIST_ASSET_ISSUER_REGISTERED_NOTIFICATION("CL_RLAIRN") {
         public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
@@ -33,11 +73,11 @@ public enum EventType implements FermatEventEnum {
     },
 
     COMPLETE_REQUEST_LIST_ASSET_USER_REGISTERED_NOTIFICATION("CL_RLAURN") {
-    public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
             return new ActorAssetUserRequestListRegisteredNetworksNotificationEventListener(this, fermatEventMonitor);
         }
 
-    public FermatEvent getNewEvent() {
+        public FermatEvent getNewEvent() {
             return new ActorAssetUserRequestListRegisteredNetworkServiceNotificationEvent(this);
         }
     },
@@ -80,8 +120,6 @@ public enum EventType implements FermatEventEnum {
         public FermatEvent getNewEvent() {
             return new ActorAssetRedeemPointCompleteRegistrationNotificationEvent(this);
         }
-
-
     },
 
     NEW_RECEIVE_MESSAGE_ACTOR("NEW_RECEIVE_MESSAGE") {
@@ -93,6 +131,17 @@ public enum EventType implements FermatEventEnum {
         @Override
         public FermatEvent getNewEvent() {
             return new NewReceiveMessageActorNotificationEvent(this);
+        }
+    },
+    NEW_RECEIVE_EXTENDED_KEY_ACTOR("EXTENDED_KEY") {
+        @Override
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new NewReceiveExtendedNotificationEventListener(this, fermatEventMonitor);
+        }
+
+        @Override
+        public FermatEvent getNewEvent() {
+            return new NewRequestActorNotificationEvent(this);
         }
     };
 

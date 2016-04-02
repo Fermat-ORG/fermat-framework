@@ -16,8 +16,10 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unexpect
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerActorConnection;
-import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_broker.utils.CryptoBrokerLinkedActorIdentity;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.enums.CryptoCustomerActorConnectionNotificationType;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerActorConnection;
 import com.bitdubai.fermat_cbp_api.layer.actor_connection.crypto_customer.utils.CryptoCustomerLinkedActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
@@ -39,22 +41,29 @@ import java.util.UUID;
  * bla bla bla.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 03/02/2016.
+ *
+ * @author lnacosta
+ * @version 1.0
+ * @since Java JDK 1.7
  */
-public class ActorConnectionEventActions {
+public final class ActorConnectionEventActions {
 
     private final CryptoBrokerManager              cryptoBrokerNetworkService;
     private final CryptoCustomerActorConnectionDao dao                       ;
     private final ErrorManager                     errorManager              ;
+    private final Broadcaster                      broadcaster               ;
     private final PluginVersionReference           pluginVersionReference    ;
 
     public ActorConnectionEventActions(final CryptoBrokerManager                     cryptoBrokerNetworkService,
                                        final CryptoCustomerActorConnectionDao        dao                       ,
                                        final ErrorManager                            errorManager              ,
+                                       final Broadcaster                             broadcaster               ,
                                        final PluginVersionReference                  pluginVersionReference    ) {
 
         this.cryptoBrokerNetworkService = cryptoBrokerNetworkService;
         this.dao                        = dao                       ;
         this.errorManager               = errorManager              ;
+        this.broadcaster                = broadcaster               ;
         this.pluginVersionReference     = pluginVersionReference    ;
     }
 
@@ -62,11 +71,8 @@ public class ActorConnectionEventActions {
 
         try {
 
-            System.out.println("******** CRYPTO BROKER NEWS -> CUSTOMER ACTOR CONNECTION");
-
             final List<CryptoBrokerConnectionRequest> list = cryptoBrokerNetworkService.listPendingConnectionNews(Actors.CBP_CRYPTO_CUSTOMER);
 
-            System.out.println("******** CRYPTO BROKER NEWS -> CUSTOMER ACTOR CONNECTION -> there is "+list.size() + " request from customers.");
             for (final CryptoBrokerConnectionRequest request : list)
                 this.handleRequestConnection(request, Actors.CBP_CRYPTO_BROKER);
 
@@ -105,6 +111,8 @@ public class ActorConnectionEventActions {
 
             dao.registerActorConnection(actorConnection);
 
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode(), CryptoCustomerActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
+
             cryptoBrokerNetworkService.confirm(request.getRequestId());
 
         } catch (final ActorConnectionAlreadyExistsException actorConnectionAlreadyExistsException) {
@@ -142,16 +150,10 @@ public class ActorConnectionEventActions {
 
             for (final CryptoBrokerConnectionRequest request : list) {
 
-                if (request.getRequestType() == RequestType.SENT  && request.getSenderActorType() == Actors.CBP_CRYPTO_CUSTOMER) {
+                if (request.getRequestType() == RequestType.RECEIVED  && request.getSenderActorType() == Actors.CBP_CRYPTO_CUSTOMER) {
 
                     switch (request.getRequestAction()) {
 
-                        case ACCEPT:
-                            this.handleAcceptConnection(request.getRequestId());
-                            break;
-                        case DENY:
-                            this.handleDenyConnection(request.getRequestId());
-                            break;
                         case DISCONNECT:
                             this.handleDisconnect(request.getRequestId());
                             break;
@@ -163,8 +165,6 @@ public class ActorConnectionEventActions {
         } catch(CantListPendingConnectionRequestsException |
                 ActorConnectionNotFoundException           |
                 UnexpectedConnectionStateException         |
-                CantAcceptActorConnectionRequestException  |
-                CantDenyActorConnectionRequestException    |
                 CantDisconnectFromActorException           e) {
 
             throw new CantHandleNewsEventException(e, "", "Error handling Crypto Addresses News Event.");
@@ -222,11 +222,12 @@ public class ActorConnectionEventActions {
             errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantDisconnectFromActorException(exception, "connectionId: "+connectionId, "Unhandled error.");
         }
+
     }
 
     public void handleDenyConnection(final UUID connectionId) throws CantDenyActorConnectionRequestException,
-                                                               ActorConnectionNotFoundException       ,
-                                                               UnexpectedConnectionStateException     {
+                                                                     ActorConnectionNotFoundException       ,
+                                                                     UnexpectedConnectionStateException     {
 
         try {
 
@@ -334,6 +335,7 @@ public class ActorConnectionEventActions {
             errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw new CantCancelActorConnectionRequestException(exception, "connectionId: "+connectionId, "Unhandled error.");
         }
+
     }
 
     public void handleAcceptConnection(final UUID connectionId) throws CantAcceptActorConnectionRequestException,
@@ -391,4 +393,5 @@ public class ActorConnectionEventActions {
             throw new CantAcceptActorConnectionRequestException(exception, "connectionId: "+connectionId, "Unhandled error.");
         }
     }
+
 }

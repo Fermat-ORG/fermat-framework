@@ -2,13 +2,24 @@ package com.bitdubai.sub_app.developer.fragment;
 
 import android.app.Service;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,12 +41,15 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.sub_app.developer.FragmentFactory.DeveloperFragmentsEnumType;
 import com.bitdubai.sub_app.developer.R;
 import com.bitdubai.sub_app.developer.common.Resource;
+import com.bitdubai.sub_app.developer.filters.DeveloperPluginFilter;
 import com.bitdubai.sub_app.developer.session.DeveloperSubAppSession;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import static android.widget.Toast.makeText;
 
 /**
  * The Class <code>com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.DatabaseToolsFragment</code>
@@ -65,6 +79,10 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
     private ArrayList<Resource> mlist;
 
     private ListView listView;
+
+    private SearchView searchView;
+
+    private AppListAdapter adapter;
 
     public static DatabaseToolsFragment newInstance() {
         return new DatabaseToolsFragment();
@@ -104,6 +122,8 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
         rootView.setTag(1);
 
         listView =(ListView) rootView.findViewById(R.id.gridView);
+
+        configureToolbar();
 
         try {
 
@@ -146,7 +166,7 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
                 }
             });
 
-            AppListAdapter adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item_init, mlist);
+            adapter = new AppListAdapter(getActivity(), R.layout.developer_app_grid_item_init, mlist);
 
             adapter.notifyDataSetChanged();
             listView.setAdapter(adapter);
@@ -157,6 +177,7 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
 
                     Resource item = (Resource) listView.getItemAtPosition(position);
                     developerSubAppSession.setData("resource", item);
+                    developerSubAppSession.setData("filterString", adapter.getFilterString());
 //                    ((FermatScreenSwapper) getActivity()).changeScreen(DeveloperFragmentsEnumType.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey(), R.id.startContainer, null);
                     changeActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE, appSession.getAppPublicKey());
 
@@ -172,13 +193,47 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
         return rootView;
     }
 
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+        if (toolbar != null) {
+            toolbar.setBackgroundColor(getResources().getColor(R.color.developer_sub_app_principal));
+            toolbar.setTitleTextColor(Color.WHITE);
+            toolbar.setBottom(Color.WHITE);
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+                Window window = getActivity().getWindow();
+                window.setStatusBarColor(getResources().getColor(R.color.developer_sub_app_principal));
+            }
+        }
+    }
 
-    public class AppListAdapter extends ArrayAdapter<Resource> {
+    public class AppListAdapter extends ArrayAdapter<Resource> implements Filterable {
         private int layoutResource;
 
+        List<Resource> filteredData;
+        List<Resource> originalData;
+
+        private String filterString;
+
         public AppListAdapter(Context context, int layoutResource, List<Resource> objects) {
-            super(context, layoutResource, objects);
+            super(context, layoutResource);
             this.layoutResource = layoutResource;
+            this.filteredData = objects;
+            this.originalData = objects;
+        }
+
+        @Override
+        public int getCount() {
+            return filteredData.size();
+        }
+
+        @Override
+        public Resource getItem(int position) {
+            return filteredData.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
         }
 
         @Override
@@ -226,6 +281,22 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
 
             return convertView;
         }
+
+        public void setData(List<Resource> data) {
+            this.filteredData = data;
+        }
+
+        public Filter getFilter() {
+            return new DeveloperPluginFilter(mlist, adapter);
+        }
+
+        public void setFilterString(String filterString) {
+            this.filterString = filterString;
+        }
+
+        public String getFilterString() {
+            return filterString;
+        }
     }
 
     /**
@@ -234,5 +305,39 @@ public class DatabaseToolsFragment extends AbstractFermatFragment {
     private class ViewHolder {
         public ImageView imageView;
         public TextView companyTextView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.developer_menu, menu);
+
+        searchView = (SearchView) menu.findItem(R.id.developer_search).getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.developer_search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (s.equals(searchView.getQuery().toString())) {
+                    adapter.getFilter().filter(s);
+                }
+                return false;
+            }
+        });
+        if (developerSubAppSession.getData("filterString") != null) {
+            String filterString = (String) developerSubAppSession.getData("filterString");
+            if (filterString.length() > 0) {
+                searchView.setQuery(filterString, true);
+                searchView.setIconified(false);
+            }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 }

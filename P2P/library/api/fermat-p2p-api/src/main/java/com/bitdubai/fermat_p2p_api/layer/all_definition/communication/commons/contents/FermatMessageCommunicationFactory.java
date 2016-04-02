@@ -7,8 +7,10 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents;
 
 
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessagesStatus;
@@ -61,6 +63,35 @@ public class FermatMessageCommunicationFactory {
     public static FermatMessage constructFermatMessage(final String senderIdentityPublicKey, final String receiverIdentityPublicKey, final String content, final FermatMessageContentType fermatMessageContentType) throws FMPException{
 
         return new FermatMessageCommunication(content, null, fermatMessageContentType, FermatMessagesStatus.PENDING_TO_SEND, receiverIdentityPublicKey, senderIdentityPublicKey, new Timestamp(System.currentTimeMillis()), null);
+    }
+
+    public static FermatMessage constructFermatMessage(final String                   senderIdentityPublicKey  ,
+                                                       final PlatformComponentType    senderType               ,
+                                                       final NetworkServiceType       senderNsType             ,
+                                                       final String                   receiverIdentityPublicKey,
+                                                       final PlatformComponentType    receiverType             ,
+                                                       final NetworkServiceType       receiverNsType           ,
+                                                       final String                   content                  ,
+                                                       final FermatMessageContentType fermatMessageContentType ) throws FMPException{
+
+        FermatMessageCommunication message = new FermatMessageCommunication(
+                content,
+                null,
+                fermatMessageContentType,
+                FermatMessagesStatus.PENDING_TO_SEND,
+                receiverIdentityPublicKey,
+                senderIdentityPublicKey,
+                new Timestamp(System.currentTimeMillis()),
+                null
+        );
+
+        message.setSenderType(senderType);
+        message.setReceiverType(receiverType);
+
+        message.setSenderNsType(senderNsType);
+        message.setReceiverNsType(receiverNsType);
+
+        return message;
     }
 
 

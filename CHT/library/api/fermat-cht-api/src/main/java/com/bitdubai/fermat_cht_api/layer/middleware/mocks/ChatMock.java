@@ -2,10 +2,13 @@ package com.bitdubai.fermat_cht_api.layer.middleware.mocks;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactListException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -113,6 +116,31 @@ public class ChatMock implements Chat {
 
     @Override
     public void setLastMessageDate(Timestamp lastMessageDate) {
+
+    }
+
+    @Override
+    public List<Contact> getContactAssociated() {
+        return null;
+    }
+
+    @Override
+    public void setContactAssociated(List<Contact> chatContacts) {
+
+    }
+
+    @Override
+    public void setContactAssociated(Contact contact) {
+
+    }
+
+    @Override
+    public String getContactListString() {
+        return null;
+    }
+
+    @Override
+    public void setContactAssociated(String chatContacts) throws CantGetContactListException {
 
     }
 }

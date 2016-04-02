@@ -22,7 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cbw_your_location"
-            android:textColor="@color/cbw_wizard_color"/>
+            android:textColor="@color/cbw_wizard_color"
+            android:textSize="16sp"/>
 
         <View
             android:layout_width="match_parent"
@@ -31,17 +32,27 @@
             android:layout_marginTop="8dp"
             android:background="@color/cbw_wizard_color"/>
 
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cbw_your_location_text"
+            android:textColor="@color/cbw_wizard_color"/>
+
+
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
             android:id="@+id/cbw_add_location_button"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
             android:background="@color/cbw_wizard_color"
             android:paddingEnd="8dp"
             android:paddingStart="8dp"
             android:text="@string/cbw_add_location"
             android:textColor="@color/white"
-            android:textSize="14sp"/>
+            android:textSize="14sp"
+            android:textAllCaps="false"
+            />
 
         <FrameLayout
             android:layout_width="match_parent"

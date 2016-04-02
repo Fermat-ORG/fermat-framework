@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_cbp_api.all_definition.request;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.RequestStatus;
 
 import java.util.UUID;
@@ -16,11 +16,11 @@ public interface Request {
 
     String getRequestDestinationPublicKey();
 
-    CurrencyType getMerchandiseCurrency();
+    MoneyType getMerchandiseCurrency();
 
     float getMerchandiseAmount();
 
-    CurrencyType getPaymentCurrency();
+    MoneyType getPaymentCurrency();
 
     RequestStatus getRequestStatus();
 }

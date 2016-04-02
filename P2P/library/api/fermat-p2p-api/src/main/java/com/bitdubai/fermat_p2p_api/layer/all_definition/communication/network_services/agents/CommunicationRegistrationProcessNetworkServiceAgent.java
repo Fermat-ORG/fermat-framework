@@ -11,7 +11,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.network_service.template.developer.bitdubai.version_1.communications.CommunicationRegistrationProcessNetworkServiceAgent</code>
  * <p/>
@@ -75,12 +74,12 @@ public final class CommunicationRegistrationProcessNetworkServiceAgent {
 
             try{
 
-                if (networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().isRegister() && !networkServiceRoot.isRegister()){
+                if (networkServiceRoot.getCommunicationsClientConnection().isRegister() && !networkServiceRoot.isRegister()){
 
                     /*
                      * Register me
                      */
-                    networkServiceRoot.getWsCommunicationsCloudClientManager().getCommunicationsCloudClientConnection().registerComponentForCommunication(networkServiceRoot.getNetworkServiceProfile().getNetworkServiceType(), networkServiceRoot.getNetworkServiceProfile());
+                    networkServiceRoot.getCommunicationsClientConnection().registerComponentForCommunication(networkServiceRoot.getNetworkServiceProfile().getNetworkServiceType(), networkServiceRoot.getNetworkServiceProfile());
 
                     /*
                      * Stop the internal threads
@@ -105,7 +104,6 @@ public final class CommunicationRegistrationProcessNetworkServiceAgent {
                 try {
                     if(Thread.currentThread().isInterrupted() == Boolean.FALSE)
                         Thread.sleep(CommunicationRegistrationProcessNetworkServiceAgent.MAX_SLEEP_TIME);
-                    active = Boolean.FALSE;
                 } catch (InterruptedException e1) {
                     active = Boolean.FALSE;
                 }

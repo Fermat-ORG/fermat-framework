@@ -41,6 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -90,7 +91,7 @@ public class ProviderLaNacionPluginRoot extends AbstractPlugin implements Databa
             dao.initialize();
             dao.initializeProvider("LaNacion");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_LANACION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.LANACION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
         serviceStatus = ServiceStatus.STARTED;
@@ -155,7 +156,7 @@ public class ProviderLaNacionPluginRoot extends AbstractPlugin implements Databa
                 }
             }
         }catch (JSONException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_LANACION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.LANACION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"LaNacion CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
         }
 
@@ -170,18 +171,18 @@ public class ProviderLaNacionPluginRoot extends AbstractPlugin implements Databa
         try {
             dao.saveExchangeRate(exchangeRate);
         }catch (CantSaveExchangeRateException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_LANACION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.LANACION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return exchangeRate;
     }
 
     @Override
-    public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+    public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, Calendar calendar) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         throw new CantGetExchangeRateException("This provider does not support fetching non-current exchange rates");
     }
 
     @Override
-    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, long startTimestamp, long endTimestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, Calendar startCalendar, Calendar endCalendar) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         throw new CantGetExchangeRateException("This provider does not support fetching non-current exchange rates");
     }
 
@@ -214,7 +215,7 @@ public class ProviderLaNacionPluginRoot extends AbstractPlugin implements Databa
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeLaNacionProviderDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_LANACION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.LANACION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }

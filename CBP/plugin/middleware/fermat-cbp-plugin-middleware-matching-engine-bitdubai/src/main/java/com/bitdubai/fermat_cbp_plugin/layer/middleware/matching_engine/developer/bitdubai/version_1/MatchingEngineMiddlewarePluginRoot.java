@@ -1,8 +1,11 @@
 package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
@@ -13,10 +16,14 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFac
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.agents.MatchingEngineMiddlewareEarningsTransactionGeneratorAgent;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.agents.MatchingEngineMiddlewareTransactionMonitorAgent;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDeveloperDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
@@ -47,17 +54,20 @@ import java.util.List;
  */
 public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM      , layer = Layers.PLATFORM_SERVICE, addon  = Addons.ERROR_MANAGER         )
+    @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE, addon  = Addons. ERROR_MANAGER         )
     private ErrorManager errorManager;
 
-    @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE, addon  = Addons.EVENT_MANAGER         )
+    @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE, addon  = Addons. EVENT_MANAGER         )
     private EventManager eventManager;
 
-    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM          , addon  = Addons.PLUGIN_FILE_SYSTEM    )
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM          , addon  = Addons. PLUGIN_FILE_SYSTEM    )
     protected PluginFileSystem pluginFileSystem        ;
 
-    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM          , addon  = Addons.PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM          , addon  = Addons. PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
+
+    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.WALLET          , plugin = Plugins.CRYPTO_BROKER_WALLET  )
+    private CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
 
     public MatchingEngineMiddlewarePluginRoot() {
@@ -65,6 +75,10 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
     }
 
     private MatchingEngineManager fermatManager;
+
+    private MatchingEngineMiddlewareTransactionMonitorAgent monitorAgent;
+
+    private MatchingEngineMiddlewareEarningsTransactionGeneratorAgent transactionGeneratorAgent;
 
     @Override
     public FermatManager getManager() {
@@ -89,6 +103,25 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
                     this.getPluginVersionReference()
             );
 
+            monitorAgent = new MatchingEngineMiddlewareTransactionMonitorAgent(
+                    cryptoBrokerWalletManager,
+                    errorManager,
+                    dao,
+                    getPluginVersionReference()
+
+            );
+
+            monitorAgent.start();
+
+            transactionGeneratorAgent = new MatchingEngineMiddlewareEarningsTransactionGeneratorAgent(
+                    errorManager,
+                    dao,
+                    getPluginVersionReference()
+
+            );
+
+            transactionGeneratorAgent.start();
+
             super.start();
 
         } catch (final CantInitializeDatabaseException cantInitializeActorConnectionDatabaseException) {
@@ -105,6 +138,53 @@ public final class MatchingEngineMiddlewarePluginRoot extends AbstractPlugin imp
                     "Problem initializing database of the plug-in."
             );
         }
+    }
+
+    @Override
+    public void pause() {
+
+        try {
+
+            monitorAgent.pause();
+            transactionGeneratorAgent.pause();
+
+        } catch (CantStopAgentException cantStopAgentException) {
+            errorManager.reportUnexpectedPluginException(
+                    getPluginVersionReference()                           ,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    cantStopAgentException
+            );
+        }
+
+        super.pause();
+    }
+
+    @Override
+    public void resume() {
+
+        try {
+
+            monitorAgent.resume();
+            transactionGeneratorAgent.resume();
+
+        } catch (CantStartAgentException cantStartAgentException) {
+            errorManager.reportUnexpectedPluginException(
+                    getPluginVersionReference()                           ,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    cantStartAgentException
+            );
+        }
+
+        super.resume();
+    }
+
+    @Override
+    public void stop() {
+
+        monitorAgent.stop();
+        transactionGeneratorAgent.stop();
+
+        super.stop();
     }
 
     @Override

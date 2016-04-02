@@ -40,12 +40,34 @@ public class IssuerCommunityAdapter extends FermatAdapter<ActorIssuer, IssuerVie
     @Override
     protected void bindHolder(final IssuerViewHolder holder, final ActorIssuer data, final int position) {
         try {
+            holder.name.setText(String.format("%s", data.getRecord().getName()));
             if (data.getRecord().getExtendedPublicKey() != null) {
-                holder.name.setText(String.format("%s", data.getRecord().getName()));
-                holder.extendedPublicKey.setText("ExtendedKey: YES");
+                holder.connectedStateConnected.setVisibility(View.VISIBLE);
+                holder.connectedStateDenied.setVisibility(View.GONE);
+                holder.connectedStateWaiting.setVisibility(View.GONE);
+                holder.connect.setVisibility(View.GONE);
             } else {
-                holder.name.setText(String.format("%s", data.getRecord().getName()));
-                holder.extendedPublicKey.setText("ExtendedKey: NO");
+                switch (data.getRecord().getDapConnectionState()){
+                    case CONNECTING:
+                    case PENDING_LOCALLY:
+                    case PENDING_REMOTELY:
+                        holder.connectedStateWaiting.setVisibility(View.VISIBLE);
+                        holder.connectedStateDenied.setVisibility(View.GONE);
+                        break;
+                    case DENIED_LOCALLY:
+                    case DENIED_REMOTELY:
+                    case CANCELLED_LOCALLY:
+                    case CANCELLED_REMOTELY:
+                        holder.connectedStateWaiting.setVisibility(View.GONE);
+                        holder.connectedStateDenied.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        holder.connectedStateWaiting.setVisibility(View.GONE);
+                        holder.connectedStateDenied.setVisibility(View.GONE);
+
+                }
+                holder.connectedStateConnected.setVisibility(View.GONE);
+                holder.connect.setVisibility(View.VISIBLE);
             }
 
             if (data.getRecord().getDapConnectionState() == DAPConnectionState.REGISTERED_ONLINE || data.getRecord().getDapConnectionState() == DAPConnectionState.CONNECTED_ONLINE) {
@@ -60,9 +82,17 @@ public class IssuerCommunityAdapter extends FermatAdapter<ActorIssuer, IssuerVie
                 holder.status.setText(R.string.status_connecting);
             }
 
+            if (data.getRecord().getDapConnectionState() == DAPConnectionState.DENIED_LOCALLY || data.getRecord().getDapConnectionState() == DAPConnectionState.DENIED_REMOTELY) {
+                holder.status.setText(R.string.status_denied);
+            }
+
+            if (data.getRecord().getDapConnectionState() == DAPConnectionState.CANCELLED_LOCALLY || data.getRecord().getDapConnectionState() == DAPConnectionState.CANCELLED_REMOTELY) {
+                holder.status.setText(R.string.status_canceled);
+            }
+
             holder.name.setText(data.getRecord().getName());
             holder.connect.setChecked(data.selected);
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
+            holder.connect.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     dataSet.get(position).selected = !dataSet.get(position).selected;
@@ -78,8 +108,8 @@ public class IssuerCommunityAdapter extends FermatAdapter<ActorIssuer, IssuerVie
                 if (profileImage.length > 0) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
                     holder.thumbnail.setImageBitmap(bitmap);
-                } else Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
-            } else Picasso.with(context).load(R.drawable.profile_image_standard).into(holder.thumbnail);
+                } else Picasso.with(context).load(R.drawable.asset_issuer_comunity).into(holder.thumbnail);
+            } else Picasso.with(context).load(R.drawable.asset_issuer_comunity).into(holder.thumbnail);
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -88,6 +118,10 @@ public class IssuerCommunityAdapter extends FermatAdapter<ActorIssuer, IssuerVie
 
     public void setAdapterChangeListener(AdapterChangeListener<ActorIssuer> adapterChangeListener) {
         this.adapterChangeListener = adapterChangeListener;
+    }
+
+    public AdapterChangeListener<ActorIssuer> getAdapterChangeListener() {
+        return adapterChangeListener;
     }
 
     public int getSize() {

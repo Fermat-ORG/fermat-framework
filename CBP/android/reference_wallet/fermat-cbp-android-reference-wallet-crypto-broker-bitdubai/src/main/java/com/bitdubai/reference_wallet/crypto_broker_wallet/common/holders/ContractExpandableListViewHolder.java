@@ -10,7 +10,9 @@ import android.widget.ImageView;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
@@ -53,11 +55,18 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
     public void bind(ContractBasicInformation itemInfo) {
 
         ContractStatus contractStatus = itemInfo.getStatus();
+        boolean nearExpirationDatetime = itemInfo.getNearExpirationDatetime();
         itemView.setBackgroundColor(getStatusBackgroundColor(contractStatus));
-        status.setText(getStatusStringRes(contractStatus));
+        status.setText(getStatusStringRes(contractStatus, nearExpirationDatetime));
+        status.setTextColor(getStatusColor(contractStatus, nearExpirationDatetime));
         contractAction.setText(getContractActionDescription(itemInfo, contractStatus));
         customerName.setText(itemInfo.getCryptoCustomerAlias());
-        typeOfPayment.setText(itemInfo.getTypeOfPayment());
+        try {
+            typeOfPayment.setText(MoneyType.getByCode(itemInfo.getTypeOfPayment()).getFriendlyName());
+        }catch (FermatException e){
+            typeOfPayment.setText(itemInfo.getTypeOfPayment());
+        }
+
         customerImage.setImageDrawable(getImgDrawable(itemInfo.getCryptoCustomerImage()));
 
         CharSequence date = DateFormat.format("dd MMM yyyy", itemInfo.getLastUpdate());
@@ -89,14 +98,24 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
         return res.getString(R.string.sending);
     }
 
-    private int getStatusStringRes(ContractStatus status) {
+    private int getStatusStringRes(ContractStatus status, boolean nearExpirationDatetime) {
         if (status == ContractStatus.CANCELLED)
             return R.string.contract_cancelled;
 
         if (status == ContractStatus.PENDING_PAYMENT)
             return R.string.waiting_for_the_customer;
 
+        if(nearExpirationDatetime)
+            return R.string.about_to_expire;
+
         return R.string.waiting_for_you;
+
+    }
+
+    private int getStatusColor(ContractStatus status, boolean nearExpirationDatetime) {
+        if (status != ContractStatus.CANCELLED && status != ContractStatus.PENDING_PAYMENT && nearExpirationDatetime)
+            return res.getColor(R.color.cbw_contract_status_about_to_expire);
+        return res.getColor(R.color.cbw_contract_status_normal);
     }
 
     private Drawable getImgDrawable(byte[] customerImg) {

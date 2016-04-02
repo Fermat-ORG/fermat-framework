@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * The class <code>com.bitdubai.fermat_pip_addon.layer.platform_service.event_manager.developer.bitdubai.version_1.structure.EventManagerPlatformServiceManager</code>
@@ -26,6 +28,8 @@ public final class EventManagerPlatformServiceManager implements EventManager {
      */
     private final ConcurrentHashMap<String, CopyOnWriteArrayList<FermatEventListener>> listenersMap;
 
+    ExecutorService executorService;
+
     private final FermatEventMonitor fermatEventMonitor;
 
 
@@ -33,7 +37,9 @@ public final class EventManagerPlatformServiceManager implements EventManager {
 
         this.fermatEventMonitor = new EventManagerPlatformServiceEventMonitor(errorManager);
 
-        this.listenersMap       = new ConcurrentHashMap<>();
+        this.listenersMap = new ConcurrentHashMap<>();
+        this.executorService = Executors.newFixedThreadPool(3);
+
     }
 
     /**
@@ -91,9 +97,26 @@ public final class EventManagerPlatformServiceManager implements EventManager {
 
         if (listenersList != null) {
             for (final FermatEventListener fermatEventListener : listenersList) {
-                fermatEventListener.raiseEvent(fermatEvent);
+                execute(fermatEventListener, fermatEvent);
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void execute(final FermatEventListener fermatEventListener,
+                         final FermatEvent         fermatEvent        ) {
+
+        executorService.submit(new
+
+            Runnable() {
+                @Override
+                public void run () {
+
+                    fermatEventListener.raiseEvent(fermatEvent);
+                }
+            }
+
+        );
     }
 
     private String buildMapKey(final FermatEventEnum fermatEnum) {

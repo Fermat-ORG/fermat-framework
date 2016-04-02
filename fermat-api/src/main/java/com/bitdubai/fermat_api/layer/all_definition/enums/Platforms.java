@@ -15,51 +15,44 @@ public enum Platforms implements FermatEnum {
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    BLOCKCHAINS                         ("BCH"),
-    BANKING_PLATFORM                    ("BNK"),
-    COMMUNICATION_PLATFORM              ("CP"),
-    CRYPTO_BROKER_PLATFORM              ("CBP"),
-    CURRENCY_EXCHANGE_RATE_PLATFORM     ("CER"),
-    CASH_PLATFORM                       ("CSH"),
-    CHAT_PLATFORM                       ("CHT"),
-    CRYPTO_COMMODITY_MONEY              ("CCM"),
-    CRYPTO_CURRENCY_PLATFORM            ("CCP"),
-    DIGITAL_ASSET_PLATFORM              ("DAP"),
-    OPERATIVE_SYSTEM_API                ("OSA"),
-    PLUG_INS_PLATFORM                   ("PIP"),
-    WALLET_PRODUCTION_AND_DISTRIBUTION  ("WPD"),
+    ART_PLATFORM                        ("ART","Artist"),
+    BLOCKCHAINS                         ("BCH","Blockchain"),
+    BANKING_PLATFORM                    ("BNK","Banking"),
+    COMMUNICATION_PLATFORM              ("CP","Communication"),
+    CRYPTO_BROKER_PLATFORM              ("CBP","Brokers"),
+    CURRENCY_EXCHANGE_RATE_PLATFORM     ("CER","Exchange"),
+    CASH_PLATFORM                       ("CSH","Cash"),
+    CHAT_PLATFORM                       ("CHT","Chat"),
+    CRYPTO_COMMODITY_MONEY              ("CCM","Crypto Commodity"),
+    CRYPTO_CURRENCY_PLATFORM            ("CCP","Crypto Currencies"),
+    DIGITAL_ASSET_PLATFORM              ("DAP","Digital Assets"),
+    OPERATIVE_SYSTEM_API                ("OSA","OSA"),
+    PLUG_INS_PLATFORM                   ("PIP","Tools"),
+    WALLET_PRODUCTION_AND_DISTRIBUTION  ("WPD","Wallets"),
+    TOKENLY                             ("TKY","Tokenly"),
     ;
 
     private final String code;
+    private final String textForm;
 
-    Platforms(final String code) {
-        this.code = code;
+    Platforms(final String code    ,
+              final String textForm) {
+
+        this.code     = code    ;
+        this.textForm = textForm;
     }
 
-    public static Platforms getByCode(String code) throws InvalidParameterException {
+    public static Platforms getByCode(final String code) throws InvalidParameterException {
 
-        switch (code) {
-
-            case "BCH":  return BLOCKCHAINS;
-            case "BNK":  return BANKING_PLATFORM;
-            case "CP":   return COMMUNICATION_PLATFORM;
-            case "CBP":  return CRYPTO_BROKER_PLATFORM;
-            case "CER":  return CURRENCY_EXCHANGE_RATE_PLATFORM;
-            case "CSH":  return CASH_PLATFORM;
-            case "CHT":  return CHAT_PLATFORM;
-            case "CCM":  return CRYPTO_COMMODITY_MONEY;
-            case "CCP":  return CRYPTO_CURRENCY_PLATFORM;
-            case "DAP":  return DIGITAL_ASSET_PLATFORM;
-            case "OSA":  return OPERATIVE_SYSTEM_API;
-            case "PIP":  return PLUG_INS_PLATFORM;
-            case "WPD":  return WALLET_PRODUCTION_AND_DISTRIBUTION;
-
-            default:
-            throw new InvalidParameterException(
-                    "Code Received: " + code,
-                    "The received code is not valid for the Platforms enum"
-            );
+        for (Platforms platform : Platforms.values()) {
+            if(platform.getCode().equals(code))
+                return platform;
         }
+
+        throw new InvalidParameterException(
+                "Code Received: " + code,
+                "The received code is not valid for the Platforms enum"
+        );
     }
 
     @Override
@@ -67,4 +60,7 @@ public enum Platforms implements FermatEnum {
         return this.code;
     }
 
+    public String getTextForm() {
+        return textForm;
+    }
 }

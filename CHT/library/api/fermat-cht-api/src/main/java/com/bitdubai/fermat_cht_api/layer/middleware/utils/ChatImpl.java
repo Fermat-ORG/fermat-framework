@@ -1,15 +1,21 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactListException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by franklin on 08/01/16.
+ * pdated by Manuel Perez on 08/02/2016
  */
 public class ChatImpl implements Chat {
     //TODO: Documentar
@@ -22,10 +28,29 @@ public class ChatImpl implements Chat {
     private String                      chatName;
     private ChatStatus                  status;
     private Timestamp                   date;
-    private Timestamp                        lastMessageDate;
+    private Timestamp                   lastMessageDate;
+    private List<Contact>               contactAssociated;
 
-    public ChatImpl(){};
+    /**
+     * Constructor without arguments
+     */
+    public ChatImpl(){}
 
+    /**
+     * Construct with parameters. In this version we not included the List<Contact> contactAssociated
+     * as a constructor argument because we get the contact from a remote device, this parameter
+     * can be set later.
+     * @param chatId
+     * @param objectId
+     * @param localActorType
+     * @param localActorPublicKey
+     * @param remoteActorType
+     * @param remoteActorPublicKey
+     * @param chatName
+     * @param status
+     * @param date
+     * @param lastMessageDate
+     */
     public ChatImpl(UUID chatId,
                     UUID objectId,
                     PlatformComponentType localActorType,
@@ -48,7 +73,7 @@ public class ChatImpl implements Chat {
         this.status               = status;
         this.date                 = date;
         this.lastMessageDate      = lastMessageDate;
-    };
+    }
 
     @Override
     public UUID getChatId() {
@@ -148,5 +173,87 @@ public class ChatImpl implements Chat {
     @Override
     public void setLastMessageDate(Timestamp lastMessageDate) {
         this.lastMessageDate = lastMessageDate;
+    }
+
+    /**
+     * This method returns a List<Contact> associated to this chat
+     * @return
+     */
+    @Override
+    public List<Contact> getContactAssociated() {
+        return this.contactAssociated;
+    }
+
+    /**
+     * This method set the contact associated list
+     * @param chatContacts
+     */
+    @Override
+    public void setContactAssociated(List<Contact> chatContacts) {
+        this.contactAssociated=chatContacts;
+    }
+
+    /**
+     * This method set one contact in contact associated list
+     * @param contact
+     */
+    @Override
+    public void setContactAssociated(Contact contact) {
+        if(this.contactAssociated==null){
+            this.contactAssociated=new ArrayList<>();
+        }
+        this.contactAssociated.add(contact);
+    }
+
+    /**
+     * This method returns a XML String with the List<Contact> associated to this object
+     * @return
+     */
+    @Override
+    public String getContactListString() {
+        if(this.contactAssociated==null){
+            this.contactAssociated=new ArrayList<>();
+        }
+        return XMLParser.parseObject(this.contactAssociated);
+    }
+
+    /**
+     * This method requires a valid List<Contact> XML String to set this list to this object
+     * @param chatContacts
+     * @throws CantGetContactListException
+     */
+    public void setContactAssociated(String chatContacts) throws CantGetContactListException {
+        if(chatContacts==null||chatContacts.isEmpty()){
+            throw new CantGetContactListException("The XML with the contacts is null or empty");
+        }
+        try{
+            List<Contact> contactListFromXML=new ArrayList<>();
+            Object xmlObject =XMLParser.parseXML(chatContacts, contactListFromXML);
+            contactListFromXML=(List<Contact>) xmlObject;
+            this.contactAssociated=contactListFromXML;
+        } catch (Exception exception){
+            throw new CantGetContactListException(
+                    exception,
+                    "Parsing the XML String to a List<Contact>",
+                    "Unexpected exception");
+        }
+
+    }
+
+    @Override
+    public String toString() {
+        return "ChatImpl{" +
+                "chatId=" + chatId +
+                ", objectId=" + objectId +
+                ", localActorType=" + localActorType +
+                ", localActorPublicKey='" + localActorPublicKey + '\'' +
+                ", remoteActorType=" + remoteActorType +
+                ", remoteActorPublicKey='" + remoteActorPublicKey + '\'' +
+                ", chatName='" + chatName + '\'' +
+                ", status=" + status +
+                ", date=" + date +
+                ", lastMessageDate=" + lastMessageDate +
+                ", contactAssociated=" + contactAssociated +
+                '}';
     }
 }

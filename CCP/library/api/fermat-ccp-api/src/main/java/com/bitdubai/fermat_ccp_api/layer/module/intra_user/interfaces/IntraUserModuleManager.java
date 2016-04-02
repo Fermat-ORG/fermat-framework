@@ -215,4 +215,12 @@ public interface IntraUserModuleManager extends ModuleManager<IntraUserWalletSet
      */
 
     IntraWalletUserActor getLastNotification(String intraUserConnectedPublicKey) throws CantGetIntraUsersListException;
+
+
+    /**
+     *
+     * @param lstIntraUser
+     * @throws CantGetIntraUsersListException
+     */
+    void saveCacheIntraUsersSuggestions(List<IntraUserInformation> lstIntraUser) throws CantGetIntraUsersListException;
 }

@@ -19,10 +19,10 @@ import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.adapters.DigitalAssetAdapter;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.models.DigitalAsset;
-import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.RedeemPointSession;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletList;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +73,7 @@ public class MainFragment extends AbstractFermatFragment
             protected Object doInBackground() throws Exception {
                 if (manager == null)
                     throw new NullPointerException("AssetRedeemPointWalletModuleManager is null");
-                assetRedeemPointWalletList = manager.getAssetRedeemPointWalletBalances("walletPublicKeyTest");
+                assetRedeemPointWalletList = manager.getAssetRedeemPointWalletBalances(WalletUtilities.WALLET_PUBLIC_KEY);
                 if (assetRedeemPointWalletList != null && !assetRedeemPointWalletList.isEmpty()) {
                     bookAssets = new ArrayList<>();
                     for (AssetRedeemPointWalletList assetRedeemPointWallet : assetRedeemPointWalletList) {

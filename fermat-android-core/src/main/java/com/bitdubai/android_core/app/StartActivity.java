@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
-import com.bitdubai.android_core.app.common.version_1.util.BroadcasterInterface;
 import com.bitdubai.android_core.app.common.version_1.util.task.GetTaskV2;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
@@ -24,13 +23,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Ver
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
 import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_osa_android_core.OSAPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantSetPlatformInformationException;
@@ -48,7 +45,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfac
  * -- Luis.
  */
 
-public class StartActivity extends AppCompatActivity implements  BroadcasterInterface, FermatWorkerCallBack /**,ServiceCallback */{
+public class StartActivity extends AppCompatActivity implements  FermatWorkerCallBack /**,ServiceCallback */{
 
 
 
@@ -76,11 +73,11 @@ public class StartActivity extends AppCompatActivity implements  BroadcasterInte
 
         try {
             AndroidCoreUtils androidCoreUtils = AndroidCoreUtils.getInstance();
-            androidCoreUtils.setContextAndResume(this);
+//            AndroidCoreUtils.getInstance().setContextAndResume(this);
             fermatSystem.start(this.getApplicationContext(), new OSAPlatform(androidCoreUtils));
         } catch (FermatException e) {
 
-            System.out.println(e.toString());
+            System.err.println(e.toString());
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -199,44 +196,10 @@ public class StartActivity extends AppCompatActivity implements  BroadcasterInte
         return true;
     }
 
-
-    @Override
-    public void publish(BroadcasterType broadcasterType, String code) {
-        Toast.makeText(this,"holas",Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void publish(BroadcasterType broadcasterType, String code, Platforms lauchedPlatform) {
-
-    }
-
-    @Override
-    public void publish(BroadcasterType broadcasterType, String code, FermatApps fermatApp) {
-
-    }
-
-
     /**
      * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
      */
-    @Override
-    protected void onStop() {
-        try {
-            super.onStop();
 
-            /**
-             * Service
-             */
-//            if (mServiceConnected) {
-//                unbindService(mServiceConnection);
-//                mServiceConnected = false;
-//            }
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     protected void onStart() {

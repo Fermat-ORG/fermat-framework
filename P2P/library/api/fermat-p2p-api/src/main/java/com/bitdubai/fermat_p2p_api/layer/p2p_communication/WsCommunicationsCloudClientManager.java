@@ -26,7 +26,6 @@ public interface WsCommunicationsCloudClientManager extends FermatManager {
      */
     public CommunicationsClientConnection getCommunicationsCloudClientConnection();
 
-
     /**
      * Get the disable server flag
      *
@@ -34,6 +33,26 @@ public interface WsCommunicationsCloudClientManager extends FermatManager {
      */
     public Boolean isDisable();
 
+    /*
+     * set Network State
+     */
     void setNetworkState(boolean state);
+
+    /*
+     * set the ipAddress and the port to connect to the Cloud Server
+     */
+    void changeIpAndPortProperties(String ipAddress, Integer port);
+
+    /*
+     * change default values the ipAddress and the port to connect to the Cloud Server
+     */
+    void resetIpAndPortDefault();
+
+    /**
+     * Method that connect the client whit the server
+     *
+     * @throws Exception
+     */
+     void reloadConnectClient() throws Exception;
 
 }

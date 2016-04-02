@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_des
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
@@ -21,7 +21,7 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
     private final Currency merchandise;
     private final BalanceType balanceType;
     private final TransactionType transactionType;
-    private final CurrencyType currencyType;
+    private final MoneyType moneyType;
     private final String walletPublicKey;
     private final String brokerPublicKey;
     private final BigDecimal amount;
@@ -29,25 +29,29 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
     private final String memo;
     private final BigDecimal priceReference;
     private final OriginTransaction originTransaction;
+    private String originTransactionId;
+    private boolean seen;
 
     public WalletTransactionWrapper(UUID transactionId,
                                     Currency merchandise,
                                     BalanceType balanceType,
                                     TransactionType transactionType,
-                                    CurrencyType currencyType,
+                                    MoneyType moneyType,
                                     String walletPublicKey,
                                     String brokerPublicKey,
                                     BigDecimal amount,
                                     long timeStamp,
                                     String memo,
                                     BigDecimal priceReference,
-                                    OriginTransaction originTransaction) {
+                                    OriginTransaction originTransaction,
+                                    String originTransactionId,
+                                    boolean seen) {
 
         this.transactionId = transactionId;
         this.merchandise = merchandise;
         this.balanceType = balanceType;
         this.transactionType = transactionType;
-        this.currencyType = currencyType;
+        this.moneyType = moneyType;
         this.walletPublicKey = walletPublicKey;
         this.brokerPublicKey = brokerPublicKey;
         this.amount = amount;
@@ -55,6 +59,8 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
         this.memo = memo;
         this.priceReference = priceReference;
         this.originTransaction = originTransaction;
+        this.originTransactionId = originTransactionId;
+        this.seen = seen;
     }
 
     @Override
@@ -73,8 +79,8 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
     }
 
     @Override
-    public CurrencyType getCurrencyType() {
-        return currencyType;
+    public MoneyType getMoneyType() {
+        return moneyType;
     }
 
     @Override
@@ -125,5 +131,21 @@ public class WalletTransactionWrapper implements CryptoBrokerStockTransactionRec
     @Override
     public BigDecimal getRunningAvailableBalance() {
         return new BigDecimal(0);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getOriginTransactionId() {
+        return this.originTransactionId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getSeen() {
+        return this.seen;
     }
 }

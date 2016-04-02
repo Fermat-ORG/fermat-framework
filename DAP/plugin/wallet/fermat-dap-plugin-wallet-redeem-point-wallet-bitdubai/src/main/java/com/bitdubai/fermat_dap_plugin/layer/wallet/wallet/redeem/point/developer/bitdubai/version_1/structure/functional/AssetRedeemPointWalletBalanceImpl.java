@@ -1,8 +1,9 @@
 package com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.functional;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterCreditException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
@@ -12,26 +13,21 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.database.AssetRedeemPointWalletDao;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by franklin on 16/10/15.
  */
 public class AssetRedeemPointWalletBalanceImpl implements com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletBalance {
-    private Database database;
-    private AssetRedeemPointWalletDao assetRedeemPointWalletDao;
-    private UUID plugin;
-    private PluginFileSystem pluginFileSystem;
 
+    private AssetRedeemPointWalletDao assetRedeemPointWalletDao;
+    private Broadcaster broadcaster;
 
     /**
      * Constructor.
      */
-    public AssetRedeemPointWalletBalanceImpl(final Database database, final UUID plugin, final PluginFileSystem pluginFileSystem, ActorAssetUserManager actorAssetUserManager) {
-        this.database = database;
-        this.plugin = plugin;
-        this.pluginFileSystem = pluginFileSystem;
-        assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database, pluginFileSystem, plugin, actorAssetUserManager);
+    public AssetRedeemPointWalletBalanceImpl(AssetRedeemPointWalletDao assetRedeemPointWalletDao, Broadcaster broadcaster) {
+        this.assetRedeemPointWalletDao = assetRedeemPointWalletDao;
+        this.broadcaster = broadcaster;
     }
 
     @Override
@@ -47,10 +43,16 @@ public class AssetRedeemPointWalletBalanceImpl implements com.bitdubai.fermat_da
     @Override
     public void debit(AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord, BalanceType balanceType) throws CantRegisterDebitException {
         assetRedeemPointWalletDao.addDebit(assetRedeemPointWalletTransactionRecord, balanceType);
+
+        broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(), "ASSET-REDEEM-DEBIT_" + "Name: " + assetRedeemPointWalletTransactionRecord.getDigitalAsset().getName() + " - Balance: " + balanceType.getCode());
     }
 
     @Override
     public void credit(AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord, BalanceType balanceType) throws CantRegisterCreditException {
         assetRedeemPointWalletDao.addCredit(assetRedeemPointWalletTransactionRecord, balanceType);
+
+        broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
+        broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(), "ASSET-REDEEM-CREDIT_" + "Name: " + assetRedeemPointWalletTransactionRecord.getDigitalAsset().getName() + " - Balance: " + balanceType.getCode());
     }
 }

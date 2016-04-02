@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.exceptions.CantGetIntraUsersConnectedStateException;
@@ -282,7 +283,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
                 ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
 
                 //return intra user information - if not connected - status return null
-                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState);
+                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState,"Online");
                 intraUserInformationModuleList.add(intraUserInformation);
             }
 
@@ -304,7 +305,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             List<IntraUserInformation> intraUserInformationModuleList = new ArrayList<>();
 
             List<IntraUserInformation> intraUserInformationList = new ArrayList<>();
-            intraUserInformationList = intraUserNertwokServiceManager.getCacheIntraUsersSuggestions(max,offset);
+            intraUserInformationList = intraUserNertwokServiceManager.getCacheIntraUsersSuggestions(max, offset);
 
 
             for (IntraUserInformation intraUser : intraUserInformationList) {
@@ -313,13 +314,29 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
                 ConnectionState connectionState = this.intraWalletUserManager.getIntraUsersConnectionStatus(intraUser.getPublicKey());
 
                 //return intra user information - if not connected - status return null
-                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState);
+                IntraUserInformation intraUserInformation = new IntraUserModuleInformation(intraUser.getName(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getProfileImage(), connectionState,"Offline");
                 intraUserInformationModuleList.add(intraUserInformation);
             }
 
             return intraUserInformationModuleList;
         }
         catch (ErrorSearchingCacheSuggestionsException e) {
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
+        }
+        catch (Exception e) {
+            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
+
+        }
+    }
+
+    @Override
+    public void saveCacheIntraUsersSuggestions(List<IntraUserInformation> lstIntraUser) throws CantGetIntraUsersListException {
+        try {
+
+            intraUserNertwokServiceManager.saveCacheIntraUsersSuggestions(lstIntraUser);
+
+        }
+        catch (CantInsertRecordException e) {
             throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
         }
         catch (Exception e) {
@@ -519,7 +536,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getAllIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
-                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPhrase(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),intraUserActor.getPhrase(),intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState(),""));
             }
             return intraUserList;
         } catch (CantGetIntraWalletUsersException e) {
@@ -546,7 +563,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getWaitingYourAcceptanceIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
-                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),"",intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),"",intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState(),""));
             }
 
             return intraUserList;
@@ -655,7 +672,7 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             List<IntraWalletUserActor> actorsList = this.intraWalletUserManager.getWaitingTheirAcceptanceIntraWalletUsers(identityPublicKey, max, offset);
 
             for (IntraWalletUserActor intraUserActor : actorsList) {
-                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),"",intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState()));
+                intraUserList.add(new IntraUserModuleInformation(intraUserActor.getName(),"",intraUserActor.getPublicKey(),intraUserActor.getProfileImage(),intraUserActor.getContactState(),""));
             }
             return intraUserList;
         } catch (CantGetIntraWalletUsersException e) {

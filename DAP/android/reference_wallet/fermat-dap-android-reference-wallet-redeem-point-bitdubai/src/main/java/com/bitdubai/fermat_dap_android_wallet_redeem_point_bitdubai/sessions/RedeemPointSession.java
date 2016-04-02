@@ -19,6 +19,9 @@ import java.util.Map;
  */
 public class RedeemPointSession extends AbstractFermatSession<InstalledWallet,AssetRedeemPointWalletSubAppModule,WalletResourcesProviderManager> {
 
+    public static final String BASIC_DATA = "catalog_item_wallet_redeem";
+    public static final String PREVIEW_IMGS = "preview_images_wallet_redeem";
+    public static final String DEVELOPER_NAME = "developer_name_wallet_redeem";
 
     private final InstalledWallet installedWallet;
     /**

@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.settin
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 
 import java.util.UUID;
 
@@ -82,18 +82,18 @@ public interface CryptoBrokerWalletAssociatedSetting {
     void setMerchandise(Currency merchandise);
 
     /**
-     * The method <code>getCurrencyType</code> returns the currency type of the CryptoBrokerWalletAssociatedSetting
+     * The method <code>getMoneyType</code> returns the currency type of the CryptoBrokerWalletAssociatedSetting
      *
-     * @return a CurrencyType of the CryptoBrokerWalletAssociatedSetting
+     * @return a MoneyType of the CryptoBrokerWalletAssociatedSetting
      */
-    CurrencyType getCurrencyType();
+    MoneyType getMoneyType();
 
     /**
-     * The method <code>setCurrencyType</code> sets currency type of the CryptoBrokerWalletAssociatedSetting
+     * The method <code>setMoneyType</code> sets currency type of the CryptoBrokerWalletAssociatedSetting
      *
-     * @param currencyType
+     * @param moneyType
      */
-    void setCurrencyType(CurrencyType currencyType);
+    void setMoneyType(MoneyType moneyType);
 
     /**
      * The method <code>getBankAccount</code> returns the bank account of the CryptoBrokerWalletAssociatedSetting

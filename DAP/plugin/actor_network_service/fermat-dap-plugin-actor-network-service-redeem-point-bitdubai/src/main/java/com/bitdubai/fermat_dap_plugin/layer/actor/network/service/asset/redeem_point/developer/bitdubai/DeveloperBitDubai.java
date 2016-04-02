@@ -24,6 +24,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
 
+//            this.registerVersion(new AssetRedeemPointActorNetworkServicePluginRoot());
             this.registerVersion(new AssetRedeemPointActorNetworkServicePluginRoot());
 
         } catch (CantRegisterVersionException e) {

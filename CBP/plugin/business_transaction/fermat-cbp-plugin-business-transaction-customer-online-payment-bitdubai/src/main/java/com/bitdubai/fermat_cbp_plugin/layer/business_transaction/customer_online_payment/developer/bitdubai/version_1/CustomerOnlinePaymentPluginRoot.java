@@ -190,7 +190,7 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
                     CustomerOnlinePaymentPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 }
             }
-        } catch (Exception exception) {
+        }catch (Exception exception) {
             this.errorManager.reportUnexpectedPluginException(
                     Plugins.CUSTOMER_ONLINE_PAYMENT,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -224,19 +224,21 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
             CustomerOnlinePaymentBusinessTransactionDao customerOnlinePaymentBusinessTransactionDao=
                     new CustomerOnlinePaymentBusinessTransactionDao(pluginDatabaseSystem,
                             pluginId,
-                            database);
+                            database,
+                            errorManager);
 
             /**
              * Init the plugin manager
              */
         //TODO: the following two lines are only for testing, please, comment them when the testing is finished
-            customerBrokerContractPurchaseManager=new CustomerBrokerContractPurchaseManagerMock();
-            customerBrokerPurchaseNegotiationManager=new PurchaseNegotiationManagerMock();
+            //customerBrokerContractPurchaseManager=new CustomerBrokerContractPurchaseManagerMock();
+            //customerBrokerPurchaseNegotiationManager=new PurchaseNegotiationManagerMock();
             this.customerOnlinePaymentTransactionManager=new CustomerOnlinePaymentTransactionManager(
                     this.customerBrokerContractPurchaseManager,
                     customerOnlinePaymentBusinessTransactionDao,
                     this.transactionTransmissionManager,
-                    this.customerBrokerPurchaseNegotiationManager);
+                    this.customerBrokerPurchaseNegotiationManager,
+                    this.errorManager);
 
             /**
              * Init event recorder service.
@@ -266,31 +268,55 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
             //System.out.println("Customer online payment starting");
             //testPayment();
         } catch (CantInitializeCustomerOnlinePaymentBusinessTransactionDatabaseException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Online Payment Plugin",
                     "Cannot initialize the plugin database factory");
         } catch (CantInitializeDatabaseException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Online Payment Plugin",
                     "Cannot initialize the database plugin");
         } catch (CantStartAgentException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Online Payment Plugin",
                     "Cannot initialize the plugin monitor agent");
         } catch (CantStartServiceException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Online Payment Plugin",
                     "Cannot initialize the plugin recorder service");
         } catch (CantSetObjectException exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(
                     FermatException.wrapException(exception),
                     "Starting Customer Online Payment Plugin",
                     "Cannot set an argument in monitor agent constructor");
         }catch (Exception exception){
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CUSTOMER_ONLINE_PAYMENT,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+                    exception);
             throw new CantStartPluginException(FermatException.wrapException(exception),
                     "Starting Customer Online Payment Plugin",
                     "Unexpected error");
@@ -299,32 +325,31 @@ public class CustomerOnlinePaymentPluginRoot extends AbstractPlugin implements
 
     @Override
     public void pause() {
+
         try{
             this.serviceStatus = ServiceStatus.PAUSED;
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
         }
-
     }
 
     @Override
     public void resume() {
+
         try{
             this.serviceStatus = ServiceStatus.STARTED;
         }catch(Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
         }
-
     }
 
     @Override
     public void stop() {
         try{
             this.serviceStatus = ServiceStatus.STOPPED;
-        }catch (Exception exception){
-            this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_WALLET_BASIC_WALLET,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
+        }catch(Exception exception){
+            this.errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_ONLINE_PAYMENT,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,FermatException.wrapException(exception));
         }
-
     }
 
     @Override

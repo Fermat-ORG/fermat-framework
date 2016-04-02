@@ -1,37 +1,41 @@
 package com.bitdubai.sub_app.crypto_customer_community.navigationDrawer;
 
-import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer.interfaces.CryptoCustomerModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySelectableIdentity;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.interfaces.CryptoCustomerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.sub_app.crypto_customer_community.R;
+import com.bitdubai.sub_app.crypto_customer_community.common.popups.ListIdentitiesDialog;
 import com.bitdubai.sub_app.crypto_customer_community.common.utils.FragmentsCommons;
+import com.bitdubai.sub_app.crypto_customer_community.session.CryptoCustomerCommunitySubAppSession;
+
+import java.lang.ref.WeakReference;
 
 /**
  * Created by mati on 2015.11.24..
  */
 public class CustomerCommunityNavigationViewPainter implements NavigationViewPainter {
 
-    private Activity activity;
+    private WeakReference<Context> activity;
     private ActiveActorIdentityInformation actorIdentity;
+    private CryptoCustomerCommunitySubAppSession subAppSession;
     private CryptoCustomerCommunitySubAppModuleManager moduleManager;
 
-    public CustomerCommunityNavigationViewPainter(Activity activity, ActiveActorIdentityInformation actorIdentity, CryptoCustomerCommunitySubAppModuleManager moduleManager) {
-        this.activity = activity;
+
+    public CustomerCommunityNavigationViewPainter(Context activity, ActiveActorIdentityInformation actorIdentity, CryptoCustomerCommunitySubAppSession subAppSession) {
+        this.activity = new WeakReference<Context>(activity);
         this.actorIdentity = actorIdentity;
-        this.moduleManager = moduleManager;
+        this.subAppSession = subAppSession;
+        this.moduleManager = subAppSession.getModuleManager();
     }
 
     @Override
@@ -39,17 +43,24 @@ public class CustomerCommunityNavigationViewPainter implements NavigationViewPai
         View headerView = null;
 
         try {
-            headerView = FragmentsCommons.setUpHeaderScreen(activity.getLayoutInflater(), activity, actorIdentityInformation);
+            headerView = FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
+                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(), actorIdentityInformation);
             headerView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(activity.getApplicationContext(), "TODO! Change identity widget thing!", Toast.LENGTH_SHORT).show();
-
                     try{
-                        CryptoCustomerCommunitySelectableIdentity identity =  moduleManager.getSelectedActorIdentity();
-                    }catch(Exception e){
-
-                    }
+                        ListIdentitiesDialog listIdentitiesDialog = new ListIdentitiesDialog(activity.get(), subAppSession, null);
+                        listIdentitiesDialog.setTitle("Connection Request");
+                        listIdentitiesDialog.show();
+                        listIdentitiesDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(DialogInterface dialog) {
+                                //Chamo olvidate que te deje recrear la actividad desde acá, tenes un metodo que se llama invalidate que hace esto
+                                //activity.get().recreate();
+                            }
+                        });
+                        listIdentitiesDialog.show();
+                    }catch(Exception e){ }
                 }
             });
         } catch (CantGetActiveLoginIdentityException e) {
@@ -61,7 +72,7 @@ public class CustomerCommunityNavigationViewPainter implements NavigationViewPai
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            return new CustomerCommunityWalletNavigationViewAdapter(activity);
+            return new CustomerCommunityWalletNavigationViewAdapter(activity.get());
         } catch (Exception e) {
             e.printStackTrace();
         }

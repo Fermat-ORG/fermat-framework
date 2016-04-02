@@ -15,7 +15,8 @@
     <string name="buy">Buying</string>
     <string name="unit_number" translatable="false">1</string>
     <string name="waiting_for_you">Waiting for you</string>
-    <string name="waiting_for_the_customer">Waiting for the customer</string>
+    <string name="about_to_expire">About to expire</string>
+    <string name="waiting_for_the_customer">Waiting for the Customer</string>
     <string name="negotiation_closed">Close</string>
     <string name="negotiation_cancelled">Cancelled</string>
     <string name="negotiation_cancel">CANCEL</string>
@@ -28,6 +29,7 @@
     <string name="sell_text_and_price">Sell: %1$s</string>
     <string name="buy_text_and_price">Buy: %1$s</string>
     <string name="market_exchange_rate">MARKET EXCHANGE RATE</string>
+    <string name="market_exchange_rate_text">Market Exchange Rate</string>
     <string name="cbw_exchange_rate_summary">1 %1$s @ %2$s %3$s</string>
     <string name="cbw_buying_details">Buying %1$s %2$s</string>
     <string name="cbw_sold_quantity_and_currency">%1$s %2$s %3$s</string>
@@ -58,11 +60,11 @@
     <string name="selected_bank_account">Selected Bank Account: </string>
     <string name="customer_locations_title">Customer Locations</string>
     <string name="customer_bank_account_title">Customer Bank Accounts</string>
-    <string name="payment_date_title">PAYMENT DATE</string>
+    <string name="payment_date_title">Payment Date</string>
     <string name="payment_date">Payment Date: </string>
     <string name="add_a_note_button">ADD A NOTE</string>
-    <string name="payment_methods_title">Payment Methods Juanaso title </string>
-    <string name="payment_method">juanaso Method: </string>
+    <string name="payment_methods_title">Payment Method</string>
+    <string name="payment_method">Method: </string>
     <string name="payment_date_text">Payment Date: </string>
     <string name="yours">Yours:</string>
     <string name="expiration_date_text">Expiration Date:</string>
@@ -84,7 +86,7 @@
     <string name="cbw_welcome">Welcome</string>
     <string name="cbw_next_step">Next Step</string>
     <string name="cbw_select_identity_warning_msg">Need to Select an Identity</string>
-    <string name="cbw_select_stock_wallets_warning_msg">Need to Select at least ONE Wallet</string>
+    <string name="cbw_select_stock_wallets_warning_msg">Need to Select at least TWO Wallet</string>
     <string name="cbw_select_providers_warning_msg">Need to Select at least ONE Provider</string>
     <string name="cbw_add_location_warning_msg">Need to Select at least ONE Location</string>
     <string name="cbw_automatic_restock">Automatic Restock</string>
@@ -105,27 +107,30 @@
     <string name="cbw_delete_wallet_dialog_msg">"Do you want to delete this wallet?"</string>
     <string name="cbw_no_selected_providers">No Selected Providers</string>
     <string name="cbw_finish">Finish</string>
-    <string name="cbw_select_your_bank_account">Select Your Bank Account</string>
+    <string name="cbw_select_your_bank_account">Select Your Bank Accounts</string>
     <string name="cbw_no_selected_bank_account">No Selected Bank Accounts</string>
+    <string name="cbw_select_your_bank_account_text">You can select accounts from your banking wallet to make restock or destock transactions</string>
     <string name="cbw_wizard_bank_account_description">You must select the Bank Account from the Bank Wallet you selected as Earning</string>
     <string name="cbw_wizard_bank_account_title">Bank Accounts</string>
     <string name="cbw_wizard_exchange_rate_providers_title">Exchange Rate Providers</string>
     <string name="cbw_wizard_exchange_rate_providers_description">You must select the providers according to the wallet of merchandise, chosen in the previous step</string>
     <string name="cbw_choose_provider">Choose Provider</string>
     <string name="cbw_wizard_locations_description">You must add at least one location to make your transactions</string>
-    <string name="cbw_add_location">Add a Location</string>
+    <string name="cbw_add_location">+ Add a Location</string>
     <string name="cbw_your_location">Your Locations</string>
+    <string name="cbw_your_location_text">You must add at least one location to deliver or receive the merchandise</string>
     <string name="cbw_no_locations_added">No Locations Added</string>
-    <string name="cbw_add_bank_account">Add Bank Account</string>
+    <string name="cbw_add_bank_account">+ Add Bank Account</string>
     <string name="cbw_wizard_earning_merchandise_title">Choose Earning Merchandises</string>
-    <string name="cbw_wizard_earning_merchandise_description">You must select the wallets will work depending on the merchandise</string>
-    <string name="cbw_select_earnings_merchandise">Select a Earning Merchandise</string>
+    <string name="cbw_wizard_earning_merchandise_description">For the merchandises you\'re going to receive and give, assign them a wallet to put the earnings</string>
+    <string name="cbw_select_earnings_merchandise">Select the pairs their wallets</string>
     <string name="cbw_crypto">Crypto</string>
     <string name="cbw_cash">Cash</string>
     <string name="cbw_bank">Bank</string>
     <string name="cbw_wizard_stock_merchandise_title">Select Stock Merchandises</string>
     <string name="cbw_wizard_stock_merchandise_description">You must select the wallets will work depending on the merchandise</string>
-    <string name="cbw_select_stock_merchandise">Select a Stock Merchandise</string>
+    <string name="cbw_select_stock_merchandise">Merchandise balances</string>
+    <string name="cbw_associated_wallets">Associated wallets</string>
     <string name="cbw_settings_locations_description">You must have at least one location to make your transactions</string>
     <string name="cbw_settings_locations_title">Manage Your Locations</string>
     <string name="cbw_save">Save</string>
@@ -138,7 +143,9 @@
     <string name="cbw_contract_details_negotiation_details">NEGOTIATION DETAILS</string>
     <string name="cbw_wizard_other_settings_title">Other settings</string>
     <string name="cbw_wizard_other_settings_description">You must set the spread value applied, and Restock automatic for transactions in the wallet </string>
-
+    <string name="cbw_contract_history_sold_quantity_and_currency">%1$s %2$s %3$s</string>
+    <string name="cbw_contract_history_exchange_rate_amount_and_currency">1 %1$s @ %2$s %3$s</string>
+    <string name="bought">Bought</string>
 
     <!--Dialog Help - Init-->
     <string name="cbw_crypto_broker_wallet_earning_subTitle">Subtitle text of Earnings dialog help.</string>
@@ -172,5 +179,27 @@
     <string name="cbw_wizard_other_settings_dialog_footer">To begin, choose an avatar below. You might change it later with any picture and your alias</string>
     <string name="cbw_wizard_other_settings_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
     <string name="cbw_current_earings_title">Current Earnings:</string>
-    <!--Dialog Help - End-->
+    <string name="cbw_earning_wizard_item_msg">Assign me a wallet</string>
+    <string name="reception_method_title">Reception Method</string>
+    <string name="reception_method">Method</string>
+    <string name="cbw_crypto_address_customer">Customer\'s Crypto Address</string>
+    <string name="cbw_crypto_address_broker">Broker\'s Crypto Address</string>
+    <string name="cbw_bank_account_customer">Customer\'s Bank Account</string>
+    <string name="cbw_bank_account_broker">Broker\'s Bank Account</string>
+    <string name="cbw_crypto_address_title">Crypto Address</string>
+    <string name="cbw_bank_account_title">Bank Account</string>
+    <string name="cbw_cash_place_to_deliver">Merchandise\'s Delivery Place</string>
+    <string name="cbw_cash_place_to_receive">Payment\'s Reception Place</string>
+    <string name="cbw_insert_note">Insert Note</string>
+    <string name="hint">hint</string>
+    <string name="title">title</string>
+    <string name="cancel">Cancel</string>
+    <string name="accept">Accept</string>
+    <string name="cbw_your_exchange_rate">Your Exchange Rate</string>
+    <string name="cbw_value">value</string>
+    <string name="cbw_cancel_negotiation">Cancel Negotiation</string>
+    <string name="cbw_reason">Reason</string>
+    <string name="cbw_earnings_title">Earnings</string>
+    <string name="cbw_no_earnings">No Earnings</string>
+    <string name="sending_to_the_customer">Sending to the Customer</string>
 </resources>

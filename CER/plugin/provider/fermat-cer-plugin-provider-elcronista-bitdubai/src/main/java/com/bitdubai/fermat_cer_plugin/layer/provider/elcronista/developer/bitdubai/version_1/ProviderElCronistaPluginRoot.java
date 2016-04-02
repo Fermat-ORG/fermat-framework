@@ -41,6 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -90,7 +91,7 @@ public class ProviderElCronistaPluginRoot extends AbstractPlugin implements Data
             dao.initialize();
             dao.initializeProvider("ElCronista");
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(e), null, null);
         }
         serviceStatus = ServiceStatus.STARTED;
@@ -155,7 +156,7 @@ public class ProviderElCronistaPluginRoot extends AbstractPlugin implements Data
                 }
             }
         }catch (JSONException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE,e,"ElCronista CER Provider","Cant Get exchange rate for" + currencyPair.getFrom().getCode() +  "-" + currencyPair.getTo().getCode());
         }
 
@@ -170,18 +171,18 @@ public class ProviderElCronistaPluginRoot extends AbstractPlugin implements Data
         try {
             dao.saveExchangeRate(exchangeRate);
         }catch (CantSaveExchangeRateException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return exchangeRate;
     }
 
     @Override
-    public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, long timestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+    public ExchangeRate getExchangeRateFromDate(CurrencyPair currencyPair, Calendar calendar) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         throw new CantGetExchangeRateException("This provider does not support fetching non-current exchange rates");
     }
 
     @Override
-    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, long startTimestamp, long endTimestamp) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
+    public Collection<ExchangeRate> getDailyExchangeRatesForPeriod(CurrencyPair currencyPair, Calendar startCalendar, Calendar endCalendar) throws UnsupportedCurrencyPairException, CantGetExchangeRateException {
         throw new CantGetExchangeRateException("This provider does not support fetching non-current exchange rates");
     }
 
@@ -214,7 +215,7 @@ public class ProviderElCronistaPluginRoot extends AbstractPlugin implements Data
             factory.initializeDatabase();
             tableRecordList = factory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
         } catch (CantInitializeElCronistaProviderDatabaseException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CER_PROVIDER_ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.ELCRONISTA, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         return tableRecordList;
     }

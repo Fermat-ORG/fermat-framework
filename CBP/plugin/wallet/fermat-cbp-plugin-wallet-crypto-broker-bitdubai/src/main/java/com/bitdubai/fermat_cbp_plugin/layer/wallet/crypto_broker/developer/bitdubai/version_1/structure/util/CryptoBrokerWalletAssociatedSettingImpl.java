@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 
 import java.util.UUID;
@@ -18,12 +18,10 @@ public class CryptoBrokerWalletAssociatedSettingImpl implements CryptoBrokerWall
     String walletPublicKey;
     Currency merchandise;
     String bankAccount;
-    CurrencyType currencyType;
+    MoneyType moneyType;
 
     public CryptoBrokerWalletAssociatedSettingImpl() {
     }
-
-    ;
 
     /**
      * {@inheritDoc}
@@ -109,16 +107,16 @@ public class CryptoBrokerWalletAssociatedSettingImpl implements CryptoBrokerWall
      * {@inheritDoc}
      */
     @Override
-    public CurrencyType getCurrencyType() {
-        return currencyType;
+    public MoneyType getMoneyType() {
+        return moneyType;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void setCurrencyType(CurrencyType currencyType) {
-        this.currencyType = currencyType;
+    public void setMoneyType(MoneyType moneyType) {
+        this.moneyType = moneyType;
     }
 
     /**

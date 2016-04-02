@@ -2,8 +2,6 @@ package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interf
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 
 
 /**
@@ -11,17 +9,11 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
  */
 public interface FermatScreenSwapper {
 
-    public void changeScreen(String screen,int idContainer,Object[] objects);
+    void changeScreen(String screen, int idContainer, Object[] objects);
 
-    public void selectWallet(InstalledWallet installedWallet);
+    void changeActivity(String activityName, String appBackPublicKey, Object... objects);
 
-    public void changeActivity(String activityName,String appBackPublicKey, Object... objects);
-
-    public void selectSubApp(InstalledSubApp installedSubApp);
-
-    public void changeWalletFragment(String walletCategory, String walletType,String walletPublicKey, String fragmentType);
-
-    public void onCallbackViewObserver(FermatCallback fermatCallback);
+    void onCallbackViewObserver(FermatCallback fermatCallback);
 
     void connectWithOtherApp(Engine emgine,String fermatAppPublicKey,Object[] objectses);
 

@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
@@ -22,7 +22,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     private BalanceType balanceType;
     private TransactionType transactionType;
     private BigDecimal amount;
-    private CurrencyType currencyType;
+    private MoneyType moneyType;
     private Currency merchandise;
     private BigDecimal runningBookBalance;
     private BigDecimal runningAvailableBalance;
@@ -30,6 +30,8 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     private String memo;
     private OriginTransaction originTransaction;
     private BigDecimal priceReference;
+    private String originTransactionId;
+    private boolean seen;
 
     /**
      * Constructor for CryptoBrokerStockTransactionRecordImpl
@@ -39,7 +41,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
      * @param ownerPublicKey
      * @param balanceType
      * @param transactionType
-     * @param currencyType
+     * @param moneyType
      * @param merchandise
      * @param amount
      * @param runningBookBalance
@@ -48,6 +50,8 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
      * @param memo
      * @param originTransaction
      * @param priceReference
+     * @param originTransactionId
+     * @param seen
      */
     public CryptoBrokerStockTransactionRecordImpl(
             UUID transactionId,
@@ -55,7 +59,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
             String ownerPublicKey,
             BalanceType balanceType,
             TransactionType transactionType,
-            CurrencyType currencyType,
+            MoneyType moneyType,
             Currency merchandise,
             BigDecimal amount,
             BigDecimal runningBookBalance,
@@ -63,7 +67,9 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
             long timeStamp,
             String memo,
             OriginTransaction originTransaction,
-            BigDecimal priceReference
+            BigDecimal priceReference,
+            String originTransactionId,
+            boolean seen
     ) {
         this.transactionId = transactionId;
         this.walletKeyPair = walletKeyPair;
@@ -71,7 +77,7 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
         this.balanceType = balanceType;
         this.transactionType = transactionType;
         this.amount = amount;
-        this.currencyType = currencyType;
+        this.moneyType = moneyType;
         this.merchandise = merchandise;
         this.runningBookBalance = runningBookBalance;
         this.runningAvailableBalance = runningAvailableBalance;
@@ -79,6 +85,8 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
         this.memo = memo;
         this.priceReference = priceReference;
         this.originTransaction = originTransaction;
+        this.originTransactionId = originTransactionId;
+        this.seen = seen;
     }
 
     /**
@@ -125,8 +133,8 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
      * {@inheritDoc}
      */
     @Override
-    public CurrencyType getCurrencyType() {
-        return this.currencyType;
+    public MoneyType getMoneyType() {
+        return this.moneyType;
     }
 
     /**
@@ -191,6 +199,22 @@ public class CryptoBrokerStockTransactionRecordImpl implements CryptoBrokerStock
     @Override
     public OriginTransaction getOriginTransaction() {
         return this.originTransaction;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getOriginTransactionId() {
+        return this.originTransactionId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean getSeen() {
+        return this.seen;
     }
 
 }

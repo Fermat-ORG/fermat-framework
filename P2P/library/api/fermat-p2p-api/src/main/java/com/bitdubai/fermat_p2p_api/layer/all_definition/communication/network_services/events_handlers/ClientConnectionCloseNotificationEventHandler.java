@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.ClientConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
 
 /**
  * The Class <code>com.bitdubai.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.event_handlers.ClientConnectionCloseNotificationEventHandler</code>
@@ -22,7 +21,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ClientConnectionCloseNotificationEventHandler implements FermatEventHandler {
+public class ClientConnectionCloseNotificationEventHandler implements FermatEventHandler<ClientConnectionCloseNotificationEvent> {
 
     /**
      * Represent the networkService
@@ -33,8 +32,8 @@ public class ClientConnectionCloseNotificationEventHandler implements FermatEven
      * Constructor with parameter
      * @param networkService
      */
-    public ClientConnectionCloseNotificationEventHandler(NetworkService networkService){
-        this.networkService = (AbstractNetworkServiceBase) networkService;
+    public ClientConnectionCloseNotificationEventHandler(AbstractNetworkServiceBase networkService){
+        this.networkService = networkService;
     }
 
     /**
@@ -42,10 +41,9 @@ public class ClientConnectionCloseNotificationEventHandler implements FermatEven
      * @see FermatEventHandler#handleEvent(FermatEvent)
      */
     @Override
-    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
-        if (this.networkService.getStatus() == ServiceStatus.STARTED) {
-            this.networkService.handleClientConnectionCloseNotificationEvent((ClientConnectionCloseNotificationEvent) fermatEvent);
-        }
+    public void handleEvent(ClientConnectionCloseNotificationEvent fermatEvent) throws FermatException {
 
+        if (this.networkService.getStatus() == ServiceStatus.STARTED)
+            this.networkService.handleClientConnectionCloseNotificationEvent(fermatEvent);
     }
 }

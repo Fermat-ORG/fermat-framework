@@ -2,10 +2,13 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.develope
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantRegisterEarningsSettingsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningsSettingsNotRegisteredException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSettings;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 /**
@@ -33,13 +36,60 @@ public final class MatchingEngineMiddlewareManager implements MatchingEngineMana
     }
 
     @Override
-    public EarningsSettings loadEarningsSettings(final WalletReference walletReference) throws CantLoadEarningSettingsException {
+    public EarningsSettings registerEarningsSettings(final WalletReference walletReference) throws CantRegisterEarningsSettingsException {
 
-        return new MatchingEngineMiddlewareEarningsSettings(
-                walletReference       ,
-                dao                   ,
-                errorManager          ,
-                pluginVersionReference
-        );
+
+        try {
+
+            dao.registerWalletReference(walletReference);
+
+            return new MatchingEngineMiddlewareEarningsSettings(
+                    walletReference,
+                    dao,
+                    errorManager,
+                    pluginVersionReference
+            );
+
+        } catch (CantRegisterEarningsSettingsException e) {
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw e;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantRegisterEarningsSettingsException(e, null, "Unhandled Exception.");
+        }
+
+    }
+
+    @Override
+    public EarningsSettings loadEarningsSettings(final String walletPublicKey) throws CantLoadEarningSettingsException       ,
+                                                                                      EarningsSettingsNotRegisteredException {
+
+        try {
+
+            WalletReference walletReference = dao.loadWalletReference(walletPublicKey);
+
+            return new MatchingEngineMiddlewareEarningsSettings(
+                    walletReference,
+                    dao,
+                    errorManager,
+                    pluginVersionReference
+            );
+
+        } catch (EarningsSettingsNotRegisteredException earningsSettingsNotRegisteredException) {
+
+            // I DO NOTHING HERE, MAYBE IS NOT REGISTERED
+            throw earningsSettingsNotRegisteredException;
+        } catch (CantLoadEarningSettingsException cantLoadEarningSettingsException) {
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadEarningSettingsException);
+            throw cantLoadEarningSettingsException;
+        } catch (final Exception e){
+
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantLoadEarningSettingsException(e, null, "Unhandled Exception.");
+        }
+
     }
 }

@@ -6,7 +6,6 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -21,21 +20,26 @@ public class MessageImpl implements Message {
     private MessageStatus status;
     private TypeMessage type;
     private Timestamp messageDate;
+    private UUID contactId;
 
     public MessageImpl(){}
 
     public MessageImpl(
+            UUID chatId,
             ChatMetadata chatMetadata,
             MessageStatus messageStatus,
-            TypeMessage typeMessage
+            TypeMessage typeMessage,
+            UUID contactId
     ){
         messageId=chatMetadata.getMessageId();
-        chatId=chatMetadata.getChatId();
+        this.chatId=chatId;
         message=chatMetadata.getMessage();
         status=messageStatus;
         type=typeMessage;
+//        messageDate=new Timestamp(System.currentTimeMillis());
         messageDate=new Timestamp(
                 chatMetadata.getDate().getTime());
+        this.contactId=contactId;
     }
 
     @Override
@@ -96,6 +100,16 @@ public class MessageImpl implements Message {
     @Override
     public void setMessageDate(Timestamp messageDate) {
         this.messageDate = messageDate;
+    }
+
+    @Override
+    public UUID getContactId() {
+        return this.contactId;
+    }
+
+    @Override
+    public void setContactId(UUID contactId) {
+        this.contactId=contactId;
     }
 
     /**

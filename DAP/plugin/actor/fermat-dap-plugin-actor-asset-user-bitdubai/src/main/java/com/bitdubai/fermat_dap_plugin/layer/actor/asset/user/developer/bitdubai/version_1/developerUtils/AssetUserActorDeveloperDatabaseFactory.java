@@ -119,11 +119,12 @@ public class AssetUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_CONNECTION_STATE_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_LOCATION_LATITUDE_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_LOCATION_LONGITUDE_COLUMN_NAME);
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME);
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME);
+        //assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_ADDRESS_COLUMN_NAME);
+        //assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CURRENCY_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTRATION_DATE_COLUMN_NAME);
         assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_LAST_CONNECTION_DATE_COLUMN_NAME);
-        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME);
+        assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_ACTOR_TYPE_COLUMN_NAME);
+        //assetUserActorColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_NETWORK_TYPE_COLUMN_NAME);
         /*
          * Asset User Actor database addition.
          */
@@ -143,11 +144,12 @@ public class AssetUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
         assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CONNECTION_STATE_COLUMN_NAME);
         assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LATITUDE_COLUMN_NAME);
         assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LOCATION_LONGITUDE_COLUMN_NAME);
-        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME);
-        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME);
+        //assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_ADDRESS_COLUMN_NAME);
+        //assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_CRYPTO_CURRENCY_COLUMN_NAME);
         assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME);
         assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME);
-        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NETWORK_TYPE_COLUMN_NAME);
+        assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_ACTOR_TYPE_COLUMN_NAME);
+        //assetUserRegisteredColumns.add(AssetUserActorDatabaseConstants.ASSET_USER_REGISTERED_NETWORK_TYPE_COLUMN_NAME);
 
         /**
          * Asset User Actor Registered database addition.
@@ -209,6 +211,23 @@ public class AssetUserActorDeveloperDatabaseFactory implements DealsWithPluginDa
          */
 //        DeveloperDatabaseTable assetUserRelationAssetIssuerTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserActorDatabaseConstants.ASSET_USER_RELATION_ASSET_ISSUER_TABLE_NAME, assetUserRelationAssetIssuerColumns);
 //        tables.add(assetUserRelationAssetIssuerTable);
+
+        /**
+         * Crypto Address database columns.
+         */
+        List<String> cryptoAddressColums = new ArrayList<String>();
+
+        cryptoAddressColums.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_PUBLIC_KEY_COLUMN_NAME);
+        cryptoAddressColums.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_ADDRESS_COLUMN_NAME);
+        cryptoAddressColums.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_CRYPTO_CURRENCY_COLUMN_NAME);
+        cryptoAddressColums.add(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_NETWORK_TYPE_COLUMN_NAME);
+
+
+        /**
+         * Crypto Address  database addition.
+         */
+        DeveloperDatabaseTable assetUserRelationAssetIssuerTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserActorDatabaseConstants.ASSET_USER_CRYPTO_TABLE_NAME, cryptoAddressColums);
+        tables.add(assetUserRelationAssetIssuerTable);
 
         return tables;
     }

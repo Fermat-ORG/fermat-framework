@@ -85,7 +85,14 @@ public class ShareMemoryCacheForVpnClientsConnections {
     public synchronized  static VpnClientConnection remove(NetworkServiceType networkServiceType, String key){
 
         if(instance.connectionMap.containsKey(networkServiceType)){
-            return instance.connectionMap.get(networkServiceType).remove(key);
+
+            VpnClientConnection vpnClientConnection = instance.connectionMap.get(networkServiceType).remove(key);
+
+            if (instance.connectionMap.get(networkServiceType).isEmpty()){
+                instance.connectionMap.remove(networkServiceType);
+            }
+
+            return vpnClientConnection;
         }
 
         return null;
@@ -134,5 +141,13 @@ public class ShareMemoryCacheForVpnClientsConnections {
         }
 
         return null;
+    }
+
+    /**
+     * Get the connection map
+     * @return Map<NetworkServiceType, Map<String, VpnClientConnection>>
+     */
+    public static Map<NetworkServiceType, Map<String, VpnClientConnection>> getConnectionMapCopy(){
+        return (HashMap) new HashMap<>(instance.connectionMap).clone();
     }
 }

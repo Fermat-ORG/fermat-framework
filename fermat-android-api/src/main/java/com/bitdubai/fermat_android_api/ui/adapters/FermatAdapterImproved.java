@@ -40,8 +40,8 @@ public abstract class FermatAdapterImproved<M, H extends FermatViewHolder> exten
 
     @Override
     public void onBindViewHolder(H holder, final int position) {
-        try
-        {
+        holder.itemView.setTag((holder.getHolderId()!=0)?holder.getHolderId():position);
+        try {
             // setting up custom listeners
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -63,8 +63,7 @@ public abstract class FermatAdapterImproved<M, H extends FermatViewHolder> exten
             });
             bindHolder(holder, getItem(position), position);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -136,6 +135,11 @@ public abstract class FermatAdapterImproved<M, H extends FermatViewHolder> exten
      * @param position position to render
      */
     protected abstract void bindHolder(H holder, M data, int position);
+
+
+    public Context getContext() {
+        return context;
+    }
 
 
 }

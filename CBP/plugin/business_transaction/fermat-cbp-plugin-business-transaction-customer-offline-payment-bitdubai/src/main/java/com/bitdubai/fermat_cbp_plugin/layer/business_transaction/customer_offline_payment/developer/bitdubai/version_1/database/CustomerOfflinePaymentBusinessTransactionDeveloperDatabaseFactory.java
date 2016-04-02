@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.customer_offline_payment.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -108,6 +109,8 @@ public class CustomerOfflinePaymentBusinessTransactionDeveloperDatabaseFactory i
         onlinePaymentColumns.add(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TRANSACTION_HASH_COLUMN_NAME);
         onlinePaymentColumns.add(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME);
         onlinePaymentColumns.add(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_TIMESTAMP_COLUMN_NAME);
+        onlinePaymentColumns.add(CustomerOfflinePaymentBusinessTransactionDatabaseConstants.OFFLINE_PAYMENT_COMPLETION_DATE_COLUMN_NAME);
+
         /**
          * Table Offline Payment addition.
          */

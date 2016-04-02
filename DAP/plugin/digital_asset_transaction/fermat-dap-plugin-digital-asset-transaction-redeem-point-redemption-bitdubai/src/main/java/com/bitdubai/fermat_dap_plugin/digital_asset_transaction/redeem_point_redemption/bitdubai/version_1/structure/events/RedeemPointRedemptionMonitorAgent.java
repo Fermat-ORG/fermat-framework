@@ -2,14 +2,15 @@ package com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_re
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
@@ -17,12 +18,21 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMetadataContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.content_message.DistributionStatusUpdateContentMessage;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.network_service_message.exceptions.CantUpdateMessageStatusException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -32,7 +42,6 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendTransactionNewStatusNotificationException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.DigitalAssetMetadataTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.AssetRedeemPointWalletTransactionRecordWrapper;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
@@ -41,6 +50,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interface
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletBalance;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionRecord;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.RedeemPointRedemptionDigitalAssetTransactionPluginRoot;
 import com.bitdubai.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database.AssetRedeemPointRedemptionDAO;
@@ -71,19 +81,20 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
     private AssetTransmissionNetworkServiceManager assetTransmissionManager;
     private PluginDatabaseSystem pluginDatabaseSystem;
     private RedemptionAgent agent;
+    private CountDownLatch latch;
 
     //VARIABLES ACCESSED BY AGENT INNER CLASS.
     //NEEDS TO BE VOLATILE SINCE THEY'RE BEING USED ON ANOTHER THREAD.
     //I NEED THREAD TO NOTICE ASAP.
-    private volatile UUID pluginId;
-    private volatile PluginFileSystem pluginFileSystem;
-    private volatile ActorAssetRedeemPointManager actorAssetRedeemPointManager;
-    private volatile AssetRedeemPointWalletManager assetRedeemPointWalletManager;
-    private volatile ActorAssetUserManager actorAssetUserManager;
-    private volatile BitcoinNetworkManager bitcoinNetworkManager;
-    private volatile CountDownLatch latch;
-    private volatile ActorAssetIssuerManager actorAssetIssuerManager;
-
+    private final UUID pluginId;
+    private final PluginFileSystem pluginFileSystem;
+    private final ActorAssetRedeemPointManager actorAssetRedeemPointManager;
+    private final AssetRedeemPointWalletManager assetRedeemPointWalletManager;
+    private final ActorAssetUserManager actorAssetUserManager;
+    private final BitcoinNetworkManager bitcoinNetworkManager;
+    private final ActorAssetIssuerManager actorAssetIssuerManager;
+    private final IncomingCryptoManager incomingCryptoManager;
+    private final TransactionProtocolManager<CryptoTransaction> protocolManager;
     //CONSTRUCTORS
 
     public RedeemPointRedemptionMonitorAgent(ErrorManager errorManager,
@@ -96,7 +107,8 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                              AssetRedeemPointWalletManager assetRedeemPointWalletManager,
                                              ActorAssetUserManager actorAssetUserManager,
                                              BitcoinNetworkManager bitcoinNetworkManager,
-                                             ActorAssetIssuerManager actorAssetIssuerManager) throws CantSetObjectException {
+                                             ActorAssetIssuerManager actorAssetIssuerManager,
+                                             IncomingCryptoManager incomingCryptoManager) throws CantSetObjectException {
         this.errorManager = Validate.verifySetter(errorManager, "errorManager is null");
         this.logManager = Validate.verifySetter(logManager, "logManager is null");
         this.assetTransmissionManager = Validate.verifySetter(assetTransmissionManager, "assetTransmissionManager is null");
@@ -108,6 +120,8 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
         this.actorAssetUserManager = Validate.verifySetter(actorAssetUserManager, "actorAssetUserManager is null");
         this.bitcoinNetworkManager = Validate.verifySetter(bitcoinNetworkManager, "bitcoinNetworkManager is null");
         this.actorAssetIssuerManager = Validate.verifySetter(actorAssetIssuerManager, "actorAssetIssuerManager is null");
+        this.incomingCryptoManager = incomingCryptoManager;
+        this.protocolManager = incomingCryptoManager.getTransactionManager();
     }
 
 
@@ -153,7 +167,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
     //INNER CLASSES
     private class RedemptionAgent extends AbstractDigitalAssetVault implements Runnable {
 
-        private volatile boolean agentRunning;
+        private boolean agentRunning;
         private static final int WAIT_TIME = 20; //SECONDS
         private AssetRedeemPointRedemptionDAO dao;
 
@@ -186,71 +200,71 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
         private void doTheMainTask() {
             try {
                 for (String eventId : dao.getPendingAssetTransmissionEvents()) {
-                    switch (dao.getEventTypeById(eventId)) {
-                        case RECEIVED_NEW_DIGITAL_ASSET_METADATA_NOTIFICATION:
+                    switch (dao.getEventDapTypeById(eventId)) {
+                        case RECEIVE_NEW_DAP_MESSAGE:
                             debug("received new digital asset metadata, requesting transaction list");
-                            List<Transaction<DigitalAssetMetadataTransaction>> newAssetTransaction = assetTransmissionManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
-                            for (Transaction<DigitalAssetMetadataTransaction> transaction : newAssetTransaction) {
+                            List<DAPMessage> newMetadata = assetTransmissionManager.getUnreadDAPMessageBySubject(DAPMessageSubject.REDEEM_POINT_REDEMPTION);
+                            for (DAPMessage message : newMetadata) {
                                 debug("verifying if there is any transaction for me");
-                                if (transaction.getInformation().getReceiverType() == PlatformComponentType.ACTOR_ASSET_REDEEM_POINT) {
-                                    //GET THE BASIC INFORMATION.
-                                    DigitalAssetMetadataTransaction assetMetadataTransaction = transaction.getInformation();
-                                    DigitalAssetMetadata metadata = assetMetadataTransaction.getDigitalAssetMetadata();
-                                    DigitalAsset digitalAsset = metadata.getDigitalAsset();
-                                    String transactionId = assetMetadataTransaction.getGenesisTransaction();
+                                //GET THE BASIC INFORMATION.
+                                AssetMetadataContentMessage content = (AssetMetadataContentMessage) message.getMessageContent();
+                                DigitalAssetMetadata metadata = content.getAssetMetadata();
+                                DigitalAsset digitalAsset = metadata.getDigitalAsset();
+                                String transactionId = metadata.getGenesisTransaction();
 
-                                    //PERSIST METADATA
-                                    debug("persisting metadata");
-                                    dao.newTransaction(transactionId, assetMetadataTransaction.getSenderId(), assetMetadataTransaction.getReceiverId(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
-                                    persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
-                                    //Now I should answer the metadata, so I'll send a message to the actor that sends me this metadata.
+                                //PERSIST METADATA
+                                debug("persisting metadata");
+                                //We store the sender of this message on its respective plugin
+                                ActorUtils.storeDAPActor(message.getActorSender(), actorAssetUserManager, actorAssetRedeemPointManager, actorAssetIssuerManager);
+                                dao.newTransaction(transactionId, message.getActorSender().getActorPublicKey(), message.getActorReceiver().getActorPublicKey(), DistributionStatus.SENDING_CRYPTO, CryptoStatus.PENDING_SUBMIT);
+                                persistDigitalAssetMetadataInLocalStorage(metadata, transactionId);
+                                //Now I should answer the metadata, so I'll send a message to the actor that sends me this metadata.
 
-                                    if (!isValidIssuer(digitalAsset)) {
-                                        updateStatusAndSendMessage(DistributionStatus.INCORRECT_REDEEM_POINT, transaction);
-                                        continue;
-                                    }
-
-                                    dao.updateTransactionStatusById(DistributionStatus.CHECKING_HASH, transactionId);
-                                    debug("verifying hash");
-                                    boolean hashValid = AssetVerification.isDigitalAssetHashValid(bitcoinNetworkManager, metadata);
-                                    if (!hashValid) {
-                                        updateStatusAndSendMessage(DistributionStatus.ASSET_REJECTED_BY_HASH, transaction);
-                                        continue;
-                                    }
-                                    debug("hash checked.");
-                                    dao.updateTransactionStatusById(DistributionStatus.HASH_CHECKED, transactionId);
-
-                                    debug("verifying contract");
-                                    dao.updateTransactionStatusById(DistributionStatus.CHECKING_CONTRACT, transactionId);
-                                    boolean contractValid = AssetVerification.isValidContract(digitalAsset.getContract());
-                                    if (!contractValid) {
-                                        updateStatusAndSendMessage(DistributionStatus.ASSET_REJECTED_BY_CONTRACT, transaction);
-                                        continue;
-                                    }
-                                    debug("contract checked");
-                                    dao.updateTransactionStatusById(DistributionStatus.CONTRACT_CHECKED, transactionId);
-
-
-                                    //EVERYTHING WENT OK.
-                                    updateStatusAndSendMessage(DistributionStatus.ASSET_ACCEPTED, transaction);
-                                    dao.updateTransactionCryptoStatusById(CryptoStatus.PENDING_SUBMIT, transactionId);
+                                if (!isValidIssuer(digitalAsset)) {
+                                    updateStatusAndSendMessage(DistributionStatus.INCORRECT_REDEEM_POINT, message);
+                                    continue;
                                 }
+
+                                dao.updateTransactionStatusById(DistributionStatus.CHECKING_HASH, transactionId);
+                                debug("verifying hash");
+                                boolean hashValid = AssetVerification.isDigitalAssetHashValid(bitcoinNetworkManager, metadata);
+                                if (!hashValid) {
+                                    updateStatusAndSendMessage(DistributionStatus.ASSET_REJECTED_BY_HASH, message);
+                                    continue;
+                                }
+                                debug("hash checked.");
+                                dao.updateTransactionStatusById(DistributionStatus.HASH_CHECKED, transactionId);
+
+                                debug("verifying contract");
+                                dao.updateTransactionStatusById(DistributionStatus.CHECKING_CONTRACT, transactionId);
+                                boolean contractValid = AssetVerification.isValidContract(digitalAsset.getContract());
+                                if (!contractValid) {
+                                    updateStatusAndSendMessage(DistributionStatus.ASSET_REJECTED_BY_CONTRACT, message);
+                                    continue;
+                                }
+                                debug("contract checked");
+                                dao.updateTransactionStatusById(DistributionStatus.CONTRACT_CHECKED, transactionId);
+
+
+                                //EVERYTHING WENT OK.
+                                updateStatusAndSendMessage(DistributionStatus.ASSET_ACCEPTED, message);
+                                dao.updateTransactionCryptoStatusById(CryptoStatus.PENDING_SUBMIT, transactionId);
                             }
-                            dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
                             break;
 
                         default:
                             dao.updateEventStatus(EventStatus.NOTIFIED, eventId); //I can't do anything with this event!
-                            logManager.log(LogLevel.MODERATE_LOGGING, "RPR Received an event it can't handle.", "The given event: " + dao.getEventTypeById(eventId) + " cannot be handle by the RPR Agent...", null);
+                            logManager.log(LogLevel.MODERATE_LOGGING, "RPR Received an event it can't handle.", "The given event: " + dao.getEventDapTypeById(eventId) + " cannot be handle by the RPR Agent...", null);
                             //I CANNOT HANDLE THIS EVENT.
                             break;
                     }
+                    dao.updateEventStatus(EventStatus.NOTIFIED, eventId);
                 }
 
                 for (String eventId : dao.getPendingCryptoRouterEvents()) {
                     boolean notifyEvent = false;
                     debug("received new crypto router event");
-                    switch (dao.getEventTypeById(eventId)) {
+                    switch (dao.getEventBchTypeById(eventId)) {
                         case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_REDEEM_POINT:
                             debug("new transaction on crypto network");
                             for (String transactionId : dao.getPendingSubmitGenesisTransactions()) {
@@ -258,22 +272,23 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 DigitalAssetMetadata digitalAssetMetadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
                                 debug("searching the crypto transaction");
 
-                                CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, digitalAssetMetadata, CryptoStatus.ON_CRYPTO_NETWORK);
+                                Transaction<CryptoTransaction> transaction = transactionForHash(digitalAssetMetadata);
 
-                                if (cryptoTransaction == null) continue; //Not yet...
+                                if (transaction == null) continue; //Not yet...
 
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                 //BUT THAT'S NOT YET IMPLEMENTED.
                                 debug("loading redeem point wallet, public key is hardcoded");
-                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest", cryptoTransaction.getBlockchainNetworkType());
+                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet(WalletUtilities.WALLET_PUBLIC_KEY, transaction.getInformation().getBlockchainNetworkType());
 
                                 String userPublicKey = dao.getSenderPublicKeyById(transactionId);
                                 AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
                                 assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
                                         digitalAssetMetadata,
-                                        cryptoTransaction,
+                                        transaction.getInformation(),
                                         userPublicKey,
-                                        actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
+                                        actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey(),
+                                        WalletUtilities.DEFAULT_MEMO_REDEMPTION);
 
                                 AssetRedeemPointWalletBalance walletBalance = wallet.getBalance();
                                 debug("adding credit on book balance");
@@ -282,6 +297,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 //UPDATE TRANSACTION CRYPTO STATUS.
                                 debug("update transaction status");
                                 dao.updateTransactionCryptoStatusById(CryptoStatus.ON_CRYPTO_NETWORK, transactionId);
+                                protocolManager.confirmReception(transaction.getTransactionID());
                                 notifyEvent = true; //Without this I'd have to put the update in there and it can result on unnecessary updates.
                             }
                             break;
@@ -291,24 +307,25 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                             for (String transactionId : dao.getOnCryptoNetworkGenesisTransactions()) {
                                 DigitalAssetMetadata metadata = getDigitalAssetMetadataFromLocalStorage(transactionId);
                                 debug("searching the crypto transaction");
-                                CryptoTransaction cryptoTransaction = AssetVerification.getCryptoTransactionFromCryptoNetworkByCryptoStatus(bitcoinNetworkManager, metadata, CryptoStatus.ON_CRYPTO_NETWORK);
+                                Transaction<CryptoTransaction> transaction = transactionForHash(metadata);
 
-                                if (cryptoTransaction == null) continue; //Not yet...
+                                if (transaction == null) continue; //Not yet...
 
                                 String userPublicKey = dao.getSenderPublicKeyById(transactionId);
                                 //TODO LOAD WALLET! I SHOULD SEARCH FOR THE WALLET PUBLIC KEY
                                 //BUT THAT'S NOT YET IMPLEMENTED.
                                 debug("loading wallet, public key is hardcoded");
-                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet("walletPublicKeyTest", cryptoTransaction.getBlockchainNetworkType());
+                                AssetRedeemPointWallet wallet = assetRedeemPointWalletManager.loadAssetRedeemPointWallet(WalletUtilities.WALLET_PUBLIC_KEY, transaction.getInformation().getBlockchainNetworkType());
 
                                 AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord;
                                 assetRedeemPointWalletTransactionRecord = new AssetRedeemPointWalletTransactionRecordWrapper(
                                         metadata,
-                                        cryptoTransaction,
+                                        transaction.getInformation(),
                                         userPublicKey,
-                                        actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey());
+                                        actorAssetRedeemPointManager.getActorAssetRedeemPoint().getActorPublicKey(),
+                                        WalletUtilities.DEFAULT_MEMO_REDEMPTION);
 
-                                updateMetadataTransactionChain(transactionId, cryptoTransaction);
+                                updateMetadataTransactionChain(transactionId, transaction.getInformation());
                                 List<ActorAssetUser> userToAdd = new ArrayList<>();
                                 userToAdd.add((ActorAssetUser) metadata.getLastOwner());
                                 actorAssetUserManager.createActorAssetUserRegisterInNetworkService(userToAdd);
@@ -320,6 +337,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                                 //I GOT IT, EVERYTHING WENT OK!
                                 debug("update status");
                                 dao.updateTransactionCryptoStatusById(CryptoStatus.ON_BLOCKCHAIN, transactionId);
+                                protocolManager.confirmReception(transaction.getTransactionID());
                                 notifyEvent = true;
                             }
                             break;
@@ -337,7 +355,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
 
                         default:
                             notifyEvent = true;
-                            logManager.log(LogLevel.MODERATE_LOGGING, "RPR Received an event it can't handle.", "The given event: " + dao.getEventTypeById(eventId) + " cannot be handle by the RPR Agent...", null);
+                            logManager.log(LogLevel.MODERATE_LOGGING, "RPR Received an event it can't handle.", "The given event: " + dao.getEventBchTypeById(eventId) + " cannot be handle by the RPR Agent...", null);
                             //I CANNOT HANDLE THIS EVENT.
                             break;
                     }
@@ -368,19 +386,18 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
             System.out.println("REDEEM POINT REDEMPTION - " + message);
         }
 
-        private void updateStatusAndSendMessage(DistributionStatus status, Transaction<DigitalAssetMetadataTransaction> transaction) throws CantSendTransactionNewStatusNotificationException, RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException, CantConfirmTransactionException {
-            DigitalAssetMetadataTransaction assetMetadataTransaction = transaction.getInformation();
-            String transactionId = assetMetadataTransaction.getGenesisTransaction();
-            //Now I should answer the metadata, so I'll send a message to the actor that sends me this metadata.
-            String actorSender = assetMetadataTransaction.getReceiverId(); //now I am the sender.
-            PlatformComponentType senderType = assetMetadataTransaction.getReceiverType();
-            String actorReceiver = assetMetadataTransaction.getSenderId(); //And the one that sends me this message is the receiver.
-            PlatformComponentType receiverType = assetMetadataTransaction.getSenderType();
-
+        private void updateStatusAndSendMessage(DistributionStatus status, DAPMessage message) throws CantSendTransactionNewStatusNotificationException, RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException, CantConfirmTransactionException, CantSetObjectException, CantSendMessageException, CantUpdateMessageStatusException {
+            AssetMetadataContentMessage content = (AssetMetadataContentMessage) message.getMessageContent();
+            DigitalAssetMetadata metadata = content.getAssetMetadata();
+            String transactionId = metadata.getGenesisTransaction();
+            DAPActor sender = message.getActorReceiver(); //Now I am the sender
+            DAPActor receiver = message.getActorSender(); //Now I am the sender
+            DistributionStatusUpdateContentMessage newContent = new DistributionStatusUpdateContentMessage(status, transactionId);
+            DAPMessage answer = new DAPMessage(newContent, sender, receiver, DAPMessageSubject.USER_REDEMPTION);
             dao.updateTransactionStatusById(status, transactionId);
-            assetTransmissionManager.sendTransactionNewStatusNotification(actorSender, senderType, actorReceiver, receiverType, transactionId, status);
+            assetTransmissionManager.sendMessage(answer);
             debug("status updated! : " + status);
-            assetTransmissionManager.confirmReception(transaction.getTransactionID());
+            assetTransmissionManager.confirmReception(message);
         }
 
         private boolean isValidIssuer(DigitalAsset asset) {
@@ -394,6 +411,16 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                 return false;
             }
             return false;
+        }
+
+        private Transaction<CryptoTransaction> transactionForHash(DigitalAssetMetadata metadata) throws CantDeliverPendingTransactionsException {
+            List<Transaction<CryptoTransaction>> pendingTransactions = protocolManager.getPendingTransactions(Specialist.REDEEM_POINT_SPECIALIST);
+            for (Transaction<CryptoTransaction> transaction : pendingTransactions) {
+                if (transaction.getInformation().getTransactionHash().equals(metadata.getLastTransactionHash())) {
+                    return transaction;
+                }
+            }
+            return null;
         }
     }
 }

@@ -2,9 +2,13 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.develope
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListInputTransactionsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.InputTransaction;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,26 +17,41 @@ import java.util.UUID;
  * bla bla bla.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 09/02/2016.
+ *
+ * @author lnacosta
+ * @version 1.0
  */
 public final class MatchingEngineMiddlewareEarningTransaction implements EarningTransaction {
 
     private final UUID                    id               ;
     private final Currency                earningCurrency  ;
     private final float                   amount           ;
-    private final List<InputTransaction>  inputTransactions;
+    private       List<InputTransaction>  inputTransactions;
+    private final long                    time             ;
     private final EarningTransactionState state            ;
 
-    public MatchingEngineMiddlewareEarningTransaction(final UUID                    id               ,
-                                                      final Currency                earningCurrency  ,
-                                                      final float                   amount           ,
-                                                      final List<InputTransaction>  inputTransactions,
-                                                      final EarningTransactionState state            ) {
+    private final MatchingEngineMiddlewareDao dao;
+
+    private final Calendar                    cal;
+
+    public MatchingEngineMiddlewareEarningTransaction(final UUID                        id               ,
+                                                      final Currency                    earningCurrency  ,
+                                                      final float                       amount           ,
+                                                      final EarningTransactionState     state            ,
+                                                      final long                        time             ,
+
+                                                      final MatchingEngineMiddlewareDao dao              ) {
 
         this.id                = id               ;
         this.earningCurrency   = earningCurrency  ;
         this.amount            = amount           ;
-        this.inputTransactions = inputTransactions;
         this.state             = state            ;
+        this.time              = time             ;
+
+        this.dao               = dao              ;
+
+        cal = GregorianCalendar.getInstance();
+        cal.setTimeInMillis(this.time);
     }
 
     @Override
@@ -50,13 +69,22 @@ public final class MatchingEngineMiddlewareEarningTransaction implements Earning
         return amount;
     }
 
-    public List<InputTransaction> listInputTransactions() {
+    public List<InputTransaction> listInputTransactions() throws CantListInputTransactionsException {
+
+        if (inputTransactions == null)
+            inputTransactions = dao.listInputsTransactionByEarningTransaction(id);
+
         return inputTransactions;
     }
 
     @Override
     public EarningTransactionState getState() {
         return state;
+    }
+
+    @Override
+    public long getTime() {
+        return time;
     }
 
     @Override
@@ -68,5 +96,30 @@ public final class MatchingEngineMiddlewareEarningTransaction implements Earning
                 ", inputTransactions=" + inputTransactions +
                 ", state=" + state +
                 '}';
+    }
+
+    public int getDay() {
+
+        return cal.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public int getDayOfYear() {
+
+        return cal.get(Calendar.DAY_OF_YEAR);
+    }
+
+    public int getWeekOfYear() {
+
+        return cal.get(Calendar.WEEK_OF_YEAR);
+    }
+
+    public int getMonth() {
+
+        return cal.get(Calendar.MONTH);
+    }
+
+    public int getYear() {
+
+        return cal.get(Calendar.YEAR);
     }
 }

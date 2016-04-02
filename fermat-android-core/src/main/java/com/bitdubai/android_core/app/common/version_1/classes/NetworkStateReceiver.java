@@ -46,6 +46,8 @@ public class NetworkStateReceiver extends BroadcastReceiver {
             connected = false;
         }
 
+        Log.i("FERMAT network type", ni.getTypeName());
+
         for (String key : intent.getExtras().keySet()) {
             Log.i("FERMAT", key);
         }
@@ -89,7 +91,7 @@ public class NetworkStateReceiver extends BroadcastReceiver {
     }
 
     public interface NetworkStateReceiverListener {
-        public void networkAvailable();
-        public void networkUnavailable();
+        void networkAvailable();
+        void networkUnavailable();
     }
 }

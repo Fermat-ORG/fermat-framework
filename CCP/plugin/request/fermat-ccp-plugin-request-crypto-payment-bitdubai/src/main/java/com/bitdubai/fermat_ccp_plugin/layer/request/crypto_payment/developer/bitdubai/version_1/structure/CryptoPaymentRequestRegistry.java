@@ -5,6 +5,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformApprovalException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_payment_request.exceptions.CantInformRefusalException;
@@ -52,6 +54,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
     private final OutgoingIntraActorManager   outgoingIntraActorManager  ;
     private final PluginDatabaseSystem        pluginDatabaseSystem       ;
     private final UUID                        pluginId                   ;
+    private Broadcaster                       broadcaster;
 
     private CryptoPaymentRequestDao cryptoPaymentRequestDao;
 
@@ -59,13 +62,15 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
                                         final ErrorManager                errorManager               ,
                                         final OutgoingIntraActorManager   outgoingIntraActorManager  ,
                                         final PluginDatabaseSystem        pluginDatabaseSystem       ,
-                                        final UUID                        pluginId                   ) {
+                                        final UUID                        pluginId                   ,
+                                        final Broadcaster                 broadcaster) {
 
         this.cryptoPaymentRequestManager = cryptoPaymentRequestManager;
         this.errorManager                = errorManager               ;
         this.outgoingIntraActorManager   = outgoingIntraActorManager  ;
         this.pluginDatabaseSystem        = pluginDatabaseSystem       ;
         this.pluginId                    = pluginId                   ;
+        this.broadcaster                 = broadcaster                ;
     }
 
     public void initialize() throws CantInitializeCryptoPaymentRequestRegistryException {
@@ -468,6 +473,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
     @Override
     public List<CryptoPayment> listCryptoPaymentRequestsByType(String            walletPublicKey,
                                                                CryptoPaymentType type           ,
+                                                               BlockchainNetworkType blockchainNetworkType,
                                                                Integer           max            ,
                                                                Integer           offset         ) throws CantListCryptoPaymentRequestsException {
 
@@ -476,6 +482,7 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
             return cryptoPaymentRequestDao.listCryptoPaymentRequestsByType(
                     walletPublicKey,
                     type,
+                    blockchainNetworkType,
                     max,
                     offset
             );
@@ -491,6 +498,36 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
         }
 
     }
+
+    @Override
+    public List<CryptoPayment> listCryptoPaymentRequestsByTypeAndNetwork(String            walletPublicKey,
+                                                               CryptoPaymentType type           ,
+                                                                BlockchainNetworkType blockchainNetworkType,
+                                                               Integer           max            ,
+                                                               Integer           offset         ) throws CantListCryptoPaymentRequestsException {
+
+        try {
+
+            return cryptoPaymentRequestDao.listCryptoPaymentRequestsByTypeAndNetwork(
+                    walletPublicKey,
+                    type,
+                    blockchainNetworkType,
+                    max,
+                    offset
+            );
+
+        } catch(CantListCryptoPaymentRequestsException e) {
+            // i inform to error manager the error.
+            reportUnexpectedException(e);
+            throw e;
+        } catch(Exception e) {
+
+            reportUnexpectedException(e);
+            throw new CantListCryptoPaymentRequestsException(e, "", "Unhandled Exception.");
+        }
+
+    }
+
 
     @Override
     public List<CryptoPayment> listCryptoPaymentRequestsByTypeAndState(String             walletPublicKey,
@@ -661,6 +698,9 @@ public class CryptoPaymentRequestRegistry implements CryptoPaymentRegistry {
         try
         {
             cryptoPaymentRequestDao.changeState(requestId, CryptoPaymentState.ERROR);
+
+            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "PAYMENTERROR|" + requestId.toString());
+
         }
         catch(CantChangeCryptoPaymentRequestStateException e)
         {

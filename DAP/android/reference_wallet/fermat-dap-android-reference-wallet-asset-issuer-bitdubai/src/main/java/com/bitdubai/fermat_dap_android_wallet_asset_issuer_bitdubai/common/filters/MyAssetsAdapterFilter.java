@@ -33,9 +33,11 @@ public class MyAssetsAdapterFilter extends Filter {
         final ArrayList<DigitalAsset> nlist = new ArrayList<>(count);
 
         String filterableString ;
+        DigitalAsset digitalAsset;
 
         for (int i = 0; i < count; i++) {
-            filterableString = list.get(i).getName();
+            digitalAsset = list.get(i);
+            filterableString = digitalAsset.getName();
             if (filterableString.toLowerCase().contains(filterString)) {
                 nlist.add(list.get(i));
             }

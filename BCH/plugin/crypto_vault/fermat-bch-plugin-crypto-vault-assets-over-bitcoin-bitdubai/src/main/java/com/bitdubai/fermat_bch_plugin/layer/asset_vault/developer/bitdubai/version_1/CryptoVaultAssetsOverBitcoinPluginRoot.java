@@ -33,13 +33,18 @@ import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.Ass
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.exceptions.CantSendAssetBitcoinsToUserException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantAddHierarchyAccountException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantDeriveNewKeysException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantSignTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CouldNotGenerateTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.GetNewCryptoAddressException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.PlatformCryptoVault;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.watch_only_vault.ExtendedPublicKey;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.database.AssetsOverBitcoinCryptoVaultDeveloperDatabaseFactory;
 import com.bitdubai.fermat_bch_plugin.layer.asset_vault.developer.bitdubai.version_1.structure.AssetCryptoVaultManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -151,16 +156,13 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
                     pluginFileSystem,
                     pluginDatabaseSystem,
                     deviceUserLoggedPublicKey,
-                    bitcoinNetworkManager);
+                    bitcoinNetworkManager,
+                    errorManager);
         } catch (Exception e){
-            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "couldn't start plugin because seed creation/loading failed. Key hierarchy not created.", "");
+            CantStartPluginException exception = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "couldn't start plugin because seed creation/loading failed. Key hierarchy not created.", "");
+            errorManager.reportUnexpectedPluginException(Plugins.BITCOIN_ASSET_VAULT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw exception;
         }
-
-        /**
-         * Test
-         */
-        //generateAddress();
-        //sendBitcoinsTest();
 
         /**
          * Nothing left to do.
@@ -203,8 +205,8 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      * @throws CantSendAssetBitcoinsToUserException
      */
     @Override
-    public String sendAssetBitcoins(String genesisTransactionId, String genesisBlock, CryptoAddress addressTo) throws CantSendAssetBitcoinsToUserException {
-        return assetCryptoVaultManager.sendAssetBitcoins(genesisTransactionId, genesisBlock, addressTo);
+    public String sendAssetBitcoins(String genesisTransactionId, String genesisBlock, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantSendAssetBitcoinsToUserException {
+        return assetCryptoVaultManager.sendAssetBitcoins(genesisTransactionId, genesisBlock, addressTo, blockchainNetworkType);
     }
 
     /**
@@ -302,7 +304,43 @@ public class CryptoVaultAssetsOverBitcoinPluginRoot extends AbstractPlugin imple
      * @throws CantCreateBitcoinTransactionException
      */
     @Override
-    public String createBitcoinTransaction(String inputTransaction, CryptoAddress addressTo) throws CantCreateBitcoinTransactionException {
-        return assetCryptoVaultManager.createBitcoinTransaction(inputTransaction, addressTo);
+    public String createBitcoinTransaction(String inputTransaction, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateBitcoinTransactionException {
+        return assetCryptoVaultManager.createBitcoinTransaction(inputTransaction, addressTo, blockchainNetworkType);
     }
+
+    /**
+     * generates a final transaction based on a draft transaction and prepares it to be broadcasted.
+     * @param draftTransaction the completed and signed transaction
+     * @return the final transactionHash
+     * @throws CantCreateBitcoinTransactionException
+     */
+    @Override
+    public String createBitcoinTransaction(DraftTransaction draftTransaction) throws CantCreateBitcoinTransactionException {
+        return assetCryptoVaultManager.createBitcoinTransaction(draftTransaction);
+    }
+
+    /**
+     * Creates a non complete, unsigned draft bitcoin transaction given the passed input and address to.
+     * @param inputTransaction the Input transaction hash used to take funds from.
+     * @param addressTo the address to whom we are giving the funds.
+     * @return a DraftTransaction class
+     * @throws CantCreateDraftTransactionException
+     */
+    @Override
+    public DraftTransaction createDraftTransaction(String inputTransaction, CryptoAddress addressTo, BlockchainNetworkType blockchainNetworkType) throws CantCreateDraftTransactionException {
+        return assetCryptoVaultManager.createDraftTransaction(inputTransaction, addressTo, blockchainNetworkType);
+    }
+
+    /**
+     * Signs the owned inputs of the passed Draft transaction
+     * @param draftTransaction the transaction to sign
+     * @return the signed Transaction
+     * @throws CantSignTransactionException
+     */
+    @Override
+    public DraftTransaction signTransaction(DraftTransaction draftTransaction) throws CantSignTransactionException {
+        return assetCryptoVaultManager.signTransaction(draftTransaction);
+    }
+
+
 }

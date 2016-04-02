@@ -36,9 +36,6 @@ public class BlockchainConnectionStatus {
     }
 
     public Boolean IsConnected() {
-        if (connectedNodesCount == 0)
-            return false;
-        else
-            return true;
+        return connectedNodesCount != 0;
     }
 }

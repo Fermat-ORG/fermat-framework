@@ -35,11 +35,14 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.MyAssetsAdapter;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.filters.MyAssetsAdapterFilter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
@@ -59,6 +62,10 @@ import static android.widget.Toast.makeText;
  */
 public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAsset>
         implements FermatListItemListeners<DigitalAsset> {
+
+
+    private List<AssetNegotiation> assetNegotiations;
+    private AssetNegotiation assetNegotiation;
 
     // Constants
     private static final String TAG = "UserMainActivityFragment";
@@ -85,12 +92,12 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         setHasOptionsMenu(true);
 
         try {
+            appSession.setData("redeem_points", null);
+
             moduleManager = ((AssetUserSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-            appSession.setData("redeem_points", null);
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
@@ -102,11 +109,6 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
-
-        setupBackgroundBitmap(layout);
-        configureToolbar();
-        noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
-        showOrHideNoAssetsView(digitalAssets.isEmpty());
 
         //Initialize settings
         settingsManager = appSession.getModuleManager().getSettingsManager();
@@ -126,9 +128,12 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
                 settingsManager.persistSettings(appSession.getAppPublicKey(), settings);
                 moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
+                moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
             } catch (CantPersistSettingsException e) {
                 e.printStackTrace();
             }
+        } else {
+            moduleManager.changeNetworkType(settings.getBlockchainNetwork().get(settings.getBlockchainNetworkPosition()));
         }
 
         final AssetUserSettings assetUserSettingsTemp = settings;
@@ -143,6 +148,14 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
             }
         }, 500);
 
+        setupBackgroundBitmap(layout);
+        configureToolbar();
+        noAssetsView = layout.findViewById(R.id.dap_wallet_no_assets);
+
+        digitalAssets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+        showOrHideNoAssetsView(digitalAssets.isEmpty());
+
+        onRefresh();
     }
 
     private void setUpPresentation(boolean checkButton) {
@@ -205,13 +218,13 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
             @Override
             public boolean onQueryTextChange(String s) {
                 if (s.equals(searchView.getQuery().toString())) {
-                    ((MyAssetsAdapter) getAdapter()).getFilter().filter(s);
+                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).filter(s);
                 }
                 return false;
             }
         });
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.dap_asset_user_help_icon)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_PRESENTATION, 2, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
     }
 
     @Override
@@ -333,9 +346,10 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 digitalAssets = (ArrayList) result[0];
-                if (adapter != null)
+                if (adapter != null) {
                     adapter.changeDataSet(digitalAssets);
-
+                    ((MyAssetsAdapterFilter) ((MyAssetsAdapter) getAdapter()).getFilter()).filter(searchView.getQuery().toString());
+                }
                 showOrHideNoAssetsView(digitalAssets.isEmpty());
             }
         }
@@ -355,6 +369,8 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         if (adapter == null) {
             adapter = new MyAssetsAdapter(getActivity(), digitalAssets, moduleManager);
             adapter.setFermatListEventListener(this);
+        } else {
+            adapter.changeDataSet(digitalAssets);
         }
         return adapter;
     }
@@ -370,7 +386,11 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
     @Override
     public void onItemClickListener(DigitalAsset data, int position) {
         appSession.setData("asset_data", data);
-        changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL, appSession.getAppPublicKey());
+        if(data.getUserAssetNegotiation() != null){
+            changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_NEGOTIATION_DETAIL_ACTIVITY,appSession.getAppPublicKey());
+        }else {
+            changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL, appSession.getAppPublicKey());
+        }
     }
 
     @Override
@@ -383,6 +403,7 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
         if (moduleManager != null) {
             try {
                 digitalAssets = Data.getAllDigitalAssets(moduleManager);
+                digitalAssets.addAll(Data.getAllPendingNegotiations(moduleManager));
 
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -410,5 +431,15 @@ public class UserMainActivityFragment extends FermatWalletListFragment<DigitalAs
             noAssetsView.setVisibility(View.GONE);
         }
     }
-}
 
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case DAPConstants.DAP_UPDATE_VIEW_ANDROID:
+                onRefresh();
+                break;
+            default:
+                super.onUpdateViewOnUIThread(code);
+        }
+    }
+}

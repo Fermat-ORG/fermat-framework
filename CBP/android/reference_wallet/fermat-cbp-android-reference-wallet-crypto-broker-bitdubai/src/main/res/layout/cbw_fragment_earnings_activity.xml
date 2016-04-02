@@ -1,169 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:background="@drawable/cbw_action_bar_gradient_colors"
               android:paddingTop="16dp">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/cbw_earning_currency_pairs_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:layout_marginBottom="12dp"
-        tools:listitem="@layout/cbw_earnings_currency_pair_item"/>
-
-
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/cbw_no_earnings_container"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/cbw_header_gradient_background"
-        android:orientation="vertical">
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_current_earnings_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:background="#55000000"
-            android:paddingBottom="8dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="8dp"
-            android:text="@string/cbw_current_earings_title"
-            android:textColor="@color/cbw_second_line_item"
-            android:textSize="16sp"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_current_earning_value"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/cbw_current_earnings_title"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="16dp"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            tools:text="132,02 BTC"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/cbw_earning_separator"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:text="Today"
-            android:textColor="#CCC"/>
-
-        <View
-            android:id="@+id/cbw_earning_separator"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_below="@+id/cbw_current_earning_value"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:background="@color/cbw_second_line_item"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_previous_earning_value"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/cbw_earning_separator"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:textColor="@color/cbw_second_line_item"
-            android:textSize="22sp"
-            tools:text="- 132,02 BTC"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@+id/cbw_earning_separator"
-            android:layout_marginEnd="16dp"
-            android:layout_marginRight="16dp"
-            android:text="This Month so far"
-            android:textColor="#CCC"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#3ec8e8"
-        android:paddingLeft="16dp">
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_earning_filter_text"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:gravity="center_vertical"
-            android:text="Sort By"
-            android:textColor="#222"
-            android:textSize="14sp"/>
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <ImageView
-            android:id="@+id/cbw_earnings_sort_by_button"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/cbw_earning_filter_text"
-            android:layout_toRightOf="@+id/cbw_earning_filter_text"
-            android:src="@drawable/ic_home_tab_arrow_down"/>
-    </RelativeLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:background="#d9d9d9"
-        android:orientation="horizontal"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/sad_face"
+            android:layout_gravity="center"
+            tools:ignore="contentDescription"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_earning_time_field"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:textColor="@color/black"
-            tools:text="Month"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:text="End"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="end|center_vertical"
-            android:textColor="@color/black"
-            android:text="Earnings"/>
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:text="@string/cbw_no_earnings"/>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/earning_overview_recycler_view"
+    <LinearLayout
+        android:id="@+id/cbw_earnings_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        tools:listitem="@layout/cbw_earnings_list_item"/>
+        android:orientation="vertical">
 
-</LinearLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/cbw_earning_currency_pairs_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:layout_marginBottom="12dp"
+            tools:listitem="@layout/cbw_earnings_currency_pair_item"/>
+
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/cbw_earning_details_view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+
+        <com.viewpagerindicator.LinePageIndicator
+            android:id="@+id/cbw_earning_details_view_pager_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/cbw_market_exchange_rate_indicator_height"
+            android:layout_margin="8dp"
+            app:lineWidth="25dp"
+            app:selectedColor="#2abff1"
+            app:strokeWidth="4dp"
+            app:unselectedColor="#052331"/>
+    </LinearLayout>
+</FrameLayout>

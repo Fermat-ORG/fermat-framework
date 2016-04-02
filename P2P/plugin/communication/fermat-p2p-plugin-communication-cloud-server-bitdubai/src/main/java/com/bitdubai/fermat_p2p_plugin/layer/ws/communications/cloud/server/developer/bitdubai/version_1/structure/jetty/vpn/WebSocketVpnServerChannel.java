@@ -110,7 +110,7 @@ public class WebSocketVpnServerChannel {
 
             String messageContentJsonStringRepresentation =  AsymmetricCryptography.decryptMessagePrivateKey(temp_i, vpnServerIdentity.getPrivateKey());
 
-            LOG.info("messageContentJsonStringRepresentation = " + messageContentJsonStringRepresentation);
+            LOG.debug("messageContentJsonStringRepresentation = " + messageContentJsonStringRepresentation);
 
             Gson gson = new Gson();
             JsonParser parser = new JsonParser();
@@ -124,7 +124,7 @@ public class WebSocketVpnServerChannel {
             PlatformComponentProfile participant = gson.fromJson(contentJsonObject.get(JsonAttNamesConstants.APPLICANT_PARTICIPANT_VPN).getAsString(), PlatformComponentProfileCommunication.class);
             String remoteParticipantIdentity     = contentJsonObject.get(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN).getAsString();
 
-            LOG.info("participant.getAlias( = " + participant.getAlias());
+            LOG.info("participant.getAlias = " + participant.getAlias());
 
             /*
              * Get the client identity and the participant profile
@@ -175,7 +175,7 @@ public class WebSocketVpnServerChannel {
             messageComplete = messageComplete + fermatPacketEncode;
 
             LOG.info("-----------------------------------------------------------");
-            LOG.info("Received TEXT message: " + messageComplete);
+            LOG.debug("Received TEXT message: " + messageComplete);
 
         /*
          * Decode the fermatPacketEncode into a fermatPacket
@@ -185,22 +185,22 @@ public class WebSocketVpnServerChannel {
 
             if (receiveFermatPacket.getFermatPacketType() == FermatPacketType.MESSAGE_TRANSMIT) {
 
-            /*
-             * Get the FermatMessage from the message content and decrypt
-             */
+                /*
+                 * Get the FermatMessage from the message content and decrypt
+                 */
                 String messageContentJsonStringRepresentation = AsymmetricCryptography.decryptMessagePrivateKey(receiveFermatPacket.getMessageContent(), vpnServerIdentity.getPrivateKey());
 
-            /*
-             * Construct the fermat message object
-             */
+                /*
+                 * Construct the fermat message object
+                 */
                 FermatMessageCommunication fermatMessage = (FermatMessageCommunication) new FermatMessageCommunication().fromJson(messageContentJsonStringRepresentation);
 
 
-                LOG.info("fermatMessage = " + fermatMessage);
+                LOG.debug("fermatMessage = " + fermatMessage);
 
-            /*
-            * Construct a new fermat packet whit the same message and different destination
-            */
+                /*
+                * Construct a new fermat packet whit the same message and different destination
+                */
                 FermatPacket fermatPacketRespond = FermatPacketCommunicationFactory.constructFermatPacketEncryptedAndSinged(vpnClientConnection.getVpnClientIdentity(), //Destination
                         vpnServerIdentity.getPublicKey(),           //Sender
                         fermatMessage.toJson(),                     //Message Content
@@ -209,21 +209,21 @@ public class WebSocketVpnServerChannel {
 
                 String key = fermatMessage.getReceiver() + fermatMessage.getSender();
 
-            /*
-             * Get the connection of the destination
-             */
+                /*
+                 * Get the connection of the destination
+                 */
                 VpnClientConnection clientConnectionDestination = ShareMemoryCacheForVpnClientsConnections.getMyRemote(vpnClientConnection.getNetworkServiceType(), key);
 
-            /*
-             * If the connection to client destination available
-             */
+                /*
+                 * If the connection to client destination available
+                 */
                 if (clientConnectionDestination != null && clientConnectionDestination.getSession().isOpen()) {
 
                     LOG.info("Sending msg to: " + clientConnectionDestination.getParticipant().getAlias());
 
-               /*
-                * Send the encode packet to the destination
-                */
+                   /*
+                    * Send the encode packet to the destination
+                    */
                     clientConnectionDestination.getSession().getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRespond));
 
                 }

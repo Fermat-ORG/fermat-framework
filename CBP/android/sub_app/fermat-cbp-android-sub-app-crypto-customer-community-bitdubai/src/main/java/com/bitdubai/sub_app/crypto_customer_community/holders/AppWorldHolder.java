@@ -18,7 +18,7 @@ public class AppWorldHolder extends FermatViewHolder {
 
     public SquareImageView thumbnail;
     public FermatTextView name;
-    public ImageView imageView_connection;
+    public ImageView connectionState;
 
     /**
      * Constructor
@@ -27,6 +27,7 @@ public class AppWorldHolder extends FermatViewHolder {
      */
     public AppWorldHolder(View itemView) {
         super(itemView);
+        connectionState = (ImageView) itemView.findViewById(R.id.ccc_connection_state);
         thumbnail = (SquareImageView) itemView.findViewById(R.id.profile_image);
         name = (FermatTextView) itemView.findViewById(R.id.community_name);
     }

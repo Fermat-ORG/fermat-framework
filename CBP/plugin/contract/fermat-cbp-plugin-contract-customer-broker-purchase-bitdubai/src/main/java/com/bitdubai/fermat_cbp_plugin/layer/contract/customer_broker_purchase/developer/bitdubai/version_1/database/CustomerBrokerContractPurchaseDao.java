@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -68,6 +69,7 @@ public class CustomerBrokerContractPurchaseDao {
                     throw new CantInitializeCustomerBrokerPurchaseContractDatabaseException(cantCreateDatabaseException.getMessage());
                 }
             }
+
         }
 
         public CustomerBrokerContractPurchase createCustomerBrokerPurchaseContract(CustomerBrokerContractPurchase contract) throws CantCreateCustomerBrokerContractPurchaseException {
@@ -215,9 +217,10 @@ public class CustomerBrokerContractPurchaseDao {
 
                 Purchases.setHistoryContracts(historyContracts);
 
+
                 /*
                     Waiting for Broker
-                 */
+                */
 
                 Query = "SELECT * FROM " +
                     CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME +
@@ -286,7 +289,7 @@ public class CustomerBrokerContractPurchaseDao {
             DatabaseTable ContractClausePurchaseTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CLAUSE_CONTRACT_TABLE_NAME);
             ContractClausePurchaseTable.addStringFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
             for(ContractClause clause : clauses){
-                DatabaseTableRecord recordToInsert = ContractClausePurchaseTable.getEmptyRecord();;
+                DatabaseTableRecord recordToInsert = ContractClausePurchaseTable.getEmptyRecord();
                 loadRecordAsNewClause(
                         recordToInsert,
                         clause.getClauseId(),

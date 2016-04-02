@@ -298,7 +298,7 @@ Updates the count of notifications in the ActionBar.
     public boolean onQueryTextSubmit(String alias) {
 
         try {
-            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.searchNewCryptoBroker(moduleManager.getSelectedActorIdentity());
+            CryptoBrokerCommunitySearch cryptoBrokerCommunitySearch = moduleManager.getCryptoBrokerSearch();
             cryptoBrokerCommunitySearch.addAlias(alias);
 
         } catch(Exception e) {
@@ -314,11 +314,7 @@ Updates the count of notifications in the ActionBar.
     @Override
     public boolean onQueryTextChange(String s) {
 
-        if (s.length() == 0 && isStartList) {
-
-            return true;
-        }
-        return false;
+        return s.length() == 0 && isStartList;
     }
 
     @Override
@@ -368,7 +364,7 @@ Updates the count of notifications in the ActionBar.
     public void onItemClickListener(CryptoBrokerCommunityInformation data, int position) {
 
         try {
-            ConnectDialog connectDialog = new ConnectDialog(getActivity(), (CryptoBrokerCommunitySubAppSession) appSession, (SubAppResourcesProviderManager) appResourcesProviderManager, data, moduleManager.getSelectedActorIdentity());
+            ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, appResourcesProviderManager, data, moduleManager.getSelectedActorIdentity());
             connectDialog.show();
         } catch (CantGetSelectedActorIdentityException| ActorIdentityNotSelectedException e) {
             e.printStackTrace();

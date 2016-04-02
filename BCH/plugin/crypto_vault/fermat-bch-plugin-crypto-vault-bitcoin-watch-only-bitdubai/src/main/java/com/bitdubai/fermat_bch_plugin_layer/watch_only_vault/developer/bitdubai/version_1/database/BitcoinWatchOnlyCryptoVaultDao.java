@@ -19,8 +19,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccount;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.HierarchyAccount.HierarchyAccountType;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantExecuteDatabaseOperationException;
+import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.CryptoVaultDao;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.interfaces.VaultKeyMaintenanceParameters;
-import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.CantExecuteDatabaseOperationException;
+
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.CantInitializeBitcoinWatchOnlyCryptoVaultDatabaseException;
 import com.bitdubai.fermat_bch_plugin_layer.watch_only_vault.developer.bitdubai.version_1.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
@@ -35,7 +37,7 @@ import java.util.UUID;
 /**
  * Created by rodrigo on 12/30/15.
  */
-public class BitcoinWatchOnlyCryptoVaultDao {
+public class BitcoinWatchOnlyCryptoVaultDao implements CryptoVaultDao {
 
     /**
      * Database instance of the plugin.
@@ -140,6 +142,7 @@ public class BitcoinWatchOnlyCryptoVaultDao {
      * @return the list of HierarchyAccounts objects
      * @throws CantExecuteDatabaseOperationException
      */
+    @Override
     public List<HierarchyAccount> getHierarchyAccounts() throws CantExecuteDatabaseOperationException{
         List<HierarchyAccount> hierarchyAccounts = new ArrayList<>();
         DatabaseTable databaseTable = getDatabaseTable(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_ACCOUNTS_TABLE_NAME);
@@ -565,8 +568,9 @@ public class BitcoinWatchOnlyCryptoVaultDao {
      * @param hierarchyAccountId
      * @param ecKey
      * @param cryptoAddress
+     * @param blockchainNetworkType
      */
-    public void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress) throws CantExecuteDatabaseOperationException, UnexpectedResultReturnedFromDatabaseException {
+    public void updateKeyDetailedStatsWithNewAddress(int hierarchyAccountId, ECKey ecKey, CryptoAddress cryptoAddress, BlockchainNetworkType blockchainNetworkType) throws CantExecuteDatabaseOperationException, UnexpectedResultReturnedFromDatabaseException {
         /**
          * If we are not allowed to save detailed information then we will exit
          */
@@ -595,6 +599,7 @@ public class BitcoinWatchOnlyCryptoVaultDao {
 
         DatabaseTableRecord record = databaseTable.getRecords().get(0);
         record.setStringValue(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
+        record.setStringValue(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME, blockchainNetworkType.getCode());
         try {
             databaseTable.updateRecord(record);
         } catch (CantUpdateRecordException e) {
@@ -661,5 +666,23 @@ public class BitcoinWatchOnlyCryptoVaultDao {
     private void throwLoadToMemoryException(Exception e, String tableName) throws CantExecuteDatabaseOperationException{
         String outputMessage = "There was an error loading into memory table " + tableName + ".";
         throw new CantExecuteDatabaseOperationException(CantExecuteDatabaseOperationException.DEFAULT_MESSAGE, e, outputMessage, "Database error.");
+    }
+
+    @Override
+    public int getPublicKeyPosition(String address) throws CantExecuteDatabaseOperationException {
+        DatabaseTable databaseTable = database.getTable(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_TABLE_NAME);
+        databaseTable.addStringFilter(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_ADDRESS_COLUMN_NAME, address, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            throwLoadToMemoryException(e, databaseTable.getTableName());
+        }
+
+        List<DatabaseTableRecord> databaseTableRecords = databaseTable.getRecords();
+        if (databaseTableRecords.size() != 0){
+            return databaseTableRecords.get(0).getIntegerValue(BitcoinWatchOnlyCryptoVaultDatabaseConstants.KEY_MAINTENANCE_DETAIL_KEY_DEPTH_COLUMN_NAME);
+        } else
+            return 0;
     }
 }

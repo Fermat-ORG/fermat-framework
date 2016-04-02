@@ -271,7 +271,7 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
      * @see CommunicationsVPNConnection#sendMessage(FermatMessage)
      */
     @Override
-    public void sendMessage(FermatMessage fermatMessage){
+    public synchronized void sendMessage(FermatMessage fermatMessage){
 
         System.out.println("WsCommunicationVPNClient - sendMessage");
 
@@ -297,22 +297,22 @@ public class WsCommunicationTyrusVPNClient extends Endpoint implements Communica
             /**
              * if Packet is bigger than 1000 Send the message through of sendDividedChain
              */
-//            if((FermatPacketEncoder.encode(fermatPacketRequest)).length() > 1000){
-//
-//                try {
-//                    sendDividedChain(FermatPacketEncoder.encode(fermatPacketRequest));
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//
-//            }else {
+            if((FermatPacketEncoder.encode(fermatPacketRequest)).length() > 1000){
+
+                try {
+                    sendDividedChain(FermatPacketEncoder.encode(fermatPacketRequest));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }else {
 
                  /*
                  * Send the encode packet to the server
                  */
                  vpnClientConnection.getAsyncRemote().sendText(FermatPacketEncoder.encode(fermatPacketRequest));
 
-//            }
+            }
 
         }else{
             throw new RuntimeException("Client Connection is Close");

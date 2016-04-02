@@ -103,8 +103,20 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
                     System.out.print("\n\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. CONFIRM negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
                 }
             }else{
-                System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + "transactionId: " + transactionId + " ****\n");
+                if(negotiation.getStatus().getCode().equals(NegotiationStatus.CANCELLED.getCode())) {
+                    System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CANCEL - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
+                }else{
+                    System.out.print("\n\n**** 4) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. NEGOTIATION negotiationType: " + negotiationType.getCode() + " transactionId: " + transactionId + " ****\n");
+                }
             }
+
+//            CustomerBrokerUpdate negotiationTransactionTest = getRegisterCustomerBrokerUpdateNegotiationTranasctionFromNegotiationId(negotiation.getNegotiationId());
+//            System.out.print("\n**** 4.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - DAO. NEGOTIATION DATE OF DATEBASE****\n" +
+//                    "\n - Customer: " + negotiationTransactionTest.getPublicKeyCustomer() +
+//                    "\n - Broker: " + negotiationTransactionTest.getPublicKeyBroker() +
+//                    "\n - negotiationId: " + negotiationTransactionTest.getNegotiationId() +
+//                    "\n - transactionId: " + negotiationTransactionTest.getTransactionId() +
+//                    "\n - Status: " + negotiationTransactionTest.getStatusTransaction());
 
         } catch (CantInsertRecordException e){
             throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException (e.getMessage(), e, "Customer Broker Update Negotiation Transaction", "Cant create new Customer Broker Update Negotiation Transaction, insert database problems.");
@@ -197,34 +209,36 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
 
     //GET LIST NEW NEGOTIATION TRANSACTION
     public List<CustomerBrokerUpdate> getAllRegisterCustomerBrokerUpdateNegotiationTranasction() throws CantRegisterCustomerBrokerUpdateNegotiationTransactionException{
-        List<CustomerBrokerUpdate> getTransactions = null;
 
         try {
+            List<CustomerBrokerUpdate> getTransactions = new ArrayList<>();
+
             List<DatabaseTableRecord> record;
             DatabaseTable table = this.database.getTable(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME);
-            if (table == null) {
-                throw new CantGetUserDeveloperIdentitiesException("Cant check if Customer Broker Update exists", "Customer Broker Update Negotiation Transaction", "");
-            }
+            if (table == null)
+                throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker new exists", "Customer Broker New Negotiation Transaction", "");
+
             table.loadToMemory();
             record = table.getRecords();
             if (record.size() == 0)
-                throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException("The number of records is 0 ", null, "", "");
+                return getTransactions;
 
             for (DatabaseTableRecord records : record) {
                 getTransactions.add(getCustomerBrokerUpdateFromRecord(records));
             }
 
+            return getTransactions;
+
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", "Cant load " + CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME + " table in memory.");
+            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(em.getMessage(), em, "Customer Broker New Negotiation Transaction not return register", "Cant load " + CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
-            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction not return register", "unknown failure.");
+            throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker New Negotiation Transaction not return register", "unknown failure.");
         }
 
-        return getTransactions;
     }
 
     //GET LIST NEW NEGOTIATION TRANSACTION PENDING TO SUBMIT
-    public List<CustomerBrokerUpdate> getPendingToSubmitNegotiation() throws CantGetNegotiationTransactionListException{
+    public List<CustomerBrokerUpdate>   getPendingToSubmitNegotiation() throws CantGetNegotiationTransactionListException{
 
         try {
 
@@ -276,7 +290,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             if (table == null)
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if customer broker update exists", "Customer Broker New Negotiation Transaction", "");
 
-            table.addStringFilter(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATUS_TRANSACTION_COLUMN_NAME, NegotiationTransactionStatus.PENDING_CONFIRMATION.getCode(), DatabaseFilterType.EQUAL);
+            table.addStringFilter(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_STATUS_TRANSACTION_COLUMN_NAME, NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM.getCode(), DatabaseFilterType.EQUAL);
             table.loadToMemory();
             record = table.getRecords();
             if (record.isEmpty())
@@ -391,6 +405,25 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
 
     }
 
+    //GET EVENT TYPE OF TRANSACTION
+    public String getEventStatus(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
+        try{
+
+            DatabaseTable table = this.database.getTable(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_TABLE_NAME);
+            table.addUUIDFilter(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_ID_COLUMN_NAME, eventId, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+            List<DatabaseTableRecord> records = table.getRecords();
+            checkDatabaseRecords(records);
+            String value=records.get(0).getStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_EVENT_STATUS_COLUMN_NAME);
+
+            return value;
+
+        } catch (CantLoadTableToMemoryException e) {
+            throw new UnexpectedResultReturnedFromDatabaseException(e,"Getting value from database","Cannot load the database table");
+        }
+
+    }
+
     //SAVE NEW EVENT
     public void saveNewEventTansaction(String eventType, String eventSource) throws CantSaveEventException {
 
@@ -440,7 +473,7 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             //            System.out.print("\n\n**** 19.1) MOCK NEGOTIATION TRANSACTION - NEGOTIATION TRANSMISSION - DAO - REGISTER NEW EVENT ****\n");
 
         }  catch (CantLoadTableToMemoryException e) {
-            throw new CantRegisterCustomerBrokerUpdateEventException(e.DEFAULT_MESSAGE, e, "Customer Broker Update Negotiation Transaction Update Event Status Not Found", "unknown failure");
+            throw new CantRegisterCustomerBrokerUpdateEventException(CantLoadTableToMemoryException.DEFAULT_MESSAGE, e, "Customer Broker Update Negotiation Transaction Update Event Status Not Found", "unknown failure");
         }
 
     }

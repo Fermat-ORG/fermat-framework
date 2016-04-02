@@ -35,6 +35,7 @@ import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enu
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAnswerQuotesRequestException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDenyConnectionRequestException;
+import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantDisconnectException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantListPendingQuotesRequestsException;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantRequestConnectionException;
@@ -125,14 +126,12 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
     /**
      * Return all the pending requests depending on the action informed through parameters.
-     *
-     * @param actions  the list of actions that we need to bring.
-     *
+     **
      * @return a list of CryptoBrokerConnectionRequest instances.
      *
      * @throws CantListPendingConnectionRequestsException  if something goes wrong.
      */
-    public final List<CryptoBrokerConnectionRequest> listAllPendingRequests(final List<ConnectionRequestAction> actions) throws CantListPendingConnectionRequestsException {
+    public final List<CryptoBrokerConnectionRequest> listPendingConnectionUpdates() throws CantListPendingConnectionRequestsException {
 
         try {
 
@@ -141,6 +140,11 @@ public final class CryptoBrokerActorNetworkServiceDao {
             final DatabaseTable connectionNewsTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
 
             connectionNewsTable.addFermatEnumFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME, protocolState, DatabaseFilterType.EQUAL);
+
+            List<ConnectionRequestAction> actions = new ArrayList<>();
+
+            actions.add(ConnectionRequestAction.ACCEPT);
+            actions.add(ConnectionRequestAction.DENY);
 
             final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
 
@@ -199,6 +203,43 @@ public final class CryptoBrokerActorNetworkServiceDao {
             final DatabaseTableFilterGroup filterGroup = connectionNewsTable.getNewFilterGroup(tableFilters, null, DatabaseFilterOperator.OR);
 
             connectionNewsTable.setFilterGroup(filterGroup);
+
+            connectionNewsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = connectionNewsTable.getRecords();
+
+            final List<CryptoBrokerConnectionRequest> cryptoAddressRequests = new ArrayList<>();
+
+            for (final DatabaseTableRecord record : records)
+                cryptoAddressRequests.add(buildConnectionNewRecord(record));
+
+            return cryptoAddressRequests;
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantListPendingConnectionRequestsException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantListPendingConnectionRequestsException(e, "", "There is a problem with some enum code."                                                                                );
+        }
+    }
+
+    public final List<CryptoBrokerConnectionRequest> listPendingConnectionNews(final Actors actorType) throws CantListPendingConnectionRequestsException {
+
+        try {
+
+            final ProtocolState protocolState = ProtocolState.PENDING_LOCAL_ACTION;
+
+            final ConnectionRequestAction action = ConnectionRequestAction.REQUEST;
+
+            final DatabaseTable connectionNewsTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            connectionNewsTable.addFermatEnumFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME, protocolState, DatabaseFilterType.EQUAL);
+
+            if (actorType != null)
+                connectionNewsTable.addFermatEnumFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME, actorType, DatabaseFilterType.EQUAL);
+
+            connectionNewsTable.addFermatEnumFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, action, DatabaseFilterType.EQUAL);
 
             connectionNewsTable.loadToMemory();
 
@@ -302,8 +343,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
         }
     }
 
-    public final void createConnectionRequest(final UUID                              newId            ,
-                                              final CryptoBrokerConnectionInformation brokerInformation,
+    public final void createConnectionRequest(final CryptoBrokerConnectionInformation brokerInformation,
                                               final ProtocolState                     state            ,
                                               final RequestType                       type             ,
                                               final ConnectionRequestAction           action           ) throws CantRequestConnectionException {
@@ -311,7 +351,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
         try {
 
             final CryptoBrokerConnectionRequest connectionNew = new CryptoBrokerConnectionRequest(
-                    newId                                      ,
+                    brokerInformation.getConnectionId()        ,
                     brokerInformation.getSenderPublicKey()     ,
                     brokerInformation.getSenderActorType()     ,
                     brokerInformation.getSenderAlias()         ,
@@ -350,7 +390,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
      */
     public void denyConnection(final UUID          requestId,
                                final ProtocolState state    ) throws CantDenyConnectionRequestException ,
-                                                                     ConnectionRequestNotFoundException {
+            ConnectionRequestNotFoundException {
 
         if (requestId == null)
             throw new CantDenyConnectionRequestException(null, "", "The requestId is required, can not be null");
@@ -392,6 +432,90 @@ public final class CryptoBrokerActorNetworkServiceDao {
     }
 
     /**
+     * Through this method you can save a denial for a connection request.
+     * It can be LOCAL or REMOTE.
+     * Possible states: PROCESSING_SEND, PROCESSING_RECEIVE.
+     *
+     * @param requestId id of the connection request.
+     * @param state     PROCESSING_SEND, PROCESSING_RECEIVE
+     *
+     * @throws CantDisconnectException    if something goes wrong.
+     * @throws ConnectionRequestNotFoundException    if we cannot find the request.
+     */
+    public void disconnectConnection(final UUID          requestId,
+                                     final ProtocolState state    ) throws CantDisconnectException            ,
+            ConnectionRequestNotFoundException {
+
+        if (requestId == null)
+            throw new CantDisconnectException(null, "", "The requestId is required, can not be null");
+
+        if (state == null)
+            throw new CantDisconnectException(null, "", "The state is required, can not be null");
+
+        try {
+
+            final ConnectionRequestAction action = ConnectionRequestAction.DISCONNECT;
+
+            final DatabaseTable connectionNewsTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            connectionNewsTable.addUUIDFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            connectionNewsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = connectionNewsTable.getRecords();
+
+            if (!records.isEmpty()) {
+
+                final DatabaseTableRecord record = records.get(0);
+
+                record.setFermatEnum(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME , state );
+                record.setFermatEnum(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, action);
+
+                connectionNewsTable.updateRecord(record);
+
+            } else
+                throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor connection request with that requestId.");
+
+        } catch (final CantUpdateRecordException e) {
+
+            throw new CantDisconnectException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot update the record.");
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantDisconnectException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        }
+    }
+
+
+    public CryptoBrokerConnectionRequest getConnectionRequest(final UUID requestId) throws CantFindRequestException, ConnectionRequestNotFoundException {
+
+        if (requestId == null)
+            throw new CantFindRequestException(null, "", "The requestId is required, can not be null");
+
+        try {
+
+            final DatabaseTable connectionRequestTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+
+            connectionRequestTable.addUUIDFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
+
+            connectionRequestTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = connectionRequestTable.getRecords();
+
+            if (!records.isEmpty())
+                return buildConnectionNewRecord(records.get(0));
+            else
+                throw new ConnectionRequestNotFoundException(null, "requestId: "+requestId, "Cannot find an actor Connection request with that requestId.");
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantFindRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantFindRequestException(e, "", "Exception reading records of the table Cannot recognize the codes of the currencies.");
+        }
+    }
+
+    /**
      * change the protocol state
      *
      * @param requestId id of the address exchange request we want to confirm.
@@ -402,7 +526,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
      */
     public void changeProtocolState(final UUID          requestId,
                                     final ProtocolState state    ) throws CantChangeProtocolStateException,
-                                                                          ConnectionRequestNotFoundException  {
+            ConnectionRequestNotFoundException  {
 
         if (requestId == null)
             throw new CantChangeProtocolStateException(null, "", "The requestId is required, can not be null");
@@ -451,7 +575,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
      * @throws ConnectionRequestNotFoundException      if i can't find the record.
      */
     public void confirmActorConnectionRequest(final UUID requestId) throws CantConfirmConnectionRequestException,
-                                                                           ConnectionRequestNotFoundException   {
+            ConnectionRequestNotFoundException   {
 
         if (requestId == null) {
             throw new CantConfirmConnectionRequestException(null, "", "The requestId is required, can not be null");
@@ -493,21 +617,12 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
     public boolean isPendingConnectionUpdates() throws CantListPendingConnectionRequestsException {
 
-        List<ConnectionRequestAction> actions = new ArrayList<>();
-
-        actions.add(ConnectionRequestAction.ACCEPT);
-        actions.add(ConnectionRequestAction.DENY  );
-
-        return this.listAllPendingRequests(actions) != null && !(this.listAllPendingRequests(actions).isEmpty());
+        return this.listPendingConnectionUpdates() != null && !(this.listPendingConnectionUpdates().isEmpty());
     }
 
     public boolean isPendingConnectionRequests() throws CantListPendingConnectionRequestsException {
 
-        List<ConnectionRequestAction> actions = new ArrayList<>();
-
-        actions.add(ConnectionRequestAction.REQUEST   );
-
-        return this.listAllPendingRequests(actions) != null && !(this.listAllPendingRequests(actions).isEmpty());
+        return this.listPendingConnectionNews(null) != null && !(this.listPendingConnectionNews(null).isEmpty());
     }
 
     /**
@@ -523,7 +638,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
      */
     public void acceptConnection(final UUID          requestId,
                                  final ProtocolState state    ) throws CantAcceptConnectionRequestException,
-                                                                       ConnectionRequestNotFoundException  {
+            ConnectionRequestNotFoundException  {
 
         if (requestId == null)
             throw new CantAcceptConnectionRequestException(null, "", "The requestId is required, can not be null");
@@ -624,7 +739,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
         }
     }
 
-    public CryptoBrokerActorNetworkServiceQuotesRequest getQuotesRequest(final UUID requestId) throws CantFindRequestException {
+    public CryptoBrokerActorNetworkServiceQuotesRequest getQuotesRequest(final UUID requestId) throws CantFindRequestException, QuotesRequestNotFoundException {
 
         if (requestId == null)
             throw new CantFindRequestException(null, "", "The requestId is required, can not be null");
@@ -642,7 +757,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
             if (!records.isEmpty())
                 return buildQuotesRequestObject(records.get(0));
             else
-                return null;
+                throw new QuotesRequestNotFoundException(null, "", "Cannot find a quotes request with that id.");
 
         } catch (final CantLoadTableToMemoryException e) {
 
@@ -656,12 +771,12 @@ public final class CryptoBrokerActorNetworkServiceDao {
         }
     }
 
-    public final CryptoBrokerExtraData<CryptoBrokerQuote> createQuotesRequest(final UUID                    requestId            ,
-                                                                              final String                  requesterPublicKey   ,
-                                                                              final Actors                  requesterActorType   ,
-                                                                              final String                  cryptoBrokerPublicKey,
-                                                                              final ProtocolState           state                ,
-                                                                              final RequestType             type                 ) throws CantRequestQuotesException {
+    public final CryptoBrokerActorNetworkServiceQuotesRequest createQuotesRequest(final UUID                    requestId            ,
+                                                                                  final String                  requesterPublicKey   ,
+                                                                                  final Actors                  requesterActorType   ,
+                                                                                  final String                  cryptoBrokerPublicKey,
+                                                                                  final ProtocolState           state                ,
+                                                                                  final RequestType             type                 ) throws CantRequestQuotesException {
 
         try {
 
@@ -709,6 +824,8 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             quotesRequestTable.addUUIDFilter(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_ID_COLUMN_NAME, requestId, DatabaseFilterType.EQUAL);
 
+            quotesRequestTable.loadToMemory();
+
             final List<DatabaseTableRecord> records = quotesRequestTable.getRecords();
 
             DatabaseTableRecord quotesRequestRecord;
@@ -745,6 +862,9 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             database.executeTransaction(databaseTransaction);
 
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantAnswerQuotesRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
         } catch (final DatabaseTransactionFailedException e) {
 
             throw new CantAnswerQuotesRequestException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot insert all the records.");
@@ -836,7 +956,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
         );
     }
 
-    private List<CryptoBrokerQuote> listQuotes(UUID requestId) throws CantListPendingQuotesRequestsException {
+    private ArrayList<CryptoBrokerQuote> listQuotes(UUID requestId) throws CantListPendingQuotesRequestsException {
 
         try {
             final DatabaseTable quotesTable = database.getTable(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_TABLE_NAME);
@@ -847,12 +967,12 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
             final List<DatabaseTableRecord> records = quotesTable.getRecords();
 
-            List<CryptoBrokerQuote> quotesList = new ArrayList<>();
+            ArrayList<CryptoBrokerQuote> quotesList = new ArrayList<>();
 
             for(DatabaseTableRecord record : records) {
 
-                String merchandiseString         = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_TYPE_COLUMN_NAME     );
-                String merchandiseTypeString     = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_COLUMN_NAME          );
+                String merchandiseString         = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_COLUMN_NAME          );
+                String merchandiseTypeString     = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_TYPE_COLUMN_NAME     );
                 String paymentCurrencyString     = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_COLUMN_NAME     );
                 String paymentCurrencyTypeString = record.getStringValue(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_TYPE_COLUMN_NAME);
                 Float  price                     = record.getFloatValue (CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PRICE_COLUMN_NAME                );
@@ -861,11 +981,11 @@ public final class CryptoBrokerActorNetworkServiceDao {
                 Currency paymentCurrency = CurrencyHelper.getCurrency(paymentCurrencyTypeString, paymentCurrencyString);
 
                 quotesList.add(
-                    new CryptoBrokerQuote(
-                            merchandise,
-                            paymentCurrency,
-                            price
-                    )
+                        new CryptoBrokerQuote(
+                                merchandise,
+                                paymentCurrency,
+                                price
+                        )
                 );
             }
 
@@ -919,7 +1039,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
     }
 
     public void confirmQuotesRequest(final UUID requestId) throws CantConfirmQuotesRequestException,
-                                                                  QuotesRequestNotFoundException   {
+            QuotesRequestNotFoundException   {
 
         if (requestId == null) {
             throw new CantConfirmQuotesRequestException(null, "", "The requestId is required, can not be null");
@@ -1077,7 +1197,7 @@ public final class CryptoBrokerActorNetworkServiceDao {
 
 
     private byte[] getProfileImage(final String publicKey) throws CantGetProfileImageException,
-                                                                  FileNotFoundException       {
+            FileNotFoundException       {
 
         try {
 

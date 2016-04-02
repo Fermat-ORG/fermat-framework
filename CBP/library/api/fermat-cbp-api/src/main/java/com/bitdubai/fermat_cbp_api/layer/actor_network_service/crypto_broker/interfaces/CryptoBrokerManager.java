@@ -44,6 +44,8 @@ public interface CryptoBrokerManager extends FermatManager {
      */
     void exposeIdentity(final CryptoBrokerExposingData cryptoBrokerExposingData) throws CantExposeIdentityException;
 
+    void updateIdentity(final CryptoBrokerExposingData cryptoBrokerExposingData) throws CantExposeIdentityException;
+
     /**
      * Through the method <code>exposeIdentities</code> we can expose the crypto identities created in the device.
      * The information given will be shown to all the crypto customers.
@@ -183,6 +185,16 @@ public interface CryptoBrokerManager extends FermatManager {
     void answerQuotesRequest(UUID                    requestId ,
                              long                    updateTime,
                              List<CryptoBrokerQuote> quotes    ) throws CantAnswerQuotesRequestException, QuotesRequestNotFoundException;
+
+    /**
+     * Through the method <code>confirmQuotesRequest</code> we can mark as done and confirmed a pending quotes request.
+     *
+     * @param requestId  id of the quotes request to confirm.
+     *
+     * @throws CantConfirmException                if something goes wrong.
+     * @throws QuotesRequestNotFoundException      if the quotes request cannot be found.
+     */
+    void confirmQuotesRequest(final UUID requestId) throws CantConfirmException, QuotesRequestNotFoundException;
 
     /**
      * Through the method <code>confirm</code> we can mark as done and confirmed a pending connection new or update.

@@ -19,15 +19,15 @@ import java.util.UUID;
  * */
 public interface DatabaseFactory {
 
-    public void createTable(UUID ownerId, DatabaseTableFactory tableFactory) throws InvalidOwnerIdException, CantCreateTableException;
+    void createTable(UUID ownerId, DatabaseTableFactory tableFactory) throws InvalidOwnerIdException, CantCreateTableException;
 
-    public DatabaseTableFactory newTableFactory(UUID ownerId, String tableName) throws InvalidOwnerIdException;
+    DatabaseTableFactory newTableFactory(UUID ownerId, String tableName) throws InvalidOwnerIdException;
 
-    public void createTable(DatabaseTableFactory tableFactory) throws CantCreateTableException;
+    void createTable(DatabaseTableFactory tableFactory) throws CantCreateTableException;
 
-    public DatabaseTableFactory newTableFactory(String tableName);
+    DatabaseTableFactory newTableFactory(String tableName);
 
-    public void createDatabase(String databaseName) throws CantCreateDatabaseException;
+    void createDatabase(String databaseName) throws CantCreateDatabaseException;
 
     
     

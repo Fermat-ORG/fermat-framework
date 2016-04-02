@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cbp_plugin.layer.network_service.transaction_transmission.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOperator;
@@ -37,6 +38,7 @@ import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 23/11/15.
+ * Updated by Gabriel Araujo (gabe_512@hotmail.com) on 10/02/16.
  */
 public class TransactionTransmissionContractHashDao {
 
@@ -46,8 +48,8 @@ public class TransactionTransmissionContractHashDao {
     private Database database;
 
     public TransactionTransmissionContractHashDao(final PluginDatabaseSystem pluginDatabaseSystem,
-                                         final UUID                 pluginId           ,
-                                         final Database database) {
+                                                  final UUID                 pluginId            ,
+                                                  final Database             database            ) {
 
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
@@ -59,17 +61,17 @@ public class TransactionTransmissionContractHashDao {
 
             database = this.pluginDatabaseSystem.openDatabase(
                     this.pluginId,
-                    CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME
+                    TransactionTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME
             );
 
         } catch (DatabaseNotFoundException e) {
 
             try {
 
-                CommunicationNetworkServiceDatabaseFactory databaseFactory = new CommunicationNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+                TransactionTransmissionDatabaseFactory databaseFactory = new TransactionTransmissionDatabaseFactory(pluginDatabaseSystem);
                 database = databaseFactory.createDatabase(
                         pluginId,
-                        CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME
+                        TransactionTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME
                 );
 
             } catch (CantCreateDatabaseException f) {
@@ -104,7 +106,7 @@ public class TransactionTransmissionContractHashDao {
      * @return DatabaseTable
      */
     DatabaseTable getDatabaseTable() {
-        return getDataBase().getTable(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
+        return getDataBase().getTable(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
     }
 
     public void saveBusinessTransmissionRecord(BusinessTransactionMetadata businessTransactionMetadata) throws CantInsertRecordDataBaseException {
@@ -126,23 +128,66 @@ public class TransactionTransmissionContractHashDao {
         }
     }
 
+    public void saveBusinessTransmissionRecord(BusinessTransactionMetadata businessTransactionMetadata,UUID transmissionId) throws CantInsertRecordDataBaseException {
+
+        try {
+
+            DatabaseTable databaseTable = getDatabaseTable();
+            DatabaseTableRecord databaseTableEmptyRecord = databaseTable.getEmptyRecord();
+
+            databaseTableEmptyRecord = buildDatabaseRecord(databaseTableEmptyRecord, businessTransactionMetadata, transmissionId);
+
+            databaseTable.insertRecord(databaseTableEmptyRecord);
+
+        } catch (CantInsertRecordException e) {
+
+            throw new CantInsertRecordDataBaseException(CantInsertRecordException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and I cannot insert the record.","");
+        } catch (Exception e){
+            throw new CantInsertRecordDataBaseException(CantInsertRecordException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and I cannot insert the record.","");
+        }
+    }
+
     private DatabaseTableRecord buildDatabaseRecord(DatabaseTableRecord record,
                                                     BusinessTransactionMetadata businessTransactionMetadata) {
 
-        record.setUUIDValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME, businessTransactionMetadata.getTransactionId());
+        record.setUUIDValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME, businessTransactionMetadata.getTransactionId());
         //if(businessTransactionMetadata.getRequestId()!=null) record.setUUIDValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_REQUEST_ID_COLUMN_NAME,  businessTransactionMetadata.getRequestId());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_HASH_COLUMN_NAME, businessTransactionMetadata.getContractHash());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_STATUS_COLUMN_NAME, businessTransactionMetadata.getContractTransactionStatus().getCode());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_ID_COLUMN_NAME, businessTransactionMetadata.getContractId());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_PUBLIC_KEY_COLUMN_NAME , businessTransactionMetadata.getSenderId());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_TYPE_COLUMN_NAME, businessTransactionMetadata.getSenderType().getCode());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_PUBLIC_KEY_COLUMN_NAME, businessTransactionMetadata.getReceiverId());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_TYPE_COLUMN_NAME, businessTransactionMetadata.getReceiverType().getCode());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_NEGOTIATION_ID_COLUMN_NAME, businessTransactionMetadata.getNegotiationId());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSACTION_TYPE_COLUMN_NAME, businessTransactionMetadata.getType().getCode());
-        record.setLongValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME, businessTransactionMetadata.getTimestamp());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME, businessTransactionMetadata.getState().getCode());
-        record.setStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME, Boolean.FALSE.toString());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_HASH_COLUMN_NAME, businessTransactionMetadata.getContractHash());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_STATUS_COLUMN_NAME, businessTransactionMetadata.getContractTransactionStatus().getCode());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_ID_COLUMN_NAME, businessTransactionMetadata.getContractId());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_PUBLIC_KEY_COLUMN_NAME , businessTransactionMetadata.getSenderId());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_TYPE_COLUMN_NAME, businessTransactionMetadata.getSenderType().getCode());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_PUBLIC_KEY_COLUMN_NAME, businessTransactionMetadata.getReceiverId());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_TYPE_COLUMN_NAME, businessTransactionMetadata.getReceiverType().getCode());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_NEGOTIATION_ID_COLUMN_NAME, businessTransactionMetadata.getNegotiationId());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSACTION_TYPE_COLUMN_NAME, businessTransactionMetadata.getType().getCode());
+        record.setLongValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME, businessTransactionMetadata.getTimestamp());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME, businessTransactionMetadata.getState().getCode());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME, Boolean.toString(businessTransactionMetadata.isPendingToRead()));
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_REMOTE_BUSINESS_TRANSACTION, businessTransactionMetadata.getRemoteBusinessTransaction().getCode());
+
+        return record;
+    }
+
+    private DatabaseTableRecord buildDatabaseRecord(DatabaseTableRecord record,
+                                                    BusinessTransactionMetadata businessTransactionMetadata,
+                                                    UUID transmissionId) {
+
+        record.setUUIDValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME, transmissionId);
+        //if(businessTransactionMetadata.getRequestId()!=null) record.setUUIDValue(CryptoTransmissionNetworkServiceDatabaseConstants.CRYPTO_TRANSMISSION_METADATA_REQUEST_ID_COLUMN_NAME,  businessTransactionMetadata.getRequestId());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_HASH_COLUMN_NAME, businessTransactionMetadata.getContractHash());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_STATUS_COLUMN_NAME, businessTransactionMetadata.getContractTransactionStatus().getCode());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_ID_COLUMN_NAME, businessTransactionMetadata.getContractId());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_PUBLIC_KEY_COLUMN_NAME , businessTransactionMetadata.getSenderId());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_TYPE_COLUMN_NAME, businessTransactionMetadata.getSenderType().getCode());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_PUBLIC_KEY_COLUMN_NAME, businessTransactionMetadata.getReceiverId());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_TYPE_COLUMN_NAME, businessTransactionMetadata.getReceiverType().getCode());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_NEGOTIATION_ID_COLUMN_NAME, businessTransactionMetadata.getNegotiationId());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSACTION_TYPE_COLUMN_NAME, businessTransactionMetadata.getType().getCode());
+        record.setLongValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME, businessTransactionMetadata.getTimestamp());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME, businessTransactionMetadata.getState().getCode());
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_PENDING_FLAG_COLUMN_NAME, Boolean.toString(businessTransactionMetadata.isPendingToRead()));
+        record.setStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_REMOTE_BUSINESS_TRANSACTION, businessTransactionMetadata.getRemoteBusinessTransaction().getCode());
 
         return record;
     }
@@ -164,7 +209,7 @@ public class TransactionTransmissionContractHashDao {
             businessTransactionMetadata.setState(transactionTransmissionStates);
 
 
-            DatabaseTable addressExchangeRequestTable = database.getTable(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
+            DatabaseTable addressExchangeRequestTable = database.getTable(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
             DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
             /*
              * 1- Create the record to the entity
@@ -181,7 +226,7 @@ public class TransactionTransmissionContractHashDao {
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Table Name: " + CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
+            contextBuffer.append("Table Name: " + TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
@@ -209,7 +254,7 @@ public class TransactionTransmissionContractHashDao {
 
             DatabaseTable databaseTable = getDatabaseTable();
 
-            databaseTable.addUUIDFilter(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
+            databaseTable.addUUIDFilter(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME, transmissionId, DatabaseFilterType.EQUAL);
 
             databaseTable.loadToMemory();
 
@@ -236,24 +281,38 @@ public class TransactionTransmissionContractHashDao {
 
     private BusinessTransactionMetadata buildBusinessTransactionRecord(DatabaseTableRecord record) throws InvalidParameterException {
 
-        UUID transactionId = record.getUUIDValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME);
-        String contractHash = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_HASH_COLUMN_NAME);
-        String contractStatus = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_STATUS_COLUMN_NAME);
-        String contractId = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_ID_COLUMN_NAME);
-        String senderPublicKey = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_PUBLIC_KEY_COLUMN_NAME);
-        String senderType = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_TYPE_COLUMN_NAME);
-        String receiverPublicKey = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
-        String receiverType = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_TYPE_COLUMN_NAME);
-        String negotiationId = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_NEGOTIATION_ID_COLUMN_NAME);
-        String type = record.getStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSACTION_TYPE_COLUMN_NAME);
-        long timestamp = record.getLongValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME);
-        String state= record.getStringValue(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME);
+        UUID transactionId = record.getUUIDValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME);
+        String contractHash = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_HASH_COLUMN_NAME);
+        String contractStatus = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_STATUS_COLUMN_NAME);
+        String contractId = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_ID_COLUMN_NAME);
+        String senderPublicKey = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_PUBLIC_KEY_COLUMN_NAME);
+        String senderType = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_TYPE_COLUMN_NAME);
+        String receiverPublicKey = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
+        String receiverType = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_RECEIVER_TYPE_COLUMN_NAME);
+        String negotiationId = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_NEGOTIATION_ID_COLUMN_NAME);
+        String type = record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSACTION_TYPE_COLUMN_NAME);
+        long timestamp = record.getLongValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TIMESTAMP_COLUMN_NAME);
+        String state= record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME);
 
         ContractTransactionStatus recordContractStatus=ContractTransactionStatus.getByCode(contractStatus);
         PlatformComponentType recordReceiverType=PlatformComponentType.getByCode(receiverType);
         PlatformComponentType recordSenderType=PlatformComponentType.getByCode(senderType);
         BusinessTransactionTransactionType recordTransactionType=BusinessTransactionTransactionType.getByCode(type);
         TransactionTransmissionStates transactionTransmissionStates=TransactionTransmissionStates.getByCode(state);
+        Plugins remoteBusinessTransaction;
+        String pluginCode=record.getStringValue(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_REMOTE_BUSINESS_TRANSACTION);
+        if(pluginCode==null||pluginCode.isEmpty()){
+            //For now, I'll put transaction transmission
+            remoteBusinessTransaction=Plugins.TRANSACTION_TRANSMISSION;
+        }else{
+            try{
+                remoteBusinessTransaction=Plugins.getByCode(pluginCode);
+            } catch (InvalidParameterException exception){
+                //If the code is invalid, I''l set the Default.
+                remoteBusinessTransaction=Plugins.TRANSACTION_TRANSMISSION;
+            }
+        }
+
 
         return new BusinessTransactionMetadataRecord(
                 contractHash,
@@ -267,14 +326,15 @@ public class TransactionTransmissionContractHashDao {
                 recordTransactionType,
                 timestamp,
                 transactionId,
-                transactionTransmissionStates
+                transactionTransmissionStates,
+                remoteBusinessTransaction
                 );
 
     }
 
     public void confirmReception(UUID transactionID) throws CantUpdateRecordDataBaseException, PendingRequestNotFoundException, CantGetTransactionTransmissionException {
         try {
-
+            System.out.print("\n2)transactionId: "+ transactionID+"\n");
             BusinessTransactionMetadata businessTransactionMetadata = getMetadata(transactionID);
 
             businessTransactionMetadata.confirmRead();
@@ -285,7 +345,7 @@ public class TransactionTransmissionContractHashDao {
             throw new PendingRequestNotFoundException(null, "RequestID: "+transactionID.toString(), "Can not find an address exchange request with the given request id.");
         } catch (CantUpdateRecordDataBaseException e) {
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: " + TransactionTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
@@ -309,18 +369,40 @@ public class TransactionTransmissionContractHashDao {
 
         try {
 
-            DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
+//            DatabaseTableRecord databaseTableRecord = getDatabaseTable().getEmptyRecord();
+//
+//            DatabaseTableRecord entityRecord = buildDatabaseRecord(databaseTableRecord, businessTransactionMetadata);
+//            DatabaseTableFilter filter = getDatabaseTable().getEmptyTableFilter();
+//            filter.setType(DatabaseFilterType.EQUAL);
+//            filter.setValue(businessTransactionMetadata.getTransactionId().toString());
+//            filter.setColumn(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_FIRST_KEY_COLUMN);
+//
+//            System.out.print("\n3)transactionId: "+ businessTransactionMetadata.getTransactionId().toString()+". COLUMN: "+TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_FIRST_KEY_COLUMN+"\n");
+//            /*
+//             * 2.- Create a new transaction and execute
+//             */
+//            DatabaseTransaction transaction = getDataBase().newTransaction();
+//            getDatabaseTable().addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+//            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
+//            getDataBase().executeTransaction(transaction);
 
-            DatabaseTableRecord entityRecord = buildDatabaseRecord(databaseTableRecord, businessTransactionMetadata);
+            //TODO YORDIN: se cambio el filter, ya que estaba editando todas las transacciones
+            DatabaseTable incomingNotificationtable = getDatabaseTable();
 
-            DatabaseTransaction transaction = getDataBase().newTransaction();
-            transaction.addRecordToUpdate(getDatabaseTable(), entityRecord);
-            getDataBase().executeTransaction(transaction);
+            DatabaseTableRecord emptyRecord = getDatabaseTable().getEmptyRecord();
+
+            DatabaseTableRecord entityRecord = buildDatabaseRecord(emptyRecord, businessTransactionMetadata);
+
+            DatabaseTransaction transaction = database.newTransaction();
+            incomingNotificationtable.addUUIDFilter(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME, businessTransactionMetadata.getTransactionId(), DatabaseFilterType.EQUAL);
+
+            transaction.addRecordToUpdate(incomingNotificationtable, entityRecord);
+            database.executeTransaction(transaction);
 
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            contextBuffer.append("Database Name: " + TransactionTransmissionNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
@@ -344,7 +426,7 @@ public class TransactionTransmissionContractHashDao {
     public List<BusinessTransactionMetadata> findAllToSend() throws CantReadRecordDataBaseException {
 
         Map<String, Object> filters = new HashMap<>();
-        filters.put(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME,
+        filters.put(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_STATE_COLUMN_NAME,
                 TransactionTransmissionStates.PRE_PROCESSING_SEND.getCode());
         if (filters == null ||
                 filters.isEmpty()) {
@@ -387,7 +469,7 @@ public class TransactionTransmissionContractHashDao {
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Table Name: " + CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
+            contextBuffer.append("Table Name: " + TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
@@ -455,7 +537,7 @@ public class TransactionTransmissionContractHashDao {
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Table Name: " + CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
+            contextBuffer.append("Table Name: " + TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
@@ -480,7 +562,7 @@ public class TransactionTransmissionContractHashDao {
 
         try {
 
-            DatabaseTable addressExchangeRequestTable = database.getTable(CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
+            DatabaseTable addressExchangeRequestTable = database.getTable(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
             DatabaseTableRecord entityRecord = addressExchangeRequestTable.getEmptyRecord();
             /*
              * 1- Create the record to the entity
@@ -497,7 +579,7 @@ public class TransactionTransmissionContractHashDao {
         } catch (DatabaseTransactionFailedException databaseTransactionFailedException) {
 
             StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Table Name: " + CommunicationNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
+            contextBuffer.append("Table Name: " + TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
 
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";

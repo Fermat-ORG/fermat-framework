@@ -10,7 +10,14 @@ import java.util.UUID;
 public final class WalletUtilities {
 
     //VARIABLE DECLARATION
-
+    public static String WALLET_PUBLIC_KEY = "walletPublicKeyTest";
+    public static String DEFAULT_MEMO_REDEMPTION = "Asset Redeemed";
+    public static String DEFAULT_MEMO_ISSUING = "Asset Created";
+    public static String DEFAULT_MEMO_DISTRIBUTION = "Asset Delivered";
+    public static String DEFAULT_MEMO_APPROPRIATION = "Asset Appropriated";
+    public static String DEFAULT_MEMO_SELL = "Asset Sold";
+    public static String DEFAULT_MEMO_BUY = "Asset Bought";
+    public static String DEFAULT_MEMO_ROLLBACK = "Transaction rollback";
     //CONSTRUCTORS
 
     private WalletUtilities() {

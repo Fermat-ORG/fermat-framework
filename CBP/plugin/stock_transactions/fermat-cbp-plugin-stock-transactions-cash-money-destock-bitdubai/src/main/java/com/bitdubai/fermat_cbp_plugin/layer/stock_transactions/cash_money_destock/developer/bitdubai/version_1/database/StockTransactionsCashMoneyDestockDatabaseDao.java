@@ -88,6 +88,7 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
         record.setStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME, cashMoneyTransaction.getTransactionStatus().getCode());
         record.setStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME, cashMoneyTransaction.getPriceReference().toPlainString());
         record.setStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME, cashMoneyTransaction.getOriginTransaction().getCode());
+        record.setStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME, cashMoneyTransaction.getOriginTransactionId());
 
         return record;
     }
@@ -95,10 +96,7 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
     private boolean isNewRecord(DatabaseTable table, DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
         table.loadToMemory();
-        if (table.getRecords().isEmpty())
-            return true;
-        else
-            return false;
+        return table.getRecords().isEmpty();
     }
 
     private List<DatabaseTableRecord> getCashMoneyRestockData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
@@ -129,6 +127,7 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
         cashMoneyDestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
         cashMoneyDestockTransaction.setPriceReference(new BigDecimal(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME)));
         cashMoneyDestockTransaction.setOriginTransaction(OriginTransaction.getByCode(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
+        cashMoneyDestockTransaction.setOriginTransactionId(cashMoneyRestockTransactionRecord.getStringValue(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME));
 
         return cashMoneyDestockTransaction;
     }

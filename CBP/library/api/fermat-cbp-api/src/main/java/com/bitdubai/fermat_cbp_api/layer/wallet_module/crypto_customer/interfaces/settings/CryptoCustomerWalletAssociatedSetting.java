@@ -2,7 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfac
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.CurrencyType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 
 import java.util.UUID;
 
@@ -26,8 +26,8 @@ public interface CryptoCustomerWalletAssociatedSetting {
     FermatEnum getMerchandise();
     void setMerchandise(FermatEnum merchandise);
 
-    CurrencyType getCurrencyType();
-    void setCurrencyType(CurrencyType currencyType);
+    MoneyType getMoneyType();
+    void setMoneyType(MoneyType moneyType);
 
     String getBankAccount();
     void setBankAccount(String bankAccount);

@@ -61,48 +61,6 @@
             android:layout_marginTop="8dp"
             android:background="@color/cbw_wizard_color"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                android:id="@+id/cbw_select_crypto_wallets"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_margin="8dp"
-                android:layout_weight="1"
-                android:background="@color/cbw_wizard_border_color"
-                android:text="@string/cbw_crypto"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="14sp"/>
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                android:id="@+id/cbw_select_cash_wallets"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_margin="8dp"
-                android:layout_weight="1"
-                android:background="@color/cbw_wizard_border_color"
-                android:text="@string/cbw_cash"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="14sp"/>
-
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                android:id="@+id/cbw_select_bank_wallets"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_margin="8dp"
-                android:layout_weight="1"
-                android:background="@color/cbw_wizard_border_color"
-                android:text="@string/cbw_bank"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="14sp"/>
-        </LinearLayout>
-
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -112,9 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
-                android:visibility="gone"
-                tools:listitem="@layout/cbw_wizard_recycler_view_item"
-                tools:visibility="visible"/>
+                tools:listitem="@layout/cbw_wizard_earnings_item"/>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/cbw_selected_earning_wallets_empty_view"
@@ -125,8 +81,7 @@
                 android:text="@string/cbw_no_selected_wallets"
                 android:textColor="#888"
                 android:textSize="16sp"
-                android:visibility="visible"
-                tools:visibility="gone"/>
+                android:visibility="gone"/>
         </FrameLayout>
 
     </LinearLayout>
