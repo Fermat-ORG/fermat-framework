@@ -1,8 +1,7 @@
-package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist;
+package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +10,9 @@ import java.util.List;
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.interfaces.CryptoBrokerCommunitySearch</code>
  * expose all the methods to search a Crypto Broker.
  * <p>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/11/2015.
+ * Created by Gabriel Araujo (1/04/2016.)
  */
-public abstract class ArtistSearch {
+public abstract class ActorSearch<V extends ExposingData> {
 
     protected List<String> aliasList;
 
@@ -39,7 +38,7 @@ public abstract class ArtistSearch {
      *
      * @throws CantListArtistsException  if something goes wrong.
      */
-    public abstract List<ArtistExposingData> getResult() throws CantListArtistsException;
+    public abstract List<V> getResult() throws CantListArtistsException;
 
     /**
      * Through the method <code>getResult</code> we can get the results of the search,
@@ -50,7 +49,7 @@ public abstract class ArtistSearch {
      * @return
      * @throws CantListArtistsException
      */
-    public abstract List<ArtistExposingData> getResult(PlatformComponentType actorTypeToLookFor) throws CantListArtistsException;
+    public abstract List<V> getResult(PlatformComponentType actorTypeToLookFor) throws CantListArtistsException;
     /**
      * Through the method <code>getResult</code> we can get the results of the search,
      * filtered by the parameters set.
@@ -62,7 +61,7 @@ public abstract class ArtistSearch {
      *
      * @throws CantListArtistsException  if something goes wrong.
      */
-    public abstract List<ArtistExposingData> getResult(final Integer max) throws CantListArtistsException;
+    public abstract List<V> getResult(final Integer max) throws CantListArtistsException;
 
     /**
      * Through the method <code>resetFilters</code> you can reset the filters set,
