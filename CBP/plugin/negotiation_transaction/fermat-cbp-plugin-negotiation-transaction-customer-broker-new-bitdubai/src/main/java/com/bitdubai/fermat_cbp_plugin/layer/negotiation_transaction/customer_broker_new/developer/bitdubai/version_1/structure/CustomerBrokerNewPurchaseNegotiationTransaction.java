@@ -45,6 +45,12 @@ public class    CustomerBrokerNewPurchaseNegotiationTransaction {
         this.pluginVersionReference                             = pluginVersionReference;
     }
 
+    /**
+     * Process negotiation transaction send: register the purchase negotiation and start transaction
+     *
+     * @param customerBrokerPurchaseNegotiation
+     * @throws CantNewPurchaseNegotiationTransactionException
+     */
     //PROCESS THE UPDATE PURCHASE NEGOTIATION TRANSACTION
     public void sendPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantNewPurchaseNegotiationTransactionException {
 
