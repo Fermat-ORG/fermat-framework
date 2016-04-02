@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
@@ -60,6 +61,11 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
      */
     ErrorManager errorManager;
 
+    /**
+     * Represents the broadcaster.
+     */
+    private Broadcaster broadcaster;
+
     //DEFAULT VALUES
     /**
      * This represents the time between synchronize process.
@@ -75,11 +81,13 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             TokenlySongWalletDao tokenlySongWalletDao,
             TokenlyWalletSongVault tokenlyWalletSongVault,
             TokenlyApiManager tokenlyApiManager,
-            ErrorManager errorManager){
+            ErrorManager errorManager,
+            Broadcaster broadcaster){
         this.tokenlySongWalletDao = tokenlySongWalletDao;
         this.tokenlyWalletSongVault = tokenlyWalletSongVault;
         this.tokenlyApiManager = tokenlyApiManager;
         this.errorManager = errorManager;
+        this.broadcaster = broadcaster;
     }
     //TODO: implement this methods
     /**

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1.structure;
+package com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionAlreadyExistsException;
@@ -30,7 +30,6 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRe
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
-import com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1.database.ArtistActorConnectionDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -48,7 +47,7 @@ public class ActorConnectionManager implements ArtistActorConnectionManager {
     /**
      * Represents the plugin database dao.
      */
-    private final ArtistActorConnectionDao artistActorConnectionDao;
+    private final com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.database.ArtistActorConnectionDao artistActorConnectionDao;
     /**
      * Represents the Error Manager
      */
@@ -60,7 +59,7 @@ public class ActorConnectionManager implements ArtistActorConnectionManager {
 
     public ActorConnectionManager(
             final ArtistManager artistActorNetworkServiceManager,
-            final ArtistActorConnectionDao artistActorConnectionDao,
+            final com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.database.ArtistActorConnectionDao artistActorConnectionDao,
             final ErrorManager errorManager,
             final PluginVersionReference pluginVersionReference) {
         this.artistActorNetworkServiceManager = artistActorNetworkServiceManager;
@@ -76,7 +75,7 @@ public class ActorConnectionManager implements ArtistActorConnectionManager {
      */
     @Override
     public ArtistActorConnectionSearch getSearch(ArtistLinkedActorIdentity actorIdentitySearching) {
-        return new ActorConnectionSearch(
+        return new com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1.structure.ActorConnectionSearch(
                 actorIdentitySearching,
                 artistActorConnectionDao);
     }
