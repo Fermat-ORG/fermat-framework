@@ -47,6 +47,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantGetNegotiationTransactionListException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantNewSaleNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantProcessPendingConfirmTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerNewConfirmationNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantSendCustomerBrokerNewNegotiationTransactionException;
@@ -56,7 +57,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType.NOTIFICATION_SERVICE;
@@ -215,7 +218,13 @@ public class CustomerBrokerNewAgent implements
 
         int                                                 iterationNumber = 0;
 
+        int                                                 iterationConfirmSend = 0;
+
+        int                                                 timeConfirmSend = 5;
+
         boolean                                             threadWorking;
+
+        boolean                                             isValidateSend = Boolean.FALSE;
 
         //public MonitorAgentTransaction() { startAgent(); }
 
@@ -239,6 +248,7 @@ public class CustomerBrokerNewAgent implements
             while(threadWorking){
                 //Increase the iteration counter
                 iterationNumber++;
+                iterationConfirmSend++;
                 try {
 
                     Thread.sleep(SLEEP_TIME);
@@ -327,15 +337,13 @@ public class CustomerBrokerNewAgent implements
                                 System.out.print("\n\n**** 6) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - PURCHASE NEGOTIATION SEND negotiationId(XML): " + purchaseNegotiation.getNegotiationId() + " ****\n");
                                 //SEND NEGOTIATION TO BROKER
                                 negotiationTransmissionManager.sendNegotiatioToCryptoBroker(negotiationTransaction, NegotiationTransactionType.CUSTOMER_BROKER_NEW);
-                                //CHANGE STATUS PURCHASE NEGOTIATION. SEND_TO_BROKER: send negotiation to broker, waiting confirm
-//                                customerBrokerPurchaseNegotiationManager.waitForCustomer(purchaseNegotiation);
                                 break;
                         }
 
                         //Update the Negotiation Transaction
-                        customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, NegotiationTransactionStatus.SENDING_NEGOTIATION);
-                        CustomerBrokerNew transactionDao = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
-                        System.out.print("\n\n**** 6.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - STATUS TRANSACTION: " + transactionDao.getStatusTransaction().getCode() + " ****\n");
+                        customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
+                                transactionId,
+                                NegotiationTransactionStatus.SENDING_NEGOTIATION);
 
                     }
                 }
@@ -359,10 +367,20 @@ public class CustomerBrokerNewAgent implements
                                 break;
                         }
 
-                        //Update the Negotiation Transaction
-                        customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
+                        //UPDATE STATUS NEGOTIATION TRANSACTION
+                        customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
+                                transactionId,
+                                NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
+
+                        //CONFIRM TRANSACTION IS DONE
+                        customerBrokerNewNegotiationTransactionDatabaseDao.confirmTransaction(transactionId);
                     }
 
+                }
+
+                if(timeConfirmSend == iterationConfirmSend){
+                    pendingToConfirmtTransaction();
+                    iterationConfirmSend = 0;
                 }
 
                 //PROCES PENDING EVENT
@@ -390,6 +408,83 @@ public class CustomerBrokerNewAgent implements
                 errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSendCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
             }
+        }
+
+        private void pendingToConfirmtTransaction() throws CantProcessPendingConfirmTransactionException{
+
+            try {
+
+
+                UUID transactionId;
+                Map<UUID,Integer> transactionSend = new HashMap<>();
+                int numberToLastSend = 0;
+
+                List<CustomerBrokerNew> negotiationList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToConfirmTransactionNegotiation();
+                if(!negotiationList.isEmpty()) {
+                    for (CustomerBrokerNew negotiationTransaction : negotiationList) {
+
+                        transactionId = negotiationTransaction.getTransactionId();
+
+                        if (!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.PENDING_SUBMIT.getCode())) {
+
+                            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - pendingToConfirmtTransaction" + transactionId + " ****\n");
+
+                            if (transactionSend.get(transactionId) != null) numberToLastSend = transactionSend.get(transactionId);
+
+                            numberToLastSend++;
+
+                            isValidateSend(transactionId, numberToLastSend);
+
+                            if(isValidateSend){
+
+                                System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - pendingToConfirmtTransaction - SEND AGAIN: "+ numberToLastSend +" ****\n");
+                                customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
+                                        transactionId,
+                                        NegotiationTransactionStatus.PENDING_SUBMIT);
+
+                            }
+
+                            transactionSend.put(transactionId, numberToLastSend);
+
+                        }
+                    }
+                }
+
+            } catch (Exception e) {
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantProcessPendingConfirmTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
+            }
+        }
+
+        private void isValidateSend(UUID transactionId, int numberToLastSend) throws CantProcessPendingConfirmTransactionException{
+
+            try {
+
+                isValidateSend = Boolean.FALSE;
+
+                int numberToSend = 10;
+                if ((numberToLastSend < numberToSend) ||
+                    (numberToLastSend > numberToSend*2 && numberToLastSend <= numberToSend*3) ||
+                    (numberToLastSend > numberToSend*4 && numberToLastSend <= numberToSend*5))
+                    isValidateSend = Boolean.TRUE;
+
+                if (numberToLastSend > numberToSend*5) {
+
+                    isValidateSend = Boolean.FALSE;
+
+                    customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
+                            transactionId,
+                            NegotiationTransactionStatus.REJECTED_NEGOTIATION);
+                }
+
+            } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e){
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantProcessPendingConfirmTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
+            } catch (Exception e) {
+                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantProcessPendingConfirmTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
+            }
+
         }
 
         //CHECK PENDING EVEN
@@ -423,62 +518,71 @@ public class CustomerBrokerNewAgent implements
                             transactionId = negotiationTransmission.getTransactionId();
                             negotiationType = negotiationTransmission.getNegotiationType();
 
-//                            System.out.print("\n**** 18) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - LIST EVENT PENDING ****\n" +
-//                                            "\n - NEGOTIATION TRANSACTION TYPE = "+negotiationTransmission.getNegotiationTransactionType().getCode()+
-////                                            "\n - TRANSACTION ID = " +transactionId+
-////                                            "\n - TRANSMISSION ID = " +transmissionId+
-//                                            "\n - TRANSMISSION STATE = "+negotiationTransmission.getTransmissionState().getCode()+
-//                                            "\n - NEGOTIATION TYPE = "+negotiationType+
-//                                            "\n - NEGOTIATION XML = "+negotiationXML
-//                            );
-
                             if (negotiationXML != null) {
 
-                                if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_NEGOTIATION)) {
+                                negotiationTransaction = customerBrokerNewNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerNewNegotiationTranasction(transactionId);
+
+                                if (negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_NEGOTIATION)) {
 
                                     switch (negotiationType) {
                                         case SALE:
-                                            System.out.print("\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CREATE SALE NEGOTIATION TRANSACTION  ****\n");
-                                            //CREATE SALE NEGOTIATION
-                                            saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
-                                            customerBrokerNewSaleNegotiationTransaction = new CustomerBrokerNewSaleNegotiationTransaction(
-                                                customerBrokerSaleNegotiationManager,
-                                                customerBrokerNewNegotiationTransactionDatabaseDao,
-                                                errorManager,
-                                                pluginVersionReference
-                                            );
-                                            customerBrokerNewSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
 
-                                            final String brokerWalletPublicKey = "crypto_broker_wallet"; // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
-                                            broadcaster.publish(NOTIFICATION_SERVICE, brokerWalletPublicKey, CBW_NEW_NEGOTIATION_NOTIFICATION);
-                                            broadcaster.publish(UPDATE_VIEW, CBW_NEGOTIATION_UPDATE_VIEW);
+                                            //CREATE SALE NEGOTIATION
+                                            System.out.print("\n**** 21) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CREATE SALE NEGOTIATION TRANSACTION  ****\n");
+                                            saleNegotiation = (CustomerBrokerSaleNegotiation) XMLParser.parseXML(negotiationXML, saleNegotiation);
+
+                                            if(negotiationTransaction == null) {
+
+                                                System.out.print("\n**** 21.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CREATE SALE NEGOTIATION TRANSACTION NEW ****\n");
+                                                customerBrokerNewSaleNegotiationTransaction = new CustomerBrokerNewSaleNegotiationTransaction(
+                                                        customerBrokerSaleNegotiationManager,
+                                                        customerBrokerNewNegotiationTransactionDatabaseDao,
+                                                        errorManager,
+                                                        pluginVersionReference
+                                                );
+                                                customerBrokerNewSaleNegotiationTransaction.receiveSaleNegotiationTranasction(transactionId, saleNegotiation);
+
+                                                //BROADCASTER FOR UPDATE LAYER ANDROID
+                                                final String brokerWalletPublicKey = "crypto_broker_wallet"; // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
+                                                broadcaster.publish(NOTIFICATION_SERVICE, brokerWalletPublicKey, CBW_NEW_NEGOTIATION_NOTIFICATION);
+                                                broadcaster.publish(UPDATE_VIEW, CBW_NEGOTIATION_UPDATE_VIEW);
+
+                                            } else {
+
+                                                System.out.print("\n**** 21.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - CREATE SALE NEGOTIATION TRANSACTION REPEAT SEND ****\n");
+                                                //CONFIRM TRANSACTION
+                                                customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
+                                                        transactionId,
+                                                        NegotiationTransactionStatus.PENDING_SUBMIT_CONFIRM);
+
+                                            }
                                             break;
                                     }
 
-                                    //NOTIFIED EVENT
-//                                    customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
-//                                    System.out.print("\n**** 22) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - EVENT CHANGE A STATUS : " + eventStatus + "  ****\n");
-                                    //CONFIRM TRANSMISSION
-//                                    negotiationTransmissionManager.confirmReception(transmissionId);
-
-                                }else if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM)) {
+                                } else if (negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM)) {
 
                                     System.out.print("\n**** 25.1) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - NEW NEGOTIATION TRANSACTION CONFIRM ****\n");
                                     switch (negotiationType) {
                                         case PURCHASE:
-                                            System.out.print("\n**** 25.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - NEW PURCHASE NEGOTIATION TRANSACTION CONFIRM ****\n");
-                                            //CREATE SALE NEGOTIATION
-                                            purchaseNegotiation = (CustomerBrokerPurchaseNegotiation)XMLParser.parseXML(negotiationXML, purchaseNegotiation);
-                                            customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
+
+                                            if(!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION)) {
+
+                                                //CREATE CONFIRM NEGOTIATION
+                                                System.out.print("\n**** 25.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - NEW PURCHASE NEGOTIATION TRANSACTION CONFIRM ****\n");
+                                                purchaseNegotiation = (CustomerBrokerPurchaseNegotiation) XMLParser.parseXML(negotiationXML, purchaseNegotiation);
+                                                customerBrokerPurchaseNegotiationManager.waitForBroker(purchaseNegotiation);
+
+                                                //CONFIRM TRANSACTION
+                                                customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
+                                                        transactionId,
+                                                        NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
+                                            }
+
+                                            //CONFIRM TRANSACTION IS DONE
+                                            customerBrokerNewNegotiationTransactionDatabaseDao.confirmTransaction(transactionId);
+
                                             break;
                                     }
-
-                                    //CONFIRM TRANSACTION
-                                    customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
-                                    //NOTIFIED EVENT
-//                                    customerBrokerNewNegotiationTransactionDatabaseDao.updateEventTansactionStatus(eventId, EventStatus.NOTIFIED);
-                                    //CONFIRM TRANSMISSION
-//                                    negotiationTransmissionManager.confirmReception(transmissionId);
 
                                 }
 
