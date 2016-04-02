@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -20,6 +19,8 @@ public final class ArtistConnectionInformation {
     private final String senderAlias         ;
     private final byte[] senderImage         ;
     private final String destinationPublicKey;
+
+    private final PlatformComponentType destinationActorType;
     private final long   sendingTime         ;
 
     public ArtistConnectionInformation(final UUID connectionId,
@@ -28,6 +29,7 @@ public final class ArtistConnectionInformation {
                                        final String senderAlias,
                                        final byte[] senderImage,
                                        final String destinationPublicKey,
+                                       PlatformComponentType destinationActorType,
                                        final long sendingTime) {
 
         this.connectionId         = connectionId        ;
@@ -36,6 +38,7 @@ public final class ArtistConnectionInformation {
         this.senderAlias          = senderAlias         ;
         this.senderImage          = senderImage         ;
         this.destinationPublicKey = destinationPublicKey;
+        this.destinationActorType = destinationActorType;
         this.sendingTime          = sendingTime         ;
     }
 
@@ -84,6 +87,11 @@ public final class ArtistConnectionInformation {
     public UUID getConnectionId() {
         return connectionId;
     }
+
+    public PlatformComponentType getDestinationActorType() {
+        return destinationActorType;
+    }
+
 
     @Override
     public String toString() {
