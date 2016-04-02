@@ -4,6 +4,9 @@ import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+/**
+ * Created by Matias Furszyfer on 2016.03.25..
+ */
 public class VerticalSpaceItemDecoration extends RecyclerView.ItemDecoration {
 
     private final int mVerticalSpaceHeight;
