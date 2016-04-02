@@ -44,12 +44,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import java.util.List;
 
 /**
- * The class <code>com.bitdubai.fermat_cbp_plugin.layer.actor_network_service.crypto_broker.developer.bitdubai.version_1.CryptoBrokerActorNetworkServicePluginRoot</code>
- * bla bla bla.
- * <p/>
- * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/11/2015.
-
- * @author lnacosta
+ * Created by Gabriel Araujo 1/04/2016.
+ * @author gaboHub
  * @version 1.0
  * @since Java JDK 1.7
  */
