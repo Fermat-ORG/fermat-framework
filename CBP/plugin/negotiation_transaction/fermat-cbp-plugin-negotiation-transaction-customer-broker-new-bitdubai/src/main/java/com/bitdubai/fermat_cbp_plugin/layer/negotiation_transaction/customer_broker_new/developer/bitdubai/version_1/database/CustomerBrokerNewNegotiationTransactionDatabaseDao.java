@@ -381,6 +381,31 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseDao {
             throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Negotiation Transaction, Customer Broker New", "Cant confirm Transaction, unknown failure.");
         }
     }
+
+    /**
+     * Change the CUSTOMER_BROKER_NEW_CONFIRM_TRANSACTION_COLUMN_NAME to TRUE, indicated confirmation that the negotiation transmision is done
+     *
+     * @param transactionId
+     * @throws CantRegisterCustomerBrokerNewNegotiationTransactionException
+     */
+    public void sendTransaction(UUID transactionId) throws CantRegisterCustomerBrokerNewNegotiationTransactionException {
+        try {
+
+            if (!transactionExists(transactionId))
+                throw new CantRegisterCustomerBrokerNewNegotiationTransactionException("Cant Update Status Customer Broker New Negotiation Transaction, not exists.", "Customer Broker New Negotiation Transaction, Update State", "Cant Update State Customer Broker New Negotiation Transaction, not exists");
+
+            DatabaseTable table = getDatabaseTransactionTable();
+            table.addUUIDFilter(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
+            DatabaseTableRecord record = table.getEmptyRecord();
+            record.setStringValue(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_SEND_TRANSACTION_COLUMN_NAME, Boolean.TRUE.toString());
+            table.updateRecord(record);
+
+        } catch (CantUpdateRecordException e) {
+            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), e, "Customer Broker New Negotiation Transaction, Update Confirm Transaction", "Cant Update Confirm Transaction Customer Broker New Negotiation Transaction, update database problems.");
+        }catch (Exception e) {
+            throw new CantRegisterCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Negotiation Transaction, Customer Broker New", "Cant confirm Transaction, unknown failure.");
+        }
+    }
     
     /*END TRANSACTION*/
 
