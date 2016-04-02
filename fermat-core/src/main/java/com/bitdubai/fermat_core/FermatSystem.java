@@ -133,7 +133,7 @@ public final class FermatSystem {
         try {
 
             //TODO Desactivacion debido a un tema de P2P
-            fermatSystemContext.registerPlatform(new ARTPlatform());
+            //fermatSystemContext.registerPlatform(new ARTPlatform());
 
             fermatSystemContext.registerPlatform(new BCHPlatform());
             fermatSystemContext.registerPlatform(new BNKPlatform());
