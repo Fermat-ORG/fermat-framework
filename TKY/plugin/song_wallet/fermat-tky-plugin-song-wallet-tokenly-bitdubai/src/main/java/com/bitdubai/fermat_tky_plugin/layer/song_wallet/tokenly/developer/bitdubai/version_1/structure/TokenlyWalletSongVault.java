@@ -201,10 +201,6 @@ public class TokenlyWalletSongVault {
                 reader+=bytesRead;
                 calculate = reader/percentStep;
                 if(calculate>downloadPercentage){
-                    //FOR TESTING
-                    if(calculate>2){
-                        CANCEL_DOWNLOAD=true;
-                    }
                     downloadPercentage=calculate;
                     broadcaster.publish(
                             BroadcasterType.NOTIFICATION_PROGRESS_SERVICE,
