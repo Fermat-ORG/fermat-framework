@@ -109,7 +109,20 @@ public class HomeCardViewHolder extends FermatViewHolder {
         BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(cardAssetImage, res, R.drawable.img_asset_without_image, false);
         bitmapWorkerTask.execute(img);
 
+//  if negotiation
         if(asset.getAssetUserNegotiation() != null){
+            if(asset.getAssetUserWalletTransaction().getActorFrom().getProfileImage() != null &&
+                    asset.getAssetUserWalletTransaction().getActorFrom().getProfileImage().length > 0){
+
+                bitmap = BitmapFactory.decodeByteArray(asset.getAssetUserWalletTransaction().getActorFrom().
+                        getProfileImage(),0,asset.getAssetUserWalletTransaction().getActorFrom().getProfileImage().length);
+//  else if normal asset
+            }else{
+                bitmap = BitmapFactory.decodeResource(res, R.drawable.img_detail_without_image);
+            }
+            bitmap = Bitmap.createScaledBitmap(bitmap, 45, 45, true);
+            homeIssuerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(res, bitmap));
+            cardActorName.setText(asset.getAssetUserWalletTransaction().getActorFrom().getName());
 
             normalV3Asset.setVisibility(View.GONE);
             negotiationV3Asset.setVisibility(View.VISIBLE);
@@ -133,6 +146,16 @@ public class HomeCardViewHolder extends FermatViewHolder {
             initActions(asset, onClickListenerRedeem, onClickListenerTransfer, onClickListenerAppropriate,
                     onClickListenerSell, onClickListenerTransactions);
         }
+
+        int imageLocked = R.drawable.locked;
+        if (asset.getAssetUserWalletTransaction().isLocked()){
+            cardConfirmedImage.setImageResource(imageLocked);
+            cardConfirmedText.setText(res.getString(R.string.card_locked));
+            cardRedeemButton.setVisibility(View.GONE);
+            cardTransferButton.setVisibility(View.GONE);
+            cardAppropriateButton.setVisibility(View.GONE);
+            cardSellButton.setVisibility(View.GONE);
+        }
     }
 
     private void initActions(Asset asset, View.OnClickListener onClickListenerRedeem,
@@ -142,21 +165,21 @@ public class HomeCardViewHolder extends FermatViewHolder {
             cardRedeemButton.setVisibility(View.VISIBLE);
             cardRedeemButton.setOnClickListener(onClickListenerRedeem);
         } else {
-            cardRedeemButton.setVisibility(View.INVISIBLE);
+            cardRedeemButton.setVisibility(View.GONE);
         }
 
         if (asset.isTransferable() && asset.getStatus().equals(Asset.Status.CONFIRMED)) {
             cardTransferButton.setVisibility(View.VISIBLE);
             cardTransferButton.setOnClickListener(onClickListenerTransfer);
         } else {
-            cardTransferButton.setVisibility(View.INVISIBLE);
+            cardTransferButton.setVisibility(View.GONE);
         }
 
         if (asset.isSaleable() && asset.getStatus().equals(Asset.Status.CONFIRMED)) {
             cardSellButton.setVisibility(View.VISIBLE);
             cardSellButton.setOnClickListener(onClickListenerSell);
         } else {
-            cardSellButton.setVisibility(View.INVISIBLE);
+            cardSellButton.setVisibility(View.GONE);
         }
 
         if (asset.getStatus().equals(Asset.Status.CONFIRMED)) {
@@ -164,7 +187,7 @@ public class HomeCardViewHolder extends FermatViewHolder {
             cardAppropriateButton.setOnClickListener(onClickListenerAppropriate);
             cardTransactionsButton.setOnClickListener(onClickListenerTransactions);
         } else {
-            cardAppropriateButton.setVisibility(View.INVISIBLE);
+            cardAppropriateButton.setVisibility(View.GONE);
         }
     }
 
