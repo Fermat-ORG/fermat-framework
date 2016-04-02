@@ -8,7 +8,7 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Discov
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistSearch;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
@@ -24,7 +24,7 @@ import java.util.List;
  * <p>
  * Created by Gabriel Araujo 31/03/2016.
  */
-public final class ArtistActorNetworkServiceSearch extends ArtistSearch {
+public final class ArtistActorNetworkServiceSearch extends ActorSearch<ArtistExposingData> {
 
     private final CommunicationsClientConnection communicationsClientConnection;
     private final ErrorManager                   errorManager                  ;
@@ -65,8 +65,8 @@ public final class ArtistActorNetworkServiceSearch extends ArtistSearch {
 
             for (final PlatformComponentProfile platformComponentProfile : list) {
 
-                System.out.println("************** I'm a ART Artist searched: "+platformComponentProfile);
-                System.out.println("************** Do I have profile image?: "+(platformComponentProfile.getExtraData() != null));
+//                System.out.println("************** I'm a ART Artist searched: "+platformComponentProfile);
+//                System.out.println("************** Do I have profile image?: "+(platformComponentProfile.getExtraData() != null));
 
                 byte[] imageByte;
 
