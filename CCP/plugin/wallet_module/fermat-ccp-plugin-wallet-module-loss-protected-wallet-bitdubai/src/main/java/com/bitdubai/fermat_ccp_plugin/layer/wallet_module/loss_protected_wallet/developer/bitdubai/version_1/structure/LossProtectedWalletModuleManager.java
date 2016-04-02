@@ -792,7 +792,6 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         }
     }
 
-
     @Override
 
     public List<LossProtectedWalletTransaction> getTransactions(String intraUserLoggedInPublicKey,

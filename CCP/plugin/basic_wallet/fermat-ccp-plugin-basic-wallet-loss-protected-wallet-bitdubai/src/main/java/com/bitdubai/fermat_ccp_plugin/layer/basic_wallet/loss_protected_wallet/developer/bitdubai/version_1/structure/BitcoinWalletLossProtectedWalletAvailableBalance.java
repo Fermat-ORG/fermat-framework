@@ -86,7 +86,6 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
     @Override
     public long getBalance(BlockchainNetworkType blockchainNetworkType, String exchangeRate) throws CantCalculateBalanceException {
         try {
-
             //calculate how many btc can spend based on the exchangeRate
 
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
@@ -187,7 +186,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
 
                         //update transaction record
                         bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(database);
-                        bitcoinWalletBasicWalletDao.updateTransactionRate(transactionId, rate[0] .getPurchasePrice());
+                        bitcoinWalletBasicWalletDao.updateTransactionRate(transactionId, rate[0].getPurchasePrice());
 
                     } catch (CantGetExchangeRateException e) {
                         e.printStackTrace();

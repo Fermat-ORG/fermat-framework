@@ -509,7 +509,7 @@ public class BitcoinWalletLossProtectedWalletDao {
 
             // Read record data and create transactions list
             for(DatabaseTableRecord record : bitcoinwalletTable.getRecords()){
-                record.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_EXCHANGE_RATE_COLUMN_NAME, (long)rate);
+                record.setStringValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_EXCHANGE_RATE_COLUMN_NAME, String.valueOf(rate));
                 bitcoinwalletTable.updateRecord(record);
             }
         } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
