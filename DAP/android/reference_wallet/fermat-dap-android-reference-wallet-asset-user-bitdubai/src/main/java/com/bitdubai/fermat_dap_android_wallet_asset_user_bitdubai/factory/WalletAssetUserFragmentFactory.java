@@ -21,6 +21,11 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.User
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.UserHistoryActivityFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.fragments.UserSellAssetFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.fragments.DetailFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.fragments.HomeFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.fragments.RedeemPointsFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.fragments.HomeCardFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.fragments.TransactionsFragment;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 /**
@@ -49,7 +54,7 @@ public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetU
                     currentFragment = new UserHistoryActivityFragment();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_DETAIL_TRANSACTIONS:
-                    currentFragment = new AssetDetailTransactionsFragment();
+                    currentFragment = new TransactionsFragment();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_REDEEM:
 //                    currentFragment = new AssetRedeemFragment();
@@ -69,7 +74,7 @@ public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetU
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_SELL_FRAGMENT:
 //                    currentFragment = new AssetSellFragment();
-                    currentFragment = new UserSellAssetFragment();
+                    currentFragment = UserSellAssetFragment.newInstance();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_SELL_SELECT_USERS_FRAGMENT:
                     currentFragment = new AssetSellSelectUserFragment();
@@ -83,6 +88,18 @@ public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetU
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_NEGOTIATION_DETAIL_FRAGMENT:
                     currentFragment = new AssetNegotiationDetailFragment();
+                    break;
+                case DAP_WALLET_ASSET_USER_V2_HOME:
+                    currentFragment = new HomeFragment();
+                    break;
+                case DAP_WALLET_ASSET_USER_V2_DETAIL:
+                    currentFragment = new DetailFragment();
+                    break;
+                case DAP_WALLET_ASSET_USER_V2_REDEEM_POINTS:
+                    currentFragment = new RedeemPointsFragment();
+                    break;
+                case DAP_WALLET_ASSET_USER_V3_HOME:
+                    currentFragment = new HomeCardFragment();
                     break;
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragment.getKey(), "Swith failed");

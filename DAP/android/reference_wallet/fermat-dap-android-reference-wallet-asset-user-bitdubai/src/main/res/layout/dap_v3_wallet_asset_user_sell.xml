@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="regular"
                 android:text="@string/dap_user_wallet_sell_asset_price"
-                android:textColor="@color/dap_user_wallet_user_selector_title_text"
+                android:textColor="@color/card_toolbar"
                 android:textSize="14sp" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
@@ -36,7 +36,7 @@
                 android:fontFamily="regular"
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
-                android:textColor="@color/color_black_light"
+                android:textColor="@color/card_toolbar"
                 android:textSize="15sp" />
             <!--android:background="@null"-->
             <Spinner
@@ -278,7 +278,7 @@
                 android:layout_marginTop="9dp"
                 android:fontFamily="regular"
                 android:text="@string/dap_user_wallet_to"
-                android:textColor="@color/dap_user_wallet_user_selector_title_text"
+                android:textColor="@color/card_toolbar"
                 android:textSize="12sp" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
@@ -379,7 +379,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="@string/dap_user_wallet_x_button"
-                    android:textColor="@color/dap_user_wallet_user_selector_title_text"
+                    android:textColor="@color/card_text_highlight"
                     android:textSize="17sp" />
             </RelativeLayout>
         </RelativeLayout>

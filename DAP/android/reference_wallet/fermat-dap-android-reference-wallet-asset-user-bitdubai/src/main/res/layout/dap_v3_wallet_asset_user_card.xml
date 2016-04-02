@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:scrollbars="vertical"
+    android:scrollbarAlwaysDrawVerticalTrack="true">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginBottom="13dp"
+        card_view:cardCornerRadius="10dp"
+        card_view:cardElevation="8dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/card_background">
+
+            <RelativeLayout
+                android:id="@+id/cardHeader"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:background="@drawable/bg_card">
+
+                <RelativeLayout
+                    android:id="@+id/cardActorImageLayout"
+                    android:layout_width="47dp"
+                    android:layout_height="47dp"
+                    android:background="@drawable/bg_circular_home_issuer"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_margin="5dp">
+
+                    <ImageView
+                        android:id="@+id/homeIssuerImage"
+                        android:layout_width="65dp"
+                        android:layout_height="65dp"
+                        android:layout_centerInParent="true"
+                        android:layout_gravity="center"
+                        android:scaleType="centerCrop"
+                        tools:ignore="ContentDescription" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/cardActorImageLayout"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp">
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:id="@+id/detailAction"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Delivered by"
+                        android:textSize="10sp"
+                        android:layout_marginBottom="3dp"
+                        android:textColor="@color/card_text_top_secondary"/>
+
+                    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                        android:id="@+id/cardActorName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Frank ISSUER"
+                        android:textSize="14sp"
+                        android:layout_below="@id/detailAction"
+                        android:textColor="@color/card_text_top_primary"/>
+
+                </RelativeLayout>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cardTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2 minutes ago"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentRight="true"
+                    android:textSize="10sp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/card_text_top_primary"/>
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/cardAssetImage"
+                android:layout_width="280dp"
+                android:layout_height="280dp"
+                android:layout_below="@+id/cardHeader"
+                android:src="@drawable/img_asset_without_image"
+                android:background="@color/fab_material_white"
+                android:layout_margin="15dp"
+                android:layout_centerHorizontal="true"/>
+
+            <!--NormalAsset-->
+            <RelativeLayout
+                android:id="@+id/normalV3Asset"
+                android:layout_width="match_parent"
+                android:layout_height="95dp"
+                android:layout_below="@id/cardAssetImage"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:visibility="visible">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cardAssetName"
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:text="Coupon for 20% discount on Shirts"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="3dp"
+                    android:textColor="@color/card_text"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cardExp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Exp. date:"
+                    android:textSize="10sp"
+                    android:layout_below="@id/cardAssetName"
+                    android:textColor="@color/card_text"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cardExpDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="01/16/2016"
+                    android:layout_alignParentRight="true"
+                    android:textSize="10sp"
+                    android:layout_below="@id/cardAssetName"
+                    android:layout_toRightOf="@+id/cardExp"
+                    android:layout_marginLeft="3dp"
+                    android:textColor="@color/card_text_highlight"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cardConfirmedText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Confirmed"
+                    android:textSize="10sp"
+                    android:textColor="@color/card_text"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginLeft="2dp"
+                    android:layout_alignParentRight="true"/>
+
+                <ImageView
+                    android:id="@+id/cardConfirmedImage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/detail_check"
+                    android:layout_toLeftOf="@id/cardConfirmedText"
+                    android:layout_marginTop="14dp"/>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/card_line"
+                    android:layout_below="@+id/cardExp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/cardExp"
+                    android:layout_marginTop="22dp"
+                    android:layout_centerHorizontal="true">
+
+                    <ImageButton
+                        android:id="@+id/cardRedeemButton"
+                        android:layout_width="55dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_redeem"
+                        android:background="@null"/>
+
+                    <ImageButton
+                        android:id="@+id/cardTransferButton"
+                        android:layout_width="55dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_transfer"
+                        android:background="@null"/>
+
+                    <ImageButton
+                        android:id="@+id/cardAppropriateButton"
+                        android:layout_width="55dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_appropriate"
+                        android:background="@null"/>
+
+                    <ImageButton
+                        android:id="@+id/cardSellButton"
+                        android:layout_width="55dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_sell"
+                        android:background="@null"/>
+
+                    <ImageButton
+                        android:id="@+id/cardTransactionsButton"
+                        android:layout_width="55dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/ic_transactions"
+                        android:background="@null"/>
+
+                </LinearLayout>
+
+            </RelativeLayout>
+            <!--assetNegotiation-->
+            <RelativeLayout
+                android:id="@+id/negotiationV3Asset"
+                android:layout_width="match_parent"
+                android:layout_height="95dp"
+                android:layout_below="@id/cardAssetImage"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:visibility="gone">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/assetToBuyV3Text"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Asset to Buy"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="3dp"
+                    android:textColor="@color/card_text_highlight"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/negotiationAssetName"
+                    android:layout_width="280dp"
+                    android:layout_height="wrap_content"
+                    android:text="Coupon for 20% discount on Shirts"
+                    android:textSize="12sp"
+                    android:layout_marginBottom="3dp"
+                    android:textColor="@color/card_text"
+                    android:layout_below="@+id/assetToBuyV3Text"
+                    />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/negotiationCardExp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Asset Price"
+                    android:textSize="10sp"
+                    android:layout_below="@id/negotiationAssetName"
+                    android:textColor="@color/card_text"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/v3NegotiationAssetPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="60000 Satoshis"
+                    android:layout_alignParentRight="true"
+                    android:textSize="10sp"
+                    android:layout_below="@id/negotiationAssetName"
+                    android:layout_toRightOf="@+id/negotiationCardExp"
+                    android:layout_marginLeft="3dp"
+                    android:textColor="@color/card_text_highlight"/>
+
+
+
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dip"
+                    android:background="@color/card_line"
+                    android:layout_below="@+id/negotiationCardExp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="3dp"
+                    android:layout_marginRight="3dp"/>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/negotiationCardExp"
+                    android:layout_marginTop="12dp"
+                    android:layout_centerHorizontal="true">
+
+                    <ImageButton
+                        android:id="@+id/v3AcceptNegotiationButton"
+                        android:layout_width="55dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/detail_check"
+                        android:background="@null"/>
+
+                    <ImageButton
+                        android:id="@+id/v3RejectNegotiationButton"
+                        android:layout_width="55dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/detail_reject"
+                        android:background="@null"/>
+
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

@@ -12,6 +12,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalc
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetAssetNegotiationsException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
@@ -34,6 +35,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWa
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -46,6 +48,8 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetU
      * @see List<AssetUserWalletList> getAssetIssuerWalletBalancesBook(String publicKey)
      */
     List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey) throws CantLoadWalletException;
+
+    Map<ActorAssetIssuer, AssetUserWalletList> getAssetUserWalletBalancesByIssuer(String publicKey) throws CantLoadWalletException;
 
     List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointConnected() throws CantGetAssetRedeemPointActorsException;
 
@@ -137,5 +141,7 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetU
     long getBitcoinWalletBalance(String walletPublicKey) throws CantLoadWalletsException, CantCalculateBalanceException;
 
     List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets() throws CantListWalletsException;
+
+    ActorAssetUser getSellerFromNegotiation(UUID negotiationID) throws CantGetAssetNegotiationsException;
 
 }

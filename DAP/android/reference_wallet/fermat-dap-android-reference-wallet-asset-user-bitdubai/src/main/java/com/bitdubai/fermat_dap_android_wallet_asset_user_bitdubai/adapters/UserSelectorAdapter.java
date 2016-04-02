@@ -65,11 +65,13 @@ public class UserSelectorAdapter  extends FermatAdapter<User, AssetSellSelectUse
 implements Filterable{
 
     private AssetUserWalletSubAppModuleManager manager;
+    private List<User> users;
 
     public UserSelectorAdapter(Context context, List<User> users, AssetUserWalletSubAppModuleManager manager) {
         super(context, users);
         this.manager = manager;
         this.dataSet = users;
+        this.users = users;
     }
 
     @Override
@@ -94,7 +96,7 @@ implements Filterable{
 
     @Override
     public Filter getFilter() {
-        return new UserSelectorAdapterFilter(this.dataSet, this);
+        return new UserSelectorAdapterFilter(this.users, this);
     }
 
 

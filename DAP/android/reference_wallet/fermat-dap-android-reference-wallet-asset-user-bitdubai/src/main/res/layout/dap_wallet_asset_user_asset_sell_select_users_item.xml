@@ -14,9 +14,8 @@
         android:orientation="horizontal">
 
         <RelativeLayout
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="@drawable/bg_circular_redeempoint_list"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true">
 
@@ -31,12 +30,13 @@
             <RelativeLayout
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/bg_circular_redeempoint_list"
+                android:background="@drawable/bg_circular_sell_check_list"
                 android:layout_centerInParent="true"
-                android:id="@+id/selectedUserEffect"
+                android:id="@+id/selectedUserEffectSell"
                 android:layout_gravity="center"
-                android:visibility="invisible">
+                android:visibility="visible">
             </RelativeLayout>
+
         </RelativeLayout>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
