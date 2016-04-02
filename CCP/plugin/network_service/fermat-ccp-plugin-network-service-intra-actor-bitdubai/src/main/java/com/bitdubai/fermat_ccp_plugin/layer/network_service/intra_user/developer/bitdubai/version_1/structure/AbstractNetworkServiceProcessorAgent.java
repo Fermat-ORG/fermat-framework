@@ -3,7 +3,12 @@ package com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.develope
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
-
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceConnectionIncubation;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.ActorNetworkServiceRecord;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.structure.NetworkServiceAgent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.interfaces.NetworkService;
+import com.bitdubai.fermat_ccp_plugin.layer.network_service.intra_user.developer.bitdubai.version_1.communications.CommunicationNetworkServiceConnectionManager;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -13,12 +18,10 @@ import java.util.Map;
 /**
  * Created by mati on 2015.10.30..
  */
-
-//Deprecated
-/*public abstract class AbstractNetworkServiceProcessorAgent<N extends NetworkService> extends FermatAgent implements NetworkServiceAgent {
+public abstract class AbstractNetworkServiceProcessorAgent<N extends NetworkService> extends FermatAgent implements NetworkServiceAgent {
 
 
-  private long sendThreadSleepTime = 15000;
+    private long sendThreadSleepTime = 15000;
     private long receiveThreadSleepTime = 15000;
 
 
@@ -126,4 +129,3 @@ import java.util.Map;
 
 
 }
-*/
