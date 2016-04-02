@@ -364,7 +364,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
                 @Override
                 public void onClick(View v) {
                     //TODO
-//                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM_SELECT_REDEEMPOINTS, appSession.getAppPublicKey());
+                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL , appSession.getAppPublicKey());
                 }
             };
             View.OnClickListener onClickListenerAcceptNegotiation = new View.OnClickListener(){
