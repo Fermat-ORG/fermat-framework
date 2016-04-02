@@ -26,7 +26,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantEx
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistSearch;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.ArtistActorNetworkServiceDao;
@@ -345,9 +345,8 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
     private void testCreateAndList(){
         ECCKeyPair identity = new ECCKeyPair();
         try {
-            artistActorNetworkServiceManager.exposeIdentity(new ArtistExposingData(identity.getPublicKey(), "El Gabo", new byte[0]));
-            ArtistSearch artistActorNetworkServiceSearch = artistActorNetworkServiceManager.getSearch();
-            Thread.sleep(5000);
+            artistActorNetworkServiceManager.exposeIdentity(new ArtistExposingData(identity.getPublicKey(), "El Gabo artist", new byte[0]));
+            ActorSearch<ArtistExposingData> artistActorNetworkServiceSearch = artistActorNetworkServiceManager.getSearch();
             List<ArtistExposingData> artistExposingDatas = artistActorNetworkServiceSearch.getResult();
             for (ArtistExposingData artistExposingData:
                     artistExposingDatas) {
@@ -357,9 +356,6 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
             e.printStackTrace();
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (CantListArtistsException e) {
-            e.printStackTrace();
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (InterruptedException e) {
             e.printStackTrace();
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
