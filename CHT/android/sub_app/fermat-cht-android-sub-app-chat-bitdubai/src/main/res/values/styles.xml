@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="AppTheme" parent="@android:style/Theme">
+    <style name="Theme.AppTheme" parent="@android:style/Theme">
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        <item name="android:windowBackground">@drawable/cht_background_viewpager</item>
+        <item name="android:buttonStyle">@color/color_white</item>
+        <item name="android:buttonStyleSmall">@color/color_white</item>
+        <item name="android:listViewStyle">@style/listView</item>
+        <item name="android:itemBackground">@color/blue</item>
     </style>
 
     <style name="customAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -17,6 +22,13 @@
 
     <style name="MyDrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
         <item name="color">#000</item>
+    </style>
+
+    <!--style name="GradientLight" parent="@android:style/Theme.Light"-->
+
+    <style name="listView" parent="@android:style/Widget.ListView.White">
+        <item name="android:background">@drawable/cht_background_viewpager</item>
+        <item name="android:listSelector">@color/green</item>
     </style>
 
     <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">

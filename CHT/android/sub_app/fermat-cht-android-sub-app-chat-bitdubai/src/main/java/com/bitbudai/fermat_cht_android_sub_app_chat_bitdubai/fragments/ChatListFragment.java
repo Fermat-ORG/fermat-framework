@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -463,10 +464,12 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
+        v.setBackgroundColor(Color.WHITE);
         if (v.getId()==R.id.list) {
             MenuInflater inflater = new MenuInflater(getContext());
             inflater.inflate(R.menu.chat_list_context_menu, menu);
         }
+        // Get the info on which item was selected
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         try{
             appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(chatId.get(info.position)));
@@ -482,7 +485,12 @@ public class ChatListFragment extends AbstractFermatFragment{
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int id =item.getItemId();
         if (id == R.id.menu_delete_chat) {
-            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+            try {
+                Chat chat = chatSession.getSelectedChat();
+                chatManager.deleteChat(chat);
+            }catch (Exception e){
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
             return true;
         }
         if (id == R.id.menu_clean_chat) {

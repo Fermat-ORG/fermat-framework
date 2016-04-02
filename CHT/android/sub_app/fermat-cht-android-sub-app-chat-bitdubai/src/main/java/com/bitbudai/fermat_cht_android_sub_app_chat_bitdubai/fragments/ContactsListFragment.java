@@ -602,8 +602,8 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int id =item.getItemId();
         if (id == R.id.menu_view_contact) {
-            Contact con = chatSession.getSelectedContact();
             try {
+                Contact con = chatSession.getSelectedContact();
                 appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(con.getContactId()));
                 changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
             }catch(CantGetContactException e) {
