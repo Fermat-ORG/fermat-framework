@@ -143,5 +143,6 @@
     <!-- v3 -->
     <string name="card_confirmed">Confirmed</string>
     <string name="card_pending">Pending</string>
+    <string name="card_locked">Locked</string>
     <!-- -->
 </resources>
