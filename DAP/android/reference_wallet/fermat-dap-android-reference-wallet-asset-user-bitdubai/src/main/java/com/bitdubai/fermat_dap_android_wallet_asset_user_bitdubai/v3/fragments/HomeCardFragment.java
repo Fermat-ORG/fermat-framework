@@ -344,7 +344,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
                     final Asset asset = (Asset) appSession.getData("asset_data");
                     new ConfirmDialog.Builder(getActivity(), appSession)
                             .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_sure))
+                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_appropriate))
                             .setColorStyle(getResources().getColor(R.color.card_toolbar))
                             .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                                 @Override

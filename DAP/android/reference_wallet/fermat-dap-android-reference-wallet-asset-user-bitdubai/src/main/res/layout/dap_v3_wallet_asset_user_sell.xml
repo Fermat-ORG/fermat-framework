@@ -379,7 +379,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
                     android:text="@string/dap_user_wallet_x_button"
-                    android:textColor="@color/dap_user_wallet_user_selector_title_text"
+                    android:textColor="@color/card_text_highlight"
                     android:textSize="17sp" />
             </RelativeLayout>
         </RelativeLayout>
