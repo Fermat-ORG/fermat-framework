@@ -33,6 +33,7 @@ import java.util.concurrent.ExecutorService;
 /**
  * Created by mati on 2016.02.03..
  */
+//TODO: tengo que cambiar el nombre de este servicio para que sea el responsable de ser llamado en el bootup del sistema y active el servicio de Fermat y todos los procesos asociados que se requieran
 public class BoundService extends Service implements FermatWorkerCallBack {
 
     public static String LOG_TAG = "BoundService";
