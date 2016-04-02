@@ -75,7 +75,7 @@ public class ActorConnectionManager implements ArtistActorConnectionManager {
      */
     @Override
     public ArtistActorConnectionSearch getSearch(ArtistLinkedActorIdentity actorIdentitySearching) {
-        return new com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1.structure.ActorConnectionSearch(
+        return new ActorConnectionSearch(
                 actorIdentitySearching,
                 artistActorConnectionDao);
     }

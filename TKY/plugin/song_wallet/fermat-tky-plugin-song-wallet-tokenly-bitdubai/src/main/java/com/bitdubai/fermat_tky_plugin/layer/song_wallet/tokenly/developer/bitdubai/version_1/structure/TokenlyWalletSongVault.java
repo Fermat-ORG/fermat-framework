@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -46,6 +49,11 @@ public class TokenlyWalletSongVault {
     TokenlyApiManager tokenlyApiManager;
 
     /**
+     * Represents the broadcaster.
+     */
+    private Broadcaster broadcaster;
+
+    /**
      * Default values
      */
 
@@ -65,15 +73,22 @@ public class TokenlyWalletSongVault {
     private final FileLifeSpan FILE_LIFE_SPAN = FileLifeSpan.PERMANENT;
 
     /**
+     * Represents the percentage step
+     */
+    private final int PERCENTAGE_STEP = 1;
+
+    /**
      * Constructor with parameters
      */
     public TokenlyWalletSongVault(
             PluginFileSystem pluginFileSystem,
             TokenlyApiManager tokenlyApiManager,
-            UUID pluginId){
+            UUID pluginId,
+            Broadcaster broadcaster){
         this.pluginFileSystem = pluginFileSystem;
         this.tokenlyApiManager = tokenlyApiManager;
         this.pluginId = pluginId;
+        this.broadcaster = broadcaster;
     }
 
     /**
@@ -147,6 +162,8 @@ public class TokenlyWalletSongVault {
             //Get file size
             int size = urlCon.getContentLength();
             System.out.println("TKY - Download size: "+size);
+            //Calculate 1% to show in UI progress bar
+            int percentStep = size/(PERCENTAGE_STEP*100);
             //Prepare the plugin file system to persist the file
             PluginBinaryFile pluginBinaryFile = pluginFileSystem.createBinaryFile(
                     pluginId,
@@ -161,11 +178,21 @@ public class TokenlyWalletSongVault {
             //File counter
             int reader = 0;
             List<Byte> byteList = new ArrayList<>();
+            int downloadPercentage=0;
+            int calculate=0;
             while(bytesRead != -1) {
                 for(byte byteRead : data){
                     byteList.add(byteRead);
                 }
                 reader+=bytesRead;
+                calculate = reader/percentStep;
+                if(calculate>downloadPercentage){
+                    downloadPercentage=calculate;
+                    broadcaster.publish(
+                            BroadcasterType.NOTIFICATION_PROGRESS_SERVICE,
+                            WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
+                            downloadPercentage+"%");
+                }
                 //System.out.println("TKY - Download "+reader+" from "+size);
                 bytesRead = is.read(data);
             }
@@ -181,6 +208,11 @@ public class TokenlyWalletSongVault {
             pluginBinaryFile.persistToMedia();
             //Close connection
             is.close();
+            //Notify that the process is finished
+            broadcaster.publish(
+                    BroadcasterType.NOTIFICATION_PROGRESS_SERVICE,
+                    WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
+                    "100%");
             //Only for testing:
             //testReadFile(fileName);
         } catch (MalformedURLException e) {

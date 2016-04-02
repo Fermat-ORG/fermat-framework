@@ -202,7 +202,8 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             tokenlyWalletSongVault = new TokenlyWalletSongVault(
                     pluginFileSystem,
                     tokenlyApiManager,
-                    pluginId);
+                    pluginId,
+                    broadcaster);
 
             /**
              * Init plugin manager
@@ -211,7 +212,8 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
                     tokenlySongWalletDao,
                     tokenlyWalletSongVault,
                     tokenlyApiManager,
-                    errorManager);
+                    errorManager,
+                    broadcaster);
             //testDownloadFile();
             //testSynchronizeSongs();
             //testAutomaticSyncSongs();
