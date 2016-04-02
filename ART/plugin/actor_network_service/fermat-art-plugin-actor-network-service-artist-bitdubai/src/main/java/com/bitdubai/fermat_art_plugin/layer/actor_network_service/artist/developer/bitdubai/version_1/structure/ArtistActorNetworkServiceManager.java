@@ -19,8 +19,8 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantEx
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
@@ -204,7 +204,7 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
     }
 
     @Override
-    public final ArtistSearch getSearch() {
+    public final ActorSearch<ArtistExposingData> getSearch() {
         return new ArtistActorNetworkServiceSearch(communicationsClientConnection, errorManager, pluginVersionReference);
     }
 
