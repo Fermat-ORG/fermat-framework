@@ -28,7 +28,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 /**
- * Created by MAtias Furszyfer on 2016.03.09..
+ * Created by Matias Furszyfer on 2016.03.09..
  */
 //TODO: le tengo que poner un timeout para desconectar los clientes y no abusen de Fermat, seguramente se pueda controlar esto por un token que me envia
     //TODO:   haciendo que paguen una cierta cantidad de satoshis por utilizar Fermat como servicio en background
@@ -71,10 +71,10 @@ public class CommunicationService extends Service{
                         break;
                     case CommunicationMessages.MSG_REQUEST_DATA_MESSAGE:
                         send(msg.getData().getString(CommunicationDataKeys.DATA_PUBLIC_KEY),
-                                (Serializable) moduleDataRequest(
+                                moduleDataRequest(
                                         (PluginVersionReference) msg.getData().getSerializable(CommunicationDataKeys.DATA_PLUGIN_VERSION_REFERENCE),
                                         msg.getData().getString(CommunicationDataKeys.DATA_METHOD_TO_EXECUTE),
-                                        (Serializable[]) msg.getData().getSerializable(CommunicationDataKeys.DATA_PARAMS_TO_EXECUTE_METHOD))
+                                        (Serializable) msg.getData().getSerializable(CommunicationDataKeys.DATA_PARAMS_TO_EXECUTE_METHOD))
                         );
                         break;
                     default:
@@ -98,7 +98,7 @@ public class CommunicationService extends Service{
         clients.remove(key);
     }
 
-    private Object moduleDataRequest(final PluginVersionReference pluginVersionReference,final String method, final Serializable[] parameters){
+    private Object moduleDataRequest(final PluginVersionReference pluginVersionReference,final String method, final Serializable parameters){
         Log.i(TAG,"Invoque method called");
         Callable<Object> callable = new Callable<Object>() {
             @Override
@@ -118,11 +118,12 @@ public class CommunicationService extends Service{
                 Method m = null;
                 Object s = null;
                 Class[] classes = null;
+                Object[] params = (Object[]) parameters;
                 if(parameters!=null) {
-                    classes = new Class[parameters.length];
-                    for (int pos = 0; pos < parameters.length; pos++) {
-                        classes[pos] = parameters[pos].getClass();
-                        Log.i(TAG, "Parametro: " + parameters[pos].getClass().getCanonicalName());
+                    classes = new Class[params.length];
+                    for (int pos = 0; pos < params.length; pos++) {
+                        classes[pos] = params[pos].getClass();
+                        Log.i(TAG, "Parametro: " + params[pos].getClass().getCanonicalName());
                     }
                 }
                 //TODO: ver porque puse el moduleManager en el invoque, si daberia id ahí o d
@@ -138,7 +139,7 @@ public class CommunicationService extends Service{
                         Log.i(TAG,"Method: "+ m.getName());
                         Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
                         Log.i(TAG,"Method return type: "+ m.getReturnType());
-                        s =  m.invoke(moduleManager,parameters);
+                        s =  m.invoke(moduleManager,params);
                     }
                     Log.i(TAG,"Method return: "+ s.toString());
                 } catch (NoSuchMethodException e) {
@@ -190,11 +191,23 @@ public class CommunicationService extends Service{
     }
 
 
-    private void send(String key,Serializable serializable) throws RemoteException {
+    private void send(String key,Object object) throws RemoteException {
         Log.i(TAG,"Sending data to:"+ clients.get(key));
+        Log.i(TAG,"Sending data: "+ object);
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Method method : object.getClass().getDeclaredMethods()) {
+            stringBuilder.append(method.getName()).append("\n");
+        }
+        Log.i(TAG, "Data methods: " + stringBuilder.toString());
+        Log.i(TAG, "Data name: " + object.getClass().getCanonicalName());
         Message msg = Message.obtain(null, CommunicationMessages.MSG_REQUEST_DATA_MESSAGE);
-        msg.getData().putSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE,serializable);
-        clients.get(key).send(msg);
+        if(object instanceof Serializable){
+            msg.getData().putSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE, (Serializable) object);
+            clients.get(key).send(msg);
+        }else{
+            Log.i(TAG, "Data is not serializable");
+        }
+
     }
 
     @Override

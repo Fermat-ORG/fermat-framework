@@ -23,6 +23,7 @@ dependencies {
     compile project(':fermat-pip-addon-platform-service-location-manager-bitdubai')
     compile project(':fermat-pip-addon-platform-service-platform-info-bitdubai')
 
+    compile project(':fermat-pip-plugin-agent-timeout-notifier-bitdubai')
     compile project(':fermat-pip-plugin-engine-desktop-runtime-bitdubai')
     compile project(':fermat-dmp-plugin-engine-sub-app-runtime-bitdubai')
 

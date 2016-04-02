@@ -21,6 +21,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -43,6 +45,8 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interf
 import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.events.NewRequestActorNotificationEvent;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -72,6 +76,7 @@ import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitduba
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.event_handlers.ActorAssetRedeemPointNewNotificationsEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.event_handlers.CryptoAddressRequestedEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.event_handlers.NewReceiveExtendedNotificationEventHandler;
+import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.event_handlers.NewRequestActorNotificationRedeemEventHandler;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantAddPendingRedeemPointException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantGetRedeemPointsListException;
 import com.bitdubai.fermat_dap_plugin.layer.actor.redeem.point.developer.bitdubai.version_1.exceptions.CantHandleCryptoAddressReceivedActionException;
@@ -553,7 +558,8 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     public void receivingActorAssetRedeemRequestConnection(String actorAssetUserLoggedInPublicKey,
                                                            String actorAssetUserToAddName,
                                                            String actorAssetUserToAddPublicKey,
-                                                           byte[] profileImage) throws CantCreateActorAssetReceiveException {
+                                                           byte[] profileImage,
+                                                           Actors actorsType) throws CantCreateActorAssetReceiveException {
         try {
             if (redeemPointActorDao.actorAssetRegisteredRequestExists(actorAssetUserToAddPublicKey, DAPConnectionState.PENDING_REMOTELY)) {
 
@@ -572,7 +578,8 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                             actorAssetUserToAddPublicKey,
                             actorAssetUserToAddName,
                             profileImage,
-                            DAPConnectionState.PENDING_LOCALLY);
+                            DAPConnectionState.PENDING_LOCALLY,
+                            actorsType);
 
             }
         } catch (CantUpdateRedeemPointException e) {
@@ -594,9 +601,9 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public List<ActorAssetRedeemPoint> getWaitingYourConnectionActorAssetRedeem(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException {
+    public List<DAPActor> getWaitingYourConnectionActorAssetRedeem(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException {
         try {
-            return this.redeemPointActorDao.getAllWaitingActorAssetUser(actorAssetUserLoggedInPublicKey, DAPConnectionState.PENDING_LOCALLY, max, offset);
+            return this.redeemPointActorDao.getAllWaitingActorAssetRedeem(actorAssetUserLoggedInPublicKey, DAPConnectionState.PENDING_LOCALLY, max, offset);
         } catch (CantGetAssetRedeemPointActorsException e) {
             throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET USER ACCEPTED CONNECTIONS", e, "", "");
         } catch (Exception e) {
@@ -605,9 +612,9 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public List<ActorAssetRedeemPoint> getWaitingTheirConnectionActorAssetRedeem(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException {
+    public List<DAPActor> getWaitingTheirConnectionActorAssetRedeem(String actorAssetUserLoggedInPublicKey, int max, int offset) throws CantGetActorAssetWaitingException {
         try {
-            return this.redeemPointActorDao.getAllWaitingActorAssetUser(actorAssetUserLoggedInPublicKey, DAPConnectionState.PENDING_REMOTELY, max, offset);
+            return this.redeemPointActorDao.getAllWaitingActorAssetRedeem(actorAssetUserLoggedInPublicKey, DAPConnectionState.PENDING_REMOTELY, max, offset);
         } catch (CantGetAssetRedeemPointActorsException e) {
             throw new CantGetActorAssetWaitingException("CAN'T LIST ACTOR ASSET USER PENDING_HIS_ACCEPTANCE CONNECTIONS", e, "", "");
         } catch (Exception e) {
@@ -759,6 +766,42 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         }
     }
 
+    public void handleNewReceiveRequestActorRedeemNotificationEvent(ActorNotification actorNotification) {
+
+        try {
+            switch (actorNotification.getAssetNotificationDescriptor()) {
+                case ASKFORCONNECTION:
+                    this.receivingActorAssetRedeemRequestConnection(
+                            actorNotification.getActorDestinationPublicKey(),
+                            actorNotification.getActorSenderAlias(),
+//                                notification.getActorSenderPhrase(),
+                            actorNotification.getActorSenderPublicKey(),
+                            actorNotification.getActorSenderProfileImage(),
+                            actorNotification.getActorSenderType());
+
+                    break;
+                case CANCEL:
+                    this.cancelActorAssetRedeem(actorNotification.getActorSenderPublicKey());
+
+                    break;
+                case ACCEPTED:
+                    this.acceptActorAssetRedeem(actorNotification.getActorDestinationPublicKey(), actorNotification.getActorSenderPublicKey());
+
+                    break;
+                case DENIED:
+                    this.denyConnectionActorAssetRedeem(actorNotification.getActorDestinationPublicKey(), actorNotification.getActorSenderPublicKey());
+                    broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
+
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
         RedeemPointActorDeveloperDatabaseFactory dbFactory = new RedeemPointActorDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
@@ -809,6 +852,14 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         }
     }
 
+
+    private void sendingRequestToActor(ActorNotification actorNotification) {
+        FermatEvent event = eventManager.getNewEvent(EventType.ACTOR_ASSET_REQUEST_CONNECTIONS);
+        event.setSource(EventSource.ACTOR_ASSET_USER);
+        ((NewRequestActorNotificationEvent) event).setActorNotification(actorNotification);
+        eventManager.raiseEvent(event);
+    }
+
     private void initializeListener() {
         /**
          * I will initialize the handling of com.bitdubai.platform events.
@@ -838,6 +889,11 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
         fermatEventListener.setEventHandler(new ActorAssetRedeemPointNewNotificationsEventHandler(this));
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
+
+        fermatEventListener = eventManager.getNewListener(EventType.ACTOR_ASSET_REQUEST_CONNECTIONS);
+        fermatEventListener.setEventHandler(new NewRequestActorNotificationRedeemEventHandler(this));
+        eventManager.addListener(fermatEventListener);
+        listenersAdded.add(fermatEventListener);
     }
 
     /**
@@ -862,18 +918,33 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 
                 switch (notification.getAssetNotificationDescriptor()) {
                     case ASKFORCONNECTION:
-                        this.receivingActorAssetRedeemRequestConnection(
-                                intraUserToConnectPublicKey,
-                                notification.getActorSenderAlias(),
+                        if (notification.getActorSenderType().getCode().equals(Actors.DAP_ASSET_USER.getCode())) {
+                            sendingRequestToActor(notification);
+                        } else {
+                            this.receivingActorAssetRedeemRequestConnection(
+                                    intraUserToConnectPublicKey,
+                                    notification.getActorSenderAlias(),
 //                                notification.getActorSenderPhrase(),
-                                intraUserSendingPublicKey,
-                                notification.getActorSenderProfileImage());
+                                    intraUserSendingPublicKey,
+                                    notification.getActorSenderProfileImage(),
+                                    notification.getActorSenderType());
+                        }
                         break;
+
                     case CANCEL:
-                        this.cancelActorAssetRedeem(intraUserSendingPublicKey);
+                        if (notification.getActorSenderType().getCode().equals(Actors.DAP_ASSET_USER.getCode())) {
+                            sendingRequestToActor(notification);
+                        } else {
+                            this.cancelActorAssetRedeem(intraUserSendingPublicKey);
+                        }
                         break;
+
                     case ACCEPTED:
-                        this.acceptActorAssetRedeem(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+                        if (notification.getActorSenderType().getCode().equals(Actors.DAP_ASSET_USER.getCode())) {
+                            sendingRequestToActor(notification);
+                        } else {
+                            this.acceptActorAssetRedeem(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+                        }
 
                         this.connectToActorRedeem(notification.getActorSenderPublicKey(),
                                 notification.getActorSenderType(),
@@ -885,6 +956,7 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
 //                         */
 //                        eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_ACCEPTED_NOTIFICATION));
                         break;
+
                     case DISCONNECTED:
 //                        this.disconnectActorAssetUser(intraUserToConnectPublicKey, intraUserSendingPublicKey);
                         this.disconnectToActorAssetRedeemPoint(intraUserSendingPublicKey, notification.getBlockchainNetworkType());
@@ -897,8 +969,13 @@ public class RedeemPointActorPluginRoot extends AbstractPlugin implements
                         //eventManager.raiseEvent(eventManager.getNewEvent(EventType.INTRA_USER_CONNECTION_REQUEST_RECEIVED_NOTIFICATION));
                         break;
                     case DENIED:
-                        this.denyConnectionActorAssetRedeem(intraUserToConnectPublicKey, intraUserSendingPublicKey);
-                        broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
+                        if (notification.getActorSenderType().getCode().equals(Actors.DAP_ASSET_USER.getCode())) {
+                            sendingRequestToActor(notification);
+                        } else {
+                            this.denyConnectionActorAssetRedeem(intraUserToConnectPublicKey, intraUserSendingPublicKey);
+                            broadcaster.publish(BroadcasterType.UPDATE_VIEW, DAPConstants.DAP_UPDATE_VIEW_ANDROID);
+                        }
+
                         break;
                     case ACTOR_ASSET_NOT_FOUND:
                         this.redeemPointActorDao.updateRegisteredConnectionState(intraUserToConnectPublicKey, intraUserSendingPublicKey, DAPConnectionState.ERROR_UNKNOWN);

@@ -12,13 +12,13 @@ import java.util.List;
 
 
 /**
- * Created by Matias on 23/07/2015.
+ * Created by Matias Furszyfer on 23/07/2015.
  */
 
 /**
  * ScreenPagerAdapter to add new subApp
  */
-public class ScreenPagerAdapter extends FragmentPagerAdapter {
+public class ScreenPagerAdapter extends FragmentPagerAdapter implements FermatUIAdapter {
 
 
     private List<AbstractFermatFragment> fragments;

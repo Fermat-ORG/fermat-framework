@@ -1,18 +1,13 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer;
 
-import android.util.Base64;
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import java.util.Arrays;
 
 /**
  * Created by Nerio on 22/09/15.
@@ -86,13 +81,16 @@ public class AssetIssuerActorRecord implements ActorAssetIssuer {
 
         this.actorPublicKey     = actorPublicKey;
         this.name               = name;
-        this.dapConnectionState = dapConnectionState;
+        if (dapConnectionState != null)
+            this.dapConnectionState = dapConnectionState;
         this.locationLatitude   = locationLatitude;
         this.locationLongitude  = locationLongitude;
         this.registrationDate   = registrationDate;
         this.lastConnectionDate = lastConnectionDate;
-        this.description        = description;
-        this.extendedPublicKey  = extendedPublicKey;
+        if (description != null)
+            this.description        = description;
+        if (extendedPublicKey != null)
+            this.extendedPublicKey  = extendedPublicKey;
         this.actorsType         = actorsType;
 
         this.setProfileImage(profileImage);

@@ -1,17 +1,25 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music;
 
+import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyRequestMethod;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.HTTPErrorResponseException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.RemoteJSonProcessor;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlyConfiguration;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.swapbot.TokenlySongAttNames;
+import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.exceptions.CantGenerateTokenlyAuthSignatureException;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.AbstractTokenlyProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.music.SongRecord;
+import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.structure.TokenlyAuthenticationComponentGenerator;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.sql.Date;
+import java.util.HashMap;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 14/03/16.
@@ -19,6 +27,18 @@ import java.sql.Date;
 public class TokenlySongProcessor extends AbstractTokenlyProcessor {
 
     private static String swabotTokenlyURL= TokenlyConfiguration.URL_TOKENLY_MUSIC_API;
+
+    /**
+     * Represents the URL to use if is necessary to get the songs owned by a authenticated user.
+     */
+    private static String mySongsTokenlyURL =
+            TokenlyConfiguration.URL_TOKENLY_MUSIC_API_SONGS_BY_AUTHENTICATED_USER;
+
+    /**
+     * Represents the URL to use if is necessary to get one song owned by a authenticated user.
+     */
+    private static String downloadSongTokenlyURL =
+            TokenlyConfiguration.URL_TOKENLY_MUSIC_API_ONE_SONG_BY_AUTHENTICATED_USER;
 
     /**
      * This method returns a song from tokenly API by a request URL.
@@ -47,6 +67,109 @@ public class TokenlySongProcessor extends AbstractTokenlyProcessor {
         String requestedURL=swabotTokenlyURL+"catalog/songs/"+albumId;
         JsonArray jSonArray = RemoteJSonProcessor.getJSonArray(requestedURL);
         return jSonArray;
+    }
+
+    /**
+     * This method returns a song array owned by a valid Tokenly user.
+     * @param musicUser
+     * @return
+     */
+    public static Song[] getSongsByAuthenticatedUser(MusicUser musicUser)
+            throws CantGetAlbumException {
+        try{
+            JsonElement response = getJsonElementFromProtectedApi(musicUser, mySongsTokenlyURL);
+            //The response is a Json array
+            JsonArray jSonArray= response.getAsJsonArray();
+            int jSonArraySize = jSonArray.size();
+            Song song;
+            Song[] songs = new Song[jSonArraySize];
+            //Recover all the songs from the array
+            int loopCounter = 0;
+            for(JsonElement jsonElement : jSonArray){
+                song = getSongFromJsonObject(jsonElement.getAsJsonObject());
+                songs[loopCounter] = song;
+                loopCounter++;
+            }
+            return songs;
+        } catch (CantGenerateTokenlyAuthSignatureException e) {
+            throw new CantGetAlbumException(
+                    e,
+                    "Getting album from tokenly protected api",
+                    "Cannot generate Auth signature for "+musicUser);
+        } catch (CantGetJSonObjectException e) {
+            throw new CantGetAlbumException(
+                    e,
+                    "Getting album from tokenly protected api",
+                    "Cannot get the Json object from "+mySongsTokenlyURL);
+        } catch (HTTPErrorResponseException e) {
+            throw new CantGetAlbumException(
+                    e,
+                    "Getting album from tokenly protected api",
+                    "Error response from Tokenly Api:\n" +
+                            "Error Code: "+e.getErrorCode()+"\n" +
+                            "Error message: "+e.getErrorMessage());
+        }
+
+    }
+
+    public static Song getSongByAuthenticatedUser(
+            MusicUser musicUser,
+            String tokenlySongId) throws CantGetSongException{
+        try{
+            String requestUrl = downloadSongTokenlyURL+tokenlySongId;
+            JsonElement jSonResponse = getJsonElementFromProtectedApi(musicUser,requestUrl);
+            Song song = getSongFromJsonObject(jSonResponse.getAsJsonObject());
+            return song;
+        } catch (CantGenerateTokenlyAuthSignatureException e) {
+            throw new CantGetSongException(
+                    e,
+                    "Getting a song from tokenly protected api",
+                    "Cannot generate Auth signature for "+musicUser);
+        } catch (CantGetJSonObjectException e) {
+            throw new CantGetSongException(
+                    e,
+                    "Getting album from tokenly protected api",
+                    "Cannot get the Json object from "+downloadSongTokenlyURL);
+        } catch (HTTPErrorResponseException e) {
+            throw new CantGetSongException(
+                    e,
+                    "Getting album from tokenly protected api",
+                    "Error response from Tokenly Api:\n" +
+                            "Error Code: "+e.getErrorCode()+"\n" +
+                            "Error message: "+e.getErrorMessage());
+        }
+    }
+
+    private static JsonElement getJsonElementFromProtectedApi(
+            MusicUser musicUser,
+            String requestUrl) throws
+            CantGenerateTokenlyAuthSignatureException,
+            HTTPErrorResponseException,
+            CantGetJSonObjectException {
+
+        HashMap<String, String> parameters = TokenlyConfiguration.getMusicAuthenticationParameters();
+        //I'll remove the "Content-Type", is necessary to get an album
+        parameters.remove("Content-Type");
+        //X-Tokenly-Auth-Nonce
+        long nonce = TokenlyAuthenticationComponentGenerator.convertTimestamp(
+                System.currentTimeMillis());
+        //Generate auth signature
+        String signature = TokenlyAuthenticationComponentGenerator.generateTokenlyAuthSignature(
+                musicUser,
+                requestUrl,
+                nonce,
+                TokenlyRequestMethod.GET);
+        //Put cURL parameters
+        parameters.put("X-Tokenly-Auth-Api-Token", musicUser.getApiToken());
+        parameters.put("X-Tokenly-Auth-Nonce", ""+nonce);
+        parameters.put("X-Tokenly-Auth-Signature", signature);
+        //Get remote Json (in this version I don't have to use http url parameters.
+        JsonElement response = RemoteJSonProcessor.getJsonElementByGETCURLRequest(
+                requestUrl,
+                parameters,
+                "");
+        return response;
+
     }
 
     public static Song getSongFromJsonObject(
@@ -81,6 +204,8 @@ public class TokenlySongProcessor extends AbstractTokenlyProcessor {
         String bitcoinAddress = getStringFromJsonObject(jsonObject, TokenlySongAttNames.BTC_ADDRESS);
         //Other
         String other = getStringFromJsonObject(jsonObject, TokenlySongAttNames.OTHER);
+        //Download url
+        String downloadUrl = getStringFromJsonObject(jsonObject, TokenlySongAttNames.DOWNLOAD_URL);
         //Create record
         Song song = new SongRecord(
                 id,
@@ -96,7 +221,8 @@ public class TokenlySongProcessor extends AbstractTokenlyProcessor {
                 usageRights,
                 usageProhibitions,
                 bitcoinAddress,
-                other);
+                other,
+                downloadUrl);
         return song;
 
     }

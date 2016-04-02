@@ -4,12 +4,14 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -101,6 +103,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.structure.CryptoWalletWalletModuleWalletContact;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantCreateOrRegisterActorException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantEnrichIntraUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.exceptions.CantEnrichTransactionException;
@@ -133,6 +136,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
+@PluginInfo(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.CRYPTO_WALLET)
 public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleManager,Serializable {
 
     private final BitcoinWalletManager           bitcoinWalletManager          ;
@@ -988,14 +992,14 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleMana
     }
 
     @Override
-    public List<PaymentRequest> listSentPaymentRequest(String walletPublicKey,int max,int offset) throws CantListSentPaymentRequestException {
+    public List<PaymentRequest> listSentPaymentRequest(String walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset) throws CantListSentPaymentRequestException {
         try {
             List<PaymentRequest> lst =  new ArrayList<>();
             CryptoWalletWalletModuleWalletContact cryptoWalletWalletContact = null;
             byte[] profilePicture = null;
 
             //find received payment request
-            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(walletPublicKey, CryptoPaymentType.SENT, max, offset)) {
+            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(walletPublicKey, CryptoPaymentType.SENT,blockchainNetworkType, max, offset)) {
 
                 WalletContactRecord walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(paymentRecord.getActorPublicKey(),walletPublicKey);
 
@@ -1048,8 +1052,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleMana
 
     }
 
-
-    public List<PaymentRequest> listReceivedPaymentRequest(String walletPublicKey,int max,int offset) throws CantListReceivePaymentRequestException {
+    @Override
+    public List<PaymentRequest> listReceivedPaymentRequest(String walletPublicKey,BlockchainNetworkType blockchainNetworkType,int max,int offset) throws CantListReceivePaymentRequestException {
 
         try {
             List<PaymentRequest> lst =  new ArrayList<>();
@@ -1058,9 +1062,10 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleMana
             byte[] profilePicture = null;
 
             //find received payment request
-            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByType(
+            for (CryptoPayment paymentRecord :  cryptoPaymentRegistry.listCryptoPaymentRequestsByTypeAndNetwork(
                     walletPublicKey,
                     CryptoPaymentType.RECEIVED,
+                    blockchainNetworkType,
                     max,
                     offset
             )) {
@@ -1234,11 +1239,11 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleMana
     }
 
     @Override
-    public List<CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException {
+    public ArrayList<CryptoWalletIntraUserIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListCryptoWalletIntraUserIdentityException {
 
         try {
 
-            List<CryptoWalletIntraUserIdentity> cryptoWalletIntraUserIdentityList = new ArrayList<CryptoWalletIntraUserIdentity>();
+            ArrayList<CryptoWalletIntraUserIdentity> cryptoWalletIntraUserIdentityList = new ArrayList<CryptoWalletIntraUserIdentity>();
 
             for (IntraWalletUserIdentity intraWalletUser : this.intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser()) {
 
@@ -1258,54 +1263,11 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleMana
     }
 
     @Override
-    public List<IntraWalletUserIdentity> getActiveIdentities() {
+    public ArrayList<IntraWalletUserIdentity> getActiveIdentities() {
 
         try{
 
-            List<IntraWalletUserIdentity> lst = new ArrayList<>();
-
-            for (final IntraWalletUserIdentity intraWalletUserIdentity : intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser()) {
-                IntraWalletUserIdentity activeIdentity = new IntraWalletUserIdentity() {
-                    @Override
-                    public String getAlias() {
-                        return intraWalletUserIdentity.getAlias();
-                    }
-
-                    @Override
-                    public byte[] getImage() {
-                        return intraWalletUserIdentity.getImage();
-                    }
-
-                    @Override
-                    public String getPublicKey() {
-                        return intraWalletUserIdentity.getPublicKey();
-                    }
-
-                    @Override
-                    public Actors getActorType() {
-                        return intraWalletUserIdentity.getActorType();
-                    }
-
-                    @Override
-                    public String getPhrase() {
-                        return intraWalletUserIdentity.getPhrase();
-                    }
-
-                    @Override
-                    public void setNewProfileImage(byte[] newProfileImage) {
-
-                    }
-
-                    @Override
-                    public String createMessageSignature(String message) {
-                        return null;
-                    }
-                };
-                lst.add(activeIdentity);
-            }
-
-
-
+            ArrayList<IntraWalletUserIdentity> lst = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
             //return intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
             return lst;
 

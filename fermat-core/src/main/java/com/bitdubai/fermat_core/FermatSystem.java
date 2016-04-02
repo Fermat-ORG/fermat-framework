@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.resources.ResourcesManager;
+import com.bitdubai.fermat_art_core.ARTPlatform;
 import com.bitdubai.fermat_bch_core.BCHPlatform;
 import com.bitdubai.fermat_bnk_core.BNKPlatform;
 import com.bitdubai.fermat_cbp_core.CBPPlatform;
@@ -51,35 +52,38 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class FermatSystem {
 
-    private static FermatSystem INSTANCE = null;
+    private static volatile FermatSystem INSTANCE = null;
 
     private FermatSystemContext fermatSystemContext;
     private FermatAddonManager  fermatAddonManager ;
     private FermatPluginManager fermatPluginManager;
     public boolean isStarted;
 
-    private synchronized static void createInstance() {
-
+    private static void createInstance() {
         if (INSTANCE == null)
             INSTANCE = new FermatSystem();
     }
 
     private synchronized static void createInstance(final Object           osContext  ,
                                                     final AbstractPlatform osaPlatform) {
-
         if (INSTANCE == null)
             INSTANCE = new FermatSystem(osContext, osaPlatform);
     }
 
     public static FermatSystem getInstance() {
-        if (INSTANCE == null) createInstance();
+        synchronized (FermatSystem.class) {
+            if (INSTANCE == null) createInstance();
+        }
+
         return INSTANCE;
     }
 
     public static FermatSystem getInstance(final Object           osContext  ,
                                            final AbstractPlatform osaPlatform) {
 
-        if (INSTANCE == null) createInstance(osContext, osaPlatform);
+        synchronized (FermatSystem.class) {
+            if (INSTANCE == null) createInstance(osContext, osaPlatform);
+        }
         return INSTANCE;
     }
 
@@ -130,19 +134,19 @@ public final class FermatSystem {
 
             //TODO Desactivacion debido a un tema de P2P
             //fermatSystemContext.registerPlatform(new ARTPlatform());
-
             fermatSystemContext.registerPlatform(new BCHPlatform());
-            fermatSystemContext.registerPlatform(new BNKPlatform());
-            fermatSystemContext.registerPlatform(new CBPPlatform());
+            //fermatSystemContext.registerPlatform(new BNKPlatform());
+            //fermatSystemContext.registerPlatform(new CBPPlatform());
             fermatSystemContext.registerPlatform(new CCPPlatform());
             fermatSystemContext.registerPlatform(new CERPlatform());
-            fermatSystemContext.registerPlatform(new CHTPlatform());
-            fermatSystemContext.registerPlatform(new CSHPlatform());
-            fermatSystemContext.registerPlatform(new DAPPlatform());
+            //fermatSystemContext.registerPlatform(new CHTPlatform());
+            //fermatSystemContext.registerPlatform(new CSHPlatform());
+            //fermatSystemContext.registerPlatform(new DAPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
             fermatSystemContext.registerPlatform(new TKYPlatform());
             fermatSystemContext.registerPlatform(new WPDPlatform());
+
 
 
 

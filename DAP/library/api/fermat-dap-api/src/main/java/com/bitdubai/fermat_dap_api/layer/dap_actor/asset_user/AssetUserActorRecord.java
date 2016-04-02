@@ -1,20 +1,16 @@
 package com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user;
 
-import android.util.Base64;
-
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Genders;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
+import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-
-import java.util.Arrays;
 
 /**
  * Created by Nerio on 22/09/15.
@@ -93,8 +89,8 @@ public class AssetUserActorRecord implements ActorAssetUser {
             this.age                =       age                     ;
         if (genders != null)
             this.genders            =       genders                 ;
-
-        this.dapConnectionState     =       dapConnectionState      ;
+        if (dapConnectionState != null)
+            this.dapConnectionState     =       dapConnectionState      ;
 
         if (locationLatitude != -1)
             this.locationLatitude       = locationLatitude          ;

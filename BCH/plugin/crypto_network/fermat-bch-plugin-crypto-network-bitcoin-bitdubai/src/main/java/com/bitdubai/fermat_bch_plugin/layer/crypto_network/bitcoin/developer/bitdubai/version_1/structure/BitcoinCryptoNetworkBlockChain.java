@@ -80,14 +80,7 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
         try {
             initialize();
         } catch (BlockStoreException e) {
-            if (BLOCKCHAIN_NETWORK_TYPE == BlockchainNetworkType.REG_TEST){
-                try {
-                    initializeInMemory();
-                } catch (BlockStoreException e1) {
-                    throw new BlockchainException(BlockchainException.DEFAULT_MESSAGE, e1, "Could not create blockchain to store block headers.", null);
-                }
-            } else
-                throw new BlockchainException(BlockchainException.DEFAULT_MESSAGE, e, "Could not create blockchain to store block headers.", null);
+            throw new BlockchainException(BlockchainException.DEFAULT_MESSAGE, e, "Could not create blockchain to store block headers.", "NetworkType:" + BLOCKCHAIN_NETWORK_TYPE.getCode());
         }
     }
 
@@ -115,8 +108,14 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
          * to set a boolean variable and decide later If I will add checkpoints.
          */
         boolean firstTime = true;
-        if (blockChainFile.exists())
+        if (blockChainFile.exists()){
             firstTime = false;
+
+            // if this is regTest I will delete the blockstore to download it again.
+            if (BLOCKCHAIN_NETWORK_TYPE == BlockchainNetworkType.REG_TEST)
+                blockChainFile.delete();
+        }
+
 
         /**
          * I create the blockstore.
@@ -127,11 +126,9 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
             /**
              * If there is an error saving it to file, I will save it to memory
              */
-            blockStore = new MemoryBlockStore(context.getParams());
+            initializeInMemory();
             System.out.println("*** Crypto Network Warning, error creating file to store blockchain, will save it to memory.");
             System.out.println("*** Crypto Network: " + e.toString());
-
-
         }
 
         /**
@@ -139,11 +136,19 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
          * the checkpoint exists.
          */
         try {
-            if (firstTime)
-                loadCheckpoint();
+            if (firstTime){
+                switch (BLOCKCHAIN_NETWORK_TYPE){
+                    case TEST_NET:
+                        loadCheckpoint("2016-03-28 00:00:01");
+                        break;
+                    case PRODUCTION:
+                        loadCheckpoint("2016-03-31 00:00:01");
+                        break;
+                }
+            }
         } catch (IOException e) {
             // if there are no checkpoints, then I will continue
-            e.printStackTrace();
+            System.out.println("***CryptoNetwork*** no checkpoint founds for network type " + BLOCKCHAIN_NETWORK_TYPE.getCode());
         }
 
         /**
@@ -160,7 +165,7 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
     /**
      * If there are checkpoints for this network type, then I will load them to the blockchain
      */
-    private void loadCheckpoint() throws BlockStoreException, IOException {
+    private void loadCheckpoint(String dateTime) throws BlockStoreException, IOException {
         ClassLoader classLoader = this.getClass().getClassLoader();
         InputStream inputStream = classLoader.getResourceAsStream(CHECKPOINT_FILENAME);
 
@@ -170,7 +175,7 @@ public class BitcoinCryptoNetworkBlockChain extends DownloadProgressTracker impl
 
             Date date = null;
             try {
-                date = format.parse("2016-03-10 01:24:22");
+                date = format.parse(dateTime);
             } catch (ParseException e) {
                 e.printStackTrace();
             }

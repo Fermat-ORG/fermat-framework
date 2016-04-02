@@ -2,6 +2,7 @@ package com.bitdubai.fermat_art_core;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_art_core.layer.actor_connection.ActorConnectionLayer;
 import com.bitdubai.fermat_art_core.layer.actor_network_service.ActorNetworkServiceLayer;
 import com.bitdubai.fermat_art_core.layer.identity.IdentityLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
@@ -21,9 +22,9 @@ public class ARTPlatform extends AbstractPlatform {
     public void start() throws CantStartPlatformException {
 
         try {
-
+            //registerLayer(new ActorConnectionLayer());
             registerLayer(new ActorNetworkServiceLayer());
-            registerLayer(new IdentityLayer());
+            //registerLayer(new IdentityLayer());
 
         } catch (CantRegisterLayerException e) {
 

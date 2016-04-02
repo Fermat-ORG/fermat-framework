@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_core;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantGetPluginIdException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterNewPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPluginIdsManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
@@ -111,30 +113,62 @@ public final class FermatPluginIdsManager {
 
         if (pluginId != null)
             return pluginId;
-        else
-            return registerNewPlugin(plugin);
+        else {
+            try {
+                return registerNewPlugin(plugin);
+            } catch (CantRegisterNewPluginException cantRegisterNewPluginException) {
+
+                throw new CantGetPluginIdException(
+                        cantRegisterNewPluginException,
+                        plugin.toString(),
+                        "There is a problem trying to register the new plugin id."
+                );
+            }
+        }
     }
 
-    private UUID registerNewPlugin(final PluginVersionReference plugin) throws CantGetPluginIdException {
+    private UUID registerNewPlugin(final PluginVersionReference plugin) throws CantRegisterNewPluginException {
+
+        if (validatePluginVersionReference(plugin)) {
+            try {
+
+                final UUID newId = UUID.randomUUID();
+
+                pluginIdsMap.put(plugin, newId);
+
+                savePluginIdsFile(getPluginIdsFile());
+
+                return newId;
+
+            } catch(final CantPersistFileException |
+                          CantCreateFileException  |
+                          FileNotFoundException    e) {
+
+                throw new CantRegisterNewPluginException(
+                        e,
+                        plugin.toString(),
+                        "There is a problem with the plugins id file."
+                );
+            }
+        } else {
+
+            throw new CantRegisterNewPluginException(
+                    plugin.toString(),
+                    "The plug-in version reference is not valid."
+            );
+        }
+
+    }
+
+    private boolean validatePluginVersionReference(final PluginVersionReference plugin) {
 
         try {
 
-            final UUID newId = UUID.randomUUID();
+            return plugin.equals(FermatPluginVersionReferenceBuilder.getByKey(FermatPluginVersionReferenceBuilder.toKey(plugin)));
 
-            pluginIdsMap.put(plugin, newId);
+        } catch (InvalidParameterException invalidParameterException) {
 
-            savePluginIdsFile(getPluginIdsFile());
-
-            return newId;
-
-        } catch(final CantPersistFileException |
-                      CantCreateFileException  |
-                      FileNotFoundException    e) {
-
-            throw new CantGetPluginIdException(
-                    plugin.toString(),
-                    "There is a problem with the plugins id file."
-            );
+            return false;
         }
     }
 

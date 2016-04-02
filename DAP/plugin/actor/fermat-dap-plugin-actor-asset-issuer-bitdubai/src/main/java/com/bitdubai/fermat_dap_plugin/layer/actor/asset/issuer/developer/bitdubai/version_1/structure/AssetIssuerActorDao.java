@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantGetAssetIssuerActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.exceptions.CantUpdateActorAssetIssuerException;
@@ -894,7 +895,8 @@ public class AssetIssuerActorDao implements Serializable {
                                                     String actorAssetIssuerPublicKey,
                                                     String actorAssetIssuerName,
                                                     byte[] profileImage,
-                                                    DAPConnectionState  dapConnectionState) throws CantAddPendingActorAssetException {
+                                                    DAPConnectionState  dapConnectionState,
+                                                    Actors actorsType) throws CantAddPendingActorAssetException {
         try {
             /**
              * if Asset Issuer exist on table
@@ -922,7 +924,7 @@ public class AssetIssuerActorDao implements Serializable {
                 record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_REGISTRATION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 record.setLongValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_LAST_CONNECTION_DATE_COLUMN_NAME, System.currentTimeMillis());
                 //TODO: Evaluar para cuando sea un USER el que realice la solicitud de conexion
-                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TYPE_COLUMN_NAME, Actors.DAP_ASSET_REDEEM_POINT.getCode());
+                record.setStringValue(AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TYPE_COLUMN_NAME, actorsType.getCode());
 
                 table.insertRecord(record);
                 /**
@@ -998,13 +1000,14 @@ public class AssetIssuerActorDao implements Serializable {
         }
     }
 
-    public List<ActorAssetIssuer> getAllWaitingActorAssetIssuer(final String actorAssetSelectedPublicKey,
+    public List<DAPActor> getAllWaitingActorAssetIssuer(final String actorAssetSelectedPublicKey,
                                                                 final DAPConnectionState dapConnectionState,
                                                                 final int max,
                                                                 final int offset) throws CantGetAssetUserActorsException {
 
         // Setup method.
         List<ActorAssetIssuer> list = new ArrayList<>(); // Actor Issuer.
+        List<DAPActor> dapActors = new ArrayList<>(); // Actor Issuer.
         DatabaseTable table;
 
         try {
@@ -1024,12 +1027,17 @@ public class AssetIssuerActorDao implements Serializable {
 
             this.addRecordsTableRegisteredToList(list, table.getRecords());
 
+            for (ActorAssetIssuer record : list) {
+                dapActors.add((new AssetIssuerActorRecord(record.getActorPublicKey(),record.getName(),record.getProfileImage(),record.getLocation())));
+            }
+
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetAssetUserActorsException(e.getMessage(), e, "ACTOR ASSET ISSUER", "Cant load " + AssetIssuerActorDatabaseConstants.ASSET_ISSUER_REGISTERED_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
             throw new CantGetAssetUserActorsException(e.getMessage(), FermatException.wrapException(e), "ACTOR ASSET ISSUER", "Cant get ACTOR ASSET ISSUER list, unknown failure.");
         }
-        return list;
+
+        return dapActors;
     }
 
     public ActorAssetIssuer getLastNotification(String actorIssuerPublicKey) throws CantGetAssetUserActorsException {

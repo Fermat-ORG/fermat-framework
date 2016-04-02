@@ -37,9 +37,12 @@ public enum SubAppsPublicKeys implements FermatEnum {
     DAP_FACTORY                   ("public_key_dap_factory"),
     //TODO PIP Platform
     PIP_DEVELOPER               ("public_key_pip_developer_sub_app"),
+    SETTINGS                    ("public_key_settings"),
     //TODO ART PLATAFORM
     ART_ARTIST_IDENTITY          ("public_key_art_artist_identity"),
-    TKY_ARTIST_IDENTITY         ("public_key_tky_artist_identity")
+    //TODO TKY PLATFORM
+    TKY_ARTIST_IDENTITY         ("public_key_tky_artist_identity"),
+    TKY_FAN_IDENTITY            ("sub_app_tky_fan_create_identity"),
 
     ;
 
@@ -80,14 +83,13 @@ public enum SubAppsPublicKeys implements FermatEnum {
             case "public_key_dap_factory":                  return DAP_FACTORY              ;
             //TODO PIP Platform
             case "public_key_pip_developer_sub_app":        return PIP_DEVELOPER            ;
-
+            case "public_key_settings":                     return SETTINGS                 ;
             //TODO ART PLATAFORM
             case "public_key_art_artist_identity":        return ART_ARTIST_IDENTITY        ;
 
             //TODO TKY PLATAFORM
             case "public_key_tky_artist_identity":        return TKY_ARTIST_IDENTITY        ;
-
-
+            case "sub_app_tky_fan_create_identity":       return TKY_FAN_IDENTITY           ;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

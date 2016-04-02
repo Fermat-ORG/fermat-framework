@@ -180,17 +180,6 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 
 
 
-      /*  if(data.getState() != null) {
-          holder.getLinear_layour_container_buttons().setVisibility(View.GONE);
-            holder.getLinear_layour_container_state().setVisibility(View.VISIBLE);
-            holder.getTxt_state().setText(data.getState());
-            holder.getTxt_state().setTypeface(tf);
-        }else{
-           holder.getLinear_layour_container_state().setVisibility(View.GONE);
-            holder.getLinear_layour_container_buttons().setVisibility(View.VISIBLE);
-        }*/
-
-
             holder.getBtn_accept_request().setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -203,7 +192,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 //                        FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
                         onRefreshList.onRefresh();
                     } catch (Exception e) {
-                        showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
+                        showMessage(context, "Cant Accept Receive Payment Exception- " + e.getMessage());
                     }
 
                 }
@@ -220,7 +209,7 @@ public class PaymentRequestHistoryAdapter  extends FermatAdapter<PaymentRequest,
 //                    FermatAnimationsUtils.showEmpty(context, false, holder.getLinear_layour_container_buttons());
                     onRefreshList.onRefresh();
                 } catch (Exception e) {
-                    showMessage(context, "Cant Accept or Denied Receive Payment Exception- " + e.getMessage());
+                    showMessage(context, "Cant Denied Receive Payment Exception- " + e.getMessage());
                 }
             }
         });

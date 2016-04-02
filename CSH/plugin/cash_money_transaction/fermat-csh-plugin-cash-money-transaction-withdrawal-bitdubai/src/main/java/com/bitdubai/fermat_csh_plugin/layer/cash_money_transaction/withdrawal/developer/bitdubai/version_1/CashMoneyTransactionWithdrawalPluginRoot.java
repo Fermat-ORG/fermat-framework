@@ -17,6 +17,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -81,7 +82,7 @@ public class CashMoneyTransactionWithdrawalPluginRoot extends AbstractPlugin imp
     private void testCreateCashWithdrawalTransaction() {
         //System.out.println("CASHWITHDRAWAL - testCreateCashWithdrawalTransaction CALLED");
 
-        CashTransactionParameters params = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(1000), FiatCurrency.US_DOLLAR, "testWithdrawal AVAIL/BOOK 1000USD", TransactionType.DEBIT);
+        CashTransactionParameters params = new CashTransactionParametersImpl(UUID.randomUUID(), WalletsPublicKeys.CSH_MONEY_WALLET.getCode(), "pkeyActor", "pkeyPlugin", new BigDecimal(1000), FiatCurrency.US_DOLLAR, "testWithdrawal AVAIL/BOOK 1000USD", TransactionType.DEBIT);
         //CashTransactionParametersImpl params2 = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActor", "pkeyPlugin", new BigDecimal(10000), FiatCurrency.US_DOLLAR, "testWithdrawal AVAIL/BOOK 10000USD", TransactionType.DEBIT);
 
         try {

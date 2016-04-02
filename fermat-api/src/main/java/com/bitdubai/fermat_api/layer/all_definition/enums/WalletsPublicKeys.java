@@ -17,11 +17,15 @@ public enum WalletsPublicKeys implements FermatEnum {
     CBP_CRYPTO_CUSTOMER_WALLET      ("crypto_customer_wallet"),
     //TODO CCP Platform
     CCP_REFERENCE_WALLET            ("reference_wallet"),
+    //TODO CWP Platform
+    CWP_LOSS_PROTECTED_WALLET       ("loss_protected_wallet"),
     //TODO DAP Platform
     DAP_ISSUER_WALLET               ("asset_issuer"),
     DAP_USER_WALLET                 ("asset_user"),
     DAP_REDEEM_WALLET               ("redeem_point"),
-    ;
+
+    TKY_FAN_WALLET                   ("fan_wallet");
+
 
     private String code;
 
@@ -45,6 +49,7 @@ public enum WalletsPublicKeys implements FermatEnum {
             case "asset_issuer":            return DAP_ISSUER_WALLET            ;
             case "asset_user":              return DAP_USER_WALLET              ;
             case "redeem_point":            return DAP_REDEEM_WALLET            ;
+            case "fan_wallet":            return TKY_FAN_WALLET           ;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

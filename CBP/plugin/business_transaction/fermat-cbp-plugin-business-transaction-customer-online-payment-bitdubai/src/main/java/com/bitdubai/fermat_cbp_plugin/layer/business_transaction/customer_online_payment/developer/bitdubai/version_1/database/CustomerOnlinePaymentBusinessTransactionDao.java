@@ -468,7 +468,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             CantGetContractListException {
         try {
             List<BusinessTransactionRecord> customerOnlinePaymentRecordList = getCustomerOnlinePaymentRecordList(
-                    ContractTransactionStatus.CRYPTO_PAYMENT_SUBMITTED.getCode(),
+                    ContractTransactionStatus.ONLINE_PAYMENT_SUBMITTED.getCode(),
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME
             );
@@ -622,7 +622,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             String brokerCryptoAddress,
             String walletPublicKey,
             long cryptoAmount,
-            BlockchainNetworkType blockchainNetworkType)
+            BlockchainNetworkType blockchainNetworkType,String intraActorReceiverPublickey)
             throws CantInsertRecordException {
         try {
             DatabaseTable databaseTable = getDatabaseContractTable();
@@ -633,7 +633,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
                     brokerCryptoAddress,
                     walletPublicKey,
                     cryptoAmount,
-                    blockchainNetworkType
+                    blockchainNetworkType,intraActorReceiverPublickey
             );
             databaseTable.insertRecord(databaseTableRecord);
         } catch (CantInsertRecordException exception) {
@@ -703,6 +703,9 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             //I going to set the money as bitcoin in this version
             brokerCryptoAddress = new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
             businessTransactionRecord.setCryptoAddress(brokerCryptoAddress);
+
+            businessTransactionRecord.setActorPublicKey(record.getStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BROKER_INTRA_ACTOR_PUBLIC_KEY_COLUMN_NAME));
+
             businessTransactionRecord.setExternalWalletPublicKey(
                     record.getStringValue(
                             CustomerOnlinePaymentBusinessTransactionDatabaseConstants.
@@ -912,10 +915,12 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
     private DatabaseTableRecord buildDatabaseTableRecord(
             DatabaseTableRecord record,
             CustomerBrokerContractPurchase customerBrokerContractPurchase,
-            String brokerCryptoAddress,
+            String cryptoaddress,
             String walletPublicKey,
             long cryptoAmount,
-            BlockchainNetworkType blockchainNetworkType) {
+            BlockchainNetworkType blockchainNetworkType,String intraActorReceiverPublickey) {
+
+
 
         UUID transactionId = UUID.randomUUID();
         record.setUUIDValue(
@@ -934,9 +939,12 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                 ContractTransactionStatus.PENDING_PAYMENT.getCode());
+
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CRYPTO_ADDRESS_COLUMN_NAME,
-                brokerCryptoAddress);
+                cryptoaddress);
+        record.setStringValue(CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_BROKER_INTRA_ACTOR_PUBLIC_KEY_COLUMN_NAME,intraActorReceiverPublickey);
+
         record.setStringValue(
                 CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_WALLET_PUBLIC_KEY_COLUMN_NAME,
                 walletPublicKey);
@@ -1010,7 +1018,7 @@ public class CustomerOnlinePaymentBusinessTransactionDao {
             CantUpdateRecordException {
         try {
             updateRecordStatus(contractHash,
-                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME,
+                    CustomerOnlinePaymentBusinessTransactionDatabaseConstants.ONLINE_PAYMENT_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     contractTransactionStatus.getCode());
         } catch (CantUpdateRecordException exception) {
             errorManager.reportUnexpectedPluginException(

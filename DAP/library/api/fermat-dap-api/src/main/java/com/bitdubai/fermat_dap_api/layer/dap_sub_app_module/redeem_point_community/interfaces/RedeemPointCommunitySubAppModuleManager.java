@@ -45,9 +45,9 @@ public interface RedeemPointCommunitySubAppModuleManager extends ModuleManager<R
 
     void askActorAssetRedeemForConnection(List<ActorAssetRedeemPoint> actorAssetRedeem) throws CantAskConnectionActorAssetException, CantRequestAlreadySendActorAssetException;
 
-    void acceptActorAssetRedeem(String actorAssetRedeemInPublicKey, String actorAssetRedeemToAddPublicKey) throws CantAcceptActorAssetUserException;
+    void acceptActorAssetRedeem(String actorAssetRedeemInPublicKey, ActorAssetRedeemPoint actorAssetRedeemToAdd) throws CantAcceptActorAssetUserException;
 
-    void denyConnectionActorAssetRedeem(String actorAssetRedeemLoggedInPublicKey, String actorAssetRedeemToRejectPublicKey) throws CantDenyConnectionActorAssetException;
+    void denyConnectionActorAssetRedeem(String actorAssetRedeemLoggedInPublicKey, ActorAssetRedeemPoint actorAssetRedeemToReject) throws CantDenyConnectionActorAssetException;
 
 //    void disconnectActorAssetUser(String intraUserLoggedInPublicKey, String actorAssetUserToDisconnectPublicKey) throws CantDisconnectAssetUserActorException;
 

@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.desktop.Item;
@@ -329,14 +330,14 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
 
 
             for(InstalledWallet installedWallet: lstInstalledWallet) {
-                    if(installedWallet.getWalletPublicKey().equals("reference_wallet")) {
+                    if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode())) {
                         Item item = new Item(installedWallet);
                         item.setIconResource(R.drawable.bitcoin_wallet);
                         item.setPosition(0);
                         lstItemsWithIcon.add(item);
                     }
 
-                if(installedWallet.getWalletPublicKey().equals("loss_protected_wallet")) {
+                if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode())) {
                     Item item = new Item(installedWallet);
                     item.setIconResource(R.drawable.loss_protected);
                     item.setPosition(8);
@@ -350,7 +351,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     new ArrayList<InstalledLanguage>(),
                     "crypto_broker",
                     "Crypto Broker",
-                    "crypto_broker_wallet",
+                    WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(),
                     "wallet_crypto_broker_platform_identifier",
                     new Version(1,0,0),
                     AppsStatus.getDefaultStatus());
@@ -366,7 +367,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     new ArrayList<InstalledLanguage>(),
                     "crypto_customer",
                     "Crypto Customer",
-                    "crypto_customer_wallet",
+                    WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode(),
                     "wallet_crypto_customer_platform_identifier",
                     new Version(1,0,0),
                     AppsStatus.getDefaultStatus());
@@ -383,7 +384,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     new ArrayList<InstalledLanguage>(),
                     "asset_issuer",
                     "Asset Issuer",
-                    "asset_issuer",
+                    WalletsPublicKeys.DAP_ISSUER_WALLET.getCode(),
                     "wallet_platform_identifier",
                     new Version(1,0,0),
                     AppsStatus.getDefaultStatus());
@@ -399,7 +400,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     new ArrayList<InstalledLanguage>(),
                     "asset_user",
                     "Asset User",
-                    "asset_user",
+                    WalletsPublicKeys.DAP_USER_WALLET.getCode(),
                     "wallet_platform_identifier",
                     new Version(1,0,0),
                     AppsStatus.getDefaultStatus());
@@ -415,7 +416,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     new ArrayList<InstalledLanguage>(),
                     "redeem_point",
                     "Redeem Point",
-                    "redeem_point",
+                    WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(),
                     "wallet_platform_identifier",
                     new Version(1,0,0),
                     AppsStatus.getDefaultStatus());
@@ -432,7 +433,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     new ArrayList<InstalledLanguage>(),
                     "banking_wallet",
                     "Banking Wallet",
-                    "banking_wallet",
+                    WalletsPublicKeys.BNK_BANKING_WALLET.getCode(),
                     "wallet_banking_platform_identifier",
                     new Version(1,0,0),
                     AppsStatus.DEV);
@@ -449,7 +450,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     new ArrayList<InstalledLanguage>(),
                     "cash_wallet",
                     "Cash Wallet",
-                    "cash_wallet",
+                    WalletsPublicKeys.CSH_MONEY_WALLET.getCode(),
                     "wallet_cash_platform_identifier",
                     new Version(1,0,0),
                     AppsStatus.DEV);
@@ -457,6 +458,24 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.cash_wallet_xxhdpi);
             item.setPosition(7);
+            lstItemsWithIcon.add(item);
+
+
+            //
+            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+                    WalletType.REFERENCE,
+                    new ArrayList<InstalledSkin>(),
+                    new ArrayList<InstalledLanguage>(),
+                    "fan_wallet",
+                    "Fan Wallet",
+                    WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
+                    "wallet_fan_platform_identifier",
+                    new Version(1,0,0),
+                    AppsStatus.DEV);
+            lstInstalledWallet.add(installedWallet);
+            item = new Item(installedWallet);
+            item.setIconResource(R.drawable.banner_tky);
+            item.setPosition(9);
             lstItemsWithIcon.add(item);
 
 

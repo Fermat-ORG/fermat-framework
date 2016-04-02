@@ -24,6 +24,16 @@ public class TokenlyConfiguration {
     public static final String URL_TOKENLY_MUSIC_AUTHENTICATION_API = "https://music-stage.tokenly.com/api/v1/account/login";
 
     /**
+     * Represents the basic URL to call the protected API to get the songs by a authenticated user.
+     */
+    public static final String URL_TOKENLY_MUSIC_API_SONGS_BY_AUTHENTICATED_USER = "https://music-stage.tokenly.com/api/v1/music/mysongs";
+
+    /**
+     * Represents the basic URL to call the protected API to get one song by a authenticated user.
+     */
+    public static final String URL_TOKENLY_MUSIC_API_ONE_SONG_BY_AUTHENTICATED_USER = "https://music-stage.tokenly.com/api/v1/music/song/download/";
+
+    /**
      * This method returns a hashMap with the parameters required by the protected Tokenly API to
      * authenticate a Tokenly user.
      * @return
