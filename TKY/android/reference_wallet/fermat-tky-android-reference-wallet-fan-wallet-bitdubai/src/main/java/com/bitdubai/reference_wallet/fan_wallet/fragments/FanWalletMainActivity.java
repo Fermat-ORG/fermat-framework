@@ -18,9 +18,9 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_tky_plugin.layer.wallet_module.fan.developer.bitdubai.version_1.structure.FanWalletModuleManager;
+import com.bitdubai.fermat_tky_api.layer.wallet_module.FanWalletPreferenceSettings;
+import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModuleManager;
 import com.bitdubai.reference_wallet.fan_wallet.R;
-import com.bitdubai.reference_wallet.fan_wallet.preference_settings.FanWalletSettings;
 import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
 import com.bitdubai.reference_wallet.fan_wallet.util.LockableViewPager;
 
@@ -33,7 +33,7 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
     //FermatManager
     private FanWalletSession fanwalletSession;
     private FanWalletModuleManager fanwalletmoduleManager;
-    private FanWalletSettings fanWalletSettings;
+    private FanWalletPreferenceSettings  fanWalletSettings;
     private ErrorManager errorManager;
 
 
@@ -51,19 +51,19 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
             fanwalletSession = ((FanWalletSession) appSession);
             fanwalletmoduleManager = fanwalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            System.out.println("AQUI ESTOY FAN WALLET");
+            System.out.println("HERE START FAN WALLET");
 
             try {
-                //    fanWalletSettings = fanwalletmoduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                    fanWalletSettings =  fanwalletmoduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 fanWalletSettings = null;
             }
 
             if (fanWalletSettings == null) {
-                fanWalletSettings = new FanWalletSettings();
+                fanWalletSettings = new FanWalletPreferenceSettings();
                 fanWalletSettings.setIsPresentationHelpEnabled(true);
                 try {
-                    //fanwalletmoduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
+                    fanwalletmoduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -94,7 +94,6 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
 
-
         // Setup the viewPager
         LockableViewPager viewPager = (LockableViewPager) view.findViewById(R.id.view_pager);
         MyPagerAdapter pagerAdapter = new MyPagerAdapter(getFragmentManager());
@@ -123,9 +122,13 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
         public Fragment getItem(int pos) {
             switch(pos) {
 
-                case 0: return SongFragment.newInstance();
+                case 0: return SongFragment.newInstance(fanwalletSession,
+                        fanwalletmoduleManager,
+                        errorManager);
                 case 1: return FollowingFragment.newInstance();
-                default: return SongFragment.newInstance();
+                default: return SongFragment.newInstance(fanwalletSession,
+                        fanwalletmoduleManager,
+                        errorManager);
             }
 
         }
@@ -149,6 +152,8 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
 
         }
     }
+
+
 
 
 
