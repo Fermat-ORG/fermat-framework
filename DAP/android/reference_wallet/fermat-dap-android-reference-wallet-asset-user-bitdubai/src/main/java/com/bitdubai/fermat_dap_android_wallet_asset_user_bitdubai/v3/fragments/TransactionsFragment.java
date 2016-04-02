@@ -74,9 +74,6 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction>
 
     private Toolbar toolbar;
     private Resources res;
-//    private View assetDetailRedeemLayout;
-//    private View assetDetailAppropriateLayout;
-//    private View assetDetailTransferLayout;
 
     private DigitalAsset digitalAsset;
     private ErrorManager errorManager;
@@ -86,9 +83,6 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction>
     private View noTransactionsView;
     private List<Transaction> transactions;
 
-    public TransactionsFragment() {
-
-    }
 
     public static TransactionsFragment newInstance() {
         return new TransactionsFragment();
@@ -102,59 +96,28 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction>
         assetUserSession = (AssetUserSession) appSession;
         moduleManager = assetUserSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        moduleManager.clearDeliverList();
         settingsManager = appSession.getModuleManager().getSettingsManager();
-        appSession.setData("users_to_transfer", null);
+
+        String digitalAssetPublicKey = ((Asset) appSession.getData("asset_data")).getDigitalAsset().getPublicKey();
+        try {
+            digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
+        } catch (CantLoadWalletException e) {
+            e.printStackTrace();
+        }
 
         transactions = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-
-        appSession.setData("sell_info", null);
     }
 
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
 
-        Activity activity = getActivity();
-        LayoutInflater layoutInflater = activity.getLayoutInflater();
-
-
-        res = getResources();
-
-
-        setupBackgroundBitmap(layout);
-        setupUIData();
         configureToolbar();
 
-        if (swipeRefreshLayout != null) {
-            swipeRefreshLayout.post(new Runnable() {
-                @Override
-                public void run() {
-                    onRefresh();
-                }
-            });
-        }
-        
         noTransactionsView = layout.findViewById(R.id.dap_wallet_asset_user_no_transactions);
         showOrHideNoTransactionsView(transactions.isEmpty());
     }
 
-
-//    private View configureActivityHeader(LayoutInflater layoutInflater) {
-//        RelativeLayout header = getToolbarHeader();
-//        try {
-//            header.removeAllViews();
-//        } catch (Exception exception) {
-//            CommonLogger.exception(TAG, "Error removing all views from header ", exception);
-//            errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, exception);
-//        }
-//        header.setVisibility(View.VISIBLE);
-//        View container = layoutInflater.inflate(R.layout.dap_wallet_asset_user_asset_detail, header, true);
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//            container.getLayoutParams().height = SizeUtils.convertDpToPixels(428, getActivity());
-//        }
-//        return container;
-//    }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -217,7 +180,6 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction>
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        inflater.inflate(R.menu.dap_wallet_asset_user_detail_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
 
         menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL, 4, "Help")
@@ -232,38 +194,6 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction>
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_DETAIL) {
                 setUpHelpAssetDetail(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
-            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM) {
-                changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM, appSession.getAppPublicKey());
-                return true;
-            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_APPROPRIATE) {
-                new ConfirmDialog.Builder(getActivity(), appSession)
-                        .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                        .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_sure))
-                        .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
-                        .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                            @Override
-                            public void onClick() {
-                                //doAppropriate(digitalAsset.getAssetPublicKey());
-                            }
-                        }).build().show();
-                return true;
-            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER) {
-//                new ConfirmDialog.Builder(getActivity(), appSession)
-//                        .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-//                        .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_sure))
-//                        .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
-//                        .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-//                            @Override
-//                            public void onClick() {
-//                                transferAsset(digitalAsset.getAssetPublicKey());
-//                            }
-//                        }).build().show();
-                changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_TRANSFER_ACTIVITY, appSession.getAppPublicKey());
-                return true;
-
-            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL) {
-                changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY , appSession.getAppPublicKey());
-                return true;
             }
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -273,70 +203,19 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction>
         return super.onOptionsItemSelected(item);
     }
 
-
-
-    private void setupBackgroundBitmap(View view) {
-        AsyncTask<Void, Void, Bitmap> asyncTask = new AsyncTask<Void, Void, Bitmap>() {
-
-            WeakReference<ViewGroup> view;
-
-            @Override
-            protected void onPreExecute() {
-                view = new WeakReference(view);
-            }
-
-            @Override
-            protected Bitmap doInBackground(Void... params) {
-                Bitmap drawable = null;
-                try {
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inScaled = true;
-                    options.inSampleSize = 5;
-                    drawable = BitmapFactory.decodeResource(
-                            getResources(), R.drawable.bg_app_image_user, options);
-                } catch (OutOfMemoryError error) {
-                    error.printStackTrace();
-                }
-                return drawable;
-            }
-
-            @Override
-            protected void onPostExecute(Bitmap drawable) {
-                if (drawable != null) {
-                    view.get().setBackground(new BitmapDrawable(getResources(), drawable));
-                }
-            }
-        };
-        asyncTask.execute();
-    }
-
-    private void setupUIData() {
-        String digitalAssetPublicKey = ((Asset) appSession.getData("asset_data")).getDigitalAsset().getPublicKey();
-        try {
-            digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
-        } catch (CantLoadWalletException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
     private void configureToolbar() {
         toolbar = getToolbar();
         if (toolbar != null) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.dap_user_wallet_principal));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.card_toolbar));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBottom(Color.WHITE);
 //            toolbar.setTitle(digitalAsset.getName());
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
-                window.setStatusBarColor(getResources().getColor(R.color.dap_user_wallet_principal));
+                window.setStatusBarColor(getResources().getColor(R.color.card_toolbar));
             }
         }
     }
-
-
-
 
 
     @Override

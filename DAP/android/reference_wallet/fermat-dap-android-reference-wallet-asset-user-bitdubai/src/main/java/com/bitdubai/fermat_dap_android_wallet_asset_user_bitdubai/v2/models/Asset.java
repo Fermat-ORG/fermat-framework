@@ -82,8 +82,8 @@ public class Asset {
         setExpDate((Timestamp) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
         setDate(new Timestamp(assetUserWalletTransaction.getTimestamp()));
         setStatus((assetUserWalletTransaction.getBalanceType().equals(BalanceType.AVAILABLE)) ? Status.CONFIRMED : Status.PENDING);
-        setActorName(digitalAsset.getIdentityAssetIssuer().getAlias());
-        setActorImage(digitalAsset.getIdentityAssetIssuer().getImage());
+        setActorName(assetUserWalletTransaction.getActorFrom().getName());
+        setActorImage(assetUserWalletTransaction.getActorFrom().getProfileImage());
         setRedeemable((Boolean) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE).getValue());
         setTransferable((Boolean) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.TRANSFERABLE).getValue());
         setSaleable((Boolean) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.SALEABLE).getValue());

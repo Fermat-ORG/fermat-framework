@@ -111,18 +111,9 @@ public class HomeCardViewHolder extends FermatViewHolder {
 
 //  if negotiation
         if(asset.getAssetUserNegotiation() != null){
-            if(asset.getAssetUserWalletTransaction().getActorFrom().getProfileImage() != null &&
-                    asset.getAssetUserWalletTransaction().getActorFrom().getProfileImage().length > 0){
 
-                bitmap = BitmapFactory.decodeByteArray(asset.getAssetUserWalletTransaction().getActorFrom().
-                        getProfileImage(),0,asset.getAssetUserWalletTransaction().getActorFrom().getProfileImage().length);
-//  else if normal asset
-            }else{
-                bitmap = BitmapFactory.decodeResource(res, R.drawable.img_detail_without_image);
-            }
-            bitmap = Bitmap.createScaledBitmap(bitmap, 45, 45, true);
             homeIssuerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(res, bitmap));
-            cardActorName.setText(asset.getAssetUserWalletTransaction().getActorFrom().getName());
+            cardActorName.setText(asset.getActorName());
 
             normalV3Asset.setVisibility(View.GONE);
             negotiationV3Asset.setVisibility(View.VISIBLE);
