@@ -311,6 +311,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     contextBuffer.append("Plugin ID: " + pluginId);
                     contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
                     contextBuffer.append("Database Name: " + CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                    contextBuffer.append("NS Name: " + networkServiceType);
 
                     String context = contextBuffer.toString();
                     String possibleCause = "The Template triggered an unexpected problem that wasn't able to solve by itself";
