@@ -438,7 +438,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
 
 
         }catch (Exception e){
-            System.out.println("WsCommunicationsCloudClientConnection+:"+e.getStackTrace());
+            System.out.println("WsCommunicationsCloudClientConnection+:" + e.getStackTrace());
             CantRegisterComponentException pluginStartException = new CantRegisterComponentException(CantRegisterComponentException.DEFAULT_MESSAGE, e, e.getLocalizedMessage(), e.getLocalizedMessage());
             throw pluginStartException;
 
@@ -967,8 +967,14 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
     @Override
     public boolean isConnected(){
 
-        if (wsCommunicationsTyrusCloudClientChannel.getClientConnection() != null){
-            return wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen();
+        try {
+
+            if (wsCommunicationsTyrusCloudClientChannel.getClientConnection() != null){
+                return wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen();
+            }
+
+        }catch (Exception e){
+            return Boolean.FALSE;
         }
 
         return Boolean.FALSE;

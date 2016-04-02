@@ -13,6 +13,7 @@ public interface Artist extends ArtIdentity {
      * This method returns the artist exposure level.
      * @return
      */
+
     ExposureLevel getExposureLevel();
 
     /**
