@@ -25,6 +25,7 @@ public enum NetworkServiceType implements FermatEnum {
     ASSET_REDEEM_POINT_ACTOR         ("ARPANS"),
     ASSET_TRANSMISSION               ("ASS_TRANS"),
     ARTIST_ACTOR                     ("ARTR"),
+    FAN_ACTOR                        ("FACTR"),
     CHAT                             ("CHAT"),
     CRYPTO_ADDRESSES                 ("CADD"),
     CRYPTO_BROKER                    ("CRBR"),
@@ -54,7 +55,8 @@ public enum NetworkServiceType implements FermatEnum {
             case "AIANS"     : return ASSET_ISSUER_ACTOR;
             case "ARPANS"    : return ASSET_REDEEM_POINT_ACTOR;
             case "ASS_TRANS" : return ASSET_TRANSMISSION;
-            case "ARTR"     : return ARTIST_ACTOR;
+            case "ARTR"      : return ARTIST_ACTOR;
+            case "FACTR"     : return FAN_ACTOR;
             case "CADD"      : return CRYPTO_ADDRESSES;
             case "CHAT"      : return CHAT;
             case "CRBR"      : return CRYPTO_BROKER;

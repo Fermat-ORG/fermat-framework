@@ -12,7 +12,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 public class ArtistActorNetworkServicePluginSubsystem extends AbstractPluginSubsystem {
 
     public ArtistActorNetworkServicePluginSubsystem() {
-        super(new PluginReference(Plugins.ACTOR_NETWORK_SERVICE_ARTIST));
+        super(new PluginReference(Plugins.ARTIST));
     }
 
     @Override
