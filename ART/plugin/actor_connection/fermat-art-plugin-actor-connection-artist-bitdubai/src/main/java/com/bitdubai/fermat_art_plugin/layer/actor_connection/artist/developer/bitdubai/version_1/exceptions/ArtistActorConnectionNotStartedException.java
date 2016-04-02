@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1.exceptions;
+package com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_art_api.all_definition.exceptions.ARTException;
 

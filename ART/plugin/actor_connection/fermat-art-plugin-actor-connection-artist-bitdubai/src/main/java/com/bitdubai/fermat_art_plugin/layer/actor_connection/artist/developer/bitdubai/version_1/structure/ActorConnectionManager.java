@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1.structure;
+package com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionAlreadyExistsException;
@@ -14,197 +14,162 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequ
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
-import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
-import com.bitdubai.fermat_art_api.all_definition.events.enums.EventType;
-import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
-import com.bitdubai.fermat_art_api.layer.actor_connection.artist.enums.ArtistActorConnectionNotificationType;
+import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionManager;
+import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionSearch;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistActorConnection;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistLinkedActorIdentity;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.RequestType;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantConfirmException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingConnectionRequestsException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantAcceptConnectionRequestException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantCancelConnectionRequestException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDenyConnectionRequestException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDisconnectException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
-import com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1.database.ArtistActorConnectionDao;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/03/16.
  */
-public class ActorConnectionEventsActions {
-
-    private final ArtistManager actorArtistNetworkServiceManager;
-    private final ArtistActorConnectionDao dao;
-    private final ErrorManager errorManager;
-    private final EventManager eventManager;
-    private final Broadcaster broadcaster;
-    private final PluginVersionReference pluginVersionReference    ;
+public class ActorConnectionManager implements ArtistActorConnectionManager {
 
     /**
-     * Constructor with parameters.
-     * @param actorArtistNetworkServiceManager
-     * @param dao
-     * @param errorManager
-     * @param eventManager
-     * @param broadcaster
-     * @param pluginVersionReference
+     * Represents the Actor Network service manager.
      */
-    public ActorConnectionEventsActions(
-            final ArtistManager actorArtistNetworkServiceManager,
-            final ArtistActorConnectionDao dao,
+    private final ArtistManager artistActorNetworkServiceManager;
+    /**
+     * Represents the plugin database dao.
+     */
+    private final com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.database.ArtistActorConnectionDao artistActorConnectionDao;
+    /**
+     * Represents the Error Manager
+     */
+    private final ErrorManager errorManager;
+    /**
+     * Represents the plugin version reference.
+     */
+    private final PluginVersionReference pluginVersionReference;
+
+    public ActorConnectionManager(
+            final ArtistManager artistActorNetworkServiceManager,
+            final com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.database.ArtistActorConnectionDao artistActorConnectionDao,
             final ErrorManager errorManager,
-            final EventManager eventManager,
-            final Broadcaster broadcaster,
             final PluginVersionReference pluginVersionReference) {
-        this.actorArtistNetworkServiceManager = actorArtistNetworkServiceManager;
-        this.dao = dao;
+        this.artistActorNetworkServiceManager = artistActorNetworkServiceManager;
+        this.artistActorConnectionDao  = artistActorConnectionDao;
         this.errorManager = errorManager;
-        this.eventManager = eventManager;
-        this.broadcaster = broadcaster;
         this.pluginVersionReference = pluginVersionReference;
     }
 
     /**
-     * This method contains the logic to handle the news event.
-     * @throws CantHandleNewsEventException
+     * This method returns an ArtistActorConnectionSearch.
+     * @param actorIdentitySearching
+     * @return
      */
-    public void handleNewsEvent() throws CantHandleNewsEventException {
-        try {
-            final List<ArtistConnectionRequest> list = actorArtistNetworkServiceManager.
-                    listPendingConnectionNews(PlatformComponentType.ART_ARTIST);
-
-            for (final ArtistConnectionRequest request : list)
-                this.handleRequestConnection(request);
-
-        } catch(CantListPendingConnectionRequestsException |
-                CantRequestActorConnectionException |
-                UnsupportedActorTypeException |
-                ConnectionAlreadyRequestedException e) {
-
-            throw new CantHandleNewsEventException(
-                    e,
-                    "Handling news event",
-                    "Error handling Crypto Broker Connection Request News Event.");
-        }
-
+    @Override
+    public ArtistActorConnectionSearch getSearch(ArtistLinkedActorIdentity actorIdentitySearching) {
+        return new ActorConnectionSearch(
+                actorIdentitySearching,
+                artistActorConnectionDao);
     }
 
     /**
-     * This method contains the logic to handle the Artist Update event.
-     * @throws CantHandleNewsEventException
-     */
-    public void handleArtistUpdateEvent() throws CantHandleNewsEventException {
-        try {
-            final List<ArtistConnectionRequest> list = actorArtistNetworkServiceManager.
-                    listPendingConnectionUpdates();
-
-            for (final ArtistConnectionRequest request : list) {
-
-                switch (request.getRequestAction()) {
-                    //TODO: I'll use ART_ARTIST_IDENTITY until the Art community is ready
-                    case ACCEPT:
-                        this.handleAcceptConnection(request.getRequestId());
-                        broadcaster.publish(
-                                BroadcasterType.NOTIFICATION_SERVICE,
-                                SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
-                                ArtistActorConnectionNotificationType.ACTOR_CONNECTED.getCode());
-                        break;
-                    case DENY:
-                        this.handleDenyConnection(request.getRequestId());
-                        break;
-                    case DISCONNECT:
-                        if (request.getRequestType() == RequestType.SENT)
-                            this.handleDisconnect(request.getRequestId());
-                        break;
-                }
-            }
-        } catch(CantListPendingConnectionRequestsException |
-                ActorConnectionNotFoundException |
-                UnexpectedConnectionStateException |
-                CantAcceptActorConnectionRequestException |
-                CantDenyActorConnectionRequestException |
-                CantDisconnectFromActorException e) {
-
-            throw new CantHandleNewsEventException(
-                    e,
-                    "Handling Artist Update event",
-                    "Error handling Crypto Addresses News Event.");
-        }
-    }
-
-    /**
-     * This method contains the logic to manage the request connection
-     * @param request
+     * This method makes a request connection
+     * @param actorSending    the actor which is trying to connect.
+     * @param actorReceiving  the actor which we're trying to connect with.
+     *
      * @throws CantRequestActorConnectionException
      * @throws UnsupportedActorTypeException
      * @throws ConnectionAlreadyRequestedException
      */
-    public void handleRequestConnection(
-            final ArtistConnectionRequest request) throws
-            CantRequestActorConnectionException ,
-            UnsupportedActorTypeException       ,
+    @Override
+    public void requestConnection(
+            ActorIdentityInformation actorSending,
+            ActorIdentityInformation actorReceiving) throws
+            CantRequestActorConnectionException,
+            UnsupportedActorTypeException,
             ConnectionAlreadyRequestedException {
-
         try {
 
+            /**
+             * If the actor type of the receiving actor is different of ART_ARTIST I can't send the request.
+             */
+            if (actorReceiving.getActorType() != Actors.ART_ARTIST)
+                throw new UnsupportedActorTypeException(
+                        "actorSending: "+actorSending + " - actorReceiving: "+actorReceiving, "Unsupported actor type exception.");
+            /**
+             * Here I generate the needed information to register the new actor connection record.
+             */
+            final UUID newConnectionId = UUID.randomUUID();
             final ArtistLinkedActorIdentity linkedIdentity = new ArtistLinkedActorIdentity(
-                    request.getDestinationPublicKey(),
-                    Actors.ART_ARTIST
+                    actorSending.getPublicKey(),
+                    actorSending.getActorType()
             );
-            final ConnectionState connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
+
+            final ConnectionState connectionState = ConnectionState.PENDING_REMOTELY_ACCEPTANCE;
+            final long currentTime = System.currentTimeMillis();
 
             final ArtistActorConnection actorConnection = new ArtistActorConnection(
-                    request.getRequestId()       ,
-                    linkedIdentity               ,
-                    request.getSenderPublicKey() ,
-                    request.getSenderAlias()     ,
-                    request.getSenderImage()     ,
-                    connectionState              ,
-                    request.getSentTime()        ,
-                    request.getSentTime()
+                    newConnectionId,
+                    linkedIdentity,
+                    actorReceiving.getPublicKey(),
+                    actorReceiving.getAlias(),
+                    actorReceiving.getImage(),
+                    connectionState,
+                    currentTime,
+                    currentTime
             );
-
-            switch(request.getSenderActorType()) {
+            /**
+             * I register the actor connection.
+             */
+            artistActorConnectionDao.registerActorConnection(actorConnection);
+            PlatformComponentType platformComponentType = PlatformComponentType.ART_ARTIST;
+            switch (actorSending.getActorType()){
                 case ART_ARTIST:
-                    dao.registerActorConnection(actorConnection);
-                    actorArtistNetworkServiceManager.confirm(request.getRequestId());
+                    platformComponentType = PlatformComponentType.ART_ARTIST;
                     break;
                 case ART_FAN:
-                    dao.registerActorConnection(actorConnection);
-                    actorArtistNetworkServiceManager.confirm(request.getRequestId());
+                    platformComponentType = PlatformComponentType.ART_FAN;
                     break;
-                default:
-                    throw new UnsupportedActorTypeException(
-                            "request: "+request, "Unsupported actor type exception.");
             }
-            //TODO: I'll use ART_ARTIST_IDENTITY until the Art community is ready
-            broadcaster.publish(
-                    BroadcasterType.NOTIFICATION_SERVICE,
-                    SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
-                    ArtistActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
+            PlatformComponentType platformComponentTypeReceiving = PlatformComponentType.ART_ARTIST;
+            switch (actorReceiving.getActorType()){
+                case ART_ARTIST:
+                    platformComponentTypeReceiving = PlatformComponentType.ART_ARTIST;
+                    break;
+                case ART_FAN:
+                    platformComponentTypeReceiving = PlatformComponentType.ART_FAN;
+                    break;
+            }
 
+            final ArtistConnectionInformation connectionInformation = new ArtistConnectionInformation(
+                    newConnectionId,
+                    actorSending.getPublicKey(),
+                    platformComponentType,
+                    actorSending.getAlias(),
+                    actorSending.getImage(),
+                    actorReceiving.getPublicKey(),
+                    platformComponentTypeReceiving,
+                    currentTime
+            );
 
+            /**
+             * I'll send the request through the network service.
+             */
+            artistActorNetworkServiceManager.requestConnection(connectionInformation);
         } catch (final UnsupportedActorTypeException unsupportedActorTypeException) {
-
             errorManager.reportUnexpectedPluginException(
                     pluginVersionReference,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     unsupportedActorTypeException);
             throw unsupportedActorTypeException;
-
         } catch (final ActorConnectionAlreadyExistsException actorConnectionAlreadyExistsException) {
             errorManager.reportUnexpectedPluginException(
                     pluginVersionReference,
@@ -212,7 +177,7 @@ public class ActorConnectionEventsActions {
                     actorConnectionAlreadyExistsException);
             throw new ConnectionAlreadyRequestedException(
                     actorConnectionAlreadyExistsException,
-                    "request: "+request,
+                    "actorSending: "+actorSending + " - actorReceiving: "+actorReceiving,
                     "The connection was already requested or exists.");
         } catch (final CantRegisterActorConnectionException cantRegisterActorConnectionException) {
             errorManager.reportUnexpectedPluginException(
@@ -221,17 +186,18 @@ public class ActorConnectionEventsActions {
                     cantRegisterActorConnectionException);
             throw new CantRequestActorConnectionException(
                     cantRegisterActorConnectionException,
-                    "request: "+request,
+                    "actorSending: "+actorSending + " - actorReceiving: "+actorReceiving,
                     "Problem registering the actor connection in DAO.");
-        } catch (final CantConfirmException cantConfirmException) {
+        } catch (final CantRequestConnectionException cantRequestConnectionException) {
+            // TODO if there is an error in the actor network service we should delete the generated actor connection record.+++
             errorManager.reportUnexpectedPluginException(
                     pluginVersionReference,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    cantConfirmException);
+                    cantRequestConnectionException);
             throw new CantRequestActorConnectionException(
-                    cantConfirmException,
-                    "request: "+request,
-                    "Error trying to confirm the connection request through the network service.");
+                    cantRequestConnectionException,
+                    "actorSending: "+actorSending + " - actorReceiving: "+actorReceiving,
+                    "Error trying to request the connection through the network service.");
         } catch (final Exception exception) {
             errorManager.reportUnexpectedPluginException(
                     pluginVersionReference,
@@ -239,36 +205,39 @@ public class ActorConnectionEventsActions {
                     exception);
             throw new CantRequestActorConnectionException(
                     exception,
-                    "request: "+request,
+                    "actorSending: "+actorSending + " - actorReceiving: "+actorReceiving,
                     "Unhandled error.");
         }
     }
 
     /**
-     * This method contains all the logic to handle disconnections.
-     * @param connectionId
+     * This method contains all the logic to make a disconnect process.
+     * @param connectionId   id of the actor connection to be disconnected.
+     *
      * @throws CantDisconnectFromActorException
      * @throws ActorConnectionNotFoundException
      * @throws UnexpectedConnectionStateException
      */
-    public void handleDisconnect(
-            final UUID connectionId) throws
-            CantDisconnectFromActorException   ,
-            ActorConnectionNotFoundException   ,
+    @Override
+    public void disconnect(UUID connectionId) throws
+            CantDisconnectFromActorException,
+            ActorConnectionNotFoundException,
             UnexpectedConnectionStateException {
-
         try {
-            ConnectionState currentConnectionState = dao.getConnectionState(connectionId);
+            ConnectionState currentConnectionState = artistActorConnectionDao.getConnectionState(
+                    connectionId);
             switch (currentConnectionState) {
-                case DISCONNECTED_REMOTELY:
+                case DISCONNECTED_LOCALLY:
                     // no action needed
                     break;
                 case CONNECTED:
-                    dao.changeConnectionState(
+                    // disconnect from an actor through network service and after that mark as DISCONNECTED LOCALLY
+                    // TODO HAVE IN COUNT THAT YOU HAVE TO DISCONNECT FROM AN SPECIFIC TYPE OF ACTOR,.
+                    artistActorNetworkServiceManager.disconnect(connectionId);
+                    artistActorConnectionDao.changeConnectionState(
                             connectionId,
-                            ConnectionState.DISCONNECTED_REMOTELY
+                            ConnectionState.DISCONNECTED_LOCALLY
                     );
-                    actorArtistNetworkServiceManager.confirm(connectionId);
                     break;
                 default:
                     throw new UnexpectedConnectionStateException(
@@ -290,13 +259,14 @@ public class ActorConnectionEventsActions {
                     cantGetConnectionStateException,
                     "connectionId: "+connectionId,
                     "Error trying to get the connection state.");
-        } catch (final CantConfirmException | ConnectionRequestNotFoundException networkServiceException ) {
+        } catch (final CantDisconnectException | ConnectionRequestNotFoundException networkServiceException ) {
             errorManager.reportUnexpectedPluginException(
                     pluginVersionReference,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     networkServiceException);
             throw new CantDisconnectFromActorException(
-                    networkServiceException, "connectionId: "+connectionId,
+                    networkServiceException,
+                    "connectionId: "+connectionId,
                     "Error trying to disconnect from an actor through the network service.");
         } catch (final CantChangeActorConnectionStateException cantChangeActorConnectionStateException ) {
             errorManager.reportUnexpectedPluginException(
@@ -304,13 +274,14 @@ public class ActorConnectionEventsActions {
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     cantChangeActorConnectionStateException);
             throw new CantDisconnectFromActorException(
-                    cantChangeActorConnectionStateException, "connectionId: "+connectionId,
+                    cantChangeActorConnectionStateException,
+                    "connectionId: "+connectionId,
                     "Error trying to change the actor connection state.");
         } catch (final Exception exception) {
-            errorManager.reportUnexpectedPluginException
-                    (pluginVersionReference,
-                            UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                            exception);
+            errorManager.reportUnexpectedPluginException(
+                    pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
             throw new CantDisconnectFromActorException(
                     exception,
                     "connectionId: "+connectionId,
@@ -319,30 +290,32 @@ public class ActorConnectionEventsActions {
     }
 
     /**
-     * This method contains all the logic to deny connections.
-     * @param connectionId
+     * This method contains all the logic to deny a connection.
+     * @param connectionId   id of the actor connection to be denied.
+     *
      * @throws CantDenyActorConnectionRequestException
      * @throws ActorConnectionNotFoundException
      * @throws UnexpectedConnectionStateException
      */
-    public void handleDenyConnection(
-            final UUID connectionId) throws
+    @Override
+    public void denyConnection(UUID connectionId) throws
             CantDenyActorConnectionRequestException,
-            ActorConnectionNotFoundException       ,
-            UnexpectedConnectionStateException     {
-
+            ActorConnectionNotFoundException,
+            UnexpectedConnectionStateException {
         try {
-            ConnectionState currentConnectionState = dao.getConnectionState(connectionId);
+            ConnectionState currentConnectionState = artistActorConnectionDao.getConnectionState(
+                    connectionId);
             switch (currentConnectionState) {
-                case DENIED_REMOTELY:
+                case DENIED_LOCALLY:
                     // no action needed
                     break;
-                case PENDING_REMOTELY_ACCEPTANCE:
-                    dao.changeConnectionState(
+                case PENDING_LOCALLY_ACCEPTANCE:
+                    // deny connection through network service and after that mark as DENIED LOCALLY
+                    artistActorNetworkServiceManager.denyConnection(connectionId);
+                    artistActorConnectionDao.changeConnectionState(
                             connectionId,
-                            ConnectionState.DENIED_REMOTELY
+                            ConnectionState.DENIED_LOCALLY
                     );
-                    actorArtistNetworkServiceManager.confirm(connectionId);
                     break;
                 default:
                     throw new UnexpectedConnectionStateException(
@@ -350,7 +323,6 @@ public class ActorConnectionEventsActions {
                             "Unexpected contact state for denying.");
             }
         } catch (final ActorConnectionNotFoundException | UnexpectedConnectionStateException innerException) {
-
             errorManager.reportUnexpectedPluginException(
                     pluginVersionReference,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -365,7 +337,7 @@ public class ActorConnectionEventsActions {
                     cantGetConnectionStateException,
                     "connectionId: "+connectionId,
                     "Error trying to get the connection state.");
-        } catch (final CantConfirmException | ConnectionRequestNotFoundException networkServiceException ) {
+        } catch (final CantDenyConnectionRequestException | ConnectionRequestNotFoundException networkServiceException ) {
             errorManager.reportUnexpectedPluginException(
                     pluginVersionReference,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -396,28 +368,32 @@ public class ActorConnectionEventsActions {
     }
 
     /**
-     * This method contains all the logic to handle cancel connections.
-     * @param connectionId
+     * This method contains all the logic to cancel a connection
+     * @param connectionId   id of the actor connection request to be canceled.
+     *
      * @throws CantCancelActorConnectionRequestException
      * @throws ActorConnectionNotFoundException
      * @throws UnexpectedConnectionStateException
      */
-    public void handleCancelConnection(final UUID connectionId) throws
+    @Override
+    public void cancelConnection(UUID connectionId) throws
             CantCancelActorConnectionRequestException,
-            ActorConnectionNotFoundException         ,
-            UnexpectedConnectionStateException       {
+            ActorConnectionNotFoundException,
+            UnexpectedConnectionStateException {
         try {
-            ConnectionState currentConnectionState = dao.getConnectionState(connectionId);
+            ConnectionState currentConnectionState = artistActorConnectionDao.getConnectionState(
+                    connectionId);
             switch (currentConnectionState) {
-                case CANCELLED_REMOTELY:
+                case CANCELLED_LOCALLY:
                     // no action needed
                     break;
-                case PENDING_LOCALLY_ACCEPTANCE:
-                    dao.changeConnectionState(
+                case PENDING_REMOTELY_ACCEPTANCE:
+                    // cancel connection through network service and after that mark as CANCELLED LOCALLY
+                    artistActorNetworkServiceManager.cancelConnection(connectionId);
+                    artistActorConnectionDao.changeConnectionState(
                             connectionId,
-                            ConnectionState.CANCELLED_REMOTELY
+                            ConnectionState.CANCELLED_LOCALLY
                     );
-                    actorArtistNetworkServiceManager.confirm(connectionId);
                     break;
                 default:
                     throw new UnexpectedConnectionStateException(
@@ -441,7 +417,7 @@ public class ActorConnectionEventsActions {
                     cantGetConnectionStateException,
                     "connectionId: "+connectionId,
                     "Error trying to get the connection state.");
-        } catch (final CantConfirmException | ConnectionRequestNotFoundException networkServiceException ) {
+        } catch (final CantCancelConnectionRequestException | ConnectionRequestNotFoundException networkServiceException ) {
             errorManager.reportUnexpectedPluginException(
                     pluginVersionReference,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -466,38 +442,44 @@ public class ActorConnectionEventsActions {
                     exception);
             throw new CantCancelActorConnectionRequestException(
                     exception,
-                    "connectionId: "+connectionId, "" +
+                    "connectionId: "+connectionId,
                     "Unhandled error.");
         }
     }
 
-    public void handleAcceptConnection(final UUID connectionId) throws
+    /**
+     * This method contains all the logic to accept a connection
+     * @param connectionId   id of the actor connection to be accepted.
+     *
+     * @throws CantAcceptActorConnectionRequestException
+     * @throws ActorConnectionNotFoundException
+     * @throws UnexpectedConnectionStateException
+     */
+    @Override
+    public void acceptConnection(UUID connectionId) throws
             CantAcceptActorConnectionRequestException,
             ActorConnectionNotFoundException,
-            UnexpectedConnectionStateException       {
+            UnexpectedConnectionStateException {
         try {
-            ConnectionState currentConnectionState = dao.getConnectionState(connectionId);
+            ConnectionState currentConnectionState = artistActorConnectionDao.getConnectionState(
+                    connectionId);
             switch (currentConnectionState) {
                 case CONNECTED:
                     // no action needed
                     break;
-                case PENDING_REMOTELY_ACCEPTANCE:
-                    dao.changeConnectionState(
+                case PENDING_LOCALLY_ACCEPTANCE:
+                    // cancel connection through network service and after that mark as CANCELLED LOCALLY
+                    artistActorNetworkServiceManager.acceptConnection(connectionId);
+                    artistActorConnectionDao.changeConnectionState(
                             connectionId,
                             ConnectionState.CONNECTED
                     );
-                    actorArtistNetworkServiceManager.confirm(connectionId);
                     break;
                 default:
                     throw new UnexpectedConnectionStateException(
                             "connectionId: "+connectionId + " - currentConnectionState: "+currentConnectionState,
                             "Unexpected contact state for cancelling.");
             }
-            //Raise new connection Event.
-            FermatEvent eventToRaise = eventManager.getNewEvent(
-                    EventType.ARTIST_ACTOR_CONNECTION_NEW_CONNECTION_EVENT);
-            eventToRaise.setSource(EventSource.ARTIST_ACTOR_CONNECTION);
-            eventManager.raiseEvent(eventToRaise);
         } catch (final ActorConnectionNotFoundException | UnexpectedConnectionStateException innerException) {
             errorManager.reportUnexpectedPluginException(
                     pluginVersionReference,
@@ -514,7 +496,7 @@ public class ActorConnectionEventsActions {
                     cantGetConnectionStateException,
                     "connectionId: "+connectionId,
                     "Error trying to get the connection state.");
-        } catch (final CantConfirmException | ConnectionRequestNotFoundException networkServiceException ) {
+        } catch (final CantAcceptConnectionRequestException | ConnectionRequestNotFoundException networkServiceException ) {
             errorManager.reportUnexpectedPluginException(
                     pluginVersionReference,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -539,8 +521,7 @@ public class ActorConnectionEventsActions {
                     exception);
             throw new CantAcceptActorConnectionRequestException(
                     exception,
-                    "connectionId: "+connectionId,
-                    "Unhandled error.");
+                    "connectionId: "+connectionId, "Unhandled error.");
         }
     }
 }

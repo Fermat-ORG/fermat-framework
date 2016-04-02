@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1;
+package com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantInitializeActorConnectionDatabaseException;
@@ -23,12 +23,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
-import com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1.database.ArtistActorConnectionDao;
-import com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1.database.ArtistActorConnectionDeveloperDatabaseFactory;
-import com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1.event_handler.ArtistConnectionRequestNewsEventHandler;
-import com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1.event_handler.ArtistConnectionRequestUpdatesEventHandler;
-import com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1.structure.ActorConnectionEventsActions;
-import com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1.structure.ActorConnectionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -62,7 +56,7 @@ public class ArtistActorConnectionPluginRoot extends AbstractPlugin implements D
     /**
      * Represents the plugin manager
      */
-    private ActorConnectionManager actorConnectionManager;
+    private com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.structure.ActorConnectionManager actorConnectionManager;
 
     /**
      * This represents the list of FermatEventListener used in this plugin.
@@ -82,13 +76,13 @@ public class ArtistActorConnectionPluginRoot extends AbstractPlugin implements D
     @Override
     public void start() throws CantStartPluginException {
         try {
-            final ArtistActorConnectionDao artistActorConnectionDao = new ArtistActorConnectionDao(
+            final com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.database.ArtistActorConnectionDao artistActorConnectionDao = new com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.database.ArtistActorConnectionDao(
                     pluginDatabaseSystem,
                     pluginFileSystem,
                     pluginId
             );
             artistActorConnectionDao.initializeDatabase();
-            final ActorConnectionEventsActions eventActions = new ActorConnectionEventsActions(
+            final com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.structure.ActorConnectionEventsActions eventActions = new com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.structure.ActorConnectionEventsActions(
                     artistActorNetworkServiceManager,
                     artistActorConnectionDao,
                     errorManager,
@@ -98,19 +92,19 @@ public class ArtistActorConnectionPluginRoot extends AbstractPlugin implements D
             );
             FermatEventListener newsListener = eventManager.getNewListener(
                     EventType.ARTIST_CONNECTION_REQUEST_NEWS);
-            newsListener.setEventHandler(new ArtistConnectionRequestNewsEventHandler(
+            newsListener.setEventHandler(new com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.event_handler.ArtistConnectionRequestNewsEventHandler(
                     eventActions,
                     this));
             eventManager.addListener(newsListener);
             listenersAdded.add(newsListener);
             FermatEventListener updatesListener = eventManager.getNewListener(
                     EventType.ARTIST_CONNECTION_REQUEST_UPDATES);
-            updatesListener.setEventHandler(new ArtistConnectionRequestUpdatesEventHandler(
+            updatesListener.setEventHandler(new com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.event_handler.ArtistConnectionRequestUpdatesEventHandler(
                     eventActions,
                     this));
             eventManager.addListener(updatesListener);
             listenersAdded.add(updatesListener);
-            actorConnectionManager = new ActorConnectionManager(
+            actorConnectionManager = new com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.structure.ActorConnectionManager(
                     artistActorNetworkServiceManager,
                     artistActorConnectionDao,
                     errorManager,
@@ -142,7 +136,7 @@ public class ArtistActorConnectionPluginRoot extends AbstractPlugin implements D
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return new ArtistActorConnectionDeveloperDatabaseFactory(
+        return new com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.database.ArtistActorConnectionDeveloperDatabaseFactory(
                 pluginDatabaseSystem,
                 pluginId).getDatabaseList(developerObjectFactory);
 
@@ -152,7 +146,7 @@ public class ArtistActorConnectionPluginRoot extends AbstractPlugin implements D
     public List<DeveloperDatabaseTable> getDatabaseTableList(
             DeveloperObjectFactory developerObjectFactory,
             DeveloperDatabase developerDatabase) {
-        return new ArtistActorConnectionDeveloperDatabaseFactory(
+        return new com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.database.ArtistActorConnectionDeveloperDatabaseFactory(
                 pluginDatabaseSystem,
                 pluginId).getDatabaseTableList(developerObjectFactory);
     }
@@ -162,7 +156,7 @@ public class ArtistActorConnectionPluginRoot extends AbstractPlugin implements D
             DeveloperObjectFactory developerObjectFactory,
             DeveloperDatabase developerDatabase,
             DeveloperDatabaseTable developerDatabaseTable) {
-        return new ArtistActorConnectionDeveloperDatabaseFactory(
+        return new com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.database.ArtistActorConnectionDeveloperDatabaseFactory(
                 pluginDatabaseSystem,
                 pluginId).getDatabaseTableContent(developerObjectFactory,  developerDatabaseTable);
     }

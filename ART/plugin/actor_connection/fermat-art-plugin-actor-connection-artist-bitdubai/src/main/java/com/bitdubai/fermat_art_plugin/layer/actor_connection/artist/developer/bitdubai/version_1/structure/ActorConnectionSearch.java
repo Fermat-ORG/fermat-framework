@@ -1,8 +1,7 @@
-package com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1.structure;
+package com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionSearch;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistLinkedActorIdentity;
-import com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version1.database.ArtistActorConnectionDao;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 31/03/16.
@@ -15,7 +14,7 @@ public class ActorConnectionSearch extends ArtistActorConnectionSearch {
      * @param dao
      */
     public ActorConnectionSearch(final ArtistLinkedActorIdentity actorIdentity,
-                                 final ArtistActorConnectionDao dao) {
+                                 final com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.database.ArtistActorConnectionDao dao) {
         super(actorIdentity, dao);
     }
 }
