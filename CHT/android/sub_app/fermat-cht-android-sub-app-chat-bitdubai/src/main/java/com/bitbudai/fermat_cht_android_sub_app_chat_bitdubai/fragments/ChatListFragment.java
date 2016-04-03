@@ -495,21 +495,20 @@ public class ChatListFragment extends AbstractFermatFragment{
                 alert.setType("delete-chat");
                 alert.show();
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                               @Override
-                                               public void onDismiss(DialogInterface dialog) {
-                                                   Chat chat = chatSession.getSelectedChat();
-                                                   if (alert.getStatusDeleteContact() == true) {
-                                                       try {
-                                                           chatManager.deleteChat(chat);
-                                                       } catch (CantDeleteChatException e) {
-                                                           errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                                       } catch (Exception e) {
-                                                           errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                                       }
-                                                   }
-                                               }
-                                           }
-                );
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                            try {
+                                Chat chat = chatSession.getSelectedChat();
+                                chatManager.deleteChat(chat);
+                                updatevalues();
+                                adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                            } catch (CantDeleteChatException e) {
+                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                            }catch (Exception e) {
+                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                            }
+                    }
+                });
 
 
             }catch (Exception e){

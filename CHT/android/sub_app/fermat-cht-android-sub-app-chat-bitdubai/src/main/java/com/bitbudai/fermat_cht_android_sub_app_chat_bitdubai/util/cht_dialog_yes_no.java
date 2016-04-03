@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactsListFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
@@ -23,6 +24,7 @@ import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManag
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
@@ -54,10 +56,20 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
     String body,title;
     boolean addcontact = false;
     public boolean delete_contact = false;
+    public boolean delete_chat = false;
     ArrayList<String> contactname=new ArrayList<String>();
     ArrayList<Bitmap> contacticon=new ArrayList<>();
     ArrayList<UUID> contactid=new ArrayList<UUID>();
     ArrayList<String> contactalias =new ArrayList<String>();
+    ArrayList<String> contactName=new ArrayList<>();
+    ArrayList<String> message=new ArrayList<>();
+    ArrayList<String> dateMessage=new ArrayList<>();
+    ArrayList<UUID> chatId=new ArrayList<>();
+    ArrayList<UUID> contactId=new ArrayList<>();
+    ArrayList<String> status=new ArrayList<>();
+    ArrayList<String> typeMessage=new ArrayList<>();
+    ArrayList<Integer> noReadMsgs=new ArrayList<>();
+    ArrayList<Bitmap> imgId=new ArrayList<>();
     public cht_dialog_yes_no(Context activity, FermatSession fermatSession, ResourceProviderManager resources, ContactConnection contactConnm, AdapterCallbackContacts mAdapterCallback) {
         super(activity, fermatSession, resources);
         this.contactConn = contactConnm;
@@ -99,6 +111,9 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
         title = txt;
     }
     public void setType(String txt){
+        if(txt.equals("delete-chat")){
+        AlertType = 3;
+        }
         if(txt.equals("delete-contact")){
         AlertType = 2;
         }
@@ -117,6 +132,9 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
     }
     public boolean getStatusDeleteContact(){
         return delete_contact;
+    }
+    public boolean getStatusDeleteChat(){
+        return delete_chat;
     }
 
     public void onClick(View v) {
@@ -181,6 +199,13 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
                 delete_contact = true;
+            }else if(AlertType == 3){
+                try {
+                    dismiss();
+                }catch (Exception e){
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
+                delete_chat = true;
             }
         }
 
