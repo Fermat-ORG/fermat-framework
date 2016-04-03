@@ -78,6 +78,7 @@ public final class ArtistActorNetworkServiceDatabaseFactory {
             table.addColumn(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME     , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
             table.addColumn(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENDER_ALIAS_COLUMN_NAME          , DatabaseDataType.STRING      , 130, Boolean.FALSE);
             table.addColumn(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING      , 130, Boolean.FALSE);
+            table.addColumn(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_ACTOR_TYPE_COLUMN_NAME, DatabaseDataType.STRING      ,  10, Boolean.FALSE);
             table.addColumn(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
             table.addColumn(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
             table.addColumn(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
