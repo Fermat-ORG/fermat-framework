@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff">
 
@@ -13,18 +14,20 @@
         android:gravity="center"
         android:text="@string/select_user_to_transfer"
         android:textColor="#2d3e50"
-        android:textSize="14sp"/>
+        android:textSize="14sp"
+        android:id="@+id/select_user_to_transfer" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_v3_user"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:layout_below="@+id/select_user_to_transfer">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/dap_wallet_asset_user_asset_trasnfer_select_user_activity_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="519dp"
             android:layout_marginEnd="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
@@ -58,4 +61,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

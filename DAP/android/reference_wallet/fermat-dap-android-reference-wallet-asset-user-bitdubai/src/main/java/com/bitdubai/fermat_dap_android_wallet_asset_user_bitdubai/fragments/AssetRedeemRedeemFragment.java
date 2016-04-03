@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -53,7 +54,7 @@ import java.util.List;
 import static android.widget.Toast.makeText;
 
 /**
- * Created by Jinmy Bohorquez on 18/02/2016.
+ * Created by Penelope Quintero on 18/02/2016.
  */
 public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPoint>
         implements FermatListItemListeners<RedeemPoint> {
@@ -78,6 +79,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
     private View noUsersView;
     private Toolbar toolbar;
     private Activity activity;
+    private FermatTextView titleRedeem;
 
     public static AssetRedeemRedeemFragment newInstance() {
         return new AssetRedeemRedeemFragment();
@@ -93,8 +95,6 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
 
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            redeemPoints = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-
             assetToRedeem = (Asset) appSession.getData("asset_data");
 
             String digitalAssetPublicKey = assetToRedeem.getDigitalAsset().getPublicKey();
@@ -103,6 +103,10 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
             } catch (CantLoadWalletException e) {
                 e.printStackTrace();
             }
+
+            redeemPoints = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+
+
 
             activity = getActivity();
 
@@ -120,7 +124,9 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
 
         configureToolbar();
 
-        noUsersView = layout.findViewById(R.id.dap_wallet_asset_user_redeem_no_redeempoints);
+        noUsersView = layout.findViewById(R.id.dap_v3_wallet_asset_user_redeem_no_redeempoints);
+        titleRedeem = (FermatTextView) layout.findViewById(R.id.select_redeem_point);
+
 
         showOrHideNoUsersView(redeemPoints.isEmpty());
     }
@@ -236,7 +242,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
 
     @Override
     protected int getRecyclerLayoutId() {
-        return R.id.dap_wallet_asset_user_asset_redeem_select_redeempoints_activity_recycler_view;
+        return R.id.dap_v3_wallet_asset_user_asset_redeem_select_redeempoints_activity_recycler_view;
     }
 
     @Override
@@ -340,8 +346,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         List<RedeemPoint> redeemPoints = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                DigitalAsset assetToRedeem = (DigitalAsset) appSession.getData("asset_data");
-                redeemPoints = Data.getConnectedRedeemPoints(moduleManager,redeemPoints, assetToRedeem);
+                redeemPoints = Data.getConnectedRedeemPoints(moduleManager,redeemPoints, digitalAsset);
                 appSession.setData("redeemPoints_to_redeem", redeemPoints);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -364,9 +369,11 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         if (show) {
             recyclerView.setVisibility(View.GONE);
             noUsersView.setVisibility(View.VISIBLE);
+            titleRedeem.setVisibility(View.GONE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             noUsersView.setVisibility(View.GONE);
+            titleRedeem.setVisibility(View.VISIBLE);
         }
     }
 
