@@ -152,6 +152,7 @@ public class NotificationService extends Service {
 
 
     public int notificateProgress(FermatBundle bundle) {
+        NotificationCompat.Builder mBuilder;
         try {
             int progress = (int) bundle.getSerializable(Broadcaster.PROGRESS_BAR);
             int publishId = (bundle.contains(Broadcaster.PUBLISH_ID)) ? bundle.getInt(Broadcaster.PUBLISH_ID) :0;
@@ -159,7 +160,7 @@ public class NotificationService extends Service {
 
             mNotifyManager = (NotificationManager)
                     getSystemService(NOTIFICATION_SERVICE);
-            if(progress==0 || progress==100){
+            if(progress<0 || progress>100){
                 mNotifyManager.cancel(publishId);
             }else {
 

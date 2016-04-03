@@ -10,12 +10,14 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransac
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.structures.ComponentProfileInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by mati on 2016.03.31..
@@ -27,14 +29,21 @@ public class ComponentDAO {
      */
     private Database dataBase;
 
+    private final PluginFileSystem pluginFileSystem;
+    private final UUID pluginId;
+
     /**
      * Constructor with parameters
      *
      * @param dataBase
      */
-    public ComponentDAO(Database dataBase) {
+    public ComponentDAO(Database dataBase,
+                        final PluginFileSystem pluginFileSystem,
+                        final UUID pluginId) {
         super();
         this.dataBase = dataBase;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
     }
 
     /**

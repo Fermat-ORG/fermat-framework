@@ -12,6 +12,9 @@ import android.widget.ImageView;
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.fermat.R;
 
+/**
+ * Created by Matias Furszyfer
+ */
 public class LoadingScreenActivity extends AppCompatActivity {
 
 

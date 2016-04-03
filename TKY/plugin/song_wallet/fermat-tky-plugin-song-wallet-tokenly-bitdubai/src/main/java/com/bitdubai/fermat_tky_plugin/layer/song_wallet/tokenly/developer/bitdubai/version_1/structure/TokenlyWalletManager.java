@@ -1,8 +1,13 @@
 package com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.BroadcasterNotificationType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_tky_api.all_definitions.util.ObjectChecker;
@@ -60,6 +65,11 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
      */
     ErrorManager errorManager;
 
+    /**
+     * Represents the broadcaster.
+     */
+    private Broadcaster broadcaster;
+
     //DEFAULT VALUES
     /**
      * This represents the time between synchronize process.
@@ -75,11 +85,13 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             TokenlySongWalletDao tokenlySongWalletDao,
             TokenlyWalletSongVault tokenlyWalletSongVault,
             TokenlyApiManager tokenlyApiManager,
-            ErrorManager errorManager){
+            ErrorManager errorManager,
+            Broadcaster broadcaster){
         this.tokenlySongWalletDao = tokenlySongWalletDao;
         this.tokenlyWalletSongVault = tokenlyWalletSongVault;
         this.tokenlyApiManager = tokenlyApiManager;
         this.errorManager = errorManager;
+        this.broadcaster = broadcaster;
     }
     //TODO: implement this methods
     /**
@@ -195,6 +207,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             //TODO: limit for testing
             int limit=3;
             int c=0;
+            FermatBundle fermatBundle;
             for(Song song : songs){
                 //Check if song is in database
                 tokenlySongId = song.getId();
@@ -216,8 +229,16 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             for(Song song : toDownloadSongList){
                 //Request download song
                 try{
-                    System.out.println("TKY - "+song.getName());
-                    System.out.println("TKY - "+song.getReleaseDate());
+                    //System.out.println("TKY - "+song.getName());
+                    //System.out.println("TKY - "+song.getReleaseDate());
+                    //Inform to UI that I'll begin to download the song.
+                    fermatBundle = new FermatBundle();
+                    fermatBundle.put(BroadcasterNotificationType.SONG_INFO.getCode(),song);
+                    broadcaster.publish(
+                            BroadcasterType.UPDATE_VIEW,
+                            WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
+                            fermatBundle);
+                    //Download the song.
                     downloadSong(song, user.getUsername());
                     /**
                      * I'll try to avoid the download list process interruption because an exception
@@ -229,6 +250,13 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                             Plugins.TOKENLY_WALLET,
                             UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
                             e);
+                    //Inform to UI this download exception.
+                    fermatBundle = new FermatBundle();
+                    fermatBundle.put(BroadcasterNotificationType.DOWNLOAD_EXCEPTION.getCode(),song);
+                    broadcaster.publish(
+                            BroadcasterType.UPDATE_VIEW,
+                            WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
+                            fermatBundle);
                 }
             }
             /**

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by mati on 2016.02.22..
+ * Created by Matias Furszyfer on 2016.02.22..
  */
 public class FermatSessionManager {
 

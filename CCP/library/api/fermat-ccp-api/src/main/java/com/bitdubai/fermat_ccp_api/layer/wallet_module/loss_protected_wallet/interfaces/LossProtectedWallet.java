@@ -358,7 +358,7 @@ public interface LossProtectedWallet extends Serializable {
     long getBalance(BalanceType balanceType,
                     String walletPublicKey,
                     BlockchainNetworkType blockchainNetworkType,
-                    long exangeRate) throws CantGetLossProtectedBalanceException;
+                    String exangeRate) throws CantGetLossProtectedBalanceException;
 
     /**
      * Throw the method <code>getTransactions</code> you cant get all the transactions for an specific balance type.
