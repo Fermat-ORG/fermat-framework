@@ -233,7 +233,9 @@ We would be grateful for any help received, and anyone interested in joining the
 ### ![alt text](https://raw.githubusercontent.com/bitDubai/media-kit/1479ec1f2e93a1b11f0f1ac9e312099f08aa7aec/Logotype/FermatTeams/logo_mordor_team.jpg "Logo Mordor Team")
 We are putting together a team of talented developers, especially passionate about the implementation of major challenges, in order to carry out our goals and collaborate with other teams on their goals.
 
-In the Crypto Broker Platform we are responsible for a large part of business transactions, while in the Chat Platform we are developing the back end. In each platform mentioned, we are involved in the development of Network Services and transactional plugins.
+* In the Crypto Broker Platform we are responsible for a large part of business transactions. 
+* In the Chat Platform We were involved in the back end development.
+* We are in charge of Tokenly and Artist development.
 
 #### Team Members:
 
@@ -263,13 +265,13 @@ In the Crypto Broker Platform we are responsible for a large part of business tr
     Skype:   juanaso15
     Github:  https://github.com/Juanaso
 
-* **Alexander Jimenez [New Developer]**<br/>
+* **Alexander Jimenez [Veteran Developer]**<br/>
 ---
     Email:   alex_jimenez76@hotmail.com
     Skype:   alex_jimenez76
     Github:  https://github.com/alexanderejm
 
-* **Alexander Jimenez [New Part-Time Developer]**<br/>
+* **Edicson Infante [New Part-Time Developer]**<br/>
 ---
     Email:   edicsonjosue18@gmail.com
     Skype:   live:ejil_18
