@@ -2312,7 +2312,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
     private SideMenu loadSideMenuAssetUserWallet(String publicKey) {
 
         SideMenu runtimeSideMenu = new SideMenu();
-        runtimeSideMenu.setBackgroundColor("#381a5e");
+        runtimeSideMenu.setBackgroundColor("#1371A7");
 //        runtimeSideMenu.setNavigationIconColor("#ffffff");
         runtimeSideMenu.setHasFooter(true);
 
@@ -2320,7 +2320,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeMenuItem.setLabel("Home");
         runtimeMenuItem.setSelected(true);
-        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_USER_MAIN_ACTIVITY);
+        runtimeMenuItem.setLinkToActivity(Activities.DAP_WALLET_ASSET_USER_V3_HOME);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
