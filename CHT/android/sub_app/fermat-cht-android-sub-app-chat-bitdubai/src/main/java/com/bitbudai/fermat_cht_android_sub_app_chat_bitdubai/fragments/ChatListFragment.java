@@ -402,7 +402,6 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public void onUpdateViewOnUIThread(String code) {
         super.onUpdateViewOnUIThread(code);
-   //     Toast.makeText(getActivity(), "Broadcast chatlist", Toast.LENGTH_SHORT).show();
         if(code.equals("13")){
             updatevalues();
             adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
@@ -475,6 +474,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         // Get the info on which item was selected
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
         try{
+            // Set the info of chat selected in session
             appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(chatId.get(info.position)));
         }catch(CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -497,16 +497,18 @@ public class ChatListFragment extends AbstractFermatFragment{
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                            try {
-                                Chat chat = chatSession.getSelectedChat();
-                                chatManager.deleteChat(chat);
-                                updatevalues();
-                                adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-                            } catch (CantDeleteChatException e) {
-                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                            }catch (Exception e) {
-                                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                            }
+                        try {
+                            // Get the info of chat selected from session
+                            Chat chat = chatSession.getSelectedChat();
+                            // Delete chat and refresh view
+                            chatManager.deleteChat(chat);
+                            updatevalues();
+                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                        } catch (CantDeleteChatException e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }catch (Exception e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }
                     }
                 });
 
