@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by mati on 2016.01.12..
+ * Created by Matias Furszyfer on 2016.01.12..
  */
 public class NetworkStateReceiver extends BroadcastReceiver {
 

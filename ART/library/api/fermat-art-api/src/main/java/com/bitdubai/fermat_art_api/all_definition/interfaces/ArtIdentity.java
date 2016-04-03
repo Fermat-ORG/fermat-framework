@@ -7,6 +7,7 @@ import com.bitdubai.fermat_art_api.all_definition.enums.ExternalPlatform;
  */
 public interface ArtIdentity {
 
+    String getAlias();
     /**
      * This method returns the identity public key.
      * @return

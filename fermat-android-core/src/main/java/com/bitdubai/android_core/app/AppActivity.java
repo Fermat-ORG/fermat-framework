@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
-import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
@@ -42,8 +41,6 @@ import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-
-import java.util.Objects;
 
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getAppResources;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
@@ -400,12 +397,6 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectApp"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
         }
-    }
-
-    @Override
-    public Object[] connectBetweenAppsData() {
-        Objects[] objectses = (Objects[]) getIntent().getSerializableExtra(ConnectionConstants.SEARCH_NAME);
-        return objectses;
     }
 
     @Override
