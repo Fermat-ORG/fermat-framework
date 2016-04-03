@@ -19,6 +19,7 @@ public class WalletSongRecord implements WalletSong {
     //WALLET SONG FIELDS
     private SongStatus songStatus;
     private UUID songId;
+    private byte[] songBytes;
     //TOKENLY SONG FIELDS
     private String id;
     private String name;
@@ -237,6 +238,38 @@ public class WalletSongRecord implements WalletSong {
 
     }
 
+    /**
+     * Constructor with parameters.
+     * Can be used to set the complete song to UI.
+     * @param walletSong
+     * @param songBytes
+     */
+    public WalletSongRecord(
+            WalletSong walletSong,
+            byte[] songBytes){
+        //Set the WalletSong fields
+        this.songStatus = walletSong.getSongStatus();
+        this.songId = walletSong.getSongId();
+        this.songBytes = songBytes;
+        //Set the song fields
+        this.id = walletSong.getId();
+        this.name = walletSong.getName();
+        this.tokens = walletSong.getTokens();
+        this.performers = walletSong.getPerformers();
+        this.composers = walletSong.getComposers();
+        this.releaseDate = walletSong.getReleaseDate();
+        this.lyrics = walletSong.getLyrics();
+        this.credits = walletSong.getCredits();
+        this.copyright = walletSong.getCopyright();
+        this.ownership = walletSong.getOwnership();
+        this.usageRights = walletSong.getUsageRights();
+        this.usageProhibitions = walletSong.getUsageProhibitions();
+        this.bitcoinAddress = walletSong.getBitcoinAddress();
+        this.other = walletSong.getOther();
+        //Set an empty string in this constructor.
+        this.downloadUrl = "";
+    }
+
     //WALLET SONG IMPLEMENTATIONS
     /**
      * This method returns the Song status.
@@ -256,6 +289,18 @@ public class WalletSongRecord implements WalletSong {
     @Override
     public UUID getSongId() {
         return this.songId;
+    }
+
+    /**
+     * This method returns a byte array that represents the song ready to be played.
+     * @return
+     */
+    @Override
+    public byte[] getSongBytes() {
+        if(songBytes==null){
+            return new byte[0];
+        }
+        return this.songBytes;
     }
 
     //TOKENLY SONG IMPLEMENTATIONS

@@ -22,6 +22,8 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.fragmentFactory.Crypto
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CANCEL_NEGOTIATION_NOTIFICATION;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CONTRACT_COMPLETED_NOTIFICATION;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CONTRACT_CUSTOMER_SUBMITTED_PAYMENT_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_CONTRACT_EXPIRATION_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_CONTRACT_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_NEGOTIATION_NOTIFICATION;
@@ -86,9 +88,13 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Crypto
             case CBW_WAITING_FOR_BROKER_NOTIFICATION:
                 return new CryptoBrokerNotificationPainter("Negotiation Update","You have received a negotiation update, check your wallet.","");
             case CBW_CANCEL_NEGOTIATION_NOTIFICATION:
-                return new CryptoBrokerNotificationPainter("Negotiation Canceled","Check the Contract Story, a customer has canceled a negotiation","");
+                return new CryptoBrokerNotificationPainter("Negotiation Canceled","Check the Contract History, a customer has canceled a negotiation.","");
             case CBW_NEW_CONTRACT_NOTIFICATION:
                 return new CryptoBrokerNotificationPainter("New Contract.","A new contract has been created, check your wallet.","");
+            case CBW_CONTRACT_CUSTOMER_SUBMITTED_PAYMENT_NOTIFICATION:
+                return new CryptoBrokerNotificationPainter("Contract Update","You just received a payment.","");
+            case CBW_CONTRACT_COMPLETED_NOTIFICATION:
+                return new CryptoBrokerNotificationPainter("Contract Completed","The contract has been completed.","");
             default:
                 return super.getNotificationPainter(code);
         }

@@ -41,7 +41,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
      * @throws CantListChatIdentityException if something goes wrong.
      */
     @Override
-    public List<ChatIdentity> getIdentityAssetUsersFromCurrentDeviceUser() throws CantListChatIdentityException {
+    public List<ChatIdentity> getIdentityChatUsersFromCurrentDeviceUser() throws CantListChatIdentityException {
         return null;
     }
 
@@ -52,7 +52,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
      * @throws CantGetChatIdentityException if something goes wrong.
      */
     @Override
-    public ChatIdentity getIdentityAssetUser() throws CantGetChatIdentityException {
+    public ChatIdentity getIdentityChatUser() throws CantGetChatIdentityException {
         return null;
     }
 

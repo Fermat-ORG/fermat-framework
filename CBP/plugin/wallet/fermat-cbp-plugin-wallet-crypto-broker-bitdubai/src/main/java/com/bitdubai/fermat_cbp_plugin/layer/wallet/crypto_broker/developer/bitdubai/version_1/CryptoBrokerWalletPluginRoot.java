@@ -431,7 +431,8 @@ public class CryptoBrokerWalletPluginRoot extends AbstractPlugin implements
             walletFile.loadFromMedia();
             return walletFile;
         } catch (FileNotFoundException | CantCreateFileException exception) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
+
+            // if not found, i will create it
             return createWalletFile();
         } catch (CantLoadFileException exception) {
             this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);

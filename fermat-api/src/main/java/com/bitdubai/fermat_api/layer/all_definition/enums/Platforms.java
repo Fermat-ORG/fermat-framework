@@ -24,7 +24,7 @@ public enum Platforms implements FermatEnum {
     CASH_PLATFORM                       ("CSH","Cash"),
     CHAT_PLATFORM                       ("CHT","Chat"),
     CRYPTO_COMMODITY_MONEY              ("CCM","Crypto Commodity"),
-    CRYPTO_CURRENCY_PLATFORM            ("CCP","Crypto Currencie"),
+    CRYPTO_CURRENCY_PLATFORM            ("CCP","Crypto Currencies"),
     DIGITAL_ASSET_PLATFORM              ("DAP","Digital Assets"),
     OPERATIVE_SYSTEM_API                ("OSA","OSA"),
     PLUG_INS_PLATFORM                   ("PIP","Tools"),
@@ -35,36 +35,24 @@ public enum Platforms implements FermatEnum {
     private final String code;
     private final String textForm;
 
-    Platforms(final String code,String textForm) {
-        this.code = code;
+    Platforms(final String code    ,
+              final String textForm) {
+
+        this.code     = code    ;
         this.textForm = textForm;
     }
 
-    public static Platforms getByCode(String code) throws InvalidParameterException {
+    public static Platforms getByCode(final String code) throws InvalidParameterException {
 
-        switch (code) {
-
-            case "BCH":  return BLOCKCHAINS;
-            case "BNK":  return BANKING_PLATFORM;
-            case "CP":   return COMMUNICATION_PLATFORM;
-            case "CBP":  return CRYPTO_BROKER_PLATFORM;
-            case "CER":  return CURRENCY_EXCHANGE_RATE_PLATFORM;
-            case "CSH":  return CASH_PLATFORM;
-            case "CHT":  return CHAT_PLATFORM;
-            case "CCM":  return CRYPTO_COMMODITY_MONEY;
-            case "CCP":  return CRYPTO_CURRENCY_PLATFORM;
-            case "DAP":  return DIGITAL_ASSET_PLATFORM;
-            case "OSA":  return OPERATIVE_SYSTEM_API;
-            case "PIP":  return PLUG_INS_PLATFORM;
-            case "WPD":  return WALLET_PRODUCTION_AND_DISTRIBUTION;
-            case "TKY":  return TOKENLY;
-
-            default:
-            throw new InvalidParameterException(
-                    "Code Received: " + code,
-                    "The received code is not valid for the Platforms enum"
-            );
+        for (Platforms platform : Platforms.values()) {
+            if(platform.getCode().equals(code))
+                return platform;
         }
+
+        throw new InvalidParameterException(
+                "Code Received: " + code,
+                "The received code is not valid for the Platforms enum"
+        );
     }
 
     @Override
