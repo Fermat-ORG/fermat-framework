@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -8,9 +8,8 @@ import com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.interfaces.W
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.HashMap;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -22,7 +21,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWalletContact {
+public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWalletContact,Serializable{
 
     private final String              actorName            ;
     private final String              actorPublicKey       ;
@@ -35,7 +34,7 @@ public class CryptoWalletWalletModuleWalletContact implements CryptoWalletWallet
     private boolean                   isConnection  ;
 
     public CryptoWalletWalletModuleWalletContact(final WalletContactRecord walletContactRecord,
-                                                 final byte[]              profilePicture     ) {
+                                                 final byte[] profilePicture) {
 
         this.contactId             = walletContactRecord.getContactId()                    ;
         this.walletPublicKey       = walletContactRecord.getWalletPublicKey()              ;

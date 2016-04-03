@@ -25,6 +25,7 @@ import com.bitdubai.fermat_cht_api.all_definition.agent.CHTTransactionAgent;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ContactStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
@@ -884,7 +885,8 @@ public class ChatMiddlewareMonitorAgent implements
                 chatMetadata.getChatName(),
                 ChatStatus.VISSIBLE,
                 chatMetadata.getDate(),
-                chatMetadata.getDate()
+                chatMetadata.getDate(),
+                TypeChat.INDIVIDUAL //TODO:Revisar
         );
     }
 

@@ -5,20 +5,27 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdent
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteGroupException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetGroupException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOwnIdentitiesException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
@@ -26,6 +33,8 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Group;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 
 import java.util.HashMap;
@@ -124,4 +133,17 @@ public interface ChatManager {
      * @throws CantSendChatMessageException
      */
     void sendMessage(Message createdMessage) throws CantSendChatMessageException;
+
+    void saveGroup(Group group) throws CantSaveGroupException;
+
+    void deleteGroup(Group group) throws CantDeleteGroupException;
+
+    List<Group> getGroups() throws CantListGroupException;
+    Group getGroup(UUID groupId) throws CantGetGroupException;
+
+    void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException;
+
+    void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException;
+
+    List<GroupMember> getGroupMembersByGroupId(UUID groupId)throws CantListGroupMemberException;
 }
