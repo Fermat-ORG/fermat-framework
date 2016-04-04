@@ -215,6 +215,7 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
 
         groupColumns.add(ChatMiddlewareDatabaseConstants.GROUP_ID_COLUMN_NAME);
         groupColumns.add(ChatMiddlewareDatabaseConstants.GROUP_NAME_COLUMN_NAME);
+        groupColumns.add(ChatMiddlewareDatabaseConstants.GROUP_TYPE_CHAT_COLUMN_NAME);
 
 
         /**

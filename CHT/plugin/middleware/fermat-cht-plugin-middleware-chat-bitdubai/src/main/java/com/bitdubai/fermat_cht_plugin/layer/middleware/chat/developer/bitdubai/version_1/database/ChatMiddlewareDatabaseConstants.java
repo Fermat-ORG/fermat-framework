@@ -113,6 +113,7 @@ public class ChatMiddlewareDatabaseConstants {
 
     public static final String GROUP_ID_COLUMN_NAME = "group_id";
     public static final String GROUP_NAME_COLUMN_NAME = "group_name";
+    public static final String GROUP_TYPE_CHAT_COLUMN_NAME = "type_chat";
 
     public static final String GROUP_FIRST_KEY_COLUMN = GROUP_ID_COLUMN_NAME;
 
