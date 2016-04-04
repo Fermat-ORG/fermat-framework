@@ -345,8 +345,8 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     e);
             throw new CantDeleteMessageException(
                     e,
-                    "Deleting a chat from database",
-                    "The chat probably is null");
+                    "Deleting messages from database",
+                    "The chat id probably is null");
         } catch (DatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.CHAT_MIDDLEWARE,
@@ -354,7 +354,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     e);
             throw new CantDeleteMessageException(
                     e,
-                    "Deleting a chat from database",
+                    "Deleting messages from database",
                     "An unexpected error happened in a database operation");
         } catch (Exception exception) {
             errorManager.reportUnexpectedPluginException(
@@ -363,7 +363,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                     FermatException.wrapException(exception));
             throw new CantDeleteMessageException(
                     FermatException.wrapException(exception),
-                    "Deleting a chat from database",
+                    "Deleting messages from database",
                     "Unexpected exception");
         }
     }
