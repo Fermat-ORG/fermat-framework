@@ -1289,37 +1289,63 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
     @Override
     public void saveGroup(Group group) throws CantSaveGroupException {
-
+        try {
+            chatMiddlewareDatabaseDao.saveGroup(group);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void deleteGroup(Group group) throws CantDeleteGroupException {
-
+        try {
+            chatMiddlewareDatabaseDao.deleteGroup(group);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public List<Group> getGroups() throws CantListGroupException {
+        try {
+            return chatMiddlewareDatabaseDao.getGroups();
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public Group getGroup(UUID groupId) throws CantGetGroupException {
+        try {
+            return chatMiddlewareDatabaseDao.getGroup(groupId);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException {
-
+        try {
+            chatMiddlewareDatabaseDao.saveGroupMember(groupMember);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException {
-
+        try {
+            chatMiddlewareDatabaseDao.deleteGroupMember(groupMember);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public List<GroupMember> getGroupMembersByGroupId(UUID groupId) throws CantListGroupMemberException {
-        return null;
+        return chatMiddlewareDatabaseDao.getGroupsMemberByGroupId(groupId);
     }
 
     /**

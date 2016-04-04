@@ -287,12 +287,12 @@ public class ChatSupAppModuleManager implements ChatManager {
 
     @Override
     public List<Group> getGroups() throws CantListGroupException {
-        return null;
+        return getGroups();
     }
 
     @Override
     public Group getGroup(UUID groupId) throws CantGetGroupException {
-        return null;
+        return middlewareChatManager.getGroup(groupId);
     }
 
 
@@ -308,6 +308,16 @@ public class ChatSupAppModuleManager implements ChatManager {
 
     @Override
     public List<GroupMember> getGroupMembersByGroupId(UUID groupId) throws CantListGroupMemberException {
-        return null;
+        return getGroupMembersByGroupId(groupId);
+    }
+
+    @Override
+    public void clearChatMessageByChatId(UUID chatId) throws CantDeleteMessageException, CantGetMessageException {
+        List<Message> messages = middlewareChatManager.getMessagesByChatId(chatId);
+
+        for (Message message : messages)
+        {
+            middlewareChatManager.deleteMessage(message);
+        }
     }
 }
