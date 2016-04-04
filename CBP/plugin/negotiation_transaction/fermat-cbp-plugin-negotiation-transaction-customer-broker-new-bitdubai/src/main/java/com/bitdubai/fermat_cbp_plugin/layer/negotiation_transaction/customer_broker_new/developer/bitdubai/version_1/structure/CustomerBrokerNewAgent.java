@@ -215,13 +215,15 @@ public class CustomerBrokerNewAgent implements
 
         CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao;
 
+        boolean                                             threadWorking;
+
         public final int                                    SLEEP_TIME = 5000;
 
         int                                                 iterationNumber = 0;
 
         int                                                 iterationConfirmSend = 0;
 
-        boolean                                             threadWorking;
+        Map<UUID,Integer>                                   transactionSend     = new HashMap<>();
 
         //public MonitorAgentTransaction() { startAgent(); }
 
@@ -320,19 +322,13 @@ public class CustomerBrokerNewAgent implements
 
                 customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, database);
 
-                CustomerBrokerNewForwardTransaction forwardTransaction = new CustomerBrokerNewForwardTransaction(
-                        customerBrokerNewNegotiationTransactionDatabaseDao,
-                        errorManager,
-                        pluginVersionReference
-                );
-
                 String                  negotiationXML;
                 NegotiationType         negotiationType;
                 UUID                    transactionId;
                 List<CustomerBrokerNew> negotiationPendingToSubmitList;
                 CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
                 CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
-                int                                 timeConfirmSend     = 20;
+                int                                 timeConfirmSend     = 5;
 
                 //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
                 negotiationPendingToSubmitList  = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
@@ -399,7 +395,17 @@ public class CustomerBrokerNewAgent implements
 
                 //SEND TRNSACTION AGAIN IF NOT IS CONFIRM
                 if(timeConfirmSend == iterationConfirmSend){
+
+                    CustomerBrokerNewForwardTransaction forwardTransaction = new CustomerBrokerNewForwardTransaction(
+                            customerBrokerNewNegotiationTransactionDatabaseDao,
+                            errorManager,
+                            pluginVersionReference,
+                            transactionSend
+                    );
+
                     forwardTransaction.pendingToConfirmtTransaction();
+                    transactionSend = forwardTransaction.getTransactionSend();
+
                     iterationConfirmSend = 0;
                 }
 
