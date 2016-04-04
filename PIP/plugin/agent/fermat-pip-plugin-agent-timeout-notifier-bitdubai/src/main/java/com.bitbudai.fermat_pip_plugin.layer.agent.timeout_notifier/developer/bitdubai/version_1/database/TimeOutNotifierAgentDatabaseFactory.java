@@ -79,9 +79,7 @@ public class TimeOutNotifierAgentDatabaseFactory {
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_END_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_ELAPSED_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.FALSE);
-            table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_PROTOCOL_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_LAST_UPDATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
 
             table.addIndex(TimeOutNotifierAgentDatabaseConstants.AGENTS_FIRST_KEY_COLUMN);

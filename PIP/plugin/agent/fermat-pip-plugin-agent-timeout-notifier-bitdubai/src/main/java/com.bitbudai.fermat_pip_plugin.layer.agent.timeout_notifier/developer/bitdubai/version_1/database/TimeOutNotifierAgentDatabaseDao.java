@@ -115,14 +115,8 @@ public class TimeOutNotifierAgentDatabaseDao {
         timeOutNotifierAgent.setEpochStartTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME));
         timeOutNotifierAgent.setEpochEndTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_END_TIME_COLUMN_NAME));
         timeOutNotifierAgent.setDuration(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME));
-        timeOutNotifierAgent.setElapsedTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_ELAPSED_COLUMN_NAME));
         try {
             timeOutNotifierAgent.setStatus(AgentStatus.getByCode(agentRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME)));
-        } catch (InvalidParameterException e) {
-            e.printStackTrace();
-        }
-        try {
-            timeOutNotifierAgent.setProtocolStatus(ProtocolStatus.getByCode(agentRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_PROTOCOL_STATUS_COLUMN_NAME)));
         } catch (InvalidParameterException e) {
             e.printStackTrace();
         }
@@ -150,9 +144,8 @@ public class TimeOutNotifierAgentDatabaseDao {
         record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME, timeOutNotifierAgent.getEpochStartTime());
         record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_END_TIME_COLUMN_NAME, timeOutNotifierAgent.getEpochEndTime());
         record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME, timeOutNotifierAgent.getDuration());
-        record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_ELAPSED_COLUMN_NAME, timeOutNotifierAgent.getElapsedTime());
+
         record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, timeOutNotifierAgent.getStatus().getCode());
-        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_PROTOCOL_STATUS_COLUMN_NAME, timeOutNotifierAgent.getNotificationProtocolStatus().getCode());
         record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_LAST_UPDATE_COLUMN_NAME, getCurrentTime());
 
         return record;

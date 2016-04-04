@@ -29,9 +29,7 @@ public class TimeOutNotifierAgentDatabaseConstants {
     public static final String AGENTS_START_TIME_COLUMN_NAME = "start_time";
     public static final String AGENTS_END_TIME_COLUMN_NAME = "end_time";
     public static final String AGENTS_DURATION_COLUMN_NAME = "duration";
-    public static final String AGENTS_ELAPSED_COLUMN_NAME = "elapsed";
     public static final String AGENTS_STATE_COLUMN_NAME = "state";
-    public static final String AGENTS_PROTOCOL_STATUS_COLUMN_NAME = "protocol_status";
     public static final String AGENTS_LAST_UPDATE_COLUMN_NAME = "last_update";
 
     public static final String AGENTS_FIRST_KEY_COLUMN = "id";

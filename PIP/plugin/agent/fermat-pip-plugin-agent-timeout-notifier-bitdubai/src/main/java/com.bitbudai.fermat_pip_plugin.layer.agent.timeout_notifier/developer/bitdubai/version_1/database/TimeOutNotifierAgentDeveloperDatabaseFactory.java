@@ -122,9 +122,7 @@ public class TimeOutNotifierAgentDeveloperDatabaseFactory {
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME);
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_END_TIME_COLUMN_NAME);
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME);
-        agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_ELAPSED_COLUMN_NAME);
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME);
-        agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_PROTOCOL_STATUS_COLUMN_NAME);
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_LAST_UPDATE_COLUMN_NAME);
         /**
          * Table agents addition.
