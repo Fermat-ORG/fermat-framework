@@ -32,8 +32,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.exceptions.CantInitializeChatSupAppModuleManagerException;
 import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.structure.ChatSupAppModuleManager;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseSystemException;
 
 import java.util.List;
 import java.util.Map;

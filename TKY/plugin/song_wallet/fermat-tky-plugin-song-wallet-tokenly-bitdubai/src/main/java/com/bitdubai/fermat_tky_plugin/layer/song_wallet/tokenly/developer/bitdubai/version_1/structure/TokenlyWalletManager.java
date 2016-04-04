@@ -27,6 +27,7 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongSt
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.SongWalletTokenlyManager;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDao;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CancelDownloadException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetLastUpdateDateException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongNameException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantGetSongTokenlyIdException;
@@ -245,7 +246,11 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                      * in one song download request. I will report the error, but, I'll continue to
                      * downloading the other songs.
                      */
-                } catch (CantDownloadSongException | ObjectNotSetException | CantPersistSongException e) {
+                } catch (
+                        CantDownloadSongException |
+                        ObjectNotSetException |
+                        CantPersistSongException |
+                        CancelDownloadException e) {
                     errorManager.reportUnexpectedPluginException(
                             Plugins.TOKENLY_WALLET,
                             UnexpectedPluginExceptionSeverity.NOT_IMPORTANT,
@@ -369,6 +374,11 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                     e,
                     "Downloading song by id:"+songId,
                     "Cannot get the song from external API");
+        } catch (CancelDownloadException e) {
+            throw new CantDownloadSongException(
+                    e,
+                    "Downloading song by id:"+songId,
+                    e.getMessage());
         }
     }
 
@@ -399,6 +409,14 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
     }
 
     /**
+     * This method reports to wallet manager that the ser wants to download a song
+     */
+    @Override
+    public void cancelDownload() {
+        this.tokenlyWalletSongVault.cancelDownload();
+    }
+
+    /**
      * This method downloads a song to the wallet and the device storage.
      * This method must be private because a previous data check must be done.
      * @param song
@@ -408,7 +426,8 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
     private void downloadSong(Song song, String username) throws
             CantDownloadSongException,
             CantPersistSongException,
-            ObjectNotSetException {
+            ObjectNotSetException,
+            CancelDownloadException {
         ObjectChecker.checkArgument(song, "The song is null");
         //Request download song.
         String songPath = this.tokenlyWalletSongVault.downloadSong(song);

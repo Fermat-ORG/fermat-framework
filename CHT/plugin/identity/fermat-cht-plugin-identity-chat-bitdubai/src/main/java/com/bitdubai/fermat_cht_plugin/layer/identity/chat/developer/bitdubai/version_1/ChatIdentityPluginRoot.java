@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.database.ChatIdentityDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.database.ChatIdentityDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.database.ChatIdentityDeveloperFactory;
@@ -31,6 +32,7 @@ import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.ver
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
 import java.util.List;
 
@@ -50,6 +52,9 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
+    private DeviceUserManager deviceUserManager;
+
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
@@ -63,17 +68,19 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
 
     @Override
     public void start() throws CantStartPluginException {
-        chatIdentityManager = new ChatIdentityManagerImpl(pluginDatabaseSystem, pluginId, errorManager);
+        chatIdentityManager = new ChatIdentityManagerImpl(pluginDatabaseSystem, pluginId, errorManager, deviceUserManager, pluginFileSystem);
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, ChatIdentityDatabaseConstants.CHAT_DATABASE_NAME);
             System.out.println("******* Init Chat Identity ******");
             //super.start();
             this.serviceStatus = ServiceStatus.STARTED;
+            chatIdentityManager.createNewIdentityChat("Franklin Marcano", new byte[0]);
         } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
             try {
                 System.out.println("******* Init Chat Identity ******");
                 ChatIdentityDatabaseFactory databaseFactory = new ChatIdentityDatabaseFactory(pluginDatabaseSystem);
                 databaseFactory.createDatabase(this.pluginId, ChatIdentityDatabaseConstants.CHAT_DATABASE_NAME);
+                chatIdentityManager.createNewIdentityChat("Franklin Marcano", new byte[0]);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();
@@ -81,6 +88,8 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
                 errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantStartPluginException("Unhandled Exception.", FermatException.wrapException(exception), null, null);
             }
+        } catch (CantCreateNewChatIdentityException e) {
+            e.printStackTrace();
         }
     }
 

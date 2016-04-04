@@ -143,31 +143,37 @@ public class ChatSupAppModuleManager implements ChatManager {
         middlewareChatManager.sendReadMessageNotification(message);
     }
 
+    //TODO: Eliminar
     @Override
     public List<Contact> getContacts() throws CantGetContactException {
         return middlewareChatManager.getContacts();
     }
 
+    //TODO: Eliminar
     @Override
     public Contact getContactByContactId(UUID contactId) throws CantGetContactException {
         return middlewareChatManager.getContactByContactId(contactId);
     }
 
+    //TODO: Eliminar
     @Override
     public Contact newEmptyInstanceContact() throws CantNewEmptyContactException {
         return newEmptyInstanceContact();
     }
 
+    //TODO: Eliminar
     @Override
     public void saveContact(Contact contact) throws CantSaveContactException {
         middlewareChatManager.saveContact(contact);
     }
 
+    //TODO: Eliminar
     @Override
     public void deleteContact(Contact contact) throws CantDeleteContactException {
         middlewareChatManager.deleteContact(contact);
     }
 
+    //TODO: Eliminar
     @Override
     public List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException {
         try
@@ -214,6 +220,7 @@ public class ChatSupAppModuleManager implements ChatManager {
      * Service.
      * @return
      */
+    //TODO: Eliminar
     @Override
     public HashMap<PlatformComponentType, Object> getSelfIdentities()
             throws CantGetOwnIdentitiesException {
@@ -232,11 +239,13 @@ public class ChatSupAppModuleManager implements ChatManager {
         return middlewareChatManager.getContactByLocalPublicKey(localPublicKey);
     }
 
+    //TODO: Eliminar
     @Override
     public void createSelfIdentities() throws CantCreateSelfIdentityException {
         middlewareChatManager.createSelfIdentities();
     }
 
+    //TODO: Actualizar para que veas la chat Identity
     @Override
     public boolean isIdentityDevice() throws CantGetChatUserIdentityException {
         if(middlewareChatManager.getChatUserIdentities().isEmpty())
@@ -244,31 +253,37 @@ public class ChatSupAppModuleManager implements ChatManager {
         else return true;
     }
 
+    //TODO: Actualizar para que veas la chat Identity
     @Override
     public List<ChatUserIdentity> getChatUserIdentities() throws CantGetChatUserIdentityException {
         return middlewareChatManager.getChatUserIdentities();
     }
 
+    //TODO: Actualizar para que veas la chat Identity
     @Override
     public ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException {
         return middlewareChatManager.getChatUserIdentity(publicKey);
     }
 
+    //TODO: Eliminar
     @Override
     public void saveContactConnection(ContactConnection contactConnection) throws CantSaveContactConnectionException {
         middlewareChatManager.saveContactConnection(contactConnection);
     }
 
+    //TODO: Eliminar
     @Override
     public void deleteContactConnection(ContactConnection chatUserIdentity) throws CantDeleteContactConnectionException {
         middlewareChatManager.deleteContactConnection(chatUserIdentity);
     }
 
+    //TODO: Eliminar
     @Override
     public List<ContactConnection> getContactConnections() throws CantGetContactConnectionException {
         return middlewareChatManager.getContactConnections();
     }
 
+    //TODO: Eliminar
     @Override
     public ContactConnection getContactConnectionByContactId(UUID contactId) throws CantGetContactConnectionException {
         return middlewareChatManager.getContactConnection(contactId);
@@ -297,12 +312,12 @@ public class ChatSupAppModuleManager implements ChatManager {
 
     @Override
     public List<Group> getGroups() throws CantListGroupException {
-        return null;
+        return getGroups();
     }
 
     @Override
     public Group getGroup(UUID groupId) throws CantGetGroupException {
-        return null;
+        return middlewareChatManager.getGroup(groupId);
     }
 
 
@@ -318,6 +333,16 @@ public class ChatSupAppModuleManager implements ChatManager {
 
     @Override
     public List<GroupMember> getGroupMembersByGroupId(UUID groupId) throws CantListGroupMemberException {
-        return null;
+        return getGroupMembersByGroupId(groupId);
+    }
+
+    @Override
+    public void clearChatMessageByChatId(UUID chatId) throws CantDeleteMessageException, CantGetMessageException {
+        List<Message> messages = middlewareChatManager.getMessagesByChatId(chatId);
+
+        for (Message message : messages)
+        {
+            middlewareChatManager.deleteMessage(message);
+        }
     }
 }

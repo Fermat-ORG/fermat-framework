@@ -150,4 +150,7 @@ public interface ChatManager {
     void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException;
 
     List<GroupMember> getGroupMembersByGroupId(UUID groupId)throws CantListGroupMemberException;
+
+    void clearChatMessageByChatId(UUID chatId) throws CantDeleteMessageException, CantGetMessageException;
+
 }

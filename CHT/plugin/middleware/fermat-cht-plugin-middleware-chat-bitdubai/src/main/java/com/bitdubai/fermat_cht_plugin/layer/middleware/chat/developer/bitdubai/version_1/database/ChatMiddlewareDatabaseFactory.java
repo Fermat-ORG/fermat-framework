@@ -200,6 +200,7 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
 
             table.addColumn(ChatMiddlewareDatabaseConstants.GROUP_ID_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.TRUE);
             table.addColumn(ChatMiddlewareDatabaseConstants.GROUP_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.GROUP_TYPE_CHAT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
             table.addIndex(ChatMiddlewareDatabaseConstants.GROUP_FIRST_KEY_COLUMN);
 

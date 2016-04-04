@@ -46,8 +46,8 @@ public class ChatIdentityDatabaseDao {
 
     Database database;
     UUID pluginId;
-    private static final String ASSET_ISSUER_PROFILE_IMAGE_FILE_NAME = "chatIdentityProfileImage";
-    private static final String ASSET_ISSUER_PRIVATE_KEYS_FILE_NAME = "chatIdentityPrivateKey";
+    private static final String CHAT_PROFILE_IMAGE_FILE_NAME = "chatIdentityProfileImage";
+    private static final String CHAT_PRIVATE_KEYS_FILE_NAME = "chatIdentityPrivateKey";
     /**
      * DealsWithPluginDatabaseSystem interface variable and implementation
      */
@@ -61,9 +61,19 @@ public class ChatIdentityDatabaseDao {
     /**
      * Constructor
      */
-    public ChatIdentityDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public ChatIdentityDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId,
+                                   PluginFileSystem pluginFileSystem) throws CantOpenDatabaseException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
+        this.pluginId             = pluginId;
+        this.pluginFileSystem     = pluginFileSystem;
+
+        try {
+            database = openDatabase();
+        } catch (CantOpenDatabaseException e) {
+            throw new CantOpenDatabaseException("Cant Open Database Exception", e);
+        } catch (CantCreateDatabaseException e) {
+            throw new CantOpenDatabaseException("Cant Create Database Exception", e);
+        }
     }
 
     private DatabaseTable getDatabaseTable(String tableName) {
@@ -91,7 +101,7 @@ public class ChatIdentityDatabaseDao {
 
             persistNewUserPrivateKeysFile(publicKey, privateKey);
 
-            DatabaseTable table = this.database.getTable(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME);
+            DatabaseTable table = getDatabaseTable(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME); //this.database.getTable(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
 
             record.setStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME, publicKey);
@@ -105,22 +115,22 @@ public class ChatIdentityDatabaseDao {
 
         } catch (CantInsertRecordException e) {
             // Cant insert record.
-            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Asset Issuer Identity", "Cant create new Asset Issuer, insert database problems.");
+            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Chat Identity", "Cant create new Chat, insert database problems.");
         } catch (CantPersistPrivateKeyException e) {
             // Cant insert record.
-            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Asset Issuer Identity", "Cant create new Asset Issuer,persist private key error.");
+            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Chat Identity", "Cant create new Chat,persist private key error.");
         } catch (Exception e) {
             // Failure unknown.
-            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Identity", "Cant create new Asset Issuer, unknown failure.");
+            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Chat Identity", "Cant create new Asset Issuer, unknown failure.");
         }
     }
 
-    public void updateIdentityAssetIssuer(String publicKey, String alias, byte[] profileImage) throws CantUpdateChatIdentityException {
+    public void updateChatIdentity(String publicKey, String alias, byte[] profileImage) throws CantUpdateChatIdentityException {
         try {
             /**
              * 1) Get the table.
              */
-            DatabaseTable table = this.database.getTable(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME);
+            DatabaseTable table = getDatabaseTable(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME);//this.database.getTable(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME);
 
             if (table == null) {
                 /**
@@ -159,7 +169,7 @@ public class ChatIdentityDatabaseDao {
         ChatIdentity chatIdentity = null;
         DatabaseTable table; // Intra User table.
 
-        // Get Asset Issuers identities list.
+        // Get Chat identities list.
         try {
 
             /**
@@ -171,7 +181,7 @@ public class ChatIdentityDatabaseDao {
                 /**
                  * Table not found.
                  */
-                throw new CantGetUserDeveloperIdentitiesException("Cant get Cnat identity list, table not found.", "Chat Identity", "Cant get Chat identity list, table not found.");
+                throw new CantGetUserDeveloperIdentitiesException("Cant get Cant identity list, table not found.", "Chat Identity", "Cant get Chat identity list, table not found.");
             }
 
 
@@ -263,7 +273,7 @@ public class ChatIdentityDatabaseDao {
          */
 
         try {
-            table = this.database.getTable(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME);
+            table = getDatabaseTable(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME);//this.database.getTable(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME);
 
             if (table == null) {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists", "Chat Identity", "");
@@ -287,7 +297,7 @@ public class ChatIdentityDatabaseDao {
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    ASSET_ISSUER_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
+                    CHAT_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -308,7 +318,7 @@ public class ChatIdentityDatabaseDao {
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    ASSET_ISSUER_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    CHAT_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -330,7 +340,7 @@ public class ChatIdentityDatabaseDao {
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    ASSET_ISSUER_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    CHAT_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -356,7 +366,7 @@ public class ChatIdentityDatabaseDao {
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    ASSET_ISSUER_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
+                    CHAT_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
