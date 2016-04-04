@@ -57,7 +57,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -227,6 +229,8 @@ public class CustomerBrokerCloseAgent  implements
 
         int                                                         iterationConfirmSend = 0;
 
+        Map<UUID,Integer>                                           transactionSend = new HashMap<>();
+
         /*IMPLEMENTATION DealsWithPluginIdentity*/
         @Override
         public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) { this.pluginDatabaseSystem=pluginDatabaseSystem; }
@@ -311,12 +315,6 @@ public class CustomerBrokerCloseAgent  implements
 
                 customerBrokerCloseNegotiationTransactionDatabaseDao = new CustomerBrokerCloseNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, database);
 
-                CustomerBrokerCloseForwardTransaction forwardTransaction = new CustomerBrokerCloseForwardTransaction(
-                        customerBrokerCloseNegotiationTransactionDatabaseDao,
-                        errorManager,
-                        pluginVersionReference
-                );
-
                 String                              negotiationXML;
                 NegotiationType                     negotiationType;
                 UUID                                transactionId;
@@ -399,7 +397,16 @@ public class CustomerBrokerCloseAgent  implements
 
                 //SEND TRNSACTION AGAIN IF NOT IS CONFIRM
                 if(timeConfirmSend == iterationConfirmSend){
+                    CustomerBrokerCloseForwardTransaction forwardTransaction = new CustomerBrokerCloseForwardTransaction(
+                            customerBrokerCloseNegotiationTransactionDatabaseDao,
+                            errorManager,
+                            pluginVersionReference,
+                            transactionSend
+                    );
+
                     forwardTransaction.pendingToConfirmtTransaction();
+                    transactionSend = forwardTransaction.getTransactionSend();
+
                     iterationConfirmSend = 0;
                 }
 

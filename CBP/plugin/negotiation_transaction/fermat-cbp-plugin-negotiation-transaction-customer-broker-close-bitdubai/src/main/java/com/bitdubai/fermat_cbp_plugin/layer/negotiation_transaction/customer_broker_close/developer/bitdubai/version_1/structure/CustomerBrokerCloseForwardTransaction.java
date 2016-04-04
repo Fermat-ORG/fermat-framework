@@ -20,28 +20,32 @@ import java.util.UUID;
  */
 public class CustomerBrokerCloseForwardTransaction {
 
-    CustomerBrokerCloseNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao;
-    ErrorManager                                        errorManager;
-    PluginVersionReference                              pluginVersionReference;
+    CustomerBrokerCloseNegotiationTransactionDatabaseDao    customerBrokerNewNegotiationTransactionDatabaseDao;
+    ErrorManager                                            errorManager;
+    PluginVersionReference                                  pluginVersionReference;
+    Map<UUID,Integer>                                       transactionSend;
 
-    boolean                                             isValidateSend = Boolean.FALSE;
+    boolean                                                 isValidateSend = Boolean.FALSE;
 
     public CustomerBrokerCloseForwardTransaction(
-            CustomerBrokerCloseNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao,
-            ErrorManager errorManager,
-            PluginVersionReference pluginVersionReference
+            CustomerBrokerCloseNegotiationTransactionDatabaseDao    customerBrokerNewNegotiationTransactionDatabaseDao,
+            ErrorManager                                            errorManager,
+            PluginVersionReference                                  pluginVersionReference,
+            Map<UUID,Integer>                                       transactionSend
     ){
         this.customerBrokerNewNegotiationTransactionDatabaseDao     = customerBrokerNewNegotiationTransactionDatabaseDao;
         this.errorManager                                           = errorManager;
         this.pluginVersionReference                                 = pluginVersionReference;
+        this.transactionSend                                        = transactionSend;
     }
 
     public void pendingToConfirmtTransaction() throws CantProcessPendingConfirmTransactionException{
 
         try {
 
+            System.out.print("\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - FORWARD TRANSACTION ****\n");
+
             UUID transactionId;
-            Map<UUID,Integer> transactionSend = new HashMap<>();
             int numberSend;
 
             List<CustomerBrokerClose> negotiationList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToConfirmTransactionNegotiation();
@@ -50,21 +54,27 @@ public class CustomerBrokerCloseForwardTransaction {
 
                     transactionId = negotiationTransaction.getTransactionId();
 
+                    System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - transactionSend ****\n" +
+                            "\n - transaction id:"+transactionId+
+                            "\n - numberSend: "+Integer.toString(getNumberSend(transactionSend, transactionId))+
+                            "\n");
+
                     if (!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.PENDING_SUBMIT.getCode())) {
 
-                        System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - pendingToConfirmtTransaction" + transactionId + " ****\n");
+                        System.out.print("\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - FORWARD TRANSACTION - pendingToConfirmtTransaction" + transactionId + " ****\n");
 
                         numberSend = getNumberSend(transactionSend, transactionId);
 
                         isValidateSend(transactionId, numberSend);
 
                         if(isValidateSend) {
-                            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - pendingToConfirmtTransaction - SEND AGAIN: " + numberSend + " ****\n");
+                            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - FORWARD TRANSACTION - pendingToConfirmtTransaction - SEND AGAIN: " + numberSend + " ****\n");
                             customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(
                                     transactionId,
                                     NegotiationTransactionStatus.PENDING_SUBMIT);
 
                         }
+
                         transactionSend.put(transactionId, numberSend);
 
                     }
@@ -76,6 +86,8 @@ public class CustomerBrokerCloseForwardTransaction {
             throw new CantProcessPendingConfirmTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
         }
     }
+
+    public Map<UUID,Integer> getTransactionSend(){ return transactionSend; }
 
     private int getNumberSend(Map<UUID,Integer> transactionSend, UUID transactionId){
 
