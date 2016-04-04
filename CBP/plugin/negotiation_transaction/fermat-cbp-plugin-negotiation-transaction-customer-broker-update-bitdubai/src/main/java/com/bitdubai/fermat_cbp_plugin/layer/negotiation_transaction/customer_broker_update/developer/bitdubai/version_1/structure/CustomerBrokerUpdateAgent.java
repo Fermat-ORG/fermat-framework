@@ -54,7 +54,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType.NOTIFICATION_SERVICE;
@@ -224,6 +226,8 @@ public class CustomerBrokerUpdateAgent implements
 
         int                                                         iterationConfirmSend = 0;
 
+        Map<UUID,Integer>                                           transactionSend = new HashMap<>();
+
         /*IMPLEMENTATION DealsWithPluginIdentity*/
         @Override
         public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
@@ -313,12 +317,6 @@ public class CustomerBrokerUpdateAgent implements
             try {
 
                 customerBrokerUpdateNegotiationTransactionDatabaseDao = new CustomerBrokerUpdateNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, database);
-
-                CustomerBrokerUpdateForwardTransaction forwardTransaction = new CustomerBrokerUpdateForwardTransaction(
-                        customerBrokerUpdateNegotiationTransactionDatabaseDao,
-                        errorManager,
-                        pluginVersionReference
-                );
 
                 String                              negotiationXML;
                 NegotiationType                     negotiationType;
@@ -411,7 +409,17 @@ public class CustomerBrokerUpdateAgent implements
 
                 //SEND TRNSACTION AGAIN IF NOT IS CONFIRM
                 if(timeConfirmSend == iterationConfirmSend){
+
+                    CustomerBrokerUpdateForwardTransaction forwardTransaction = new CustomerBrokerUpdateForwardTransaction(
+                            customerBrokerUpdateNegotiationTransactionDatabaseDao,
+                            errorManager,
+                            pluginVersionReference,
+                            transactionSend
+                    );
+
                     forwardTransaction.pendingToConfirmtTransaction();
+                    transactionSend = forwardTransaction.getTransactionSend();
+
                     iterationConfirmSend = 0;
                 }
 

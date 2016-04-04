@@ -93,6 +93,9 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_TYPE_COLUMN_NAME, negotiationType.getCode());
             record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_XML_COLUMN_NAME, negotiationXML);
             record.setLongValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TIMESTAMP_COLUMN_NAME, timestamp);
+            record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_SEND_TRANSACTION_COLUMN_NAME, Boolean.FALSE.toString());
+            record.setStringValue(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_CONFIRM_TRANSACTION_COLUMN_NAME, Boolean.FALSE.toString());
+
 
             table.insertRecord(record);
 
