@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmetric
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListIdentitiesException;
@@ -30,6 +31,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
     private ErrorManager errorManager;
+    private PluginFileSystem pluginFileSystem;
 
     /**
      * Represents the DeviceUserManager
@@ -45,17 +47,19 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
     public ChatIdentityManagerImpl(final PluginDatabaseSystem pluginDatabaseSystem,
                                                    final UUID pluginId,
                                                    final ErrorManager errorManager,
-                                                   final DeviceUserManager deviceUserManager) {
+                                                   final DeviceUserManager deviceUserManager,
+                                                   final PluginFileSystem pluginFileSystem) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
         this.errorManager         = errorManager        ;
         this.deviceUserManager    = deviceUserManager   ;
+        this.pluginFileSystem     = pluginFileSystem    ;
     }
 
     private ChatIdentityDatabaseDao chatIdentityDao(){
         ChatIdentityDatabaseDao chatIdentityDatabaseDao = null;
         try {
-            chatIdentityDatabaseDao = new ChatIdentityDatabaseDao(pluginDatabaseSystem, pluginId);
+            chatIdentityDatabaseDao = new ChatIdentityDatabaseDao(pluginDatabaseSystem, pluginId, pluginFileSystem);
         } catch (CantOpenDatabaseException e) {
             e.printStackTrace();
         }
