@@ -809,14 +809,14 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
     @Override
     public void saveCacheIntraUsersSuggestions(List<IntraUserInformation> lstIntraUser) throws CantInsertRecordException {
 
-            try
-            {
-                intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
-            } catch (CantAddIntraWalletCacheUserException e) {
+        try
+        {
+            intraActorNetworkServiceDao.saveIntraUserCache(lstIntraUser);
+        } catch (CantAddIntraWalletCacheUserException e) {
 
-                throw new CantInsertRecordException("CAN'T Save INTRA USER CACHE LIST",e,"","error saved table records");
+            throw new CantInsertRecordException("CAN'T Save INTRA USER CACHE LIST",e,"","error saved table records");
 
-            }
+        }
     }
 
     @Override

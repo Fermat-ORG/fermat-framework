@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cht_api.layer.middleware.interfaces;
 
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
+
 import java.util.UUID;
 
 /**
@@ -17,4 +19,11 @@ public interface Group {
      * @return the publicKey
      */
     String getNameGroup();
+
+    /**
+     * The method <code>getTypeChat</code> gives us the public key of the represented a Actor
+     *
+     * @return the typeChat
+     */
+    TypeChat getTypeChat();
 }

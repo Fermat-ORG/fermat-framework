@@ -117,7 +117,7 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
             throw exception;
         }
 
-        //testAddNewAgent();
+        testAddNewAgent();
     }
 
 
