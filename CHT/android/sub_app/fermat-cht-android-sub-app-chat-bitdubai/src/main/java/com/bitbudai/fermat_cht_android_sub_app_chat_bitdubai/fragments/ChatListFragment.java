@@ -552,6 +552,9 @@ public class ChatListFragment extends AbstractFermatFragment{
                         }
                     }
                 });
+            }catch (Exception e){
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
             return true;
         }
         if (id == R.id.menu_delete_all_chats) {
