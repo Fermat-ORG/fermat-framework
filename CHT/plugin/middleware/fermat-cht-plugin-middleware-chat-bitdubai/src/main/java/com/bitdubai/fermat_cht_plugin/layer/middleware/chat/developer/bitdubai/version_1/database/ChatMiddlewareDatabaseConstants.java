@@ -109,7 +109,7 @@ public class ChatMiddlewareDatabaseConstants {
     /**
      * Chat Actor GROUP REGISTERED database table definition.
      */
-    public static final String GROUP_TABLE_NAME = "group";
+    public static final String GROUP_TABLE_NAME = "group_contact";
 
     public static final String GROUP_ID_COLUMN_NAME = "group_id";
     public static final String GROUP_NAME_COLUMN_NAME = "group_name";
