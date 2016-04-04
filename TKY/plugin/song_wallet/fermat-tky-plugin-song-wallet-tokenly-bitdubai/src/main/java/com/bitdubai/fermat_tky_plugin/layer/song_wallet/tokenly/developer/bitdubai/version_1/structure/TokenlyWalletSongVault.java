@@ -181,7 +181,7 @@ public class TokenlyWalletSongVault {
             //Put the inputStream into the array bytes.
             int bytesRead = is.read(data);
             //Set the cancel download flag in true
-            CANCEL_DOWNLOAD=true;
+            CANCEL_DOWNLOAD=false;
             //File counter
             int reader = 0;
             List<Byte> byteList = new ArrayList<>();
@@ -259,8 +259,11 @@ public class TokenlyWalletSongVault {
         }
     }
 
+    /**
+     * This method sets the CANCEL_DOWNLOAD variable in true.
+     */
     public void cancelDownload(){
-
+        this.CANCEL_DOWNLOAD=true;
     }
 
     /**
