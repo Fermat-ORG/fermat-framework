@@ -83,7 +83,9 @@ public class CustomerBrokerNewForwardTransaction {
 
         if (transactionSend.get(transactionId) != null) numberSend = transactionSend.get(transactionId);
 
-        return numberSend++;
+        numberSend++;
+
+        return numberSend;
 
     }
 
