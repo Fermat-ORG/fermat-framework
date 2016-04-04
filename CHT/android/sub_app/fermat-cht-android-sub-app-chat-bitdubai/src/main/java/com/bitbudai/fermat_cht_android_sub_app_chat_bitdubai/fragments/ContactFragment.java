@@ -463,8 +463,8 @@ public class ContactFragment extends AbstractFermatFragment {
             return true;
         }
         if (item.getItemId() == R.id.menu_edit_contact) {
-            Contact con = chatSession.getSelectedContact();
             try {
+                Contact con = chatSession.getSelectedContact();
                 appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(con.getContactId()));
                 changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
             }catch(CantGetContactException e) {
