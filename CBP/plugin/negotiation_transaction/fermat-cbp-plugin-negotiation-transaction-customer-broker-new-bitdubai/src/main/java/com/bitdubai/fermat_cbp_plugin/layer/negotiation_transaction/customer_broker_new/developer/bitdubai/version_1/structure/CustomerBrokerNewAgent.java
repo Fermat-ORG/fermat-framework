@@ -310,7 +310,6 @@ public class CustomerBrokerNewAgent implements
         {
             try{
 
-//                System.out.print("\n\n**** MOCK CUSTOMER BROKER NEW. AGENT ****\n");
                 customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, database);
 
                 String                  negotiationXML;
@@ -320,7 +319,6 @@ public class CustomerBrokerNewAgent implements
                 CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
                 CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
 
-//                System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - PENDING LIST SENDING ****\n");
                 //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
                 negotiationPendingToSubmitList  = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
                 if(!negotiationPendingToSubmitList.isEmpty()){
@@ -378,6 +376,7 @@ public class CustomerBrokerNewAgent implements
 
                 }
 
+                //SEND TRNSACTION AGAIN IF NOT IS CONFIRM
                 if(timeConfirmSend == iterationConfirmSend){
                     pendingToConfirmtTransaction();
                     iterationConfirmSend = 0;
@@ -413,11 +412,10 @@ public class CustomerBrokerNewAgent implements
         private void pendingToConfirmtTransaction() throws CantProcessPendingConfirmTransactionException{
 
             try {
-
-
+                
                 UUID transactionId;
                 Map<UUID,Integer> transactionSend = new HashMap<>();
-                int numberToLastSend = 0;
+                int numberSend;
 
                 List<CustomerBrokerNew> negotiationList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToConfirmTransactionNegotiation();
                 if(!negotiationList.isEmpty()) {
@@ -429,22 +427,20 @@ public class CustomerBrokerNewAgent implements
 
                             System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - pendingToConfirmtTransaction" + transactionId + " ****\n");
 
-                            if (transactionSend.get(transactionId) != null) numberToLastSend = transactionSend.get(transactionId);
+                            numberSend = getNumberSend(transactionSend, transactionId);
 
-                            numberToLastSend++;
-
-                            isValidateSend(transactionId, numberToLastSend);
+                            isValidateSend(transactionId, numberSend);
 
                             if(isValidateSend){
 
-                                System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - pendingToConfirmtTransaction - SEND AGAIN: "+ numberToLastSend +" ****\n");
+                                System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - pendingToConfirmtTransaction - SEND AGAIN: "+ numberSend +" ****\n");
                                 customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
                                         transactionId,
                                         NegotiationTransactionStatus.PENDING_SUBMIT);
 
                             }
 
-                            transactionSend.put(transactionId, numberToLastSend);
+                            transactionSend.put(transactionId, numberSend);
 
                         }
                     }
@@ -456,21 +452,29 @@ public class CustomerBrokerNewAgent implements
             }
         }
 
-        private void isValidateSend(UUID transactionId, int numberToLastSend) throws CantProcessPendingConfirmTransactionException{
+        private int getNumberSend(Map<UUID,Integer> transactionSend, UUID transactionId){
+
+            int numberSend = 0;
+
+            if (transactionSend.get(transactionId) != null) numberSend = transactionSend.get(transactionId);
+
+            return numberSend++;
+
+        }
+
+        private void isValidateSend(UUID transactionId, int numberSend) throws CantProcessPendingConfirmTransactionException{
 
             try {
 
                 isValidateSend = Boolean.FALSE;
 
                 int numberToSend = 10;
-                if ((numberToLastSend < numberToSend) ||
-                    (numberToLastSend > numberToSend*2 && numberToLastSend <= numberToSend*3) ||
-                    (numberToLastSend > numberToSend*4 && numberToLastSend <= numberToSend*5))
+                if ((numberSend < numberToSend) ||
+                    (numberSend > numberToSend*2 && numberSend <= numberToSend*3) ||
+                    (numberSend > numberToSend*4 && numberSend <= numberToSend*5))
                     isValidateSend = Boolean.TRUE;
 
-                if (numberToLastSend > numberToSend*5) {
-
-                    isValidateSend = Boolean.FALSE;
+                if (numberSend > numberToSend*5) {
 
                     customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
                             transactionId,
@@ -565,7 +569,7 @@ public class CustomerBrokerNewAgent implements
                                     switch (negotiationType) {
                                         case PURCHASE:
 
-                                            if(!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION)) {
+                                            if(!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
 
                                                 //CREATE CONFIRM NEGOTIATION
                                                 System.out.print("\n**** 25.2) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - NEW PURCHASE NEGOTIATION TRANSACTION CONFIRM ****\n");
