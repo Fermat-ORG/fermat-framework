@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -53,7 +54,7 @@ import java.util.List;
 import static android.widget.Toast.makeText;
 
 /**
- * Created by Jinmy Bohorquez on 18/02/2016.
+ * Created by Penelope Quintero on 18/02/2016.
  */
 public class AssetTransferUserFragment extends FermatWalletListFragment<User>
         implements FermatListItemListeners<User> {
@@ -78,6 +79,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
     private View noUsersView;
     private Toolbar toolbar;
     private Activity activity;
+    private FermatTextView titleUser;
 
     public static AssetTransferUserFragment newInstance() {
         return new AssetTransferUserFragment();
@@ -120,6 +122,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
         configureToolbar();
 
         noUsersView = layout.findViewById(R.id.dap_wallet_asset_user_transfer_no_users);
+        titleUser = (FermatTextView) layout.findViewById(R.id.select_user_to_transfer);
 
         showOrHideNoUsersView(users.isEmpty());
     }
@@ -338,9 +341,11 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
         if (show) {
             recyclerView.setVisibility(View.GONE);
             noUsersView.setVisibility(View.VISIBLE);
+            titleUser.setVisibility(View.GONE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             noUsersView.setVisibility(View.GONE);
+            titleUser.setVisibility(View.VISIBLE);
         }
     }
 

@@ -354,9 +354,10 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
         if (adapter == null) {
             adapter = new UserSelectorAdapter(getActivity(), users, moduleManager);
             adapter.setFermatListEventListener(this);
-        }else {
-            adapter.changeDataSet(users);
         }
+//        else {
+//            adapter.changeDataSet(users);
+//        }
         return adapter;
     }
 

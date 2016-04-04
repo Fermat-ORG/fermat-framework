@@ -25,6 +25,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.fragments.D
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.fragments.HomeFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.fragments.RedeemPointsFragment;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.fragments.HomeCardFragment;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.fragments.TransactionsFragment;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 
 /**
@@ -47,13 +48,13 @@ public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetU
 
             switch (fragment) {
                 case DAP_WALLET_ASSET_USER_MAIN_ACTIVITY:
-                    currentFragment = new UserMainActivityFragment();
+//                    currentFragment = new UserMainActivityFragment();
                     break;
                 case DAP_WALLET_ASSET_USER_HISTORY_ACTIVITY:
                     currentFragment = new UserHistoryActivityFragment();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_DETAIL_TRANSACTIONS:
-                    currentFragment = new AssetDetailTransactionsFragment();
+                    currentFragment = new TransactionsFragment();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_REDEEM:
 //                    currentFragment = new AssetRedeemFragment();

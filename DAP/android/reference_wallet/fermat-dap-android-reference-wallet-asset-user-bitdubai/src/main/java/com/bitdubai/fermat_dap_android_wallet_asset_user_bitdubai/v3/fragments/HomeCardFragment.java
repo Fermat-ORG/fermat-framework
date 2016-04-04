@@ -46,6 +46,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asse
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.common.adapters.HomeCardAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.common.filters.HomeCardAdapterFilter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.common.holders.HomeCardViewHolder;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import com.bitdubai.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.exceptions.CantProcessBuyingTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
@@ -344,7 +345,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
                     final Asset asset = (Asset) appSession.getData("asset_data");
                     new ConfirmDialog.Builder(getActivity(), appSession)
                             .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_sure))
+                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_appropriate))
                             .setColorStyle(getResources().getColor(R.color.card_toolbar))
                             .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                                 @Override
@@ -364,7 +365,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
                 @Override
                 public void onClick(View v) {
                     //TODO
-//                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM_SELECT_REDEEMPOINTS, appSession.getAppPublicKey());
+                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL , appSession.getAppPublicKey());
                 }
             };
             View.OnClickListener onClickListenerAcceptNegotiation = new View.OnClickListener(){
@@ -579,5 +580,16 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
                     show();
         }
         return assets;
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code) {
+            case DAPConstants.DAP_UPDATE_VIEW_ANDROID:
+                onRefresh();
+                break;
+            default:
+                super.onUpdateViewOnUIThread(code);
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.inte
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.exceptions.CantGetBuyingTransactionsException;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface AssetBuyerManager extends FermatManager {
     void declineAsset(UUID negotiationId) throws com.bitdubai.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.exceptions.CantProcessBuyingTransactionException;
 
     List<AssetNegotiation> getNewNegotiations(BlockchainNetworkType networkType) throws CantGetBuyingTransactionsException;
+
+    ActorAssetUser getSellerFromNegotiation(UUID negotiationID) throws CantGetBuyingTransactionsException;
 }
