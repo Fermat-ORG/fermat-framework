@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -132,8 +133,8 @@ public class ChatListFragment extends AbstractFermatFragment{
     private ChatPreferenceSettings chatSettings;
     private ChatSession chatSession;
     ChatListAdapter adapter;
-
     ListView list;
+    private SearchView searchView;
     // Defines a tag for identifying log entries
     String TAG="CHT_ChatListFragment";
     SwipeRefreshLayout mSwipeRefreshLayout;
@@ -149,7 +150,6 @@ public class ChatListFragment extends AbstractFermatFragment{
     //TextView text;
     View layout;
     PresentationDialog presentationDialog;
-    Typeface tf;
     private Toolbar toolbar;
     private Bitmap contactIcon;
     private BitmapDrawable contactIconCircular;
@@ -271,15 +271,6 @@ public class ChatListFragment extends AbstractFermatFragment{
         {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
-
-        //      filldatabase();
-
-
-        // Check if this fragment is part of a two-pane set up or a single pane by reading a
-        // boolean from the application resource directories. This lets allows us to easily specify
-        // which screen sizes should use a two-pane layout by setting this boolean in the
-        // corresponding resource size-qualified directory.
-        // mIsTwoPaneLayout = getResources().getBoolean(R.bool.has_two_panes);
 
         // Let this fragment contribute menu items
         setHasOptionsMenu(true);
@@ -419,11 +410,35 @@ public class ChatListFragment extends AbstractFermatFragment{
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         try {
-           if(chatManager.isIdentityDevice() != false) {//if((chatSettings.getLocalPlatformComponentType()!=null && chatSettings.getLocalPublicKey()!=null))
-                // Inflate the menu items
-                inflater.inflate(R.menu.chat_list_menu, menu);
-                // Locate the search item
-                //MenuItem searchItem = menu.findItem(R.id.menu_search);
+           if(chatManager.isIdentityDevice() != false) {
+               // Inflate the menu items
+               inflater.inflate(R.menu.chat_list_menu, menu);
+               // Locate the search item
+               //MenuItem searchItem = menu.findItem(R.id.menu_search);
+
+               searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+               searchView.setQueryHint(getResources().getString(R.string.search_hint));
+               searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                   @Override
+                   public boolean onQueryTextSubmit(String s) {
+                       return false;
+                   }
+
+                   @Override
+                   public boolean onQueryTextChange(String s) {
+                       if (s.equals(searchView.getQuery().toString())) {
+                           adapter.getFilter().filter(s);
+                       }
+                       return false;
+                   }
+               });
+               if (chatSession.getData("filterString") != null) {
+                   String filterString = (String) chatSession.getData("filterString");
+                   if (filterString.length() > 0) {
+                       searchView.setQuery(filterString, true);
+                       searchView.setIconified(false);
+                   }
+               }
            }
            menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
