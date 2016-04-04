@@ -94,7 +94,7 @@ else:
 	teamLeaderMessage=''
 repositoryUser='bitDubai'
 
-if module: 
+if IsModule: 
 	rootIssues=[" - Plug-In__sep__This is the root of your issue structure and must be labeled as SUPER ISSUE. It is closed only when all its children and grand children are closed.",
 " - Analisys__sep__This is the Analisys root. It is closed whenever all analisys is done. This issue must be linked to the root of the issue structure.",
 " - Implementation__sep__This is the Implementation root. It is closed whenever all implementation is done. This issue must be linked to the root of the issue structure. - Implementation - Developer Class__sep__This issue is closed when this class if fully implemented.",
