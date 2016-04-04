@@ -180,9 +180,10 @@ public class NotificationService extends Service {
                 }else {
                     if(mapNotifications.containsKey(publishId))
                         mBuilder = mapNotifications.get(publishId);
-                    else
-                        Log.i(LOG_TAG,"Error, Notification id not found");
+                    else {
+                        Log.i(LOG_TAG, "Error, Notification id not found");
                         return 0;
+                    }
                 }
                 mBuilder.setProgress(100, progress, false);
 
