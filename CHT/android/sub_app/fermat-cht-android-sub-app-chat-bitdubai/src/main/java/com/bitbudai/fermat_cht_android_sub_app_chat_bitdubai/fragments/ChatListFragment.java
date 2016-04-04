@@ -529,7 +529,29 @@ public class ChatListFragment extends AbstractFermatFragment{
             return true;
         }
         if (id == R.id.menu_clean_chat) {
-            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+            try {
+                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+                alert.setTextTitle("Clean Chat");
+                alert.setTextBody("Do you want to clean this chat?");
+                alert.setType("delete-chat");
+                alert.show();
+                alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        try {
+                            // Get the info of chat selected from session
+                            Chat chat = chatSession.getSelectedChat();
+                            // Delete chat and refresh view
+                            chatManager.deleteMessagesByChatId(chat.getChatId());
+                            updatevalues();
+                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                        } catch (CantDeleteMessageException e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }catch (Exception e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }
+                    }
+                });
             return true;
         }
         if (id == R.id.menu_delete_all_chats) {
