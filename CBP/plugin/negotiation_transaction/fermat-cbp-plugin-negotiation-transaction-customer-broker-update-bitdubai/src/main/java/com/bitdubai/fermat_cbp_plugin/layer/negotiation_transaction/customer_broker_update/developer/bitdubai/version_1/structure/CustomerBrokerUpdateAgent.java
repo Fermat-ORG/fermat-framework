@@ -468,15 +468,6 @@ public class CustomerBrokerUpdateAgent implements
                             transactionId = negotiationTransmission.getTransactionId();
                             negotiationType = negotiationTransmission.getNegotiationType();
 
-                            System.out.print("\n**** 18) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - LIST EVENT PENDING ID: " + eventId + "****\n" +
-                                            "\n - NEGOTIATION TRANSACTION TYPE = " + negotiationTransmission.getNegotiationTransactionType().getCode() +
-                                            "\n - TRANSACTION ID = " + transactionId +
-                                            "\n - TRANSMISSION ID = " + transmissionId +
-                                            "\n - TRANSMISSION STATE = " + negotiationTransmission.getTransmissionState().getCode() +
-                                            "\n - NEGOTIATION TYPE = " + negotiationType +
-                                            "\n - NEGOTIATION XML = " + negotiationXML
-                            );
-
                             if (negotiationXML != null) {
 
                                 negotiationTransaction = customerBrokerUpdateNegotiationTransactionDatabaseDao.getRegisterCustomerBrokerUpdateNegotiationTranasction(transactionId);

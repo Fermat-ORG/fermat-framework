@@ -148,24 +148,27 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
 
     //GET NEW NEGOTIATION TRANSACTION FROM TRANSACTION ID
     public CustomerBrokerUpdate getRegisterCustomerBrokerUpdateNegotiationTranasction(UUID transactionId) throws CantRegisterCustomerBrokerUpdateNegotiationTransactionException{
-        CustomerBrokerUpdate getTransaction = null;
 
         try {
 
+            CustomerBrokerUpdate getTransaction = null;
+
             List<DatabaseTableRecord> record;
             DatabaseTable table = this.database.getTable(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME);
-            if (table == null) {
+            if (table == null)
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if Customer Broker Update exists", "Customer Broker Update Negotiation Transaction", "");
-            }
+
             table.addUUIDFilter(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TRANSACTION_ID_COLUMN_NAME, transactionId, DatabaseFilterType.EQUAL);
             table.loadToMemory();
             record = table.getRecords();
             if (record.size() == 0)
-                throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException("The number of records is 0 ", null, "", "");
+                return getTransaction;
 
             for (DatabaseTableRecord records : record) {
                 getTransaction = getCustomerBrokerUpdateFromRecord(records);
             }
+
+            return getTransaction;
 
         } catch (CantLoadTableToMemoryException em) {
             throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(em.getMessage(), em, "Customer Broker Update Negotiation Transaction not return register", "Cant load " + CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TABLE_NAME + " table in memory.");
@@ -173,7 +176,6 @@ public class CustomerBrokerUpdateNegotiationTransactionDatabaseDao {
             throw new CantRegisterCustomerBrokerUpdateNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e), "Customer Broker Update Negotiation Transaction not return register", "unknown failure.");
         }
 
-        return getTransaction;
     }
 
     //GET NEW NEGOTIATION TRANSACTION FROM NEGOTIATION ID
