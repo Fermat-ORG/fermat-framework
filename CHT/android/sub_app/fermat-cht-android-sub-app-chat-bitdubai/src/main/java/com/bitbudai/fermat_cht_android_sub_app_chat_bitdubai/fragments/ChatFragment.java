@@ -160,6 +160,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                             Chat chat = chatSession.getSelectedChat();
                             // Delete chat and refresh view
                             chatManager.deleteMessagesByChatId(chat.getChatId());
+                            adapter.refreshEvents();
                         } catch (CantDeleteMessageException e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }catch (Exception e) {
