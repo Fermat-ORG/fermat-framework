@@ -2,6 +2,7 @@ package com.bitdubai.fermat_art_core.layer.actor_network_service;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_art_core.layer.actor_network_service.artist.ArtistActorNetworkServicePluginSubsystem;
+import com.bitdubai.fermat_art_core.layer.actor_network_service.fan.FanActorNetworkServicePluginSubsystem;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
@@ -20,6 +21,7 @@ public class ActorNetworkServiceLayer  extends AbstractLayer {
         try {
 
             registerPlugin(new ArtistActorNetworkServicePluginSubsystem());
+            registerPlugin(new FanActorNetworkServicePluginSubsystem());
 
         } catch (CantRegisterPluginException e) {
 

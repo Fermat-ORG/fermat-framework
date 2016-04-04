@@ -20,15 +20,9 @@ import org.acra.annotation.ReportsCrashes;
 import java.io.Serializable;
 
 /**
- * Reformated by Matias Furszyfer
+ * Matias Furszyfer
  */
 
-/**
- * This class, is created by the Android OS before any Activity. That means its constructor is run before any other code
- * written by ourselves.
- *
- * -- Luis.
- */
 
 @ReportsCrashes(//formUri = "http://yourserver.com/yourscript",
         mailTo = "matiasfurszyfer@gmail.com",
