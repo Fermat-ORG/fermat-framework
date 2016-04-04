@@ -24,6 +24,7 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
@@ -65,7 +66,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 3/17/16.
  */
-public class HomeCardFragment extends FermatWalletListFragment<Asset> {
+public class HomeCardFragment extends FermatWalletListFragment<Asset> implements FermatListItemListeners<Asset> {
     private Activity activity;
     // Data
     private List<Asset> assets;
@@ -326,79 +327,8 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
     @Override
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            View.OnClickListener onClickListenerRedeem = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM, appSession.getAppPublicKey());
-                }
-            };
-            View.OnClickListener onClickListenerTransfer = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_TRANSFER_ACTIVITY, appSession.getAppPublicKey());
-                }
-            };
-            View.OnClickListener onClickListenerAppropriate = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final Asset asset = (Asset) appSession.getData("asset_data");
-                    new ConfirmDialog.Builder(getActivity(), appSession)
-                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_appropriate))
-                            .setColorStyle(getResources().getColor(R.color.card_toolbar))
-                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                                @Override
-                                public void onClick() {
-                                    doAppropriate(asset.getDigitalAsset().getPublicKey());
-                                }
-                            }).build().show();
-                }
-            };
-            View.OnClickListener onClickListenerSell = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY, appSession.getAppPublicKey());
-                }
-            };
-            View.OnClickListener onClickListenerTransactions = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //TODO
-                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL , appSession.getAppPublicKey());
-                }
-            };
-            View.OnClickListener onClickListenerAcceptNegotiation = new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    final Asset asset = (Asset) appSession.getData("asset_data");
-
-                    if (isValidBuy(asset)) {
-                        new ConfirmDialog.Builder(getActivity(), appSession)
-                                .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                                .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_asset_buy))
-                                .setColorStyle(getResources().getColor(R.color.card_toolbar))
-                                .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                                    @Override
-                                    public void onClick() {
-
-                                        doBuy(asset.getAssetUserNegotiation().getId());
-                                    }
-                                }).build().show();
-                    }
-                }
-
-            };
-            View.OnClickListener onClickListenerRejectNegotiation = new View.OnClickListener(){
-                @Override
-                public void onClick(View v) {
-                    final Asset asset = (Asset) appSession.getData("asset_data");
-                    doDecline(asset);
-                }
-            };
-
-            adapter = new HomeCardAdapter(getActivity(), assets, moduleManager, appSession, onClickListenerRedeem,
-                    onClickListenerTransfer, onClickListenerAppropriate, onClickListenerSell, onClickListenerTransactions, onClickListenerAcceptNegotiation,
-                    onClickListenerRejectNegotiation);
+            adapter = new HomeCardAdapter(this, getActivity(), assets, moduleManager, appSession);
+            adapter.setFermatListEventListener(this);
         } else {
             adapter.changeDataSet(assets);
         }
@@ -554,6 +484,65 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
         task.execute();*/
     }
 
+    public void doRedeem()
+    {
+        changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM, appSession.getAppPublicKey());
+    }
+
+    public void doTransfer()
+    {
+        changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_TRANSFER_ACTIVITY, appSession.getAppPublicKey());
+    }
+
+    public void doSell()
+    {
+        changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY, appSession.getAppPublicKey());
+    }
+
+    public void doTransaction()
+    {
+        changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL , appSession.getAppPublicKey());
+    }
+
+    public void doAppropiate()
+    {
+        final Asset asset = (Asset) appSession.getData("asset_data");
+        new ConfirmDialog.Builder(getActivity(), appSession)
+                .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_appropriate))
+                .setColorStyle(getResources().getColor(R.color.card_toolbar))
+                .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                    @Override
+                    public void onClick() {
+                        doAppropriate(asset.getDigitalAsset().getPublicKey());
+                    }
+                }).build().show();
+    }
+
+    public void doAcceptNegotiation(){
+        final Asset asset = (Asset) appSession.getData("asset_data");
+
+        if (isValidBuy(asset)) {
+            new ConfirmDialog.Builder(getActivity(), appSession)
+                    .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                    .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_asset_buy))
+                    .setColorStyle(getResources().getColor(R.color.card_toolbar))
+                    .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                        @Override
+                        public void onClick() {
+
+                            doBuy(asset.getAssetUserNegotiation().getId());
+                        }
+                    }).build().show();
+        }
+
+    }
+    public void doRejectNegotiation(){
+        final Asset asset = (Asset) appSession.getData("asset_data");
+        doDecline(asset);
+    }
+
+
 
     @Override
     public List<Asset> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
@@ -579,5 +568,15 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
                     show();
         }
         return assets;
+    }
+
+    @Override
+    public void onItemClickListener(Asset data, int position) {
+        appSession.setData("asset_data", data);
+    }
+
+    @Override
+    public void onLongItemClickListener(Asset data, int position) {
+
     }
 }

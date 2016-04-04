@@ -392,7 +392,8 @@
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="100dp"
-            android:background="@drawable/dap_wallet_user_sell_buttom_shape">
+            android:background="@drawable/dap_wallet_user_sell_buttom_shape"
+            android:visibility="gone">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"

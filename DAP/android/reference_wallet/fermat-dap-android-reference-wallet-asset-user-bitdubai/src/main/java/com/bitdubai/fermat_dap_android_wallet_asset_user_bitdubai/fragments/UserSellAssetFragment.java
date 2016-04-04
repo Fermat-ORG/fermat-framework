@@ -235,27 +235,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
             }
         });
 
-        sellButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (isValidSell()) {
-                    new ConfirmDialog.Builder(getActivity(), appSession)
-                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
-                            .setColorStyle(getResources().getColor(R.color.card_toolbar))
-                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                                @Override
-                                public void onClick() {
-                                    BitcoinConverter.Currency from = (BitcoinConverter.Currency) assetCurrencySpinner.getSelectedItem();
-
-                                    long sellPrice = (long) BitcoinConverter.convert(Double.parseDouble(assetPrice.getText().toString()), from, SATOSHI);
-                                    doSell(digitalAsset.getAssetPublicKey(), userSelected, sellPrice, sellPrice, 1);
-                                }
-                            }).build().show();
-                }
-            }
-        });
-
-        eraseButton.setOnClickListener(new View.OnClickListener() {
+           eraseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 userToSelectText.setText("");
@@ -415,8 +395,10 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
         super.onCreateOptionsMenu(menu, inflater);
         /*menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);*/
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        /*menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);*/
+        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 0, "Sell")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
@@ -424,10 +406,25 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
         try {
             int id = item.getItemId();
 
-            /*if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM) {
-                setUpHelpAssetSell(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
-            }*/
+            if (id == SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL) {
+                if (isValidSell()) {
+                    new ConfirmDialog.Builder(getActivity(), appSession)
+                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
+                            .setColorStyle(getResources().getColor(R.color.card_toolbar))
+                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                @Override
+                                public void onClick() {
+                                    BitcoinConverter.Currency from = (BitcoinConverter.Currency) assetCurrencySpinner.getSelectedItem();
+
+                                    long sellPrice = (long) BitcoinConverter.convert(Double.parseDouble(assetPrice.getText().toString()), from, SATOSHI);
+                                    doSell(digitalAsset.getAssetPublicKey(), userSelected, sellPrice, sellPrice, 1);
+                                }
+                            }).build().show();
+                }
+
+            }
+            return true;
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -453,10 +450,15 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
     private boolean isValidSell() {
 
-
-        String bitcoinsTotalStr = assetPrice.getText().toString();
-        double total = Double.parseDouble(assetPrice.getText().toString());
-        if (total == 0) {
+        if (assetPrice.getText() != null && assetPrice.getText().length() != 0) {
+            double total = Double.parseDouble(assetPrice.getText().toString());
+            if (total == 0) {
+                makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_total_zero),
+                        Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        else {
             makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_total_zero),
                     Toast.LENGTH_SHORT).show();
             return false;
@@ -469,7 +471,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
                     Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (appSession.getData("user_selected") == null) {
+        if (userSelected == null) {
             makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_user),
                     Toast.LENGTH_SHORT).show();
             return false;
