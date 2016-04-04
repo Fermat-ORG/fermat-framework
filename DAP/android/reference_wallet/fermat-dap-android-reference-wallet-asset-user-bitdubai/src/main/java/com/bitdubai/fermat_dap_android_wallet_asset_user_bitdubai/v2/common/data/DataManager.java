@@ -1,13 +1,15 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.data;
 
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.RedeemPoint;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.AssetUserNegotiation;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Issuer;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.RedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
@@ -35,8 +37,8 @@ import java.util.Set;
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 2/24/16.
  */
 public class DataManager {
-    private AssetUserWalletSubAppModuleManager moduleManager;
-    private String walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
+    private static AssetUserWalletSubAppModuleManager moduleManager;
+    private static String walletPublicKey = WalletUtilities.WALLET_PUBLIC_KEY;
 
     public DataManager(AssetUserWalletSubAppModuleManager moduleManager) {
         this.moduleManager = moduleManager;
@@ -73,7 +75,7 @@ public class DataManager {
         return null;
     }
 
-    public List<Asset> getAssets() throws CantLoadWalletException, CantGetTransactionsException {
+    public static List<Asset> getAssets() throws CantLoadWalletException, CantGetTransactionsException {
         List<AssetUserWalletList> assetUserWalletBalances = moduleManager.getAssetUserWalletBalances(walletPublicKey);
 
         List<Asset> assets = new ArrayList<>();
@@ -123,7 +125,7 @@ public class DataManager {
         return newAssets;
     }
 
-    public List<RedeemPoint> getConnectedRedeemPoints(String assetPublicKey) throws CantGetAssetRedeemPointActorsException {
+    public static List<RedeemPoint> getConnectedRedeemPoints(String assetPublicKey) throws CantGetAssetRedeemPointActorsException {
         List<RedeemPoint> redeemPoints = new ArrayList<>();
         List<ActorAssetRedeemPoint> actorAssetRedeemPoints = moduleManager.getRedeemPointsConnectedForAsset(assetPublicKey);
         for (ActorAssetRedeemPoint actorAssetRedeemPoint : actorAssetRedeemPoints) {
@@ -133,7 +135,27 @@ public class DataManager {
         return redeemPoints;
     }
 
-    public List<Asset> getAllPendingNegotiations() throws Exception {
+    public static List<ActorAssetRedeemPoint> getRedeemPoints(List<RedeemPoint> redeemPoints) {
+        List<ActorAssetRedeemPoint> actorAssetRedeemPoints = new ArrayList<>();
+        for (RedeemPoint redeemPoint : redeemPoints) {
+            if (redeemPoint.isSelected()) {
+                actorAssetRedeemPoints.add(redeemPoint.getActorAssetRedeemPoint());
+            }
+        }
+        return actorAssetRedeemPoints;
+    }
+
+    public static List<User> getConnectedUsers() throws CantGetAssetUserActorsException {
+        List<User> users = new ArrayList<>();
+        List<ActorAssetUser> actorAssetUsers = moduleManager.getAllAssetUserActorConnected();
+        for (ActorAssetUser actorAssetUser : actorAssetUsers) {
+            User newUser = new User(actorAssetUser.getName(), actorAssetUser);
+            users.add(newUser);
+        }
+        return users;
+    }
+
+    public static List<Asset> getAllPendingNegotiations() throws Exception {
         List<AssetNegotiation> assetNegotiations = moduleManager.getPendingAssetNegotiations();
         List<Asset> digitalAssets = new ArrayList<>();
         Asset digitalAsset;

@@ -21,6 +21,7 @@ import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 2/24/16.
  */
 public class Asset {
+
     private AssetUserWalletList assetUserWalletList;
     private AssetUserWalletTransaction assetUserWalletTransaction;
     private DigitalAsset digitalAsset;
@@ -60,7 +61,7 @@ public class Asset {
         }
     }
 
-    public Asset(){
+    public Asset() {
 
     }
 

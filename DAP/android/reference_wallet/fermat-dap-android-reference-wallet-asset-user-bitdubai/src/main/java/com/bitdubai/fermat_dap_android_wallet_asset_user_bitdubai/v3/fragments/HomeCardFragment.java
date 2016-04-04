@@ -83,12 +83,17 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
 
     private long bitcoinWalletBalanceSatoshis;
 
+    public static HomeCardFragment newInstance() {
+        return new HomeCardFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
         try {
+            appSession.setData("redeem_points", null);
 
             moduleManager = ((AssetUserSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
@@ -275,6 +280,11 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    @Override
     protected boolean hasMenu() {
         return false;
     }
@@ -286,7 +296,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
 
     @Override
     protected int getSwipeRefreshLayoutId() {
-        return R.id.dap_v3_wallet_asset_user_home_swipe_refresh;
+        return R.id.swipe_refresh;
     }
 
     @Override
@@ -559,7 +569,6 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> {
     @Override
     public List<Asset> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         List<Asset> assets = new ArrayList<>();
-
         if (moduleManager != null) {
             try {
                 assets = dataManager.getAssets();
