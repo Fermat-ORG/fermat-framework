@@ -126,7 +126,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
         try {
             bitcoinWalletBalanceSatoshis = moduleManager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(moduleManager));
         } catch (Exception e) {
-           // bitcoinBalanceText.setText(getResources().getString(R.string.dap_user_wallet_buy_no_available));
+            // bitcoinBalanceText.setText(getResources().getString(R.string.dap_user_wallet_buy_no_available));
         }
 
         onRefresh();
@@ -495,28 +495,23 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
         task.execute();*/
     }
 
-    public void doRedeem()
-    {
+    public void doRedeem() {
         changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_REDEEM, appSession.getAppPublicKey());
     }
 
-    public void doTransfer()
-    {
+    public void doTransfer() {
         changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_TRANSFER_ACTIVITY, appSession.getAppPublicKey());
     }
 
-    public void doSell()
-    {
+    public void doSell() {
         changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_SELL_ACTIVITY, appSession.getAppPublicKey());
     }
 
-    public void doTransaction()
-    {
-        changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL , appSession.getAppPublicKey());
+    public void doTransaction() {
+        changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL, appSession.getAppPublicKey());
     }
 
-    public void doAppropiate()
-    {
+    public void doAppropiate() {
         final Asset asset = (Asset) appSession.getData("asset_data");
         new ConfirmDialog.Builder(getActivity(), appSession)
                 .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
@@ -530,7 +525,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
                 }).build().show();
     }
 
-    public void doAcceptNegotiation(){
+    public void doAcceptNegotiation() {
         final Asset asset = (Asset) appSession.getData("asset_data");
 
         if (isValidBuy(asset)) {
@@ -548,11 +543,11 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
         }
 
     }
-    public void doRejectNegotiation(){
+
+    public void doRejectNegotiation() {
         final Asset asset = (Asset) appSession.getData("asset_data");
         doDecline(asset);
     }
-
 
 
     @Override
@@ -591,6 +586,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
         }
     }
 
+
     public void onItemClickListener(Asset data, int position) {
         appSession.setData("asset_data", data);
     }
@@ -600,3 +596,4 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
 
     }
 }
+

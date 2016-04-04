@@ -89,4 +89,9 @@ public class BlockchainDownloadProgress {
                 ", downloader='" + downloader + '\'' +
                 '}';
     }
+
+
+    public void setLastBlockDownloadTime(long lastblocktime) {
+        this.lastblocktime = lastblocktime;
+    }
 }
