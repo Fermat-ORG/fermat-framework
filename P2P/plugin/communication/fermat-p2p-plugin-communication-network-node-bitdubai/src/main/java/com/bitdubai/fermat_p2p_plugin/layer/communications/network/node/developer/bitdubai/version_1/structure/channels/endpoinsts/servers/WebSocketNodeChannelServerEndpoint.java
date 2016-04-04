@@ -109,12 +109,12 @@ public class WebSocketNodeChannelServerEndpoint extends com.bitdubai.fermat_p2p_
     }
 
     @OnMessage
-    public void newPackageReceived(String message, Session session) {
+    public void newPackageReceived(String packet, Session session) {
 
-        LOG.info("On Message: " + session.getId() + " message = " + message + ")");
+        LOG.info("newPackageReceived: " + session.getId() + " message = " + packet + ")");
 
         for (Session s : session.getOpenSessions()) {
-            s.getAsyncRemote().sendText(message);
+            s.getAsyncRemote().sendText(packet);
         }
     }
 
