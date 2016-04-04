@@ -6,17 +6,17 @@
 
 All the work done for the Fermat open source project is done by several teams of people collaborating between each other. Fermat has several teams working in parallel. Most of them are dev teams, but these are not the only ones. Fermat also has teams of graphic designers, 3d artists, video producers, copy writers, publishing, etc.
 
-bitDubai is a network of teams working on the Fermat project. In this document you will learn about how bitDubai teams are organized. At the moment bitDubai is the only team-network working on Fermat, but there is room for other networks to join and they might want to get organized in a different way.
+Fermat Dev Teams is a network of teams working on the Fermat project. In this document you will learn about how these teams are organized. At the moment Fermat Dev Teams is the only teams-network working on Fermat, but there is room for other networks to join and they might want to get organized in a different way.
 
-Below you will find a list of bitDubai/Fermat developers teams. Feel free to contact their team leaders if you want to join them.
+Below you will find a list of Fermat developers teams. Feel free to contact the team leader if you want to join any of them.
 
 You can also contribute to the Fermat project through other means. Please refer to the [CONTRIBUTING GUIDE](https://github.com/bitDubai/fermat/blob/master/CONTRIBUTING.md) for more details.
 
-## bitDubai Teams Organization
+## Fermat Dev Teams Organization
 
 The maximun size for a team is 5 people. All of them together should have all the skill sets needed for these kind of projects.
 
-Teams are organized in a hierarchical way. This helps the task of reviewing changes in source code, since it is expected that a child team changes they are pushed to its parent team in order to be reviewed, merged with their own changes and pushed again to the next parent in the hierarchy. At the top the core developers are the only ones merging the combined batch of changes into the bitDubai codebase.
+Teams are organized in a hierarchical way. This helps the task of reviewing changes in source code, since it is expected that a child team changes they are pushed to its parent team in order to be reviewed, merged with their own changes and pushed again to the next parent in the hierarchy. At the top Fermat Core Developers are the only ones merging the combined batch of changes into the Fermat codebase.
 
 
 ## Teams List
