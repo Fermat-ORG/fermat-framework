@@ -254,10 +254,6 @@ public enum Plugins implements FermatPluginsEnum {
     WALLET_SETTINGS             ("WSE"),
     WALLET_STATISTICS           ("WSTA"),
     WALLET_STORE                ("WST"),
-
-
-
-
     WS_CLOUD_CLIENT             ("WCL"),
 
     //CBP
@@ -296,15 +292,17 @@ public enum Plugins implements FermatPluginsEnum {
     CUSTOMER_BROKER_SALE                ("CBSA"),
 
     //CHT
-
     CHAT_MIDDLEWARE                     ("CHMID"),
     CHAT_NETWORK_SERVICE                ("CHTNS"),
     CHAT_SUP_APP_MODULE                 ("CHTSAM"),
+    CHAT_IDENTITY                       ("CHTIDE"),
     CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
 
     // ART
     ARTIST_ACTOR_CONNECTION             ("ARTAAC"),
     FAN_ACTOR_CONNECTION                ("ARTFAC"),
+    ARTIST                              ("ANSART"),
+    FAN                                 ("FANS"),
     ACTOR_NETWORK_SERVICE_ARTIST        ("ANSART"),
     ARTIST_IDENTITY                     ("ARTIDNTY"),
     ART_ARTIST_SUB_APP_MODULE           ("AASAM"),
@@ -328,7 +326,6 @@ public enum Plugins implements FermatPluginsEnum {
 
     // End  new Plugins
 
-
     private final String code;
 
     Plugins(final String code) {
@@ -337,164 +334,15 @@ public enum Plugins implements FermatPluginsEnum {
 
     public static Plugins getByCode(final String code) throws InvalidParameterException {
 
-        switch (code) {
-
-            case "AND"  :   return ANDROID_CORE          ;
-            case "APR"  :   return SUB_APP_RUNTIME          ;
-            case "ASAP" :   return ASSET_APPROPRIATION      ;
-            case "ASD"  :   return ASSET_DISTRIBUTION       ;
-            case "ASDS" :   return ASSET_DIRECT_SELL        ;
-            case "ASTT"  :  return ASSET_TRANSFER           ;
-            case "ASF"  :   return ASSET_FACTORY            ;
-            case "ASI"  :   return ASSET_ISSUER             ;
-            case "ASIC" :   return ASSET_ISSUER_COMMUNITY   ;
-            case "ASIS" :   return ASSET_ISSUING            ;
-            case "ASR"  :   return ASSET_RECEPTION          ;
-            case "ASSE":    return ASSET_SELLER;
-            case "ASBU":    return ASSET_BUYER;
-            case "ASU"  :   return ASSET_USER               ;
-            case "ASUC" :   return ASSET_USER_COMMUNITY     ;
-            case "AST"  :   return ASSET_TRANSMISSION       ;
-            case "BAV"  :   return BITCOIN_ASSET_VAULT      ;
-            case "BN"   :   return BITCOIN_NETWORK          ;
-            case "BV"   :   return BITCOIN_VAULT            ;
-            case "BW"   :   return BITCOIN_WALLET           ;
-            case "LPW"  :   return LOSS_PROTECTED_WALLET    ;
-            case "BWOV" :   return BITCOIN_WATCH_ONLY_VAULT ;
-            case "BHOLD":   return BITCOIN_HOLD             ;
-            case "BUNHOLD": return BITCOIN_UNHOLD           ;
-            case "CONTP" :   return CONTRACT_PURCHASE       ;
-            case "CONTS" :   return CONTRACT_SALE           ;
-            case "CA"   :   return CRYPTO_ADDRESSES         ;
-            case "CAB"  :   return CRYPTO_ADDRESS_BOOK      ;
-            case "CB"   :   return CRYPTO_BROKER            ;
-            case "CBC"  :   return CRYPTO_BROKER_COMMUNITY  ;
-            case "CBI"  :   return CRYPTO_BROKER_IDENTITY   ;
-            case "CC"   :   return CRYPTO_CUSTOMER          ;
-            case "CCI"  :   return CRYPTO_CUSTOMER_IDENTITY ;
-            case "CCC"  :   return CRYPTO_CUSTOMER_COMMUNITY;
-            case "CPR"  :   return CRYPTO_PAYMENT_REQUEST   ;
-            case "CT"   :   return CRYPTO_TRANSMISSION      ;
-            case "CW"   :   return CRYPTO_WALLET            ;
-            case "CLPW" :   return CRYPTO_LOSS_PROTECTED_WALLET            ;
-            case "DER"  :   return DESKTOP_RUNTIME          ;
-            case "DEV"  :   return DEVELOPER                ;
-            case "DU"   :   return DEVICE_USER              ;
-            case "EWU"  :   return EXTRA_WALLET_USER        ;
-            case "IC"   :   return INCOMING_CRYPTO          ;
-            case "IEU"  :   return INCOMING_EXTRA_USER      ;
-            case "IIU"  :   return INCOMING_INTRA_USER      ;
-            case "IWU"  :   return INTRA_WALLET_USER        ;
-            case "IIA"  :   return INTRA_IDENTITY_USER      ;
-            case "IR"   :   return ISSUER_REDEMPTION        ;
-            case "ISAP":    return ISSUER_APPROPRIATION     ;
-            case "NOT"  :   return NOTIFICATION             ;
-            case "NDS"  :   return NEGOTIATION_DIRECT_SELL  ;
-            case "OEU"  :   return OUTGOING_EXTRA_USER      ;
-            case "OIA"  :   return OUTGOING_INTRA_ACTOR     ;
-            case "TIW"  :   return TRANSFER_INTRA_WALLET     ;
-            case "TON"  :   return TIMEOUT_NOTIFIER         ;
-            case "PBL"  :   return PUBLISHER                ;
-            case "RP"   :   return REDEEM_POINT             ;
-            case "RPC"  :   return REDEEM_POINT_COMMUNITY   ;
-            case "RPR"  :   return REDEEM_POINT_REDEMPTION  ;
-            case "SAR"  :   return SUB_APP_RESOURCES        ;
-            case "FERM"  :   return SUB_APP_FERMAT_MONITOR   ;
-            case "SPR"  :   return SUB_APP_RUNTIME          ;
-            case "UR"   :   return USER_REDEMPTION          ;
-            case "WCOM" :   return WALLET_COMMUNITY         ;
-            case "WC"   :   return WALLET_CONTACTS          ;
-            case "WF"   :   return WALLET_FACTORY           ;
-            case "WM"   :   return WALLET_MANAGER           ;
-            case "SAM"  :   return SUB_APP_MANAGER          ;
-            case "WPU"  :   return WALLET_PUBLISHER         ;
-            case "WRE"  :   return WALLET_RESOURCES         ;
-            case "WRU"  :   return WALLET_RUNTIME           ;
-            case "WSE"  :   return WALLET_SETTINGS          ;
-            case "WSTA" :   return WALLET_STATISTICS        ;
-            case "WST"  :   return WALLET_STORE             ;
-            case "WCL"  :   return WS_CLOUD_CLIENT          ;
-            case ("CBAC"):  return CRYPTO_BROKER_ACTOR      ;
-            case ("CCAC"):  return CRYPTO_CUSTOMER_ACTOR    ;
-            case ("CBWA"):  return CRYPTO_BROKER_WALLET     ;
-            case ("BMRE"):  return BANK_MONEY_RESTOCK       ;
-            case ("BMDE"):  return BANK_MONEY_DESTOCK       ;
-            case ("CMRE"):  return CASH_MONEY_RESTOCK       ;
-            case ("CMDE"):  return CASH_MONEY_DESTOCK       ;
-            case ("CRRE"):  return CRYPTO_MONEY_RESTOCK     ;
-            case ("CRDE"):  return CRYPTO_MONEY_DESTOCK     ;
-            case "TRTX":    return TRANSACTION_TRANSMISSION ;
-            case "CBPU":    return CUSTOMER_BROKER_PURCHASE ;
-            case "CBSA":    return CUSTOMER_BROKER_SALE     ;
-            case ("FI"):    return FIAT_INDEX               ;
-            case "BBNKHMT": return BITDUBAI_BNK_HOLD_MONEY_TRANSACTION;
-            case "BBNKUMT": return BITDUBAI_BNK_UNHOLD_MONEY_TRANSACTION;
-            case "BBNKDMT": return BITDUBAI_BNK_DEPOSIT_MONEY_TRANSACTION;
-            case "BBNKWMT": return BITDUBAI_BNK_WITHDRAW_MONEY_TRANSACTION;
-            case "BBNKBMW": return BITDUBAI_BNK_BANK_MONEY_WALLET;
-            case "BBNKBMWM": return BITDUBAI_BNK_BANK_MONEY_WALLET_MODULE;
-            case "BCSHMTH": return BITDUBAI_CSH_MONEY_TRANSACTION_HOLD;
-            case "BCSHMTU": return BITDUBAI_CSH_MONEY_TRANSACTION_UNHOLD;
-            case "BCSHMTD": return BITDUBAI_CSH_MONEY_TRANSACTION_DEPOSIT;
-            case "BCSHMTW": return BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL;
-            case "BCSHMWM": return BITDUBAI_CSH_MONEY_WALLET_MODULE;
-            case "BCSHWCM": return BITDUBAI_CSH_WALLET_CASH_MONEY;
-            case "BCERPF":  return FILTER;
-            case "BCERPBV": return BITCOINVENEZUELA;
-            case "BCERPBF": return BITFINEX;
-            case "BCERPBT": return BTER;
-            case "BCERPDT": return DOLARTODAY;
-            case "BCERPEC": return ELCRONISTA;
-            case "BCERPECB":return EUROPEAN_CENTRAL_BANK;
-            case "BCERPLN": return LANACION;
-            case "BCERPYH": return YAHOO;
-            case ("NGTR"):  return NEGOTIATION_TRANSMISSION         ;
-            case ("CBNE"):  return CUSTOMER_BROKER_NEW              ;
-            case ("CBUP"):  return CUSTOMER_BROKER_UPDATE           ;
-            case ("CBCL"):  return CUSTOMER_BROKER_CLOSE            ;
-            case ("NGS"):   return NEGOTIATION_SALE                 ;
-            case ("NGP"):   return NEGOTIATION_PURCHASE             ;
-            case "OPC":     return OPEN_CONTRACT                    ;
-            case "CLC":     return CLOSE_CONTRACT                   ;
-            case "CONP":    return CUSTOMER_ONLINE_PAYMENT          ;
-            case "COFP":    return CUSTOMER_OFFLINE_PAYMENT         ;
-            case "BAFP":    return BROKER_ACK_OFFLINE_PAYMENT       ;
-            case "BAOP":    return BROKER_ACK_ONLINE_PAYMENT        ;
-            case "CAOM":    return CUSTOMER_ACK_ONLINE_MERCHANDISE  ;
-            case "BSOM":    return BROKER_SUBMIT_ONLINE_MERCHANDISE ;
-            case "BSFM":    return BROKER_SUBMIT_OFFLINE_MERCHANDISE;
-            case "MAEN":    return MATCHING_ENGINE;
-
-            case "BCNNODE"   :  return BITDUBAI_COMMUNICATIONS_NETWORK_NODE     ;
-            case "BCNCLIENT" :  return BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT   ;
-            case "CHMID":       return CHAT_MIDDLEWARE                          ;
-            case "CHTNS":       return CHAT_NETWORK_SERVICE                     ;
-            case "CHTSAM":      return CHAT_SUP_APP_MODULE                      ;
-            case "CCPODT" :     return CCP_OUTGOING_DRAFT_TRANSACTION           ;
-            case "ANSART":      return ACTOR_NETWORK_SERVICE_ARTIST             ;
-            case "ARTIDNTY":    return ARTIST_IDENTITY                          ;
-            case "AASAM":       return ART_ARTIST_SUB_APP_MODULE                ;
-            case "AFSAM":       return ART_FAN_SUB_APP_MODULE                   ;
-            case "TOKAP":       return TOKENLY_API;
-            case "TARTIST":     return TOKENLY_ARTIST                           ;
-            case "TFAN":        return TOKENLY_FAN                              ;
-            case "TASAM":       return TOKENLY_ARTIST_SUB_APP_MODULE            ;
-            case "TFSAM":       return TOKENLY_FAN_SUB_APP_MODULE               ;
-            case "TFWM":        return TOKENLY_FAN_WALLET_MODULE                ;
-            case "TWALLET":     return TOKENLY_WALLET                           ;
-            case "ARTAAC":      return ARTIST_ACTOR_CONNECTION                  ;
-            case "ARTFAC":      return FAN_ACTOR_CONNECTION                     ;
-            case "PFM":         return PIP_FERMAT_MONITOR                       ;
-            case "ARTMPM":      return MUSIC_PLAYER_SUB_APP_MODULE              ;
-            case "ARTACM":      return ARTIST_COMMUNITY_SUB_APP_MODULE          ;
-            case "ARTMCM":      return FAN_COMMUNITY_SUB_APP_MODULE             ;
-            default:
-                throw new InvalidParameterException(
-                        "Code Received: " + code,
-                        "This Code Is Not Valid for the Plugins enum"
-                );
+        for (Plugins plugin : Plugins.values()) {
+            if(plugin.getCode().equals(code))
+                return plugin;
         }
 
+        throw new InvalidParameterException(
+                "Code Received: " + code,
+                "This code is not valid for the Plugins enum."
+        );
     }
 
     @Override

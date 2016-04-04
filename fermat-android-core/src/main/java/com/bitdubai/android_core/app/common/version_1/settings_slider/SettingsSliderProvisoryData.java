@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by mati on 2016.03.25..
+ * Created by Matias Furszyfer on 2016.03.25..
  */
 public class SettingsSliderProvisoryData {
     
