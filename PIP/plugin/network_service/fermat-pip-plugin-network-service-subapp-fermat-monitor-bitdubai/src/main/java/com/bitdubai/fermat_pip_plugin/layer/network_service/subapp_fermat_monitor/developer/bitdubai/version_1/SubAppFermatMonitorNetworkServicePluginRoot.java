@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.communications.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
@@ -36,6 +37,9 @@ import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monito
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.database.SystemMonitorNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.developerUtils.SystemMonitorNetworkServiceDeveloperDatabaseFactory;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantInitializeSystemMonitorNetworkServiceDataBaseException;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
+//import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.DatabaseTransactionFailedException;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.structures.ComponentProfileInfo;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.structures.EventHandlerRouter;
 
 import java.util.ArrayList;
@@ -221,11 +225,32 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
 
     }
 
-
     public void saveComponentRegistration(CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent) {
-        PlatformComponentProfile fas;
+        try {
+            NetworkServiceType networkServiceType = completeComponentRegistrationNotificationEvent.getNetworkServiceTypeApplicant();
+            PlatformComponentProfile platformComponentProfile = completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered();
+            //la variable platformComponentProfile se la tenes que pasar al subappFermatMonitorComponentDAO
+            //pero como espera otro objeto vas a tener que contruirlo y asigarle los datos
+            //creo que es esto lo que tenes que hacer
+            ComponentProfileInfo componentProfileInfo = new ComponentProfileInfo(
+                                            platformComponentProfile.getIdentityPublicKey(),
+                                            platformComponentProfile.getAlias(),
+                                            platformComponentProfile.getNetworkServiceType().getCode());
 
+            try {
+                subappFermatMonitorComponentDAO.create(componentProfileInfo);
+            } catch (DatabaseTransactionFailedException e) {
+                e.printStackTrace();
+            }
+
+        } catch (CantInsertRecordDataBaseException e) {
+            e.printStackTrace();
+        }
     }
+   /* public void saveComponentRegistration(CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent) {
+
+
+    }*/
 
     public void updateActor(FermatEvent fermatEvent) {
 
