@@ -61,9 +61,12 @@ public class ChatIdentityDatabaseDao {
     /**
      * Constructor
      */
-    public ChatIdentityDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) throws CantOpenDatabaseException {
+    public ChatIdentityDatabaseDao(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId,
+                                   PluginFileSystem pluginFileSystem) throws CantOpenDatabaseException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
+        this.pluginId             = pluginId;
+        this.pluginFileSystem     = pluginFileSystem;
+
         try {
             database = openDatabase();
         } catch (CantOpenDatabaseException e) {
@@ -112,13 +115,13 @@ public class ChatIdentityDatabaseDao {
 
         } catch (CantInsertRecordException e) {
             // Cant insert record.
-            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Asset Issuer Identity", "Cant create new Asset Issuer, insert database problems.");
+            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Chat Identity", "Cant create new Chat, insert database problems.");
         } catch (CantPersistPrivateKeyException e) {
             // Cant insert record.
-            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Asset Issuer Identity", "Cant create new Asset Issuer,persist private key error.");
+            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Chat Identity", "Cant create new Chat,persist private key error.");
         } catch (Exception e) {
             // Failure unknown.
-            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer Identity", "Cant create new Asset Issuer, unknown failure.");
+            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Chat Identity", "Cant create new Asset Issuer, unknown failure.");
         }
     }
 
@@ -166,7 +169,7 @@ public class ChatIdentityDatabaseDao {
         ChatIdentity chatIdentity = null;
         DatabaseTable table; // Intra User table.
 
-        // Get Asset Issuers identities list.
+        // Get Chat identities list.
         try {
 
             /**
