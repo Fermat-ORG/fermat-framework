@@ -99,7 +99,6 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         /**
          * sets the blockchainDownloader data
          */
-        blockchainDownloadProgress.setLastblocktime(block.getTimeSeconds());
         blockchainDownloadProgress.setPendingBlocks(blocksLeft);
         blockchainDownloadProgress.setLastBlockDownloadTime(block.getTimeSeconds());
         if (blockchainDownloadProgress.getTotalBlocks() == 0)
