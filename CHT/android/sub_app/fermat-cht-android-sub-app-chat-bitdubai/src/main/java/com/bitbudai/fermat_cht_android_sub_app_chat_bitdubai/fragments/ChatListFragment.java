@@ -558,7 +558,21 @@ public class ChatListFragment extends AbstractFermatFragment{
             return true;
         }
         if (id == R.id.menu_delete_all_chats) {
-            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+            try {
+                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+                alert.setTextTitle("Delete All Chats");
+                alert.setTextBody("Do you want to delete all chats? All chats will be erased");
+                alert.setType("delete-chat");
+                alert.show();
+                alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+
+                    }
+                });
+            }catch (Exception e){
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
             return true;
         }
         if (id == R.id.menu_delete_contact) {
