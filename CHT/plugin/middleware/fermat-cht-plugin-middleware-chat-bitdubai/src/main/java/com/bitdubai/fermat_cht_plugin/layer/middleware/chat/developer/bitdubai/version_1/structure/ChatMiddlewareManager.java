@@ -330,7 +330,7 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     /**
      * This method deletes all messages of a chat from database.
      *
-     * @param UUID chatId
+     * @param chatId
      * @throws CantDeleteMessageException
      */
     @Override
