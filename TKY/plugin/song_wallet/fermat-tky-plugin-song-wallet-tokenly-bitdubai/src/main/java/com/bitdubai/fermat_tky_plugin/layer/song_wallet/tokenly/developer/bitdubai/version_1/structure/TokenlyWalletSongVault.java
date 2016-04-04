@@ -193,7 +193,7 @@ public class TokenlyWalletSongVault {
             while(bytesRead != -1) {
                 if(CANCEL_DOWNLOAD){
                     broadcaster.publish(
-                            BroadcasterType.NOTIFICATION_SERVICE,
+                            BroadcasterType.UPDATE_VIEW,
                             WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
                             "Download canceled by user request");
                     throw new CancelDownloadException();
@@ -209,7 +209,7 @@ public class TokenlyWalletSongVault {
                     fermatBundle.put(BroadcasterNotificationType.DOWNLOAD_PERCENTAGE.getCode(),
                             downloadPercentage+"%");
                     broadcaster.publish(
-                            BroadcasterType.NOTIFICATION_PROGRESS_SERVICE,
+                            BroadcasterType.UPDATE_VIEW,
                             WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
                             fermatBundle);
                 }
@@ -239,7 +239,7 @@ public class TokenlyWalletSongVault {
             fermatBundle = new FermatBundle();
             fermatBundle.put(BroadcasterNotificationType.DOWNLOAD_PERCENTAGE.getCode(), "100%");
             broadcaster.publish(
-                    BroadcasterType.NOTIFICATION_PROGRESS_SERVICE,
+                    BroadcasterType.UPDATE_VIEW,
                     WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
                     fermatBundle);
             //Only for testing:
