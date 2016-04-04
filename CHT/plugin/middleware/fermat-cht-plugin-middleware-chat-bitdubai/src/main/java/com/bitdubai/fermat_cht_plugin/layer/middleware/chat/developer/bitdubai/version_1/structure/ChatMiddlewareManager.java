@@ -328,6 +328,47 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     }
 
     /**
+     * This method deletes all messages of a chat from database.
+     *
+     * @param UUID chatId
+     * @throws CantDeleteMessageException
+     */
+    @Override
+    public void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException {
+        try {
+            ObjectChecker.checkArgument(chatId, "The chat argument is null");
+            this.chatMiddlewareDatabaseDao.deleteMessagesByChatId(chatId);
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantDeleteMessageException(
+                    e,
+                    "Deleting a chat from database",
+                    "The chat probably is null");
+        } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantDeleteMessageException(
+                    e,
+                    "Deleting a chat from database",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantDeleteMessageException(
+                    FermatException.wrapException(exception),
+                    "Deleting a chat from database",
+                    "Unexpected exception");
+        }
+    }
+
+    /**
      * This method returns a full message list.
      *
      * @return
