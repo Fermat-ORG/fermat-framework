@@ -34,6 +34,7 @@ import com.bitdubai.fermat_ccp_api.layer.crypto_transaction.outgoing_draft.Outgo
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
 import com.bitdubai.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.exceptions.CantGetBuyingTransactionsException;
@@ -220,6 +221,15 @@ public class AssetBuyerDigitalAssetTransactionPluginRoot extends AbstractPlugin 
     public List<AssetNegotiation> getNewNegotiations(BlockchainNetworkType networkType) throws CantGetBuyingTransactionsException {
         try {
             return transactionManager.getNewNegotiations(networkType);
+        } catch (DAPException e) {
+            throw new CantGetBuyingTransactionsException(FermatException.wrapException(e));
+        }
+    }
+
+    @Override
+    public ActorAssetUser getSellerFromNegotiation(UUID negotiationID) throws CantGetBuyingTransactionsException {
+        try {
+            return transactionManager.getSellerFromNegotiation(negotiationID);
         } catch (DAPException e) {
             throw new CantGetBuyingTransactionsException(FermatException.wrapException(e));
         }

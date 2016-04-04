@@ -8,6 +8,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Rede
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -138,8 +139,6 @@ public class DataManager {
         Asset digitalAsset;
 
         for (AssetNegotiation asset : assetNegotiations){
-            List<AssetUserWalletTransaction> assetUserWalletTransactions = moduleManager.loadAssetUserWallet(walletPublicKey).getAllTransactions(asset.getAssetToOffer().getPublicKey());
-
 
             digitalAsset = new Asset();
             digitalAsset.setDigitalAsset(asset.getAssetToOffer());
@@ -148,6 +147,11 @@ public class DataManager {
             digitalAsset.setId(asset.getNegotiationId().toString());
             digitalAsset.setDate(new Timestamp(new Date().getTime()));
             digitalAsset.setStatus(Asset.Status.PENDING);
+
+            ActorAssetUser seller = moduleManager.getSellerFromNegotiation(asset.getNegotiationId());
+
+            digitalAsset.setActorName(seller.getName());
+            digitalAsset.setActorImage(seller.getProfileImage());
 
             AssetUserNegotiation userAssetNegotiation = new AssetUserNegotiation();
             userAssetNegotiation.setId(asset.getNegotiationId());

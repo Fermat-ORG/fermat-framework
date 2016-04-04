@@ -142,4 +142,6 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetU
 
     List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets() throws CantListWalletsException;
 
+    ActorAssetUser getSellerFromNegotiation(UUID negotiationID) throws CantGetAssetNegotiationsException;
+
 }

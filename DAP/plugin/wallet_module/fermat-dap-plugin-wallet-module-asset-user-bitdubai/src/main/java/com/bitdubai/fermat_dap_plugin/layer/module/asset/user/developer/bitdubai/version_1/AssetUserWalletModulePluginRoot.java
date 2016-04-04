@@ -507,6 +507,16 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
         }
     }
 
+    @Override
+    public ActorAssetUser getSellerFromNegotiation(UUID negotiationID) throws CantGetAssetNegotiationsException {
+        try {
+            return assetBuyerManager.getSellerFromNegotiation(negotiationID);
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.ASSET_BUYER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetAssetNegotiationsException(e);
+        }
+    }
+
     /**
      * This method notifies the seller that we've accepted one of its asset and the transaction for this asset can proceed.
      *

@@ -19,10 +19,10 @@
     <color name="secondary_text">#727272</color>
     <color name="primary_text">#212121</color>
 
-    <color name="dap_user_view_color">#381a5e</color>
+    <color name="dap_user_view_color">#1371A7</color>
 
-    <color name="dap_wallet_asset_user_gradient_start_color">#381a5e</color>
-    <color name="dap_wallet_asset_user_gradient_end_color">#381a5e</color>
+    <color name="dap_wallet_asset_user_gradient_start_color">#1371A7</color>
+    <color name="dap_wallet_asset_user_gradient_end_color">#1371A7</color>
 
     <!-- dap asset user wallet colors -->
     <color name="dap_user_wallet_principal">#381a5e</color>
@@ -51,6 +51,8 @@
 
     <!-- v3 -->
     <color name="card_toolbar">#1371A7</color>
+    <color name="card_toolbar_trans">#CC1371A7</color>
+    <color name="bg_circular_redeem_color">#CC1371A7</color>
     <color name="card_top">#0C6089</color>
     <color name="card_text_top_primary">#ffffff</color>
     <color name="card_text_top_secondary">#BDBDBD</color>

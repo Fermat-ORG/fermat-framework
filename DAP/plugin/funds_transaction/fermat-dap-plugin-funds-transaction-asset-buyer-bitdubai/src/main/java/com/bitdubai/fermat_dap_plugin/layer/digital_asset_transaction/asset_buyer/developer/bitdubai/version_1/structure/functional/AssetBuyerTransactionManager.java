@@ -49,6 +49,14 @@ public class AssetBuyerTransactionManager {
         return toReturn;
     }
 
+    public ActorAssetUser getSellerFromNegotiation(UUID negotiationID) throws DAPException {
+
+        ActorAssetUser seller;
+        seller = dao.getNegotiationRecord(negotiationID).getSeller();
+        return seller;
+
+    }
+
     public DAPMessage constructNegotiationMessage(NegotiationRecord negotiationRecord) throws CantGetAssetUserActorsException, CantSetObjectException {
         AssetNegotiationContentMessage content = new AssetNegotiationContentMessage(negotiationRecord.getNegotiationStatus(), negotiationRecord.getNegotiation());
         ActorAssetUser mySelf = userManager.getActorAssetUser();

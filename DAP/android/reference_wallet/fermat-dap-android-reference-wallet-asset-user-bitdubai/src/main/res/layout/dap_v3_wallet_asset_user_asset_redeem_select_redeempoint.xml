@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff">
 
@@ -14,16 +15,17 @@
         android:text="@string/select_redeem_to_redeem"
         android:textColor="#2d3e50"
         android:textSize="14sp"
-        />
+        android:id="@+id/select_redeem_point" />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_redeempoint_v3"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible">
+        android:visibility="visible"
+        android:layout_below="@+id/select_redeem_point">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/dap_wallet_asset_user_asset_redeem_select_redeempoints_activity_recycler_view"
+            android:id="@+id/dap_v3_wallet_asset_user_asset_redeem_select_redeempoints_activity_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginEnd="16dp"
@@ -35,7 +37,7 @@
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
-        android:id="@+id/dap_wallet_asset_user_redeem_no_redeempoints"
+        android:id="@+id/dap_v3_wallet_asset_user_redeem_no_redeempoints"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -59,4 +61,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
