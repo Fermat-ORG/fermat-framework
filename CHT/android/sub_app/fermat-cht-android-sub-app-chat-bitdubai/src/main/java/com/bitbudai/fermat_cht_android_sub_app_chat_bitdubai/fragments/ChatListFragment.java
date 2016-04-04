@@ -567,7 +567,13 @@ public class ChatListFragment extends AbstractFermatFragment{
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-
+                        try {
+                            chatManager.deleteChats();
+                        } catch (CantDeleteChatException e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }catch (Exception e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }
                     }
                 });
             }catch (Exception e){
