@@ -322,7 +322,7 @@ public class CustomerBrokerNewAgent implements
                 List<CustomerBrokerNew> negotiationPendingToSubmitList;
                 CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
                 CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
-                int                                 timeConfirmSend     = 60;
+                int                                 timeConfirmSend     = 5;
 
                 //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
                 negotiationPendingToSubmitList  = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
@@ -413,87 +413,6 @@ public class CustomerBrokerNewAgent implements
                 throw new CantSendCustomerBrokerNewNegotiationTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
             }
         }
-
-        /*private void pendingToConfirmtTransaction() throws CantProcessPendingConfirmTransactionException{
-
-            try {
-
-                UUID transactionId;
-                Map<UUID,Integer> transactionSend = new HashMap<>();
-                int numberSend;
-
-                List<CustomerBrokerNew> negotiationList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToConfirmTransactionNegotiation();
-                if(!negotiationList.isEmpty()) {
-                    for (CustomerBrokerNew negotiationTransaction : negotiationList) {
-
-                        transactionId = negotiationTransaction.getTransactionId();
-
-                        if (!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.PENDING_SUBMIT.getCode())) {
-
-                            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - pendingToConfirmtTransaction" + transactionId + " ****\n");
-
-                            numberSend = getNumberSend(transactionSend, transactionId);
-
-                            isValidateSend(transactionId, numberSend);
-
-                            if(isValidateSend) {
-                                System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - pendingToConfirmtTransaction - SEND AGAIN: " + numberSend + " ****\n");
-                                customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
-                                        transactionId,
-                                        NegotiationTransactionStatus.PENDING_SUBMIT);
-
-                            }
-                            transactionSend.put(transactionId, numberSend);
-
-                        }
-                    }
-                }
-
-            } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantProcessPendingConfirmTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
-            }
-        }
-
-        private int getNumberSend(Map<UUID,Integer> transactionSend, UUID transactionId){
-
-            int numberSend = 0;
-
-            if (transactionSend.get(transactionId) != null) numberSend = transactionSend.get(transactionId);
-
-            return numberSend++;
-
-        }
-
-        private void isValidateSend(UUID transactionId, int numberSend) throws CantProcessPendingConfirmTransactionException{
-
-            try {
-
-                isValidateSend = Boolean.FALSE;
-                int numberToSend = 3;
-
-                if ((numberSend <= numberToSend) ||
-                    (numberSend > numberToSend*2 && numberSend <= numberToSend*3) ||
-                    (numberSend > numberToSend*4 && numberSend <= numberToSend*5))
-                    isValidateSend = Boolean.TRUE;
-
-                if (numberSend > numberToSend*5) {
-
-                    customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
-                            transactionId,
-                            NegotiationTransactionStatus.REJECTED_NEGOTIATION);
-
-                }
-
-            } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e){
-                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantProcessPendingConfirmTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
-            } catch (Exception e) {
-                errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-                throw new CantProcessPendingConfirmTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
-            }
-
-        }*/
 
         //CHECK PENDING EVEN
         private void checkPendingEvent(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
