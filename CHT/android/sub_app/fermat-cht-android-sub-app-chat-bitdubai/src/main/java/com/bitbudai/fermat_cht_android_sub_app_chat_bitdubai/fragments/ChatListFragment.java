@@ -532,7 +532,7 @@ public class ChatListFragment extends AbstractFermatFragment{
             try {
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
                 alert.setTextTitle("Clean Chat");
-                alert.setTextBody("Do you want to clean this chat?");
+                alert.setTextBody("Do you want to clean this chat? All messages in here will be erased");
                 alert.setType("delete-chat");
                 alert.show();
                 alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
