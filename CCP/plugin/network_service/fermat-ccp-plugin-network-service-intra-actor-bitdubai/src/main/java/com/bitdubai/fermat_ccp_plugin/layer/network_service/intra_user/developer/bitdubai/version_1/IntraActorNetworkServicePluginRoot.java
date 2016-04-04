@@ -172,35 +172,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
 
             this.startTimer();
 
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    while(true) {
-                        if (blockchainDownloadProgress < 101) {
-                            FermatBundle fermatBundle = new FermatBundle();
-                            fermatBundle.put(Broadcaster.PROGRESS_BAR, blockchainDownloadProgress);
-                            fermatBundle.put(Broadcaster.PROGRESS_BAR_TEXT, "Blockchain download for network.");
 
-                            if (broadcasterID != 0) {
-                                fermatBundle.put(Broadcaster.PUBLISH_ID, broadcasterID);
-                                broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
-                            } else
-                                broadcasterID = broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
-                        }
-
-                        blockchainDownloadProgress+=2;
-                        if(blockchainDownloadProgress>100){
-                            break;
-                        }
-                        System.out.println("progress: " +blockchainDownloadProgress);
-                        try {
-                            TimeUnit.SECONDS.sleep(2);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            });
 
         }catch (Exception e){
             e.printStackTrace();
