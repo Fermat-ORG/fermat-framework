@@ -17,7 +17,12 @@ public enum SongStatus implements FermatEnum {
     DELETED         ("DEL"),
     DOWNLOADED      ("DED"),
     DOWNLOADING     ("DNG"),
-    NOT_AVAILABLE   ("NAV");
+    NOT_AVAILABLE   ("NAV"),
+    AVA             ("AVAILABLE"),
+    DEL             ("DELETED"),
+    DED             ("DOWNLOADED"),
+    DNG             ("DOWNLOADING"),
+    NAV             ("NOT_AVAILABLE");
 
     String code;
     SongStatus(String code){
@@ -47,6 +52,8 @@ public enum SongStatus implements FermatEnum {
     public String getCode() {
         return code;
     }
+
+
 
 }
 

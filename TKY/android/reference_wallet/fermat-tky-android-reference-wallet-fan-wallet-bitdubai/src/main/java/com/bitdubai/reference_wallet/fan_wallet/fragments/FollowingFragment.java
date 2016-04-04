@@ -128,9 +128,9 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
     void loaditems(){
 
-        items.add(new FollowingItems(R.drawable.ta, "http://www.tatianamoroz.com", "Tatiana Moroz"));
+        /*items.add(new FollowingItems(R.drawable.ta, "http://www.tatianamoroz.com", "Tatiana Moroz"));
         items.add(new FollowingItems(R.drawable.ma, "http://www.metallica.com", "Metallica"));
-        items.add(new FollowingItems(R.drawable.da, "http://www.dreamtheater.com.ve", "Dreamtheater"));
+        items.add(new FollowingItems(R.drawable.da, "http://www.dreamtheater.com.ve", "Dreamtheater"));*/
 
     }
 
@@ -291,6 +291,10 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     void tochat(){
         
         
+    }
+    // TODO: 01/04/16
+    void getMyConnection(){
+
     }
 
     private List<FollowingItems> filter(List<FollowingItems> models, String query) {
