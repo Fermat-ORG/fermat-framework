@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_core;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantGetPluginIdException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterNewPluginException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPluginIdsManagerException;
