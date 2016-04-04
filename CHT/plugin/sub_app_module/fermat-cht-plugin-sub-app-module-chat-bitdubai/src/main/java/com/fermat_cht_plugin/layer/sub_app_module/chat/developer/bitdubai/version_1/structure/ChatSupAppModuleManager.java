@@ -83,6 +83,11 @@ public class ChatSupAppModuleManager implements ChatManager {
     }
 
     @Override
+    public void deleteChats() throws CantDeleteChatException {
+        middlewareChatManager.deleteChats();
+    }
+
+    @Override
     public void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException {
         middlewareChatManager.deleteMessagesByChatId(chatId);
     }
