@@ -3,10 +3,10 @@ package com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_br
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationTransactionStatus;
-import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_new.interfaces.CustomerBrokerNew;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.database.CustomerBrokerNewNegotiationTransactionDatabaseDao;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantProcessPendingConfirmTransactionException;
-import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_new.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerNewNegotiationTransactionException;
+import com.bitdubai.fermat_cbp_api.layer.negotiation_transaction.customer_broker_update.interfaces.CustomerBrokerUpdate;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.database.CustomerBrokerUpdateNegotiationTransactionDatabaseDao;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantProcessPendingConfirmTransactionException;
+import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_update.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerUpdateNegotiationTransactionException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -20,18 +20,18 @@ import java.util.UUID;
  */
 public class CustomerBrokerUpdateForwardTransaction {
 
-    CustomerBrokerNewNegotiationTransactionDatabaseDao  customerBrokerNewNegotiationTransactionDatabaseDao;
+    CustomerBrokerUpdateNegotiationTransactionDatabaseDao customerBrokerUpdateNegotiationTransactionDatabaseDao;
     ErrorManager                                        errorManager;
     PluginVersionReference                              pluginVersionReference;
 
     boolean                                             isValidateSend = Boolean.FALSE;
 
     public CustomerBrokerUpdateForwardTransaction(
-            CustomerBrokerNewNegotiationTransactionDatabaseDao customerBrokerNewNegotiationTransactionDatabaseDao,
+            CustomerBrokerUpdateNegotiationTransactionDatabaseDao customerBrokerUpdateNegotiationTransactionDatabaseDao,
             ErrorManager errorManager,
             PluginVersionReference pluginVersionReference
     ){
-        this.customerBrokerNewNegotiationTransactionDatabaseDao     = customerBrokerNewNegotiationTransactionDatabaseDao;
+        this.customerBrokerUpdateNegotiationTransactionDatabaseDao     = customerBrokerUpdateNegotiationTransactionDatabaseDao;
         this.errorManager                                           = errorManager;
         this.pluginVersionReference                                 = pluginVersionReference;
     }
@@ -44,23 +44,23 @@ public class CustomerBrokerUpdateForwardTransaction {
             Map<UUID,Integer> transactionSend = new HashMap<>();
             int numberSend;
 
-            List<CustomerBrokerNew> negotiationList = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToConfirmTransactionNegotiation();
+            List<CustomerBrokerUpdate> negotiationList = customerBrokerUpdateNegotiationTransactionDatabaseDao.getPendingToConfirmTransactionNegotiation();
             if(!negotiationList.isEmpty()) {
-                for (CustomerBrokerNew negotiationTransaction : negotiationList) {
+                for (CustomerBrokerUpdate negotiationTransaction : negotiationList) {
 
                     transactionId = negotiationTransaction.getTransactionId();
 
                     if (!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.PENDING_SUBMIT.getCode())) {
 
-                        System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - pendingToConfirmtTransaction" + transactionId + " ****\n");
+                        System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - pendingToConfirmtTransaction" + transactionId + " ****\n");
 
                         numberSend = getNumberSend(transactionSend, transactionId);
 
                         isValidateSend(transactionId, numberSend);
 
                         if(isValidateSend) {
-                            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - pendingToConfirmtTransaction - SEND AGAIN: " + numberSend + " ****\n");
-                            customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
+                            System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - AGENT - pendingToConfirmtTransaction - SEND AGAIN: " + numberSend + " ****\n");
+                            customerBrokerUpdateNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerUpdateNegotiationTranasction(
                                     transactionId,
                                     NegotiationTransactionStatus.PENDING_SUBMIT);
 
@@ -103,13 +103,13 @@ public class CustomerBrokerUpdateForwardTransaction {
 
             if (numberSend > numberToSend*5) {
 
-                customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
+                customerBrokerUpdateNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerUpdateNegotiationTranasction(
                         transactionId,
                         NegotiationTransactionStatus.REJECTED_NEGOTIATION);
 
             }
 
-        } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e){
+        } catch (CantRegisterCustomerBrokerUpdateNegotiationTransactionException e){
             errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantProcessPendingConfirmTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
         } catch (Exception e) {
