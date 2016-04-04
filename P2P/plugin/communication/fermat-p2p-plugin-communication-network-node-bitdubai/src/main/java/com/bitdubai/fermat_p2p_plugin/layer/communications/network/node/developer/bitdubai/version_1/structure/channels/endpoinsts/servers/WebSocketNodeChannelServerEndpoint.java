@@ -4,12 +4,13 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageEncoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.caches.NodeSessionMemoryCache;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.NodeChannelConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ClientsConnectionHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodeConnectionHistory;
@@ -27,7 +28,7 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketNodeChannelServerEndpoint</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketNodeChannelServerEndpoint</code>
  * represent the the communication chanel between nodes<p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 12/11/15.
  *
@@ -40,7 +41,7 @@ import javax.websocket.server.ServerEndpoint;
         encoders = {PackageEncoder.class},
         decoders = {PackageDecoder.class}
 )
-public class WebSocketNodeChannelServerEndpoint extends WebSocketChannelServerEndpoint {
+public class WebSocketNodeChannelServerEndpoint extends com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketChannelServerEndpoint {
 
     /**
      * Represent the LOG
@@ -63,7 +64,7 @@ public class WebSocketNodeChannelServerEndpoint extends WebSocketChannelServerEn
     /**
      * (non-javadoc)
      *
-     * @see WebSocketChannelServerEndpoint#initPackageProcessorsRegistration()
+     * @see com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketChannelServerEndpoint#initPackageProcessorsRegistration()
      */
     @Override
     void initPackageProcessorsRegistration(){
