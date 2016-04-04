@@ -72,6 +72,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 import java.util.UUID;
 
 /**
@@ -187,17 +188,22 @@ public class ChatListFragment extends AbstractFermatFragment{
                                 long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
                                 long milliseconds = timemess + nanos;
                                 Date dated = new java.util.Date(milliseconds);
+                                DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                                formatter.setTimeZone(TimeZone.getDefault());
+                                String datef=formatter.format(new java.util.Date(milliseconds));
                                 if (Validate.isDateToday(dated)) {
-                                    dateMessage.add(new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds)));
+                                    formatter = new SimpleDateFormat("HH:mm");
+                                    formatter.setTimeZone(TimeZone.getDefault());
+                                    datef=formatter.format(new java.util.Date(milliseconds));
                                 } else {
-                                    Date old = new Date(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds)));
+                                    Date old = new Date(datef);
                                     Date today = new Date();
                                     long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
                                     if (dias == 1) {
-                                        dateMessage.add("YESTERDAY");
-                                    } else
-                                        dateMessage.add(new SimpleDateFormat("dd/MM/yy").format(new java.util.Date(milliseconds)));
+                                        datef="YESTERDAY";
+                                    }
                                 }
+                                dateMessage.add(datef);
                                 chatId.add(chatidtemp);
                                 ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getProfileImage());
                                 BitmapDrawable bmd = new BitmapDrawable(bytes);

@@ -431,7 +431,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             presentationDialog.show();
             return true;
         }
-        /*if (id == R.id.menu_add_contact) {
+        if (id == R.id.menu_add_contact) {
             final cht_dialog_connections dialog_conn = new cht_dialog_connections(getActivity(), appSession, null , chatManager, this);
             dialog_conn.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
@@ -445,7 +445,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             });
             dialog_conn.show();
             return true;
-        }else if (id == R.id.menu_switch_profile) {
+        }/*else if (id == R.id.menu_switch_profile) {
             changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
             return true;
         }*/

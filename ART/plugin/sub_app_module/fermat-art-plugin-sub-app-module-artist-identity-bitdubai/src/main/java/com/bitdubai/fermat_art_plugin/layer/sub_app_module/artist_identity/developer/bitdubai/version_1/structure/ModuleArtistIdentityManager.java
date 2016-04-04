@@ -1,5 +1,9 @@
 package com.bitdubai.fermat_art_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
 import com.bitdubai.fermat_art_api.all_definition.enums.ExternalPlatform;
@@ -43,21 +47,46 @@ public class ModuleArtistIdentityManager implements ArtistIdentityManagerModule 
 
     @Override
     public void updateArtistIdentity(String alias, String publicKey, byte[] profileImage, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
-        updateArtistIdentity(alias,publicKey,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+        artistIdentityManager.updateArtistIdentity(alias, publicKey, profileImage, externalUserName, externalAccessToken, externalPlatform, exposureLevel, artistAcceptConnectionsType);
     }
 
     @Override
     public Artist getArtistIdentity(String publicKey) throws CantGetArtistIdentityException, IdentityNotFoundException {
-        return getArtistIdentity(publicKey);
+        return artistIdentityManager.getArtistIdentity(publicKey);
     }
 
     @Override
     public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
-        publishIdentity(publicKey);
+        artistIdentityManager.publishIdentity(publicKey);
     }
 
     @Override
     public void hideIdentity(String publicKey) throws CantHideIdentityException, IdentityNotFoundException {
-        hideIdentity(publicKey);
+        artistIdentityManager.hideIdentity(publicKey);
+    }
+
+    @Override
+    public SettingsManager getSettingsManager() {
+        return null;
+    }
+
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        return null;
+    }
+
+    @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
     }
 }

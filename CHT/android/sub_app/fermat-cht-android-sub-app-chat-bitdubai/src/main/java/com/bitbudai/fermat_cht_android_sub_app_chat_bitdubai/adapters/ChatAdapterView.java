@@ -66,6 +66,7 @@ import java.util.List;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 
 /**
@@ -218,13 +219,12 @@ public class ChatAdapterView extends LinearLayout {
                     long nanos = (mess.getMessageDate().getNanos() / 1000000);
                     long milliseconds = timemess + nanos;
                     Date dated= new java.util.Date(milliseconds);
+                    DateFormat formatter = DateFormat.getDateTimeInstance();
                     if (Validate.isDateToday(dated)) {
-                        String S = new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds));
-                        msg.setDate(S);
-                    }else
-                    {
-                        msg.setDate(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds)));
+                        formatter = new SimpleDateFormat("HH:mm");
                     }
+                    formatter.setTimeZone(TimeZone.getDefault());
+                    msg.setDate(formatter.format(new java.util.Date(milliseconds)));
                     msg.setUserId(mess.getContactId());
                     msg.setMessage(message);
                     msg.setType(mess.getType().toString());
@@ -232,11 +232,7 @@ public class ChatAdapterView extends LinearLayout {
                 }
                 adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
                 messagesContainer.setAdapter(adapter);
-            }//else{
-             //   Toast.makeText(getContext(),"Waiting for chat message", Toast.LENGTH_SHORT).show();
-            //}
-        //}catch (CantSaveMessageException e) {
-           // errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
         }catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }catch (Exception e){

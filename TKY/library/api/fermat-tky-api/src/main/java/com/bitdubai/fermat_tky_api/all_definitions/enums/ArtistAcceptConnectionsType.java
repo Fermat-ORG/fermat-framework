@@ -3,6 +3,9 @@ package com.bitdubai.fermat_tky_api.all_definitions.enums;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
@@ -20,6 +23,9 @@ public enum ArtistAcceptConnectionsType implements FermatEnum {
     ArtistAcceptConnectionsType(String code){
         this.code=code;
     }
+
+
+    public static final ArtistAcceptConnectionsType DEFAULT_ARTIST_ACCEPT_CONNECTION_TYPE = ArtistAcceptConnectionsType.AUTOMATIC;
 
     //PUBLIC METHODS
 
@@ -44,6 +50,15 @@ public enum ArtistAcceptConnectionsType implements FermatEnum {
     @Override
     public String getCode() {
         return code;
+    }
+
+    public static List<String> getArrayItems(){
+        List<String> platformsNames = new ArrayList<String>();
+        ArtistAcceptConnectionsType[] externalPlatforms = values();
+        for (ArtistAcceptConnectionsType externalPlatform : externalPlatforms) {
+            platformsNames.add(externalPlatform.name());
+        }
+        return  platformsNames;
     }
 }
 

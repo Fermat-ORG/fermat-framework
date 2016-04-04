@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
-import com.bitdubai.android_core.app.common.version_1.connections.ConnectionConstants;
 import com.bitdubai.android_core.app.common.version_1.util.BottomMenuReveal;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.ActivityType;
@@ -41,8 +40,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.sub_app.wallet_manager.fragment.FermatNetworkSettings;
 
-import java.util.Objects;
-
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getCloudClient;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
@@ -51,7 +48,7 @@ import static com.bitdubai.android_core.app.common.version_1.util.system.FermatS
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
 
 /**
- * Created by mati on 2015.11.19..
+ * Created by Matias Furszyfer on 2015.11.19..
  */
 public class DesktopActivity extends FermatActivity implements FermatScreenSwapper,DesktopAppSelector {
 
@@ -393,12 +390,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     @Override
     public void connectWithOtherApp(Engine emgine, String fermatAppPublicKey,Object[] objectses) {
 
-    }
-
-    @Override
-    public Object[] connectBetweenAppsData() {
-        Objects[] objectses = (Objects[]) getIntent().getSerializableExtra(ConnectionConstants.SEARCH_NAME);
-        return objectses;
     }
 
     @Override
