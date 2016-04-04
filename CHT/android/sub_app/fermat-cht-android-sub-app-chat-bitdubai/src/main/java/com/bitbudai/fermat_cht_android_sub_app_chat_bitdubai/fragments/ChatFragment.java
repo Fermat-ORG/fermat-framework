@@ -156,7 +156,10 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         try {
-
+                            // Get the info of chat selected from session
+                            Chat chat = chatSession.getSelectedChat();
+                            // Delete chat and refresh view
+                            chatManager.deleteMessagesByChatId(chat.getChatId());
                         } catch (CantDeleteMessageException e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }catch (Exception e) {
