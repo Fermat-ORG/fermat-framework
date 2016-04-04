@@ -188,7 +188,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                                 long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
                                 long milliseconds = timemess + nanos;
                                 Date dated = new java.util.Date(milliseconds);
-                                DateFormat formatter = DateFormat.getDateTimeInstance();
+                                DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                                 formatter.setTimeZone(TimeZone.getDefault());
                                 String datef=formatter.format(new java.util.Date(milliseconds));
                                 if (Validate.isDateToday(dated)) {
