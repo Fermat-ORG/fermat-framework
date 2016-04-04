@@ -120,18 +120,18 @@ public class CustomerBrokerNewAgent implements
 
 
     public CustomerBrokerNewAgent(
-        PluginDatabaseSystem                        pluginDatabaseSystem,
-        LogManager                                  logManager,
-        ErrorManager                                errorManager,
-        EventManager                                eventManager,
-        UUID                                        pluginId,
-        NegotiationTransmissionManager              negotiationTransmissionManager,
-        CustomerBrokerPurchaseNegotiation           customerBrokerPurchaseNegotiation,
-        CustomerBrokerSaleNegotiation               customerBrokerSaleNegotiation,
-        CustomerBrokerPurchaseNegotiationManager    customerBrokerPurchaseNegotiationManager,
-        CustomerBrokerSaleNegotiationManager        customerBrokerSaleNegotiationManager,
-        Broadcaster                                 broadcaster,
-        PluginVersionReference                      pluginVersionReference
+            PluginDatabaseSystem                        pluginDatabaseSystem,
+            LogManager                                  logManager,
+            ErrorManager                                errorManager,
+            EventManager                                eventManager,
+            UUID                                        pluginId,
+            NegotiationTransmissionManager              negotiationTransmissionManager,
+            CustomerBrokerPurchaseNegotiation           customerBrokerPurchaseNegotiation,
+            CustomerBrokerSaleNegotiation               customerBrokerSaleNegotiation,
+            CustomerBrokerPurchaseNegotiationManager    customerBrokerPurchaseNegotiationManager,
+            CustomerBrokerSaleNegotiationManager        customerBrokerSaleNegotiationManager,
+            Broadcaster                                 broadcaster,
+            PluginVersionReference                      pluginVersionReference
     ){
         this.pluginDatabaseSystem                       = pluginDatabaseSystem;
         this.logManager                                 = logManager;
@@ -220,11 +220,9 @@ public class CustomerBrokerNewAgent implements
 
         int                                                 iterationConfirmSend = 0;
 
-        int                                                 timeConfirmSend = 5;
-
         boolean                                             threadWorking;
 
-        boolean                                             isValidateSend = Boolean.FALSE;
+//        boolean                                             isValidateSend = Boolean.FALSE;
 
         //public MonitorAgentTransaction() { startAgent(); }
 
@@ -241,7 +239,7 @@ public class CustomerBrokerNewAgent implements
         /*IMPLEMENTATION Runnable*/
         @Override
         public void run() {
-            
+
             threadWorking=true;
             logManager.log(NegotiationTransactionCustomerBrokerNewPluginRoot.getLogLevelByClass(this.getClass().getName()),"Customer Broker New Monitor Agent: running...", null, null);
 
@@ -301,7 +299,7 @@ public class CustomerBrokerNewAgent implements
 
         public boolean isAgentRunning() { return agentRunning; }
         /*END INNER CLASS PUBLIC METHOD*/
-        
+
         /*INNER CLASS PRIVATE METHOD*/
         private void doTheMainTask() throws
                 CantSendCustomerBrokerNewNegotiationTransactionException,
@@ -312,12 +310,19 @@ public class CustomerBrokerNewAgent implements
 
                 customerBrokerNewNegotiationTransactionDatabaseDao = new CustomerBrokerNewNegotiationTransactionDatabaseDao(pluginDatabaseSystem, pluginId, database);
 
+                CustomerBrokerNewForwardTransaction forwardTransaction = new CustomerBrokerNewForwardTransaction(
+                        customerBrokerNewNegotiationTransactionDatabaseDao,
+                        errorManager,
+                        pluginVersionReference
+                );
+
                 String                  negotiationXML;
                 NegotiationType         negotiationType;
                 UUID                    transactionId;
                 List<CustomerBrokerNew> negotiationPendingToSubmitList;
                 CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
                 CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
+                int                                 timeConfirmSend     = 60;
 
                 //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
                 negotiationPendingToSubmitList  = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
@@ -376,18 +381,18 @@ public class CustomerBrokerNewAgent implements
 
                 }
 
-                //SEND TRNSACTION AGAIN IF NOT IS CONFIRM
-                if(timeConfirmSend == iterationConfirmSend){
-                    pendingToConfirmtTransaction();
-                    iterationConfirmSend = 0;
-                }
-
                 //PROCES PENDING EVENT
                 List<UUID> pendingEventsIdList=customerBrokerNewNegotiationTransactionDatabaseDao.getPendingEvents();
                 for(UUID eventId : pendingEventsIdList){
                     checkPendingEvent(eventId);
                 }
-                
+
+                //SEND TRNSACTION AGAIN IF NOT IS CONFIRM
+                if(timeConfirmSend == iterationConfirmSend){
+                    forwardTransaction.pendingToConfirmtTransaction();
+                    iterationConfirmSend = 0;
+                }
+
             } catch (CantGetNegotiationTransactionListException e) {
                 errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantSendCustomerBrokerNewNegotiationTransactionException(CantSendCustomerBrokerNewNegotiationTransactionException.DEFAULT_MESSAGE,e,"Sending Negotiation","Cannot get the Negotiation list from database");
@@ -409,10 +414,10 @@ public class CustomerBrokerNewAgent implements
             }
         }
 
-        private void pendingToConfirmtTransaction() throws CantProcessPendingConfirmTransactionException{
+        /*private void pendingToConfirmtTransaction() throws CantProcessPendingConfirmTransactionException{
 
             try {
-                
+
                 UUID transactionId;
                 Map<UUID,Integer> transactionSend = new HashMap<>();
                 int numberSend;
@@ -431,15 +436,13 @@ public class CustomerBrokerNewAgent implements
 
                             isValidateSend(transactionId, numberSend);
 
-                            if(isValidateSend){
-
-                                System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - pendingToConfirmtTransaction - SEND AGAIN: "+ numberSend +" ****\n");
+                            if(isValidateSend) {
+                                System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER NEW - AGENT - pendingToConfirmtTransaction - SEND AGAIN: " + numberSend + " ****\n");
                                 customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
                                         transactionId,
                                         NegotiationTransactionStatus.PENDING_SUBMIT);
 
                             }
-
                             transactionSend.put(transactionId, numberSend);
 
                         }
@@ -467,9 +470,9 @@ public class CustomerBrokerNewAgent implements
             try {
 
                 isValidateSend = Boolean.FALSE;
+                int numberToSend = 3;
 
-                int numberToSend = 10;
-                if ((numberSend < numberToSend) ||
+                if ((numberSend <= numberToSend) ||
                     (numberSend > numberToSend*2 && numberSend <= numberToSend*3) ||
                     (numberSend > numberToSend*4 && numberSend <= numberToSend*5))
                     isValidateSend = Boolean.TRUE;
@@ -479,6 +482,7 @@ public class CustomerBrokerNewAgent implements
                     customerBrokerNewNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerNewNegotiationTranasction(
                             transactionId,
                             NegotiationTransactionStatus.REJECTED_NEGOTIATION);
+
                 }
 
             } catch (CantRegisterCustomerBrokerNewNegotiationTransactionException e){
@@ -489,7 +493,7 @@ public class CustomerBrokerNewAgent implements
                 throw new CantProcessPendingConfirmTransactionException(e.getMessage(), FermatException.wrapException(e),"Sending Negotiation","UNKNOWN FAILURE.");
             }
 
-        }
+        }*/
 
         //CHECK PENDING EVEN
         private void checkPendingEvent(UUID eventId) throws UnexpectedResultReturnedFromDatabaseException {
