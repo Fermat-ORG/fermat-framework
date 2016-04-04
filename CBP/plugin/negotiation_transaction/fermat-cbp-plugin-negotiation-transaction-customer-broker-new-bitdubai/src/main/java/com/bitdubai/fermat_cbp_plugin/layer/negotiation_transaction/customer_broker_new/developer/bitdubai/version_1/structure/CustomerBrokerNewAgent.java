@@ -222,8 +222,6 @@ public class CustomerBrokerNewAgent implements
 
         boolean                                             threadWorking;
 
-//        boolean                                             isValidateSend = Boolean.FALSE;
-
         //public MonitorAgentTransaction() { startAgent(); }
 
         /*IMPLEMENTATION DealsWithPluginIdentity*/
@@ -322,7 +320,7 @@ public class CustomerBrokerNewAgent implements
                 List<CustomerBrokerNew> negotiationPendingToSubmitList;
                 CustomerBrokerPurchaseNegotiation   purchaseNegotiation = new NegotiationPurchaseRecord();
                 CustomerBrokerSaleNegotiation       saleNegotiation     = new NegotiationSaleRecord();
-                int                                 timeConfirmSend     = 5;
+                int                                 timeConfirmSend     = 20;
 
                 //SEND NEGOTIATION PENDING (CUSTOMER_BROKER_NEW_STATUS_NEGOTIATION_COLUMN_NAME = NegotiationTransactionStatus.PENDING_SUBMIT)
                 negotiationPendingToSubmitList  = customerBrokerNewNegotiationTransactionDatabaseDao.getPendingToSubmitNegotiation();
