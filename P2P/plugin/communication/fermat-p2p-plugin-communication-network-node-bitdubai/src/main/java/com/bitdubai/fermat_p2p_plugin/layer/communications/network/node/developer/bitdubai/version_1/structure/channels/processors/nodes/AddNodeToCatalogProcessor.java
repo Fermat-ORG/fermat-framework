@@ -7,8 +7,11 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
@@ -53,12 +56,17 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
         super(channel, PackageType.ADD_NODE_TO_CATALOG_REQUEST);
     }
 
+    /**
+     * (non-javadoc)
+     * @see PackageProcessor#processingPackage(Session, Package)
+     */
     @Override
     public void processingPackage(Session session, Package packageReceived) {
 
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
         NodeProfile nodeProfile = null;
+        AddNodeToCatalogMsjRespond addNodeToCatalogMsjRespond = null;
 
         try {
 
@@ -79,25 +87,38 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
                  */
                 nodeProfile = messageContent.getNodeProfile();
 
-                /*
-                 * Insert NodesCatalog into data base
-                 */
-                insertNodesCatalog(nodeProfile);
 
-                /*
-                 * Insert NodesCatalogTransaction into data base
-                 */
-                insertNodesCatalogTransaction(nodeProfile);
+                if (exist(nodeProfile)){
 
-                /*
-                 * Insert NodesCatalogTransactionsPendingForPropagation into data base
-                 */
-                insertNodesCatalogTransactionsPendingForPropagation(nodeProfile);
+                    /*
+                     * Notify the node already exist
+                     */
+                    addNodeToCatalogMsjRespond = new AddNodeToCatalogMsjRespond(CheckInProfileMsjRespond.STATUS.FAIL, "The node profile already exist", nodeProfile.getIdentityPublicKey());
 
-                /*
-                 * If all ok, respond whit success message
-                 */
-                AddNodeToCatalogMsjRespond addNodeToCatalogMsjRespond = new AddNodeToCatalogMsjRespond(CheckInProfileMsjRespond.STATUS.SUCCESS, CheckInProfileMsjRespond.STATUS.SUCCESS.toString(), nodeProfile.getIdentityPublicKey());
+                }else {
+
+                    /*
+                     * Insert NodesCatalog into data base
+                     */
+                    insertNodesCatalog(nodeProfile);
+
+                    /*
+                     * Insert NodesCatalogTransaction into data base
+                     */
+                    insertNodesCatalogTransaction(nodeProfile);
+
+                    /*
+                     * Insert NodesCatalogTransactionsPendingForPropagation into data base
+                     */
+                    insertNodesCatalogTransactionsPendingForPropagation(nodeProfile);
+
+                    /*
+                     * If all ok, respond whit success message
+                     */
+                    addNodeToCatalogMsjRespond = new AddNodeToCatalogMsjRespond(CheckInProfileMsjRespond.STATUS.SUCCESS, CheckInProfileMsjRespond.STATUS.SUCCESS.toString(), nodeProfile.getIdentityPublicKey());
+
+                }
+
                 Package packageRespond = Package.createInstance(addNodeToCatalogMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
@@ -117,7 +138,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
                 /*
                  * Respond whit fail message
                  */
-                AddNodeToCatalogMsjRespond addNodeToCatalogMsjRespond = new AddNodeToCatalogMsjRespond(AddNodeToCatalogMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), nodeProfile.getIdentityPublicKey());
+                addNodeToCatalogMsjRespond = new AddNodeToCatalogMsjRespond(AddNodeToCatalogMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), nodeProfile.getIdentityPublicKey());
                 Package packageRespond = Package.createInstance(addNodeToCatalogMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
@@ -132,6 +153,27 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
             }
 
         }
+
+    }
+
+    /**
+     * Validate if the node exist into the catalog
+     *
+     * @param nodeProfile
+     * @return boolean
+     */
+    private boolean exist(NodeProfile nodeProfile) throws CantReadRecordDataBaseException, RecordNotFoundException {
+
+        /*
+         * Search in the data base
+         */
+        NodesCatalog nodesCatalog = getDaoFactory().getNodesCatalogDao().findById(nodeProfile.getIdentityPublicKey());
+
+        if (nodesCatalog != null){
+            return Boolean.TRUE;
+        }
+
+        return Boolean.FALSE;
 
     }
 
