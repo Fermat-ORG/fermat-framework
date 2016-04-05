@@ -8,11 +8,11 @@ import com.bitdubai.fermat_api.FermatException;
 public class CantGetSelectActorException extends FermatException {
     private static final String DEFAULT_MESSAGE = "CANT GET SELECTED ACTOR EXCEPTION";
 
-    public CantGetSelectedIdentityException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetSelectActorException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
-    public CantGetSelectedIdentityException(Exception cause, String context, String possibleReason) {
+    public CantGetSelectActorException(Exception cause, String context, String possibleReason) {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }
