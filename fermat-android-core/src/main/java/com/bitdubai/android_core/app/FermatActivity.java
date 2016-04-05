@@ -132,7 +132,6 @@ import static android.widget.Toast.makeText;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getAppResources;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
 import static java.lang.System.gc;
 
 /**
@@ -210,7 +209,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
      * Listeners
      */
     private RuntimeStructureManager runtimeStructureManager;
-
 
     /**
      * Service
@@ -437,7 +435,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                      * Set adapter
                      */
                     FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
-                    List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = getFermatAppManager().getLastAppStructure().getLastActivity().getSideMenu().getMenuItems();
+                    List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().getSideMenu().getMenuItems();
                     SideMenuBuilder.setAdapter(
                             navigation_recycler_view,
                             mAdapter,
@@ -1282,12 +1280,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     publicKey = bundle.getString(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY);
                 }
                 if (fermatApp == null) {
-                    fermatApp = getFermatAppManager().getApp(publicKey);
+                    fermatApp = ApplicationSession.getInstance().getAppManager().getApp(publicKey);
                 }
                 if (bundle.containsKey(ApplicationConstants.ACTIVITY_CODE_TO_OPEN)) {
                     String activityCode = bundle.getString(ApplicationConstants.ACTIVITY_CODE_TO_OPEN);
                     if (activityCode != null)
-                        getFermatAppManager().getAppStructure(fermatApp.getAppPublicKey()).getActivity(Activities.valueOf(activityCode));
+                        ApplicationSession.getInstance().getAppManager().getAppStructure(fermatApp.getAppPublicKey()).getActivity(Activities.valueOf(activityCode));
                 }
             }
             return createOrOpenApp(fermatApp);
@@ -1307,7 +1305,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
      */
     private FermatSession createOrOpenApp(FermatApp fermatApp){
         FermatSession fermatSession = null;
-        FermatAppsManager fermatAppsManager = getFermatAppManager();
+        FermatAppsManager fermatAppsManager = ApplicationSession.getInstance().getAppManager();
         if(fermatAppsManager.isAppOpen(fermatApp.getAppPublicKey())){
             fermatSession = fermatAppsManager.getAppsSession(fermatApp.getAppPublicKey());
         }else{
@@ -1384,10 +1382,15 @@ public abstract class FermatActivity extends AppCompatActivity implements
         /**
          * Service
          */
-        if (mNotificationServiceConnected) {
-            unbindService(mServiceConnection);
-            mNotificationServiceConnected = false;
-        }
+//        if (mNotificationServiceConnected) {
+//            unbindService(mServiceConnection);
+//            mNotificationServiceConnected = false;
+//        }
+
+        /**
+         * stop every service
+         */
+        //ApplicationSession.getInstance().getServicesHelpers().unbindServices();
 
         resetThisActivity();
         super.onDestroy();
@@ -1402,14 +1405,15 @@ public abstract class FermatActivity extends AppCompatActivity implements
     public int notificateProgressBroadcast(FermatBundle bundle) {
         int id = 0;
         try {
-            if(mNotificationServiceConnected){
-                id = notificationService.notificateProgress(bundle);
-            }else{
-                Intent intent = new Intent(this, NotificationService.class);
-                intent.putExtra(NotificationService.LOG_TAG,"Activity 1");
-                startService(intent);
-                bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-            }
+            ApplicationSession.getInstance().getNotificationService().notificateProgress(bundle);
+//            if(mNotificationServiceConnected){
+//                id = notificationService.notificateProgress(bundle);
+//            }else{
+//                Intent intent = new Intent(this, NotificationService.class);
+//                intent.putExtra(NotificationService.LOG_TAG,"Activity 1");
+//                startService(intent);
+//                bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+//            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -1418,15 +1422,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     public void notificateBroadcast(String appPublicKey,String code){
         try {
-            if(mNotificationServiceConnected){
-                notificationService.notificate(code,getFermatAppManager().getAppStructure(appPublicKey));
-            }else{
-                Intent intent = new Intent(this, NotificationService.class);
-                //acá puedo mandarle el messenger con el handler para el callback
-                intent.putExtra(NotificationService.LOG_TAG,"Activity 1");
-                startService(intent);
-                bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-            }
+            ApplicationSession.getInstance().getNotificationService().notificate(code, ApplicationSession.getInstance().getAppManager().getAppStructure(appPublicKey));
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -1434,15 +1430,15 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
     public void notificateBroadcast(String appPublicKey,FermatBundle bundle){
         try {
-            if(mNotificationServiceConnected){
-                //notificationService.notificate(appPublicKey,bundle);
-            }else{
-                Intent intent = new Intent(this, NotificationService.class);
-                //acá puedo mandarle el messenger con el handler para el callback
-                intent.putExtra(NotificationService.LOG_TAG,"Activity 1");
-                startService(intent);
-                bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-            }
+//            if(mNotificationServiceConnected){
+//                //notificationService.notificate(appPublicKey,bundle);
+//            }else{
+//                Intent intent = new Intent(this, NotificationService.class);
+//                //acá puedo mandarle el messenger con el handler para el callback
+//                intent.putExtra(NotificationService.LOG_TAG,"Activity 1");
+//                startService(intent);
+//                bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+//            }
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -1456,9 +1452,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     @Override
     public void invalidate() {
-        FermatStructure fermatStructure = getFermatAppManager().getLastAppStructure();
+        FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
         Activity activity = fermatStructure.getLastActivity();
-        FermatSession fermatSession = getFermatAppManager().getAppsSession(fermatStructure.getPublicKey());
+        FermatSession fermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
         AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,fermatSession);
         try {
             appsConnections.setActiveIdentity(fermatSession.getModuleManager().getSelectedActorIdentity());
@@ -1474,7 +1470,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         //TODO: acá seria bueno un getLastApp
         if(ActivityType.ACTIVITY_TYPE_DESKTOP != activityType) {
 //            final FermatStructure fermatStructure = getAppInUse();
-//            FermatSession fermatSession = getFermatAppManager().getAppsSession(fermatStructure.getPublicKey());
+//            FermatSession fermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
 //            AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,fermatSession);
 //            final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
 //            final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
@@ -1598,7 +1594,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 onNavigationMenuItemTouchListener(data, position);
             }
         }, DRAWER_CLOSE_DELAY_MS);
-        getFermatAppManager().clearRuntime();
+        ApplicationSession.getInstance().getAppManager().clearRuntime();
 
     }
 
@@ -1703,7 +1699,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
         // TODO Add extras or a data URI to this intent as appropriate.
         setResult(android.app.Activity.RESULT_OK, resultIntent);
         //resultIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        resultIntent.putExtra(ApplicationConstants.RECENT_APPS, getFermatAppManager().getRecentsAppsStack().toArray());
+        resultIntent.putExtra(ApplicationConstants.RECENT_APPS, ApplicationSession.getInstance().getAppManager().getRecentsAppsStack().toArray());
         startActivityForResult(resultIntent, TASK_MANAGER_STACK);
     }
 
@@ -1736,28 +1732,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         Intent intent = new Intent(this,StartActivity.class);
         startActivity(intent);
     }
-
-
-    private NotificationService notificationService;
-    private boolean mNotificationServiceConnected;
-    /**
-     * Service
-     */
-
-
-    private ServiceConnection mServiceConnection = new ServiceConnection() {
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-            mNotificationServiceConnected = false;
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            notificationService = ((NotificationService.LocalBinder)service).getService();
-            mNotificationServiceConnected = true;
-        }
-    };
 
     private ServiceCallback getServiceCallback(){
         return this;
@@ -1942,17 +1916,16 @@ public abstract class FermatActivity extends AppCompatActivity implements
      *
      */
     void bindServices(){
-        if(!mNotificationServiceConnected) {
-            Intent intent = new Intent(this, NotificationService.class);
-            intent.putExtra(NotificationService.LOG_TAG, "Activity 1");
-            startService(intent);
-            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-        }
+//        if(!mNotificationServiceConnected) {
+//            Intent intent = new Intent(this, NotificationService.class);
+//            intent.putExtra(NotificationService.LOG_TAG, "Activity 1");
+//            startService(intent);
+//            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+//        }
         if(!mCommunicationServiceConnected){
             //doBindService();
         }
     }
-
 
 
 }

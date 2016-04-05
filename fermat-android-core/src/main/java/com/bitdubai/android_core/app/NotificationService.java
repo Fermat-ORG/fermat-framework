@@ -24,8 +24,6 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
 /**
  * Created by mati on 2016.03.01..
  */
@@ -43,7 +41,7 @@ public class NotificationService extends Service {
 
 
     public class LocalBinder extends Binder {
-        NotificationService getService() {
+        public NotificationService getService() {
             return NotificationService.this;
         }
     }
@@ -77,7 +75,7 @@ public class NotificationService extends Service {
         if (fermatStructure != null) {
             // notificationIdCount++;
             // lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,getFermatAppManager().getAppsSession(fermatStructure.getPublicKey()));
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this, ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
             NotificationPainter notificationPainter = null;
             try {
                 notificationPainter = fermatAppConnection.getNotificationPainter(code);
