@@ -26,7 +26,7 @@ import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.u
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMessage;
 
 /**
- * Created by root on 05/04/16.
+ * Created by Joaquin Carrasquero on 05/04/16.
  */
 public class TransactionsHistoryAdapter extends FermatAdapter<LossProtectedWalletTransaction, TransactionHistoryViewHolder2> {
 

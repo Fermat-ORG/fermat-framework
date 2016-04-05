@@ -31,6 +31,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.PaymentRequestHistoryAdapter;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.TransactionsHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
@@ -168,7 +169,7 @@ public class ReceiveTransactionFragment3 extends FermatWalletListFragment<LossPr
 
     @Override
     protected int getLayoutResource() {
-        return R.layout.fragment_transaction_main;
+        return R.layout.transaction_history_main;
     }
 
     @Override
@@ -192,7 +193,7 @@ public class ReceiveTransactionFragment3 extends FermatWalletListFragment<LossPr
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-       //     adapter = new PaymentRequestHistoryAdapter(getActivity(), lst,cryptoWallet,referenceWalletSession,this);
+            adapter = new TransactionsHistoryAdapter(getActivity(), lst,cryptoWallet,referenceWalletSession,this);
             adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
