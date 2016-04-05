@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitduba
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -183,16 +184,16 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     }
 
     @Override
-    public List<AssetUserWalletTransaction> getAllTransactions(String assetPublicKey) throws CantGetTransactionsException {
-        List<AssetUserWalletTransaction> all = assetUserWalletDao.listsTransactionsByAssets(assetPublicKey);
+    public List<AssetUserWalletTransaction> getAllTransactions(CryptoAddress cryptoAddress) throws CantGetTransactionsException {
+        List<AssetUserWalletTransaction> all = assetUserWalletDao.listsTransactionsByAssets(cryptoAddress);
         return all;
     }
 
     @Override
-    public List<AssetUserWalletTransaction> getAllAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException {
+    public List<AssetUserWalletTransaction> getAllAvailableTransactions(CryptoAddress cryptoAddress) throws CantGetTransactionsException {
         List<AssetUserWalletTransaction> toReturn = new ArrayList<>();
-        List<AssetUserWalletTransaction> allCreditAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
-        List<AssetUserWalletTransaction> alldebitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
+        List<AssetUserWalletTransaction> allCreditAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, cryptoAddress);
+        List<AssetUserWalletTransaction> alldebitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, cryptoAddress);
         for (AssetUserWalletTransaction transaction : alldebitAvailable) {
             allCreditAvailable.remove(transaction);
         }
@@ -205,11 +206,11 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     }
 
     @Override
-    public List<AssetUserWalletTransaction> getTransactionsForDisplay(String assetPublicKey) throws CantGetTransactionsException {
-        List<AssetUserWalletTransaction> creditAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
-        List<AssetUserWalletTransaction> creditBook = getTransactions(BalanceType.BOOK, TransactionType.CREDIT, assetPublicKey);
-        List<AssetUserWalletTransaction> debitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
-        List<AssetUserWalletTransaction> debitBook = getTransactions(BalanceType.BOOK, TransactionType.DEBIT, assetPublicKey);
+    public List<AssetUserWalletTransaction> getTransactionsForDisplay(CryptoAddress cryptoAddress) throws CantGetTransactionsException {
+        List<AssetUserWalletTransaction> creditAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, cryptoAddress);
+        List<AssetUserWalletTransaction> creditBook = getTransactions(BalanceType.BOOK, TransactionType.CREDIT, cryptoAddress);
+        List<AssetUserWalletTransaction> debitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, cryptoAddress);
+        List<AssetUserWalletTransaction> debitBook = getTransactions(BalanceType.BOOK, TransactionType.DEBIT, cryptoAddress);
         List<AssetUserWalletTransaction> toReturn = new ArrayList<>();
         toReturn.addAll(getTransactionsForDisplay(creditAvailable, creditBook));
         toReturn.addAll(getTransactionsForDisplay(debitBook, debitAvailable));
@@ -232,9 +233,9 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     }
 
     @Override
-    public List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType, String assetPublicKey) throws CantGetTransactionsException {
+    public List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType, CryptoAddress cryptoAddress) throws CantGetTransactionsException {
         try {
-            return assetUserWalletDao.listsTransactionsByAssets(balanceType, transactionType, assetPublicKey);
+            return assetUserWalletDao.listsTransactionsByAssets(balanceType, transactionType, cryptoAddress);
         } catch (CantGetTransactionsException exception) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_WALLET_ISSUER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(exception));
             throw exception;
