@@ -409,7 +409,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        try {
+        //try {
            //if(chatManager.isIdentityDevice() != false) {
                // Inflate the menu items
                inflater.inflate(R.menu.chat_list_menu, menu);
@@ -443,9 +443,9 @@ public class ChatListFragment extends AbstractFermatFragment{
            menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        } catch (CantGetChatUserIdentityException e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
+        //} catch (CantGetChatUserIdentityException e) {
+        //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        //}
     }
 
     @Override
