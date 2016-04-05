@@ -28,7 +28,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "org.fermat"
+        applicationId "org.fermat.alpha"
         minSdkVersion 17
         targetSdkVersion 23
         versionCode 22

@@ -8,5 +8,5 @@ import com.bitdubai.fermat_core.FermatSystem;
 public interface FermatApplicationSession {
 
     FermatSystem getFermatSystem();
-    FermatAppsManager getFermatAppsManager();
+
 }
