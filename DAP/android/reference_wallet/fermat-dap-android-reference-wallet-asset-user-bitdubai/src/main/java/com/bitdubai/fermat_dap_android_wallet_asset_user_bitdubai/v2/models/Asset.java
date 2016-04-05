@@ -31,6 +31,7 @@ public class Asset {
     private String name;
     private double amount;
     private String description;
+    private String memo;
     private Timestamp expDate;
     private Timestamp date;
     private Status status;
@@ -81,6 +82,7 @@ public class Asset {
         setAmount(assetUserWalletList.getAvailableBalance());
         setDescription(digitalAsset.getDescription());
         setExpDate((Timestamp) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
+        setMemo(assetUserWalletTransaction.getMemo());
         setDate(new Timestamp(assetUserWalletTransaction.getTimestamp()));
         setStatus((assetUserWalletTransaction.getBalanceType().equals(BalanceType.AVAILABLE)) ? Status.CONFIRMED : Status.PENDING);
         setActorName(assetUserWalletTransaction.getActorFrom().getName());
@@ -208,6 +210,14 @@ public class Asset {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 
     public AssetUserNegotiation getAssetUserNegotiation() {

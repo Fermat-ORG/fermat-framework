@@ -32,29 +32,30 @@ public class HomeCardViewHolder extends FermatViewHolder {
     private AssetUserWalletSubAppModuleManager manager;
     private Context context;
 
-    public Resources res;
+    private Resources res;
 
-    public ImageView homeIssuerImage;
-    public FermatTextView cardActorName;
-    public FermatTextView cardTime;
-    public ImageView cardConfirmedImage;
-    public FermatTextView cardConfirmedText;
-    public ImageView cardAssetImage;
-    public FermatTextView cardAssetName;
-    public FermatTextView cardExpDate;
-    public ImageButton cardRedeemButton;
-    public ImageButton cardTransferButton;
-    public ImageButton cardAppropriateButton;
-    public ImageButton cardSellButton;
-    public ImageButton cardTransactionsButton;
+    private ImageView homeIssuerImage;
+    private FermatTextView cardActorName;
+    private FermatTextView cardTime;
+    private ImageView cardConfirmedImage;
+    private FermatTextView cardConfirmedText;
+    private ImageView cardAssetImage;
+    private FermatTextView cardAssetName;
+    private FermatTextView cardExpDate;
+    private FermatTextView cardAssetMemo;
+    private ImageButton cardRedeemButton;
+    private ImageButton cardTransferButton;
+    private ImageButton cardAppropriateButton;
+    private ImageButton cardSellButton;
+    private ImageButton cardTransactionsButton;
 
-    public View normalV3Asset;
-    public View negotiationV3Asset;
-    public FermatTextView negotiationAssetName;
-    public FermatTextView v3NegotiationAssetPrice;
+    private View normalV3Asset;
+    private View negotiationV3Asset;
+    private FermatTextView negotiationAssetName;
+    private FermatTextView v3NegotiationAssetPrice;
 
-    public View acceptNegotiationButton;
-    public View rejectNegotiationButton;
+    private View acceptNegotiationButton;
+    private View rejectNegotiationButton;
 
     /**
      * Constructor
@@ -75,6 +76,7 @@ public class HomeCardViewHolder extends FermatViewHolder {
         cardAssetImage = (ImageView) itemView.findViewById(R.id.cardAssetImage);
         cardAssetName = (FermatTextView) itemView.findViewById(R.id.cardAssetName);
         cardExpDate = (FermatTextView) itemView.findViewById(R.id.cardExpDate);
+        cardAssetMemo = (FermatTextView) itemView.findViewById(R.id.cardAssetMemo);
         cardRedeemButton = (ImageButton) itemView.findViewById(R.id.cardRedeemButton);
         cardTransferButton = (ImageButton) itemView.findViewById(R.id.cardTransferButton);
         cardAppropriateButton = (ImageButton) itemView.findViewById(R.id.cardAppropriateButton);
@@ -130,6 +132,7 @@ public class HomeCardViewHolder extends FermatViewHolder {
             int image = (asset.getStatus().equals(Asset.Status.CONFIRMED)) ? R.drawable.detail_check : R.drawable.detail_uncheck;
             cardConfirmedImage.setImageResource(image);
             cardConfirmedText.setText((asset.getStatus().equals(Asset.Status.CONFIRMED)) ? res.getString(R.string.card_confirmed) : res.getString(R.string.card_pending));
+            cardAssetMemo.setText(asset.getMemo());
 
             cardAssetName.setText(asset.getName());
             cardExpDate.setText(asset.getFormattedExpDate());
