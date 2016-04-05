@@ -10,8 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -222,19 +220,21 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
                         .setBannerRes(R.drawable.banner_crypto_broker)
                         .setIconRes(R.drawable.crypto_broker)
-                        .setBody(R.string.cbw_wizard_merchandise_dialog_body)
                         .setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title)
+                        .setBody(R.string.cbw_wizard_merchandise_dialog_body)
                         .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
+                        .setCheckboxText(R.string.cbw_wizard_not_show_text)
                         .build();
 
             } else {
                 presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setSubTitle(R.string.cbw_crypto_broker_wallet_merchandises_subTitle)
-                        .setBody(R.string.cbw_crypto_broker_wallet_merchandises_body)
-                        .setTextFooter(R.string.cbw_crypto_broker_wallet_merchandises_footer)
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                         .setBannerRes(R.drawable.banner_crypto_broker)
                         .setIconRes(R.drawable.crypto_broker)
+                        .setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title)
+                        .setBody(R.string.cbw_wizard_merchandise_dialog_body)
+                        .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
+                        .setCheckboxText(R.string.cbw_wizard_not_show_text)
                         .build();
             }
 
