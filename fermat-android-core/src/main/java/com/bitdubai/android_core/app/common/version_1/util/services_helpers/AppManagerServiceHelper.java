@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.util.services;
+package com.bitdubai.android_core.app.common.version_1.util.services_helpers;
 
 import android.content.ComponentName;
 import android.content.Context;

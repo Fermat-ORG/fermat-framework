@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.util.services;
+package com.bitdubai.android_core.app.common.version_1.util.services_helpers;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -16,6 +16,7 @@ import java.lang.ref.WeakReference;
  */
 public class NotificationServiceHelper {
 
+    private static final String TAG = "NotificationService";
     private final WeakReference<Context> contextWeakReference;
     private NotificationService notificationService;
     private boolean mNotificationServiceConnected;
@@ -33,6 +34,7 @@ public class NotificationServiceHelper {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            Log.i(TAG,"Connected");
             notificationService = ((NotificationService.LocalBinder)service).getService();
             mNotificationServiceConnected = true;
         }
@@ -40,8 +42,9 @@ public class NotificationServiceHelper {
 
     public void bindNotificationService() {
         if(!mNotificationServiceConnected) {
+            Log.i(TAG,"binding service");
             Intent intent = new Intent(contextWeakReference.get(), NotificationService.class);
-            contextWeakReference.get().startService(intent);
+//            contextWeakReference.get().startService(intent);
             contextWeakReference.get().bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
         }
 
@@ -49,10 +52,11 @@ public class NotificationServiceHelper {
 
     public void unbindNotificationService(){
         if(mNotificationServiceConnected) {
+            Log.d(TAG ,"Unbinding AppManagerService");
             // Detach our existing connection.
             contextWeakReference.get().unbindService(mServiceConnection);
             mNotificationServiceConnected = false;
-            Log.d(contextWeakReference.get().getPackageName(), "Unbinding AppManagerService");
+
         }
     }
 

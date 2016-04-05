@@ -52,7 +52,7 @@ public class NotificationService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.v(LOG_TAG, "in onBind: " + intent.getExtras().get(LOG_TAG));
+        //Log.v(LOG_TAG, "in onBind: " + intent.getExtras().get(LOG_TAG));
         return mBinder;
     }
     @Override

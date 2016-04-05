@@ -3,16 +3,10 @@ package com.bitdubai.android_core.app.common.version_1.apps_manager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
-import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.bitdubai.android_core.app.ApplicationSession;
-import com.bitdubai.android_core.app.common.version_1.communication.CommunicationDataKeys;
-import com.bitdubai.android_core.app.common.version_1.communication.CommunicationMessages;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentApp;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentAppComparator;
@@ -55,24 +49,6 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
     private HashMap<String,FermatAppType> appsInstalledInDevice = new HashMap<>();
     // Binder given to clients
     private final IBinder localBinder = new AppManagerLocalBinder();
-
-    public class IncomingAppManagerRequestHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what) {
-                case CommunicationMessages.MSG_REQUEST_DATA_MESSAGE:
-                    Log.d(TAG, "Received from service: " + msg.arg1);
-                    //String keyResponse = msg.getData().getString(DATA_KEY_TO_RESPONSE);
-                    Bundle bundle = msg.getData();
-                    String id = bundle.getString(CommunicationDataKeys.DATA_REQUEST_ID);
-                    //TODO: el DATA_KEY_TO_RESPONSE quizás deberia ser el id
-                    //onMessageRecieve(UUID.fromString(id),msg.getData().getSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE));
-                    break;
-                default:
-                    super.handleMessage(msg);
-            }
-        }
-    }
 
     /**
      * Class used for the client Binder.  Because we know this service always

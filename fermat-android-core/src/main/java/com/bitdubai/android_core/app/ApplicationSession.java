@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
-import com.bitdubai.android_core.app.common.version_1.util.services.ServicesHelpers;
+import com.bitdubai.android_core.app.common.version_1.util.services_helpers.ServicesHelpers;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_core.FermatSystem;
