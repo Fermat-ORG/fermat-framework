@@ -2,15 +2,8 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Path;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,14 +15,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -63,9 +53,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -217,13 +204,13 @@ public class ChatAdapterView extends LinearLayout {
                     long timemess = mess.getMessageDate().getTime();
                     long nanos = (mess.getMessageDate().getNanos() / 1000000);
                     long milliseconds = timemess + nanos;
-                    Date dated= new java.util.Date(milliseconds);
+                    Date dated= new Date(milliseconds);
                     if (Validate.isDateToday(dated)) {
-                        String S = new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds));
+                        String S = new SimpleDateFormat("HH:mm").format(new Date(milliseconds));
                         msg.setDate(S);
                     }else
                     {
-                        msg.setDate(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds)));
+                        msg.setDate(DateFormat.getDateTimeInstance().format(new Date(milliseconds)));
                     }
                     msg.setUserId(mess.getContactId());
                     msg.setMessage(message);
@@ -285,7 +272,7 @@ public class ChatAdapterView extends LinearLayout {
             whatToDo();
             findMessage();
             scroll();
-        
+
 //        if (rightName != null) {
 //            meLabel.setText(rightName);
 //        } else {
@@ -302,19 +289,19 @@ public class ChatAdapterView extends LinearLayout {
 //        } else {
 //            companionLabel.setText("Contacto");
 //        }
-        
+
         //if (background != -1) {
         //    container.setBackgroundColor(background);
         //}
 
-        messageET.setOnClickListener(new View.OnClickListener() {
+        messageET.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 //messageET.setText("");
             }
         });
 
-        sendBtn.setOnClickListener(new View.OnClickListener() {
+        sendBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 BackgroundAsyncTask sendMessageAsync = new BackgroundAsyncTask();
