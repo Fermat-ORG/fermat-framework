@@ -1000,6 +1000,78 @@ public class ChatMiddlewareDatabaseDao {
         }
     }
 
+
+    public void deleteChats() throws CantDeleteChatException, DatabaseOperationException
+    {
+        try
+        {
+            database = openDatabase();
+            DatabaseTransaction transaction = database.newTransaction();
+
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.CHATS_TABLE_NAME);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            List<DatabaseTableRecord> records=getChatData(filter);
+            if(records!=null && !records.isEmpty()){
+                for (DatabaseTableRecord record : records) {
+                    table.deleteRecord(record);
+                }
+            }
+            //I execute the transaction and persist the database side of the chat.
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+
+        }catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantDeleteChatException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to delete the Chat Transaction in the database.",
+                    null);
+        }
+    }
+
+    public void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException, DatabaseOperationException
+    {
+        try
+        {
+            database = openDatabase();
+            DatabaseTransaction transaction = database.newTransaction();
+
+            DatabaseTable table = getDatabaseTable(ChatMiddlewareDatabaseConstants.MESSAGE_TABLE_NAME);
+            DatabaseTableFilter filter = table.getEmptyTableFilter();
+            filter.setType(DatabaseFilterType.EQUAL);
+            filter.setValue(chatId.toString());
+            filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME);
+            List<DatabaseTableRecord> records=getMessageData(filter);
+            if(records!=null && !records.isEmpty()){
+                for (DatabaseTableRecord record : records) {
+                    table.deleteRecord(record);
+                }
+            }
+            //I execute the transaction and persist the database side of the chat.
+            database.executeTransaction(transaction);
+            database.closeDatabase();
+
+        }catch (Exception e) {
+            if (database != null)
+                database.closeDatabase();
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(e));
+            throw new CantDeleteMessageException(
+                    DatabaseOperationException.DEFAULT_MESSAGE,
+                    FermatException.wrapException(e),
+                    "Error trying to delete the Chat Transaction in the database.",
+                    null);
+        }
+    }
+
     /**
      * This method returns a message created list.
      * The messages in CREATED status are saved in database, but, are not sent through the Network

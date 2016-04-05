@@ -176,6 +176,28 @@ public class ProvisoryData {
         lstIdentities.add(item2);
 
 
+        /**
+         * Chat added by Lozadaa
+         */
+
+        lstIdentities.add(item2);
+        installedSubApp = new InstalledSubApp(
+                SubApps.CHT_CHAT_IDENTITY,
+                null,
+                null,
+                "sub_app_chat_identity",
+                "Chat",
+                SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode(),
+                "sub_app_chat_identity",
+                new Version(1, 0, 0),
+                Platforms.CHAT_PLATFORM);
+
+        item2 = new Item(installedSubApp);
+        item2.setIconResource(R.drawable.chat_subapp);
+        item2.setPosition(6);
+        lstIdentities.add(item2);
+
+
 
 
         FermatFolder fermatFolder = new FermatFolder("Identities",lstIdentities,2);

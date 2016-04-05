@@ -58,6 +58,10 @@ public interface ChatManager {
 
     void deleteChat(Chat chat) throws CantDeleteChatException;
 
+    void deleteChats() throws CantDeleteChatException;
+
+    void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException;
+
     List<Message> getMessages() throws CantGetMessageException;
 
     List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException;
