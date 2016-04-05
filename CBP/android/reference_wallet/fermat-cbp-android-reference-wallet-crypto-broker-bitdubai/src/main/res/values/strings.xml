@@ -85,10 +85,10 @@
     <string name="cbw_set_identity_wizard_description">Please choose one identity to use in this wallet. This step can not be undone.</string>
     <string name="cbw_welcome">Welcome</string>
     <string name="cbw_next_step">Next Step</string>
-    <string name="cbw_select_identity_warning_msg">Need to Select an Identity</string>
-    <string name="cbw_select_stock_wallets_warning_msg">Need to Select at least TWO Wallet</string>
-    <string name="cbw_select_providers_warning_msg">Need to Select at least ONE Provider</string>
-    <string name="cbw_add_location_warning_msg">Need to Select at least ONE Location</string>
+    <string name="cbw_select_identity_warning_msg">You need to select an Identity</string>
+    <string name="cbw_select_stock_wallets_warning_msg">You need to select at least two Wallets</string>
+    <string name="cbw_select_providers_warning_msg">You need to select at least one Provider</string>
+    <string name="cbw_add_location_warning_msg">You need to provide at least one Location</string>
     <string name="cbw_automatic_restock">Automatic Restock</string>
     <string name="cbw_no_selected_wallets">No Selected Wallets</string>
     <string name="cbw_city">City</string>
@@ -112,25 +112,17 @@
     <string name="cbw_select_your_bank_account_text">You can select accounts from your banking wallet to make restock or destock transactions</string>
     <string name="cbw_wizard_bank_account_description">You must select the Bank Account from the Bank Wallet you selected as Earning</string>
     <string name="cbw_wizard_bank_account_title">Bank Accounts</string>
-    <string name="cbw_wizard_exchange_rate_providers_title">Exchange Rate Providers</string>
-    <string name="cbw_wizard_exchange_rate_providers_description">You must select the providers according to the wallet of merchandise, chosen in the previous step</string>
-    <string name="cbw_choose_provider">Choose Provider</string>
     <string name="cbw_wizard_locations_description">You must add at least one location to make your transactions</string>
     <string name="cbw_add_location">+ Add a Location</string>
     <string name="cbw_your_location">Your Locations</string>
     <string name="cbw_your_location_text">You must add at least one location to deliver or receive the merchandise</string>
     <string name="cbw_no_locations_added">No Locations Added</string>
     <string name="cbw_add_bank_account">+ Add Bank Account</string>
-    <string name="cbw_wizard_earning_merchandise_title">Choose Earning Merchandises</string>
-    <string name="cbw_wizard_earning_merchandise_description">For the merchandises you\'re going to receive and give, assign them a wallet to put the earnings</string>
-    <string name="cbw_select_earnings_merchandise">Select the pairs their wallets</string>
+
     <string name="cbw_crypto">Crypto</string>
     <string name="cbw_cash">Cash</string>
     <string name="cbw_bank">Bank</string>
-    <string name="cbw_wizard_stock_merchandise_title">Select Stock Merchandises</string>
-    <string name="cbw_wizard_stock_merchandise_description">You must select the wallets will work depending on the merchandise</string>
-    <string name="cbw_select_stock_merchandise">Merchandise balances</string>
-    <string name="cbw_associated_wallets">Associated wallets</string>
+
     <string name="cbw_settings_locations_description">You must have at least one location to make your transactions</string>
     <string name="cbw_settings_locations_title">Manage Your Locations</string>
     <string name="cbw_save">Save</string>
@@ -141,45 +133,11 @@
     <string name="wizard_locations_title">Add Your Locations</string>
     <string name="cbw_contract_details_contract_title">SELLING BTC</string>
     <string name="cbw_contract_details_negotiation_details">NEGOTIATION DETAILS</string>
-    <string name="cbw_wizard_other_settings_title">Other settings</string>
-    <string name="cbw_wizard_other_settings_description">You must set the spread value applied, and Restock automatic for transactions in the wallet </string>
     <string name="cbw_contract_history_sold_quantity_and_currency">%1$s %2$s %3$s</string>
     <string name="cbw_contract_history_exchange_rate_amount_and_currency">1 %1$s @ %2$s %3$s</string>
     <string name="bought">Bought</string>
-
-    <!--Dialog Help - Init-->
-    <string name="cbw_crypto_broker_wallet_earning_subTitle">Subtitle text of Earnings dialog help.</string>
-    <string name="cbw_crypto_broker_wallet_earning_body">Custom text support for dialog in the wizard Earnings help</string>
-    <string name="cbw_crypto_broker_wallet_earning_footer">Text footer Earnings dialog help.</string>
-    <!--Dialog Help - End-->
-
-    <!--Dialog Help - Init-->
-    <string name="cbw_crypto_broker_wallet_identity_subTitle">This is a simple wallet for exchange Merchandise. It\'s main features are:</string>
-    <string name="cbw_crypto_broker_wallet_identity_body">Custom text support for dialog in the wizard identities help</string>
-    <string name="cbw_crypto_broker_wallet_identity_footer">To begin, choose an avatar below. You might change it later with any picture and your alias.</string>
-    <!--Dialog Help - End-->
-
-    <!--Dialog Help - Init-->
-    <string name="cbw_crypto_broker_wallet_identity_2_subTitle">This is a simple wallet for exchange Merchandise. </string>
-    <string name="cbw_crypto_broker_wallet_identity_2_body">Custom text support for dialog in the wizard identities help 2</string>
-    <string name="cbw_crypto_broker_wallet_identity_2_footer">To begin, choose an avatar below. You might change it later with any picture and your alias.</string>
-    <!--Dialog Help - End-->
-
-    <!--Dialog Help - Init-->
-    <string name="cbw_crypto_broker_wallet_merchandises_subTitle">Subtitle text of Merchandises dialog help</string>
-    <string name="cbw_crypto_broker_wallet_merchandises_body">Custom text support for dialog in the wizard Merchandises help.</string>
-    <string name="cbw_crypto_broker_wallet_merchandises_footer">Text footer Merchandises dialog help.</string>
-    <string name="cbw_wizard_merchandise_dialog_body">Custom text support for dialog in the wizard identities help 2</string>
-    <string name="cbw_wizard_merchandise_dialog_footer">To begin, choose an avatar below. You might change it later with any picture and your alias</string>
-    <string name="cbw_wizard_merchandise_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
-    <string name="cbw_wizard_providers_dialog_body">Custom text support for dialog in the wizard identities help 2</string>
-    <string name="cbw_wizard_providers_dialog_footer">To begin, choose an avatar below. You might change it later with any picture and your alias</string>
-    <string name="cbw_wizard_providers_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
-    <string name="cbw_wizard_other_settings_dialog_body">Custom text support for dialog in the wizard identities help 2</string>
-    <string name="cbw_wizard_other_settings_dialog_footer">To begin, choose an avatar below. You might change it later with any picture and your alias</string>
-    <string name="cbw_wizard_other_settings_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
     <string name="cbw_current_earings_title">Current Earnings:</string>
-    <string name="cbw_earning_wizard_item_msg">Assign me a wallet</string>
+    <string name="cbw_earning_wizard_item_msg">Assign a wallet here</string>
     <string name="reception_method_title">Reception Method</string>
     <string name="reception_method">Method</string>
     <string name="cbw_crypto_address_customer">Customer\'s Crypto Address</string>
@@ -202,4 +160,64 @@
     <string name="cbw_earnings_title">Earnings</string>
     <string name="cbw_no_earnings">No Earnings</string>
     <string name="sending_to_the_customer">Sending to the Customer</string>
+
+
+
+
+    <!--These needs to be commented on where they're used or be deleted -->
+
+    <!--Dialog Help - Init-->
+    <string name="cbw_crypto_broker_wallet_identity_subTitle">This is a simple wallet for exchange Merchandise. It\'s main features are:</string>
+    <string name="cbw_crypto_broker_wallet_identity_body">Custom text support for dialog in the wizard identities help</string>
+    <string name="cbw_crypto_broker_wallet_identity_footer">To begin, choose an avatar below. You might change it later with any picture and your alias.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="cbw_crypto_broker_wallet_identity_2_subTitle">This is a simple wallet for exchange Merchandise. </string>
+    <string name="cbw_crypto_broker_wallet_identity_2_body">Custom text support for dialog in the wizard identities help 2</string>
+    <string name="cbw_crypto_broker_wallet_identity_2_footer">To begin, choose an avatar below. You might change it later with any picture and your alias.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="cbw_crypto_broker_wallet_merchandises_subTitle">Subtitle text of Merchandises dialog help</string>
+    <string name="cbw_crypto_broker_wallet_merchandises_body">Custom text support for dialog in the wizard Merchandises help.</string>
+    <string name="cbw_crypto_broker_wallet_merchandises_footer">Text footer Merchandises dialog help.</string>
+
+
+
+
+
+    <!-- Strings for Wizard pages (both dialogs and actual pages) and Settings pages for each setting: -->
+    <!-- Merchandises, Earnings, Providers and 'Other Settings' -->
+
+    <!-- Merchandises Wizard and Settings pages -->
+    <string name="cbw_wizard_merchandise_dialog_sub_title">Welcome to the Broker Wallet Wizard!</string>
+    <string name="cbw_wizard_merchandise_dialog_body">This wizard will help you configure your Broker Wallet so you can use it to sell money</string>
+    <string name="cbw_wizard_merchandise_dialog_footer">To begin, choose an avatar below. You may change it later with your picture and alias</string>
+    <string name="cbw_wizard_not_show_text">Don\'t show any help dialogs</string>
+    <string name="cbw_wizard_stock_merchandise_title">Select Stock Wallets</string>
+    <string name="cbw_wizard_stock_merchandise_description">Associate at least two of your wallets from which you can withdraw funds to use as stock</string>
+    <string name="cbw_select_stock_merchandise">Your wallets</string>
+    <string name="cbw_associated_wallets">Associated wallets</string>
+
+    <!-- Earnings Wizard and Settings pages-->
+    <string name="cbw_wizard_earnings_dialog_sub_title">Configure your earnings!</string>
+    <string name="cbw_wizard_earnings_dialog_body">This page let\'s you assign wallets where your earnings will be deposited</string>
+    <string name="cbw_wizard_earning_merchandise_title">Select Earning Wallets</string>
+    <string name="cbw_wizard_earning_merchandise_description">Assign a wallet (where we\'ll deposit your earnings) for every currency pair in the list below</string>
+    <string name="cbw_select_earnings_merchandise">Assign a wallet to each item</string>
+
+    <!-- Providers Wizard and Settings pages -->
+    <string name="cbw_wizard_providers_dialog_sub_title">Configure your Exchange Providers!</string>
+    <string name="cbw_wizard_providers_dialog_body">This page let\'s you select one or more Exchange Rate Providers for each of the currencies you\'ll work with</string>
+    <string name="cbw_wizard_exchange_rate_providers_title">Select Exchange Providers</string>
+    <string name="cbw_wizard_exchange_rate_providers_description">Select at least one exchange provider to be used in your wallet</string>
+    <string name="cbw_choose_provider">Choose a Provider</string>
+
+    <!-- 'Other Settings' Wizard and Settings pages -->
+    <string name="cbw_wizard_other_settings_dialog_sub_title">Configure additional settings!</string>
+    <string name="cbw_wizard_other_settings_dialog_body">This page allows you to configure: \n* Automatic restock of funds to the broker wallet. \n* The Wallet\'s Spread, which is the weighted difference between the asking and selling price of a given currency</string>
+    <string name="cbw_wizard_other_settings_title">Other settings</string>
+    <string name="cbw_wizard_other_settings_description">Set a Spread and Automatic Restock. These settings can be changed later</string>
+
 </resources>

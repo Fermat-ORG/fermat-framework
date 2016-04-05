@@ -779,7 +779,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     public long getBalance(BalanceType balanceType, //available balance only
                            String walletPublicKey,
                            BlockchainNetworkType blockchainNetworkType,
-                           long exchangeRate) throws CantGetLossProtectedBalanceException {
+                           String exchangeRate) throws CantGetLossProtectedBalanceException {
         try {
             BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             return bitcoinWalletWallet.getBalance(balanceType).getBalance(blockchainNetworkType, exchangeRate);
@@ -791,7 +791,6 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
             throw new CantGetLossProtectedBalanceException(CantGetLossProtectedBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
-
 
     @Override
 
