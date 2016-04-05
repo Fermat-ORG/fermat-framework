@@ -95,14 +95,14 @@ include ':fermat-dap-plugin-network-service-asset-transmission-bitdubai'
 project(':fermat-dap-plugin-network-service-asset-transmission-bitdubai').projectDir = new File('DAP/plugin/network_service/fermat-dap-plugin-network-service-asset-transmission-bitdubai')
 
 // actor
-include ':fermat-dap-plugin-actor-asset-issuer-bitdubai'
-project(':fermat-dap-plugin-actor-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-issuer-bitdubai')
+include ':fermat-dap-plugin-actor-asset-issuer'
+project(':fermat-dap-plugin-actor-asset-issuer').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-issuer')
 
-include ':fermat-dap-plugin-actor-asset-user-bitdubai'
-project(':fermat-dap-plugin-actor-asset-user-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-user-bitdubai')
+include ':fermat-dap-plugin-actor-asset-user'
+project(':fermat-dap-plugin-actor-asset-user').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-user')
 
-include ':fermat-dap-plugin-actor-redeem-point-bitdubai'
-project(':fermat-dap-plugin-actor-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point-bitdubai')
+include ':fermat-dap-plugin-actor-redeem-point'
+project(':fermat-dap-plugin-actor-redeem-point').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point')
 
 
 
@@ -140,15 +140,6 @@ project(':fermat-dap-plugin-actor-network-service-redeem-point-bitdubai').projec
 
 include ':fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai'
 project(':fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/actor_network_service/fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai')
-
-
-
-// actor
-include ':fermat-dap-plugin-actor-asset-issuer-bitdubai'
-project(':fermat-dap-plugin-actor-asset-issuer-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-asset-issuer-bitdubai')
-
-include ':fermat-dap-plugin-actor-redeem-point-bitdubai'
-project(':fermat-dap-plugin-actor-redeem-point-bitdubai').projectDir = new File('DAP/plugin/actor/fermat-dap-plugin-actor-redeem-point-bitdubai')
 
 // android dap wallets
 include ':fermat-dap-android-reference-wallet-asset-issuer-bitdubai'

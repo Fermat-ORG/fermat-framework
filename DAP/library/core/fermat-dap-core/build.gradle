@@ -13,9 +13,9 @@ dependencies {
     compile project(':fermat-api')
     compile project(':fermat-core-api')
 
-    compile project(':fermat-dap-plugin-actor-asset-issuer-bitdubai')
-    compile project(':fermat-dap-plugin-actor-asset-user-bitdubai')
-    compile project(':fermat-dap-plugin-actor-redeem-point-bitdubai')
+    compile project(':fermat-dap-plugin-actor-asset-issuer')
+    compile project(':fermat-dap-plugin-actor-asset-user')
+    compile project(':fermat-dap-plugin-actor-redeem-point')
 
     compile project(':fermat-dap-plugin-actor-network-service-asset-issuer-bitdubai')
     compile project(':fermat-dap-plugin-actor-network-service-asset-user-bitdubai')
