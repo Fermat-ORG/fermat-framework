@@ -24,6 +24,21 @@ public abstract class PackageContent {
     private MessageContentType messageContentType;
 
     /**
+     * Constructor
+     */
+    public PackageContent() {
+        super();
+    }
+
+    /**
+     * Constructor whit parameters
+     * @param messageContentType
+     */
+    public PackageContent(MessageContentType messageContentType) {
+        this.messageContentType = messageContentType;
+    }
+
+    /**
      * Gets the value of messageContentType and returns
      *
      * @return messageContentType

@@ -52,7 +52,7 @@ import javax.websocket.server.ServerEndpoint;
         encoders = {PackageEncoder.class},
         decoders = {PackageDecoder.class}
 )
-public class WebSocketClientChannelServerEndpoint extends com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketChannelServerEndpoint {
+public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServerEndpoint {
 
     /**
      * Represent the LOG
