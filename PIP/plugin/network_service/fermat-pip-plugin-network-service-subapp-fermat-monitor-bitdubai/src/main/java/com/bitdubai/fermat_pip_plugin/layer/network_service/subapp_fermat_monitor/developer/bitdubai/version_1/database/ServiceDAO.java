@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
@@ -32,14 +33,21 @@ public class ServiceDAO {
      */
     private Database dataBase;
 
+    private final PluginFileSystem pluginFileSystem;
+    private final UUID pluginId;
+
     /**
      * Constructor with parameters
      *
      * @param dataBase
      */
-    public ServiceDAO(Database dataBase) {
+    public ServiceDAO(Database dataBase,
+                      final PluginFileSystem pluginFileSystem,
+                      final UUID pluginId) {
         super();
         this.dataBase = dataBase;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
     }
 
 
@@ -60,18 +68,6 @@ public class ServiceDAO {
      */
     DatabaseTable getDatabaseTable() {
         return getDataBase().getTable(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_TABLE_NAME);
-    }
-
-    /**
-     * This method open or creates the database i'll be working with
-     *
-     * @param ownerId plugin id
-     * @param databaseName database name
-     * @throws
-     */
-
-    public void initializeDatabase(UUID ownerId, String databaseName){
-
     }
 
     /**

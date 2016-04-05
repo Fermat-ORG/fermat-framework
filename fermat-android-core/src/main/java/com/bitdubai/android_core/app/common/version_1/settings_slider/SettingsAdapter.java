@@ -9,6 +9,9 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
 
 import java.util.List;
 
+/**
+ * Created by Matias Furszyfer on 2016.02.22..
+ */
 public class SettingsAdapter extends FermatAdapterImproved<SettingsItem, SettingsHolder> {
 
 
