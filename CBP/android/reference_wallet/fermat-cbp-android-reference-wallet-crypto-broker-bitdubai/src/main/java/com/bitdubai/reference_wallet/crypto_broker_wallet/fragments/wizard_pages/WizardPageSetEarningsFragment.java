@@ -46,6 +46,9 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
     // Constants
     private static final String TAG = "WizardPageSetEarning";
 
+    //UI
+    boolean hideHelperDialogs = false;
+
     //Data
     private List<EarningsWizardData> earningDataList;
 
@@ -76,6 +79,10 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
             walletManager.clearEarningPairsFromEarningSettings(appSession.getAppPublicKey());
 
 
+            //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
+            Object aux = appSession.getData(PresentationDialog.PRESENTATION_SCREEN_ENABLED);
+            if(aux != null && aux instanceof Boolean)
+                hideHelperDialogs = (boolean) aux;
 
             List<EarningsWizardData> _earningDataList = createEarningDataList();
             earningDataList = new ArrayList<>();
@@ -128,15 +135,18 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
             }
         });
 
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                .setBannerRes(R.drawable.banner_crypto_broker)
-                .setIconRes(R.drawable.crypto_broker)
-                .setSubTitle(R.string.cbw_crypto_broker_wallet_earning_subTitle)
-                .setBody(R.string.cbw_crypto_broker_wallet_earning_body)
-                .setTextFooter(R.string.cbw_crypto_broker_wallet_earning_footer)
-                .build();
-        presentationDialog.show();
+
+        if(!hideHelperDialogs) {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.banner_crypto_broker)
+                    .setIconRes(R.drawable.crypto_broker)
+                    .setSubTitle(R.string.cbw_wizard_earnings_dialog_sub_title)
+                    .setBody(R.string.cbw_wizard_earnings_dialog_body)
+                    .setCheckboxText(R.string.cbw_wizard_not_show_text)
+                    .build();
+            presentationDialog.show();
+        }
 
         return layout;
     }

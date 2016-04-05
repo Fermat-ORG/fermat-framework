@@ -1,7 +1,7 @@
 package com.bitdubai.android_core.app.common.version_1.communication;
 
 /**
- * Created by mati on 2016.03.15..
+ * Created by Matias Furszyfer on 2016.03.15..
  */
 public class CommunicationDataKeys {
 
