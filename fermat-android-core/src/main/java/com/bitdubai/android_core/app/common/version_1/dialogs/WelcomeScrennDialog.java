@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -58,7 +59,17 @@ public class WelcomeScrennDialog extends FermatDialog<ReferenceWalletSession,Sub
 
             List list = itemList();
 
-            radio_group.check(radioButtons.get(0).getId());
+
+            for (int i = 0; i < list.size(); i++) {
+                RadioButton radioButton = new RadioButton(getContext());
+                ViewGroup.LayoutParams lp = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                radioButton.setLayoutParams(lp);
+                radio_group.addView(radioButton, i, lp);
+                radioButtons.add(radioButton);
+            }
+            radioSelected = 0;
+
+            radio_group.check(radioButtons.get(radioSelected).getId());
 
             abstractViewPagerAdapter = new DialogViewPagerAdapter(getContext(), list);
 
@@ -67,11 +78,13 @@ public class WelcomeScrennDialog extends FermatDialog<ReferenceWalletSession,Sub
                 @Override
                 public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                     radio_group.check(radioButtons.get(position).getId());
+                    radioSelected = position;
                 }
 
                 @Override
                 public void onPageSelected(int position) {
                     radio_group.check(radioButtons.get(position).getId());
+                    radioSelected = position;
                 }
 
                 @Override
