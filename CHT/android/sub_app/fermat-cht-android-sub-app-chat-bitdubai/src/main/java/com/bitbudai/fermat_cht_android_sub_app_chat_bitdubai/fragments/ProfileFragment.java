@@ -41,7 +41,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Profile fragment
@@ -83,8 +82,8 @@ public class ProfileFragment extends AbstractFermatFragment {
     private ChatManager chatManager;
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
-    private SettingsManager<ChatSettings> settingsManager;
-    private ChatSession chatSession;
+    private SettingsManager<com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings> settingsManager;
+    private com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession chatSession;
     private Toolbar toolbar;
     // Defines a tag for identifying log entries
     String TAG = "CHT_ProfileFragment";
@@ -112,7 +111,7 @@ public class ProfileFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            chatSession=((ChatSession) appSession);
+            chatSession=((com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession) appSession);
             moduleManager= chatSession.getModuleManager();
             chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
@@ -187,7 +186,7 @@ public class ProfileFragment extends AbstractFermatFragment {
             BitmapDrawable bmd = new BitmapDrawable(bytes);
             profileicon.add(bmd.getBitmap());
 
-            ProfileAdapter adapter=new ProfileAdapter(getActivity(), profilename,  profilealias, profileid, "detail", errorManager);
+            com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ProfileAdapter adapter=new com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ProfileAdapter(getActivity(), profilename,  profilealias, profileid, "detail", errorManager);
             FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
             name.setText(profilealias.get(0));
             //name.setTypeface(tf, Typeface.NORMAL);

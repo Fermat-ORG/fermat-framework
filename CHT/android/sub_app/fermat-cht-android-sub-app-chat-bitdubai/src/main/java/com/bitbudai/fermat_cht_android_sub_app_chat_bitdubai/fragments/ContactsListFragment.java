@@ -473,7 +473,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         try {
-            if (chatManager.isIdentityDevice() != false) {
+            //if (chatManager.isIdentityDevice() != false) {
                 // Inflate the menu items
                 inflater.inflate(R.menu.contact_list_menu, menu);
                 // Locate the search item
@@ -572,7 +572,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 searchView.setQuery(savedSearchTerm, false);
             }
     */
-            }
+            //}
             menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         } catch (CantGetChatUserIdentityException e) {

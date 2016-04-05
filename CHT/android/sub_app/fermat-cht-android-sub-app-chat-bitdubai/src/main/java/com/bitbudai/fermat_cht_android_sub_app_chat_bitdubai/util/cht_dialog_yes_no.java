@@ -1,6 +1,5 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -13,7 +12,6 @@ import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactsListFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
@@ -49,8 +47,8 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
     private ChatManager chatManager;
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
-    private SettingsManager<ChatSettings> settingsManager;
-    private ChatSession chatSession;
+    private SettingsManager<com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings> settingsManager;
+    private com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession chatSession;
     private AdapterCallbackContacts mAdapterCallback;
     int AlertType = 0;
     String body,title;
@@ -89,7 +87,7 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
             btn_yes = (Button) this.findViewById(R.id.cht_alert_btn_yes);
             btn_no = (Button) this.findViewById(R.id.cht_alert_btn_no);
             try {
-                chatSession = ((ChatSession) getSession());
+                chatSession = ((com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession) getSession());
                 moduleManager = chatSession.getModuleManager();
                 chatManager = moduleManager.getChatManager();
                 errorManager = getSession().getErrorManager();
