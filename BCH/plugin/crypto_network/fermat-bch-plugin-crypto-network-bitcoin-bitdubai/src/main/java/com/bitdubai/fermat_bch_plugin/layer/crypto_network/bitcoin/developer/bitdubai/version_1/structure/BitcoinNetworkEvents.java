@@ -294,10 +294,14 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         return true;
     }
 
+
     /**
      * returns the blockchain download progress class.
      * @return
      */
+    public BlockchainDownloadProgress getBlockchainDownloadProgress(){
+        return blockchainDownloadProgress;
+    }
 
 }
 
