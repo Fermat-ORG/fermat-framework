@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
 import com.bitdubai.fermat_art_api.all_definition.enums.ExternalPlatform;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRegisterActorArtistNetworkServiceException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;

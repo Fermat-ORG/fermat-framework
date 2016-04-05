@@ -1406,7 +1406,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 id = notificationService.notificateProgress(bundle);
             }else{
                 Intent intent = new Intent(this, NotificationService.class);
-                //acá puedo mandarle el messenger con el handler para el callback
                 intent.putExtra(NotificationService.LOG_TAG,"Activity 1");
                 startService(intent);
                 bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
