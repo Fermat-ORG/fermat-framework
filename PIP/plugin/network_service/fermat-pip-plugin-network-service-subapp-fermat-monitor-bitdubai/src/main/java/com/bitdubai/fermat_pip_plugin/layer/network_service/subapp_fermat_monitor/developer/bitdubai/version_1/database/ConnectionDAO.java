@@ -195,7 +195,7 @@ public class ConnectionDAO {
 
     /**
      * Method that list the all entities on the data base. The valid value of
-     * the column name are the att of the <code>SystemMonitorNetworkServiceDatabaseConstants</code>
+     * the column name are the att of the <code>SystemMonitorNetworkServiceDeveloperDatabaseConstants</code>
      *
      * @return All Connection.
      * @throws DatabaseTransactionFailedException
@@ -274,7 +274,7 @@ public class ConnectionDAO {
 
     /**
      * Method that list the all entities on the data base. The valid value of
-     * the key are the att of the <code>SystemMonitorNetworkServiceDatabaseConstants</code>
+     * the key are the att of the <code>SystemMonitorNetworkServiceDeveloperDatabaseConstants</code>
      *
      * @param filters
      * @return List<Connection>

@@ -5,6 +5,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -59,7 +64,7 @@ import java.util.List;
  *
  * Created by Matias Furszyfer on 17/02/15.
  */
-public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetworkServiceBase {
+public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetworkServiceBase  implements DatabaseManagerForDevelopers{
 
        /**
      * Dealing with the repository database
@@ -74,6 +79,8 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
     private ComponentDAO componentDAO;
 
     private SystemMonitorNetworkServiceDeveloperDatabaseFactory systemMonitorNetworkServiceDeveloperDatabaseFactory;
+
+    private SystemMonitorNetworkServiceDatabaseConstants systemMonitorNetworkServiceDatabaseConstants;
 
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
@@ -228,11 +235,10 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
 
     public void saveComponentRegistration(CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent) {
         try {
+
             NetworkServiceType networkServiceType = completeComponentRegistrationNotificationEvent.getNetworkServiceTypeApplicant();
             PlatformComponentProfile platformComponentProfile = completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered();
-            //la variable platformComponentProfile se la tenes que pasar al subappFermatMonitorComponentDAO
-            //pero como espera otro objeto vas a tener que contruirlo y asigarle los datos
-            //creo que es esto lo que tenes que hacer
+
             ComponentProfileInfo componentProfileInfo = new ComponentProfileInfo(
                                             platformComponentProfile.getIdentityPublicKey(),
                                             platformComponentProfile.getAlias(),
@@ -254,5 +260,21 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
 
     public void updateActor(FermatEvent fermatEvent) {
 
+    }
+
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        return systemMonitorNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return new SystemMonitorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem,pluginId).getDatabaseTableList(developerObjectFactory);
+
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        return systemMonitorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory,developerDatabase,developerDatabaseTable);
     }
 }

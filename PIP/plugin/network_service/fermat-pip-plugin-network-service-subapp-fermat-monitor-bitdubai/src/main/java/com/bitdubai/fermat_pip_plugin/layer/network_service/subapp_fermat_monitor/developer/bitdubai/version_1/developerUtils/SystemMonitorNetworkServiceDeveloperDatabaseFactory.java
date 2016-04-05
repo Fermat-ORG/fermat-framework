@@ -169,7 +169,7 @@ public class SystemMonitorNetworkServiceDeveloperDatabaseFactory implements Deal
     }
 
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         /**
          * Will get the records for the given table
          */
