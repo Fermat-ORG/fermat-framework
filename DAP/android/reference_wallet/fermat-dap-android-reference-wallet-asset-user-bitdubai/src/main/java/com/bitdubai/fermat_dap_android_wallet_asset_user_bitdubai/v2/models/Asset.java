@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models;
 
-import android.text.format.DateUtils;
-
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.Utils;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
@@ -10,9 +8,10 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 
 import java.sql.Timestamp;
-import java.util.Date;
+import java.util.List;
 
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.BITCOIN;
 import static com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter.Currency.SATOSHI;
@@ -69,9 +68,13 @@ public class Asset {
         this.name = name;
     }
 
-    public Asset(AssetUserWalletList assetUserWalletList, AssetUserWalletTransaction assetUserWalletTransaction) {
+    public Asset(AssetUserWalletList assetUserWalletList, List<AssetUserWalletTransaction> transactions) {
+        if (transactions.isEmpty())
+            throw new IllegalStateException("Can't initialize this object without transactions!!");
+        AssetUserWalletTransaction lastTransaction = transactions.get(transactions.size() - 1);
+        AssetUserWalletTransaction firstTransaction = transactions.get(0);
+        this.assetUserWalletTransaction = lastTransaction;
         this.assetUserWalletList = assetUserWalletList;
-        this.assetUserWalletTransaction = assetUserWalletTransaction;
         this.digitalAsset = assetUserWalletList.getDigitalAsset();
         setId(assetUserWalletTransaction.getTransactionHash());
         if (digitalAsset.getResources().size() != 0) {
@@ -81,10 +84,10 @@ public class Asset {
         setAmount(assetUserWalletList.getAvailableBalance());
         setDescription(digitalAsset.getDescription());
         setExpDate((Timestamp) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
-        setDate(new Timestamp(assetUserWalletTransaction.getTimestamp()));
-        setStatus((assetUserWalletTransaction.getBalanceType().equals(BalanceType.AVAILABLE)) ? Status.CONFIRMED : Status.PENDING);
-        setActorName(assetUserWalletTransaction.getActorFrom().getName());
-        setActorImage(assetUserWalletTransaction.getActorFrom().getProfileImage());
+        setDate(new Timestamp(firstTransaction.getTimestamp()));
+        setStatus((lastTransaction.getBalanceType().equals(BalanceType.AVAILABLE) && lastTransaction.getTransactionType().equals(TransactionType.CREDIT)) ? Status.CONFIRMED : Status.PENDING);
+        setActorName(firstTransaction.getActorFrom().getName());
+        setActorImage(firstTransaction.getActorFrom().getProfileImage());
         setRedeemable((Boolean) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.REDEEMABLE).getValue());
         setTransferable((Boolean) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.TRANSFERABLE).getValue());
         setSaleable((Boolean) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.SALEABLE).getValue());
