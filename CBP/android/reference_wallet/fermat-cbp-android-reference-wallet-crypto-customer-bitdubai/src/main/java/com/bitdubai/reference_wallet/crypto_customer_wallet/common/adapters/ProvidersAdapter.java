@@ -25,6 +25,6 @@ public class ProvidersAdapter extends SingleDeletableItemAdapter<CurrencyPairAnd
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.ccw_wizard_recycler_view_item;
+        return R.layout.ccw_wizard_recycler_view_providers_item;
     }
 }
