@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_art_api.layer.sub_app_module.community;
+package com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantAcceptActorConnectionRequestException;
@@ -9,24 +9,25 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequ
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
-import com.bitdubai.fermat_api.layer.actor_connection.common.structure_abstract_classes.ActorConnectionSearch;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
-import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistLinkedActorIdentity;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionSearch;
+import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanLinkedActorIdentity;
 
 import java.util.UUID;
 
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/23/16.
  */
-public interface ArtistCommunityModuleManager extends ModuleManager {
+public interface FanCommunityModuleManager extends ModuleManager {
     /**
      * Through the method <code>getSearch</code> we can get a new instance of Actor Connection Search.
      * This Actor Connection search provides all the necessary functionality to make an Actor Connection Search.
      *
      * @return an ActorConnectionSearch instance.
      */
-     ActorConnectionSearch getSearch(final ArtistLinkedActorIdentity actorIdentitySearching);
+    FanActorConnectionSearch getSearch(final FanLinkedActorIdentity actorIdentitySearching);
 
     /**
      * Through the method <code>requestConnection</code> we can request an actor for a connection.
@@ -66,7 +67,7 @@ public interface ArtistCommunityModuleManager extends ModuleManager {
      * @throws ActorConnectionNotFoundException          if we can't find an actor connection with this connection id.
      */
     void denyConnection(final UUID connectionId) throws CantDenyActorConnectionRequestException,
-            ActorConnectionNotFoundException       ,
+            ActorConnectionNotFoundException,
             UnexpectedConnectionStateException;
 
     /**
