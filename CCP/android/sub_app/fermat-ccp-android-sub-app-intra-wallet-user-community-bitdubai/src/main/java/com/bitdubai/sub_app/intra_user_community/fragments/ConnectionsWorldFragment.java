@@ -533,6 +533,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             if(userCacheList.size() == 0)
             {
                 dataSet.addAll(userList);
+                moduleManager.saveCacheIntraUsersSuggestions(userList);
             }
             else
             {
@@ -660,8 +661,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             getActivity().onBackPressed();
         }else{
             invalidate();
-        }
-        if (dataSet.isEmpty()) {
+        }if (dataSet.isEmpty()) {
             showEmpty(true, emptyView);
             swipeRefresh.post(new Runnable() {
                 @Override
