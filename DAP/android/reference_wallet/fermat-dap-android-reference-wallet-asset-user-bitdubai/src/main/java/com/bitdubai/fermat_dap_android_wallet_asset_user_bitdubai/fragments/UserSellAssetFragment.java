@@ -164,14 +164,10 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
         super.initViews(layout);
 
         configureToolbar();
-        try {
 
         assetToSell = (Asset) appSession.getData("asset_data");
         digitalAssetPublicKey = assetToSell.getDigitalAsset().getPublicKey();
-//            digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
 
         noUsersView = layout.findViewById(R.id.asset_sell_no_users_view);
         assetPrice = (FermatEditText) layout.findViewById(R.id.assetSellbitcoins);
@@ -419,9 +415,8 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
                                 @Override
                                 public void onClick() {
                                     BitcoinConverter.Currency from = (BitcoinConverter.Currency) assetCurrencySpinner.getSelectedItem();
-
                                     long sellPrice = (long) BitcoinConverter.convert(Double.parseDouble(assetPrice.getText().toString()), from, SATOSHI);
-                                    doSell(digitalAsset.getAssetPublicKey(), userSelected, sellPrice, sellPrice, 1);
+                                    doSell(digitalAssetPublicKey, userSelected, sellPrice, sellPrice, 1);
                                 }
                             }).build().show();
                 }

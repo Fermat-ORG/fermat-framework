@@ -181,7 +181,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
                                 @Override
                                 public void onClick() {
                                     int assetsAmount = Integer.parseInt("1");
-                                    doTransfer(assetToTransfer.getDigitalAsset().getPublicKey(), users, assetsAmount);
+                                    doTransfer(digitalAssetPublicKey, users, assetsAmount);
                                 }
                             }).build().show();
 
