@@ -317,9 +317,9 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             businessTransactionRecord.getCryptoAmount(),
                             "Payment from Crypto Customer contract " + pendingContractHash,
                             businessTransactionRecord.getCustomerPublicKey(),
-                            businessTransactionRecord.getBrokerPublicKey(),
+                            businessTransactionRecord.getActorPublicKey(),
                             Actors.CBP_CRYPTO_CUSTOMER,
-                            Actors.CBP_CRYPTO_BROKER,
+                            Actors.INTRA_USER,
                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                             businessTransactionRecord.getBlockchainNetworkType()
                     );

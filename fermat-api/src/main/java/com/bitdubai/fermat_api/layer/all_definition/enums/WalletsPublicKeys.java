@@ -23,7 +23,9 @@ public enum WalletsPublicKeys implements FermatEnum {
     DAP_ISSUER_WALLET               ("asset_issuer"),
     DAP_USER_WALLET                 ("asset_user"),
     DAP_REDEEM_WALLET               ("redeem_point"),
-    ;
+
+    TKY_FAN_WALLET                   ("fan_wallet");
+
 
     private String code;
 
@@ -47,6 +49,7 @@ public enum WalletsPublicKeys implements FermatEnum {
             case "asset_issuer":            return DAP_ISSUER_WALLET            ;
             case "asset_user":              return DAP_USER_WALLET              ;
             case "redeem_point":            return DAP_REDEEM_WALLET            ;
+            case "fan_wallet":            return TKY_FAN_WALLET           ;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

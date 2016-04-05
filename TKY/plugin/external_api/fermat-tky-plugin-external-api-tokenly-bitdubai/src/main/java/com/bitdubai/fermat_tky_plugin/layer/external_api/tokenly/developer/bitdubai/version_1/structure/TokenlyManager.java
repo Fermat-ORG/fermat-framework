@@ -19,6 +19,8 @@ import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdu
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music.TokenlySongProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.swapbot.TokenlySwapBotProcessor;
 
+import java.util.concurrent.ExecutionException;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 04/03/16.
  */
@@ -72,7 +74,7 @@ public class TokenlyManager implements TokenlyApiManager {
      * @return
      */
     @Override
-    public User validateTokenlyUser(String username, String userKey) throws CantGetUserException {
+    public User validateTokenlyUser(String username, String userKey) throws CantGetUserException, ExecutionException, InterruptedException {
         User user = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(username, userKey);
         return user;
     }

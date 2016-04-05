@@ -185,7 +185,7 @@ public class ComponentDAO {
         return connection;
     }
 
-
+    /*copiar el create*/
     /**
      * Method that create a new entity in the data base.
      *
