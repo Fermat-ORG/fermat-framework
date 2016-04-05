@@ -6,13 +6,27 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketChannelServerEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.AddNodeToCatalogMsgRequest;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.AddNodeToCatalogMsjRespond;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
 
 import org.jboss.logging.Logger;
 
+import java.io.IOException;
+
+import javax.websocket.EncodeException;
 import javax.websocket.Session;
 
 /**
@@ -30,8 +44,6 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
      */
     private final Logger LOG = Logger.getLogger(AddNodeToCatalogProcessor.class.getName());
 
-
-
     /**
      * Constructor with parameter
      *
@@ -44,5 +56,175 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
     @Override
     public void processingPackage(Session session, Package packageReceived) {
 
+        String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
+        String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
+        NodeProfile nodeProfile = null;
+
+        try {
+
+            AddNodeToCatalogMsgRequest messageContent = (AddNodeToCatalogMsgRequest)  packageReceived.getContent();
+
+            /*
+             * Create the method call history
+             */
+            methodCallsHistory(getGson().toJson(messageContent.getNodeProfile()), destinationIdentityPublicKey);
+
+            /*
+             * Validate if content type is the correct
+             */
+            if (messageContent.getMessageContentType() == MessageContentType.JSON){
+
+                /*
+                 * Obtain the profile of the node
+                 */
+                nodeProfile = messageContent.getNodeProfile();
+
+                /*
+                 * Insert NodesCatalog into data base
+                 */
+                insertNodesCatalog(nodeProfile);
+
+                /*
+                 * Insert NodesCatalogTransaction into data base
+                 */
+                insertNodesCatalogTransaction(nodeProfile);
+
+                /*
+                 * Insert NodesCatalogTransactionsPendingForPropagation into data base
+                 */
+                insertNodesCatalogTransactionsPendingForPropagation(nodeProfile);
+
+                /*
+                 * If all ok, respond whit success message
+                 */
+                AddNodeToCatalogMsjRespond addNodeToCatalogMsjRespond = new AddNodeToCatalogMsjRespond(CheckInProfileMsjRespond.STATUS.SUCCESS, CheckInProfileMsjRespond.STATUS.SUCCESS.toString(), nodeProfile.getIdentityPublicKey());
+                Package packageRespond = Package.createInstance(addNodeToCatalogMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+
+                /*
+                 * Send the respond
+                 */
+                session.getBasicRemote().sendObject(packageRespond);
+
+            }
+
+
+        } catch (Exception exception){
+
+            try {
+
+                LOG.error(exception.getMessage());
+
+                /*
+                 * Respond whit fail message
+                 */
+                AddNodeToCatalogMsjRespond addNodeToCatalogMsjRespond = new AddNodeToCatalogMsjRespond(AddNodeToCatalogMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), nodeProfile.getIdentityPublicKey());
+                Package packageRespond = Package.createInstance(addNodeToCatalogMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+
+                /*
+                 * Send the respond
+                 */
+                session.getBasicRemote().sendObject(packageRespond);
+
+            } catch (IOException iOException) {
+                LOG.error(iOException.getMessage());
+            } catch (EncodeException encodeException) {
+                LOG.error(encodeException.getMessage());
+            }
+
+        }
+
     }
+
+    /**
+     * Create a new row into the data base
+     *
+     * @param nodeProfile
+     * @throws CantInsertRecordDataBaseException
+     */
+    private void insertNodesCatalog(NodeProfile nodeProfile) throws CantInsertRecordDataBaseException {
+
+        /*
+         * Create the NodesCatalog
+         */
+        NodesCatalog nodeCatalog = new NodesCatalog();
+        nodeCatalog.setIp(nodeProfile.getIp());
+        nodeCatalog.setDefaultPort(nodeProfile.getDefaultPort());
+        nodeCatalog.setIdentityPublicKey(nodeProfile.getIdentityPublicKey());
+        nodeCatalog.setName(nodeProfile.getName());
+        nodeCatalog.setOfflineCounter(0);
+
+        //Validate if location are available
+        if (nodeProfile.getLocation() != null){
+            nodeCatalog.setLastLatitude(nodeProfile.getLocation().getLatitude());
+            nodeCatalog.setLastLongitude(nodeProfile.getLocation().getLongitude());
+        }
+
+        /*
+         * Save into the data base
+         */
+        getDaoFactory().getNodesCatalogDao().create(nodeCatalog);
+    }
+
+    /**
+     * Create a new row into the data base
+     *
+     * @param nodeProfile
+     * @throws CantInsertRecordDataBaseException
+     */
+    private void insertNodesCatalogTransaction(NodeProfile nodeProfile) throws CantInsertRecordDataBaseException {
+
+        /*
+         * Create the NodesCatalog
+         */
+        NodesCatalogTransaction transaction = new NodesCatalogTransaction();
+        transaction.setIp(nodeProfile.getIp());
+        transaction.setDefaultPort(nodeProfile.getDefaultPort());
+        transaction.setIdentityPublicKey(nodeProfile.getIdentityPublicKey());
+        transaction.setName(nodeProfile.getName());
+        transaction.setTransactionType(NodesCatalogTransaction.ADD_TRANSACTION_TYPE);
+        transaction.setHashId(transaction.getHashId());
+
+        //Validate if location are available
+        if (nodeProfile.getLocation() != null){
+            transaction.setLastLatitude(nodeProfile.getLocation().getLatitude());
+            transaction.setLastLongitude(nodeProfile.getLocation().getLongitude());
+        }
+
+        /*
+         * Save into the data base
+         */
+        getDaoFactory().getNodesCatalogTransactionDao().create(transaction);
+    }
+
+    /**
+     * Create a new row into the data base
+     *
+     * @param nodeProfile
+     * @throws CantInsertRecordDataBaseException
+     */
+    private void insertNodesCatalogTransactionsPendingForPropagation(NodeProfile nodeProfile) throws CantInsertRecordDataBaseException {
+
+        /*
+         * Create the NodesCatalog
+         */
+        NodesCatalogTransactionsPendingForPropagation transaction = new NodesCatalogTransactionsPendingForPropagation();
+        transaction.setIp(nodeProfile.getIp());
+        transaction.setDefaultPort(nodeProfile.getDefaultPort());
+        transaction.setIdentityPublicKey(nodeProfile.getIdentityPublicKey());
+        transaction.setName(nodeProfile.getName());
+        transaction.setTransactionType(NodesCatalogTransaction.ADD_TRANSACTION_TYPE);
+        transaction.setHashId(transaction.getHashId());
+
+        //Validate if location are available
+        if (nodeProfile.getLocation() != null){
+            transaction.setLastLatitude(nodeProfile.getLocation().getLatitude());
+            transaction.setLastLongitude(nodeProfile.getLocation().getLongitude());
+        }
+
+        /*
+         * Save into the data base
+         */
+        getDaoFactory().getNodesCatalogTransactionsPendingForPropagationDao().create(transaction);
+    }
+
 }

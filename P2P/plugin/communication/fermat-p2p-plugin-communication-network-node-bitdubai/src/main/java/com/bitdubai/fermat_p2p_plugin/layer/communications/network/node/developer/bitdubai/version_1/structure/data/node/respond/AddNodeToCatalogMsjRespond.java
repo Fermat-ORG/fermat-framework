@@ -19,12 +19,18 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 public class AddNodeToCatalogMsjRespond extends MsgRespond {
 
     /**
+     * Represent the identityPublicKey of the profile
+     */
+    private String identityPublicKey;
+
+    /**
      * Constructor with parameters
      *
      * @param status
      * @param details
      */
-    public AddNodeToCatalogMsjRespond(STATUS status, String details) {
+    public AddNodeToCatalogMsjRespond(STATUS status, String details, String identityPublicKey) {
         super(status, details);
+        this.identityPublicKey = identityPublicKey;
     }
 }
