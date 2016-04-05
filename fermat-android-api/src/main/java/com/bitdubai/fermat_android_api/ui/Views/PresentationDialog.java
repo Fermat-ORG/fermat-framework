@@ -155,7 +155,8 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
         if (txt_sub_title != null) txt_sub_title.setText(subTitle);
         if (txt_body != null) txt_body.setText(body);
         if (footer_title != null) footer_title.setText(textFooter);
-        if (checkbox_not_show_text != null) checkbox_not_show_text.setText(textCheckboxNotShow);
+        if (checkbox_not_show_text != null && textCheckboxNotShow != -1)
+            checkbox_not_show_text.setText(textCheckboxNotShow);
         if (viewColor != -1) view_color.setBackgroundColor(viewColor);
         if (titleTextColor != -1) txt_title.setTextColor(titleTextColor);
         if (textColor != null) {
