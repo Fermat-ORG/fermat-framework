@@ -59,7 +59,7 @@ public class CustomerBrokerUpdateForwardTransaction {
                             "\n - numberSend: "+Integer.toString(getNumberSend(transactionSend, transactionId))+
                             "\n");
 
-                    if (!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.PENDING_SUBMIT.getCode())) {
+                    if (negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode())) {
 
                         System.out.print("\n\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER UPDATE - FORWARD TRANSACTION - pendingToConfirmtTransaction" + transactionId + " ****\n");
 
