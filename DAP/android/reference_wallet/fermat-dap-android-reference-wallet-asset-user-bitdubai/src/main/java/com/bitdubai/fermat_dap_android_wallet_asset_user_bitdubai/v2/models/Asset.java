@@ -84,7 +84,7 @@ public class Asset {
         setAmount(assetUserWalletList.getAvailableBalance());
         setDescription(digitalAsset.getDescription());
         setExpDate((Timestamp) digitalAsset.getContract().getContractProperty(DigitalAssetContractPropertiesConstants.EXPIRATION_DATE).getValue());
-        setDate(new Timestamp(firstTransaction.getTimestamp()));
+        setDate(new Timestamp(lastTransaction.getTimestamp()));
         setStatus((lastTransaction.getBalanceType().equals(BalanceType.AVAILABLE) && lastTransaction.getTransactionType().equals(TransactionType.CREDIT)) ? Status.CONFIRMED : Status.PENDING);
         setActorName(firstTransaction.getActorFrom().getName());
         setActorImage(firstTransaction.getActorFrom().getProfileImage());
