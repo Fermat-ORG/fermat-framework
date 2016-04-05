@@ -134,16 +134,15 @@ public class TimeOutNotifierAgentPool {
 
     public void stopTimeOutAgent(TimeOutAgent timeOutAgent) throws CantStopTimeOutAgentException {
         TimeOutNotifierAgent agent = (TimeOutNotifierAgent) timeOutAgent;
-        agent.setStatus(AgentStatus.STOPPED);
         try {
             dao.updateTimeOutNotifierAgent(agent);
+            agent.setStatus(AgentStatus.STOPPED);
+            runningAgents.remove(timeOutAgent);
         } catch (CantExecuteQueryException e) {
             CantStopTimeOutAgentException exception = new CantStopTimeOutAgentException(e, "Database error updating status to stopped. " + agent.toString(), "Database error");
             errorManager.reportUnexpectedPluginException(Plugins.TIMEOUT_NOTIFIER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
         }
-
-        runningAgents.remove(timeOutAgent);
     }
 
 

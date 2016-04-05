@@ -114,7 +114,7 @@ public class TimeOutNotifierAgentDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_TABLE_NAME);
 
-            table.addColumn(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME, DatabaseDataType.INTEGER, 0, Boolean.FALSE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_LAST_UPDATED_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
 

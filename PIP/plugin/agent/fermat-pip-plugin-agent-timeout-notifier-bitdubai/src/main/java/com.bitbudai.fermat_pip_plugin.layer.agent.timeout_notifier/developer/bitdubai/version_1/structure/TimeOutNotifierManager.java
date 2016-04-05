@@ -58,7 +58,7 @@ public class TimeOutNotifierManager  implements TimeOutManager{
         timeOutNotifierAgent.setEpochEndTime(timeOutNotifierAgent.getEpochStartTime() + timeOutNotifierAgent.getDuration());
         timeOutNotifierAgent.setOwner(owner);
         timeOutNotifierAgent.setStatus(AgentStatus.CREATED);
-        timeOutNotifierAgent.setProtocolStatus(ProtocolStatus.NO_ACTION_REQUIRED);
+
 
         timeOutNotifierAgentPool.addRunningAgent(timeOutNotifierAgent);
 

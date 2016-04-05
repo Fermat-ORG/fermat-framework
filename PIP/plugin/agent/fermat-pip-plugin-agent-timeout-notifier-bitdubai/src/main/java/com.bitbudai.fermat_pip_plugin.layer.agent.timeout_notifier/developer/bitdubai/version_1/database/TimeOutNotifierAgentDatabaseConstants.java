@@ -50,7 +50,7 @@ public class TimeOutNotifierAgentDatabaseConstants {
      */
     public static final String EVENT_MONITOR_TABLE_NAME = "event_monitor";
 
-    public static final String EVENT_MONITOR_AGENT_PUBLICKEY_COLUMN_NAME = "agent_publickey";
+    public static final String EVENT_MONITOR_AGENT_ID_COLUMN_NAME = "agent_publickey";
     public static final String EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME = "amount_raise";
     public static final String EVENT_MONITOR_LAST_UPDATED_COLUMN_NAME = "last_updated";
 

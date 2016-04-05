@@ -359,4 +359,39 @@ public class TimeOutNotifierAgentDatabaseDao {
         }
     }
 
+    public void updateMonitorEventData(UUID agentId) throws CantExecuteQueryException {
+        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_TABLE_NAME);
+        databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_ID_COLUMN_NAME, agentId, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            thrownCantExecuteQueryException(e, databaseTable.getTableName());
+        }
+
+        DatabaseTableRecord record;
+        if (databaseTable.getRecords().size() == 0){
+            record = databaseTable.getEmptyRecord();
+            record.setUUIDValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_ID_COLUMN_NAME, agentId);
+            record.setIntegerValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME, 1);
+            record.setLongValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_LAST_UPDATED_COLUMN_NAME, getCurrentTime());
+
+            try {
+                databaseTable.insertRecord(record);
+            } catch (CantInsertRecordException e) {
+                throw new CantExecuteQueryException(e, "Error inserting new record. " + record.toString(), "Database issue");
+            }        }
+        else
+        {
+            record = databaseTable.getRecords().get(0);
+            int current = record.getIntegerValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME);
+            record.setIntegerValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME, current+1);
+            try {
+                databaseTable.updateRecord(record);
+            } catch (CantUpdateRecordException e) {
+                throw new CantExecuteQueryException(e, "Error updating record. " + record.toString(), "Database issue");
+            }
+        }
+    }
+
 }

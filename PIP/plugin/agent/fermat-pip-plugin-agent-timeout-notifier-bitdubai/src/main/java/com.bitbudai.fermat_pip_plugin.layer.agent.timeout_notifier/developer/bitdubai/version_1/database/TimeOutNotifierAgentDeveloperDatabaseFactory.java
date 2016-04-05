@@ -149,7 +149,7 @@ public class TimeOutNotifierAgentDeveloperDatabaseFactory {
          */
         List<String> event_monitorColumns = new ArrayList<String>();
 
-        event_monitorColumns.add(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_PUBLICKEY_COLUMN_NAME);
+        event_monitorColumns.add(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_ID_COLUMN_NAME);
         event_monitorColumns.add(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME);
         event_monitorColumns.add(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_LAST_UPDATED_COLUMN_NAME);
         /**
