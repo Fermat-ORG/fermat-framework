@@ -52,6 +52,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
     String title;
     int subTitle = -1;
     int body = -1;
+    int textCheckboxNotShow = -1;
     int textFooter = -1;
     int textNameLeft = -1;
     int textNameRight = -1;
@@ -74,6 +75,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
     private FermatTextView txt_body;
     private FermatTextView footer_title;
     private CheckBox checkbox_not_show;
+    private FermatTextView checkbox_not_show_text;
     private ImageView image_view_left;
     private ImageView image_view_right;
     private Button btn_left;
@@ -106,6 +108,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
             txt_body = (FermatTextView) findViewById(R.id.txt_body);
             footer_title = (FermatTextView) findViewById(R.id.footer_title);
             checkbox_not_show = (CheckBox) findViewById(R.id.checkbox_not_show);
+            checkbox_not_show_text = (FermatTextView) findViewById(R.id.checkbox_not_show_text);
             checkbox_not_show.setChecked(!checkButton);
             img_icon = (ImageView) findViewById(R.id.img_icon);
             view_color = findViewById(R.id.view_color);
@@ -131,6 +134,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
                 case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
                     btn_dismiss = (FermatButton) findViewById(R.id.btn_dismiss);
                     btn_dismiss.setOnClickListener(this);
+                    checkbox_not_show.setOnCheckedChangeListener(this);
                     break;
             }
         } catch (Exception e) {
@@ -151,6 +155,8 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
         if (txt_sub_title != null) txt_sub_title.setText(subTitle);
         if (txt_body != null) txt_body.setText(body);
         if (footer_title != null) footer_title.setText(textFooter);
+        if (checkbox_not_show_text != null && textCheckboxNotShow != -1)
+            checkbox_not_show_text.setText(textCheckboxNotShow);
         if (viewColor != -1) view_color.setBackgroundColor(viewColor);
         if (titleTextColor != -1) txt_title.setTextColor(titleTextColor);
         if (textColor != null) {
@@ -277,6 +283,10 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
         this.textFooter = textFooter;
     }
 
+    public void setTextCheckboxNoShow(int textCheckbox) {
+        this.textCheckboxNotShow = textCheckbox;
+    }
+
     public void setResBannerImage(int resBannerImage) {
         this.resBannerImage = resBannerImage;
     }
@@ -327,6 +337,7 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
         private int subTitle = -1;
         private int body = - 1;
         private int textFooter = -1;
+        private int textCheckbox = -1;
         private String textColor;
         private int textNameLeft = -1;
         private int textNameRight = -1;
@@ -350,6 +361,9 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
             }
             if (textFooter != -1) {
                 presentationDialog.setTextFooter(textFooter);
+            }
+            if (textCheckbox != -1) {
+                presentationDialog.setTextCheckboxNoShow(textCheckbox);
             }
             if (bannerRes != -1) {
                 presentationDialog.setResBannerImage(bannerRes);
@@ -447,6 +461,11 @@ public class PresentationDialog extends FermatDialog<FermatSession, SubAppResour
 
         public Builder setTextFooter(int textFooter) {
             this.textFooter = textFooter;
+            return this;
+        }
+
+        public Builder setCheckboxText(int textCheckbox) {
+            this.textCheckbox = textCheckbox;
             return this;
         }
 
