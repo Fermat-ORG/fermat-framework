@@ -97,21 +97,20 @@ public class DataManager {
                     sublist.add(asset);
                 }
             }
-//            if (sublist.size() == 1) {
-//                newAssets.add(sublist.get(0));
-//            } else if (sublist.size() > 1) {
-//                for (int i = sublist.size() - 1; i >= 0; i--) {
-//                    if (sublist.get(i).getAssetUserWalletTransaction().getTransactionType().equals(TransactionType.CREDIT)
-//                            && sublist.get(i).getStatus().equals(Asset.Status.CONFIRMED)) {
-//                        newAssets.add(sublist.get(i));
-//                        break;
-//                    } else if (sublist.get(i).getAssetUserWalletTransaction().getTransactionType().equals(TransactionType.DEBIT)
-//                            && sublist.get(i).getStatus().equals(Asset.Status.CONFIRMED)) {
-//                        break;
-//                    }
-//                }
-//            }
-            newAssets.add(sublist.get(sublist.size() - 1));
+            if (sublist.size() == 1) {
+                newAssets.add(sublist.get(0));
+            } else if (sublist.size() > 1) {
+                for (int i = sublist.size() - 1; i >= 0; i--) {
+                    if (sublist.get(i).getAssetUserWalletTransaction().getTransactionType().equals(TransactionType.CREDIT)
+                            && sublist.get(i).getStatus().equals(Asset.Status.CONFIRMED)) {
+                        newAssets.add(sublist.get(i));
+                        break;
+                    } else if (sublist.get(i).getAssetUserWalletTransaction().getTransactionType().equals(TransactionType.DEBIT)
+                            && sublist.get(i).getStatus().equals(Asset.Status.CONFIRMED)) {
+                        break;
+                    }
+                }
+            }
         }
 
         Collections.sort(newAssets, new Comparator<Asset>() {
