@@ -52,11 +52,11 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
     /**
      * Class Variables
      */
-    TimeOutNotifierAgentDeveloperDatabaseFactory timeOutNotifierAgentDeveloperDatabaseFactory;
-    TimeOutNotifierAgentPool timeOutNotifierAgentPool;
-    TimeOutNotifierManager timeOutNotifierManager;
-    TimeOutNotifierAgentDatabaseDao dao;
-    TimeOutMonitoringAgent monitoringAgent;
+    private TimeOutNotifierAgentDeveloperDatabaseFactory timeOutNotifierAgentDeveloperDatabaseFactory;
+    private TimeOutNotifierAgentPool timeOutNotifierAgentPool;
+    private TimeOutNotifierManager timeOutNotifierManager;
+    private TimeOutNotifierAgentDatabaseDao dao;
+    private TimeOutMonitoringAgent monitoringAgent;
 
     /**
      * constructor
@@ -104,18 +104,9 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
         /**
          * Instantiate agents.
          */
-        timeOutNotifierAgentPool = new TimeOutNotifierAgentPool(getDao(), this.errorManager);
+        monitoringAgent = new TimeOutMonitoringAgent(getDao(), errorManager, eventManager);
+        timeOutNotifierAgentPool = new TimeOutNotifierAgentPool(getDao(), this.errorManager, this.monitoringAgent);
         timeOutNotifierManager = new TimeOutNotifierManager(getDao(), this.errorManager, this.timeOutNotifierAgentPool);
-
-        //starts the agent
-        monitoringAgent = new TimeOutMonitoringAgent(getDao(), timeOutNotifierAgentPool, errorManager, eventManager);
-        try {
-            monitoringAgent.start();
-        } catch (CantStartAgentException e) {
-            CantStartPluginException exception = new CantStartPluginException(e, "Unable to start Timeout Monitoring agent", "unknown");
-            errorManager.reportUnexpectedPluginException(Plugins.TIMEOUT_NOTIFIER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw exception;
-        }
 
         testAddNewAgent();
     }

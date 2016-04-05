@@ -12,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 
 /**
@@ -19,12 +20,12 @@ import java.util.HashMap;
  */
 public class AppsConfiguration {
 
-    private final FermatAppsManager fermatAppsManager;
+    private final WeakReference<FermatAppsManagerService> fermatAppsManager;
 
     private final String APPS_CONFIGURATION_FILE = "installed_app_configuration.txt";
 
-    public AppsConfiguration(FermatAppsManager fermatAppsManager) {
-        this.fermatAppsManager = fermatAppsManager;
+    public AppsConfiguration(FermatAppsManagerService fermatAppsManager) {
+        this.fermatAppsManager = new WeakReference<FermatAppsManagerService>(fermatAppsManager) ;
     }
 
     public HashMap<String, FermatAppType> readAppsCoreInstalled(){
@@ -49,9 +50,9 @@ public class AppsConfiguration {
         HashMap<String,FermatAppType> appsInstalledInDevice = new HashMap<>();
         // Aplicaciones instaladas en el dispoanae sitivo separadas por tipo
         for (FermatAppType fermatAppType : FermatAppType.values()) {
-            RuntimeManager runtimeManager = fermatAppsManager.selectRuntimeManager(fermatAppType);
+            RuntimeManager runtimeManager = fermatAppsManager.get().selectRuntimeManager(fermatAppType);
             if(runtimeManager != null)
-                for (String key : fermatAppsManager.selectRuntimeManager(fermatAppType).getListOfAppsPublicKey()) {
+                for (String key : fermatAppsManager.get().selectRuntimeManager(fermatAppType).getListOfAppsPublicKey()) {
                     appsInstalledInDevice.put(key,fermatAppType);
                 }
         }
