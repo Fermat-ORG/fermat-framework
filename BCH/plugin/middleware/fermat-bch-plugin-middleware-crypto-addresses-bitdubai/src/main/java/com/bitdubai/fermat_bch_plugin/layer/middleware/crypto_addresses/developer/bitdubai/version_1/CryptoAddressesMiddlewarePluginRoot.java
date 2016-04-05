@@ -103,8 +103,14 @@ public class CryptoAddressesMiddlewarePluginRoot extends AbstractPlugin implemen
                     getPluginVersionReference()
             );
 
-            // execute pending crypto addresses requests
-            executorService.executePendingActions();
+            try {
+                // execute pending crypto addresses requests
+                executorService.executePendingActions();
+            } catch (CantExecutePendingActionsException e) {
+
+                errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                e.printStackTrace();
+            }
 
             FermatEventListener cryptoAddressesNewsEventListener = eventManager.getNewListener(EventType.CRYPTO_ADDRESSES_NEWS);
             cryptoAddressesNewsEventListener.setEventHandler(new CryptoAddressesNewsEventHandler(executorService, this));
