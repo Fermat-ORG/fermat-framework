@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
+import com.bitdubai.fermat_pip_api.all_definition.event_manager.events.TimeOutReachedEvent;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -122,13 +123,20 @@ public class TimeOutMonitoringAgent implements Agent {
                 List<TimeOutNotifierAgent> timeOutManagerList =  dao.getTimeOutNotifierAgent(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, AgentStatus.STARTED.code, DatabaseFilterType.EQUAL);
                 for (TimeOutNotifierAgent timeOutNotifierAgent : timeOutManagerList){
                     if (timeOutNotifierAgent.getEpochEndTime() > System.currentTimeMillis()){
-                        //raise event
+                        raiseEvent(timeOutNotifierAgent);
                         dao.updateMonitorEventData(timeOutNotifierAgent.getUUID());
+                        System.out.println("***TimeOutNotifier*** Event Raised for agent " + timeOutNotifierAgent.toString());
                     }
                 }
             } catch (CantExecuteQueryException e) {
                 e.printStackTrace();
             }
+        }
+
+        private void raiseEvent(TimeOutNotifierAgent timeOutNotifierAgent) {
+            TimeOutReachedEvent event = new TimeOutReachedEvent();
+            event.setTimeOutAgent(timeOutNotifierAgent);
+            eventManager.raiseEvent(event);
         }
     }
 }
