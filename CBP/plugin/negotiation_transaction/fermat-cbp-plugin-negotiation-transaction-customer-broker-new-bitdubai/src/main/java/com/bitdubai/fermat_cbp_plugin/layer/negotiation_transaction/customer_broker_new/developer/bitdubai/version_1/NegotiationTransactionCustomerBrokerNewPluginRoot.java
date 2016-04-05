@@ -35,6 +35,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.events.enums.EventType;
+import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantSaveEventException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
@@ -282,13 +283,24 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
 
     /*PRIVATE METHOD*/
     private void initializeDb() throws CantInitializeDatabaseException {
+        /*try {
+
+            customerBrokerNewNegotiationTransactionDatabaseDao.initialize();
+
+        } catch (CantInitializeCustomerBrokerNewNegotiationTransactionDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(getPluginVersionReference(),UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,e);
+            throw new CantInitializeDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", "There is a problem and i cannot create the database.");
+        }*/
+
         try {
 
+//            dataBase = this.pluginDatabaseSystem.openDatabase(this.pluginId, pluginId.toString());
             dataBase = this.pluginDatabaseSystem.openDatabase(this.pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
 
         } catch (DatabaseNotFoundException e) {
             try {
                 CustomerBrokerNewNegotiationTransactionDatabaseFactory databaseFactory = new CustomerBrokerNewNegotiationTransactionDatabaseFactory(pluginDatabaseSystem);
+//                dataBase = databaseFactory.createDatabase(pluginId, pluginId.toString());
                 dataBase = databaseFactory.createDatabase(pluginId, CustomerBrokerNewNegotiationTransactionDatabaseConstants.DATABASE_NAME);
             } catch (CantCreateDatabaseException f) {
                 errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,f);
@@ -304,6 +316,7 @@ public class NegotiationTransactionCustomerBrokerNewPluginRoot extends AbstractP
             errorManager.reportUnexpectedPluginException(Plugins.CUSTOMER_BROKER_NEW, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantInitializeDatabaseException(CantOpenDatabaseException.DEFAULT_MESSAGE, e, "", "Generic Exception.");
         }
+
     }
     /*END PRIVATE METHOD*/
 
