@@ -125,7 +125,7 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
         }
 
         int imageLocked = R.drawable.locked;
-        if (asset.getAssetUserWalletTransaction().isLocked()){
+        if (asset.getAssetUserWalletTransaction() != null && asset.getAssetUserWalletTransaction().isLocked()){
             holder.cardConfirmedImage.setImageResource(imageLocked);
             holder.cardConfirmedText.setText(holder.res.getString(R.string.card_locked));
             holder.cardRedeemButton.setVisibility(View.GONE);
