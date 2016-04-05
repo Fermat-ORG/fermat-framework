@@ -18,6 +18,10 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
  */
 public class UpdateNodeInCatalogMsjRespond extends MsgRespond {
 
+    /**
+     * Represent the identityPublicKey of the profile
+     */
+    private String identityPublicKey;
 
     /**
      * Constructor with parameters
@@ -25,7 +29,18 @@ public class UpdateNodeInCatalogMsjRespond extends MsgRespond {
      * @param status
      * @param details
      */
-    public UpdateNodeInCatalogMsjRespond(STATUS status, String details) {
+    public UpdateNodeInCatalogMsjRespond(STATUS status, String details, String identityPublicKey) {
         super(status, details);
+        this.identityPublicKey = identityPublicKey;
     }
+
+    /**
+     * Get the IdentityPublicKey
+     * @return String
+     */
+    public String getIdentityPublicKey() {
+        return identityPublicKey;
+    }
+
+
 }

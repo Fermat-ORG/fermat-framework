@@ -33,4 +33,12 @@ public class AddNodeToCatalogMsjRespond extends MsgRespond {
         super(status, details);
         this.identityPublicKey = identityPublicKey;
     }
+
+    /**
+     * Get the IdentityPublicKey
+     * @return String
+     */
+    public String getIdentityPublicKey() {
+        return identityPublicKey;
+    }
 }

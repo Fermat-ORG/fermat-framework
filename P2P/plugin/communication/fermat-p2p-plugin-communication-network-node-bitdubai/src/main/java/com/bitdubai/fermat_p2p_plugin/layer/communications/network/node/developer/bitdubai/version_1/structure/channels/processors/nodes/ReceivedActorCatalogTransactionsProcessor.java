@@ -39,6 +39,10 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
         super(channel, PackageType.RECEIVE_ACTOR_CATALOG_TRANSACTIONS_REQUEST);
     }
 
+    /**
+     * (non-javadoc)
+     * @see PackageProcessor#processingPackage(Session, Package)
+     */
     @Override
     public void processingPackage(Session session, Package packageReceived) {
 

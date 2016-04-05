@@ -39,6 +39,10 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
         super(channel, PackageType.GET_NODE_CATALOG_REQUEST);
     }
 
+    /**
+     * (non-javadoc)
+     * @see PackageProcessor#processingPackage(Session, Package)
+     */
     @Override
     public void processingPackage(Session session, Package packageReceived) {
 
