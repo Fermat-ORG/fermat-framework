@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.data;
 
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.RedeemPoint;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.User;
@@ -13,6 +14,7 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAs
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
@@ -69,11 +71,17 @@ public class DataManager {
 
     public static List<Asset> getAssets() throws CantLoadWalletException, CantGetTransactionsException {
         List<AssetUserWalletList> assetUserWalletBalances = moduleManager.getAssetUserWalletBalances(walletPublicKey);
-
+        AssetUserWallet userWallet = moduleManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY);
         List<Asset> assets = new ArrayList<>();
         for (AssetUserWalletList assetUserWalletList : assetUserWalletBalances) {
+            List<CryptoAddress> addresses = assetUserWalletList.getAddresses();
             for (int i = 0; i < assetUserWalletList.getQuantityBookBalance(); i++) {
-                assets.add(new Asset(assetUserWalletList, moduleManager.loadAssetUserWallet(WalletUtilities.WALLET_PUBLIC_KEY).getAllTransactions(assetUserWalletList.getDigitalAsset().getPublicKey())));
+                try {
+                    CryptoAddress address = addresses.get(i);
+                    assets.add(new Asset(assetUserWalletList, userWallet.getAllTransactions(address), address));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
         Collections.sort(assets, new Comparator<Asset>() {
