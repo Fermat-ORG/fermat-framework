@@ -119,10 +119,6 @@ public class CryptoAddressesMiddlewarePluginRoot extends AbstractPlugin implemen
 
             this.serviceStatus = ServiceStatus.STARTED;
 
-        } catch (CantExecutePendingActionsException e) {
-
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(e, "", "Error trying to execute pending actions in network service.");
         } catch (Exception e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
