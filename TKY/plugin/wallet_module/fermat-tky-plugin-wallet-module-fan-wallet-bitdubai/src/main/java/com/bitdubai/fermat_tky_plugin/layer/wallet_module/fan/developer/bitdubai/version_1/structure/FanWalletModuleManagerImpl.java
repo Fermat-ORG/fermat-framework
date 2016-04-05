@@ -95,5 +95,13 @@ public class FanWalletModuleManagerImpl implements FanWalletModule {
         return tokenlyApiManager.getBotBySwapbotUsername(username);
     }
 
+    /**
+     * This method reports to wallet manager that the ser wants to download a song
+     */
+    @Override
+    public void cancelDownload() {
+        songWalletTokenlyManager.cancelDownload();
+    }
+
 
 }
