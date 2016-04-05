@@ -2,10 +2,13 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pa
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -149,6 +152,8 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
 
         final View layout = inflater.inflate(R.layout.ccw_wizard_step_set_bitcoin_wallet_and_providers, container, false);
 
+        configureToolbar();
+
         recyclerView = (RecyclerView) layout.findViewById(R.id.ccw_selected_providers_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
 
@@ -208,6 +213,20 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
         }, 250);
 
         return layout;
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
+
+        toolbar.setTitleTextColor(Color.WHITE);
+        toolbar.setTitle("Prueba");
+
+        System.out.println("toolbar: "+toolbar.toString());
     }
 
     private void showHelpDialog() {
