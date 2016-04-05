@@ -376,13 +376,45 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             }
 
             /**
-             * IN_CONTRACT_SUBMIT -> Update Contract Status to CANCELLED when Expiration Time is done:
+             * IN_PAYMENT_SUBMIT -> Update Contract Status to CANCELLED when Expiration Time is done:
+             *
+             * If Expiration Time is done, Update the contract status to CANCELLED.
+             */
+            for (CustomerBrokerSale customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_PAYMENT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
+            {
+                for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_PAYMENT)) {
+
+                    String negotiationId    = customerBrokerContractSale.getNegotiatiotId();
+
+                    if (customerBrokerPurchase.getTransactionId().equals(negotiationId)) {
+
+                        long dateTimeToDelivery                 = 0;
+                        long timeStampToday                     = new Date().getTime();
+                        Negotiation negotiation                 = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                        Collection<Clause> negotiationClause    = negotiation.getClauses();
+                        String clauseValue                      = getNegotiationClause(negotiationClause, ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
+
+                        if(clauseValue != null) dateTimeToDelivery = Long.parseLong(clauseValue);
+
+                        if (timeStampToday >= dateTimeToDelivery) {
+
+                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(customerBrokerContractSale.getContractId(), ContractStatus.CANCELLED);
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION);
+                            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+
+                        }
+                    }
+                }
+            }
+
+            /**
+             * IN_MERCHANDISE_SUBMIT -> Update Contract Status to CANCELLED when Expiration Time is done:
              *
              * If Expiration Time is done, Update the contract status to CANCELLED.
              */
             for (CustomerBrokerSale customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
             {
-                for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_PAYMENT)) {
+                for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_MERCHANDISE)) {
 
                     String negotiationId    = customerBrokerContractSale.getNegotiatiotId();
 
@@ -399,9 +431,8 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         if (timeStampToday >= dateTimeToDelivery) {
 
                             customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(customerBrokerContractSale.getContractId(), ContractStatus.CANCELLED);
-//                                lastNotificationTime = new Date().getTime();
-//                                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION);
-//                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, brokerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION);
+                            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
 
                         }
                     }
