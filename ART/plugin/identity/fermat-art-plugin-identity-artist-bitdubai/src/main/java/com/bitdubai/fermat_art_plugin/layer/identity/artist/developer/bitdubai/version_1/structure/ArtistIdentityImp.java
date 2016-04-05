@@ -137,6 +137,11 @@ public class ArtistIdentityImp implements DealsWithPluginFileSystem, DealsWithPl
     }
 
     @Override
+    public String getAlias() {
+        return this.alias;
+    }
+
+    @Override
     public String getPublicKey() {
         return publicKey;
     }

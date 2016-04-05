@@ -35,10 +35,14 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 }
+
+task generateSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier 'sources'
+}
 dependencies {
     compile project(':fermat-api')
     compile project(':fermat-core')
-    compile project(':fermat-pip-api')
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 

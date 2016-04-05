@@ -1,5 +1,8 @@
 package com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -14,6 +17,7 @@ import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.DownloadS
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDeleteSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDownloadSongException;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CancelDownloadException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantDownloadFileException;
 
 import java.io.IOException;
@@ -46,6 +50,11 @@ public class TokenlyWalletSongVault {
     TokenlyApiManager tokenlyApiManager;
 
     /**
+     * Represents the broadcaster.
+     */
+    private Broadcaster broadcaster;
+
+    /**
      * Default values
      */
 
@@ -65,15 +74,27 @@ public class TokenlyWalletSongVault {
     private final FileLifeSpan FILE_LIFE_SPAN = FileLifeSpan.PERMANENT;
 
     /**
+     * Represents the percentage step
+     */
+    private final int PERCENTAGE_STEP = 1;
+
+    /**
+     * Represents if the download must be canceled
+     */
+    private boolean CANCEL_DOWNLOAD = false;
+
+    /**
      * Constructor with parameters
      */
     public TokenlyWalletSongVault(
             PluginFileSystem pluginFileSystem,
             TokenlyApiManager tokenlyApiManager,
-            UUID pluginId){
+            UUID pluginId,
+            Broadcaster broadcaster){
         this.pluginFileSystem = pluginFileSystem;
         this.tokenlyApiManager = tokenlyApiManager;
         this.pluginId = pluginId;
+        this.broadcaster = broadcaster;
     }
 
     /**
@@ -82,8 +103,11 @@ public class TokenlyWalletSongVault {
      * Tonkenly Id.
      * @param song
      * @throws CantDownloadSongException
+     * @throws CancelDownloadException
      */
-    public String downloadSong(Song song) throws CantDownloadSongException {
+    public String downloadSong(Song song) throws
+            CantDownloadSongException,
+            CancelDownloadException {
         try{
             //Get DownloadSOng object from Tokenly public API
             String downloadUrl = song.getDownloadUrl();
@@ -134,8 +158,11 @@ public class TokenlyWalletSongVault {
      * @param downloadUrl
      * @param fileName
      * @throws CantDownloadFileException
+     * @throws CancelDownloadException
      */
-    public void downloadFile(String downloadUrl, String fileName) throws CantDownloadFileException{
+    public void downloadFile(String downloadUrl, String fileName) throws
+            CantDownloadFileException,
+            CancelDownloadException {
         try{
             //TODO: study if this method will fix better in external API
             //Remove spaces
@@ -147,25 +174,39 @@ public class TokenlyWalletSongVault {
             //Get file size
             int size = urlCon.getContentLength();
             System.out.println("TKY - Download size: "+size);
-            //Prepare the plugin file system to persist the file
-            PluginBinaryFile pluginBinaryFile = pluginFileSystem.createBinaryFile(
-                    pluginId,
-                    DIRECTORY_NAME,
-                    fileName,
-                    FILE_PRIVACY,
-                    FILE_LIFE_SPAN);
+            //Calculate 1% to show in UI progress bar
+            int percentStep = size/(PERCENTAGE_STEP*100);
             //Reading buffer.
             byte [] data = new byte[1024];
             //Put the inputStream into the array bytes.
             int bytesRead = is.read(data);
+            //Set the cancel download flag in true
+            CANCEL_DOWNLOAD=true;
             //File counter
             int reader = 0;
             List<Byte> byteList = new ArrayList<>();
+            int downloadPercentage=0;
+            int calculate;
             while(bytesRead != -1) {
+                if(CANCEL_DOWNLOAD){
+                    broadcaster.publish(
+                            BroadcasterType.NOTIFICATION_SERVICE,
+                            WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
+                            "Download canceled by user request");
+                    throw new CancelDownloadException();
+                }
                 for(byte byteRead : data){
                     byteList.add(byteRead);
                 }
                 reader+=bytesRead;
+                calculate = reader/percentStep;
+                if(calculate>downloadPercentage){
+                    downloadPercentage=calculate;
+                    broadcaster.publish(
+                            BroadcasterType.NOTIFICATION_PROGRESS_SERVICE,
+                            WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
+                            downloadPercentage+"%");
+                }
                 //System.out.println("TKY - Download "+reader+" from "+size);
                 bytesRead = is.read(data);
             }
@@ -177,10 +218,22 @@ public class TokenlyWalletSongVault {
                 array[loopCounter] = Byte.parseByte(object.toString());
                 loopCounter++;
             }
+            //Prepare the plugin file system to persist the file
+            PluginBinaryFile pluginBinaryFile = pluginFileSystem.createBinaryFile(
+                    pluginId,
+                    DIRECTORY_NAME,
+                    fileName,
+                    FILE_PRIVACY,
+                    FILE_LIFE_SPAN);
             pluginBinaryFile.setContent(array);
             pluginBinaryFile.persistToMedia();
             //Close connection
             is.close();
+            //Notify that the process is finished
+            broadcaster.publish(
+                    BroadcasterType.NOTIFICATION_PROGRESS_SERVICE,
+                    WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
+                    "100%");
             //Only for testing:
             //testReadFile(fileName);
         } catch (MalformedURLException e) {
@@ -204,6 +257,10 @@ public class TokenlyWalletSongVault {
                     "Downloading file from URL "+downloadUrl,
                     "Cannot create the file");
         }
+    }
+
+    public void cancelDownload(){
+
     }
 
     /**
