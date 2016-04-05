@@ -20,6 +20,10 @@ project(':fermat-cht-android-sub-app-chat-bitdubai').projectDir = new File('CHT/
 
 //PLUGINS
 
+//Actor Connection
+include ':fermat-cht-plugin-actor-connection-chat-bitdunai'
+project(':fermat-cht-plugin-actor-connection-chat-bitdunai').projectDir = new File('CHT/plugin/actor_connection/fermat-cht-plugin-actor-connection-chat-bitdubai')
+
 //Middleware
 include ':fermat-cht-plugin-middleware-chat-bitdubai'
 project(':fermat-cht-plugin-middleware-chat-bitdubai').projectDir = new File('CHT/plugin/middleware/fermat-cht-plugin-middleware-chat-bitdubai')
