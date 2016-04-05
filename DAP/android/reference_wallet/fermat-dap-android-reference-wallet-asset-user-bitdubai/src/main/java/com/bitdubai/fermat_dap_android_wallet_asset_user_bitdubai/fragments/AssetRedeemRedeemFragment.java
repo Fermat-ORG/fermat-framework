@@ -39,6 +39,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.RedeemP
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.data.DataManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -72,7 +73,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
 
     private Asset assetToRedeem;
     private DigitalAsset digitalAsset;
-
+    String digitalAssetPublicKey;
     SettingsManager<AssetUserSettings> settingsManager;
 
     //UI
@@ -94,19 +95,17 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
             errorManager = appSession.getErrorManager();
 
             settingsManager = appSession.getModuleManager().getSettingsManager();
-
-            assetToRedeem = (Asset) appSession.getData("asset_data");
-
-            String digitalAssetPublicKey = assetToRedeem.getDigitalAsset().getPublicKey();
             try {
-                digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
-            } catch (CantLoadWalletException e) {
+
+                assetToRedeem = (Asset) appSession.getData("asset_data");
+                digitalAssetPublicKey = assetToRedeem.getDigitalAsset().getPublicKey();
+//                digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
+//                digitalAsset = DataManager.getAssets();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
             redeemPoints = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-
-
 
             activity = getActivity();
 
@@ -168,7 +167,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM_SELECT) {
                 setUpHelpAssetRedeem(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
-            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM){
+            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_REDEEM) {
                 if (redeemPointSelect != null) {
 
                     new ConfirmDialog.Builder(getActivity(), appSession)
@@ -179,7 +178,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
                                 @Override
                                 public void onClick() {
                                     int assetsAmount = Integer.parseInt("1");
-                                    doRedeem(digitalAsset.getAssetPublicKey(), redeemPoints, assetsAmount);
+                                    doRedeem(digitalAssetPublicKey, redeemPoints, assetsAmount);
 
                                 }
                             }).build().show();
@@ -296,10 +295,8 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         //TODO select redeemPoint
         //appSession.setData("redeemPoint_selected", data);
 
-        for (int i=0; i < redeemPoints.size(); i++)
-        {
-            if (i != position)
-            {
+        for (int i = 0; i < redeemPoints.size(); i++) {
+            if (i != position) {
                 redeemPoints.get(i).setSelected(false);
             }
         }
@@ -324,8 +321,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
 
         if (redeemPoints.get(position).isSelected()) {
             redeemPointSelect = data;
-        }
-        else {
+        } else {
             redeemPointSelect = null;
         }
 
@@ -346,7 +342,9 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         List<RedeemPoint> redeemPoints = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                redeemPoints = Data.getConnectedRedeemPoints(moduleManager,redeemPoints, digitalAsset);
+//                redeemPoints = Data.getConnectedRedeemPoints(moduleManager,redeemPoints, digitalAsset);
+                redeemPoints = DataManager.getConnectedRedeemPoints(digitalAssetPublicKey);
+
                 appSession.setData("redeemPoints_to_redeem", redeemPoints);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -385,7 +383,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         FermatWorker task = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                moduleManager.redeemAssetToRedeemPoint(assetPublicKey, WalletUtilities.WALLET_PUBLIC_KEY, Data.getRedeemPoints(redeemPoints), assetAmount);
+                moduleManager.redeemAssetToRedeemPoint(assetPublicKey, WalletUtilities.WALLET_PUBLIC_KEY, DataManager.getRedeemPoints(redeemPoints), assetAmount);
                 return true;
             }
         };

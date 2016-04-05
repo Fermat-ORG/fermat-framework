@@ -10,9 +10,9 @@ public class BlockchainDownloadProgress {
     int pendingBlocks;
     int totalBlocks;
     int downloadedBlocks;
-    long lastBlockDownloadTime;
     int progress;
     String downloader;
+    long lastBlockDownloadTime;
 
     public BlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType, int pendingBlocks, int totalBlocks, int downloadedBlocks, int progress) {
         this.blockchainNetworkType = blockchainNetworkType;
@@ -74,8 +74,8 @@ public class BlockchainDownloadProgress {
         return lastBlockDownloadTime;
     }
 
-    public void setLastBlockDownloadTime(long lastblocktime) {
-        this.lastBlockDownloadTime = lastblocktime;
+    public void setLastBlockDownloadTime(long lastBlockDownloadTime) {
+        this.lastBlockDownloadTime = lastBlockDownloadTime;
     }
 
     @Override

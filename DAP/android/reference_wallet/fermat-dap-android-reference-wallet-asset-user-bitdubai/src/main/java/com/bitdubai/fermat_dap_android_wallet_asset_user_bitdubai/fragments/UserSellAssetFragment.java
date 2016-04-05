@@ -63,11 +63,13 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.data.DataManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -106,6 +108,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
     SettingsManager<AssetUserSettings> settingsManager;
     List<User> users;
     private User user;
+    String digitalAssetPublicKey;
 
     private FermatEditText assetPrice;
     private FermatTextView assetPriceView;
@@ -163,12 +166,8 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
         configureToolbar();
 
         assetToSell = (Asset) appSession.getData("asset_data");
-        String digitalAssetPublicKey = assetToSell.getDigitalAsset().getPublicKey();
-        try {
-            digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
-        } catch (CantLoadWalletException e) {
-            e.printStackTrace();
-        }
+        digitalAssetPublicKey = assetToSell.getDigitalAsset().getPublicKey();
+        //digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
 
         noUsersView = layout.findViewById(R.id.asset_sell_no_users_view);
         assetPrice = (FermatEditText) layout.findViewById(R.id.assetSellbitcoins);
@@ -235,27 +234,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
             }
         });
 
-        sellButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if (isValidSell()) {
-                    new ConfirmDialog.Builder(getActivity(), appSession)
-                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
-                            .setColorStyle(getResources().getColor(R.color.card_toolbar))
-                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                                @Override
-                                public void onClick() {
-                                    BitcoinConverter.Currency from = (BitcoinConverter.Currency) assetCurrencySpinner.getSelectedItem();
-
-                                    long sellPrice = (long) BitcoinConverter.convert(Double.parseDouble(assetPrice.getText().toString()), from, SATOSHI);
-                                    doSell(digitalAsset.getAssetPublicKey(), userSelected, sellPrice, sellPrice, 1);
-                                }
-                            }).build().show();
-                }
-            }
-        });
-
-        eraseButton.setOnClickListener(new View.OnClickListener() {
+           eraseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 userToSelectText.setText("");
@@ -415,8 +394,10 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
         super.onCreateOptionsMenu(menu, inflater);
         /*menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);*/
-        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        /*menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM, 0, "Help")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);*/
+        menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL, 0, "Sell")
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
@@ -424,10 +405,24 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
         try {
             int id = item.getItemId();
 
-            /*if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_REDEEM) {
-                setUpHelpAssetSell(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
-                return true;
-            }*/
+            if (id == SessionConstantsAssetUser.IC_ACTION_USER_ITEM_SELL) {
+                if (isValidSell()) {
+                    new ConfirmDialog.Builder(getActivity(), appSession)
+                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
+                            .setColorStyle(getResources().getColor(R.color.card_toolbar))
+                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                @Override
+                                public void onClick() {
+                                    BitcoinConverter.Currency from = (BitcoinConverter.Currency) assetCurrencySpinner.getSelectedItem();
+                                    long sellPrice = (long) BitcoinConverter.convert(Double.parseDouble(assetPrice.getText().toString()), from, SATOSHI);
+                                    doSell(digitalAssetPublicKey, userSelected, sellPrice, sellPrice, 1);
+                                }
+                            }).build().show();
+                }
+
+            }
+            return true;
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -453,10 +448,15 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
 
     private boolean isValidSell() {
 
-
-        String bitcoinsTotalStr = assetPrice.getText().toString();
-        double total = Double.parseDouble(assetPrice.getText().toString());
-        if (total == 0) {
+        if (assetPrice.getText() != null && assetPrice.getText().length() != 0) {
+            double total = Double.parseDouble(assetPrice.getText().toString());
+            if (total == 0) {
+                makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_total_zero),
+                        Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        }
+        else {
             makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_total_zero),
                     Toast.LENGTH_SHORT).show();
             return false;
@@ -469,7 +469,7 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
                     Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (appSession.getData("user_selected") == null) {
+        if (userSelected == null) {
             makeText(getActivity(), getResources().getString(R.string.dap_user_wallet_validate_sell_user),
                     Toast.LENGTH_SHORT).show();
             return false;
@@ -544,8 +544,12 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
     private void refreshUIData() {
         String digitalAssetPublicKey = ((DigitalAsset) appSession.getData("asset_data")).getAssetPublicKey();
         try {
-            digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
+//            digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
+            assetToSell = (Asset) DataManager.getAssets();
+
         } catch (CantLoadWalletException e) {
+            e.printStackTrace();
+        } catch (CantGetTransactionsException e) {
             e.printStackTrace();
         }
 
@@ -563,7 +567,8 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
         if (moduleManager != null) {
             try {
                 //DigitalAsset digitalAsset = (DigitalAsset) appSession.getData("asset_data");
-                users = Data.getConnectedUsers(moduleManager);
+//                users = Data.getConnectedUsers(moduleManager);
+                users = DataManager.getConnectedUsers();
                 appSession.setData("users", users);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);

@@ -39,6 +39,7 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.data.DataManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
@@ -70,6 +71,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
     private List<User> users;
     private User userSelected;
     private Asset assetToTransfer;
+    String digitalAssetPublicKey;
 
     private DigitalAsset digitalAsset;
 
@@ -95,15 +97,19 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
 
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
-            users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-
-            assetToTransfer = (Asset) appSession.getData("asset_data");
-            String digitalAssetPublicKey = assetToTransfer.getDigitalAsset().getPublicKey();
             try {
-                digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
-            } catch (CantLoadWalletException e) {
+
+                assetToTransfer = (Asset) appSession.getData("asset_data");
+                digitalAssetPublicKey = assetToTransfer.getDigitalAsset().getPublicKey();
+
+//                digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
+
+            } catch (Exception e) {
                 e.printStackTrace();
             }
+
+            users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+
             activity = getActivity();
 
 
@@ -152,7 +158,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
         menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER, 0, "Transfer")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_HELP_TRANSFER_SELECT, 0, "Help")
-                //.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        //.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
     }
 
@@ -164,20 +170,20 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_TRANSFER_SELECT) {
                 setUpHelpAssetRedeem(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
-            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER){
+            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER) {
                 if (userSelected != null) {
 
-                            new ConfirmDialog.Builder(getActivity(), appSession)
-                                    .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                                    .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
-                                    .setColorStyle(getResources().getColor(R.color.card_toolbar))
-                                    .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                                        @Override
-                                        public void onClick() {
-                                            int assetsAmount = Integer.parseInt("1");
-                                            doTransfer(digitalAsset.getAssetPublicKey(), users, assetsAmount);
-                                        }
-                                    }).build().show();
+                    new ConfirmDialog.Builder(getActivity(), appSession)
+                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
+                            .setColorStyle(getResources().getColor(R.color.card_toolbar))
+                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                @Override
+                                public void onClick() {
+                                    int assetsAmount = Integer.parseInt("1");
+                                    doTransfer(digitalAssetPublicKey, users, assetsAmount);
+                                }
+                            }).build().show();
 
                 } else {
                     Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_validate_no_user), Toast.LENGTH_SHORT).show();
@@ -289,12 +295,10 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
     @Override
     public void onItemClickListener(User data, int position) {
         //TODO select user
-       //appSession.setData("user_selected", data);
+        //appSession.setData("user_selected", data);
 
-        for (int i=0; i < users.size(); i++)
-        {
-            if (i != position)
-            {
+        for (int i = 0; i < users.size(); i++) {
+            if (i != position) {
                 users.get(i).setSelected(false);
             }
         }
@@ -302,8 +306,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
 
         if (users.get(position).isSelected()) {
             userSelected = data;
-        }
-        else {
+        } else {
             userSelected = null;
         }
         getAdapter().changeDataSet(users);
@@ -318,7 +321,8 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
         List<User> users = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                users = Data.getConnectedUsers(moduleManager);
+//                users = Data.getConnectedUsers(moduleManager);
+                users = DataManager.getConnectedUsers();
                 appSession.setData("users_to_transfer", users);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
