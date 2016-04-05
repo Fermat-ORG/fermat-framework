@@ -328,6 +328,77 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     }
 
     /**
+     * This method deletes all chats from database.
+     *
+     * @throws CantDeleteChatException
+     */
+    @Override
+    public void deleteChats() throws CantDeleteChatException {
+        try {
+            this.chatMiddlewareDatabaseDao.deleteChats();
+        } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantDeleteChatException(
+                    e,
+                    "Deleting all chats from database",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantDeleteChatException(
+                    FermatException.wrapException(exception),
+                    "Deleting all chats from database",
+                    "Unexpected exception");
+        }
+    }
+
+    /**
+     * This method deletes all messages of a chat from database.
+     *
+     * @param chatId
+     * @throws CantDeleteMessageException
+     */
+    @Override
+    public void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException {
+        try {
+            ObjectChecker.checkArgument(chatId, "The chat argument is null");
+            this.chatMiddlewareDatabaseDao.deleteMessagesByChatId(chatId);
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantDeleteMessageException(
+                    e,
+                    "Deleting messages from database",
+                    "The chat id probably is null");
+        } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantDeleteMessageException(
+                    e,
+                    "Deleting messages from database",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantDeleteMessageException(
+                    FermatException.wrapException(exception),
+                    "Deleting messages from database",
+                    "Unexpected exception");
+        }
+    }
+
+    /**
      * This method returns a full message list.
      *
      * @return
@@ -1289,37 +1360,63 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
     @Override
     public void saveGroup(Group group) throws CantSaveGroupException {
-
+        try {
+            chatMiddlewareDatabaseDao.saveGroup(group);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void deleteGroup(Group group) throws CantDeleteGroupException {
-
+        try {
+            chatMiddlewareDatabaseDao.deleteGroup(group);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public List<Group> getGroups() throws CantListGroupException {
+        try {
+            return chatMiddlewareDatabaseDao.getGroups();
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public Group getGroup(UUID groupId) throws CantGetGroupException {
+        try {
+            return chatMiddlewareDatabaseDao.getGroup(groupId);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
     @Override
     public void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException {
-
+        try {
+            chatMiddlewareDatabaseDao.saveGroupMember(groupMember);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException {
-
+        try {
+            chatMiddlewareDatabaseDao.deleteGroupMember(groupMember);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public List<GroupMember> getGroupMembersByGroupId(UUID groupId) throws CantListGroupMemberException {
-        return null;
+        return chatMiddlewareDatabaseDao.getGroupsMemberByGroupId(groupId);
     }
 
     /**

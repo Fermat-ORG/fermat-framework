@@ -58,6 +58,10 @@ public interface ChatManager {
 
     void deleteChat(Chat chat) throws CantDeleteChatException;
 
+    void deleteChats() throws CantDeleteChatException;
+
+    void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException;
+
     List<Message> getMessages() throws CantGetMessageException;
 
     List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException;
@@ -146,4 +150,7 @@ public interface ChatManager {
     void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException;
 
     List<GroupMember> getGroupMembersByGroupId(UUID groupId)throws CantListGroupMemberException;
+
+    void clearChatMessageByChatId(UUID chatId) throws CantDeleteMessageException, CantGetMessageException;
+
 }

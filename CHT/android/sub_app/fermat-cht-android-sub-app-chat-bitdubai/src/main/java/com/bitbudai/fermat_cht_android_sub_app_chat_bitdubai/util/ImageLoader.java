@@ -12,8 +12,9 @@ import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.widget.ImageView;
-import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.*;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ImageCache;
 import com.bitdubai.android_api.BuildConfig;
 
 import java.io.FileDescriptor;
@@ -25,6 +26,7 @@ import java.lang.ref.WeakReference;
  * @version 1.0
  *
  */
+
 /**
  * This class wraps up completing some arbitrary long running work when loading a bitmap to an
  * ImageView. It handles things like using a memory and disk cache, running the work in a background
@@ -53,7 +55,7 @@ public abstract class ImageLoader {
 
     /**
      * Load an image specified by the data parameter into an ImageView (override
-     * {@link ImageLoader#processBitmap(Object)} to define the processing logic). If the image is
+     * {@link com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.ImageLoader#processBitmap(Object)} to define the processing logic). If the image is
      * found in the memory cache, it is set immediately, otherwise an {@link AsyncTask} will be
      * created to asynchronously load the bitmap.
      *
@@ -94,7 +96,7 @@ public abstract class ImageLoader {
     }
 
     /**
-     * Adds an {@link ImageCache} to this image loader.
+     * Adds an {@link com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.ImageCache} to this image loader.
      *
      * @param fragmentManager A FragmentManager to use to retain the cache over configuration
      *                        changes such as an orientation change.
@@ -117,7 +119,7 @@ public abstract class ImageLoader {
      * example, you could resize a large bitmap here, or pull down an image from the network.
      *
      * @param data The data to identify which image to process, as provided by
-     *            {@link ImageLoader#loadImage(Object, ImageView)}
+     *            {@link com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.ImageLoader#loadImage(Object, ImageView)}
      * @return The processed bitmap
      */
     protected abstract Bitmap processBitmap(Object data);

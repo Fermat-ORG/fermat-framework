@@ -295,6 +295,7 @@ public enum Plugins implements FermatPluginsEnum {
     CHAT_MIDDLEWARE                     ("CHMID"),
     CHAT_NETWORK_SERVICE                ("CHTNS"),
     CHAT_SUP_APP_MODULE                 ("CHTSAM"),
+    CHAT_IDENTITY_SUP_APP_MODULE        ("CHTISAM"),
     CHAT_IDENTITY                       ("CHTIDE"),
     CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
 

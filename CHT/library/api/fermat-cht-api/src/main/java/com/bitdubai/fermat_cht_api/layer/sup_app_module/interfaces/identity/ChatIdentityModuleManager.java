@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces;
+package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -9,6 +9,7 @@ import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentit
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantUpdateChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.*;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 
 import java.util.List;
 
