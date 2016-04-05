@@ -307,7 +307,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
             }
 
             /**
-             * IN_CONTRACT_SUBMIT -> Update Contract Status to CANCELLED when Expiration Time is done:
+             * IN_PAYMENT_SUBMIT -> Update Contract Status to CANCELLED when Expiration Time of submit of the payment is done:
              *
              * If Expiration Time is done, Update the contract status to CANCELLED.
              */
@@ -330,16 +330,45 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                         if (timeStampToday >= dateTimeToDelivery) {
 
                             customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(customerBrokerContractPurchase.getContractId(), ContractStatus.CANCELLED);
-
-//                                lastNotificationTime = new Date().getTime();
-//                                broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_EXPIRATION_NOTIFICATION);
-//                                broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION);
+                            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
 
                         }
                     }
                 }
             }
 
+            /**
+             * IN_MERCHANDISE_SUBMIT -> Update Contract Status to CANCELLED when Expiration Time of submit of the merchandise is done:
+             *
+             * If Expiration Time is done, Update the contract status to CANCELLED.
+             */
+            for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
+            {
+                for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_MERCHANDISE)) {
+
+                    String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
+
+                    if (customerBrokerPurchase.getTransactionId().equals(negotiationId)) {
+
+                        long dateTimeToDelivery                 = 0;
+                        long timeStampToday                     = new Date().getTime();
+                        Negotiation negotiation                 = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                        Collection<Clause> negotiationClause    = negotiation.getClauses();
+                        String clauseValue                      = getNegotiationClause(negotiationClause, ClauseType.BROKER_DATE_TIME_TO_DELIVER);
+
+                        if(clauseValue != null) dateTimeToDelivery = Long.parseLong(clauseValue);
+
+                        if (timeStampToday >= dateTimeToDelivery) {
+
+                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(customerBrokerContractPurchase.getContractId(), ContractStatus.CANCELLED);
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION);
+                            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+
+                        }
+                    }
+                }
+            }
             /**
              * Se verifica el estatus del contrato hasta que se consiga la realización de un pago
              * IN_CONTRACT_SUBMIT -> IN_PAYMENT_SUBMIT
