@@ -36,6 +36,7 @@ import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monito
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.database.SystemMonitorNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.database.SystemMonitorNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.developerUtils.SystemMonitorNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantInitializeSystemMonitorNetworkServiceDataBaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 //import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.DatabaseTransactionFailedException;
@@ -238,8 +239,11 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
                                             platformComponentProfile.getNetworkServiceType().getCode());
 
             try {
+                subappFermatMonitorComponentDAO.deleteComponentEvent();
                 subappFermatMonitorComponentDAO.create(componentProfileInfo);
             } catch (DatabaseTransactionFailedException e) {
+                e.printStackTrace();
+            } catch (CantDeleteRecordDataBaseException e) {
                 e.printStackTrace();
             }
 
@@ -247,10 +251,6 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
             e.printStackTrace();
         }
     }
-   /* public void saveComponentRegistration(CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent) {
-
-
-    }*/
 
     public void updateActor(FermatEvent fermatEvent) {
 

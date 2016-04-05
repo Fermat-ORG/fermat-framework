@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -7,10 +8,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterT
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.structures.ComponentProfileInfo;
@@ -185,7 +188,39 @@ public class ComponentDAO {
         return connection;
     }
 
-    /*copiar el create*/
+    /**
+     * Method that delete all entity in the data base.
+     *
+     * @throws CantDeleteRecordDataBaseException
+     */
+
+    public void deleteComponentEvent() throws CantDeleteRecordDataBaseException {
+
+        try {
+
+            DatabaseTable databaseTable = getDatabaseTable();
+            databaseTable.loadToMemory();
+
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+
+
+            for (DatabaseTableRecord record : records) {
+
+
+                databaseTable.deleteRecord(record);
+            }
+
+
+        } catch (CantDeleteRecordException e) {
+
+            throw new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE,e, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
+        } catch(CantLoadTableToMemoryException exception){
+
+            throw new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, FermatException.wrapException(exception), "Exception invalidParameterException.","");
+        }
+
+    }
+
     /**
      * Method that create a new entity in the data base.
      *
