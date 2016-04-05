@@ -39,6 +39,8 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFind
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantGetExchangeProviderIdException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantSaveExchangeProviderIdException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSettings;
@@ -1568,45 +1570,27 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
 
     @Override
-    public UUID getExchangeProvider(String walletPublicKey) throws CantGetBasicWalletExchangeProviderException {
+    public UUID getExchangeProvider() throws CantGetBasicWalletExchangeProviderException {
 
         try {
-            return bitcoinWalletManager.getSettingsManager().loadAndGetSettings(walletPublicKey).getExchangeProvider();
+            return bitcoinWalletManager.getExchangeProviderId();
 
-        } catch (CantGetSettingsException e) {
+
+        } catch (CantGetExchangeProviderIdException e) {
             throw new CantGetBasicWalletExchangeProviderException(CantGetBasicWalletExchangeProviderException.DEFAULT_MESSAGE, e, "CantGetSettingsException: " + e.toString(), "");
 
-        } catch (SettingsNotFoundException e) {
-
-            bitcoinWalletManager.createSettingsFile(walletPublicKey);
-
-            return null;
         }
     }
 
     @Override
-    public void setExchangeProvider(UUID idProvider, String walletPublicKey) throws CantSetBasicWalletExchangeProviderException
+    public void setExchangeProvider(UUID idProvider) throws CantSetBasicWalletExchangeProviderException
     {
         try {
-            SettingsManager<BitcoinLossProtectedWalletSettings> settingsManager = bitcoinWalletManager.getSettingsManager();
+            bitcoinWalletManager.saveExchangeProviderIdFile(idProvider);
 
-            BitcoinLossProtectedWalletSettings bitcoinLossProtectedWalletSettings = settingsManager.loadAndGetSettings(walletPublicKey);
 
-            bitcoinLossProtectedWalletSettings.setExchangeProvider(idProvider);
-
-            settingsManager.persistSettings(walletPublicKey,bitcoinLossProtectedWalletSettings);
-
-        } catch (CantGetSettingsException e) {
+        } catch (CantSaveExchangeProviderIdException e) {
             throw new CantSetBasicWalletExchangeProviderException(CantSetBasicWalletExchangeProviderException.DEFAULT_MESSAGE, e, "CantGetSettingsException: " + e.toString(), "");
-
-        } catch (SettingsNotFoundException e) {
-            throw new CantSetBasicWalletExchangeProviderException(CantSetBasicWalletExchangeProviderException.DEFAULT_MESSAGE, e, "SettingsNotFoundException: " + e.toString(), "");
-
-        } catch (CantPersistSettingsException e) {
-            throw new CantSetBasicWalletExchangeProviderException(CantSetBasicWalletExchangeProviderException.DEFAULT_MESSAGE, e, "CantPersistSettingsException: " + e.toString(), "");
-
-        } catch (Exception e) {
-            throw new CantSetBasicWalletExchangeProviderException(CantSetBasicWalletExchangeProviderException.DEFAULT_MESSAGE, e, "Exception: " + e.toString(), "");
 
         }
 

@@ -4,6 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCreateWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantGetExchangeProviderIdException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantSaveExchangeProviderIdException;
+
+import java.util.UUID;
 
 /**
  * Created by eze on 2015.06.17..
@@ -14,7 +18,7 @@ public interface BitcoinLossProtectedWalletManager extends FermatManager {
 
     void createWallet(String walletPublicKey) throws CantCreateWalletException;
 
-    SettingsManager<BitcoinLossProtectedWalletSettings> getSettingsManager();
+    UUID getExchangeProviderId() throws CantGetExchangeProviderIdException;
 
-    void createSettingsFile(String walletPublicKey);
+    void saveExchangeProviderIdFile(UUID providerId) throws CantSaveExchangeProviderIdException;
 }

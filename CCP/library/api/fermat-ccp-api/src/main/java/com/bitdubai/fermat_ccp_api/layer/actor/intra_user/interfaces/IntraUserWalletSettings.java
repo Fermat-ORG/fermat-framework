@@ -8,6 +8,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserL
  */
 public class IntraUserWalletSettings  implements FermatSettings {
 
+
     private IntraUserLoginIdentity lastSelectedIdentity;
     private boolean isPresentationHelpEnabled;
     public IntraUserWalletSettings() {

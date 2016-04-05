@@ -1023,8 +1023,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
     }
 
     /**
-     * This method is automatically called when the network service receive
-     * a new message was sent
+     * This method is automatically called when the message was sent
      *
      * @param messageSent
      */

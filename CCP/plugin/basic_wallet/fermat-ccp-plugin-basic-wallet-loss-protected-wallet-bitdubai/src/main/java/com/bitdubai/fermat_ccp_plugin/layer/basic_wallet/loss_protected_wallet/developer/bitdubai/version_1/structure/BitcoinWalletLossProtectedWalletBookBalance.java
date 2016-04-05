@@ -52,21 +52,23 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
 
     private Broadcaster broadcaster;
 
-    private SettingsManager<BitcoinLossProtectedWalletSettings> settingsManager;
-
     private CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter;
 
+    private UUID exchangeProviderId;
+
     private String WALLET_PUBLIC_KEY = "loss_protected_wallet";
+
 
 
 
     /**
      * Constructor.
      */
-    public BitcoinWalletLossProtectedWalletBookBalance(final Database database,final Broadcaster broadcaster, final SettingsManager<BitcoinLossProtectedWalletSettings> settingsManager){
+    public BitcoinWalletLossProtectedWalletBookBalance(final Database database,final Broadcaster broadcaster, final UUID exchangeProviderId, final CurrencyExchangeProviderFilterManager exchangeProviderFilterManagerproviderFilter){
         this.database = database;
         this.broadcaster = broadcaster;
-        this.settingsManager = settingsManager;
+        this.exchangeProviderId = exchangeProviderId;
+        this.exchangeProviderFilterManagerproviderFilter = exchangeProviderFilterManagerproviderFilter;
     }
 
 
@@ -143,10 +145,10 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
         try {
             double purchasePrice = 0;
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-           // ExchangeRate rate = getActualExchangeRate();
+            ExchangeRate rate = getActualExchangeRate();
 
-         //   if(rate != null)
-             //   purchasePrice = rate.getPurchasePrice();
+           if(rate != null)
+               purchasePrice = rate.getPurchasePrice();
 
             bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.BOOK,purchasePrice);
             //broadcaster balance amount
@@ -178,12 +180,7 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
         try {
             BitcoinLossProtectedWalletSettings basicWalletSettings = null;
 
-
-            //get walelt setting exchange provider manager
-
-            basicWalletSettings = settingsManager.loadAndGetSettings(WALLET_PUBLIC_KEY);
-
-          final UUID rateProviderManagerId = basicWalletSettings.getExchangeProvider();
+          final UUID rateProviderManagerId = exchangeProviderId;
 
             Thread thread = new Thread(new Runnable(){
                 @Override
@@ -204,9 +201,7 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
                 }
             });
 
-            } catch (CantGetSettingsException e) {
-                e.printStackTrace();
-            } catch (SettingsNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         return rate[0];
