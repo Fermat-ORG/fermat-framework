@@ -32,6 +32,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.inter
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
@@ -313,24 +314,19 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
             for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_PAYMENT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
             {
                 for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_PAYMENT)) {
-                    if (customerBrokerPurchase.getTransactionId().equals(customerBrokerContractPurchase.getNegotiatiotId())) {
 
-                        long dateTimeToDelivery = 0;
-                        long timeStampToday = new Date().getTime();
-                        String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
+                    String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
 
-                        //GET NEGOTIATION
-                        Negotiation negotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-                        Collection<Clause> negotiationClause = negotiation.getClauses();
+                    if (customerBrokerPurchase.getTransactionId().equals(negotiationId)) {
 
-                        //GET DATE TIME TO DELIVERY PAYMENT
-                        for (Clause clause: negotiationClause) {
-                            if (clause.getType().getCode().equals(ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER.getCode()))
-                                dateTimeToDelivery = Long.parseLong(clause.getValue());
-                            break;
-                        }
+                        long dateTimeToDelivery                 = 0;
+                        long timeStampToday                     = new Date().getTime();
+                        Negotiation negotiation                 = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                        Collection<Clause> negotiationClause    = negotiation.getClauses();
+                        String clauseValue                      = getNegotiationClause(negotiationClause, ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
 
-                        //UPDATE CONTRACT STATUS TO CANCELLED
+                        if(clauseValue != null) dateTimeToDelivery = Long.parseLong(clauseValue);
+
                         if (timeStampToday >= dateTimeToDelivery) {
 
                             customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(customerBrokerContractPurchase.getContractId(), ContractStatus.CANCELLED);
@@ -343,6 +339,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                     }
                 }
             }
+
             /**
              * Se verifica el estatus del contrato hasta que se consiga la realización de un pago
              * IN_CONTRACT_SUBMIT -> IN_PAYMENT_SUBMIT
@@ -597,5 +594,24 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
 
         //Can't do nothing more
         throw new CantGetExchangeRateException();
+    }
+
+    /**
+     * Get Value of Clause
+     *
+     * @param negotiationClause
+     * @param clauseType
+     */
+    private String getNegotiationClause(Collection<Clause> negotiationClause, ClauseType clauseType){
+
+        String value = null;
+
+        for (Clause clause : negotiationClause) {
+            if (clause.getType().getCode().equals(clauseType.getCode())) value = clause.getValue();
+            break;
+        }
+
+        return value;
+
     }
 }
