@@ -509,7 +509,7 @@ public class CustomerBrokerCloseAgent  implements
 
                             } else if(negotiationTransmission.getTransmissionType().equals(NegotiationTransmissionType.TRANSMISSION_CONFIRM)) {
 
-                                if(negotiationTransaction == null) {
+                                if(!negotiationTransaction.getStatusTransaction().getCode().equals(NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode())) {
 
                                     switch (negotiationType) {
                                         case PURCHASE:

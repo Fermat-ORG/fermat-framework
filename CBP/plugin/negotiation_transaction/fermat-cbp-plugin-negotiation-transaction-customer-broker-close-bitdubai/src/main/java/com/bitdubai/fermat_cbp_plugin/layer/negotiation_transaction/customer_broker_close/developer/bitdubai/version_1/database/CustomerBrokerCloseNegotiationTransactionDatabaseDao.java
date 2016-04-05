@@ -145,7 +145,7 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseDao {
             table.loadToMemory();
             record = table.getRecords();
             if (record.size() == 0)
-                throw new CantRegisterCustomerBrokerCloseNegotiationTransactionException("The number of records is 0 ", null, "", "");
+                return getTransaction;
 
             for (DatabaseTableRecord records : record) {
                 getTransaction = getCustomerBrokerCloseFromRecord(records);
