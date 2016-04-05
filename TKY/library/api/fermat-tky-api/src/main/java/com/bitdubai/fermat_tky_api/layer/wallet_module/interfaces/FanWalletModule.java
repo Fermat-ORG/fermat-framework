@@ -126,4 +126,9 @@ public interface FanWalletModule {
      * @throws CantGetBotException
      */
     Bot getBotBySwapbotUsername(String username) throws CantGetBotException;
+
+    /**
+     * This method report to wallet manager that the ser wants to download a song
+     */
+    void cancelDownload();
 }
