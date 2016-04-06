@@ -52,13 +52,16 @@ public class CompleteComponentRegistrationNotificationEventHandler implements Fe
 
         if (this.networkService.getStatus() == ServiceStatus.STARTED) {
 
-            if (networkService.getNetworkServiceProfile() == null)
-                System.out.println("********************************************************** \n\n plugin "+this.networkService.getPluginVersionReference()+"\n networkService.getNetworkServiceProfile() == null \n\n\n **********************************************************");
+            if(networkService.getNetworkServiceProfile() == null ||
+                    completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered() == null) {
 
-            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered() == null)
-                System.out.println("********************************************************** \n\n plugin "+this.networkService.getPluginVersionReference()+"\n completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered() == null \n\n\n **********************************************************");
+                if (networkService.getNetworkServiceProfile() == null)
+                    System.out.println("********************************************************** \n\n plugin " + this.networkService.eventSource + " networkService.getNetworkServiceProfile() == null \n\n\n **********************************************************");
 
-            if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == networkService.getNetworkServiceProfile().getNetworkServiceType() ||
+                if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered() == null)
+                    System.out.println("********************************************************** \n\n plugin " + this.networkService.eventSource + " completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered() == null \n\n\n **********************************************************");
+
+            }else if (completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getNetworkServiceType() == networkService.getNetworkServiceProfile().getNetworkServiceType() ||
                     completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered().getPlatformComponentType() == PlatformComponentType.COMMUNICATION_CLOUD_CLIENT) {
                 /*
                  *  networkService make the job
