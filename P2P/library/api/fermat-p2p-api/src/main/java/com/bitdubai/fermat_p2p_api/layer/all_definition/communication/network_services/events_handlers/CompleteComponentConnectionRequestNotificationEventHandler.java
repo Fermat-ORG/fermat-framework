@@ -50,12 +50,25 @@ public class CompleteComponentConnectionRequestNotificationEventHandler implemen
     public void handleEvent(CompleteComponentConnectionRequestNotificationEvent completeComponentConnectionRequestNotificationEvent) throws FermatException {
 
         if (this.networkService.getStatus() == ServiceStatus.STARTED) {
-            if(completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant() == networkService.getNetworkServiceProfile().getNetworkServiceType()){
+
+            if(networkService.getNetworkServiceProfile() == null ||
+                    completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant() == null) {
+
+                if (networkService.getNetworkServiceProfile() == null)
+                    System.out.println("********************************************************** \n\n plugin " + this.networkService.eventSource + " networkService.getNetworkServiceProfile() == null \n\n\n **********************************************************");
+
+                if (completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant() == null)
+                    System.out.println("********************************************************** \n\n plugin " + this.networkService.eventSource + " completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant() == null \n\n\n **********************************************************");
+
+
+
+            }else if(completeComponentConnectionRequestNotificationEvent.getNetworkServiceTypeApplicant() == networkService.getNetworkServiceProfile().getNetworkServiceType()){
 
                 /*
                  *  networkService make the job
                  */
                 this.networkService.handleCompleteComponentConnectionRequestNotificationEvent(completeComponentConnectionRequestNotificationEvent);
+
             }
         }
     }
