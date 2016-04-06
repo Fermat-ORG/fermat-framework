@@ -107,14 +107,17 @@ public class TokenlyWalletSongVault {
      * @throws CantDownloadSongException
      * @throws CancelDownloadException
      */
-    public String downloadSong(Song song) throws
+    public String downloadSong(Song song, UUID songId) throws
             CantDownloadSongException,
             CancelDownloadException {
         try{
             //Get DownloadSOng object from Tokenly public API
             String downloadUrl = song.getDownloadUrl();
             String songName = song.getName();
-            downloadFile(downloadUrl,songName);
+            downloadFile(
+                    downloadUrl,
+                    songName,
+                    songId);
             return DIRECTORY_NAME+"/"+songName.replace(" ","_");
         } catch (CantDownloadFileException e) {
             throw new CantDownloadSongException(
@@ -159,10 +162,11 @@ public class TokenlyWalletSongVault {
      * Is required to review the tokenly API to use the download URL.
      * @param downloadUrl
      * @param fileName
+     * @param songId
      * @throws CantDownloadFileException
      * @throws CancelDownloadException
      */
-    public void downloadFile(String downloadUrl, String fileName) throws
+    public void downloadFile(String downloadUrl, String fileName, UUID songId) throws
             CantDownloadFileException,
             CancelDownloadException {
         try{
@@ -208,6 +212,7 @@ public class TokenlyWalletSongVault {
                     fermatBundle = new FermatBundle();
                     fermatBundle.put(BroadcasterNotificationType.DOWNLOAD_PERCENTAGE.getCode(),
                             downloadPercentage+"%");
+                    fermatBundle.put(BroadcasterNotificationType.SONG_ID.getCode(), songId);
                     broadcaster.publish(
                             BroadcasterType.UPDATE_VIEW,
                             WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
