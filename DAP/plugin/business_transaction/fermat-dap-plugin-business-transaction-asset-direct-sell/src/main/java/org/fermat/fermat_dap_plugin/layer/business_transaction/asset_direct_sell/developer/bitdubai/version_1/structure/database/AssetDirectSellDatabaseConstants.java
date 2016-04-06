@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.bitdubai.version_1.structure.database;
+package org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.bitdubai.version_1.structure.database;
 
 /**
  * Luis Torres (lutor1106@gmail.com") 16/03/16
