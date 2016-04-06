@@ -4,6 +4,7 @@ import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bit
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOutNotifierAgentDatabaseDao;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.events.TimeOutMonitoringAgent;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.exceptions.InconsistentResultObtainedInDatabaseQueryException;
+import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -82,10 +83,6 @@ public class TimeOutNotifierAgentPool {
         runningAgents.add(timeOutNotifierAgent);
         try {
             dao.addTimeOutNotifierAgent(timeOutNotifierAgent);
-
-            if (timeOutNotifierAgent.getStatus() != AgentStatus.STARTED)
-                timeOutMonitoringAgent.start();
-
         } catch (Exception e) {
             //remove it from memory.
             try {
@@ -108,10 +105,6 @@ public class TimeOutNotifierAgentPool {
         try {
             stopTimeOutAgent(timeOutNotifierAgent);
             dao.removeTimeOutNotifierAgent(timeOutNotifierAgent);
-
-            // stop the monitoring agent if this is the last one
-            if (runningAgents.isEmpty() && timeOutMonitoringAgent.getAgentStatus() == AgentStatus.STARTED)
-                timeOutMonitoringAgent.stop();
 
         } catch (Exception e) {
             CantRemoveExistingTimeOutAgentException exception = new CantRemoveExistingTimeOutAgentException(e,
@@ -138,6 +131,11 @@ public class TimeOutNotifierAgentPool {
             dao.updateTimeOutNotifierAgent(agent);
             agent.setStatus(AgentStatus.STOPPED);
             runningAgents.remove(timeOutAgent);
+
+            // stop the monitoring agent if this is the last one
+            if (runningAgents.isEmpty() && timeOutMonitoringAgent.getAgentStatus() == AgentStatus.STARTED)
+                timeOutMonitoringAgent.stop();
+
         } catch (CantExecuteQueryException e) {
             CantStopTimeOutAgentException exception = new CantStopTimeOutAgentException(e, "Database error updating status to stopped. " + agent.toString(), "Database error");
             errorManager.reportUnexpectedPluginException(Plugins.TIMEOUT_NOTIFIER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
@@ -153,8 +151,15 @@ public class TimeOutNotifierAgentPool {
         agent.setEpochEndTime(agent.getEpochStartTime() + agent.getDuration());
         try {
             dao.updateTimeOutNotifierAgent(agent);
+            if (timeOutMonitoringAgent.getAgentStatus() != AgentStatus.STARTED)
+                timeOutMonitoringAgent.start();
+
         } catch (CantExecuteQueryException e) {
             CantStartTimeOutAgentException exception = new CantStartTimeOutAgentException(e, "Database error updating status to run. " + agent.toString(), "Database error");
+            errorManager.reportUnexpectedPluginException(Plugins.TIMEOUT_NOTIFIER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+        } catch (CantStartAgentException e) {
+            CantStartTimeOutAgentException exception = new CantStartTimeOutAgentException(e, "Error starting monitoring agent", "agent error");
             errorManager.reportUnexpectedPluginException(Plugins.TIMEOUT_NOTIFIER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
             throw exception;
         }
