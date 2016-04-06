@@ -177,7 +177,7 @@ public class ProvisoryData {
 
 
         /**
-         * Chat added by Lozadaa
+         * Chat identity added by Lozadaa
          */
 
         lstIdentities.add(item2);
