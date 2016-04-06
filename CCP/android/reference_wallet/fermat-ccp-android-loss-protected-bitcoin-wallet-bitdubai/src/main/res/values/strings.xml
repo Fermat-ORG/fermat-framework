@@ -51,6 +51,8 @@
     <string name="give_me_an_address_address_text">Give me an Address!</string>
     <!-- fragment_transaction_main_receive.xml -->
     <string name="you_dont_have_transactions_received_text">You don\'t have\n any received transactions</string>
+    <!-- chunck_values_fragment_transaction_main.xml -->
+    <string name="you_dont_have_chunck_values">You don\'t have\n any Chunck Values</string>
     <!-- fragment_transaction_main_send.xml -->
     <string name="you_dont_have_transactions_sent_text">You don\'t have\n any transaction sent</string>
     <string name="balance_amount_0_bits_text">0 bits</string>

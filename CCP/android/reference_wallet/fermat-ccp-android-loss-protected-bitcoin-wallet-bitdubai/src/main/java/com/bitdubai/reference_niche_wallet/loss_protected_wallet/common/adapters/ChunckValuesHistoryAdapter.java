@@ -1,6 +1,7 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
 import android.widget.Toast;
@@ -91,6 +92,12 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
 
         holder.getTxt_amount().setText(formatBalanceString(data.getAmount(), referenceWalletSession.getTypeAmount()));
         holder.getTxt_amount().setTypeface(tf) ;
+
+        if (data.getExchangeRate() <= referenceWalletSession.getActualExchangeRate()) {
+            holder.getTxt_amount().setTextColor(Color.parseColor("#00c853"));
+        }else {
+            holder.getTxt_amount().setTextColor(Color.parseColor("#dd2c00"));
+        }
 
         holder.getTxt_exchange_rate().setText("Exchange Rate: 1 BTC = "+ data.getExchangeRate());
 
