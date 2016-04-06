@@ -33,6 +33,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAg
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerSubmitMerchandiseConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
@@ -426,12 +427,14 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
 
             BigDecimal amount = getAmount(pendingToDeStockTransaction.getContractHash());
 
+            String extractedBankAccount = NegotiationClauseHelper.getAccountNumberFromString(bankMoneyDeStockRecord.getBankAccount());
             System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeBankDeStock(): \n" +
                     " - bankMoneyDeStockRecord.getPublicKeyActor(): "+bankMoneyDeStockRecord.getPublicKeyActor()+",\n" +
                     " - bankMoneyDeStockRecord.getFiatCurrency(): "+bankMoneyDeStockRecord.getFiatCurrency()+",\n" +
                     " - bankMoneyDeStockRecord.getCbpWalletPublicKey(): "+bankMoneyDeStockRecord.getCbpWalletPublicKey()+",\n" +
                     " - bankMoneyDeStockRecord.getBankWalletPublicKey(): "+bankMoneyDeStockRecord.getBankWalletPublicKey()+",\n" +
                     " - bankMoneyDeStockRecord.getBankAccount(): "+bankMoneyDeStockRecord.getBankAccount()+",\n" +
+                    " - extractedBankAccount: "+extractedBankAccount+",\n"+
                     " - Amount(): "+amount+",\n" +
                     " - bankMoneyDeStockRecord.getMemo(): "+bankMoneyDeStockRecord.getMemo()+",\n" +
                     " - bankMoneyDeStockRecord.getPriceReference(): "+bankMoneyDeStockRecord.getPriceReference()+",\n" +
