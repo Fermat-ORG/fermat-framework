@@ -43,7 +43,7 @@ public interface ChatManager extends FermatManager {
 
     void acceptConnection(final UUID requestId) throws CantAcceptConnectionRequestException, ConnectionRequestNotFoundException;
 
-    List<ChatConnectionRequest> listPendingConnectionNews() throws CantListPendingConnectionRequestsException;
+    List<ChatConnectionRequest> listPendingConnectionNews(Actors actorType) throws CantListPendingConnectionRequestsException;
 
     List<ChatConnectionRequest> listPendingConnectionUpdates() throws CantListPendingConnectionRequestsException;
 
