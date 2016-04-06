@@ -52,7 +52,7 @@ public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_a
 
     @Override
     public ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater,ViewGroup base) {
-        RelativeLayout relativeLayout = (RelativeLayout) layoutInflater.inflate(R.layout.navigation_view_bottom,base,true);
+        RelativeLayout relativeLayout = (RelativeLayout) layoutInflater.inflate(R.layout.loss_navigation_view_botton,base,true);
         //base.setLayoutParams(new RelativeLayout.LayoutParams(activity,));
         return relativeLayout;
     }

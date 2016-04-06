@@ -191,7 +191,9 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
-                            setUpTutorial();
+                            boolean isHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
+
+                            setUpTutorial(isHelpEnabled);
                         } catch (CantGetSettingsException e) {
                             e.printStackTrace();
                         } catch (SettingsNotFoundException e) {
@@ -313,7 +315,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             int id = item.getItemId();
 
             if (id == BitcoinWalletConstants.IC_ACTION_HELP_CONTACT) {
-                setUpTutorial();
+                setUpTutorial(false);
                 return true;
             }
 
@@ -346,8 +348,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         refreshAdapter();
     }
 
-    private void setUpTutorial() throws CantGetSettingsException, SettingsNotFoundException {
-        boolean isHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
+    private void setUpTutorial(boolean isHelpEnabled) throws CantGetSettingsException, SettingsNotFoundException {
         if (isHelpEnabled) {
             ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), referenceWalletSession, null, settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).isContactsHelpEnabled());
             contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {

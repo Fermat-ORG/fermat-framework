@@ -321,10 +321,10 @@ public class IntraWalletUserModulePluginRoot extends AbstractPlugin implements
             return intraUserInformationModuleList;
         }
         catch (ErrorSearchingCacheSuggestionsException e) {
-            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
+            throw new CantGetIntraUsersListException("CAN'T GET CACHE SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
         }
         catch (Exception e) {
-            throw new CantGetIntraUsersListException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
+            throw new CantGetIntraUsersListException("CAN'T GET CACHE SUGGESTIONS TO CONTACT",e,"","Unknown Error");
 
         }
     }

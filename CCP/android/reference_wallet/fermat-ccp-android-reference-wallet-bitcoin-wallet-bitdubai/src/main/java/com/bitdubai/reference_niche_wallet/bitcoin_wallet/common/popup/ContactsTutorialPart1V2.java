@@ -56,6 +56,11 @@ public class ContactsTutorialPart1V2 extends FermatDialog<ReferenceWalletSession
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        add_fermat_user =(FermatButton) findViewById(R.id.add_fermat_user);
+        add_extra_user = (FermatButton) findViewById(R.id.add_extra_user);
+        checkbox_not_show = (CheckBox) findViewById(R.id.checkbox_not_show);
+        checkbox_not_show.setChecked(checkButton);
+
         add_fermat_user.setOnClickListener(this);
         add_extra_user.setOnClickListener(this);
 
