@@ -376,7 +376,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             }
 
             /**
-             * IN_PAYMENT_SUBMIT -> Update Contract Status to CANCELLED when Expiration Time is done:
+             * IN_PAYMENT_SUBMIT -> Update Contract Status to CANCELLED for expiration time in payment submit:
              *
              * If Expiration Time is done, Update the contract status to CANCELLED.
              */
@@ -396,6 +396,14 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                         if(clauseValue != null) dateTimeToDelivery = Long.parseLong(clauseValue);
 
+                        System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN PAYMENT ***\n" +
+                                        "\n - timeStampToday: "+timeStampToday+
+                                        "\n - dateTimeToDelivery: "+dateTimeToDelivery
+                        );
+
+                        //TODO FOR TEST
+                        dateTimeToDelivery = timeStampToday;
+
                         if (timeStampToday >= dateTimeToDelivery) {
 
                             customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(customerBrokerContractSale.getContractId(), ContractStatus.CANCELLED);
@@ -408,7 +416,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             }
 
             /**
-             * IN_MERCHANDISE_SUBMIT -> Update Contract Status to CANCELLED when Expiration Time is done:
+             * IN_MERCHANDISE_SUBMIT -> Update Contract Status to CANCELLED for expiration time in merchandise:
              *
              * If Expiration Time is done, Update the contract status to CANCELLED.
              */
@@ -427,6 +435,11 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         String clauseValue                      = getNegotiationClause(negotiationClause, ClauseType.BROKER_DATE_TIME_TO_DELIVER);
 
                         if(clauseValue != null) dateTimeToDelivery = Long.parseLong(clauseValue);
+
+                        System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN MERCHANDISE ***\n" +
+                                        "\n - timeStampToday: "+timeStampToday+
+                                        "\n - dateTimeToDelivery: "+dateTimeToDelivery
+                        );
 
                         if (timeStampToday >= dateTimeToDelivery) {
 
