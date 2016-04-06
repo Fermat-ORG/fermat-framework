@@ -29,12 +29,12 @@ public class FanCommunityPluginRoot extends AbstractPlugin {
     @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.IDENTITY,              plugin = Plugins.ARTIST_IDENTITY     )
     private ArtistIdentityManager artistIdentityManager;
 
-    //this next lines will stay commented until the Fan Identity is completed
-
-    /*@NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.IDENTITY,              plugin = Plugins.ARTIST_IDENTITY)
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_CONNECTION,              plugin = Plugins.FAN_ACTOR_CONNECTION)
     private FanActorConnectionManager fanActorConnectionManager;
 
-    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ARTIST_IDENTITY   )
+    //this next lines will stay commented until the Fan Identity is completed
+
+    /*@NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ARTIST_IDENTITY   )
     private FanManager fanNetworkServiceManager;
 
     @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.IDENTITY,              plugin = Plugins.ARTIST_IDENTITY   )
