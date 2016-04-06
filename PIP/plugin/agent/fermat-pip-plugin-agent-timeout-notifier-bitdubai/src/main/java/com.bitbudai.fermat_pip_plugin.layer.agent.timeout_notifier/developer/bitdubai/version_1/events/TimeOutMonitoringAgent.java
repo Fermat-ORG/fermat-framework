@@ -55,6 +55,8 @@ public class TimeOutMonitoringAgent implements Agent {
         if (monitoringAgent == null)
             monitoringAgent = new MonitoringAgent(this.dao);
 
+        monitoringAgent.setExecutionFlag(true);
+
         if (monitorThread == null)
             monitorThread = new Thread(monitoringAgent, "TimeOutNotifier");
 
@@ -88,6 +90,7 @@ public class TimeOutMonitoringAgent implements Agent {
 
         public MonitoringAgent(TimeOutNotifierAgentDatabaseDao dao) {
             this.dao = dao;
+            executionFlag = new AtomicBoolean(true);
         }
 
         public boolean getExecutionFlag() {
@@ -106,7 +109,7 @@ public class TimeOutMonitoringAgent implements Agent {
         public void run() {
             this.agentStatus = AgentStatus.STARTED;
 
-            while (executionFlag.get()){
+            while (getExecutionFlag()){
                 doTheMainTask();
 
                 try {
