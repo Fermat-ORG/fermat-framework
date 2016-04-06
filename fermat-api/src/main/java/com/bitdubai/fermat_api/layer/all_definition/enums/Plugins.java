@@ -254,10 +254,6 @@ public enum Plugins implements FermatPluginsEnum {
     WALLET_SETTINGS             ("WSE"),
     WALLET_STATISTICS           ("WSTA"),
     WALLET_STORE                ("WST"),
-
-
-
-
     WS_CLOUD_CLIENT             ("WCL"),
 
     //CBP
@@ -296,15 +292,17 @@ public enum Plugins implements FermatPluginsEnum {
     CUSTOMER_BROKER_SALE                ("CBSA"),
 
     //CHT
-
     CHAT_MIDDLEWARE                     ("CHMID"),
     CHAT_NETWORK_SERVICE                ("CHTNS"),
     CHAT_SUP_APP_MODULE                 ("CHTSAM"),
+    CHAT_IDENTITY                       ("CHTIDE"),
     CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
 
     // ART
     ARTIST_ACTOR_CONNECTION             ("ARTAAC"),
     FAN_ACTOR_CONNECTION                ("ARTFAC"),
+    ARTIST                              ("ANSART"),
+    FAN                                 ("FANS"),
     ACTOR_NETWORK_SERVICE_ARTIST        ("ANSART"),
     ARTIST_IDENTITY                     ("ARTIDNTY"),
     ART_ARTIST_SUB_APP_MODULE           ("AASAM"),
@@ -327,7 +325,6 @@ public enum Plugins implements FermatPluginsEnum {
     //End PIP
 
     // End  new Plugins
-
 
     private final String code;
 

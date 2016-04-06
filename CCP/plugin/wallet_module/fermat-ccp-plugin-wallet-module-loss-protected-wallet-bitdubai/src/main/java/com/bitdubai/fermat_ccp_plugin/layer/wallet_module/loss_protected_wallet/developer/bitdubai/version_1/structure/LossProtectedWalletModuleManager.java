@@ -39,6 +39,8 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantFind
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantStoreMemoException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantGetExchangeProviderIdException;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantSaveExchangeProviderIdException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSettings;
@@ -777,7 +779,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     public long getBalance(BalanceType balanceType, //available balance only
                            String walletPublicKey,
                            BlockchainNetworkType blockchainNetworkType,
-                           long exchangeRate) throws CantGetLossProtectedBalanceException {
+                           String exchangeRate) throws CantGetLossProtectedBalanceException {
         try {
             BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             return bitcoinWalletWallet.getBalance(balanceType).getBalance(blockchainNetworkType, exchangeRate);
@@ -789,7 +791,6 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
             throw new CantGetLossProtectedBalanceException(CantGetLossProtectedBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
-
 
     @Override
 
@@ -1372,20 +1373,26 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
             switch (bitcoinWalletTransaction.getTransactionType()) {
                 case CREDIT:
                     try {
-                        if(bitcoinWalletTransaction.getActorFromType() == Actors.INTRA_USER)
-                        {
-                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
+                        if(!bitcoinWalletTransaction.getActorFromType().equals(Actors.DEVICE_USER)){
+                            if(bitcoinWalletTransaction.getActorFromType() == Actors.INTRA_USER)
+                            {
+                                involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(), intraUserLoggedInPublicKey);
 
-                            walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
+                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorFromPublicKey(), walletPublicKey);
 
-                        }
+                            }
 
-                        if(involvedActor==null)
-                        {
-                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
+                            if(involvedActor==null)
+                            {
+                                involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
 
-                           walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
+                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
 
+                            }
+
+                        }else{
+                            involvedActor = null;
+                            walletContactRecord = null;
                         }
 
                          if (walletContactRecord != null)
@@ -1403,18 +1410,21 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                     break;
                 case DEBIT:
                     try {
-                        involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(),intraUserLoggedInPublicKey);
-                         walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
-
-                        if(involvedActor==null)
-                        {
-                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
-
+                        if(!bitcoinWalletTransaction.getActorFromType().equals(Actors.DEVICE_USER)){
+                            involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorToPublicKey(), bitcoinWalletTransaction.getActorToType(),intraUserLoggedInPublicKey);
                             walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
 
+                            if(involvedActor==null)
+                            {
+                                involvedActor = getActorByActorPublicKeyAndType(bitcoinWalletTransaction.getActorFromPublicKey(), bitcoinWalletTransaction.getActorFromType(), intraUserLoggedInPublicKey);
+
+                                walletContactRecord = walletContactsRegistry.getWalletContactByActorAndWalletPublicKey(bitcoinWalletTransaction.getActorToPublicKey(), walletPublicKey);
+
+                            }
+                        }else{
+                            involvedActor = null;
+                            walletContactRecord = null;
                         }
-
-
 
                         if (walletContactRecord != null)
                             contactId = walletContactRecord.getContactId();
@@ -1450,6 +1460,10 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                 } catch (CantGetIntraUserException| IntraUserNotFoundException e) {
                     throw new CantGetLossProtectedActorException(CantGetLossProtectedActorException.DEFAULT_MESSAGE, e, null, "Cant get Intra User on DataBase");
                 }
+            case DEVICE_USER:
+                    //there is not going to find an actor because it is a transaction from another wallet
+                    actor = null;
+                    return actor;
 
             default:
                 throw new CantGetLossProtectedActorException(CantGetLossProtectedActorException.DEFAULT_MESSAGE, null, null, null);
@@ -1568,45 +1582,27 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
 
     @Override
-    public UUID getExchangeProvider(String walletPublicKey) throws CantGetBasicWalletExchangeProviderException {
+    public UUID getExchangeProvider() throws CantGetBasicWalletExchangeProviderException {
 
         try {
-            return bitcoinWalletManager.getSettingsManager().loadAndGetSettings(walletPublicKey).getExchangeProvider();
+            return bitcoinWalletManager.getExchangeProviderId();
 
-        } catch (CantGetSettingsException e) {
+
+        } catch (CantGetExchangeProviderIdException e) {
             throw new CantGetBasicWalletExchangeProviderException(CantGetBasicWalletExchangeProviderException.DEFAULT_MESSAGE, e, "CantGetSettingsException: " + e.toString(), "");
 
-        } catch (SettingsNotFoundException e) {
-
-            bitcoinWalletManager.createSettingsFile(walletPublicKey);
-
-            return null;
         }
     }
 
     @Override
-    public void setExchangeProvider(UUID idProvider, String walletPublicKey) throws CantSetBasicWalletExchangeProviderException
+    public void setExchangeProvider(UUID idProvider) throws CantSetBasicWalletExchangeProviderException
     {
         try {
-            SettingsManager<BitcoinLossProtectedWalletSettings> settingsManager = bitcoinWalletManager.getSettingsManager();
+            bitcoinWalletManager.saveExchangeProviderIdFile(idProvider);
 
-            BitcoinLossProtectedWalletSettings bitcoinLossProtectedWalletSettings = settingsManager.loadAndGetSettings(walletPublicKey);
 
-            bitcoinLossProtectedWalletSettings.setExchangeProvider(idProvider);
-
-            settingsManager.persistSettings(walletPublicKey,bitcoinLossProtectedWalletSettings);
-
-        } catch (CantGetSettingsException e) {
+        } catch (CantSaveExchangeProviderIdException e) {
             throw new CantSetBasicWalletExchangeProviderException(CantSetBasicWalletExchangeProviderException.DEFAULT_MESSAGE, e, "CantGetSettingsException: " + e.toString(), "");
-
-        } catch (SettingsNotFoundException e) {
-            throw new CantSetBasicWalletExchangeProviderException(CantSetBasicWalletExchangeProviderException.DEFAULT_MESSAGE, e, "SettingsNotFoundException: " + e.toString(), "");
-
-        } catch (CantPersistSettingsException e) {
-            throw new CantSetBasicWalletExchangeProviderException(CantSetBasicWalletExchangeProviderException.DEFAULT_MESSAGE, e, "CantPersistSettingsException: " + e.toString(), "");
-
-        } catch (Exception e) {
-            throw new CantSetBasicWalletExchangeProviderException(CantSetBasicWalletExchangeProviderException.DEFAULT_MESSAGE, e, "Exception: " + e.toString(), "");
 
         }
 

@@ -23,6 +23,7 @@ public final class ArtistConnectionRequest {
     private final String                  senderAlias         ;
     private final byte[]                  senderImage         ;
     private final String                  destinationPublicKey;
+    private final PlatformComponentType   destinationActorType;
     private final RequestType requestType         ;
     private final ProtocolState protocolState       ;
     private final ConnectionRequestAction requestAction       ;
@@ -34,6 +35,7 @@ public final class ArtistConnectionRequest {
                                    final String senderAlias,
                                    final byte[] senderImage,
                                    final String destinationPublicKey,
+                                   PlatformComponentType destinationActorType,
                                    final RequestType requestType,
                                    final ProtocolState protocolState,
                                    final ConnectionRequestAction requestAction,
@@ -45,6 +47,7 @@ public final class ArtistConnectionRequest {
         this.senderAlias          = senderAlias         ;
         this.senderImage          = senderImage         ;
         this.destinationPublicKey = destinationPublicKey;
+        this.destinationActorType = destinationActorType;
         this.requestType          = requestType         ;
         this.protocolState        = protocolState       ;
         this.requestAction        = requestAction       ;
@@ -121,6 +124,10 @@ public final class ArtistConnectionRequest {
         return sentTime;
     }
 
+    public PlatformComponentType getDestinationActorType() {
+        return destinationActorType;
+    }
+
     @Override
     public String toString() {
         return "ArtistConnectionRequest{" +
@@ -128,8 +135,9 @@ public final class ArtistConnectionRequest {
                 ", senderPublicKey='" + senderPublicKey + '\'' +
                 ", senderActorType=" + senderActorType +
                 ", senderAlias='" + senderAlias + '\'' +
-                ", senderImage=" + (senderImage != null )+
+                ", senderImage=" + Arrays.toString(senderImage) +
                 ", destinationPublicKey='" + destinationPublicKey + '\'' +
+                ", destinationActorType=" + destinationActorType +
                 ", requestType=" + requestType +
                 ", protocolState=" + protocolState +
                 ", requestAction=" + requestAction +

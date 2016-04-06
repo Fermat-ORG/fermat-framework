@@ -51,4 +51,20 @@ public class SystemMonitorNetworkServiceDatabaseConstants {
 
     public static final String SERVICES_FIRST_KEY_COLUMN = "id";
 
+
+
+    /**
+     * Platform components database table definition.
+     */
+    public static final String PLATFORM_COMPONENTS_TABLE_NAME = "platform_component";
+
+    public static final String COMPONENT_ID_COLUMN_NAME = "id";
+    public static final String COMPONENT_NAME_COLUMN_NAME = "name";
+    public static final String COMPONENT_TYPE_COLUMN_NAME = "type";
+
+    public static final String COMPONENT_FIRST_KEY_COLUMN = "id";
+
+
+
+
 }

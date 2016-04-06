@@ -13,6 +13,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantEx
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
@@ -54,7 +55,7 @@ public interface ArtistManager extends FermatManager{
      *
      * @return a CryptoBrokerCommunitySearch instance.
      */
-    ArtistSearch getSearch();
+    ActorSearch<ArtistExposingData> getSearch();
 
     /**
      * Through the method <code>requestConnection</code> we can request to a crypto broker a connection.

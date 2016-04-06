@@ -73,19 +73,6 @@ public interface TimeOutAgent {
      */
     long getDuration();
 
-    /**
-     * Gets the amount of milliseconds pass since the start and the moment this method is requested.
-     * @return the amount of elapsed time for this agent in milliseconds.
-     */
-    long getElapsedTime();
-
-
-    /**
-     * The notification Protocol status of the raised event.
-     * The event will continue to be raised until someone consumes it.
-     * @return the Protocol Status
-     */
-    ProtocolStatus getNotificationProtocolStatus();
 
     /**
      * Marks the notification of an event as Read. After a notification has been acknowledge, we don't raise it

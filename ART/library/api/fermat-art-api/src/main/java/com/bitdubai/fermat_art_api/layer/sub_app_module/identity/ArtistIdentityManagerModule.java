@@ -1,9 +1,6 @@
 package com.bitdubai.fermat_art_api.layer.sub_app_module.identity;
 
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
-import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
-import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
-import com.bitdubai.fermat_art_api.all_definition.enums.ExternalPlatform;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
@@ -13,13 +10,17 @@ import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtis
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/23/16.
  */
-public interface ArtistIdentityManagerModule extends FermatManager {
+public interface ArtistIdentityManagerModule extends ModuleManager {
 
     /**
      * Through the method <code>listIdentitiesFromCurrentDeviceUser</code> we can get all the artist
@@ -33,12 +34,14 @@ public interface ArtistIdentityManagerModule extends FermatManager {
      * Through the method <code>createArtistIdentity</code> you can create a new artist identity.
      * @param alias
      * @param imageBytes
+     * @param externalIdentityID
      * @return
      * @throws
      */
     Artist createArtistIdentity(
             final String alias,
-            final byte[] imageBytes) throws
+            final byte[] imageBytes,
+            final UUID externalIdentityID) throws
             CantCreateArtistIdentityException,
             ArtistIdentityAlreadyExistsException;
 
@@ -47,17 +50,11 @@ public interface ArtistIdentityManagerModule extends FermatManager {
      * @param alias
      * @param publicKey
      * @param profileImage
-     * @param externalUserName
-     * @param externalAccessToken
-     * @param externalPlatform
-     * @param exposureLevel
-     * @param artistAcceptConnectionsType
+     * @param externalIdentityID
      * @throws CantUpdateArtistIdentityException
      */
     void updateArtistIdentity(
-            String alias,String publicKey, byte[] profileImage,
-            String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform,
-            ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws
+            String alias, String publicKey, byte[] profileImage, UUID externalIdentityID) throws
             CantUpdateArtistIdentityException;
 
     /**
