@@ -9,7 +9,7 @@ import java.util.UUID;
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 05/04/16.
  */
 public final class ChatActorConnection extends ActorConnection<ChatLinkedActorIdentity> {
-    protected ChatActorConnection(UUID connectionId, ChatLinkedActorIdentity linkedIdentity, String publicKey, String alias, byte[] image, ConnectionState connectionState, long creationTime, long updateTime) {
+    public ChatActorConnection(UUID connectionId, ChatLinkedActorIdentity linkedIdentity, String publicKey, String alias, byte[] image, ConnectionState connectionState, long creationTime, long updateTime) {
         super(connectionId, linkedIdentity, publicKey, alias, image, connectionState, creationTime, updateTime);
     }
 }
