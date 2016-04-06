@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.sub_app_module.asset.user.developer.bitdubai.version_1;
+package org.fermat.fermat_dap_plugin.layer.sub_app_module.asset.user.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
