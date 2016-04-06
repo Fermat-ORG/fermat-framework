@@ -122,11 +122,10 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
             holder.cardAssetName.setText(asset.getName());
             holder.cardExpDate.setText(asset.getFormattedExpDate());
 
-            initActions(holder, asset);
         }
 
         int imageLocked = R.drawable.locked;
-        if (asset.getAssetUserWalletTransaction().isLocked()){
+        if (asset.getAssetUserWalletTransaction() != null && asset.getAssetUserWalletTransaction().isLocked()){
             holder.cardConfirmedImage.setImageResource(imageLocked);
             holder.cardConfirmedText.setText(holder.res.getString(R.string.card_locked));
             holder.cardRedeemButton.setVisibility(View.GONE);
@@ -134,10 +133,12 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
             holder.cardAppropriateButton.setVisibility(View.GONE);
             holder.cardSellButton.setVisibility(View.GONE);
         }
+
+        initActions(holder, asset);
     }
 
     private void initActions(HomeCardViewHolder holder, final Asset asset) {
-        if (!holder.cardRedeemButton.hasOnClickListeners()) {
+
             holder.cardRedeemButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -145,8 +146,8 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
                     fragment.doRedeem();
                 }
             });
-        }
-        if(!holder.cardTransferButton.hasOnClickListeners()) {
+
+
             holder.cardTransferButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -154,8 +155,8 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
                     fragment.doTransfer();
                 }
             });
-        }
-        if(!holder.cardSellButton.hasOnClickListeners()) {
+
+
             holder.cardSellButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -163,9 +164,7 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
                     fragment.doSell();
                 }
             });
-        }
-        if(!holder.cardAppropriateButton.hasOnClickListeners())
-        {
+
         holder.cardAppropriateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -173,16 +172,14 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
                 fragment.doAppropiate();
             }
         });
-        }
 
-        if(!holder.cardTransactionsButton.hasOnClickListeners()){
         holder.cardTransactionsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 assetUserSession.setData("asset_data", asset);
                 fragment.doTransaction();
             }
-        });}
+        });
 
         if (asset.isRedeemable() && asset.getStatus().equals(Asset.Status.CONFIRMED)) {
             holder.cardRedeemButton.setVisibility(View.VISIBLE);

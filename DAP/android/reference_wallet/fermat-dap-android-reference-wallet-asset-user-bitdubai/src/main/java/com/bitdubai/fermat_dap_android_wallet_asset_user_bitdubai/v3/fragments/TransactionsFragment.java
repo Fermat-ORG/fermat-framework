@@ -261,8 +261,6 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction>
             try {
                 transactions = Data.getTransactions(moduleManager, digitalAsset);
 
-                appSession.setData("transactions_sent", transactions);
-
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
                 if (errorManager != null)
