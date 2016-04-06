@@ -28,6 +28,7 @@ public enum EventSource implements FermatEnum {
     BROKER_SUBMIT_ONLINE_MERCHANDISE        ("BSOM"),
     BUSINESS_TRANSACTION_CLOSE_CONTRACT     ("BTCC"),
     BUSINESS_TRANSACTION_OPEN_CONTRACT      ("BTOC"),
+    CHAT_ACTOR_CONNECTION                   ("CAC"),
     CUSTOMER_ACK_OFFLINE_MERCHANDISE        ("CAOM"),
     CUSTOMER_ACK_ONLINE_MERCHANDISE         ("CAOM"),
     COMMUNICATION_CLOUD_PLUGIN              ("CCL"),
@@ -107,6 +108,7 @@ public enum EventSource implements FermatEnum {
             case "NTNW":   return NEGOTIATION_TRANSACTION_NEW;
             case "NTUP":   return NEGOTIATION_TRANSACTION_UPDATE;
             case "NTCL":   return NEGOTIATION_TRANSACTION_CLOSE;
+            case "CAC":    return CHAT_ACTOR_CONNECTION;
             case "CCL":    return COMMUNICATION_CLOUD_PLUGIN;
             case "CAB":    return CRYPTO_ADDRESS_BOOK;
             case "CBAC":   return CRYPTO_BROKER_ACTOR_CONNECTION;
