@@ -6,6 +6,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
@@ -14,8 +15,11 @@ import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.FanIdentityAlre
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.FanIdentityManagerModule;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.FanIdentitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,8 +41,18 @@ public class ModuleFanIdentityManager implements FanIdentityManagerModule {
     }
 
     @Override
-    public Fanatic createFanaticIdentity(String alias, byte[] imageBytes,UUID externalIdentityID) throws CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
-        return fanaticIdentityManager.createFanaticIdentity(alias, imageBytes, externalIdentityID);
+    public HashMap<ExternalPlatform, HashMap<UUID, String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
+        return fanaticIdentityManager.listExternalIdentitiesFromCurrentDeviceUser();
+    }
+
+    @Override
+    public ArtIdentity getLinkedIdentity(String publicKey) {
+        return fanaticIdentityManager.getLinkedIdentity(publicKey);
+    }
+
+    @Override
+    public Fanatic createFanaticIdentity(String alias, byte[] imageBytes, UUID externalIdentityID) throws CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
+        return fanaticIdentityManager.createFanaticIdentity(alias,imageBytes,externalIdentityID);
     }
 
     @Override
@@ -57,7 +71,7 @@ public class ModuleFanIdentityManager implements FanIdentityManagerModule {
     }
 
     @Override
-    public SettingsManager getSettingsManager() {
+    public SettingsManager<FanIdentitySettings> getSettingsManager() {
         return null;
     }
 

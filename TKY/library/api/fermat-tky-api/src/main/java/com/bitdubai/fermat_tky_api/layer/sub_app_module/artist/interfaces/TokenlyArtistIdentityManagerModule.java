@@ -46,7 +46,8 @@ public interface TokenlyArtistIdentityManagerModule extends ModuleManager<Tokenl
     Artist createArtistIdentity(
             String userName,
             byte[] profileImage,
-            String password,ExternalPlatform externalPlatform,
+            String password,
+            ExternalPlatform externalPlatform,
             ExposureLevel exposureLevel,
             ArtistAcceptConnectionsType artistAcceptConnectionsType) throws
             CantCreateArtistIdentityException,
@@ -65,8 +66,14 @@ public interface TokenlyArtistIdentityManagerModule extends ModuleManager<Tokenl
      * @throws CantUpdateArtistIdentityException
      */
     void updateArtistIdentity(
-            String username,String password, UUID id,String publicKey, byte[] profileImage, ExternalPlatform externalPlatform,
-            ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws
+            String username,
+            String password,
+            UUID id,
+            String publicKey,
+            byte[] profileImage,
+            ExternalPlatform externalPlatform,
+            ExposureLevel exposureLevel,
+            ArtistAcceptConnectionsType artistAcceptConnectionsType) throws
             CantUpdateArtistIdentityException;
 
     /**

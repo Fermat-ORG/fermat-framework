@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_plugin.layer.sub_app_module.music_player.developer.bitdubai.version_1.structure.MusicPlayerManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -28,6 +29,9 @@ public class MusicPlayerPluginRoot extends AbstractPlugin {
     @NeededPluginReference(platform = Platforms.ART_PLATFORM, layer = Layers.IDENTITY,plugin = Plugins.MUSIC_PLAYER_SUB_APP_MODULE)
     private SongWalletTokenlyManager songWalletTokenlyManager;
 
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM,                addon  = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
     private MusicPlayerManager musicPlayerManager;
     /**
      * Default constructor
@@ -37,7 +41,11 @@ public class MusicPlayerPluginRoot extends AbstractPlugin {
     }
 
     private void initPluginManager(){
-        this.musicPlayerManager = new MusicPlayerManager(errorManager,songWalletTokenlyManager);
+        this.musicPlayerManager = new MusicPlayerManager(
+                errorManager,
+                songWalletTokenlyManager,
+                pluginFileSystem,
+                pluginId);
     }
     public ModuleManager getManager(){
         return this.musicPlayerManager;
