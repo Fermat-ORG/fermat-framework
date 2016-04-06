@@ -5,14 +5,14 @@ import com.bitdubai.fermat_api.FermatException;
 /**
  * Created by root on 31/03/16.
  */
-public class CantGetChtActorLocalSearchResult extends FermatException {
+public class CantGetChtActorSearchResult extends FermatException {
     private static final String DEFAULT_MESSAGE = "CAN'T GET CHAT ACTOR SEARCH RESULT EXCEPTION";
 
-    public CantGetChtActorLocalSearchResult(String message, Exception cause, String context, String possibleReason) {
+    public CantGetChtActorSearchResult(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 
-    public CantGetChtActorLocalSearchResult(Exception cause, String context, String possibleReason) {
+    public CantGetChtActorSearchResult(Exception cause, String context, String possibleReason) {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 }
