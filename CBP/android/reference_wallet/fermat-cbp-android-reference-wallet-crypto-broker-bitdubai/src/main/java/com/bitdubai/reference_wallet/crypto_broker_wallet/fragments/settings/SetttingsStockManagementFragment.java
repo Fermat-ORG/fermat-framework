@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
+import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
@@ -47,7 +48,7 @@ import java.util.Map;
 /**
  * Created by nelson on 22/12/15.
  */
-public class SetttingsStockManagementFragment extends FermatWalletListFragment<CryptoBrokerWalletAssociatedSetting> implements FermatListItemListeners<CryptoBrokerWalletAssociatedSetting>, DialogInterface.OnDismissListener {
+public class SetttingsStockManagementFragment extends FermatWalletListFragment<CryptoBrokerWalletAssociatedSetting> implements FermatListItemListeners<CryptoBrokerWalletAssociatedSetting>, DialogInterface.OnDismissListener,CBPBroadcasterConstants {
 
     // Constants
     private static final String TAG = "SettingsStockManagement";
@@ -536,5 +537,14 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
             layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
         }
         return layoutManager;
+    }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code){
+            case CBW_OPERATION_DEBIT_OR_CREDIT_UPDATE_VIEW:
+                onRefresh();
+                break;
+        }
     }
 }
