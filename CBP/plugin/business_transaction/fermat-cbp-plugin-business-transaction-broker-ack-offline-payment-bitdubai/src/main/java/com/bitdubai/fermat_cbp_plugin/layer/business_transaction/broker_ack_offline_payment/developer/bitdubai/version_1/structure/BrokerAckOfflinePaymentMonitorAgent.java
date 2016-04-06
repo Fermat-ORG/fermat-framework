@@ -39,6 +39,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAg
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerAckPaymentConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetCashTransactionParameterException;
@@ -662,7 +663,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                         brokerCurrency = FiatCurrency.getByCode(clause.getValue());
 
                     if (clauseType == ClauseType.BROKER_BANK_ACCOUNT)
-                        account = getAccountNumberFromClause(clause);
+                        account = NegotiationClauseHelper.getAccountNumberFromClause(clause);
 
                     if (clauseType == ClauseType.BROKER_CURRENCY_QUANTITY) {
                         brokerAmountDouble = parseToDouble(clause.getValue());
@@ -734,13 +735,6 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
                             "Parsing String object to long", "Cannot parse " + stringValue + " string value to long");
                 }
             }
-        }
-
-        private String getAccountNumberFromClause(Clause clause) {
-        /* The account Account data that come from the clause have this format*/
-            String clauseValue = clause.getValue();
-            String[] split = clauseValue.split("\\D+:\\s*");
-            return split.length == 1 ? split[0] : split[1];
         }
 
         /**

@@ -22,6 +22,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.exceptions.CantCloseContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.CloseContractManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
@@ -417,7 +418,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                                         amount = new BigDecimal(instance.parse(clause.getValue()).doubleValue());
                                         break;
                                     case BROKER_BANK_ACCOUNT:
-                                        bankAccount = getAccountNumberFromClause(clause);
+                                        bankAccount =  NegotiationClauseHelper.getAccountNumberFromClause(clause);
                                         break;
                                     case BROKER_CURRENCY:
                                         if(CryptoCurrency.codeExists(clause.getValue())){
@@ -431,19 +432,21 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                             }
 
                             if (sw == 1) {
-                                cryptoMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
+                                cryptoMoneyRestockManager.createTransactionRestock(
+                                        customerBrokerContractSale.getPublicKeyBroker(),
                                         CryptoCurrency.BITCOIN,
                                         "walletPublicKey",
                                         "walletPublicKey",
                                         amount,
                                         "RESTOCK AUTOMATIC",
                                         priceReference,
-                                        OriginTransaction.RESTOCK_AUTOMATIC,
+                                        OriginTransaction.SALE,
                                         customerBrokerContractSale.getContractId(),
                                         BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO: Revisar de donde saco esto
 
                             } else if (sw == 2) {
-                                bankMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
+                                bankMoneyRestockManager.createTransactionRestock(
+                                        customerBrokerContractSale.getPublicKeyBroker(),
                                         (FiatCurrency)fiatCurrency,
                                         "walletPublicKey",
                                         "walletPublicKey",
@@ -451,11 +454,12 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                                         amount,
                                         "RESTOCK AUTOMATIC",
                                         priceReference,
-                                        OriginTransaction.RESTOCK_AUTOMATIC,
+                                        OriginTransaction.SALE,
                                         customerBrokerContractSale.getContractId());
 
                             } else if (sw == 3) {
-                                cashMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
+                                cashMoneyRestockManager.createTransactionRestock(
+                                        customerBrokerContractSale.getPublicKeyBroker(),
                                         (FiatCurrency)fiatCurrency,
                                         "walletPublicKey",
                                         "walletPublicKey",
@@ -619,13 +623,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
-    }
-
-    private String getAccountNumberFromClause(Clause clause) {
-        /* The account Account data that come from the clause have this format*/
-        String clauseValue = clause.getValue();
-        String[] split = clauseValue.split("\\D+:\\s*");
-        return split.length == 1 ? split[0] : split[1];
     }
 
     private DatabaseTableFilter getFilterTable(final String valueFilter, final String columnValue) {
