@@ -315,7 +315,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             int id = item.getItemId();
 
             if (id == BitcoinWalletConstants.IC_ACTION_HELP_CONTACT) {
-                setUpTutorial(false);
+                setUpTutorial(true);
                 return true;
             }
 

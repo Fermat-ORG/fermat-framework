@@ -566,7 +566,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 }
             }
 
-            offset = dataSet.size();
+            //offset = dataSet.size();
 
         } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();
