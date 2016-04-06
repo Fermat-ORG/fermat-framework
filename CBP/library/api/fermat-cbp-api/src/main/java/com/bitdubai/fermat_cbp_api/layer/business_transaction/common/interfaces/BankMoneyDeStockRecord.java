@@ -3,8 +3,6 @@ package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 
-import java.math.BigDecimal;
-
 /**
  * This class represents the fields necessary to create a Bank Money DeStock Transaction
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 22/12/15.
@@ -33,7 +31,7 @@ public class BankMoneyDeStockRecord extends AbstractDeStockRecord{
                 businessTransactionRecord.getCryptoAmount());
         this.memo=generateMemo(businessTransactionRecord.getContractHash());
         this.priceReference=businessTransactionRecord.getPriceReference();
-        this.originTransaction=OriginTransaction.STOCK_INITIAL;
+        this.originTransaction=OriginTransaction.SALE;
 
     }
 
