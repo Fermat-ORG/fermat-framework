@@ -47,4 +47,6 @@ public class SongItems {
 
     public void setProgressbarvissible(boolean newprogressbarvissible) {progressbarvissible = newprogressbarvissible;}
 
+    public void setSong_id(UUID newsongid){song_id=newsongid;}
+
 }

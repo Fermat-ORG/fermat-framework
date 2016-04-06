@@ -3736,14 +3736,14 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         Fragment runtimeFragment;
         StatusBar runtimeStatusBar;
         TitleBar runtimeTitleBar;
-
+        TabStrip runtimeTabStrip;
+        Tab runtimeTab;
         final String publicKey = WalletsPublicKeys.TKY_FAN_WALLET.getCode();
-
-        //final String statusBarColor = "#00b9ff";
         final String statusBarColor = "#000000";
-        final String titleBarLabelColor = "#FFFFFF";
-        final String titleBarColor = "#00b9ff";
+        final String titleBarLabelColor = "#000000";
+        final String BackgroundtitleBarLabelColor = "#f5f5f5";
         final int titleBarLabelSize = 20;
+
 
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
@@ -3751,22 +3751,59 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
         lstWalletNavigationStructureOpen.put(publicKey, runtimeWalletNavigationStructure);
 
-
-        //Setup Activity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.TKY_FAN_WALLET_MAIN_ACTIVITY);
         runtimeActivity.setActivityType(Activities.TKY_FAN_WALLET_MAIN_ACTIVITY.getCode());
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.TKY_FAN_WALLET_MAIN_ACTIVITY);
 
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Fan Wallet");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor(titleBarLabelColor);
+        runtimeTitleBar.setColor(BackgroundtitleBarLabelColor);
+        runtimeTitleBar.setIsTitleTextStatic(false);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
+        /*runtimeHeader = new Header();
+        runtimeHeader.setLabel("Market rate");
+        runtimeHeader.setHasExpandable(true);
+        runtimeActivity.setHeader(runtimeHeader);*/
+
+        /*runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS.getKey(), runtimeFragment);*/
+
+
+        runtimeTabStrip = new TabStrip();
+        runtimeTabStrip.setTabsColor("#f5f5f5");
+        runtimeTabStrip.setTabsTextColor("#000000");
+        runtimeTabStrip.setTabsIndicateColor("#0c6908");
+        runtimeTabStrip.setDividerColor(0x72af9c);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Song");
+        runtimeTab.setFragment(Fragments.TKY_FAN_WALLET_SONGS_TAB_FRAGMENT);
+        runtimeTabStrip.addTab(runtimeTab);
+
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.TKY_FAN_WALLET_MAIN_ACTIVITY.getKey());
-        runtimeActivity.addFragment(Fragments.TKY_FAN_WALLET_MAIN_ACTIVITY.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.TKY_FAN_WALLET_MAIN_ACTIVITY.getKey());
+        runtimeFragment.setType(Fragments.TKY_FAN_WALLET_SONGS_TAB_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.TKY_FAN_WALLET_SONGS_TAB_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.TKY_FAN_WALLET_SONGS_TAB_FRAGMENT.getKey());
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Following");
+        runtimeTab.setFragment(Fragments.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT);
+        runtimeTabStrip.addTab(runtimeTab);
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT.getKey(), runtimeFragment);
 
 
         return runtimeWalletNavigationStructure;

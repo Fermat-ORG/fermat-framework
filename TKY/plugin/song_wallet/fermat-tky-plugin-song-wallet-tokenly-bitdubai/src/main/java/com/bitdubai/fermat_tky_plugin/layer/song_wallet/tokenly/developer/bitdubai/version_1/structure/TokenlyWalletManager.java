@@ -234,7 +234,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                     //System.out.println("TKY - "+song.getReleaseDate());
                     //Inform to UI that I'll begin to download the song.
                     fermatBundle = new FermatBundle();
-                    fermatBundle.put(BroadcasterNotificationType.SONG_INFO.getCode(),song);
+                    fermatBundle.put(BroadcasterNotificationType.SONG_INFO.getCode(), song);
                     broadcaster.publish(
                             BroadcasterType.UPDATE_VIEW,
                             WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
