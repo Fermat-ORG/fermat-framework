@@ -102,6 +102,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
 
     private boolean isRefreshing = false;
     private long satoshisWalletBalance;
+    private ActionButton create;
 
     public static EditableAssetsFragment newInstance() {
         return new EditableAssetsFragment();
@@ -226,7 +227,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
         }
 
         // fab action button create
-        ActionButton create = (ActionButton) layout.findViewById(R.id.create);
+        create = (ActionButton) layout.findViewById(R.id.create);
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -239,11 +240,13 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
         });
         create.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fab_jump_from_down));
         create.setVisibility(View.VISIBLE);
+        create.setEnabled(false);
 
         showPresentationDialog();
     }
 
     private void showPresentationDialog() {
+
         //Initialize settings
         settingsManager = appSession.getModuleManager().getSettingsManager();
         AssetFactorySettings settings = null;
@@ -280,6 +283,8 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                     }
                 }
             }, 500);
+        } else {
+            create.setEnabled(true);
         }
 
     }
@@ -316,6 +321,7 @@ public class EditableAssetsFragment extends AbstractFermatFragment implements
                     } else {
                         invalidate();
                     }
+                    create.setEnabled(true);
                 }
             });
 

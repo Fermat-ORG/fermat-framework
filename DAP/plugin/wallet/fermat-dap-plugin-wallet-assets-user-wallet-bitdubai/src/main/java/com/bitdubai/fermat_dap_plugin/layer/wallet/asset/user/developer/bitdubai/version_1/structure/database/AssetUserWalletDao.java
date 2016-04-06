@@ -2,6 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.wallet.asset.user.developer.bitduba
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
@@ -138,10 +139,16 @@ public final class AssetUserWalletDao {
             assetUserWalletBalance.setBookBalance(record.getLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TABLE_BOOK_BALANCE_COLUMN_NAME));
 
             try {
+                Set<CryptoAddress> cryptoAddresses = getAvailableAddressesForAsset(assetPublicKey);
+                assetUserWalletBalance.setAddresses(cryptoAddresses);
+            } catch (CantGetTransactionsException e) {
+                e.printStackTrace();
+            }
+            try {
                 PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(plugin, AssetUserWalletPluginRoot.PATH_DIRECTORY, assetPublicKey, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 DigitalAsset asset = (DigitalAsset) XMLParser.parseXML(pluginTextFile.getContent(), new DigitalAsset());
                 assetUserWalletBalance.setDigitalAsset(asset);
-                List<AssetUserWalletTransaction> allTx = listsTransactionsByAssets(asset.getPublicKey());
+                List<AssetUserWalletTransaction> allTx = listsTransactionsByAssets(asset.getGenesisAddress());
                 int lockedAssets = 0;
                 Set<String> genesisTx = new HashSet<>();
                 for (AssetUserWalletTransaction tx : allTx) {
@@ -251,10 +258,10 @@ public final class AssetUserWalletDao {
         }
     }
 
-    public List<AssetUserWalletTransaction> listsTransactionsByAssets(String assetPublicKey) throws CantGetTransactionsException {
+    public List<AssetUserWalletTransaction> listsTransactionsByAssets(CryptoAddress cryptoAddress) throws CantGetTransactionsException {
         try {
             DatabaseTable databaseTableAssuerUsetWallet = getAssetUserWalletTable();
-            databaseTableAssuerUsetWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            databaseTableAssuerUsetWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ASSET_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
 
             databaseTableAssuerUsetWallet.loadToMemory();
             return createTransactionList(databaseTableAssuerUsetWallet.getRecords());
@@ -265,10 +272,10 @@ public final class AssetUserWalletDao {
         }
     }
 
-    public List<AssetUserWalletTransaction> listsTransactionsByAssets(BalanceType balanceType, TransactionType transactionType, String assetPublicKey) throws CantGetTransactionsException {
+    public List<AssetUserWalletTransaction> listsTransactionsByAssets(BalanceType balanceType, TransactionType transactionType, CryptoAddress cryptoAddress) throws CantGetTransactionsException {
         try {
             DatabaseTable databaseTableAssuerUsetWallet = getAssetUserWalletTable();
-            databaseTableAssuerUsetWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ASSET_PUBLIC_KEY_COLUMN_NAME, assetPublicKey, DatabaseFilterType.EQUAL);
+            databaseTableAssuerUsetWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ASSET_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress(), DatabaseFilterType.EQUAL);
             databaseTableAssuerUsetWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
             databaseTableAssuerUsetWallet.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
 
@@ -345,6 +352,66 @@ public final class AssetUserWalletDao {
     public ActorAssetIssuer getActorByAsset(DigitalAsset digitalAsset) {
         String publicKey = digitalAsset.getIdentityAssetIssuer().getPublicKey();
         return (ActorAssetIssuer) ActorUtils.getActorFromPublicKey(publicKey, Actors.DAP_ASSET_ISSUER, userManager, redeemPointManager, issuerManager);
+    }
+
+    private void newAddress(DigitalAsset asset, Boolean available) throws CantExecuteLockOperationException {
+        try {
+            DatabaseTable addressesTable = getAddressesTable();
+            addressesTable.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME, asset.getGenesisAddress().getAddress(), DatabaseFilterType.EQUAL);
+            addressesTable.loadToMemory();
+            if (!addressesTable.getRecords().isEmpty()) {
+                return; //We already registered this asset
+            }
+            DatabaseTableRecord record = addressesTable.getEmptyRecord();
+            record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_ID_COLUMN_NAME, UUID.randomUUID().toString());
+            record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_ASSET_PUBLICKEY_COLUMN_NAME, asset.getPublicKey());
+            record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME, asset.getGenesisAddress().getAddress());
+            record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME, asset.getGenesisAddress().getCryptoCurrency().getCode());
+            record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_AVAILABLE_COLUMN_NAME, available.toString());
+            addressesTable.insertRecord(record);
+        } catch (Exception e) {
+            throw new CantExecuteLockOperationException(e);
+        }
+    }
+
+    private void addressSpent(DigitalAsset asset) throws CantExecuteLockOperationException {
+        try {
+            DatabaseTable addressesTable = getAddressesTable();
+            addressesTable.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME, asset.getGenesisAddress().getAddress(), DatabaseFilterType.EQUAL);
+            addressesTable.loadToMemory();
+            if (addressesTable.getRecords().isEmpty()) {
+                //We don't have this address?
+                newAddress(asset, Boolean.FALSE);
+                return;
+            }
+            DatabaseTableRecord record = addressesTable.getRecords().get(0);
+            record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_AVAILABLE_COLUMN_NAME, Boolean.FALSE.toString());
+            addressesTable.updateRecord(record);
+        } catch (Exception e) {
+            throw new CantExecuteLockOperationException(e);
+        }
+    }
+
+    private Set<CryptoAddress> getAvailableAddressesForAsset(String assetPk) throws CantGetTransactionsException {
+        try {
+            DatabaseTable addressesTable = getAddressesTable();
+            addressesTable.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_ASSET_PUBLICKEY_COLUMN_NAME, assetPk, DatabaseFilterType.EQUAL);
+            addressesTable.addStringFilter(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_AVAILABLE_COLUMN_NAME, Boolean.TRUE.toString(), DatabaseFilterType.EQUAL);
+            addressesTable.loadToMemory();
+
+            Set<CryptoAddress> toReturn = new HashSet<>();
+            for (DatabaseTableRecord record : addressesTable.getRecords()) {
+                String address = record.getStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME);
+                CryptoCurrency cryptoCurrency = CryptoCurrency.getByCode(record.getStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME));
+                CryptoAddress cryptoAddress = new CryptoAddress(address, cryptoCurrency);
+                toReturn.add(cryptoAddress);
+            }
+            return toReturn;
+        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
+            throw new CantGetTransactionsException("Get List of Transactions", cantLoadTableToMemory, "Error load wallet table ", "");
+        } catch (Exception exception) {
+            throw new CantGetTransactionsException(CantGetTransactionsException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
+        }
     }
 
     private void startAssetLock(DigitalAssetMetadata metadata) throws CantExecuteLockOperationException {
@@ -522,6 +589,7 @@ public final class AssetUserWalletDao {
         try {
             DatabaseTableRecord assetUserWalletRecord = constructAssetUserWalletRecord(assetUserWalletTransactionRecord, transactionType, balanceType, availableRunningBalance, bookRunningBalance);//DatabaseTableRecord balanceRecord = constructBalanceRecord(availableRunningBalance, bookRunningBalance);
             DatabaseTableRecord assetBalanceRecord = constructAssetBalanceRecord(assetUserWalletTransactionRecord.getDigitalAsset(), availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
+            manageAddress(assetUserWalletTransactionRecord.getDigitalAsset(), transactionType, balanceType);
             DatabaseTransaction transaction = database.newTransaction();
             transaction.addRecordToInsert(getAssetUserWalletTable(), assetUserWalletRecord);
 
@@ -552,6 +620,13 @@ public final class AssetUserWalletDao {
         }
     }
 
+    private void manageAddress(DigitalAsset digitalAsset, TransactionType transactionType, BalanceType balanceType) throws CantExecuteLockOperationException {
+        newAddress(digitalAsset, Boolean.TRUE);
+        if (transactionType == TransactionType.DEBIT && balanceType == BalanceType.BOOK) {
+            addressSpent(digitalAsset);
+        }
+    }
+
     private DatabaseTableRecord getBalancesByAssetRecord(String assetPublicKey) throws CantGetBalanceRecordException {
         try {
             DatabaseTable balancesTable = getBalancesTable();
@@ -579,6 +654,7 @@ public final class AssetUserWalletDao {
         DatabaseTableRecord record = getAssetUserWalletTable().getEmptyRecord();
         record.setUUIDValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TABLE_ID_COLUMN_NAME, UUID.randomUUID());
         record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ASSET_PUBLIC_KEY_COLUMN_NAME, assetUserWalletTransactionRecord.getDigitalAsset().getPublicKey());
+        record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ASSET_CRYPTO_ADDRESS_COLUMN_NAME, assetUserWalletTransactionRecord.getDigitalAsset().getGenesisAddress().getAddress());
         record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_VERIFICATION_ID_COLUMN_NAME, assetUserWalletTransactionRecord.getIdTransaction());
         record.setStringValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TYPE_COLUMN_NAME, transactionType.getCode());
         record.setLongValue(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_AMOUNT_COLUMN_NAME, assetUserWalletTransactionRecord.getAmount());
@@ -617,6 +693,10 @@ public final class AssetUserWalletDao {
 
     private DatabaseTable getLockTable() {
         return database.getTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_TABLE_NAME);
+    }
+
+    private DatabaseTable getAddressesTable() {
+        return database.getTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_TABLE_NAME);
     }
 
     private long getCurrentAvailableBalance() throws CantGetBalanceRecordException {
