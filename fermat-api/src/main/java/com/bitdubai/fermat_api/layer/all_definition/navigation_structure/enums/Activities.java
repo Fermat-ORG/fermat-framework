@@ -329,6 +329,7 @@ public enum Activities implements FermatEnum {
 
     //ART
     ART_ARTIST_IDENTITY_HOME("AACACP"),
+    ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE("ASAFCCOP"),
 
     //TKY
     TKY_ARTIST_IDENTITY("TAI"),
@@ -869,6 +870,9 @@ public enum Activities implements FermatEnum {
             //TKY fan Wallet
             case "TKYFWMA":
                 return TKY_FAN_WALLET_MAIN_ACTIVITY;
+            //ART
+            case "ASAFCCOP":
+                return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
