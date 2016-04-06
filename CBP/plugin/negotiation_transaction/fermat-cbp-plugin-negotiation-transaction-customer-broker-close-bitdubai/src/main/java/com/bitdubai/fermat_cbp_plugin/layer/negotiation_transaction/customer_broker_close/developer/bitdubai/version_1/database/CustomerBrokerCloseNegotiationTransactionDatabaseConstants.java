@@ -29,6 +29,8 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseConstants {
     static final String CUSTOMER_BROKER_CLOSE_NEGOTIATION_TYPE_COLUMN_NAME = "negotiation_type";
     static final String CUSTOMER_BROKER_CLOSE_NEGOTIATION_XML_COLUMN_NAME = "negotiation_xml";
     static final String CUSTOMER_BROKER_CLOSE_TIMESTAMP_COLUMN_NAME = "timestamp";
+    static final String CUSTOMER_BROKER_CLOSE_SEND_TRANSACTION_COLUMN_NAME = "sendTransaction";
+    static final String CUSTOMER_BROKER_CLOSE_CONFIRM_TRANSACTION_COLUMN_NAME = "confirmTransaction";
 
     static final String CUSTOMER_BROKER_CLOSE_FIRST_KEY_COLUMN = "transaction_id";
 

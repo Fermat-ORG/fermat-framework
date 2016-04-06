@@ -28,6 +28,8 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseConstants {
     public static final String CUSTOMER_BROKER_NEW_NEGOTIATION_TYPE_COLUMN_NAME = "negotiation_type";
     public static final String CUSTOMER_BROKER_NEW_NEGOTIATION_XML_COLUMN_NAME = "negotiation_xml";
     public static final String CUSTOMER_BROKER_NEW_TIMESTAMP_COLUMN_NAME = "timestamp";
+    public static final String CUSTOMER_BROKER_NEW_SEND_TRANSACTION_COLUMN_NAME = "sendTransaction";
+    public static final String CUSTOMER_BROKER_NEW_CONFIRM_TRANSACTION_COLUMN_NAME = "confirmTransaction";
 
     static final String CUSTOMER_BROKER_NEW_FIRST_KEY_COLUMN = "transaction_id";
 

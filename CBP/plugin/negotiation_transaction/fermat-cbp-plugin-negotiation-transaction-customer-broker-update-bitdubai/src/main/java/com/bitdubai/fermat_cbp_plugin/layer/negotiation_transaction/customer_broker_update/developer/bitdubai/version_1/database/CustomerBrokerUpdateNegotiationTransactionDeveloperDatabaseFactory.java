@@ -129,6 +129,9 @@ public class CustomerBrokerUpdateNegotiationTransactionDeveloperDatabaseFactory 
         customerBrokerUpdateColumns.add(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_TYPE_COLUMN_NAME);
         customerBrokerUpdateColumns.add(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_NEGOTIATION_XML_COLUMN_NAME);
         customerBrokerUpdateColumns.add(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_TIMESTAMP_COLUMN_NAME);
+        customerBrokerUpdateColumns.add(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_SEND_TRANSACTION_COLUMN_NAME);
+        customerBrokerUpdateColumns.add(CustomerBrokerUpdateNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_UPDATE_CONFIRM_TRANSACTION_COLUMN_NAME);
+
         /**
          * Table Customer Broker Update addition.
          */
