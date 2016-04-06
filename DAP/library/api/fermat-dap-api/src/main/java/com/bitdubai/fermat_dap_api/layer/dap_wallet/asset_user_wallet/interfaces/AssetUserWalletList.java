@@ -1,6 +1,10 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by franklin on 05/10/15.
@@ -8,6 +12,10 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAss
 public interface AssetUserWalletList {
 
     DigitalAsset getDigitalAsset();
+
+    List<CryptoAddress> getAddresses();
+
+    void setAddresses(Set<CryptoAddress> addresses);
 
     long getAvailableBalance();
 

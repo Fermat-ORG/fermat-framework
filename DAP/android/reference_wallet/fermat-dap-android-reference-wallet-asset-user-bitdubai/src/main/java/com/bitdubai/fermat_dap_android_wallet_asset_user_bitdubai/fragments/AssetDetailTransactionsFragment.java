@@ -37,6 +37,7 @@ import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -279,7 +280,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
                         .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                             @Override
                             public void onClick() {
-                                doAppropriate(digitalAsset.getAssetPublicKey());
+                                doAppropriate(digitalAsset.getDigitalAsset().getGenesisAddress());
                             }
                         }).build().show();
                 return true;
@@ -415,7 +416,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         }
     }
 
-    private void doAppropriate(final String assetPublicKey) {
+    private void doAppropriate(final CryptoAddress cryptoAddress) {
         final Activity activity = getActivity();
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
@@ -430,7 +431,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
 //                            asset.getActorAssetRedeemPoint()
 //                    );
                 //TODO: only for Appropriate test
-                moduleManager.appropriateAsset(assetPublicKey, null);
+                moduleManager.appropriateAsset(cryptoAddress, null);
                 return true;
             }
         };
@@ -455,7 +456,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         task.execute();
     }
 
-    private void transferAsset(final String assetPublicKey) {
+    private void transferAsset(final CryptoAddress cryptoAddress) {
         final Activity activity = getActivity();
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
@@ -464,7 +465,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         FermatWorker task = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                moduleManager.transferAssets(assetPublicKey, null, 1);
+                moduleManager.transferAssets(cryptoAddress, null, 1);
                 return true;
             }
         };
