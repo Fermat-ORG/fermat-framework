@@ -19,12 +19,27 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 public class ReceivedNodeCatalogTransactionsMsjRespond  extends MsgRespond {
 
     /**
+     * Represent the lateNotificationsCounter
+     */
+    private Integer lateNotificationsCounter;
+
+    /**
      * Constructor with parameters
      *
      * @param status
      * @param details
+     * @param lateNotificationsCounter
      */
-    public ReceivedNodeCatalogTransactionsMsjRespond(STATUS status, String details) {
+    public ReceivedNodeCatalogTransactionsMsjRespond(STATUS status, String details, Integer lateNotificationsCounter) {
         super(status, details);
+        this.lateNotificationsCounter = lateNotificationsCounter;
+    }
+
+    /**
+     * Get the LateNotificationsCounter value
+     * return java.lang.Integer
+     */
+    public Integer getLateNotificationsCounter() {
+        return lateNotificationsCounter;
     }
 }

@@ -7,6 +7,9 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
+
+import java.util.List;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.ReceivedNodeCatalogTransactionsMsjRequest</code>
@@ -17,4 +20,28 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
  * @since Java JDK 1.7
  */
 public class ReceivedNodeCatalogTransactionsMsjRequest extends PackageContent {
+
+    /**
+     * Represent the list of transactions
+     */
+    private List<NodesCatalogTransaction> nodesCatalogTransactions;
+
+    /**
+     * Constructor with parameters
+     * @param nodesCatalogTransactions
+     */
+    public ReceivedNodeCatalogTransactionsMsjRequest(List<NodesCatalogTransaction> nodesCatalogTransactions) {
+        super();
+        this.nodesCatalogTransactions = nodesCatalogTransactions;
+    }
+
+    /**
+     * Get the list of node catalog nodesCatalogTransactions
+     * @return nodesCatalogTransactions
+     */
+    public List<NodesCatalogTransaction> getNodesCatalogTransactions() {
+        return nodesCatalogTransactions;
+    }
+
+
 }
