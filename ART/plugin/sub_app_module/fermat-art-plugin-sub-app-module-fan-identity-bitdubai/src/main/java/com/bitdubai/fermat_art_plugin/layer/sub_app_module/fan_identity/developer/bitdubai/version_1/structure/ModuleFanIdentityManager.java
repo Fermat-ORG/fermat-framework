@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
@@ -14,9 +15,11 @@ import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.FanIdentityAlre
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanIdentityManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.FanIdentityManagerModule;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.FanIdentitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by alexander on 3/15/16.
@@ -24,10 +27,20 @@ import java.util.List;
 public class ModuleFanIdentityManager implements FanIdentityManagerModule {
     private final ErrorManager errorManager;
     private final FanIdentityManager fanIdentityManager;
+    private final PluginFileSystem pluginFileSystem;
+    private final UUID pluginId;
 
-    public ModuleFanIdentityManager(ErrorManager errorManager, FanIdentityManager fanIdentityManager) {
+    private SettingsManager<FanIdentitySettings> settingsManager;
+
+
+    public ModuleFanIdentityManager(ErrorManager errorManager,
+                                    FanIdentityManager fanIdentityManager,
+                                    PluginFileSystem pluginFileSystem,
+                                    UUID pluginId) {
         this.errorManager = errorManager;
         this.fanIdentityManager = fanIdentityManager;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
     }
 
     @Override
@@ -55,9 +68,18 @@ public class ModuleFanIdentityManager implements FanIdentityManagerModule {
         fanIdentityManager.publishIdentity(publicKey);
     }
 
+
     @Override
-    public SettingsManager getSettingsManager() {
-        return null;
+    public SettingsManager<FanIdentitySettings> getSettingsManager() {
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override
