@@ -186,10 +186,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/unitPriceLayout"
             android:layout_centerHorizontal="true"
-            android:layout_marginRight="14dp"
-            android:layout_marginLeft="14dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/bg_user_selector">
+            android:background="@drawable/bg_user_selector"
+            android:layout_margin="14dp">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/sellToTextFake"
@@ -208,7 +206,7 @@
             <AutoCompleteTextView
                 android:id="@+id/userToSelectTextFake"
                 android:layout_width="match_parent"
-                android:layout_height="32dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@+id/sellToTextFake"
                 android:background="@null"
                 android:dropDownAnchor="@+id/userToSelectText"
@@ -224,18 +222,13 @@
                 android:visibility="gone"
                 />
 
-        </RelativeLayout>
 
         <!--importantone-->
         <RelativeLayout
             android:id="@+id/userSelectorLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/unitPriceLayout"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginLeft="20dp"
             android:background="@drawable/dap_wallet_user_users_selector_shape"
             android:visibility="visible"
             >
@@ -346,7 +339,7 @@
             <LinearLayout
                 android:id="@+id/asset_sell_no_users_view"
                 android:layout_width="match_parent"
-                android:layout_height="215dp"
+                android:layout_height="match_parent"
                 android:layout_below="@+id/listReferenceLine"
                 android:gravity="center"
                 android:orientation="vertical"
@@ -355,9 +348,9 @@
                 <ImageView
                     android:layout_width="90dp"
                     android:layout_height="90dp"
-                    android:layout_marginBottom="16dp"
+                    android:gravity="center"
                     android:scaleType="fitXY"
-                    android:src="@drawable/sad_face" />
+                    android:src="@drawable/sad_face"/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
@@ -386,6 +379,7 @@
                     android:textColor="@color/card_text_highlight"
                     android:textSize="17sp" />
             </RelativeLayout>
+        </RelativeLayout>
         </RelativeLayout>
 
         <!--button-->
