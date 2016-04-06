@@ -8,9 +8,10 @@ import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantGetFanIdent
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
-import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fan;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/23/16.
@@ -22,18 +23,19 @@ public interface FanIdentityManagerModule extends ModuleManager {
      * @return
      * @throws CantListFanIdentitiesException
      */
-    List<Fan> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
+    List<Fanatic> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
 
     /**
-     * Through the method <code>createArtistIdentity</code> you can create a new artist identity.
+     * Through the method <code>createFanaticIdentity</code> you can create a new artist identity.
      * @param alias
      * @param imageBytes
+     * @param externalIdentityID
      * @return
      * @throws
      */
-    Fan createArtistIdentity(
+    Fanatic createFanaticIdentity(
             final String alias,
-            final byte[] imageBytes) throws
+            final byte[] imageBytes, UUID externalIdentityID) throws
             CantCreateFanIdentityException,
             FanIdentityAlreadyExistsException;
     /**
@@ -41,12 +43,13 @@ public interface FanIdentityManagerModule extends ModuleManager {
      * @param alias
      * @param publicKey
      * @param imageProfile
+     * @param externalIdentityID
      */
     void updateFanIdentity(
             String alias,
             String publicKey,
             byte[] imageProfile,
-            String external) throws
+            UUID externalIdentityID) throws
             CantUpdateFanIdentityException;
 
     /**
@@ -56,7 +59,7 @@ public interface FanIdentityManagerModule extends ModuleManager {
      * @throws CantGetFanIdentityException
      * @throws IdentityNotFoundException
      */
-    Fan getFanIdentity(String publicKey) throws
+    Fanatic getFanIdentity(String publicKey) throws
             CantGetFanIdentityException,
             IdentityNotFoundException;
 
