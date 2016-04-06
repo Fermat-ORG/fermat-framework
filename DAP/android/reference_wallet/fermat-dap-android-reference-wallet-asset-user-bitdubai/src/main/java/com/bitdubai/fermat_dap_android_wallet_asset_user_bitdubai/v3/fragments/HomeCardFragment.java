@@ -530,8 +530,8 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
                     .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                         @Override
                         public void onClick() {
-
                             doBuy(asset.getAssetUserNegotiation().getId());
+                            asset.setAssetUserNegotiation(null);
                         }
                     }).build().show();
         }
@@ -541,6 +541,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
     public void doRejectNegotiation() {
         final Asset asset = (Asset) appSession.getData("asset_data");
         doDecline(asset);
+        asset.setAssetUserNegotiation(null);
     }
 
 
