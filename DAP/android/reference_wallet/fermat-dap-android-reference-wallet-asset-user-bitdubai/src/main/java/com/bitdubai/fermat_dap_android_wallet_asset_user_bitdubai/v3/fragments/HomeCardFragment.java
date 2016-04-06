@@ -93,6 +93,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
             moduleManager = ((AssetUserSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
             settingsManager = appSession.getModuleManager().getSettingsManager();
+            assets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
             dataManager = new DataManager(moduleManager);
 
         } catch (Exception ex) {
@@ -115,15 +116,13 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
         configureToolbar();
         noAssetsView = layout.findViewById(R.id.dap_v3_wallet_asset_user_home_no_assets);
 
-        assets = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+
         showOrHideNoAssetsView(assets.isEmpty());
         try {
             bitcoinWalletBalanceSatoshis = moduleManager.getBitcoinWalletBalance(Utils.getBitcoinWalletPublicKey(moduleManager));
         } catch (Exception e) {
             // bitcoinBalanceText.setText(getResources().getString(R.string.dap_user_wallet_buy_no_available));
         }
-
-        onRefresh();
     }
 
     private void showOrHideNoAssetsView(boolean empty) {
@@ -583,7 +582,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
 
 
     public void onItemClickListener(Asset data, int position) {
-        appSession.setData("asset_data", data);
+        //appSession.setData("asset_data", data);
     }
 
     @Override
