@@ -1397,7 +1397,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     public int notificateProgressBroadcast(FermatBundle bundle) {
         int id = 0;
         try {
-            ApplicationSession.getInstance().getNotificationService().notificateProgress(bundle);
+            //ApplicationSession.getInstance().getNotificationService().notificateProgress(bundle);
 //            if(mNotificationServiceConnected){
 //                id = notificationService.notificateProgress(bundle);
 //            }else{

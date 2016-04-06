@@ -15,9 +15,9 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+//import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+//import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventStatus;
@@ -75,9 +75,9 @@ import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.v
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.CantGetPendingTransactionException;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+//import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+//import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+//import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
@@ -930,28 +930,29 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      * @return
      * @throws CantGetContactException
      */
+    //TODO:Eliminar
     @Override
     public List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException {
-        try {
-            List<ContactConnection> contactList;
-            contactList=this.chatMiddlewareContactFactory.discoverDeviceActors();
-            if(!contactList.isEmpty()){
-                for(ContactConnection contact : contactList){
-                    saveContactConnection(contact);
-                }
-            }
-            return contactList;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantGetContactConnectionException(
-                    FermatException.wrapException(exception),
-                    "Getting the actors registered",
-                    "Unexpected exception");
-        }
-
+//        try {
+//            List<ContactConnection> contactList;
+//            contactList=this.chatMiddlewareContactFactory.discoverDeviceActors();
+//            if(!contactList.isEmpty()){
+//                for(ContactConnection contact : contactList){
+//                    saveContactConnection(contact);
+//                }
+//            }
+//            return contactList;
+//        } catch (Exception exception) {
+//            errorManager.reportUnexpectedPluginException(
+//                    Plugins.CHAT_MIDDLEWARE,
+//                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+//                    FermatException.wrapException(exception));
+//            throw new CantGetContactConnectionException(
+//                    FermatException.wrapException(exception),
+//                    "Getting the actors registered",
+//                    "Unexpected exception");
+//        }
+    return null;
     }
 
     /**
@@ -1034,24 +1035,26 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      *
      * @return
      */
+    //TODO:Eliminar
     @Override
     public HashMap<PlatformComponentType, Object> getSelfIdentities()
             throws CantGetOwnIdentitiesException {
-        try {
-            HashMap<PlatformComponentType, Object> selfIdentitiesMap =
-                    this.chatMiddlewareContactFactory.getSelfIdentities();
-            selfIdentitiesMap = checkSelfIdentitiesMap(selfIdentitiesMap);
-            return selfIdentitiesMap;
-        } catch (CantGetNetworkServicePublicKeyException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantGetOwnIdentitiesException(
-                    FermatException.wrapException(exception),
-                    "Checking own identities",
-                    "Unexpected Exception getting network service public key");
-        }
+//        try {
+//            HashMap<PlatformComponentType, Object> selfIdentitiesMap =
+//                    this.chatMiddlewareContactFactory.getSelfIdentities();
+//            selfIdentitiesMap = checkSelfIdentitiesMap(selfIdentitiesMap);
+//            return selfIdentitiesMap;
+//        } catch (CantGetNetworkServicePublicKeyException exception) {
+//            errorManager.reportUnexpectedPluginException(
+//                    Plugins.CHAT_MIDDLEWARE,
+//                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+//                    FermatException.wrapException(exception));
+//            throw new CantGetOwnIdentitiesException(
+//                    FermatException.wrapException(exception),
+//                    "Checking own identities",
+//                    "Unexpected Exception getting network service public key");
+//        }
+        return null;
     }
 
     /**
@@ -1237,60 +1240,61 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
     }
 
+    //TODO:Eliminar
     @Override
     public void createSelfIdentities() throws CantCreateSelfIdentityException {
-        try {
-            HashMap<PlatformComponentType, Object> selfIdentitiesMap =
-                    this.chatMiddlewareContactFactory.getSelfIdentities();
-            selfIdentitiesMap = checkSelfIdentitiesMap(selfIdentitiesMap);
-
-            //List<ContactConnection> actorConnections = this.chatMiddlewareContactFactory.discoverDeviceActors();
-
-            Iterator it = selfIdentitiesMap.keySet().iterator();
-            while (it.hasNext()) {
-                PlatformComponentType key = (PlatformComponentType) it.next();
-
-                if (PlatformComponentType.ACTOR_ASSET_USER.getCode() == key.getCode()) {
-                    ActorAssetUser actorAssetUser = (ActorAssetUser) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetUser.getName(), null, actorAssetUser.getActorPublicKey(), null, actorAssetUser.getProfileImage(), actorAssetUser.getType(), PlatformComponentType.ACTOR_ASSET_USER);
-                    saveChatUserIdentity(chatUserIdentity);
-                }
-                if (PlatformComponentType.ACTOR_ASSET_ISSUER.getCode() == key.getCode()) {
-                    ActorAssetIssuer actorAssetIssuer = (ActorAssetIssuer) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetIssuer.getName(), null, actorAssetIssuer.getActorPublicKey(), null, actorAssetIssuer.getProfileImage(), actorAssetIssuer.getType(), PlatformComponentType.ACTOR_ASSET_ISSUER);
-                    saveChatUserIdentity(chatUserIdentity);
-                }
-                if (PlatformComponentType.ACTOR_ASSET_REDEEM_POINT.getCode() == key.getCode()) {
-                    ActorAssetRedeemPoint actorAssetRedeemPoint = (ActorAssetRedeemPoint) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetRedeemPoint.getName(), null, actorAssetRedeemPoint.getActorPublicKey(), null, actorAssetRedeemPoint.getProfileImage(), actorAssetRedeemPoint.getType(), PlatformComponentType.ACTOR_ASSET_REDEEM_POINT);
-                    saveChatUserIdentity(chatUserIdentity);
-                }
-                if (PlatformComponentType.ACTOR_INTRA_USER.getCode() == key.getCode()) {
-                    IntraUserLoginIdentity intraUserLoginIdentity = (IntraUserLoginIdentity) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(intraUserLoginIdentity.getAlias(), null, intraUserLoginIdentity.getPublicKey(), null, intraUserLoginIdentity.getProfileImage(), Actors.INTRA_USER, PlatformComponentType.ACTOR_INTRA_USER);
-                    saveChatUserIdentity(chatUserIdentity);
-                }
-                if (PlatformComponentType.ACTOR_CRYPTO_BROKER.getCode() == key.getCode()) {
-                    CryptoBrokerIdentity brokerIdentity = (CryptoBrokerIdentity) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(brokerIdentity.getAlias(), null, brokerIdentity.getPublicKey(), null, brokerIdentity.getProfileImage(), Actors.CBP_CRYPTO_BROKER, PlatformComponentType.ACTOR_CRYPTO_BROKER);
-                    saveChatUserIdentity(chatUserIdentity);
-                }
-                if (PlatformComponentType.ACTOR_CRYPTO_CUSTOMER.getCode() == key.getCode()) {
-                    CryptoCustomerIdentity broCustomerIdentity = (CryptoCustomerIdentity) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(broCustomerIdentity.getAlias(), null, broCustomerIdentity.getPublicKey(), null, broCustomerIdentity.getProfileImage(), Actors.CBP_CRYPTO_CUSTOMER, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
-                    saveChatUserIdentity(chatUserIdentity);
-                }
-            }
-
-        } catch (CantGetOwnIdentitiesException e) {
-            e.printStackTrace();
-        } catch (CantGetNetworkServicePublicKeyException e) {
-            e.printStackTrace();
-//        } catch (CantGetContactException e) {
+//        try {
+//            HashMap<PlatformComponentType, Object> selfIdentitiesMap =
+//                    this.chatMiddlewareContactFactory.getSelfIdentities();
+//            selfIdentitiesMap = checkSelfIdentitiesMap(selfIdentitiesMap);
+//
+//            //List<ContactConnection> actorConnections = this.chatMiddlewareContactFactory.discoverDeviceActors();
+//
+//            Iterator it = selfIdentitiesMap.keySet().iterator();
+//            while (it.hasNext()) {
+//                PlatformComponentType key = (PlatformComponentType) it.next();
+//
+//                if (PlatformComponentType.ACTOR_ASSET_USER.getCode() == key.getCode()) {
+//                    ActorAssetUser actorAssetUser = (ActorAssetUser) selfIdentitiesMap.get(key);
+//                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetUser.getName(), null, actorAssetUser.getActorPublicKey(), null, actorAssetUser.getProfileImage(), actorAssetUser.getType(), PlatformComponentType.ACTOR_ASSET_USER);
+//                    saveChatUserIdentity(chatUserIdentity);
+//                }
+//                if (PlatformComponentType.ACTOR_ASSET_ISSUER.getCode() == key.getCode()) {
+//                    ActorAssetIssuer actorAssetIssuer = (ActorAssetIssuer) selfIdentitiesMap.get(key);
+//                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetIssuer.getName(), null, actorAssetIssuer.getActorPublicKey(), null, actorAssetIssuer.getProfileImage(), actorAssetIssuer.getType(), PlatformComponentType.ACTOR_ASSET_ISSUER);
+//                    saveChatUserIdentity(chatUserIdentity);
+//                }
+//                if (PlatformComponentType.ACTOR_ASSET_REDEEM_POINT.getCode() == key.getCode()) {
+//                    ActorAssetRedeemPoint actorAssetRedeemPoint = (ActorAssetRedeemPoint) selfIdentitiesMap.get(key);
+//                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetRedeemPoint.getName(), null, actorAssetRedeemPoint.getActorPublicKey(), null, actorAssetRedeemPoint.getProfileImage(), actorAssetRedeemPoint.getType(), PlatformComponentType.ACTOR_ASSET_REDEEM_POINT);
+//                    saveChatUserIdentity(chatUserIdentity);
+//                }
+//                if (PlatformComponentType.ACTOR_INTRA_USER.getCode() == key.getCode()) {
+//                    IntraUserLoginIdentity intraUserLoginIdentity = (IntraUserLoginIdentity) selfIdentitiesMap.get(key);
+//                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(intraUserLoginIdentity.getAlias(), null, intraUserLoginIdentity.getPublicKey(), null, intraUserLoginIdentity.getProfileImage(), Actors.INTRA_USER, PlatformComponentType.ACTOR_INTRA_USER);
+//                    saveChatUserIdentity(chatUserIdentity);
+//                }
+//                if (PlatformComponentType.ACTOR_CRYPTO_BROKER.getCode() == key.getCode()) {
+//                    CryptoBrokerIdentity brokerIdentity = (CryptoBrokerIdentity) selfIdentitiesMap.get(key);
+//                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(brokerIdentity.getAlias(), null, brokerIdentity.getPublicKey(), null, brokerIdentity.getProfileImage(), Actors.CBP_CRYPTO_BROKER, PlatformComponentType.ACTOR_CRYPTO_BROKER);
+//                    saveChatUserIdentity(chatUserIdentity);
+//                }
+//                if (PlatformComponentType.ACTOR_CRYPTO_CUSTOMER.getCode() == key.getCode()) {
+//                    CryptoCustomerIdentity broCustomerIdentity = (CryptoCustomerIdentity) selfIdentitiesMap.get(key);
+//                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(broCustomerIdentity.getAlias(), null, broCustomerIdentity.getPublicKey(), null, broCustomerIdentity.getProfileImage(), Actors.CBP_CRYPTO_CUSTOMER, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
+//                    saveChatUserIdentity(chatUserIdentity);
+//                }
+//            }
+//
+//        } catch (CantGetOwnIdentitiesException e) {
 //            e.printStackTrace();
-        } catch (CantSaveChatUserIdentityException e) {
-            e.printStackTrace();
-        }
+//        } catch (CantGetNetworkServicePublicKeyException e) {
+//            e.printStackTrace();
+////        } catch (CantGetContactException e) {
+////            e.printStackTrace();
+//        } catch (CantSaveChatUserIdentityException e) {
+//            e.printStackTrace();
+//        }
     }
 
     /**
