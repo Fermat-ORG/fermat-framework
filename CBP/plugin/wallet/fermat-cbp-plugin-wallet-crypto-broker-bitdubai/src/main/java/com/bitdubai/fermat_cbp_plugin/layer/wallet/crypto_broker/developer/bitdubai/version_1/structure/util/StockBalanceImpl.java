@@ -3,9 +3,12 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockBalance;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
@@ -35,6 +38,7 @@ public class StockBalanceImpl implements StockBalance {
     UUID plugin;
     PluginFileSystem pluginFileSystem;
     ErrorManager errorManager;
+    private Broadcaster broadcaster;
 
     /**
      * Constructor for StockBalanceImpl
@@ -43,11 +47,12 @@ public class StockBalanceImpl implements StockBalance {
      * @param plugin
      * @param pluginFileSystem
      */
-    public StockBalanceImpl(final Database database, final UUID plugin, final PluginFileSystem pluginFileSystem, ErrorManager errorManager) {
+    public StockBalanceImpl(final Database database, final UUID plugin, final PluginFileSystem pluginFileSystem, ErrorManager errorManager,Broadcaster broadcaster) {
         this.database = database;
         this.plugin = plugin;
         this.pluginFileSystem = pluginFileSystem;
         this.errorManager = errorManager;
+        this.broadcaster=broadcaster;
         cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.plugin);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
@@ -199,6 +204,7 @@ public class StockBalanceImpl implements StockBalance {
     public void debit(CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecord, BalanceType balanceType) throws CantAddDebitCryptoBrokerWalletException, CantStartPluginException {
         try {
             cryptoBrokerWalletDatabaseDao.addDebit(cryptoBrokerStockTransactionRecord, balanceType);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_OPERATION_DEBIT_OR_CREDIT_UPDATE_VIEW);
         } catch (CantAddDebitException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
@@ -216,6 +222,7 @@ public class StockBalanceImpl implements StockBalance {
     public void credit(CryptoBrokerStockTransactionRecord cryptoBrokerStockTransactionRecord, BalanceType balanceType) throws CantAddCreditCryptoBrokerWalletException, CantStartPluginException {
         try {
             cryptoBrokerWalletDatabaseDao.addCredit(cryptoBrokerStockTransactionRecord, balanceType);
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW,CBPBroadcasterConstants.CBW_OPERATION_DEBIT_OR_CREDIT_UPDATE_VIEW);
         } catch (CantAddCreditException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, null, null);
