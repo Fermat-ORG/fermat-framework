@@ -8,6 +8,9 @@ package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.deve
 
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 
+import org.apache.commons.lang.ClassUtils;
+import org.apache.log4j.Logger;
+
 import javax.websocket.HandshakeResponse;
 import javax.websocket.server.HandshakeRequest;
 import javax.websocket.server.ServerEndpointConfig;
@@ -24,12 +27,23 @@ import javax.websocket.server.ServerEndpointConfig;
 public class WebSocketConfigurator extends ServerEndpointConfig.Configurator{
 
     /**
+     * Represent the logger instance
+     */
+    private Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(WebSocketConfigurator.class));
+
+    /**
     * (non-javadoc)
     *
     * @see ServerEndpointConfig.Configurator#modifyHandshake(ServerEndpointConfig, HandshakeRequest, HandshakeResponse)
     */
     @Override
     public void modifyHandshake(ServerEndpointConfig serverEndpointConfig, HandshakeRequest handshakeRequest, HandshakeResponse handshakeResponse) {
+
+        LOG.info("Headers Attributes:");
+
+        for (String key : handshakeRequest.getHeaders().keySet()) {
+            LOG.info(key + " : "+handshakeRequest.getHeaders().get(key));
+        }
 
         if (handshakeRequest.getHeaders().containsKey(JsonAttNamesConstants.HEADER_ATT_NAME_TI)){
 
@@ -43,7 +57,10 @@ public class WebSocketConfigurator extends ServerEndpointConfig.Configurator{
              */
             serverEndpointConfig.getUserProperties().put(JsonAttNamesConstants.HEADER_ATT_NAME_TI, ti);
 
+        }else {
+            LOG.warn(JsonAttNamesConstants.HEADER_ATT_NAME_TI + " No Found");
         }
+
 
     }
 }
