@@ -82,20 +82,27 @@ public interface ChatManager {
 
     void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
 
+    //TODO:Eliminar
     List<Contact> getContacts() throws CantGetContactException;
 
+    //TODO:Eliminar
     Contact getContactByContactId(UUID contactId) throws CantGetContactException;
 
+    //TODO:Eliminar
     Contact newEmptyInstanceContact() throws CantNewEmptyContactException;
 
+    //TODO:Eliminar
     void saveContact(Contact contact) throws CantSaveContactException;
 
+    //TODO:Eliminar
     void deleteContact(Contact contact) throws CantDeleteContactException;
 
+    //TODO:Eliminar
     List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException;
 
     String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
 
+    //TODO:Eliminar
     /**
      * This method return a HashMap with the possible self identities.
      * The HashMap contains a Key-value like PlatformComponentType-ActorPublicKey.
@@ -105,6 +112,7 @@ public interface ChatManager {
      */
     HashMap<PlatformComponentType, Object> getSelfIdentities() throws CantGetOwnIdentitiesException;
 
+    //TODO:Eliminar
     /**
      * This method returns the contact id by local public key.
      * @param localPublicKey
@@ -113,22 +121,29 @@ public interface ChatManager {
      */
     Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException;
 
+    //TODO:Eliminar
     void createSelfIdentities() throws CantCreateSelfIdentityException;
 
     boolean isIdentityDevice() throws CantGetChatUserIdentityException;
 
+    //TODO:Eliminar
     List<ChatUserIdentity> getChatUserIdentities() throws CantGetChatUserIdentityException;
 
+    //TODO:Eliminar
     ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException;
 
+    //TODO:Eliminar
     void saveContactConnection(ContactConnection contactConnection) throws CantSaveContactConnectionException;
 
     //void deleteContactConnections( ) throws CantDeleteContactConnectionException;
 
+    //TODO:Eliminar
     void deleteContactConnection(ContactConnection chatUserIdentity) throws CantDeleteContactConnectionException;
 
+    //TODO:Eliminar
     List<ContactConnection> getContactConnections() throws CantGetContactConnectionException;
 
+    //TODO:Eliminar
     ContactConnection getContactConnectionByContactId(UUID contactId) throws CantGetContactConnectionException;
 
     /**
