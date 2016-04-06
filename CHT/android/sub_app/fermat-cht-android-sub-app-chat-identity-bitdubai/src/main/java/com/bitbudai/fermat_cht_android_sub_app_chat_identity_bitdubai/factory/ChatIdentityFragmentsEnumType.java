@@ -9,7 +9,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 public enum ChatIdentityFragmentsEnumType implements FermatFragmentsEnumType<ChatIdentityFragmentsEnumType> {
 
 
-    CHT_CHAT_CREATE_IDENTITY("CHTCI"),
+    CHT_CHAT_CREATE_IDENTITY_FRAGMENT("CHTCIF"),
     CHT_CHAT_EDIT_IDENTITY("CHTEI");
 
 
