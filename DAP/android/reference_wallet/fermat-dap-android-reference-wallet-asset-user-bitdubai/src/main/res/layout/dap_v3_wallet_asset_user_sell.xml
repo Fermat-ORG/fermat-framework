@@ -24,7 +24,7 @@
                 android:fontFamily="regular"
                 android:text="@string/dap_user_wallet_sell_asset_price"
                 android:textColor="@color/card_toolbar"
-                android:textSize="14sp" />
+                android:textSize="18sp" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
                 android:id="@+id/assetSellbitcoins"
@@ -238,13 +238,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="11dp"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="20dp"
                 android:fontFamily="regular"
                 android:gravity="center_vertical"
                 android:paddingTop="12dp"
                 android:text="@string/dap_user_wallet_sell_to"
                 android:textColor="@color/color_white"
-                android:textSize="16sp" />
+                android:textSize="17sp" />
 
             <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
                 android:id="@+id/userToSelectText"
@@ -273,13 +273,12 @@
                 android:layout_below="@+id/sellToText"
                 android:layout_marginLeft="12dp"
                 android:layout_marginTop="9dp"
-                android:fontFamily="regular"
+                android:fontFamily="ROBOTO"
                 android:text="@string/dap_user_wallet_to"
                 android:textColor="@color/card_toolbar"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
-
                 android:id="@+id/userToSelectText"
                 android:layout_width="324dp"
                 android:layout_height="33dp"
@@ -290,11 +289,12 @@
                 android:editable="true"
                 android:ellipsize="end"
                 android:hint=""
-                android:paddingLeft="35dp"
+                android:paddingLeft="45dp"
                 android:paddingRight="35dp"
                 android:singleLine="true"
+                android:fontFamily="ROBOTO"
                 android:textColor="@color/color_black"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <RelativeLayout
                 android:id="@+id/listReferenceLine"
@@ -367,8 +367,6 @@
                 android:layout_height="30dp"
                 android:layout_alignBottom="@+id/userToSelectText"
                 android:layout_alignRight="@+id/userToSelectText"
-                android:layout_marginBottom="3dp"
-                android:layout_marginRight="10dp"
                 android:visibility="invisible">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
