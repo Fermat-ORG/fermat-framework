@@ -9,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapterView;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
@@ -116,6 +117,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             }
         });
         getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         adapter=new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
                 .addModuleManager(moduleManager)
