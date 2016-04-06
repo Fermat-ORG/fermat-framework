@@ -234,10 +234,15 @@ public class UserSellAssetFragment extends FermatWalletListFragment<User>
             }
         });
 
-           eraseButton.setOnClickListener(new View.OnClickListener() {
+        eraseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 userToSelectText.setText("");
+                userSelected = null;
+                for (User user : users) {
+                    user.setSelected(false);
+                }
+                adapter.notifyDataSetChanged();
             }
         });
 
