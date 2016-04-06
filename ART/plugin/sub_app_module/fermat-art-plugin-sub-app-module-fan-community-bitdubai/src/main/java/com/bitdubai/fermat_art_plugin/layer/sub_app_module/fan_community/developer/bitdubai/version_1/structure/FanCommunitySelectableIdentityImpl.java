@@ -3,7 +3,7 @@ package com.bitdubai.fermat_art_plugin.layer.sub_app_module.fan_community.develo
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantSelectIdentityException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
-import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fan;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 
 /**
@@ -31,7 +31,7 @@ public class FanCommunitySelectableIdentityImpl implements FanCommunitySelectabl
         this.image     = artistIdentity.getProfileImage();
     }
 
-    FanCommunitySelectableIdentityImpl(final Fan fanIdentity) {
+    FanCommunitySelectableIdentityImpl(final Fanatic fanIdentity) {
 
         this.alias     = fanIdentity.getAlias()       ;
         this.publicKey = fanIdentity.getPublicKey()   ;

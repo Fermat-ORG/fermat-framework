@@ -21,7 +21,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.Fa
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
-import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanIdentityManager;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantGetFanListException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantGetFanSearchResult;
@@ -51,7 +51,7 @@ public class FanCommunityManager implements FanCommunityModuleManager {
     private final ArtistIdentityManager                artistIdentityManager                    ;
     private final FanActorConnectionManager            fanActorConnectionManager                ;
     private final FanManager                           fanActorNetworkServiceManager            ;
-    private final FanIdentityManager                   fanIdentityManager                       ;
+    private final FanaticIdentityManager               fanaticIdentityManager                   ;
     private final ErrorManager                         errorManager                             ;
     private final PluginFileSystem                     pluginFileSystem                         ;
     private final UUID                                 pluginId                                 ;
@@ -64,7 +64,7 @@ public class FanCommunityManager implements FanCommunityModuleManager {
     public FanCommunityManager(final ArtistIdentityManager artistIdentityManager,
                                           final FanActorConnectionManager fanActorConnectionManager,
                                           final FanManager fanActorNetworkServiceManager,
-                                          final FanIdentityManager fanIdentityManager,
+                                          final FanaticIdentityManager fanaticIdentityManager,
                                           final ErrorManager errorManager,
                                           final PluginFileSystem pluginFileSystem,
                                           final UUID pluginId,
@@ -73,7 +73,7 @@ public class FanCommunityManager implements FanCommunityModuleManager {
         this.artistIdentityManager                    = artistIdentityManager                    ;
         this.fanActorConnectionManager                = fanActorConnectionManager                ;
         this.fanActorNetworkServiceManager            = fanActorNetworkServiceManager            ;
-        this.fanIdentityManager                       = fanIdentityManager                       ;
+        this.fanaticIdentityManager                   = fanaticIdentityManager                   ;
         this.errorManager                             = errorManager                             ;
         this.pluginFileSystem                         = pluginFileSystem                         ;
         this.pluginId                                 = pluginId                                 ;

@@ -4,13 +4,17 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
+import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,6 +29,21 @@ public interface FanIdentityManagerModule extends ModuleManager<FanIdentitySetti
      * @throws CantListFanIdentitiesException
      */
     List<Fanatic> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
+
+    /**
+     * Through the method <code>listExternalIdentitiesFromCurrentDeviceUser</code> we can get all the external artist
+     * identities linked to the current logged device user.
+     * @return
+     * @throws CantListArtistIdentitiesException
+     */
+    HashMap<ExternalPlatform,HashMap<UUID,String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
+
+    /**
+     * Return an Object with the basic data from the linked identity and its respectible
+     * @param publicKey
+     * @return
+     */
+    ArtIdentity getLinkedIdentity(String publicKey);
 
     /**
      * Through the method <code>createFanaticIdentity</code> you can create a new artist identity.
@@ -74,4 +93,5 @@ public interface FanIdentityManagerModule extends ModuleManager<FanIdentitySetti
     void publishIdentity(String publicKey) throws
             CantPublishIdentityException,
             IdentityNotFoundException;
+
 }

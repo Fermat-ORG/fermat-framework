@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
-import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanIdentityManager;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
 import com.bitdubai.fermat_art_plugin.layer.sub_app_module.fan_community.developer.bitdubai.version_1.structure.FanCommunityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -38,7 +38,7 @@ public class FanCommunityPluginRoot extends AbstractPlugin {
     private FanManager fanNetworkServiceManager;
 
     @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.IDENTITY,              plugin = Plugins.ARTIST_IDENTITY   )
-    private FanIdentityManager fanIdentityManager;*/
+    private FanaticIdentityManager fanaticIdentityManager;*/
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,     layer = Layers.PLATFORM_SERVICE,      addon  = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -61,7 +61,7 @@ public class FanCommunityPluginRoot extends AbstractPlugin {
                 artistIdentityManager,
                 fanActorConnectionManager,
                 fanNetworkServiceManager,
-                fanIdentityManager,
+                fanaticIdentityManager,
                 errorManager,
                 pluginFileSystem,
                 pluginId,
