@@ -204,8 +204,8 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
 
 
         LOG.info("------------------------------------------------------ -----------------------------------------------------");
-        LOG.info("Sending vpn connection to = " + platformComponentProfileDestination.toJson());
-        LOG.info("Sending whit remote = " + remoteParticipant.toJson());
+        LOG.info("Sending vpn connection to = " + platformComponentProfileDestination.getAlias());
+        LOG.info("Sending whit remote = " + remoteParticipant.getAlias());
 
         /*
          * Get json representation for the filters
