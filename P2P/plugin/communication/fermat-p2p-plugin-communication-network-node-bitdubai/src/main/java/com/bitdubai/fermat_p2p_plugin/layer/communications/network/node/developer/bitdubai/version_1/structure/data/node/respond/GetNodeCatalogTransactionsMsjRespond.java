@@ -12,14 +12,14 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import java.util.List;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.node.respond.NodeCatalogTransactionsMsjRequest</code>
+ * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.node.respond.GetNodeCatalogTransactionsMsjRespond</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 05/04/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NodeCatalogTransactionsMsjRequest extends MsgRespond {
+public class GetNodeCatalogTransactionsMsjRespond extends MsgRespond {
 
     /**
      * Represent the list of transactions
@@ -27,14 +27,20 @@ public class NodeCatalogTransactionsMsjRequest extends MsgRespond {
     private List<NodesCatalogTransaction> nodesCatalogTransactions;
 
     /**
+     * Represent the count
+     */
+    private Integer count;
+
+    /**
      * Constructor with parameters
      *
      * @param status
      * @param details
      */
-    public NodeCatalogTransactionsMsjRequest(STATUS status, String details, List<NodesCatalogTransaction> nodesCatalogTransactions) {
+    public GetNodeCatalogTransactionsMsjRespond(STATUS status, String details, List<NodesCatalogTransaction> nodesCatalogTransactions, Integer count) {
         super(status, details);
         this.nodesCatalogTransactions = nodesCatalogTransactions;
+        this.count = count;
     }
 
     /**
@@ -43,5 +49,13 @@ public class NodeCatalogTransactionsMsjRequest extends MsgRespond {
      */
     public List<NodesCatalogTransaction> getNodesCatalogTransactions() {
         return nodesCatalogTransactions;
+    }
+
+    /**
+     * Get the Count
+     * @return Integer
+     */
+    public Integer getCount() {
+        return count;
     }
 }

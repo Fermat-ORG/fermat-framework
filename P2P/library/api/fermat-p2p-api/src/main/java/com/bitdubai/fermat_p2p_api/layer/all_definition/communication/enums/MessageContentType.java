@@ -25,7 +25,8 @@ public enum MessageContentType {
     JSON  ("JSON"),
     BYTE  ("BYTE"),
     IMAGE ("IMG"),
-    VIDEO ("VIDEO");
+    VIDEO ("VIDEO"),
+    OBJECT ("OBJECT");
 
     /**
      * Represent the code of the message status
@@ -68,6 +69,8 @@ public enum MessageContentType {
                 return MessageContentType.IMAGE;
             case "VIDEO":
                 return MessageContentType.VIDEO;
+            case "OBJECT":
+                return MessageContentType.OBJECT;
         }
 
         /**

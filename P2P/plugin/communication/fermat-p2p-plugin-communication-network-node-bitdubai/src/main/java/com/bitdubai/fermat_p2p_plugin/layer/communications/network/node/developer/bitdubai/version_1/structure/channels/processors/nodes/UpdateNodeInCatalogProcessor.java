@@ -63,6 +63,8 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
     @Override
     public void processingPackage(Session session, Package packageReceived) {
 
+        LOG.info("Processing new package received");
+
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
         NodeProfile nodeProfile = null;
