@@ -60,11 +60,7 @@ public class ArtistIdentityDatabaseFactory implements DealsWithErrors, DealsWith
             table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
             table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
             table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
-            table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_USER_NAME_COLUMN_NAME    , DatabaseDataType.STRING, 150, false);
-            table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_ACCESS_TOKEN_COLUMN_NAME    , DatabaseDataType.STRING, 200, false);
-            table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME    , DatabaseDataType.STRING, 100, false);
-            table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXPOSURE_LEVEL_COLUMN_NAME    , DatabaseDataType.STRING, 100, false);
-            table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ACEEPTS_CONNECTIONS_TYPE_COLUMN_NAME    , DatabaseDataType.STRING, 100, false);
+            table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME, DatabaseDataType.STRING, 200, false);
 
 
             table.addIndex(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_FIRST_KEY_COLUMN);
