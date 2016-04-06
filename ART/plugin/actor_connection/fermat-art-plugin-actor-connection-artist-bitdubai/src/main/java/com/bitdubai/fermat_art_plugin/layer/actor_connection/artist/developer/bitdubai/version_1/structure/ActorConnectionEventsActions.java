@@ -96,7 +96,7 @@ public class ActorConnectionEventsActions {
             throw new CantHandleNewsEventException(
                     e,
                     "Handling news event",
-                    "Error handling Crypto Broker Connection Request News Event.");
+                    "Error handling Artist Connection Request News Event.");
         }
 
     }
