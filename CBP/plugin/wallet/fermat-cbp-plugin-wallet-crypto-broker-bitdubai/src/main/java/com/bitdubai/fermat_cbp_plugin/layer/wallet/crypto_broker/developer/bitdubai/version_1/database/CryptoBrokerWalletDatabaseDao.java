@@ -105,7 +105,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     }
 
     public List<CurrencyMatching> getCryptoBrokerTransactionCurrencyMatchings() throws CantGetTransactionCryptoBrokerWalletMatchingException {
-        List<CurrencyMatching> currencyMatchings = new ArrayList<>();
+        List<CurrencyMatching> currencyMatchingList = new ArrayList<>();
         boolean sw = true;
 
         DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME);
@@ -114,10 +114,10 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         table.addFilterOrder(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
         Currency currencyGiving = null;
-        Currency currencyReceiving = null;
+        Currency currencyReceiving;
         float amountGiving = 0;
-        float amountReceiving = 0;
-        String originTransactionId = null;
+        float amountReceiving;
+        String originTransactionId ;
 
         try {
             table.loadToMemory();
@@ -164,7 +164,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
 
                     if (Objects.equals(originTransactionId, records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME))) {
                         currencyMatchingImp = new CurrencyMatchingImp(originTransactionId, currencyGiving, currencyReceiving, amountGiving, amountReceiving);
-                        currencyMatchings.add(currencyMatchingImp);
+                        currencyMatchingList.add(currencyMatchingImp);
                     }
                     originTransactionId = null;
 
@@ -175,7 +175,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
             throw new CantGetTransactionCryptoBrokerWalletMatchingException("Cant Load Table Memory", e, "", "");
         }
 
-        return currencyMatchings;
+        return currencyMatchingList;
     }
 
     public void markAsSeen(List<String> transactionIds) throws CantMarkAsSeenException {
