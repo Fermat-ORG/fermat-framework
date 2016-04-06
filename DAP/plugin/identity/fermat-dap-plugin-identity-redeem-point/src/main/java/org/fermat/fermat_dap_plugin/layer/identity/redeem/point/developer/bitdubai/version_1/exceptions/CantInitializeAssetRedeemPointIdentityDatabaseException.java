@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions;
+package org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 

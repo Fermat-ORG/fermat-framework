@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.database;
+package org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.database;
 
 /**
  * Created by Nerio on 18/09/15.

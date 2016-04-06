@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.database;
+package org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
@@ -28,14 +28,14 @@ import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDe
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantGetRedeemPointIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.CantUpdateIdentityRedeemPointException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
-import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.ReedemPointIdentityPluginRoot;
-import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantGetAssetRedeemPointIdentityPrivateKeyException;
-import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantGetAssetRedeemPointIdentityProfileImageException;
-import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException;
-import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantListAssetRedeemPointIdentitiesException;
-import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
-import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
-import com.bitdubai.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.structure.IdentityAssetRedeemPointImpl;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.ReedemPointIdentityPluginRoot;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantGetAssetRedeemPointIdentityPrivateKeyException;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantGetAssetRedeemPointIdentityProfileImageException;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantListAssetRedeemPointIdentitiesException;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.structure.IdentityAssetRedeemPointImpl;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;
