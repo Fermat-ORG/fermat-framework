@@ -22,7 +22,7 @@ public class ChatIdentityFragmentFactory extends FermatFragmentFactory<ChatIdent
             throw createFragmentNotFoundException(null);
         }
 
-        if(fragments.equals(ChatIdentityFragmentsEnumType.CHT_CHAT_CREATE_IDENTITY)){
+        if(fragments.equals(ChatIdentityFragmentsEnumType.CHT_CHAT_CREATE_IDENTITY_FRAGMENT)){
             CreateChatIdentityFragment.newInstance();
         }
 
