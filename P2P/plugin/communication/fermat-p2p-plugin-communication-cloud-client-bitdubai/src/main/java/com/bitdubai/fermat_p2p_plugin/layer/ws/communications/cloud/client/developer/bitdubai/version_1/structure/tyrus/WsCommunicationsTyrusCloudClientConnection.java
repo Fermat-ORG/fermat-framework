@@ -365,7 +365,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
             String fermatPacketEncode = FermatPacketEncoder.encode(fermatPacket);
 //ahi, listo
             System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() " + wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());
-            if (wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen()){
+            if (isConnected()){
                 /*
                  * Send the encode packet to the server
                  */
@@ -424,7 +424,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
             String fermatPacketEncode = FermatPacketEncoder.encode(fermatPacket);
 
             System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() "+ wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());
-            if (wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen()){
+            if (isConnected()){
 
                 /*
                  * Send the encode packet to the server
@@ -480,7 +480,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
                     wsCommunicationsTyrusCloudClientChannel.getClientIdentity().getPrivateKey()); //Sender private key
 
             System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() "+ wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());
-            if (wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen()){
+            if (isConnected()){
 
                 /*
                  * Send the encode packet to the server
@@ -790,7 +790,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
 
 
             System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() " + wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());
-            if (wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen()){
+            if (isConnected()){
                 /*
                  * Send the encode packet to the server
                  */
@@ -860,7 +860,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
 
 
             System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() " + wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());
-            if (wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen()){
+            if (isConnected()){
 
                 /*
                  * Send the encode packet to the server
@@ -939,7 +939,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
 
 
             System.out.println("WsCommunicationsCloudClientConnection - wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen() " + wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen());
-            if (wsCommunicationsTyrusCloudClientChannel.getClientConnection().isOpen()){
+            if (isConnected()){
 
                 /*
                  * Send the encode packet to the server
