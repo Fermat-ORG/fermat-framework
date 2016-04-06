@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
-public interface FanIdentityManager extends FermatManager {
+public interface FanaticIdentityManager extends FermatManager {
 
     /**
      * Through the method <code>listIdentitiesFromCurrentDeviceUser</code> we can get all the artist
@@ -22,7 +22,7 @@ public interface FanIdentityManager extends FermatManager {
      * @return
      * @throws CantListFanIdentitiesException
      */
-    List<Fan> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
+    List<Fanatic> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
 
     /**
      * Through the method <code>createArtistIdentity</code> you can create a new artist identity.
@@ -31,7 +31,7 @@ public interface FanIdentityManager extends FermatManager {
      * @return
      * @throws
      */
-    Fan createArtistIdentity(
+    Fanatic createArtistIdentity(
             final String alias,
             final byte[] imageBytes) throws
             CantCreateFanIdentityException,
@@ -56,7 +56,7 @@ public interface FanIdentityManager extends FermatManager {
      * @throws CantGetFanIdentityException
      * @throws IdentityNotFoundException
      */
-    Fan getFanIdentity(String publicKey) throws
+    Fanatic getFanIdentity(String publicKey) throws
             CantGetFanIdentityException,
             IdentityNotFoundException;
 

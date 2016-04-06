@@ -5,7 +5,7 @@ import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
-public interface Fan extends ArtIdentity {
+public interface Fanatic extends ArtIdentity {
 
     /**
      * This interface, in this version only extends the default methods in ArtIdentity interface.
