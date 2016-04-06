@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanIdentityManager;
 import com.bitdubai.fermat_art_plugin.layer.sub_app_module.fan_identity.developer.bitdubai.version_1.structure.ModuleFanIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -28,6 +29,9 @@ public class FanIdentityPluginRoot extends AbstractPlugin {
     @NeededPluginReference(platform = Platforms.ART_PLATFORM, layer = Layers.IDENTITY,plugin = Plugins.ARTIST_IDENTITY)
     private FanIdentityManager fanIdentityManager;
 
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM,                addon  = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
+
     private ModuleFanIdentityManager moduleFanIdentityManager;
     /**
      * Default constructor
@@ -38,7 +42,9 @@ public class FanIdentityPluginRoot extends AbstractPlugin {
     private void initPluginManager(){
         this.moduleFanIdentityManager = new ModuleFanIdentityManager(
                 errorManager,
-                fanIdentityManager);
+                fanIdentityManager,
+                pluginFileSystem,
+                pluginId);
     }
     public ModuleManager getManager(){
         return this.moduleFanIdentityManager;
