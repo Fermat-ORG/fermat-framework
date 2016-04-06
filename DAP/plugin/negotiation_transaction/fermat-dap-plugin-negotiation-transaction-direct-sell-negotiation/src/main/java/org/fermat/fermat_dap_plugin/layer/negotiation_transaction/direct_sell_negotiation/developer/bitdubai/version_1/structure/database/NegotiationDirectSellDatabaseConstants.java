@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.bitdubai.version_1.structure.database;
+package org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.bitdubai.version_1.structure.database;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 06/11/15. - Jose Briceño (josebricenor@gmail.com) 16/03/16.
