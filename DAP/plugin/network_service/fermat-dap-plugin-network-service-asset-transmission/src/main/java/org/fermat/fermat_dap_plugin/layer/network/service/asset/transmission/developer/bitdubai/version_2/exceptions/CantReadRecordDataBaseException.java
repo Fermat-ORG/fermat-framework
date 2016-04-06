@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions;
+package org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions;
 /*
  * @#CantReadRecordDataBaseException.java - 2015
  * Copyright bitDubai.com., All rights reserved.
