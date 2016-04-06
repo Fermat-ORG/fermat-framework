@@ -8,13 +8,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFile
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
-import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
-import com.bitdubai.fermat_art_api.all_definition.enums.ExternalPlatform;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRegisterActorArtistNetworkServiceException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ActorArtistNetworkServiceManager;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistActor;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.util.ArtistActorImp;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
@@ -66,7 +64,7 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
      */
     private DeviceUserManager deviceUserManager;
 
-    private ActorArtistNetworkServiceManager actorArtistNetworkServiceManager;
+    private ArtistManager artistManager;
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -96,14 +94,14 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public IdentityArtistManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, ActorArtistNetworkServiceManager actorArtistNetworkServiceManager){
+    public IdentityArtistManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, ArtistManager artistManager){
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.deviceUserManager = deviceUserManager;
-        this.actorArtistNetworkServiceManager = actorArtistNetworkServiceManager;
+        this.artistManager = artistManager;
     }
 
     private ArtistIdentityDao getArtistIdentityDao() throws CantInitializeArtistIdentityDatabaseException {
@@ -148,7 +146,7 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
         }
         return artist;
     }
-    public Artist createNewIdentityArtist(String alias, byte[] profileImage) throws CantCreateArtistIdentityException {
+    public Artist createNewIdentityArtist(String alias, byte[] profileImage, UUID externalIdentityID) throws CantCreateArtistIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -156,9 +154,9 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            getArtistIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage);
+            getArtistIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage,externalIdentityID);
 
-            return new ArtistIdentityImp(alias, publicKey, profileImage, pluginFileSystem, pluginId);
+            return new ArtistIdentityImp(alias, publicKey, profileImage,externalIdentityID, pluginFileSystem, pluginId);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateArtistIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {
@@ -166,64 +164,24 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
         }
     }
 
-    public Artist createNewIdentityArtist(String alias, byte[] profileImage,
-                                                       String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform,
-                                                       ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException {
+    public void updateIdentityArtist(String alias,String publicKey, byte[] profileImage, UUID externalIdentityID) throws CantUpdateArtistIdentityException {
         try {
-            DeviceUser deviceUser = deviceUserManager.getLoggedInDeviceUser();
-
-            ECCKeyPair keyPair = new ECCKeyPair();
-            String publicKey = keyPair.getPublicKey();
-            String privateKey = keyPair.getPrivateKey();
-
-            getArtistIdentityDao().createNewUser(alias,publicKey,privateKey,deviceUser,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
-
-
-            return new ArtistIdentityImp(alias,publicKey,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType, pluginFileSystem, pluginId);
-        } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantCreateArtistIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", e, "Error getting current logged in device user", "");
-        } catch (Exception e) {
-            throw new CantCreateArtistIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    public void updateIdentityArtist(String alias,String publicKey, byte[] profileImage,
-                                     String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform,
-                                     ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
-        try {
-            getArtistIdentityDao().updateIdentityArtistUser(publicKey, alias, profileImage, externalUserName,
-                    externalAccessToken, externalPlatform, exposureLevel, artistAcceptConnectionsType);
+            getArtistIdentityDao().updateIdentityArtistUser(publicKey, alias, profileImage,externalIdentityID);
 
         } catch (CantInitializeArtistIdentityDatabaseException e) {
             e.printStackTrace();
         }
     }
-//
-//    public boolean hasRedeemPointIdentity() throws CantListAssetRedeemPointException {
-//        try {
-//
-//            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-//            if (getArtistIdentityDao().getIdentityAssetRedeemPointsFromCurrentDeviceUser(loggedUser).size() > 0)
-//                return true;
-//            else
-//                return false;
-//        } catch (CantGetLoggedInDeviceUserException e) {
-//            throw new CantListAssetRedeemPointException("CAN'T GET IF NEW ARTIST IDENTITIES  EXISTS", e, "Error get logged user device", "");
-//        } catch (CantListArtistIdentitiesException e) {
-//            throw new CantListAssetRedeemPointException("CAN'T GET IF NEW ARTIST IDENTITIES EXISTS", e, "", "");
-//        } catch (Exception e) {
-//            throw new CantListAssetRedeemPointException("CAN'T GET ASSET NEW ARTIST IDENTITY EXISTS", FermatException.wrapException(e), "", "");
-//        }
-//    }
 
-
-    public void registerIdentitiesANS(String publicKey) throws CantRegisterActorArtistNetworkServiceException {
+    public void registerIdentitiesANS(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
         try {
-            Artist artist = getArtistIdentityDao().getIdentityArtist(publicKey);
-            actorArtistNetworkServiceManager.registerActorArtist(new ArtistActorImp(artist));
-        } catch (CantRegisterActorArtistNetworkServiceException | CantGetArtistIdentityException | CantInitializeArtistIdentityDatabaseException e) {
+            Artist artist = getIdentitArtist(publicKey);
+            ArtistExposingData artistExposingData = new ArtistExposingData(artist.getPublicKey(),artist.getAlias(),artist.getProfileImage());
+            artistManager.exposeIdentity(artistExposingData);
+        } catch (CantGetArtistIdentityException | CantExposeIdentityException e) {
             e.printStackTrace();
         }
     }
+
 
 }

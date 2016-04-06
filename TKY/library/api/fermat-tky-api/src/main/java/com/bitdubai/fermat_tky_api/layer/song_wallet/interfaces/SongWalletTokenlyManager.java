@@ -2,6 +2,9 @@ package com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDeleteSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDownloadSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongListException;
@@ -58,19 +61,19 @@ public interface SongWalletTokenlyManager extends FermatManager{
      * This checks the time passed between the method execution and the last update, if the actual
      * time - last updated is less than the default update interval, this method not synchronize
      * with external API.
-     * @param tokenlyUsername
+     * @param fanIdentity
      * @throws CantSynchronizeWithExternalAPIException
      */
-    void synchronizeSongs(String tokenlyUsername) throws CantSynchronizeWithExternalAPIException;
+    void synchronizeSongs(Fan fanIdentity) throws CantSynchronizeWithExternalAPIException;
 
     /**
      * This method starts the synchronize songs process.
      * In this case, the synchronize process is started by the user.
      * This method doesn't check the last update field.
-     * @param tokenlyUsername
+     * @param fanIdentity
      * @throws CantSynchronizeWithExternalAPIException
      */
-    void synchronizeSongsByUser(String tokenlyUsername) throws CantSynchronizeWithExternalAPIException;
+    void synchronizeSongsByUser(Fan fanIdentity) throws CantSynchronizeWithExternalAPIException;
 
     /**
      * This method deletes a song from the wallet and the device storage.
@@ -88,11 +91,25 @@ public interface SongWalletTokenlyManager extends FermatManager{
      * This Id is assigned by the Song Wallet Tokenly implementation, can be different to the
      * Tonkenly Id.
      * @param songId
+     * @param musicUser
      * @throws CantDownloadSongException
      */
-    void downloadSong(UUID songId) throws
+    void downloadSong(UUID songId, MusicUser musicUser) throws
             CantDownloadSongException,
             CantUpdateSongDevicePathException,
             CantUpdateSongStatusException;
 
+    /**
+     * This method returns a WalletSong object that includes a byte array that represents the song
+     * ready to be played.
+     * @param songId
+     * @return
+     * @throws CantGetSongException
+     */
+    WalletSong getSongWithBytes(UUID songId) throws CantGetSongException;
+
+    /**
+     * This method reports to wallet manager that the ser wants to download a song
+     */
+    void cancelDownload();
 }

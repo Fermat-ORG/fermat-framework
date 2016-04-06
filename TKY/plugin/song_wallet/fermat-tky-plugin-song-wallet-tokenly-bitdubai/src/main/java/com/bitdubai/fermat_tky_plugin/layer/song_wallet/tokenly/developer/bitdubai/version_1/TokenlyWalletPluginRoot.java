@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -29,8 +30,12 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDao;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDatabaseConstants;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.database.TokenlySongWalletDatabaseFactory;
@@ -38,10 +43,12 @@ import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdub
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure.TokenlyWalletManager;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure.TokenlyWalletSongVault;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
 
@@ -63,6 +70,9 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
+    private Broadcaster broadcaster;
 
     @NeededPluginReference(platform = Platforms.TOKENLY, layer = Layers.EXTERNAL_API, plugin = Plugins.TOKENLY_API)
     protected TokenlyApiManager tokenlyApiManager;
@@ -86,6 +96,11 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
      * Represents the plugin Developer database factory.
      */
     TokenlySongWalletDeveloperDatabaseFactory tokenlySongWalletDeveloperDatabaseFactory;
+
+    /**
+     * Represents the plugin database DAO.
+     */
+    TokenlySongWalletDao tokenlySongWalletDao;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -175,7 +190,7 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             /**
              * Init Database DAO.
              */
-            TokenlySongWalletDao tokenlySongWalletDao = new TokenlySongWalletDao(
+            tokenlySongWalletDao = new TokenlySongWalletDao(
                     pluginDatabaseSystem,
                     pluginId,
                     database,
@@ -186,7 +201,9 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
              */
             tokenlyWalletSongVault = new TokenlyWalletSongVault(
                     pluginFileSystem,
-                    tokenlyApiManager);
+                    tokenlyApiManager,
+                    pluginId,
+                    broadcaster);
 
             /**
              * Init plugin manager
@@ -195,8 +212,15 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
                     tokenlySongWalletDao,
                     tokenlyWalletSongVault,
                     tokenlyApiManager,
-                    errorManager);
+                    errorManager,
+                    broadcaster);
             //testDownloadFile();
+            //testSynchronizeSongs();
+            //testAutomaticSyncSongs();
+            //testDeleteSong();
+            //testDownloadDeletedSong();
+            //testDownloadSongsAndRecoverBytesArray();
+            //testCancelDownload();
         } catch(CantInitializeDatabaseException e){
             errorManager.reportUnexpectedPluginException(
                     Plugins.TOKENLY_API,
@@ -330,10 +354,182 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
         try{
             String testURL="https://www.dropbox.com/s/l8df6ixyiweq8yt/appSessionFragmenContract?dl=0";
             String testName="testFileName";
-            this.tokenlyWalletSongVault.downloadFile(testURL, testName);
+            this.tokenlyWalletSongVault.downloadFile(testURL, testName, UUID.randomUUID());
         } catch (Exception e){
             System.out.println("TKY: Test Download exception");
             e.printStackTrace();
         }
     }
+
+    private void testSynchronizeSongs(){
+        try{
+            Fan fanIdentity = getTestFanIdentity();
+            this.tokenlyWalletManager.synchronizeSongsByUser(fanIdentity);
+        } catch (Exception e){
+            System.out.println("TKY: Test Download song exception");
+            e.printStackTrace();
+        }
+    }
+
+    private void testAutomaticSyncSongs(){
+        try{
+            //Please, make this test with any songs in database
+            Fan fanIdentity = getTestFanIdentity();
+            this.tokenlyWalletManager.synchronizeSongs(fanIdentity);
+        } catch (Exception e){
+            System.out.println("TKY: Test Automatic Download song exception");
+            e.printStackTrace();
+        }
+    }
+
+    private void testDeleteSong(){
+        try{
+            //Get the available songs
+            List<WalletSong> availableSongsList = this.tokenlyWalletManager.getAvailableSongs();
+            System.out.println("TKY - AVAILABLE List "+availableSongsList);
+            int indexToDelete = 0;
+            UUID idToDelete = availableSongsList.get(indexToDelete).getSongId();
+            this.tokenlyWalletManager.deleteSong(idToDelete);
+            availableSongsList = this.tokenlyWalletManager.getAvailableSongs();
+            System.out.println("TKY - NEW AVAILABLE List " + availableSongsList);
+            //Get the deleted songs
+            List<WalletSong> deletedSongsList = this.tokenlyWalletManager.getDeletedSongs();
+            System.out.println("TKY - Deleted List " + deletedSongsList);
+        } catch (Exception e){
+            System.out.println("TKY: Test Delete song exception");
+            e.printStackTrace();
+        }
+    }
+
+    private void testDownloadDeletedSong(){
+        try{
+            UUID deletedSongId = UUID.fromString("a5a68fe3-923c-42f4-b0b2-6755b7970fd9");
+            Fan fanIdentity = getTestFanIdentity();
+            this.tokenlyWalletManager.downloadSong(deletedSongId, fanIdentity.getMusicUser());
+        } catch (Exception e){
+            System.out.println("TKY: Test download Deleted song exception");
+            e.printStackTrace();
+        }
+    }
+
+    private void testDownloadSongsAndRecoverBytesArray(){
+        try{
+            //testSynchronizeSongs();
+            List<WalletSong> availableSongsList = this.tokenlyWalletManager.getAvailableSongs();
+            System.out.println("TKY - AVAILABLE List "+availableSongsList);
+            WalletSong songToRecover = availableSongsList.get(0);
+            WalletSong fullSong=this.tokenlyWalletManager.getSongWithBytes(
+                    songToRecover.getSongId());
+            byte[] songBytes = fullSong.getSongBytes();
+            FileOutputStream fos = new FileOutputStream("/storage/emulated/0/Music/test/"+fullSong.getName().replace(" ","_"));
+            fos.write(songBytes);
+            fos.close();
+        } catch (Exception e){
+            System.out.println("TKY: array bytes exception");
+            e.printStackTrace();
+        }
+    }
+
+    private void testCancelDownload(){
+        try {
+            Fan fanIdentity = getTestFanIdentity();
+            this.tokenlyWalletManager.synchronizeSongsByUser(fanIdentity);
+        } catch (Exception e){
+            System.out.println("TKY: cancel download exception");
+            e.printStackTrace();
+        }
+    }
+
+    private Fan getTestFanIdentity(){
+        Fan fanIdentity = new Fan() {
+            @Override
+            public String getTokenlyId() {
+                return null;
+            }
+
+            @Override
+            public String getUsername() {
+                return null;
+            }
+
+            @Override
+            public String getEmail() {
+                return null;
+            }
+
+            @Override
+            public String getApiToken() {
+                return null;
+            }
+
+            @Override
+            public String getApiSecretKey() {
+                return null;
+            }
+
+
+            @Override
+            public UUID getId() {
+                return null;
+            }
+
+            @Override
+            public String getPublicKey() {
+                return null;
+            }
+
+            @Override
+            public byte[] getProfileImage() {
+                return new byte[0];
+            }
+
+            @Override
+            public void setNewProfileImage(byte[] imageBytes) {
+
+            }
+
+            @Override
+            public ExternalPlatform getExternalPlatform() {
+                return null;
+            }
+
+            @Override
+            public MusicUser getMusicUser() {
+                MusicUser hardocedUser = new MusicUser() {
+                    @Override
+                    public String getTokenlyId() {
+                        return "18873727-da0f-4b50-a213-cc40c6b4562d";
+                    }
+
+                    @Override
+                    public String getUsername() {
+                        return "pereznator";
+                    }
+
+                    @Override
+                    public String getEmail() {
+                        return "darkpriestrelative@gmail.com";
+                    }
+
+                    @Override
+                    public String getApiToken() {
+                        return "Tvn1yFjTsisMHnlI";
+                    }
+
+                    @Override
+                    public String getApiSecretKey() {
+                        return "K0fW5UfvrrEVQJQnK27FbLgtjtWHjsTsq3kQFB6Y";
+                    }
+                };
+                return hardocedUser;
+            }
+
+            @Override
+            public String getUserPassword() {
+                return null;
+            }
+        };
+        return fanIdentity;
+    }
+
 }

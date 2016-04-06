@@ -42,18 +42,17 @@ public class TimeOutNotifierAgentDatabaseFactory {
      * Create the database
      *
      * @param ownerId      the owner id
-     * @param databaseName the database name
      * @return Database
      * @throws CantCreateDatabaseException
      */
-    protected Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
+    protected Database createDatabase(UUID ownerId) throws CantCreateDatabaseException {
         Database database;
 
         /**
          * I will create the database where I am going to store the information of this wallet.
          */
         try {
-            database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
+            database = this.pluginDatabaseSystem.createDatabase(ownerId, TimeOutNotifierAgentDatabaseConstants.DATABASE_NAME);
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
             /**
              * I can not handle this situation.
@@ -78,10 +77,9 @@ public class TimeOutNotifierAgentDatabaseFactory {
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_DESCRIPTION_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_OWNER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_END_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-            table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_ELAPSED_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.FALSE);
-            table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_PROTOCOL_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 30, Boolean.FALSE);
             table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENTS_LAST_UPDATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
 
             table.addIndex(TimeOutNotifierAgentDatabaseConstants.AGENTS_FIRST_KEY_COLUMN);
@@ -91,16 +89,18 @@ public class TimeOutNotifierAgentDatabaseFactory {
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
+            }
+
+            /**
              * Create agent_owner table.
              */
-            table = databaseFactory.newTableFactory(ownerId, TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, TimeOutNotifierAgentDatabaseConstants.OWNER_TABLE_NAME);
 
-            table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_OWNER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-            table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(TimeOutNotifierAgentDatabaseConstants.OWNER_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(TimeOutNotifierAgentDatabaseConstants.OWNER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(TimeOutNotifierAgentDatabaseConstants.OWNER_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
 
-            table.addIndex(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_FIRST_KEY_COLUMN);
+            table.addIndex(TimeOutNotifierAgentDatabaseConstants.OWNER_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table
@@ -108,6 +108,25 @@ public class TimeOutNotifierAgentDatabaseFactory {
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+
+            /**
+             * Create event_monitor table.
+             */
+            table = databaseFactory.newTableFactory(ownerId, TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_TABLE_NAME);
+
+            table.addColumn(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME, DatabaseDataType.INTEGER, 0, Boolean.FALSE);
+            table.addColumn(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_LAST_UPDATED_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+
+            table.addIndex(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
         } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,

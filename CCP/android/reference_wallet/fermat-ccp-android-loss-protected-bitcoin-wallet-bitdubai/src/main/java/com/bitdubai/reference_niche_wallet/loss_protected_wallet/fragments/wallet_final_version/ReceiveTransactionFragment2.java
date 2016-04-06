@@ -29,6 +29,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_android_api.ui.util.FermatDividerItemDecoration;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -288,20 +289,17 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
                 BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode( settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType().getCode());
 
-                List<LossProtectedWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(),intraUserPk, blockchainNetworkType,  MAX_TRANSACTIONS, available_offset);
+                List<LossProtectedWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(),intraUserPk, blockchainNetworkType,  MAX_TRANSACTIONS, 0);
 
                 lstCryptoWalletTransactionsAvailable.addAll(list);
 
-                available_offset = lstCryptoWalletTransactionsAvailable.size();
-
-              //  lstCryptoWalletTransactionsBook.addAll(moduleManager.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), intraUserPk, MAX_TRANSACTIONS, book_offset));
-
-               // book_offset = lstCryptoWalletTransactionsBook.size();
-
-                //get transactions from actor public key to send me btc
+                     //get transactions from actor public key to send me btc
                 for (LossProtectedWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
                     List<LossProtectedWalletTransaction> lst = new ArrayList<>();
-                    lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk,blockchainNetworkType,MAX_TRANSACTIONS, 0);
+                    lst.add(cryptoWalletTransaction);
+                    if(!cryptoWalletTransaction.getActorFromType().equals(Actors.DEVICE_USER)){
+                        lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk,blockchainNetworkType,MAX_TRANSACTIONS, 0);
+                    }
                     long total = 0;
                     for(LossProtectedWalletTransaction cwt : lst){
                         total+= cwt.getAmount();
@@ -380,14 +378,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         try {
             if (((LossProtectedWalletSession)appSession).getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
-                //txt_balance_amount.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
-                txt_type_balance.setText(R.string.book_balance);
-               // referenceWalletSession.setBalanceTypeSelected(BalanceType.BOOK);
-            //} else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())) {
-                //bookBalance = loadBalance(BalanceType.BOOK);
-            //    txt_balance_amount.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
-           //     txt_type_balance.setText(R.string.available_balance);
-               // referenceWalletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
+                 txt_type_balance.setText(R.string.book_balance);
             }
         } catch (Exception e) {
            // referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
@@ -398,11 +389,6 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     private long loadBalance(BalanceType balanceType){
         long balance = 0;
-//        try {
-//            balance = cryptoWallet.getBalance(balanceType,referenceWalletSession.getWalletSessionType().getWalletPublicKey());
-//        } catch (CantGetBalanceException e) {
-//            e.printStackTrace();
-//        }
         return balance;
     }
 

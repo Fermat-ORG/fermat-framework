@@ -149,7 +149,7 @@ public class TokenlySongWalletDao {
             //Song status
             SongStatus songStatus;
             String songStatusString = databaseTableRecord.getStringValue(
-                    TokenlySongWalletDatabaseConstants.SONG_SONG_ID_COLUMN_NAME);
+                    TokenlySongWalletDatabaseConstants.SONG_SONG_STATUS_COLUMN_NAME);
             if(songStatusString==null||songStatusString.isEmpty()){
                 throw new CantGetWalletSongException("The song status is empty");
             } else{
@@ -259,7 +259,7 @@ public class TokenlySongWalletDao {
         //name
         databaseTableRecord.setStringValue(
                 TokenlySongWalletDatabaseConstants.SONG_NAME_COLUMN_NAME,
-                walletSong.getName());
+                walletSong.getName().replace("'","\'"));
         //tokens
         databaseTableRecord.setStringValue(
                 TokenlySongWalletDatabaseConstants.SONG_TOKENS_COLUMN_NAME,
@@ -267,39 +267,44 @@ public class TokenlySongWalletDao {
         //performers
         databaseTableRecord.setStringValue(
                 TokenlySongWalletDatabaseConstants.SONG_PERFORMERS_COLUMN_NAME,
-                walletSong.getPerformers());
+                walletSong.getPerformers().replace("'", "\'"));
         //composers
         databaseTableRecord.setStringValue(
                 TokenlySongWalletDatabaseConstants.SONG_COMPOSERS_COLUMN_NAME,
-                walletSong.getComposers());
+                walletSong.getComposers().replace("'", "\'"));
         //release Date
         databaseTableRecord.setStringValue(
                 TokenlySongWalletDatabaseConstants.SONG_RELEASE_DATE_COLUMN_NAME,
                 walletSong.getReleaseDate().toString());
         //Lyrics
+        /**
+         * TODO: I don't want to persists the lyrics in this version
         databaseTableRecord.setStringValue(
                 TokenlySongWalletDatabaseConstants.SONG_LYRICS_COLUMN_NAME,
-                walletSong.getLyrics());
+                walletSong.getLyrics().replace("'", "\'").replace("\n", "\\n"));*/
+        databaseTableRecord.setStringValue(
+                TokenlySongWalletDatabaseConstants.SONG_LYRICS_COLUMN_NAME,
+                "");
         //credits
         databaseTableRecord.setStringValue(
                 TokenlySongWalletDatabaseConstants.SONG_TOKENS_COLUMN_NAME,
-                walletSong.getLyrics());
+                walletSong.getCredits().replace("'", "\'"));
         //copyright
         databaseTableRecord.setStringValue(
                 TokenlySongWalletDatabaseConstants.SONG_COPYRIGHT_COLUMN_NAME,
-                walletSong.getCopyright());
+                walletSong.getCopyright().replace("'", "\'"));
         //ownership
         databaseTableRecord.setStringValue(
                 TokenlySongWalletDatabaseConstants.SONG_OWNERSHIP_COLUMN_NAME,
-                walletSong.getOwnership());
+                walletSong.getOwnership().replace("'", "\'"));
         //usageRights
         databaseTableRecord.setStringValue(
                 TokenlySongWalletDatabaseConstants.SONG_USAGE_RIGHTS_COLUMN_NAME,
-                walletSong.getUsageRights());
+                walletSong.getUsageRights().replace("'", "\'"));
         //usageProhibitions
         databaseTableRecord.setStringValue(
                 TokenlySongWalletDatabaseConstants.SONG_USAGE_PROHIBITIONS_COLUMN_NAME,
-                walletSong.getUsageRights());
+                walletSong.getUsageProhibitions().replace("'","\'"));
         return databaseTableRecord;
     }
 
@@ -360,7 +365,7 @@ public class TokenlySongWalletDao {
      * @return
      * @throws CantGetSongListException
      */
-    public List<String> getSongsTokenlyIdNotDeleted()
+    public List<String> getSongsTokenlyIdDeleted()
             throws CantGetSongListException {
         try{
             openDatabase();
@@ -371,21 +376,15 @@ public class TokenlySongWalletDao {
             databaseTable.addStringFilter(
                     TokenlySongWalletDatabaseConstants.SONG_SONG_STATUS_COLUMN_NAME,
                     SongStatus.DELETED.getCode(),
-                    DatabaseFilterType.NOT_EQUALS);
+                    DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
             List<DatabaseTableRecord> records = databaseTable.getRecords();
             if(records.isEmpty()){
                 //I'll return an empty list
                 return songList;
             }
-            SongStatus songStatus;
             for(DatabaseTableRecord databaseTableRecord : records){
                 walletSong = buildWalletSong(databaseTableRecord);
-                songStatus = walletSong.getSongStatus();
-                //I'll ignore the AVAILABLE songStatus, this song is already in the device.
-                if(songStatus.getCode().equals(SongStatus.AVAILABLE.getCode())){
-                    continue;
-                }
                 songList.add(walletSong.getId());
             }
             return songList;
@@ -412,9 +411,72 @@ public class TokenlySongWalletDao {
         }
     }
 
+    /**
+     * This method returns a AVAILABLE song list
+     * @return
+     * @throws CantGetSongListException
+     */
+    public List<String> getAvailableSongsTokenlyId()
+            throws CantGetSongListException {
+        try{
+            openDatabase();
+            List<String> songList = new ArrayList<>();
+            WalletSong walletSong;
+            DatabaseTable databaseTable = getDatabaseTable(
+                    TokenlySongWalletDatabaseConstants.SONG_TABLE_NAME);
+            databaseTable.addStringFilter(
+                    TokenlySongWalletDatabaseConstants.SONG_SONG_STATUS_COLUMN_NAME,
+                    SongStatus.AVAILABLE.getCode(),
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            if(records.isEmpty()){
+                //I'll return an empty list
+                return songList;
+            }
+            for(DatabaseTableRecord databaseTableRecord : records){
+                walletSong = buildWalletSong(databaseTableRecord);
+                songList.add(walletSong.getId());
+            }
+            return songList;
+        } catch (CantCreateDatabaseException e) {
+            throw new CantGetSongListException(
+                    e,
+                    "Building Wallet Song List by Status from Database",
+                    "Cannot create database");
+        } catch (CantOpenDatabaseException e) {
+            throw new CantGetSongListException(
+                    e,
+                    "Building Wallet Song List by Status from Database",
+                    "Cannot open database");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetSongListException(
+                    e,
+                    "Building Wallet Song List by Status from Database",
+                    "Cannot load database table");
+        } catch (CantGetWalletSongException e) {
+            throw new CantGetSongListException(
+                    e,
+                    "Building Wallet Song List by Status from Database",
+                    "Cannot get song from database");
+        }
+    }
+
+    /**
+     * This method persist a Song in plugin database.
+     * @param song
+     * @param songPath
+     * @param username
+     * @param songStatus
+     * @param songId
+     * @throws CantPersistSongException
+     */
     public void saveSong(
             Song song,
-            String songPath) throws
+            String songPath,
+            String username,
+            SongStatus songStatus,
+            UUID songId) throws
             CantPersistSongException {
         try{
             openDatabase();
@@ -422,7 +484,7 @@ public class TokenlySongWalletDao {
             WalletSong walletSong = new WalletSongRecord(
                     song,
                     SongStatus.AVAILABLE,
-                    UUID.randomUUID());
+                    songId);
             //Build record
             DatabaseTable databaseTable = getDatabaseTable(
                     TokenlySongWalletDatabaseConstants.SONG_TABLE_NAME);
@@ -430,6 +492,14 @@ public class TokenlySongWalletDao {
             databaseTableRecord = getDatabaseTableRecordFromWalletSong(
                     databaseTableRecord,
                     walletSong);
+            //Set username
+            databaseTableRecord.setStringValue(
+                    TokenlySongWalletDatabaseConstants.SONG_TOKENLY_USERNAME_COLUMN_NAME, username);
+            //Set SongStatus
+            databaseTableRecord.setStringValue(
+                    TokenlySongWalletDatabaseConstants.SONG_SONG_STATUS_COLUMN_NAME,
+                    songStatus.getCode());
+            //Set song path
             databaseTableRecord.setStringValue(
                     TokenlySongWalletDatabaseConstants.SONG_DEVICE_PATH_COLUMN_NAME,
                     songPath);
@@ -467,27 +537,7 @@ public class TokenlySongWalletDao {
         try{
             WalletSong walletSong = getWalletSongArgumentBySongId(songId);
             return walletSong.getSongStatus();
-        } catch (CantCreateDatabaseException e) {
-            throw new CantGetSongStatusException(
-                    e,
-                    "Getting Song Status from Database",
-                    "Cannot create database");
-        } catch (CantOpenDatabaseException e) {
-            throw new CantGetSongStatusException(
-                    e,
-                    "Getting Song Status from Database",
-                    "Cannot open database");
-        } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetSongStatusException(
-                    e,
-                    "Getting Song Status from Database",
-                    "Cannot load database table");
         } catch (CantGetWalletSongException e) {
-            throw new CantGetSongStatusException(
-                    e,
-                    "Getting Song Status from Database",
-                    "Cannot get song from database");
-        } catch (UnexpectedResultReturnedFromDatabaseException e) {
             throw new CantGetSongStatusException(
                     e,
                     "Getting Song Status from Database",
@@ -507,27 +557,7 @@ public class TokenlySongWalletDao {
         try{
             WalletSong walletSong = getWalletSongArgumentBySongId(songId);
             return walletSong.getName();
-        } catch (CantCreateDatabaseException e) {
-            throw new CantGetSongNameException(
-                    e,
-                    "Getting Song name from Database",
-                    "Cannot create database");
-        } catch (CantOpenDatabaseException e) {
-            throw new CantGetSongNameException(
-                    e,
-                    "Getting Song name from Database",
-                    "Cannot open database");
-        } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetSongNameException(
-                    e,
-                    "Getting Song name from Database",
-                    "Cannot load database table");
         } catch (CantGetWalletSongException e) {
-            throw new CantGetSongNameException(
-                    e,
-                    "Getting Song name from Database",
-                    "Cannot get song from database");
-        } catch (UnexpectedResultReturnedFromDatabaseException e) {
             throw new CantGetSongNameException(
                     e,
                     "Getting Song name from Database",
@@ -545,30 +575,48 @@ public class TokenlySongWalletDao {
      * @throws UnexpectedResultReturnedFromDatabaseException
      * @throws CantGetWalletSongException
      */
-    private WalletSong getWalletSongArgumentBySongId(UUID songId)
+    public WalletSong getWalletSongArgumentBySongId(UUID songId)
             throws
-            CantOpenDatabaseException,
-            CantCreateDatabaseException,
-            CantLoadTableToMemoryException,
-            UnexpectedResultReturnedFromDatabaseException,
             CantGetWalletSongException {
-        openDatabase();
-        WalletSong walletSong;
-        DatabaseTable databaseTable = getDatabaseTable(
-                TokenlySongWalletDatabaseConstants.SONG_TABLE_NAME);
-        databaseTable.addStringFilter(
-                TokenlySongWalletDatabaseConstants.SONG_SONG_ID_COLUMN_NAME,
-                songId.toString(),
-                DatabaseFilterType.EQUAL);
-        databaseTable.loadToMemory();
-        List<DatabaseTableRecord> records = databaseTable.getRecords();
-        checkDatabaseRecords(records);
-        if(records.isEmpty()){
-            //I'll return null
-            return null;
+        try{
+            openDatabase();
+            WalletSong walletSong;
+            DatabaseTable databaseTable = getDatabaseTable(
+                    TokenlySongWalletDatabaseConstants.SONG_TABLE_NAME);
+            databaseTable.addStringFilter(
+                    TokenlySongWalletDatabaseConstants.SONG_SONG_ID_COLUMN_NAME,
+                    songId.toString(),
+                    DatabaseFilterType.EQUAL);
+            databaseTable.loadToMemory();
+            List<DatabaseTableRecord> records = databaseTable.getRecords();
+            checkDatabaseRecords(records);
+            if(records.isEmpty()){
+                //I'll return null
+                return null;
+            }
+            walletSong = buildWalletSong(records.get(0));
+            return walletSong;
+        } catch (CantCreateDatabaseException e) {
+            throw new CantGetWalletSongException(
+                    e,
+                    "Getting Song from Database",
+                    "Cannot create database");
+        } catch (UnexpectedResultReturnedFromDatabaseException e) {
+            throw new CantGetWalletSongException(
+                    e,
+                    "Getting Song from Database",
+                    "Unexpected error from database");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantGetWalletSongException(
+                    e,
+                    "Getting Song from Database",
+                    "Cannot load table from database");
+        } catch (CantOpenDatabaseException e) {
+            throw new CantGetWalletSongException(
+                    e,
+                    "Getting Song from Database",
+                    "Cannot open the database");
         }
-        walletSong = buildWalletSong(records.get(0));
-        return walletSong;
     }
 
     /**
@@ -584,31 +632,11 @@ public class TokenlySongWalletDao {
             WalletSong walletSong = getWalletSongArgumentBySongId(songId);
             //This Id represents the tokenly Id.
             return walletSong.getId();
-        } catch (CantCreateDatabaseException e) {
-            throw new CantGetSongTokenlyIdException(
-                    e,
-                    "Getting Tokenly Id from Database",
-                    "Cannot create database");
-        } catch (CantOpenDatabaseException e) {
-            throw new CantGetSongTokenlyIdException(
-                    e,
-                    "Getting Tokenly Id from Database",
-                    "Cannot open database");
-        } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetSongTokenlyIdException(
-                    e,
-                    "Getting Tokenly Id from Database",
-                    "Cannot load database table");
         } catch (CantGetWalletSongException e) {
             throw new CantGetSongTokenlyIdException(
                     e,
                     "Getting Tokenly Id from Database",
                     "Cannot get song from database");
-        } catch (UnexpectedResultReturnedFromDatabaseException e) {
-            throw new CantGetSongTokenlyIdException(
-                    e,
-                    "Getting Tokenly Id from Database",
-                    "Unexpected results from database");
         }
     }
 
@@ -788,6 +816,11 @@ public class TokenlySongWalletDao {
                 databaseTableRecord.setLongValue(
                         TokenlySongWalletDatabaseConstants.SYNCHRONIZE_TIMESTAMP,
                         timestamp);
+                //Username
+                databaseTableRecord.setStringValue(
+                        TokenlySongWalletDatabaseConstants.SYNCHRONIZE_TOKENLY_USERNAME_COLUMN_NAME,
+                        username);
+                databaseTable.insertRecord(databaseTableRecord);
             } else{
                 //First I'll check if there's a wrong result in result set.
                 checkDatabaseRecords(records);
@@ -832,6 +865,11 @@ public class TokenlySongWalletDao {
                     e,
                     "Persisting the Synchronize process",
                     "Cannot update the database");
+        } catch (CantInsertRecordException e) {
+            throw new CantPersistSynchronizeDateException(
+                    e,
+                    "Persisting the Synchronize process",
+                    "Cannot insert a new record in the database");
         }
     }
 

@@ -24,8 +24,6 @@ import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
 /**
  * Created by mati on 2016.03.01..
  */
@@ -43,7 +41,7 @@ public class NotificationService extends Service {
 
 
     public class LocalBinder extends Binder {
-        NotificationService getService() {
+        public NotificationService getService() {
             return NotificationService.this;
         }
     }
@@ -54,7 +52,7 @@ public class NotificationService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.v(LOG_TAG, "in onBind: " + intent.getExtras().get(LOG_TAG));
+        //Log.v(LOG_TAG, "in onBind: " + intent.getExtras().get(LOG_TAG));
         return mBinder;
     }
     @Override
@@ -77,7 +75,7 @@ public class NotificationService extends Service {
         if (fermatStructure != null) {
             // notificationIdCount++;
             // lstNotifications.put(fermatStructure.getPublicKey(),notificationIdCount);
-            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,getFermatAppManager().getAppsSession(fermatStructure.getPublicKey()));
+            AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this, ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey()));
             NotificationPainter notificationPainter = null;
             try {
                 notificationPainter = fermatAppConnection.getNotificationPainter(code);
@@ -152,14 +150,15 @@ public class NotificationService extends Service {
 
 
     public int notificateProgress(FermatBundle bundle) {
+        NotificationCompat.Builder mBuilder;
         try {
             int progress = (int) bundle.getSerializable(Broadcaster.PROGRESS_BAR);
-            int publishId = (bundle.contains(Broadcaster.PUBLISH_ID)) ? (int) bundle.getInt(Broadcaster.PUBLISH_ID):0;
+            int publishId = (bundle.contains(Broadcaster.PUBLISH_ID)) ? bundle.getInt(Broadcaster.PUBLISH_ID) :0;
             String progressText = (bundle.contains(Broadcaster.PROGRESS_BAR_TEXT)) ? bundle.getString(Broadcaster.PROGRESS_BAR_TEXT):null;
 
             mNotifyManager = (NotificationManager)
                     getSystemService(NOTIFICATION_SERVICE);
-            if(progress==0 || progress==100){
+            if(progress<0 || progress>100){
                 mNotifyManager.cancel(publishId);
             }else {
 
@@ -172,13 +171,17 @@ public class NotificationService extends Service {
                             .setSmallIcon(R.drawable.fermat_logo_310_x_310);
                     Random random = new Random();
                     publishId = random.nextInt();
+                    if(publishId<0){
+                        publishId = publishId*(-1);
+                    }
                     mapNotifications.put(publishId,mBuilder);
                 }else {
                     if(mapNotifications.containsKey(publishId))
                         mBuilder = mapNotifications.get(publishId);
-                    else
-                        Log.i(LOG_TAG,"Error, Notification id not found");
+                    else {
+                        Log.i(LOG_TAG, "Error, Notification id not found");
                         return 0;
+                    }
                 }
                 mBuilder.setProgress(100, progress, false);
 

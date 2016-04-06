@@ -150,6 +150,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     private UUID exchangeProviderId = null;
 
+    private long exchangeRate = 0;
+
     public static SendTransactionFragment2 newInstance() {
         return new SendTransactionFragment2();
     }
@@ -253,19 +255,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
             }
 
-            //default Exchange rate Provider
-
-            if(bitcoinWalletSettings.getExchangeProvider()==null){
-                List<CurrencyExchangeRateProviderManager> providers = new ArrayList(moduleManager.getExchangeRateProviderManagers());
-
-                exchangeProviderId = providers.get(0).getProviderId();
-                bitcoinWalletSettings.setExchangeProvider(exchangeProviderId);
-
-            }
-            else
-            {
-                exchangeProviderId =bitcoinWalletSettings.getExchangeProvider();
-            }
 
             settingsManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(),bitcoinWalletSettings);
 
@@ -273,6 +262,23 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
             final LossProtectedWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
 
+
+            //default Exchange rate Provider
+            try {
+                    if(moduleManager.getExchangeProvider()==null) {
+                        List<CurrencyExchangeRateProviderManager> providers = new ArrayList(moduleManager.getExchangeRateProviderManagers());
+
+                        exchangeProviderId = providers.get(0).getProviderId();
+                        moduleManager.setExchangeProvider(exchangeProviderId);
+
+                    }
+                    else
+                   {
+                        exchangeProviderId =moduleManager.getExchangeProvider();
+                   }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
 
             Handler handlerTimer = new Handler();
             handlerTimer.postDelayed(new Runnable(){
@@ -347,7 +353,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         rootView = super.onCreateView(inflater, container, savedInstanceState);
         setUp(inflater);
 
-       // getAndShowMarketExchangeRateData(rootView);
+       getAndShowMarketExchangeRateData(rootView);
         return rootView;
     }
 
@@ -414,7 +420,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         Thread thread = new Thread(runnable);
         thread.start();
 
-        final View balance_header = inflater.inflate(R.layout.donut_header, container_header_balance, true);
+        final View balance_header = inflater.inflate(R.layout.loss_donut_header, container_header_balance, true);
 
         container_header_balance.setVisibility(View.VISIBLE);
 
@@ -431,7 +437,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         txt_type_balance = (TextView) balance_header.findViewById(R.id.txt_type_balance);
 
-       //txt_exchange_rate =  (TextView) balance_header.findViewById(R.id.txt_exchange_rate);
+       txt_exchange_rate =  (TextView) balance_header.findViewById(R.id.txt_exchange_rate);
 
         // handler for the background updating
         final Handler progressHandler = new Handler() {
@@ -679,7 +685,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             int id = item.getItemId();
 
             if(id == BitcoinWalletConstants.IC_ACTION_SEND){
-                changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,lossProtectedWalletSession.getAppPublicKey());
+                changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_FORM_ACTIVITY,lossProtectedWalletSession.getAppPublicKey());
                 return true;
             }else if(id == BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION){
                 setUpPresentation(settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey()).isPresentationHelpEnabled());
@@ -707,7 +713,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         if (openNegotiationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer =(LinearLayout) layout.findViewById(R.id.empty);
-            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+            FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
             //emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
     }
@@ -752,6 +758,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     @Override
     public List<GrouperItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         ArrayList<GrouperItem> data = new ArrayList<>();
+
         lstCryptoWalletTransactionsAvailable = new ArrayList<>();
 
         try {
@@ -761,15 +768,21 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                 BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey()).getBlockchainNetworkType().getCode());
 
-                List<LossProtectedWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossProtectedWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, available_offset);
+                List<LossProtectedWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossProtectedWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
 
                 lstCryptoWalletTransactionsAvailable.addAll(list);
 
-                available_offset = lstCryptoWalletTransactionsAvailable.size();
+               // available_offset = lstCryptoWalletTransactionsAvailable.size();
 
                 for (LossProtectedWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
-//                    List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, MAX_TRANSACTIONS, 0);
+
                     List<LossProtectedWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossProtectedWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
+
+                    lst.add(cryptoWalletTransaction);
+                    if(!cryptoWalletTransaction.getActorFromType().equals(Actors.DEVICE_USER)){
+                        lst = moduleManager.listTransactionsByActorAndType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossProtectedWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
+                    }
+
 
                     GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction> grouperItem = new GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction>(lst, false, cryptoWalletTransaction);
                     data.add(grouperItem);
@@ -876,7 +889,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private long loadBalance(BalanceType balanceType){
         long balance = 0;
         try {
-            balance = lossProtectedWalletSession.getModuleManager().getCryptoWallet().getBalance(balanceType, lossProtectedWalletSession.getAppPublicKey(),blockchainNetworkType);
+            balance =  lossProtectedWalletSession.getModuleManager().getCryptoWallet().getBalance(balanceType, lossProtectedWalletSession.getAppPublicKey(),blockchainNetworkType,String.valueOf(exchangeRate));
             System.out.println("THE BALANCE IS " + balance);
 
         } catch (CantGetLossProtectedBalanceException e) {
@@ -1087,6 +1100,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     ExchangeRate rate = (ExchangeRate)result[0];
                     // progressBar.setVisibility(View.GONE);
                     txt_exchange_rate.setText("1 BTC - " + String.valueOf(rate.getPurchasePrice()) +" USD" );
+
+                    //get available balance to actual exchange rate
+                    exchangeRate = (long)rate.getPurchasePrice();
+                    updateBalances();
 
                 }
             }

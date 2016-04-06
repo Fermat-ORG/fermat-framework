@@ -32,7 +32,13 @@ public class TokenlySongProcessor extends AbstractTokenlyProcessor {
      * Represents the URL to use if is necessary to get the songs owned by a authenticated user.
      */
     private static String mySongsTokenlyURL =
-            TokenlyConfiguration.URL_TOKENLY_MUSIC_API_SONGS_BY_AUHTENTICATED_USER;
+            TokenlyConfiguration.URL_TOKENLY_MUSIC_API_SONGS_BY_AUTHENTICATED_USER;
+
+    /**
+     * Represents the URL to use if is necessary to get one song owned by a authenticated user.
+     */
+    private static String downloadSongTokenlyURL =
+            TokenlyConfiguration.URL_TOKENLY_MUSIC_API_ONE_SONG_BY_AUTHENTICATED_USER;
 
     /**
      * This method returns a song from tokenly API by a request URL.
@@ -68,30 +74,10 @@ public class TokenlySongProcessor extends AbstractTokenlyProcessor {
      * @param musicUser
      * @return
      */
-    public static Song[] getSongsyAuthenticatedUser(MusicUser musicUser)
+    public static Song[] getSongsByAuthenticatedUser(MusicUser musicUser)
             throws CantGetAlbumException {
         try{
-            HashMap<String, String> parameters = TokenlyConfiguration.getMusicAuthenticationParameters();
-            //I'll remove the "Content-Type", is necessary to get an album
-            parameters.remove("Content-Type");
-            //X-Tokenly-Auth-Nonce
-            long nonce = TokenlyAuthenticationComponentGenerator.convertTimestamp(
-                    System.currentTimeMillis());
-            //Generate auth signature
-            String signature = TokenlyAuthenticationComponentGenerator.generateTokenlyAuthSignature(
-                    musicUser,
-                    mySongsTokenlyURL,
-                    nonce,
-                    TokenlyRequestMethod.GET);
-            //Put cURL parameters
-            parameters.put("X-Tokenly-Auth-Api-Token", musicUser.getApiToken());
-            parameters.put("X-Tokenly-Auth-Nonce", ""+nonce);
-            parameters.put("X-Tokenly-Auth-Signature", signature);
-            //Get remote Json (in this version I don't have to use http url parameters.
-            JsonElement response = RemoteJSonProcessor.getJsonElementByGETCURLRequest(
-                    mySongsTokenlyURL,
-                    parameters,
-                    "");
+            JsonElement response = getJsonElementFromProtectedApi(musicUser, mySongsTokenlyURL);
             //The response is a Json array
             JsonArray jSonArray= response.getAsJsonArray();
             int jSonArraySize = jSonArray.size();
@@ -123,6 +109,66 @@ public class TokenlySongProcessor extends AbstractTokenlyProcessor {
                             "Error Code: "+e.getErrorCode()+"\n" +
                             "Error message: "+e.getErrorMessage());
         }
+
+    }
+
+    public static Song getSongByAuthenticatedUser(
+            MusicUser musicUser,
+            String tokenlySongId) throws CantGetSongException{
+        try{
+            String requestUrl = downloadSongTokenlyURL+tokenlySongId;
+            JsonElement jSonResponse = getJsonElementFromProtectedApi(musicUser,requestUrl);
+            Song song = getSongFromJsonObject(jSonResponse.getAsJsonObject());
+            return song;
+        } catch (CantGenerateTokenlyAuthSignatureException e) {
+            throw new CantGetSongException(
+                    e,
+                    "Getting a song from tokenly protected api",
+                    "Cannot generate Auth signature for "+musicUser);
+        } catch (CantGetJSonObjectException e) {
+            throw new CantGetSongException(
+                    e,
+                    "Getting album from tokenly protected api",
+                    "Cannot get the Json object from "+downloadSongTokenlyURL);
+        } catch (HTTPErrorResponseException e) {
+            throw new CantGetSongException(
+                    e,
+                    "Getting album from tokenly protected api",
+                    "Error response from Tokenly Api:\n" +
+                            "Error Code: "+e.getErrorCode()+"\n" +
+                            "Error message: "+e.getErrorMessage());
+        }
+    }
+
+    private static JsonElement getJsonElementFromProtectedApi(
+            MusicUser musicUser,
+            String requestUrl) throws
+            CantGenerateTokenlyAuthSignatureException,
+            HTTPErrorResponseException,
+            CantGetJSonObjectException {
+
+        HashMap<String, String> parameters = TokenlyConfiguration.getMusicAuthenticationParameters();
+        //I'll remove the "Content-Type", is necessary to get an album
+        parameters.remove("Content-Type");
+        //X-Tokenly-Auth-Nonce
+        long nonce = TokenlyAuthenticationComponentGenerator.convertTimestamp(
+                System.currentTimeMillis());
+        //Generate auth signature
+        String signature = TokenlyAuthenticationComponentGenerator.generateTokenlyAuthSignature(
+                musicUser,
+                requestUrl,
+                nonce,
+                TokenlyRequestMethod.GET);
+        //Put cURL parameters
+        parameters.put("X-Tokenly-Auth-Api-Token", musicUser.getApiToken());
+        parameters.put("X-Tokenly-Auth-Nonce", ""+nonce);
+        parameters.put("X-Tokenly-Auth-Signature", signature);
+        //Get remote Json (in this version I don't have to use http url parameters.
+        JsonElement response = RemoteJSonProcessor.getJsonElementByGETCURLRequest(
+                requestUrl,
+                parameters,
+                "");
+        return response;
 
     }
 

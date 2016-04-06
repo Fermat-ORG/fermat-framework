@@ -12,7 +12,7 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -57,7 +57,6 @@ dependencies {
     compile 'com.android.support:support-v13:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.getbase:floatingactionbutton:1.10.1'
-    compile project(':fermat-ccp-android-sub-app-intra-wallet-user-identity-bitdubai')
 }
 
 

@@ -122,6 +122,27 @@ public class SystemMonitorNetworkServiceDatabaseFactory implements DealsWithPlug
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
+
+
+
+            table = databaseFactory.newTableFactory(ownerId, SystemMonitorNetworkServiceDatabaseConstants.PLATFORM_COMPONENTS_TABLE_NAME);
+
+            table.addColumn(SystemMonitorNetworkServiceDatabaseConstants.COMPONENT_ID_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.TRUE);
+            table.addColumn(SystemMonitorNetworkServiceDatabaseConstants.COMPONENT_NAME_COLUMN_NAME, DatabaseDataType.STRING, 40, Boolean.FALSE);
+            table.addColumn(SystemMonitorNetworkServiceDatabaseConstants.COMPONENT_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
+
+            table.addIndex(SystemMonitorNetworkServiceDatabaseConstants.COMPONENT_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+
+
+
 } catch (InvalidOwnerIdException invalidOwnerId) {
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,

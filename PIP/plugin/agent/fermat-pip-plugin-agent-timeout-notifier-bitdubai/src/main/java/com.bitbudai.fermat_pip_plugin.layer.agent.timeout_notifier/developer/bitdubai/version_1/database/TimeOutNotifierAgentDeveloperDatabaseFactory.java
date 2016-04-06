@@ -65,7 +65,7 @@ public class TimeOutNotifierAgentDeveloperDatabaseFactory {
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, "TimeOut Notifier");
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, TimeOutNotifierAgentDatabaseConstants.DATABASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -86,7 +86,7 @@ public class TimeOutNotifierAgentDeveloperDatabaseFactory {
                   /*
                    * We create the new database
                    */
-                database = timeOutNotifierAgentDatabaseFactory.createDatabase(pluginId, "TimeOut Notifier");
+                database = timeOutNotifierAgentDatabaseFactory.createDatabase(pluginId);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
@@ -102,7 +102,7 @@ public class TimeOutNotifierAgentDeveloperDatabaseFactory {
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase("TimeOut Notifier", this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(TimeOutNotifierAgentDatabaseConstants.DATABASE_NAME, this.pluginId.toString()));
         return databases;
     }
 
@@ -120,10 +120,9 @@ public class TimeOutNotifierAgentDeveloperDatabaseFactory {
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_DESCRIPTION_COLUMN_NAME);
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_OWNER_PUBLICKEY_COLUMN_NAME);
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME);
+        agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_END_TIME_COLUMN_NAME);
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME);
-        agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_ELAPSED_COLUMN_NAME);
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME);
-        agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_PROTOCOL_STATUS_COLUMN_NAME);
         agentsColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENTS_LAST_UPDATE_COLUMN_NAME);
         /**
          * Table agents addition.
@@ -136,14 +135,28 @@ public class TimeOutNotifierAgentDeveloperDatabaseFactory {
          */
         List<String> agent_ownerColumns = new ArrayList<String>();
 
-        agent_ownerColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_OWNER_PUBLICKEY_COLUMN_NAME);
-        agent_ownerColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_NAME_COLUMN_NAME);
-        agent_ownerColumns.add(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TYPE_COLUMN_NAME);
+        agent_ownerColumns.add(TimeOutNotifierAgentDatabaseConstants.OWNER_PUBLICKEY_COLUMN_NAME);
+        agent_ownerColumns.add(TimeOutNotifierAgentDatabaseConstants.OWNER_NAME_COLUMN_NAME);
+        agent_ownerColumns.add(TimeOutNotifierAgentDatabaseConstants.OWNER_TYPE_COLUMN_NAME);
         /**
          * Table agent_owner addition.
          */
-        DeveloperDatabaseTable agent_ownerTable = developerObjectFactory.getNewDeveloperDatabaseTable(TimeOutNotifierAgentDatabaseConstants.AGENT_OWNER_TABLE_NAME, agent_ownerColumns);
+        DeveloperDatabaseTable agent_ownerTable = developerObjectFactory.getNewDeveloperDatabaseTable(TimeOutNotifierAgentDatabaseConstants.OWNER_TABLE_NAME, agent_ownerColumns);
         tables.add(agent_ownerTable);
+
+        /**
+         * Table event_monitor columns.
+         */
+        List<String> event_monitorColumns = new ArrayList<String>();
+
+        event_monitorColumns.add(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_ID_COLUMN_NAME);
+        event_monitorColumns.add(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME);
+        event_monitorColumns.add(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_LAST_UPDATED_COLUMN_NAME);
+        /**
+         * Table event_monitor addition.
+         */
+        DeveloperDatabaseTable event_monitorTable = developerObjectFactory.getNewDeveloperDatabaseTable(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_TABLE_NAME, event_monitorColumns);
+        tables.add(event_monitorTable);
 
 
 

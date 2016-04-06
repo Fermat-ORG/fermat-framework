@@ -16,6 +16,7 @@ import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_bro
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantDetermineCryptoCurrencyException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantReceiveConfirmNegotiationTransactionException;
 import com.bitdubai.fermat_cbp_plugin.layer.negotiation_transaction.customer_broker_close.developer.bitdubai.version_1.exceptions.CantRegisterCustomerBrokerCloseNegotiationTransactionException;
+import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
@@ -51,6 +52,8 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
     /*Represent the Plugins Version*/
     private PluginVersionReference                                  pluginVersionReference;
 
+    private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
+
     public CustomerBrokerClosePurchaseNegotiationTransaction(
             CustomerBrokerPurchaseNegotiationManager                customerBrokerPurchaseNegotiationManager,
             CustomerBrokerCloseNegotiationTransactionDatabaseDao    customerBrokerCloseNegotiationTransactionDatabaseDao,
@@ -58,7 +61,8 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
             CryptoVaultManager                                      cryptoVaultManager,
             WalletManagerManager                                    walletManagerManager,
             ErrorManager                                            errorManager,
-            PluginVersionReference                                  pluginVersionReference
+            PluginVersionReference                                  pluginVersionReference,
+            IntraWalletUserIdentityManager intraWalletUserIdentityManager
     ){
         this.customerBrokerPurchaseNegotiationManager               = customerBrokerPurchaseNegotiationManager;
         this.customerBrokerCloseNegotiationTransactionDatabaseDao   = customerBrokerCloseNegotiationTransactionDatabaseDao;
@@ -67,6 +71,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
         this.walletManagerManager                                   = walletManagerManager;
         this.errorManager                                           = errorManager;
         this.pluginVersionReference                                 = pluginVersionReference;
+        this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
     }
 
     //PROCESS THE UPDATE PURCHASE NEGOTIATION TRANSACTION
@@ -90,7 +95,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
                 this.cryptoVaultManager,
                 this.walletManagerManager,
                 this.errorManager,
-                this.pluginVersionReference
+                this.pluginVersionReference,intraWalletUserIdentityManager
             );
 
             if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)){
@@ -150,7 +155,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
                 this.cryptoVaultManager,
                 this.walletManagerManager,
                 this.errorManager,
-                this.pluginVersionReference
+                this.pluginVersionReference,intraWalletUserIdentityManager
             );
 
             if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)){
@@ -205,7 +210,7 @@ public class CustomerBrokerClosePurchaseNegotiationTransaction {
                 this.cryptoVaultManager,
                 this.walletManagerManager,
                 this.errorManager,
-                this.pluginVersionReference
+                this.pluginVersionReference,intraWalletUserIdentityManager
             );
 
             if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerPurchaseNegotiation.getClauses(), ClauseType.CUSTOMER_PAYMENT_METHOD)) {

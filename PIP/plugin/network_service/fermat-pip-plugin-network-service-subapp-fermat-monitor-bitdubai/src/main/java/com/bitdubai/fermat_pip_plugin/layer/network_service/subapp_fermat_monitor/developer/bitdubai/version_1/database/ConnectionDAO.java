@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 
 
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
@@ -33,28 +34,24 @@ public class ConnectionDAO {
      */
     private Database dataBase;
 
+    private final PluginFileSystem pluginFileSystem;
+    private final UUID pluginId;
+
+
     /**
      * Constructor with parameters
      *
      * @param dataBase
      */
-    public ConnectionDAO(Database dataBase) {
+    public ConnectionDAO(Database dataBase,
+                         final PluginFileSystem pluginFileSystem,
+                         final UUID pluginId) {
         super();
-        this.dataBase = dataBase;
+        this.dataBase         = dataBase;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId         = pluginId;
     }
 
-
-    /**
-     * This method open or creates the database i'll be working with
-     *
-     * @param ownerId plugin id
-     * @param databaseName database name
-     * @throws
-     */
-
-    public void initializeDatabase(UUID ownerId, String databaseName){
-
-    }
 
     /**
      * Return the Database

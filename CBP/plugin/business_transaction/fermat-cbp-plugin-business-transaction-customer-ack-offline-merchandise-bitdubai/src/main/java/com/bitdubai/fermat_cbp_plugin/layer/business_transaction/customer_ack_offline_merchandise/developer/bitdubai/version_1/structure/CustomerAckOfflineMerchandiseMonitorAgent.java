@@ -408,6 +408,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
                             //If the contract is null, I cannot handle with this situation
                             ObjectChecker.checkArgument(customerBrokerContractSale);
                             customerAckOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale);
+//                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.COMPLETED);
                             customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.READY_TO_CLOSE);
                             Date date = new Date();
                             customerAckOfflineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
@@ -445,6 +446,7 @@ public class CustomerAckOfflineMerchandiseMonitorAgent implements
 
 //                                businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);
                                 customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.READY_TO_CLOSE);
+//                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.COMPLETED);
                                 Date date = new Date();
                                 customerAckOfflineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
                                 customerAckOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash,ContractTransactionStatus.CONFIRM_OFFLINE_ACK_MERCHANDISE);

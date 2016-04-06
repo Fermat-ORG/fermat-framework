@@ -13,7 +13,7 @@ android {
 
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 17
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -35,10 +35,14 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 }
+
+task generateSourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier 'sources'
+}
 dependencies {
     compile project(':fermat-api')
     compile project(':fermat-core')
-    compile project(':fermat-pip-api')
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
