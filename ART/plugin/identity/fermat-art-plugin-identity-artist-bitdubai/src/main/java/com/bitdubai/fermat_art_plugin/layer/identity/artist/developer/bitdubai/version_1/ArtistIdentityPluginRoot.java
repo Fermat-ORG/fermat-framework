@@ -134,11 +134,11 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
             while (entries.hasNext()) {
                 Map.Entry<ExternalPlatform, HashMap<UUID, String>> entry = entries.next();
                 HashMap<UUID, String> artists = entry.getValue();
-                Iterator<Map.Entry<UUID, String>> entries2 = artists.entrySet().iterator();
-                while(entries2.hasNext()){
-                    Map.Entry<UUID, String> entry2 = entries2.next();
-                    System.out.println("Key = " + entry2.getKey() + ", Value = " + entry2.getValue());
-                    externalIdentityID = entry2.getKey();
+                Iterator<Map.Entry<UUID, String>> entiesSet = artists.entrySet().iterator();
+                while(entiesSet.hasNext()){
+                    Map.Entry<UUID, String> entrySet = entiesSet.next();
+                    System.out.println("Key = " + entrySet.getKey() + ", Value = " + entrySet.getValue());
+                    externalIdentityID = entrySet.getKey();
                 }
             }
             System.out.println("externalIdentites = " + XMLParser.parseObject(externalIdentites));

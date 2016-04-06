@@ -334,7 +334,7 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
     protected void onNetworkServiceRegistered() {
 
         artistActorNetworkServiceManager.setPlatformComponentProfile(this.getNetworkServiceProfile());
-        testCreateAndList();
+        //testCreateAndList();
 
     }
 

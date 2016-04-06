@@ -334,7 +334,7 @@ public class FanActorNetworkServicePluginRoot extends AbstractNetworkServiceBase
     protected void onNetworkServiceRegistered() {
 
         fanActorNetworkServiceManager.setPlatformComponentProfile(this.getNetworkServiceProfile());
-        testCreateAndList();
+        //testCreateAndList();
 
     }
 

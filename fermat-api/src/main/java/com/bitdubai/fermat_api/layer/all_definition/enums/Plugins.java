@@ -305,6 +305,7 @@ public enum Plugins implements FermatPluginsEnum {
     FAN                                 ("FANS"),
     ACTOR_NETWORK_SERVICE_ARTIST        ("ANSART"),
     ARTIST_IDENTITY                     ("ARTIDNTY"),
+    FANATIC_IDENTITY                    ("FANIDNTY"),
     ART_ARTIST_SUB_APP_MODULE           ("AASAM"),
     ART_FAN_SUB_APP_MODULE              ("AFSAM"),
     MUSIC_PLAYER_SUB_APP_MODULE         ("ARTMPM"),

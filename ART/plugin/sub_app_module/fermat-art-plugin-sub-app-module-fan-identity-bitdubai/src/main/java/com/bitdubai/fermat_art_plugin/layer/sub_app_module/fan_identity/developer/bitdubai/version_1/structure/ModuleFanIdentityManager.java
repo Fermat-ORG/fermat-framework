@@ -11,48 +11,49 @@ import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantGetFanIdent
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
-import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fan;
-import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanIdentityManager;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.FanIdentityManagerModule;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by alexander on 3/15/16.
  */
 public class ModuleFanIdentityManager implements FanIdentityManagerModule {
     private final ErrorManager errorManager;
-    private final FanIdentityManager fanIdentityManager;
+    private final FanaticIdentityManager fanaticIdentityManager;
 
-    public ModuleFanIdentityManager(ErrorManager errorManager, FanIdentityManager fanIdentityManager) {
+    public ModuleFanIdentityManager(ErrorManager errorManager, FanaticIdentityManager fanaticIdentityManager) {
         this.errorManager = errorManager;
-        this.fanIdentityManager = fanIdentityManager;
+        this.fanaticIdentityManager = fanaticIdentityManager;
     }
 
     @Override
-    public List<Fan> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
-        return fanIdentityManager.listIdentitiesFromCurrentDeviceUser();
+    public List<Fanatic> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
+        return fanaticIdentityManager.listIdentitiesFromCurrentDeviceUser();
     }
 
     @Override
-    public Fan createArtistIdentity(String alias, byte[] imageBytes) throws CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
-        return fanIdentityManager.createArtistIdentity(alias,imageBytes);
+    public Fanatic createFanaticIdentity(String alias, byte[] imageBytes,UUID externalIdentityID) throws CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
+        return fanaticIdentityManager.createFanaticIdentity(alias, imageBytes, externalIdentityID);
     }
 
     @Override
-    public void updateFanIdentity(String alias, String publicKey, byte[] imageProfile, String external) throws CantUpdateFanIdentityException {
-        fanIdentityManager.updateFanIdentity(alias,publicKey,imageProfile,external);
+    public void updateFanIdentity(String alias, String publicKey, byte[] imageProfile, UUID externalIdentityID) throws CantUpdateFanIdentityException {
+        fanaticIdentityManager.updateFanIdentity(alias,publicKey,imageProfile,externalIdentityID);
     }
 
     @Override
-    public Fan getFanIdentity(String publicKey) throws CantGetFanIdentityException, IdentityNotFoundException {
-        return fanIdentityManager.getFanIdentity(publicKey);
+    public Fanatic getFanIdentity(String publicKey) throws CantGetFanIdentityException, IdentityNotFoundException {
+        return fanaticIdentityManager.getFanIdentity(publicKey);
     }
 
     @Override
     public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
-        fanIdentityManager.publishIdentity(publicKey);
+        fanaticIdentityManager.publishIdentity(publicKey);
     }
 
     @Override
