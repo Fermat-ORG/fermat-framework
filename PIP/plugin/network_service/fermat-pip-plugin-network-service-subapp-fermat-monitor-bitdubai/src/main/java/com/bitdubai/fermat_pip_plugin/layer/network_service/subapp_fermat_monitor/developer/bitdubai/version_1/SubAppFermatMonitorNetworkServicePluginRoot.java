@@ -5,6 +5,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -36,8 +41,10 @@ import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monito
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.database.SystemMonitorNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.database.SystemMonitorNetworkServiceDatabaseFactory;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.developerUtils.SystemMonitorNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantInitializeSystemMonitorNetworkServiceDataBaseException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
+//import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.structures.ComponentProfileInfo;
 import com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.structures.EventHandlerRouter;
 
@@ -57,7 +64,7 @@ import java.util.List;
  *
  * Created by Matias Furszyfer on 17/02/15.
  */
-public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetworkServiceBase {
+public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetworkServiceBase  implements DatabaseManagerForDevelopers{
 
        /**
      * Dealing with the repository database
@@ -72,6 +79,8 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
     private ComponentDAO componentDAO;
 
     private SystemMonitorNetworkServiceDeveloperDatabaseFactory systemMonitorNetworkServiceDeveloperDatabaseFactory;
+
+    private SystemMonitorNetworkServiceDatabaseConstants systemMonitorNetworkServiceDatabaseConstants;
 
     List<FermatEventListener> listenersAdded = new ArrayList<>();
 
@@ -99,7 +108,6 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
             systemMonitorNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
             //DAO
-
             subAppFermatMonitorServiceDAO = new ServiceDAO(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
 
             subAppFermatMonitorConnectionDAO = new ConnectionDAO(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
@@ -107,7 +115,6 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
             subAppFermatMonitorSystemDataDAO = new SystemDataDAO(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
 
             subappFermatMonitorComponentDAO = new ComponentDAO(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
-
 
 
 
@@ -160,14 +167,6 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
             e.printStackTrace();
         } catch (CantInitializeSystemMonitorNetworkServiceDataBaseException e) {
             e.printStackTrace();
-        } catch (Exception e) {
-
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(
-                    e,
-                    "",
-                    "Unhandled error during the start of the plug-in."
-            );
         }
 
     }
@@ -234,33 +233,48 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
 
     }
 
-
     public void saveComponentRegistration(CompleteComponentRegistrationNotificationEvent completeComponentRegistrationNotificationEvent) {
         try {
 
             NetworkServiceType networkServiceType = completeComponentRegistrationNotificationEvent.getNetworkServiceTypeApplicant();
-
             PlatformComponentProfile platformComponentProfile = completeComponentRegistrationNotificationEvent.getPlatformComponentProfileRegistered();
 
-        //la variable platformComponentProfile se la tenes que pasar al subappFermatMonitorComponentDAO
-        //pero como espera otro objeto vas a tener que contruirlo y asigarle los datos
-        //creo que es esto lo que tenes que hacer
-        ComponentProfileInfo componentProfileInfo = new ComponentProfileInfo(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(),platformComponentProfile.getNetworkServiceType().getCode());
+            ComponentProfileInfo componentProfileInfo = new ComponentProfileInfo(
+                                            platformComponentProfile.getIdentityPublicKey(),
+                                            platformComponentProfile.getAlias(),
+                                            platformComponentProfile.getNetworkServiceType().getCode());
 
-
-            subappFermatMonitorComponentDAO.create(componentProfileInfo);
+            try {
+                subappFermatMonitorComponentDAO.deleteComponentEvent();
+                subappFermatMonitorComponentDAO.create(componentProfileInfo);
+            } catch (DatabaseTransactionFailedException e) {
+                e.printStackTrace();
+            } catch (CantDeleteRecordDataBaseException e) {
+                e.printStackTrace();
+            }
 
         } catch (CantInsertRecordDataBaseException e) {
             e.printStackTrace();
-        } catch (DatabaseTransactionFailedException e) {
-            e.printStackTrace();
         }
-
-
-
     }
 
     public void updateActor(FermatEvent fermatEvent) {
-    //aca no se si te dijo Matias que tenias que hacer
+
+    }
+
+    @Override
+    public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
+        return systemMonitorNetworkServiceDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
+    }
+
+    @Override
+    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
+        return new SystemMonitorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem,pluginId).getDatabaseTableList(developerObjectFactory);
+
+    }
+
+    @Override
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+        return systemMonitorNetworkServiceDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory,developerDatabase,developerDatabaseTable);
     }
 }

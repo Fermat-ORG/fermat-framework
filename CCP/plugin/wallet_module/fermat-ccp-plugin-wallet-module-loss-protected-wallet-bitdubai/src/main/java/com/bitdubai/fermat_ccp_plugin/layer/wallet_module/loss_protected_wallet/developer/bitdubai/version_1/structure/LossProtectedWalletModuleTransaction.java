@@ -41,6 +41,7 @@ public class LossProtectedWalletModuleTransaction implements LossProtectedWallet
     private final long runningBookBalance;
     private final long runningAvailableBalance;
     private final long timeStamp;
+    private final double rate;
     private final String memo;
     private final BlockchainNetworkType blockchainNetworkType;
     private final TransactionState transactionState;
@@ -67,6 +68,7 @@ public class LossProtectedWalletModuleTransaction implements LossProtectedWallet
         this.runningBookBalance = bitcoinWalletTransaction.getRunningBookBalance();
         this.runningAvailableBalance = bitcoinWalletTransaction.getRunningAvailableBalance();
         this.timeStamp = bitcoinWalletTransaction.getTimestamp();
+        this.rate = bitcoinWalletTransaction.getExchangeRate();
         this.memo = bitcoinWalletTransaction.getMemo();
         this.blockchainNetworkType = bitcoinWalletTransaction.getBlockchainNetworkType();
         this.transactionState = bitcoinWalletTransaction.getTransactionState();
@@ -158,6 +160,11 @@ public class LossProtectedWalletModuleTransaction implements LossProtectedWallet
     @Override
     public String getMemo() {
         return memo;
+    }
+
+    @Override
+    public double getExchangeRate() {
+        return rate;
     }
 
     public BlockchainNetworkType getBlockchainNetworkType() {return blockchainNetworkType;}
