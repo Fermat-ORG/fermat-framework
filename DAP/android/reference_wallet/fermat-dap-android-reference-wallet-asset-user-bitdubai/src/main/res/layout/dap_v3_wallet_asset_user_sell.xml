@@ -7,14 +7,15 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="20dp">
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/unitPriceLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/bitcoinsLabelText"
@@ -181,11 +182,12 @@
         <!--fake for shadow-->
         <RelativeLayout
             android:id="@+id/userSelectorLayoutFake"
-            android:layout_width="410dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/unitPriceLayout"
             android:layout_centerHorizontal="true"
-            android:layout_marginRight="1dp"
+            android:layout_marginRight="14dp"
+            android:layout_marginLeft="14dp"
             android:layout_marginTop="24dp"
             android:background="@drawable/bg_user_selector">
 
@@ -227,11 +229,13 @@
         <!--importantone-->
         <RelativeLayout
             android:id="@+id/userSelectorLayout"
-            android:layout_width="327dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/unitPriceLayout"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
             android:background="@drawable/dap_wallet_user_users_selector_shape"
             android:visibility="visible"
             >
@@ -319,8 +323,8 @@
             </ListView>-->
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/asset_sell_swipe_refresh"
-                android:layout_width="322dp"
-                android:layout_height="215dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_below="@+id/listReferenceLine"
                 android:layout_centerHorizontal="true"
                 android:background="@null"
