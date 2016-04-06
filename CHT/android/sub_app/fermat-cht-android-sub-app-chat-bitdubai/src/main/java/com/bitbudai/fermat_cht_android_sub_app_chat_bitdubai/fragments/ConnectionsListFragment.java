@@ -1,7 +1,5 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
