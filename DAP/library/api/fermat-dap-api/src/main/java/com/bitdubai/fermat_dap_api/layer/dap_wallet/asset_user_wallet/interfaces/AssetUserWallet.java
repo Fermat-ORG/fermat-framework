@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
@@ -24,15 +25,15 @@ public interface AssetUserWallet {
 
     AssetUserWalletBalance getBalance() throws CantGetTransactionsException;
 
-    List<AssetUserWalletTransaction> getAllTransactions(String assetPublicKey) throws CantGetTransactionsException;
+    List<AssetUserWalletTransaction> getAllTransactions(CryptoAddress cryptoAddress) throws CantGetTransactionsException;
 
-    List<AssetUserWalletTransaction> getAllAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException;
+    List<AssetUserWalletTransaction> getAllAvailableTransactions(CryptoAddress cryptoAddress) throws CantGetTransactionsException;
 
-    List<AssetUserWalletTransaction> getTransactionsForDisplay(String assetPublicKey) throws CantGetTransactionsException;
+    List<AssetUserWalletTransaction> getTransactionsForDisplay(CryptoAddress cryptoAddress) throws CantGetTransactionsException;
 
     List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType,
                                                      TransactionType transactionType,
-                                                     String assetPublicKey) throws CantGetTransactionsException;
+                                                     CryptoAddress cryptoAddress) throws CantGetTransactionsException;
 
     List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType,
                                                      TransactionType transactionType,

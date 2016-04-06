@@ -16,9 +16,9 @@ import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_funds_transaction.asset_seller.exceptions.CantStartAssetSellTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.exceptions.CantSendDigitalAssetMetadataException;
 import com.bitdubai.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
-import com.bitdubai.fermat_dap_api.layer.dap_funds_transaction.asset_seller.exceptions.CantStartAssetSellTransactionException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
@@ -80,7 +80,7 @@ public final class AssetSellerTransactionManager {
     }
 
     private void startSellingTransactions(AssetUserWallet userWallet, AssetNegotiation negotiation, ActorAssetUser actorTo) throws CantGetDigitalAssetFromLocalStorageException, CantGetTransactionsException, CantInsertRecordException, RecordsNotFoundException, CantExecuteLockOperationException {
-        List<AssetUserWalletTransaction> availableTransactions = userWallet.getAllAvailableTransactions(negotiation.getAssetToOffer().getPublicKey());
+        List<AssetUserWalletTransaction> availableTransactions = userWallet.getAllAvailableTransactions(negotiation.getAssetToOffer().getGenesisAddress());
         for (int i = 0; i < negotiation.getQuantityToBuy(); i++) {
             AssetUserWalletTransaction transaction = availableTransactions.get(i);
             DigitalAssetMetadata metadata = userWallet.getDigitalAssetMetadata(transaction.getGenesisTransaction());
@@ -96,7 +96,7 @@ public final class AssetSellerTransactionManager {
     }
 
     private List<DigitalAssetMetadata> getAvailableAssetMetadata(AssetUserWallet assetUserWallet, DigitalAsset digitalAsset) throws CantGetTransactionsException, CantGetDigitalAssetFromLocalStorageException {
-        List<AssetUserWalletTransaction> transactions = assetUserWallet.getAllAvailableTransactions(digitalAsset.getPublicKey());
+        List<AssetUserWalletTransaction> transactions = assetUserWallet.getAllAvailableTransactions(digitalAsset.getGenesisAddress());
         List<DigitalAssetMetadata> toReturn = new ArrayList<>();
         for (AssetUserWalletTransaction transaction : transactions) {
             toReturn.add(assetUserWallet.getDigitalAssetMetadata(transaction.getGenesisTransaction()));
