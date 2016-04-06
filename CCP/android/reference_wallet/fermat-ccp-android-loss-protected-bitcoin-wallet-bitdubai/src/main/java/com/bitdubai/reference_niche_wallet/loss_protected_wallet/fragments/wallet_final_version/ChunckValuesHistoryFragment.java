@@ -25,11 +25,19 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.ChunckValuesHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
@@ -44,7 +52,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by mati on 2015.09.30..
  */
-public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossProtectedPaymentRequest> implements FermatListItemListeners<LossProtectedPaymentRequest>,onRefreshList {
+public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossProtectedWalletTransaction> implements FermatListItemListeners<LossProtectedWalletTransaction>,onRefreshList {
 
     /**
      * Session
@@ -53,13 +61,19 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     String walletPublicKey = "loss_protected_wallet";
     /**
      * MANAGERS
+    @Override
+    protected void bindHolder(ChunckValuesHistoryItemViewHolder holder, LossProtectedWalletTransaction data, int position) {
+
+    }
+
      */
     private LossProtectedWallet cryptoWallet;
+    private LossProtectedWalletTransaction cryptowalletTransaction;
     /**
      * DATA
      */
-    private List<LossProtectedPaymentRequest> lstPaymentRequest;
-    private LossProtectedPaymentRequest selectedItem;
+    private List<LossProtectedWalletTransaction> lstTransactionRequest;
+    private LossProtectedWalletTransaction selectedItem;
     /**
      * Executor Service
      */
@@ -89,7 +103,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
         referenceWalletSession = (LossProtectedWalletSession)appSession;
 
-        lstPaymentRequest = new ArrayList<LossProtectedPaymentRequest>();
+        lstTransactionRequest = new ArrayList<LossProtectedWalletTransaction>();
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
@@ -203,7 +217,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-            lstPaymentRequest = new ArrayList<LossProtectedPaymentRequest>();
+            lstTransactionRequest = new ArrayList<LossProtectedWalletTransaction>();
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -242,7 +256,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new PaymentRequestHistoryAdapter(getActivity(), lstPaymentRequest,cryptoWallet,referenceWalletSession,this);
+            adapter = new ChunckValuesHistoryAdapter(getActivity(), lstTransactionRequest,cryptoWallet,referenceWalletSession,this);
             adapter.setFermatListEventListener(this); // setting up event listeners
 
         }
@@ -258,15 +272,30 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     }
 
     @Override
-    public List<LossProtectedPaymentRequest> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
-        List<LossProtectedPaymentRequest> lstPaymentRequest  = new ArrayList<LossProtectedPaymentRequest>();
+    public List<LossProtectedWalletTransaction> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoLossProtectedWalletException, CantListLossProtectedTransactionsException {
+        List<LossProtectedWalletTransaction> lstPaymentRequest  = new ArrayList<LossProtectedWalletTransaction>();
 
         try {
+
+
+            LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = null;
+            intraUserLoginIdentity = referenceWalletSession.getIntraUserModuleManager();
+            String intraUserPk = null;
+            if (intraUserLoginIdentity != null) {
+                intraUserPk = intraUserLoginIdentity.getPublicKey();
+            }
+
             //when refresh offset set 0
-            if(refreshType.equals(FermatRefreshTypes.NEW))
+            if (refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
-            lstPaymentRequest = cryptoWallet.listReceivedPaymentRequest(walletPublicKey, blockchainNetworkType,10, offset);
-            offset+=MAX_TRANSACTIONS;
+
+            List<LossProtectedWalletTransaction> lst = cryptoWallet.listLastActorTransactionsByTransactionType(
+                    BalanceType.AVAILABLE,
+                    TransactionType.DEBIT,
+                    referenceWalletSession.getAppPublicKey(),
+                    intraUserPk,
+                    blockchainNetworkType,
+                    20, 0);
         } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -277,7 +306,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     }
 
     @Override
-    public void onItemClickListener(LossProtectedPaymentRequest item, int position) {
+    public void onItemClickListener(LossProtectedWalletTransaction item, int position) {
         selectedItem = item;
         onRefresh();
         //showDetailsActivityFragment(selectedItem);
@@ -290,7 +319,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
      * @param position
      */
     @Override
-    public void onLongItemClickListener(LossProtectedPaymentRequest data, int position) {
+    public void onLongItemClickListener(LossProtectedWalletTransaction data, int position) {
 
     }
 
@@ -301,10 +330,10 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                lstPaymentRequest = (ArrayList) result[0];
+                lstTransactionRequest = (ArrayList) result[0];
                 if (adapter != null)
-                    adapter.changeDataSet(lstPaymentRequest);
-                if(lstPaymentRequest.isEmpty()) FermatAnimationsUtils.showEmpty(getActivity(),true,empty);
+                    adapter.changeDataSet(lstTransactionRequest);
+                if(lstTransactionRequest.isEmpty()) FermatAnimationsUtils.showEmpty(getActivity(),true,empty);
                 else FermatAnimationsUtils.showEmpty(getActivity(),false,empty);
 
             }
