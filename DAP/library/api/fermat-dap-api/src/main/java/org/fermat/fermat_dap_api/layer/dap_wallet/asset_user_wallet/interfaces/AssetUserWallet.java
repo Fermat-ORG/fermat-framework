@@ -1,20 +1,18 @@
 package org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.*;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionSummary;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantExecuteLockOperationException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
+
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantExecuteLockOperationException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,24 +24,24 @@ public interface AssetUserWallet {
 
     //TODO:Documentar y manejo de excepciones
 
-    com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletBalance getBalance() throws CantGetTransactionsException;
+    AssetUserWalletBalance getBalance() throws CantGetTransactionsException;
 
-    List<com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction> getAllTransactions(CryptoAddress cryptoAddress) throws CantGetTransactionsException;
+    List<AssetUserWalletTransaction> getAllTransactions(CryptoAddress cryptoAddress) throws CantGetTransactionsException;
 
-    List<com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction> getAllAvailableTransactions(CryptoAddress cryptoAddress) throws CantGetTransactionsException;
+    List<AssetUserWalletTransaction> getAllAvailableTransactions(CryptoAddress cryptoAddress) throws CantGetTransactionsException;
 
-    List<com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction> getTransactionsForDisplay(CryptoAddress cryptoAddress) throws CantGetTransactionsException;
+    List<AssetUserWalletTransaction> getTransactionsForDisplay(CryptoAddress cryptoAddress) throws CantGetTransactionsException;
 
-    List<com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction> getTransactions(BalanceType balanceType,
+    List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType,
                                                      TransactionType transactionType,
                                                      CryptoAddress cryptoAddress) throws CantGetTransactionsException;
 
-    List<com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction> getTransactions(BalanceType balanceType,
+    List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType,
                                                      TransactionType transactionType,
                                                      int max,
                                                      int offset, String assetPublicKey) throws CantGetTransactionsException;
 
-    List<com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction> getTransactionsByActor(String actorPublicKey,
+    List<AssetUserWalletTransaction> getTransactionsByActor(String actorPublicKey,
                                                             BalanceType balanceType,
                                                             int max,
                                                             int offset) throws CantGetTransactionsException;

@@ -1,7 +1,8 @@
 package org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 
 import java.util.List;
 import java.util.Set;
