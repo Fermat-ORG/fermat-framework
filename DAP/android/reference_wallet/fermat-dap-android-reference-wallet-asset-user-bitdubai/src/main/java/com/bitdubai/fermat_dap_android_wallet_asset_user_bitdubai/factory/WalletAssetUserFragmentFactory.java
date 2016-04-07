@@ -54,7 +54,7 @@ public class WalletAssetUserFragmentFactory extends FermatFragmentFactory<AssetU
                     currentFragment = new UserHistoryActivityFragment();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_DETAIL_TRANSACTIONS:
-                    currentFragment = new TransactionsFragment();
+                    currentFragment = TransactionsFragment.newInstance();
                     break;
                 case DAP_WALLET_ASSET_USER_ASSET_REDEEM:
 //                    currentFragment = new AssetRedeemFragment();

@@ -81,7 +81,7 @@
     <string name="dap_user_wallet_sell_to">User to sell</string>
     <string name="dap_user_wallet_sell_button">Sell</string>
     <string name="dap_user_wallet_buy_no_available">No Available</string>
-    <string name="dap_user_wallet_to">To</string>
+    <string name="dap_user_wallet_to">To: </string>
     <string name="dap_user_wallet_x_button">X</string>
     <!-- -->
 
