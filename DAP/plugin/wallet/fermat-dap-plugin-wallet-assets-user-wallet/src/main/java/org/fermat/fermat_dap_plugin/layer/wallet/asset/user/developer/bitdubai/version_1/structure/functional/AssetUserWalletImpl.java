@@ -18,6 +18,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
@@ -28,7 +31,7 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.Records
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletBalance;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
-import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.*;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransactionSummary;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
@@ -41,8 +44,6 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMem
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.database.AssetUserWalletDao;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.database.AssetUserWalletDatabaseFactory;
 import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.exceptions.CantInitializeAssetUserWalletException;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -213,8 +214,8 @@ public class AssetUserWalletImpl implements AssetUserWallet {
         List<AssetUserWalletTransaction> debitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, cryptoAddress);
         List<AssetUserWalletTransaction> debitBook = getTransactions(BalanceType.BOOK, TransactionType.DEBIT, cryptoAddress);
         List<AssetUserWalletTransaction> toReturn = new ArrayList<>();
-        toReturn.addAll(getTransactionsForDisplay(creditAvailable, creditBook));
-        toReturn.addAll(getTransactionsForDisplay(debitBook, debitAvailable));
+        toReturn.addAll(getCreditsForDisplay(creditAvailable, creditBook));
+        toReturn.addAll(getDebitsForDisplay(debitAvailable, debitBook));
         Collections.sort(toReturn, new Comparator<AssetUserWalletTransaction>() {
             @Override
             public int compare(AssetUserWalletTransaction o1, AssetUserWalletTransaction o2) {
@@ -224,7 +225,7 @@ public class AssetUserWalletImpl implements AssetUserWallet {
         return toReturn;
     }
 
-    private List<AssetUserWalletTransaction> getTransactionsForDisplay(List<AssetUserWalletTransaction> available, List<AssetUserWalletTransaction> book) {
+    private List<AssetUserWalletTransaction> getCreditsForDisplay(List<AssetUserWalletTransaction> available, List<AssetUserWalletTransaction> book) {
         for (AssetUserWalletTransaction transaction : book) {
             if (!available.contains(transaction)) {
                 available.add(transaction);
@@ -233,6 +234,16 @@ public class AssetUserWalletImpl implements AssetUserWallet {
         return available;
     }
 
+    private List<AssetUserWalletTransaction> getDebitsForDisplay(List<AssetUserWalletTransaction> available, List<AssetUserWalletTransaction> book) {
+        Collections.reverse(available);
+        for (AssetUserWalletTransaction transaction : book) {
+            if (available.contains(transaction)) {
+                available.remove(transaction); //YES, THIS IS NECESSARY.
+            }
+            available.add(transaction);
+        }
+        return available;
+    }
     @Override
     public List<AssetUserWalletTransaction> getTransactions(BalanceType balanceType, TransactionType transactionType, CryptoAddress cryptoAddress) throws CantGetTransactionsException {
         try {
