@@ -150,6 +150,7 @@
             />
 
         <service android:name="com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService"/>
+        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerService"/>
 
     </application>
 </manifest>

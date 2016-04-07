@@ -1,12 +1,14 @@
 package com.bitdubai.android_core.app;
 
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerService;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.android_core.app.common.version_1.util.services_helpers.ServicesHelpers;
 import com.bitdubai.fermat.R;
@@ -134,6 +136,10 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         servicesHelpers = new ServicesHelpers(this);
         servicesHelpers.bindServices();
 
+        NotificationManager notificationManager = (NotificationManager)
+                getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+
         super.onCreate();
     }
     protected void attachBaseContext(Context base) {
@@ -154,6 +160,10 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
     public NotificationService getNotificationService(){
         return getServicesHelpers().getNotificationService();
+    }
+
+    public ClientSystemBrokerService getClientSideBrokerService(){
+        return getServicesHelpers().getClientSideBrokerService();
     }
 
     public ServicesHelpers getServicesHelpers() {

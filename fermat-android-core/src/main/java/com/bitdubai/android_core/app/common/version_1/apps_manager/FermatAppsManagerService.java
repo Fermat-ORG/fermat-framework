@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.dmp_module.AppManager;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
@@ -171,6 +172,13 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         if(fermatSessionManager.isSessionOpen(fermatApp.getAppPublicKey())){
             fermatSession = fermatSessionManager.getAppsSession(fermatApp.getAppPublicKey());
         }else {
+            ModuleManager moduleManager = null;
+//            try {
+//                moduleManager = ApplicationSession.getInstance().getClientSideBrokerService().getModuleManager(fermatAppConnection.getPluginVersionReference());
+//            } catch (CantCreateProxyException e) {
+//                e.printStackTrace();
+//            }
+//            fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), moduleManager, fermatAppConnection);
             fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), FermatSystemUtils.getModuleManager(fermatAppConnection.getPluginVersionReference()), fermatAppConnection);
         }
         fermatAppConnection.setFullyLoadedSession(fermatSession);

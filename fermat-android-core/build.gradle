@@ -31,7 +31,7 @@ android {
         applicationId "org.fermat.alpha"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 22
+        versionCode 25
         versionName "1.1"
         multiDexEnabled true
     }
