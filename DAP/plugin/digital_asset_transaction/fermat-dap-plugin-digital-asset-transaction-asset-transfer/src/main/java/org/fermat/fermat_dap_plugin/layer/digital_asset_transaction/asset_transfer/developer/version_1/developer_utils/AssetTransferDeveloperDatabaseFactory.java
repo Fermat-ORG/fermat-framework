@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.developer_utils;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.developer_utils;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -16,8 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_transfer.exceptions.CantInitializeAssetTransferTransactionDatabaseException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.database.AssetTransferDatabaseConstants;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.database.AssetTransferDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +99,7 @@ public class AssetTransferDeveloperDatabaseFactory implements DealsWithPluginDat
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(AssetTransferDatabaseConstants.ASSET_TRANSFER_DATABASE, this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DATABASE, this.pluginId.toString()));
         return databases;
     }
 
@@ -113,19 +112,19 @@ public class AssetTransferDeveloperDatabaseFactory implements DealsWithPluginDat
          */
         List<String> assetTransferColumns = new ArrayList<String>();
 
-        assetTransferColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_GENESIS_TRANSACTION_COLUMN_NAME);
-        assetTransferColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_DIGITAL_ASSET_HASH_COLUMN_NAME);
-        assetTransferColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_ACTOR_ASSET_USER_PUBLIC_KEY_COLUMN_NAME);
-        assetTransferColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_DIGITAL_ASSET_STORAGE_LOCAL_PATH_COLUMN_NAME);
-        assetTransferColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_TRANSFERENCE_STATUS_COLUMN_NAME);
-        assetTransferColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_CRYPTO_STATUS_COLUMN_NAME);
-        assetTransferColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_PROTOCOL_STATUS_COLUMN_NAME);
-        assetTransferColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_ACTOR_ASSET_USER_BITCOIN_ADDRESS_COLUMN_NAME);
-        assetTransferColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_TRANSFERENCE_ID_COLUMN_NAME);
+        assetTransferColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_GENESIS_TRANSACTION_COLUMN_NAME);
+        assetTransferColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DIGITAL_ASSET_HASH_COLUMN_NAME);
+        assetTransferColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_ACTOR_ASSET_USER_PUBLIC_KEY_COLUMN_NAME);
+        assetTransferColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DIGITAL_ASSET_STORAGE_LOCAL_PATH_COLUMN_NAME);
+        assetTransferColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_TRANSFERENCE_STATUS_COLUMN_NAME);
+        assetTransferColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_CRYPTO_STATUS_COLUMN_NAME);
+        assetTransferColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_PROTOCOL_STATUS_COLUMN_NAME);
+        assetTransferColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_ACTOR_ASSET_USER_BITCOIN_ADDRESS_COLUMN_NAME);
+        assetTransferColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_TRANSFERENCE_ID_COLUMN_NAME);
         /**
          * Table Asset Distribution addition.
          */
-        DeveloperDatabaseTable assetDistributionTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetTransferDatabaseConstants.ASSET_TRANSFER_TABLE_NAME, assetTransferColumns);
+        DeveloperDatabaseTable assetDistributionTable = developerObjectFactory.getNewDeveloperDatabaseTable(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_TABLE_NAME, assetTransferColumns);
         tables.add(assetDistributionTable);
 
         /**
@@ -133,13 +132,13 @@ public class AssetTransferDeveloperDatabaseFactory implements DealsWithPluginDat
          * */
         List<String> eventsRecorderColumns = new ArrayList<String>();
 
-        eventsRecorderColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_EVENTS_RECORDED_ID_COLUMN_NAME);
-        eventsRecorderColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_EVENTS_RECORDED_EVENT_COLUMN_NAME);
-        eventsRecorderColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_EVENTS_RECORDED_SOURCE_COLUMN_NAME);
-        eventsRecorderColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_EVENTS_RECORDED_STATUS_COLUMN_NAME);
-        eventsRecorderColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME);
+        eventsRecorderColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_EVENTS_RECORDED_ID_COLUMN_NAME);
+        eventsRecorderColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_EVENTS_RECORDED_EVENT_COLUMN_NAME);
+        eventsRecorderColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_EVENTS_RECORDED_SOURCE_COLUMN_NAME);
+        eventsRecorderColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_EVENTS_RECORDED_STATUS_COLUMN_NAME);
+        eventsRecorderColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME);
 
-        DeveloperDatabaseTable eventsRecorderTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetTransferDatabaseConstants.ASSET_TRANSFER_EVENTS_RECORDED_TABLE_NAME, eventsRecorderColumns);
+        DeveloperDatabaseTable eventsRecorderTable = developerObjectFactory.getNewDeveloperDatabaseTable(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_EVENTS_RECORDED_TABLE_NAME, eventsRecorderColumns);
         tables.add(eventsRecorderTable);
 
         /**
@@ -147,18 +146,18 @@ public class AssetTransferDeveloperDatabaseFactory implements DealsWithPluginDat
          */
         List<String> assetDeliveringColumns = new ArrayList<String>();
 
-        assetDeliveringColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_TRANSACTION_ID_COLUMN_NAME);
-        assetDeliveringColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME);
-        assetDeliveringColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_NETWORK_TYPE_COLUMN_NAME);
-        assetDeliveringColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME);
-        assetDeliveringColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_USER_PUBLICKEY_COLUMN_NAME);
-        assetDeliveringColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_START_TIME_COLUMN_NAME);
-        assetDeliveringColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_TIMEOUT_COLUMN_NAME);
-        assetDeliveringColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_STATE_COLUMN_NAME);
-        assetDeliveringColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_SENT_GENESISTX_COLUMN_NAME);
-        assetDeliveringColumns.add(AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_ATTEMPT_NUMBER_COLUMN_NAME);
+        assetDeliveringColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_TRANSACTION_ID_COLUMN_NAME);
+        assetDeliveringColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME);
+        assetDeliveringColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_NETWORK_TYPE_COLUMN_NAME);
+        assetDeliveringColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_ASSET_PUBLICKEY_COLUMN_NAME);
+        assetDeliveringColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_USER_PUBLICKEY_COLUMN_NAME);
+        assetDeliveringColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_START_TIME_COLUMN_NAME);
+        assetDeliveringColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_TIMEOUT_COLUMN_NAME);
+        assetDeliveringColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_STATE_COLUMN_NAME);
+        assetDeliveringColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_SENT_GENESISTX_COLUMN_NAME);
+        assetDeliveringColumns.add(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_ATTEMPT_NUMBER_COLUMN_NAME);
 
-        DeveloperDatabaseTable assetDeliveringTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_TABLE_NAME, assetDeliveringColumns);
+        DeveloperDatabaseTable assetDeliveringTable = developerObjectFactory.getNewDeveloperDatabaseTable(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_TABLE_NAME, assetDeliveringColumns);
         tables.add(assetDeliveringTable);
 
         return tables;

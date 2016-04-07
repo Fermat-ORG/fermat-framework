@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
@@ -44,14 +44,11 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSta
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.developer_utils.AssetTransferDeveloperDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.database.AssetTransferDAO;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.database.AssetTransferDatabaseConstants;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.database.AssetTransferDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.events.AssetTransferMonitorAgent;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.events.AssetTransferRecorderService;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.functional.AssetTransferTransactionManager;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.functional.DigitalAssetTransferVault;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.developer_utils.AssetTransferDeveloperDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDAO;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.functional.AssetTransferTransactionManager;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.functional.DigitalAssetTransferVault;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -102,7 +99,7 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
 
     DigitalAssetTransferVault digitalAssetTransferVault;
     AssetTransferTransactionManager assetTransferTransactionManager;
-    AssetTransferMonitorAgent assetTransferMonitorAgent;
+    org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.events.AssetTransferMonitorAgent assetTransferMonitorAgent;
     Database assetDistributionDatabase;
     public AssetTransferDigitalAssetTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -126,14 +123,14 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
 
     private void createAssetDistributionTransactionDatabase() throws CantCreateDatabaseException {
         AssetTransferDatabaseFactory databaseFactory = new AssetTransferDatabaseFactory(this.pluginDatabaseSystem);
-        assetDistributionDatabase = databaseFactory.createDatabase(pluginId, AssetTransferDatabaseConstants.ASSET_TRANSFER_DATABASE);
+        assetDistributionDatabase = databaseFactory.createDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DATABASE);
     }
 
     @Override
     public void start() throws CantStartPluginException {
         try {
             try {
-                this.assetDistributionDatabase = this.pluginDatabaseSystem.openDatabase(pluginId, AssetTransferDatabaseConstants.ASSET_TRANSFER_DATABASE);
+                this.assetDistributionDatabase = this.pluginDatabaseSystem.openDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DATABASE);
             } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
                 try {
                     createAssetDistributionTransactionDatabase();
@@ -162,7 +159,7 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
                     assetTransmissionNetworkServiceManager,
                     actorAssetUserManager);
             //Starting Event Recorder
-            AssetTransferRecorderService assetTransferRecorderService = new AssetTransferRecorderService(assetDistributionDao, eventManager);
+            org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.events.AssetTransferRecorderService assetTransferRecorderService = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.events.AssetTransferRecorderService(assetDistributionDao, eventManager);
             try {
                 assetTransferRecorderService.start();
             } catch (CantStartServiceException exception) {
@@ -197,7 +194,7 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
         if (this.assetTransferMonitorAgent == null) {
-            this.assetTransferMonitorAgent = new AssetTransferMonitorAgent(this.pluginDatabaseSystem,
+            this.assetTransferMonitorAgent = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.events.AssetTransferMonitorAgent(this.pluginDatabaseSystem,
                     this.errorManager,
                     this.pluginId,
                     pluginFileSystem,
@@ -234,7 +231,7 @@ public class AssetTransferDigitalAssetTransactionPluginRoot extends AbstractPlug
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         Database database;
         try {
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, AssetTransferDatabaseConstants.ASSET_TRANSFER_DATABASE);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDatabaseConstants.ASSET_TRANSFER_DATABASE);
             return AssetTransferDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**

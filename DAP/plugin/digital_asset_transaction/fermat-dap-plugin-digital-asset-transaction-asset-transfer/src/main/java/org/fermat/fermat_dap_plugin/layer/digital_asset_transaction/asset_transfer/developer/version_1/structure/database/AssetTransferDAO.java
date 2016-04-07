@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.database;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -29,10 +29,8 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSav
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartDeliveringException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.AssetTransferDigitalAssetTransactionPluginRoot;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.exceptions.CantCheckTransferProgressException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.functional.DeliverRecord;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.functional.DigitalAssetTransferVault;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantCheckTransferProgressException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.functional.DeliverRecord;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,7 +44,7 @@ import java.util.UUID;
  */
 public class AssetTransferDAO {
 
-    private final DigitalAssetTransferVault digitalAssetTransferVault;
+    private final org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.functional.DigitalAssetTransferVault digitalAssetTransferVault;
     //VARIABLE DECLARATION
     private UUID pluginId;
     private Database database;
@@ -56,7 +54,7 @@ public class AssetTransferDAO {
     //CONSTRUCTORS
     public AssetTransferDAO(PluginDatabaseSystem pluginDatabaseSystem,
                             UUID pluginId,
-                            DigitalAssetTransferVault digitalAssetTransferVault) throws CantExecuteDatabaseOperationException {
+                            org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.functional.DigitalAssetTransferVault digitalAssetTransferVault) throws CantExecuteDatabaseOperationException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         this.digitalAssetTransferVault = digitalAssetTransferVault;
@@ -72,7 +70,7 @@ public class AssetTransferDAO {
 
         String transactionId = UUID.randomUUID().toString();
         long startTime = System.currentTimeMillis();
-        long timeOut = startTime + AssetTransferDigitalAssetTransactionPluginRoot.DELIVERING_TIMEOUT;
+        long timeOut = startTime + org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.AssetTransferDigitalAssetTransactionPluginRoot.DELIVERING_TIMEOUT;
 
         try {
             DatabaseTable databaseTable = getDatabaseTable(AssetTransferDatabaseConstants.ASSET_TRANSFER_DELIVERING_TABLE_NAME);

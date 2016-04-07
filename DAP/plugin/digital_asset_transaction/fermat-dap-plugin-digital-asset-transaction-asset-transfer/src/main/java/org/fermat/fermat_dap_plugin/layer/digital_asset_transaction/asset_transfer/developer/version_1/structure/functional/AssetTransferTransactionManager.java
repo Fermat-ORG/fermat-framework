@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.functional;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -12,8 +12,8 @@ import org.fermat.fermat_dap_api.layer.dap_network_services.asset_transmission.i
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_transfer.exceptions.CantTransferDigitalAssetsException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_transfer.interfaces.AssetTransferManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.exceptions.CantGetActorAssetIssuerException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.bitdubai.version_1.structure.database.AssetTransferDAO;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.database.AssetTransferDAO;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.HashMap;
@@ -39,7 +39,7 @@ public class AssetTransferTransactionManager implements AssetTransferManager {
                                            PluginDatabaseSystem pluginDatabaseSystem,
                                            PluginFileSystem pluginFileSystem,
                                            BitcoinNetworkManager bitcoinNetworkManager,
-                                           DigitalAssetTransferVault digitalAssetTransferVault,
+                                           org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.functional.DigitalAssetTransferVault digitalAssetTransferVault,
                                            AssetTransferDAO assetTransferDAO,
                                            AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager,
                                            ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
@@ -74,7 +74,7 @@ public class AssetTransferTransactionManager implements AssetTransferManager {
         this.digitalAssetTransferer.setAssetTransferDao(assetDistributionDatabaseDao);
     }
 
-    public void setDigitalAssetDistributionVault(DigitalAssetTransferVault digitalAssetTransferVault) throws CantSetObjectException {
+    public void setDigitalAssetDistributionVault(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.structure.functional.DigitalAssetTransferVault digitalAssetTransferVault) throws CantSetObjectException {
         this.digitalAssetTransferer.setDigitalAssetTransferVault(digitalAssetTransferVault);
     }
 
@@ -123,7 +123,7 @@ public class AssetTransferTransactionManager implements AssetTransferManager {
         }
         try {
             this.digitalAssetTransferer.setActorAssetUserManager(actorAssetUserManager);
-        } catch (CantGetActorAssetIssuerException exception) {
+        } catch (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_transfer.developer.version_1.exceptions.CantGetActorAssetIssuerException exception) {
             throw new CantSetObjectException(exception, "Setting the Actor Asset Issuer Manager", "Getting the Actor Asset Issuer");
         }
 
