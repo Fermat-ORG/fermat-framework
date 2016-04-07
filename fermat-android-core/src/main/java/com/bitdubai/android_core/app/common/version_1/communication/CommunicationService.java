@@ -70,7 +70,8 @@ public class CommunicationService extends Service{
                         unRegisterClient(msg.getData().getString(CommunicationDataKeys.DATA_PUBLIC_KEY));
                         break;
                     case CommunicationMessages.MSG_REQUEST_DATA_MESSAGE:
-                        send(msg.getData().getString(CommunicationDataKeys.DATA_PUBLIC_KEY),
+                        send(msg.getData().getString(CommunicationDataKeys.DATA_REQUEST_ID),
+                                msg.getData().getString(CommunicationDataKeys.DATA_PUBLIC_KEY),
                                 moduleDataRequest(
                                         (PluginVersionReference) msg.getData().getSerializable(CommunicationDataKeys.DATA_PLUGIN_VERSION_REFERENCE),
                                         msg.getData().getString(CommunicationDataKeys.DATA_METHOD_TO_EXECUTE),
@@ -191,7 +192,7 @@ public class CommunicationService extends Service{
     }
 
 
-    private void send(String key,Object object) throws RemoteException {
+    private void send(String id, String key, Object object) throws RemoteException {
         Log.i(TAG,"Sending data to:"+ clients.get(key));
         Log.i(TAG,"Sending data: "+ object);
         StringBuilder stringBuilder = new StringBuilder();
@@ -203,6 +204,7 @@ public class CommunicationService extends Service{
         Message msg = Message.obtain(null, CommunicationMessages.MSG_REQUEST_DATA_MESSAGE);
         if(object instanceof Serializable){
             msg.getData().putSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE, (Serializable) object);
+            msg.getData().putString(CommunicationDataKeys.DATA_REQUEST_ID, id);
             clients.get(key).send(msg);
         }else{
             Log.i(TAG, "Data is not serializable");
