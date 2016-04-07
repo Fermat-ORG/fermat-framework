@@ -292,15 +292,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //                e.printStackTrace();
 //            }
 //
-//            /**
-//             * Service
-//             */
-//            if (mNotificationServiceConnected) {
-//                unbindService(mServiceConnection);
-//                mNotificationServiceConnected = false;
-//            }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -1370,14 +1361,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        /**
-         * Service
-         */
-//        if (mNotificationServiceConnected) {
-//            unbindService(mServiceConnection);
-//            mNotificationServiceConnected = false;
-//        }
 
         /**
          * stop every service
