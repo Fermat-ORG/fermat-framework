@@ -66,4 +66,12 @@ public interface CustomerBrokerContractPurchaseManager extends FermatManager{
      * @throws CantUpdateCustomerBrokerContractPurchaseException
      */
     void updateContractNearExpirationDatetime(String contractId, Boolean status) throws CantUpdateCustomerBrokerContractPurchaseException;
+
+    /**
+     *
+     * @param contractId
+     * @param reason
+     * @throws CantUpdateCustomerBrokerContractPurchaseException
+     */
+    void cancelContract(String contractId, String reason) throws CantUpdateCustomerBrokerContractPurchaseException;
 }
