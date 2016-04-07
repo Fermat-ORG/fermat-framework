@@ -1066,6 +1066,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
     }
 
     private void startTimer() {
+        if(timer!=null)
         timer.schedule(new TimerTask() {
             @Override
             public void run() {

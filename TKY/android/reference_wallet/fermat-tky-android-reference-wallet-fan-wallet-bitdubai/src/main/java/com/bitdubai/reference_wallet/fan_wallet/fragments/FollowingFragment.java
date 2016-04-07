@@ -29,11 +29,11 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_tky_plugin.layer.wallet_module.fan.developer.bitdubai.version_1.structure.FanWalletModuleManager;
+import com.bitdubai.fermat_tky_api.layer.wallet_module.FanWalletPreferenceSettings;
+import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModuleManager;
 import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.common.adapters.FollowingAdapter;
 import com.bitdubai.reference_wallet.fan_wallet.common.models.FollowingItems;
-import com.bitdubai.reference_wallet.fan_wallet.preference_settings.FanWalletSettings;
 import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
 import com.bitdubai.reference_wallet.fan_wallet.util.ManageRecyclerviewClick;
 
@@ -48,7 +48,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     //FermatManager
     private FanWalletSession fanwalletSession;
     private FanWalletModuleManager fanwalletmoduleManager;
-    private FanWalletSettings fanWalletSettings;
+    private FanWalletPreferenceSettings fanWalletSettings;
     private ErrorManager errorManager;
 
 
@@ -75,19 +75,19 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
             fanwalletSession = ((FanWalletSession) appSession);
             fanwalletmoduleManager = fanwalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
+            System.out.println("HERE START FAN WALLET");
 
             try {
-                //    fanWalletSettings = fanwalletmoduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                fanWalletSettings =  fanwalletmoduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 fanWalletSettings = null;
             }
 
             if (fanWalletSettings == null) {
-                fanWalletSettings = new FanWalletSettings();
+                fanWalletSettings = new FanWalletPreferenceSettings();
                 fanWalletSettings.setIsPresentationHelpEnabled(true);
                 try {
-                    //fanwalletmoduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
+                    fanwalletmoduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -98,6 +98,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
+
 
     }
 
@@ -159,10 +160,6 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                         intent.setData(Uri.parse(items.get(position).getArtist_url()));
                         startActivity(intent);
 
-                        /*Intent i = new Intent(Intent.ACTION_VIEW);
-                        i.addCategory(Intent.CATEGORY_BROWSABLE);
-                        i.setData(Uri.parse("www.google.com"));
-                        getActivity().startActivity(i);*/
                     }
                 })
         );

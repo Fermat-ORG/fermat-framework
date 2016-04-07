@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by mati on 2016.03.25..
+ * Created by Matias Furszyfer on 2016.03.25..
  */
 public class SettingsSliderProvisoryData {
     
@@ -55,12 +55,15 @@ public class SettingsSliderProvisoryData {
 
         SettingsItem settingsItemRecents = new SettingsItem(SettingsType.RECENTS,R.drawable.ic_menu_recent_history,"Recents","");
 
+        SettingsItem settingsHelp = new SettingsItem(SettingsType.HELP,R.drawable.ic_action_help_grey,"Help","");
+
 
         list.add(settingsItemFermatNetwork);
         list.add(settingsItemBitcoinNetwork);
         list.add(settingsItemPrivateNetwork);
         list.add(settingsItemSettings);
         list.add(settingsItemRecents);
+        list.add(settingsHelp);
 
 
         return list;

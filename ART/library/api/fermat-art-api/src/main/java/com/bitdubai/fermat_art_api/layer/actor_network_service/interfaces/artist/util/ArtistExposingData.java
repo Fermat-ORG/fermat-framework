@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ExposingData;
 
 import java.util.Arrays;
 
@@ -10,7 +10,7 @@ import java.util.Arrays;
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 17/11/2015.
  */
-public final class ArtistExposingData {
+public final class ArtistExposingData implements ExposingData {
 
     private final String publicKey;
     private final String alias    ;

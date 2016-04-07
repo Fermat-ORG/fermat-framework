@@ -94,7 +94,7 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
 
 
-        list.add(new PreferenceSettingsEditText(9,"Export Private key","Click Here"));
+       // list.add(new PreferenceSettingsEditText(9,"Export Private key","Click Here"));
 
         } catch (CantGetSettingsException e) {
             e.printStackTrace();

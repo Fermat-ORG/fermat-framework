@@ -31,7 +31,7 @@ public class TkyIdentityHomeFragment  extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootLayout = inflater.inflate(R.layout.fragment_tky_artist_create_identity, container, false);
+        View rootLayout = inflater.inflate(R.layout.fragment_tky_artist_home, container, false);
 
 
         return rootLayout;

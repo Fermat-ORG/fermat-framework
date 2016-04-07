@@ -7,8 +7,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.fan_wallet.fragments.FanWalletMainActivity;
-import com.bitdubai.reference_wallet.fan_wallet.fragments.FollowingFragment;
-import com.bitdubai.reference_wallet.fan_wallet.fragments.SongFragment;
 import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
 
 /**
@@ -26,12 +24,12 @@ public class FanWalletFragmentFactory extends FermatFragmentFactory<FanWalletSes
 
         if (fragments.equals(FanWalletEnumType.TKY_FAN_WALLET_SONGS_TAB_FRAGMENT))
         {
-            return SongFragment.newInstance();
+          //  return SongFragment.newInstance();
         }
 
         if (fragments.equals(FanWalletEnumType.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT))
         {
-            return FollowingFragment.newInstance();
+          //  return FollowingFragment.newInstance();
         }
 
 

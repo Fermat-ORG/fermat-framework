@@ -26,7 +26,7 @@ public interface BitcoinLossProtectedWalletBalance {
       * @return
       * @throws CantCalculateBalanceException
       */
-    long getBalance(BlockchainNetworkType blockchainNetworkType, long exchangeRate) throws CantCalculateBalanceException;
+    long getBalance(BlockchainNetworkType blockchainNetworkType, String exchangeRate) throws CantCalculateBalanceException;
 
     void debit(BitcoinLossProtectedWalletTransactionRecord cryptoTransaction) throws CantRegisterDebitException;
 

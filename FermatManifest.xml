@@ -7912,7 +7912,7 @@
 			 description="Opens the default browser of the device with the URL of the artist."
 			 platform="TKY"
 			 superlayer=""
-			 layer="Song Wallet"
+			 layer="Reference Wallet"
 			 name="Fan Wallet"
 			 >
 		     </step>

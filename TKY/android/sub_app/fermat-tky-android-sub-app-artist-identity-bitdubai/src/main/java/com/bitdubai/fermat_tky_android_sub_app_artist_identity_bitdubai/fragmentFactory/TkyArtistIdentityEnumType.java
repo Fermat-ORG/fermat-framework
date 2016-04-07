@@ -33,6 +33,6 @@ public enum TkyArtistIdentityEnumType implements FermatFragmentsEnumType<TkyArti
 
     @Override
     public String getKey() {
-        return null;
+        return this.key;
     }
 }

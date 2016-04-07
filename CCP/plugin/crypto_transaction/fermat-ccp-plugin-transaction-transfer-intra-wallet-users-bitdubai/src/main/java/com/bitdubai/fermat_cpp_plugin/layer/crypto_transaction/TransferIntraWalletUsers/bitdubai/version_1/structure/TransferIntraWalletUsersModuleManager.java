@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cpp_plugin.layer.crypto_transaction.TransferIntraWal
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
@@ -107,7 +108,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
 
                     //Consult current balance of the sending wallet
 
-                    BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(wallet_public_key_receiving);
+                    BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(wallet_public_key_sending);
                     initialBalance = bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getBalance(blockchainNetworkType);
 
 
@@ -121,10 +122,10 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                         //TODO: los actors de estas transacciones van a ser la wallets, hay que distinguir
                         // esto con el actor type para poder mostrar despues bien el que seria el contacto asociado
                         BitcoinWalletTransactionRecord bitcoinWalletTransactionWalletRecord = buildBitcoinWalletRecord(id,
-                                null,
+                                new CryptoAddress("", CryptoCurrency.BITCOIN),
                                 null,
                                 cryptoAmount,
-                                null,
+                                new CryptoAddress("", CryptoCurrency.BITCOIN),
                                 notes,
                                 System.currentTimeMillis(),
                                 "",
@@ -192,10 +193,10 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                         //Prepares the record to be used within transactions
 
                         BitcoinLossProtectedWalletTransactionRecord bitcoinLossProtectedWalletTransactionWalletRecord2 = buildLossWalletRecord(id,
-                                null,
+                                new CryptoAddress("", CryptoCurrency.BITCOIN),
                                 null,
                                 cryptoAmount,
-                                null,
+                                new CryptoAddress("", CryptoCurrency.BITCOIN),
                                 notes,
                                 System.currentTimeMillis(),
                                 "",
@@ -296,10 +297,10 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                     //Prepares the record to be used within transactions
 
                     BitcoinWalletTransactionWalletRecord bitcoinWalletTransactionWalletRecord2 = buildBitcoinWalletRecord(id,
-                            null,
+                            new CryptoAddress("", CryptoCurrency.BITCOIN),
                             null,
                             cryptoAmount,
-                            null,
+                            new CryptoAddress("", CryptoCurrency.BITCOIN),
                             notes,
                             System.currentTimeMillis(),
                             "",
@@ -309,7 +310,7 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                             actortype,
                             blockchainNetworkType);
 
-                    BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(wallet_public_key_sending);
+                    BitcoinWalletWallet bitcoinWalletWallet = this.bitcoinWalletManager.loadWallet(wallet_public_key_receiving);
 
                     try {
                         bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).credit(bitcoinWalletTransactionWalletRecord2);
@@ -330,12 +331,12 @@ public class TransferIntraWalletUsersModuleManager implements TransferIntraWalle
                     break;
                 case BASIC_WALLET_LOSS_PROTECTED_WALLET:
                     //Prepares the record to be used within transactions
-                    BitcoinLossProtectedWallet bitcoinLossProtectedWallet = this.bitcoinLossWalletManager.loadWallet(wallet_public_key_sending);
+                    BitcoinLossProtectedWallet bitcoinLossProtectedWallet = this.bitcoinLossWalletManager.loadWallet(wallet_public_key_receiving);
                     BitcoinLossProtectedWalletTransactionRecord bitcoinLossProtectedWalletTransactionWalletRecord = buildLossWalletRecord(id,
-                            null,
+                            new CryptoAddress("", CryptoCurrency.BITCOIN),
                             null,
                             cryptoAmount,
-                            null,
+                            new CryptoAddress("", CryptoCurrency.BITCOIN),
                             notes,
                             System.currentTimeMillis(),
                             "",

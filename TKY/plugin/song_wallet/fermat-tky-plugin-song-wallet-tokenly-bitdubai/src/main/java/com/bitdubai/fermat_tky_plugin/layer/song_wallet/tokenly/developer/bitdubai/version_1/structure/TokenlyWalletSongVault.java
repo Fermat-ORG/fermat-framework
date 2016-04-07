@@ -1,5 +1,9 @@
 package com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -8,12 +12,14 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.BroadcasterNotificationType;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.DownloadSong;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDeleteSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDownloadSongException;
+import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CancelDownloadException;
 import com.bitdubai.fermat_tky_plugin.layer.song_wallet.tokenly.developer.bitdubai.version_1.exceptions.CantDownloadFileException;
 
 import java.io.IOException;
@@ -46,6 +52,11 @@ public class TokenlyWalletSongVault {
     TokenlyApiManager tokenlyApiManager;
 
     /**
+     * Represents the broadcaster.
+     */
+    private Broadcaster broadcaster;
+
+    /**
      * Default values
      */
 
@@ -65,15 +76,27 @@ public class TokenlyWalletSongVault {
     private final FileLifeSpan FILE_LIFE_SPAN = FileLifeSpan.PERMANENT;
 
     /**
+     * Represents the percentage step
+     */
+    private final int PERCENTAGE_STEP = 1;
+
+    /**
+     * Represents if the download must be canceled
+     */
+    private boolean CANCEL_DOWNLOAD = false;
+
+    /**
      * Constructor with parameters
      */
     public TokenlyWalletSongVault(
             PluginFileSystem pluginFileSystem,
             TokenlyApiManager tokenlyApiManager,
-            UUID pluginId){
+            UUID pluginId,
+            Broadcaster broadcaster){
         this.pluginFileSystem = pluginFileSystem;
         this.tokenlyApiManager = tokenlyApiManager;
         this.pluginId = pluginId;
+        this.broadcaster = broadcaster;
     }
 
     /**
@@ -82,13 +105,19 @@ public class TokenlyWalletSongVault {
      * Tonkenly Id.
      * @param song
      * @throws CantDownloadSongException
+     * @throws CancelDownloadException
      */
-    public String downloadSong(Song song) throws CantDownloadSongException {
+    public String downloadSong(Song song, UUID songId) throws
+            CantDownloadSongException,
+            CancelDownloadException {
         try{
             //Get DownloadSOng object from Tokenly public API
             String downloadUrl = song.getDownloadUrl();
             String songName = song.getName();
-            downloadFile(downloadUrl,songName);
+            downloadFile(
+                    downloadUrl,
+                    songName,
+                    songId);
             return DIRECTORY_NAME+"/"+songName.replace(" ","_");
         } catch (CantDownloadFileException e) {
             throw new CantDownloadSongException(
@@ -133,9 +162,13 @@ public class TokenlyWalletSongVault {
      * Is required to review the tokenly API to use the download URL.
      * @param downloadUrl
      * @param fileName
+     * @param songId
      * @throws CantDownloadFileException
+     * @throws CancelDownloadException
      */
-    public void downloadFile(String downloadUrl, String fileName) throws CantDownloadFileException{
+    public void downloadFile(String downloadUrl, String fileName, UUID songId) throws
+            CantDownloadFileException,
+            CancelDownloadException {
         try{
             //TODO: study if this method will fix better in external API
             //Remove spaces
@@ -147,25 +180,44 @@ public class TokenlyWalletSongVault {
             //Get file size
             int size = urlCon.getContentLength();
             System.out.println("TKY - Download size: "+size);
-            //Prepare the plugin file system to persist the file
-            PluginBinaryFile pluginBinaryFile = pluginFileSystem.createBinaryFile(
-                    pluginId,
-                    DIRECTORY_NAME,
-                    fileName,
-                    FILE_PRIVACY,
-                    FILE_LIFE_SPAN);
+            //Calculate 1% to show in UI progress bar
+            int percentStep = size/(PERCENTAGE_STEP*100);
             //Reading buffer.
             byte [] data = new byte[1024];
             //Put the inputStream into the array bytes.
             int bytesRead = is.read(data);
+            //Set the cancel download flag in true
+            CANCEL_DOWNLOAD=false;
             //File counter
             int reader = 0;
             List<Byte> byteList = new ArrayList<>();
+            int downloadPercentage=0;
+            int calculate;
+            FermatBundle fermatBundle;
             while(bytesRead != -1) {
+                if(CANCEL_DOWNLOAD){
+                    broadcaster.publish(
+                            BroadcasterType.UPDATE_VIEW,
+                            WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
+                            "Download canceled by user request");
+                    throw new CancelDownloadException();
+                }
                 for(byte byteRead : data){
                     byteList.add(byteRead);
                 }
                 reader+=bytesRead;
+                calculate = reader/percentStep;
+                if(calculate>downloadPercentage){
+                    downloadPercentage=calculate;
+                    fermatBundle = new FermatBundle();
+                    fermatBundle.put(BroadcasterNotificationType.DOWNLOAD_PERCENTAGE.getCode(),
+                            downloadPercentage+"%");
+                    fermatBundle.put(BroadcasterNotificationType.SONG_ID.getCode(), songId);
+                    broadcaster.publish(
+                            BroadcasterType.UPDATE_VIEW,
+                            WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
+                            fermatBundle);
+                }
                 //System.out.println("TKY - Download "+reader+" from "+size);
                 bytesRead = is.read(data);
             }
@@ -177,10 +229,24 @@ public class TokenlyWalletSongVault {
                 array[loopCounter] = Byte.parseByte(object.toString());
                 loopCounter++;
             }
+            //Prepare the plugin file system to persist the file
+            PluginBinaryFile pluginBinaryFile = pluginFileSystem.createBinaryFile(
+                    pluginId,
+                    DIRECTORY_NAME,
+                    fileName,
+                    FILE_PRIVACY,
+                    FILE_LIFE_SPAN);
             pluginBinaryFile.setContent(array);
             pluginBinaryFile.persistToMedia();
             //Close connection
             is.close();
+            //Notify that the process is finished
+            fermatBundle = new FermatBundle();
+            fermatBundle.put(BroadcasterNotificationType.DOWNLOAD_PERCENTAGE.getCode(), "100%");
+            broadcaster.publish(
+                    BroadcasterType.UPDATE_VIEW,
+                    WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
+                    fermatBundle);
             //Only for testing:
             //testReadFile(fileName);
         } catch (MalformedURLException e) {
@@ -204,6 +270,13 @@ public class TokenlyWalletSongVault {
                     "Downloading file from URL "+downloadUrl,
                     "Cannot create the file");
         }
+    }
+
+    /**
+     * This method sets the CANCEL_DOWNLOAD variable in true.
+     */
+    public void cancelDownload(){
+        this.CANCEL_DOWNLOAD=true;
     }
 
     /**

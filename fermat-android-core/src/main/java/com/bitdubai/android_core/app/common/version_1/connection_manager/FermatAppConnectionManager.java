@@ -144,6 +144,7 @@ public class FermatAppConnectionManager {
                 fermatAppConnection = new WalletStoreFermatAppConnection(activity);
                 break;
 
+
             // CHT Sub Apps
             case "public_key_cht_chat":
                 fermatAppConnection = new ChatFermatAppConnection(activity);
@@ -157,7 +158,6 @@ public class FermatAppConnectionManager {
                 //fermatAppConnection = new ChatFermatAppConnection(activity);
                 break;
             case "public_key_tky_artist_identity":
-                System.out.println("------------------------------public_key_tky_artist_identity------------------------------------");
                 fermatAppConnection = new TkyArtistIdentityAppConnection(activity);
                 break;
             case "sub_app_tky_fan_create_identity":

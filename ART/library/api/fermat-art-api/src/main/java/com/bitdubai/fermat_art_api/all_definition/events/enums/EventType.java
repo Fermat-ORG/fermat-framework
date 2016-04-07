@@ -9,6 +9,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.events.ArtistActorConnectionNewConnectionEvent;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.events.ArtistConnectionRequestNewsEvent;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.events.ArtistConnectionRequestUpdatesEvent;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.events.FanConnectionRequestNewsEvent;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.events.FanConnectionRequestUpdatesEvent;
 
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 31/03/16.
@@ -26,6 +28,12 @@ public enum EventType implements FermatEventEnum {
     },
     ARTIST_CONNECTION_REQUEST_UPDATES("ACRU"){
         public final FermatEvent getNewEvent(){ return new ArtistConnectionRequestUpdatesEvent(this);}
+    },
+    FAN_CONNECTION_REQUEST_NEWS("FCRN"){
+        public final FermatEvent getNewEvent(){ return new FanConnectionRequestNewsEvent(this);}
+    },
+    FAN_CONNECTION_REQUEST_UPDATES("FCRU"){
+        public final FermatEvent getNewEvent(){ return new FanConnectionRequestUpdatesEvent(this);}
     }
     ;
 

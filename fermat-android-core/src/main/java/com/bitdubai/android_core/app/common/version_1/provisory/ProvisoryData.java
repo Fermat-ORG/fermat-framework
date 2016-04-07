@@ -144,31 +144,39 @@ public class ProvisoryData {
         item2.setPosition(5);
         lstIdentities.add(item2);
 
-        installedSubApp = new InstalledSubApp(SubApps.TKY_FAN_IDENTITY_SUB_APP,null,null,"tky_fan_sub_app","Tokenly Fan","sub_app_tky_fan_create_identity","tky_fan_sub_app",new Version(1,0,0),Platforms.TOKENLY);
+        installedSubApp = new InstalledSubApp(
+                SubApps.TKY_FAN_IDENTITY_SUB_APP,
+                null,
+                null,
+                "tky_fan_sub_app",
+                "Tokenly Fan",
+                "sub_app_tky_fan_create_identity",
+                "tky_fan_sub_app",
+                new Version(1,0,0),Platforms.TOKENLY);
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.tokenly_fan);
         item2.setPosition(6);
         lstIdentities.add(item2);
 
-/*
+
         installedSubApp = new InstalledSubApp(
                 SubApps.TKY_ARTIST_IDENTITY_SUB_APP,
                 null,
                 null,
-                "tky_sub_app",
-                "Tokenly",
-                "public_key_tky_artist_identity",
-                "tky_sub_app",
+                "sub_app_tky_artist_identity",
+                "Tokenly Artist",
+                SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode(),
+                "sub_app_tky_artist_identity",
                 new Version(1, 0, 0),
                 Platforms.TOKENLY);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.bitcoin_icon);
-        item2.setPosition(6);
+        item2.setPosition(7);
         lstIdentities.add(item2);
 
 
-*/
+
 
         FermatFolder fermatFolder = new FermatFolder("Identities",lstIdentities,2);
         Item identityFolder = new Item(fermatFolder);

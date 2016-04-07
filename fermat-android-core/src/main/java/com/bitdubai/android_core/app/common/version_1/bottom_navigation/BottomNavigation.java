@@ -14,7 +14,7 @@ import com.bitdubai.sub_app.wallet_manager.commons.helpers.SimpleItemTouchHelper
 import java.util.List;
 
 /**
- * Created by mati on 2015.11.25..
+ * Created by Matias Furszyfer on 2015.11.25..
  */
 public class BottomNavigation implements  OnStartDragListener {
 

@@ -87,7 +87,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * class variables
      */
     BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor;
-    File walletFile;
     final String WALLET_PATH;
 
     /**
@@ -149,10 +148,21 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         for (BlockchainNetworkType blockchainNetworkType : blockchainNetworkTypes) {
             System.out.println("***CryptoNetwork*** Monitor Request from " + cryptoVault.getCode() + " vault on " + blockchainNetworkType.getCode() + " for " + keyList.size() + " keys...");
 
+            // I create the walletFile for this network
+            File walletFile = new File(WALLET_PATH, blockchainNetworkType.getCode());
             /**
-             * load (if any) existing wallet.
+             * load (or create) the wallet.
              */
-            Wallet wallet = getWallet(blockchainNetworkType, keyList);
+            Wallet wallet = null;
+            try {
+                wallet = getWallet(blockchainNetworkType, keyList);
+            } catch (UnreadableWalletException e) {
+                CantStartAgentException exception = new CantStartAgentException(e, "Unable to load wallet from file for network " + blockchainNetworkType.getCode(), "IO error");
+                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+                e.printStackTrace();
+                throw exception;
+            }
+
             Context context = wallet.getContext();
 
             /**
@@ -295,9 +305,12 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      *
      * @return
      */
-    private Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList) {
+    private Wallet getWallet(BlockchainNetworkType blockchainNetworkType, @Nullable List<ECKey> keyList) throws UnreadableWalletException {
         Wallet wallet = null;
-        walletFile = new File(WALLET_PATH, blockchainNetworkType.getCode());
+        File walletFile = new File(WALLET_PATH, blockchainNetworkType.getCode());
+
+        // will get the context for this wallet.
+        Context context = new Context(BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType));
 
         // if the wallet file exists, I will get it from the Network Monitor
         if (walletFile.exists()){
@@ -306,25 +319,20 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
             if (monitor != null)
                 wallet = monitor.getWallet();
             else
-                try {
-                    wallet = Wallet.loadFromFile(walletFile);
-                } catch (UnreadableWalletException e) {
-                    e.printStackTrace();
-                }
+
+                wallet = Wallet.loadFromFile(walletFile);
+
+
             return wallet;
             }
          else {
-            // I will create a new one.
-            NetworkParameters newWalletNetworkParameters = BitcoinNetworkSelector.getNetworkParameter(blockchainNetworkType);
-            Context context = new Context(newWalletNetworkParameters);
-
             wallet = new Wallet(context);
             wallet.importKeys(keyList);
 
             /**
              * Will set the autosave information and save it.
              */
-            wallet.autosaveToFile(walletFile, 1, TimeUnit.SECONDS, null);
+            wallet.autosaveToFile(walletFile, 10, TimeUnit.SECONDS, null);
             try {
                 wallet.saveToFile(walletFile);
             } catch (IOException e1) {
@@ -503,10 +511,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         Sha256Hash sha256Hash = Sha256Hash.wrap(transactionHash);
         Transaction transaction = runningAgents.get(blockchainNetworkType).getBitcoinTransaction(sha256Hash);
 
-        if (transaction == null){
-            Wallet wallet = getWallet(blockchainNetworkType, null);
-            transaction = wallet.getTransaction(sha256Hash);
-        }
         return transaction;
     }
 
