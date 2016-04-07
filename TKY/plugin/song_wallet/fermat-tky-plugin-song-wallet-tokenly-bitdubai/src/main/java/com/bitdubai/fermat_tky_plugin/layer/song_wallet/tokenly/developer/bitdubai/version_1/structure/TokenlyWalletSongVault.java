@@ -243,6 +243,7 @@ public class TokenlyWalletSongVault {
             //Notify that the process is finished
             fermatBundle = new FermatBundle();
             fermatBundle.put(BroadcasterNotificationType.DOWNLOAD_PERCENTAGE.getCode(), "100%");
+            fermatBundle.put(BroadcasterNotificationType.SONG_ID.getCode(), songId);
             broadcaster.publish(
                     BroadcasterType.UPDATE_VIEW,
                     WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
