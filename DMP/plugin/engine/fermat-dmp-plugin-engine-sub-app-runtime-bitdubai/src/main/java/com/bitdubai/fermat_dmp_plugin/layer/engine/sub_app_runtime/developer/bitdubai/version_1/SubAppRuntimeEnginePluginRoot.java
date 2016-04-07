@@ -790,7 +790,35 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             /**
              * CHT CHAT
              */
+
             createChatSubAppNavigationStructure();
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.CHT_CHAT_IDENTITY);
+            String ChatIdentityPublicKey = SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode();
+            runtimeSubApp.setPublicKey(ChatIdentityPublicKey);
+            // Activity: Create New Identity
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CHT_CHAT_CREATE_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
+            //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeSubApp.addPosibleStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY);
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Chat Identity");
+            runtimeTitleBar.setColor("#1189a4");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setLabelSize(18);
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            statusBar = new StatusBar();
+            statusBar.setColor("#1189a4");
+            runtimeActivity.setStatusBar(statusBar);
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             /**
              * CCP INTRA USER IDENTITY

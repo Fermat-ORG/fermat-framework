@@ -12,6 +12,7 @@ public enum SubAppsPublicKeys implements FermatEnum {
 
     //TODO CHT Platform
     CHT_OPEN_CHAT               ("public_key_cht_chat"),
+
     //TODO CBP Platform
     CBP_BROKER_COMMUNITY        ("public_key_crypto_broker_community"),
     CBP_BROKER_IDENTITY         ("sub_app_crypto_broker_identity"),
@@ -60,7 +61,7 @@ public enum SubAppsPublicKeys implements FermatEnum {
 
             //TODO CHT Platform
             case "public_key_cht_chat":                     return CHT_OPEN_CHAT            ;
-            case "public_key_cht_chat_identiy":             return CHT_CHAT_IDENTITY  ;
+            case "public_key_cht_chat_identity":             return CHT_CHAT_IDENTITY  ;
             //TODO CBP Platform
             case "sub_app_crypto_broker_identity":          return CBP_BROKER_IDENTITY      ;
             case "sub_app_crypto_customer_identity":        return CBP_CUSTOMER_IDENTITY    ;
