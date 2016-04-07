@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.bitdubai.version_1.developer_utils;
+package org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.version_1.developer_utils;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -18,8 +18,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import org.fermat.fermat_dap_api.layer.all_definition.util.Validate;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_redemption.exceptions.CantInitializeAssetRedeemPointRedemptionTransactionDatabaseException;
-import org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.bitdubai.version_1.structure.database.NegotiationDirectSellDatabaseConstants;
-import org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.bitdubai.version_1.structure.database.NegotiationDirectSellDatabaseFactory;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,7 +53,7 @@ public class NegotiationDirectSellDeveloperDatabaseFactory implements DealsWithP
              /*
               * Open new database connection
               */
-            database = pluginDatabaseSystem.openDatabase(pluginId, NegotiationDirectSellDatabaseConstants.DIRECT_SELL_NEGOTIATION_DATABASE);
+            database = pluginDatabaseSystem.openDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.version_1.structure.database.NegotiationDirectSellDatabaseConstants.DIRECT_SELL_NEGOTIATION_DATABASE);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -70,9 +68,9 @@ public class NegotiationDirectSellDeveloperDatabaseFactory implements DealsWithP
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            NegotiationDirectSellDatabaseFactory negotiationDirectSellDatabaseFactory = null;
+            org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.version_1.structure.database.NegotiationDirectSellDatabaseFactory negotiationDirectSellDatabaseFactory = null;
             try {
-                negotiationDirectSellDatabaseFactory = new NegotiationDirectSellDatabaseFactory(pluginDatabaseSystem);
+                negotiationDirectSellDatabaseFactory = new org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.version_1.structure.database.NegotiationDirectSellDatabaseFactory(pluginDatabaseSystem);
             } catch (CantSetObjectException e1) {
                 throw new CantInitializeAssetRedeemPointRedemptionTransactionDatabaseException(e1.getMessage());
             }
@@ -101,7 +99,7 @@ public class NegotiationDirectSellDeveloperDatabaseFactory implements DealsWithP
 
         //Collumns
 
-        DeveloperDatabaseTable eventsRecorderTable = developerObjectFactory.getNewDeveloperDatabaseTable(NegotiationDirectSellDatabaseConstants.DIRECT_SELL_NEGOTIATION_EVENTS_RECORDED_TABLE_NAME, eventsRecorderColumns);
+        DeveloperDatabaseTable eventsRecorderTable = developerObjectFactory.getNewDeveloperDatabaseTable(org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.version_1.structure.database.NegotiationDirectSellDatabaseConstants.DIRECT_SELL_NEGOTIATION_EVENTS_RECORDED_TABLE_NAME, eventsRecorderColumns);
 
         tables.add(eventsRecorderTable);
 
@@ -113,7 +111,7 @@ public class NegotiationDirectSellDeveloperDatabaseFactory implements DealsWithP
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(NegotiationDirectSellDatabaseConstants.DIRECT_SELL_NEGOTIATION_DATABASE, pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.version_1.structure.database.NegotiationDirectSellDatabaseConstants.DIRECT_SELL_NEGOTIATION_DATABASE, pluginId.toString()));
         return databases;
     }
 

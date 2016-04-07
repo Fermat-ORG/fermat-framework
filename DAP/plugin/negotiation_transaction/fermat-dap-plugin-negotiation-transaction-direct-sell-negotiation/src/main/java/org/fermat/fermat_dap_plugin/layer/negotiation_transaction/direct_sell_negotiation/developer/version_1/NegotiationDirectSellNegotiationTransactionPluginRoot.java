@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.bitdubai.version_1;
+package org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
@@ -34,11 +34,9 @@ import org.fermat.fermat_dap_api.layer.dap_network_services.asset_transmission.i
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
-import org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.bitdubai.version_1.developer_utils.NegotiationDirectSellDeveloperDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.bitdubai.version_1.structure.database.NegotiationDirectSellDatabaseConstants;
-import org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.bitdubai.version_1.structure.database.NegotiationDirectSellDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.bitdubai.version_1.structure.events.NegotiationDirectSellMonitorAgent;
-import org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.bitdubai.version_1.structure.events.NegotiationDirectSellRecorderService;
+import org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.version_1.developer_utils.NegotiationDirectSellDeveloperDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.version_1.structure.database.NegotiationDirectSellDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.version_1.structure.events.NegotiationDirectSellRecorderService;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -99,7 +97,7 @@ public class NegotiationDirectSellNegotiationTransactionPluginRoot extends Abstr
     private ActorAssetUserManager actorAssetUserManager;
 
     NegotiationDirectSellRecorderService recorderService;
-    NegotiationDirectSellMonitorAgent monitorAgent;
+    org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.version_1.structure.events.NegotiationDirectSellMonitorAgent monitorAgent;
 
     //CONSTRUCTORS
 
@@ -128,7 +126,7 @@ public class NegotiationDirectSellNegotiationTransactionPluginRoot extends Abstr
             }
             recorderService = new NegotiationDirectSellRecorderService(pluginId, eventManager, pluginDatabaseSystem);
             recorderService.start();
-            monitorAgent = new NegotiationDirectSellMonitorAgent(pluginDatabaseSystem,
+            monitorAgent = new org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.version_1.structure.events.NegotiationDirectSellMonitorAgent(pluginDatabaseSystem,
                     errorManager,
                     pluginId,
                     extraUserManager);
@@ -166,7 +164,7 @@ public class NegotiationDirectSellNegotiationTransactionPluginRoot extends Abstr
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         Database database;
         try {
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, NegotiationDirectSellDatabaseConstants.DIRECT_SELL_NEGOTIATION_DATABASE);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_negotiation.developer.version_1.structure.database.NegotiationDirectSellDatabaseConstants.DIRECT_SELL_NEGOTIATION_DATABASE);
             return NegotiationDirectSellDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**
