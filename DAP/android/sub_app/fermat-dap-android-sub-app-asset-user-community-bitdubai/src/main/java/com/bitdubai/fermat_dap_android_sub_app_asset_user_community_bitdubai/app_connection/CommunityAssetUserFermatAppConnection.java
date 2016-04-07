@@ -16,13 +16,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.common.header.UserAssetCommunityHeaderPainter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.factory.CommunityUserFragmentFactory;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.navigation_drawer.UserCommunityNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.sessions.AssetUserCommunitySubAppSession;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
+
+import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..

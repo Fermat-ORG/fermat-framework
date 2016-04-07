@@ -1,8 +1,8 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import org.fermat.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ public class DigitalAsset {
 
     private String name;
     private String amount;
-    private com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset digitalAsset;
+    private org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset digitalAsset;
     private Long availableBalanceQuantity;
     private Long bookBalanceQuantity;
     private Long availableBalance;
@@ -195,11 +195,11 @@ public class DigitalAsset {
         return userAssetNegotiation;
     }
 
-    public com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset getDigitalAsset() {
+    public org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset getDigitalAsset() {
         return digitalAsset;
     }
 
-    public void setDigitalAsset(com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset digitalAsset) {
+    public void setDigitalAsset(org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset digitalAsset) {
         this.digitalAsset = digitalAsset;
     }
 }

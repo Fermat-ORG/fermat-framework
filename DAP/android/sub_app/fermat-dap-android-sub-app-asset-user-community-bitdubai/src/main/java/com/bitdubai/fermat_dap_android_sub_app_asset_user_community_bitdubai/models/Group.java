@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.models;
 
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupRecord;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.AssetUserGroupRecord;
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
 
 /**
  * Created by Penny on 01/08/16.

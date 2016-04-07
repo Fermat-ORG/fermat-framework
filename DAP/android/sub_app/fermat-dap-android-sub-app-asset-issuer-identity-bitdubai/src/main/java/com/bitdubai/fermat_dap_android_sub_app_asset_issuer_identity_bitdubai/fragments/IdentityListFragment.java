@@ -17,9 +17,9 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.co
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.common.views.DividerItemDecoration;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.session.IssuerIdentitySubAppSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_identity_bitdubai.util.CommonLogger;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
+import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
+import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
+import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuerManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.melnykov.fab.FloatingActionButton;
 

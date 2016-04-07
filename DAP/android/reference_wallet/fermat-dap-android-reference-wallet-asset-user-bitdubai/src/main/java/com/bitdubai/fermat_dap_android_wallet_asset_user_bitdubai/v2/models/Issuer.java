@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models;
 
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
 
 import java.util.ArrayList;
 import java.util.List;
