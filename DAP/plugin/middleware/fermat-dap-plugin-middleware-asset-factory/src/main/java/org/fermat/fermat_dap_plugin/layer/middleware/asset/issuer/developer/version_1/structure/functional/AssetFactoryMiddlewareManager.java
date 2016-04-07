@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.functional;
+package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -29,11 +29,7 @@ import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptio
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.CantPublishAssetException;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.MissingAssetDataException;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDao;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant;
+
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.WalletManagerManager;
 
@@ -82,9 +78,9 @@ public final class AssetFactoryMiddlewareManager {
         this.identityAssetIssuerManager = identityAssetIssuerManager;
     }
 
-    private AssetFactoryMiddlewareDao getAssetFactoryMiddlewareDao() {
+    private org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDao getAssetFactoryMiddlewareDao() {
 
-        return new AssetFactoryMiddlewareDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
+        return new org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
     }
 
     private boolean areObjectsSettled(AssetFactory assetFactory) {
@@ -100,7 +96,7 @@ public final class AssetFactoryMiddlewareManager {
         return isBoolean;
     }
 
-    private void saveAssetFactoryInDatabase(AssetFactory assetFactory) throws DatabaseOperationException, MissingAssetDataException, CantCreateFileException, CantPersistFileException {
+    private void saveAssetFactoryInDatabase(AssetFactory assetFactory) throws org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException, org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.MissingAssetDataException, CantCreateFileException, CantPersistFileException {
         try {
             List<ContractProperty> contractProperties = new ArrayList<>();
             ContractProperty redeemable;
@@ -131,15 +127,15 @@ public final class AssetFactoryMiddlewareManager {
 
     }
 
-    private void saveMarkFactoryInDatabase(AssetFactory assetFactory) throws CantSaveAssetFactoryException, DatabaseOperationException, MissingAssetDataException {
+    private void saveMarkFactoryInDatabase(AssetFactory assetFactory) throws CantSaveAssetFactoryException, org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException, org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.MissingAssetDataException {
         try {
             getAssetFactoryMiddlewareDao().markAssetFactoryData(assetFactory);
-        } catch (DatabaseOperationException | MissingAssetDataException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException | org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.MissingAssetDataException e) {
             throw new CantSaveAssetFactoryException(e, assetFactory.getName(), "Mark Save Asset Factory");
         }
     }
 
-    private List<AssetFactory> getAssetFactories(DatabaseTableFilter... filters) throws DatabaseOperationException, InvalidParameterException, CantLoadTableToMemoryException, CantCreateFileException {
+    private List<AssetFactory> getAssetFactories(DatabaseTableFilter... filters) throws org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException, InvalidParameterException, CantLoadTableToMemoryException, CantCreateFileException {
         List<AssetFactory> assetFactories = new ArrayList<>();
 
         for (AssetFactory assetFactory : getAssetFactoryMiddlewareDao().getAssetFactoryList(filters)) {
@@ -153,7 +149,7 @@ public final class AssetFactoryMiddlewareManager {
     private void markAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException, CantCreateFileException, CantPersistFileException {
         try {
             saveMarkFactoryInDatabase(assetFactory);
-        } catch (DatabaseOperationException | MissingAssetDataException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException | org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.MissingAssetDataException e) {
             throw new CantSaveAssetFactoryException(e, assetFactory.getName(), "Save Asset Factory");
         }
     }
@@ -170,7 +166,7 @@ public final class AssetFactoryMiddlewareManager {
     public void saveAssetFactory(AssetFactory assetFactory) throws CantSaveAssetFactoryException, CantCreateFileException, CantPersistFileException {
         try {
             saveAssetFactoryInDatabase(assetFactory);
-        } catch (DatabaseOperationException | MissingAssetDataException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException | org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.MissingAssetDataException e) {
             throw new CantSaveAssetFactoryException(e, assetFactory.getName(), "Save Asset Factory");
         }
     }
@@ -195,7 +191,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
+                return org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
             }
 
             @Override
@@ -213,7 +209,7 @@ public final class AssetFactoryMiddlewareManager {
         try {
             assetFactories = getAssetFactories(publicKeyFilter);
             return assetFactories.get(0);
-        } catch (DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
             throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryByAssetPublicKey()", "PublicKey " + publicKey);
         }
     }
@@ -237,7 +233,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NETWORK_TYPE;
+                return org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NETWORK_TYPE;
             }
 
             @Override
@@ -273,7 +269,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
+                return org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
             }
 
             @Override
@@ -305,7 +301,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
+                return org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
             }
 
             @Override
@@ -323,7 +319,7 @@ public final class AssetFactoryMiddlewareManager {
         try {
             assetFactories = getAssetFactories(assetPublicKey, stateFilter);
             return assetFactories.get(0);
-        } catch (DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
             throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryByAssetPublicKey()", "PublicKey " + publicKey);
         }
     }
@@ -348,7 +344,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN;
+                return org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ID_COLUMN;
             }
 
             @Override
@@ -366,7 +362,7 @@ public final class AssetFactoryMiddlewareManager {
         try {
             assetFactories = getAssetFactories(filter);
             return assetFactories.get(0);
-        } catch (DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
             throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryByAssetPublicKey()", "PublicKey " + factoryId);
         }
     }
@@ -391,7 +387,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN;
+                return org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ISSUER_IDENTITY_PUBLIC_KEY_COLUMN;
             }
 
             @Override
@@ -409,7 +405,7 @@ public final class AssetFactoryMiddlewareManager {
         try {
             assetFactories = getAssetFactories(filter);
             return assetFactories;
-        } catch (DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
             throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryByIssuer()", "IssuerIdentityPublicKey " + issuerIdentityPublicKey);
         }
     }
@@ -434,7 +430,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
+                return org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
             }
 
             @Override
@@ -466,7 +462,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN;
+                return org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_NAME_COLUMN;
             }
 
             @Override
@@ -483,7 +479,7 @@ public final class AssetFactoryMiddlewareManager {
         try {
             assetFactories = getAssetFactories(stateFilter, assetPublicKeyFilter);
             return assetFactories;
-        } catch (DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
             throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryByState()", "State " + state.getCode());
         }
     }
@@ -508,7 +504,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
+                return org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
             }
 
             @Override
@@ -540,7 +536,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
+                return org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_ASSET_PUBLIC_KEY_COLUMN;
             }
 
             @Override
@@ -557,7 +553,7 @@ public final class AssetFactoryMiddlewareManager {
         try {
             assetFactories = getAssetFactories(stateFilter, assetPublicKeyFilter);
             return assetFactories;
-        } catch (DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
             throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryByState()", "State " + state.getCode());
         }
     }
@@ -582,7 +578,7 @@ public final class AssetFactoryMiddlewareManager {
 
             @Override
             public String getColumn() {
-                return AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
+                return org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_STATE_COLUMN;
             }
 
             @Override
@@ -600,7 +596,7 @@ public final class AssetFactoryMiddlewareManager {
         try {
             assetFactories = getAssetFactories(stateFilter, getNetworkTypeFilter(networkType));
             return assetFactories;
-        } catch (DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
             throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryByState()", "State " + state.getCode());
         }
     }
@@ -613,7 +609,7 @@ public final class AssetFactoryMiddlewareManager {
         try {
             assetFactories = getAssetFactories(filter);
             return assetFactories;
-        } catch (DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.DatabaseOperationException | InvalidParameterException | CantLoadTableToMemoryException e) {
             throw new CantGetAssetFactoryException("Asset Factory", e, "Method: getAssetFactoryAll", "");
         }
     }
@@ -622,12 +618,12 @@ public final class AssetFactoryMiddlewareManager {
         return pluginFileSystem.getBinaryFile(pluginId, PATH_DIRECTORY, resource.getId().toString(), FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
     }
 
-    public boolean isReadyToPublish(String asssetPublicKey) throws CantPublishAssetException {
+    public boolean isReadyToPublish(String asssetPublicKey) throws org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.CantPublishAssetException {
         try {
             AssetFactory assetFactory = getAssetFactoryByAssetPublicKey(asssetPublicKey);
             return areObjectsSettled(assetFactory);
         } catch (Exception exception) {
-            throw new CantPublishAssetException("Cant Publish Asset Factory", exception, null, "Asset Factory incomplete");
+            throw new org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.CantPublishAssetException("Cant Publish Asset Factory", exception, null, "Asset Factory incomplete");
         }
     }
 
@@ -675,7 +671,7 @@ public final class AssetFactoryMiddlewareManager {
                 markAssetFactoryState(State.PENDING_FINAL, assetFactory.getAssetPublicKey());
                 assetIssuingManager.issueAssets(digitalAsset, assetFactory.getQuantity(), /* Issuer Wallet PK */WalletUtilities.WALLET_PUBLIC_KEY, /* BTC Wallet PK*/assetFactory.getWalletPublicKey(), assetFactory.getNetworkType());
             } else {
-                throw new CantPublishAssetException(CantPublishAssetException.DEFAULT_MESSAGE);
+                throw new org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.CantPublishAssetException(org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.CantPublishAssetException.DEFAULT_MESSAGE);
             }
 
         } catch (Exception e) {

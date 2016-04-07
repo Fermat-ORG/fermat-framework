@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure;
+package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;

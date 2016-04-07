@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions;
+package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 

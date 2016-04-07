@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1;
+package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
@@ -42,11 +42,9 @@ import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptio
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
 import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactoryManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.AssetIssuingManager;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database.AssetFactoryMiddlewareDeveloperFactory;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.events.AssetFactoryMiddlewareMonitorAgent;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.functional.AssetFactoryMiddlewareManager;
+import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDeveloperFactory;
+import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.functional.AssetFactoryMiddlewareManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
@@ -86,7 +84,7 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
         super(new PluginVersionReference(new Version()));
     }
 
-    private AssetFactoryMiddlewareMonitorAgent assetFactoryMiddlewareMonitorAgent;
+    private org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.events.AssetFactoryMiddlewareMonitorAgent assetFactoryMiddlewareMonitorAgent;
 
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the asset issuing plugin
@@ -97,7 +95,7 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
         if (assetFactoryMiddlewareMonitorAgent == null) {
-            assetFactoryMiddlewareMonitorAgent = new AssetFactoryMiddlewareMonitorAgent(
+            assetFactoryMiddlewareMonitorAgent = new org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.events.AssetFactoryMiddlewareMonitorAgent(
                     assetFactoryMiddlewareManager,
                     assetIssuingManager,
                     errorManager
@@ -135,11 +133,11 @@ public class AssetFactoryMiddlewarePluginRoot extends AbstractPlugin implements
     public void start() throws CantStartPluginException {
         assetFactoryMiddlewareManager = new AssetFactoryMiddlewareManager(assetIssuingManager, pluginDatabaseSystem, pluginFileSystem, pluginId, walletManagerManager, identityAssetIssuerManager);
         try {
-            pluginDatabaseSystem.openDatabase(pluginId, AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
+            pluginDatabaseSystem.openDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
         } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
             try {
                 AssetFactoryMiddlewareDatabaseFactory assetFactoryMiddlewareDatabaseFactory = new AssetFactoryMiddlewareDatabaseFactory(this.pluginDatabaseSystem);
-                assetFactoryMiddlewareDatabaseFactory.createDatabase(this.pluginId, AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
+                assetFactoryMiddlewareDatabaseFactory.createDatabase(this.pluginId, org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database.AssetFactoryMiddlewareDatabaseConstant.DATABASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_ASSET_FACTORY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateDatabaseException);
                 throw new CantStartPluginException();

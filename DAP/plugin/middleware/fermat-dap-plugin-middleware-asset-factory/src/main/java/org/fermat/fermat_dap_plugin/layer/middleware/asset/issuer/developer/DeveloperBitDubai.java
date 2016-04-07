@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai;
+package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer;
 
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.AssetFactoryMiddlewarePluginRoot;
+import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.AssetFactoryMiddlewarePluginRoot;
 
 /**
  * Created by rodrigo on 9/7/15.

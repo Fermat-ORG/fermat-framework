@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.structure.database;
+package org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.structure.database;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeAssetFactoryMiddlewareDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,7 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
         this.pluginId = pluginId;
     }
 
-    public void initializeDatabase() throws CantInitializeAssetFactoryMiddlewareDatabaseException {
+    public void initializeDatabase() throws org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.CantInitializeAssetFactoryMiddlewareDatabaseException {
         try {
 
              /*
@@ -73,7 +72,7 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeAssetFactoryMiddlewareDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.CantInitializeAssetFactoryMiddlewareDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -93,7 +92,7 @@ public class AssetFactoryMiddlewareDeveloperFactory implements DealsWithPluginDa
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeAssetFactoryMiddlewareDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.version_1.exceptions.CantInitializeAssetFactoryMiddlewareDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
