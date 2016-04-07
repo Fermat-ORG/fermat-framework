@@ -336,7 +336,7 @@ public class CreateRedeemPointIdentityFragment extends AbstractFermatFragment {
         if (resultCode == Activity.RESULT_OK) {
             Bitmap imageBitmap = null;
             ImageView pictureView = mIdentityImage;
-            contextMenuInUse = true;
+            contextMenuInUse = false;
 
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:

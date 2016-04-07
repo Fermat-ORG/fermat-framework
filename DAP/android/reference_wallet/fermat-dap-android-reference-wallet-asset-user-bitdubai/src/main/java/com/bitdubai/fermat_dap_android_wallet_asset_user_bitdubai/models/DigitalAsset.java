@@ -19,6 +19,7 @@ public class DigitalAsset {
 
     private String name;
     private String amount;
+    private com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset digitalAsset;
     private Long availableBalanceQuantity;
     private Long bookBalanceQuantity;
     private Long availableBalance;
@@ -192,5 +193,13 @@ public class DigitalAsset {
 
     public UserAssetNegotiation getUserAssetNegotiation() {
         return userAssetNegotiation;
+    }
+
+    public com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset getDigitalAsset() {
+        return digitalAsset;
+    }
+
+    public void setDigitalAsset(com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset digitalAsset) {
+        this.digitalAsset = digitalAsset;
     }
 }

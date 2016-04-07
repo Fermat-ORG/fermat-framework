@@ -1,9 +1,9 @@
 package org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.functional;
 
-import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
-import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
-import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
-import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 
 /**
  * Created by franklin on 30/09/15.
@@ -55,7 +55,7 @@ public class AssetIssuerWalletTransactionWrapper implements AssetIssuerWalletTra
 
         AssetIssuerWalletTransactionWrapper that = (AssetIssuerWalletTransactionWrapper) o;
 
-        if (!getTransactionHash().equals(that.getTransactionHash())) return false;
+        if (!getTransactionId().equals(that.getTransactionId())) return false;
         return getAssetPublicKey().equals(that.getAssetPublicKey());
 
     }

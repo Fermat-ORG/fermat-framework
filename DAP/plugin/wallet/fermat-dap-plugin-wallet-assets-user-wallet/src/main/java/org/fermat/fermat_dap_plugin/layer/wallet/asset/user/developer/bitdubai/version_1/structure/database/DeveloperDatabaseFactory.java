@@ -46,6 +46,7 @@ public class DeveloperDatabaseFactory {
         List<String> assetWalletIssuerColumns = new ArrayList<>();
         assetWalletIssuerColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TABLE_ID_COLUMN_NAME);
         assetWalletIssuerColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ASSET_PUBLIC_KEY_COLUMN_NAME);
+        assetWalletIssuerColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ASSET_CRYPTO_ADDRESS_COLUMN_NAME);
         assetWalletIssuerColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_AMOUNT_COLUMN_NAME);
         assetWalletIssuerColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_VERIFICATION_ID_COLUMN_NAME);
         assetWalletIssuerColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESS_FROM_COLUMN_NAME);
@@ -99,6 +100,16 @@ public class DeveloperDatabaseFactory {
          */
         DeveloperDatabaseTable metadataLockTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_TABLE_NAME, metadataLockColumns);
         tables.add(metadataLockTable);
+
+        List<String> addressesColumns = new ArrayList<>();
+        addressesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_ID_COLUMN_NAME);
+        addressesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_ASSET_PUBLICKEY_COLUMN_NAME);
+        addressesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME);
+        addressesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME);
+        addressesColumns.add(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_AVAILABLE_COLUMN_NAME);
+
+        DeveloperDatabaseTable addressesTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_TABLE_NAME, addressesColumns);
+        tables.add(addressesTable);
         return tables;
     }
 

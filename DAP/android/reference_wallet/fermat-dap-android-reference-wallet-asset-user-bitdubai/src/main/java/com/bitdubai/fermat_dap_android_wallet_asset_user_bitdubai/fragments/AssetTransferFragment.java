@@ -31,6 +31,7 @@ import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
@@ -185,7 +186,7 @@ public class AssetTransferFragment extends AbstractFermatFragment {
                                         @Override
                                         public void onClick() {
                                             int assetsAmount = Integer.parseInt(assetsToTransferEditText.getText().toString());
-                                            doTransfer(digitalAsset.getAssetPublicKey(), users, assetsAmount);
+                                            doTransfer(digitalAsset.getDigitalAsset().getGenesisAddress(), users, assetsAmount);
                                         }
                                     }).build().show();
                         }
@@ -260,7 +261,7 @@ public class AssetTransferFragment extends AbstractFermatFragment {
         return count;
     }
 
-    private void doTransfer(final String assetPublicKey, final List<User> users, final int assetAmount) {
+    private void doTransfer(final CryptoAddress cryptoAddress, final List<User> users, final int assetAmount) {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
         dialog.setCancelable(false);
@@ -273,7 +274,7 @@ public class AssetTransferFragment extends AbstractFermatFragment {
                         moduleManager.addUserToDeliver(user.getActorAssetUser());
                     }
                 }
-                moduleManager.transferAssets(assetPublicKey, WalletUtilities.WALLET_PUBLIC_KEY, assetAmount);
+                moduleManager.transferAssets(cryptoAddress, WalletUtilities.WALLET_PUBLIC_KEY, assetAmount);
                 return true;
             }
         };

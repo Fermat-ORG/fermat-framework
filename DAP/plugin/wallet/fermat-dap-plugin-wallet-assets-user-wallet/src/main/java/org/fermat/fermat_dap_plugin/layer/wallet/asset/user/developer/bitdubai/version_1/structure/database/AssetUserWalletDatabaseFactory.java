@@ -32,6 +32,7 @@ public class AssetUserWalletDatabaseFactory {
             createAssetUserWalletTable(ownerId, database.getDatabaseFactory());
             createAssetUserWalletBalancesTable(ownerId, database.getDatabaseFactory());
             createMetadataLockTable(ownerId, database.getDatabaseFactory());
+            createAddressesTable(ownerId, database.getDatabaseFactory());
             //insertInitialBalancesRecord(database);
 
             return database;
@@ -72,10 +73,20 @@ public class AssetUserWalletDatabaseFactory {
         }
     }
 
+    private void createAddressesTable(final UUID ownerId, final DatabaseFactory databaseFactory) throws CantCreateTableException {
+        try {
+            DatabaseTableFactory tableFactory = createAddressesTableFactory(ownerId, databaseFactory);
+            databaseFactory.createTable(tableFactory);
+        } catch (InvalidOwnerIdException exception) {
+            throw new CantCreateTableException(CantCreateTableException.DEFAULT_MESSAGE, exception, null, "The ownerId of the database factory didn't match with the given owner id");
+        }
+    }
+
     private DatabaseTableFactory createAssetUserWalletTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException {
         DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TABLE_NAME);
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_TABLE_ID_COLUMN_NAME, DatabaseDataType.STRING, 36, true);
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ASSET_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, false);
+        table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ASSET_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 255, false);
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_AMOUNT_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, false);
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_VERIFICATION_ID_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESS_FROM_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
@@ -113,6 +124,16 @@ public class AssetUserWalletDatabaseFactory {
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_METADATA_ID_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_GENESIS_TX_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
         table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_METADATA_LOCK_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 15, false);
+        return table;
+    }
+
+    private DatabaseTableFactory createAddressesTableFactory(final UUID ownerId, final DatabaseFactory databaseFactory) throws InvalidOwnerIdException {
+        DatabaseTableFactory table = databaseFactory.newTableFactory(ownerId, AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_TABLE_NAME);
+        table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_ID_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
+        table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_ASSET_PUBLICKEY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
+        table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
+        table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
+        table.addColumn(AssetUserWalletDatabaseConstant.ASSET_WALLET_USER_ADDRESSES_AVAILABLE_COLUMN_NAME, DatabaseDataType.STRING, 15, false);
         return table;
     }
 

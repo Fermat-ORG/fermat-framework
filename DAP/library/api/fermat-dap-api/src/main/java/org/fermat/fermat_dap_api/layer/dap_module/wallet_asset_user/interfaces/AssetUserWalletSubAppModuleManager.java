@@ -1,6 +1,7 @@
 package org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -9,17 +10,29 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
-
-import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
-import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
-import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
-import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
-import org.fermat.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
-import org.fermat.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.exceptions.CantProcessBuyingTransactionException;
-import org.fermat.fermat_dap_api.layer.dap_transaction.asset_transfer.exceptions.CantTransferDigitalAssetsException;
-import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;
-
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetAssetNegotiationsException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.exceptions.CantProcessBuyingTransactionException;
+import com.bitdubai.fermat_dap_api.layer.dap_funds_transaction.asset_seller.exceptions.CantStartAssetSellTransactionException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.exceptions.CantGetAssetFactoryException;
+import com.bitdubai.fermat_dap_api.layer.dap_middleware.dap_asset_factory.interfaces.AssetFactory;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_transfer.exceptions.CantTransferDigitalAssetsException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.user_redemption.exceptions.CantRedeemDigitalAssetException;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
 
 import java.util.List;
@@ -29,29 +42,29 @@ import java.util.UUID;
 /**
  * Created by franklin on 16/10/15.
  */
-public interface AssetUserWalletSubAppModuleManager extends ModuleManager<org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings, ActiveActorIdentityInformation> {
+public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetUserSettings, ActiveActorIdentityInformation> {
     /**
      * (non-Javadoc)
      *
-     * @see List< org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList > getAssetIssuerWalletBalancesBook(String publicKey)
+     * @see List<AssetUserWalletList> getAssetIssuerWalletBalancesBook(String publicKey)
      */
-    List<org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList> getAssetUserWalletBalances(String publicKey) throws org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+    List<AssetUserWalletList> getAssetUserWalletBalances(String publicKey) throws CantLoadWalletException;
 
-    Map<ActorAssetIssuer, org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList> getAssetUserWalletBalancesByIssuer(String publicKey) throws org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+    Map<ActorAssetIssuer, AssetUserWalletList> getAssetUserWalletBalancesByIssuer(String publicKey) throws CantLoadWalletException;
 
-    List<org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint> getAllActorAssetRedeemPointConnected() throws org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
+    List<ActorAssetRedeemPoint> getAllActorAssetRedeemPointConnected() throws CantGetAssetRedeemPointActorsException;
 
-    List<org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint> getRedeemPointsConnectedForAsset(String assetPublicKey) throws org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.exceptions.CantGetAssetRedeemPointActorsException;
+    List<ActorAssetRedeemPoint> getRedeemPointsConnectedForAsset(String assetPublicKey) throws CantGetAssetRedeemPointActorsException;
 
-    org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWallet loadAssetUserWallet(String walletPublicKey) throws org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+    AssetUserWallet loadAssetUserWallet(String walletPublicKey) throws CantLoadWalletException;
 
-    void createAssetUserWallet(String walletPublicKey) throws org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
+    void createAssetUserWallet(String walletPublicKey) throws CantCreateWalletException;
 
     IdentityAssetUser getActiveAssetUserIdentity() throws CantGetIdentityAssetUserException;
 
-    void redeemAssetToRedeemPoint(String digitalAssetPublicKey, String walletPublicKey, List<org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint> actorAssetRedeemPoints, int assetAmount) throws org.fermat.fermat_dap_api.layer.dap_transaction.user_redemption.exceptions.CantRedeemDigitalAssetException;
+    void redeemAssetToRedeemPoint(CryptoAddress cryptoAddress, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoints, int assetAmount) throws CantRedeemDigitalAssetException;
 
-    void appropriateAsset(String digitalAssetPublicKey, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException;
+    void appropriateAsset(CryptoAddress cryptoAddress, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException;
 
     AssetFactory getAssetFactory(final String publicKey) throws CantGetAssetFactoryException, CantCreateFileException;
 
@@ -63,34 +76,34 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<org.fe
 
     // ASSET TRANSFER METHODS.
 
-    List<org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser> getAllActorUserRegistered() throws CantGetAssetUserActorsException;
+    List<ActorAssetUser> getAllActorUserRegistered() throws CantGetAssetUserActorsException;
 
-    List<org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException;
+    List<ActorAssetUser> getAllAssetUserActorConnected() throws CantGetAssetUserActorsException;
 
-    List<org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup> getAssetUserGroupsList() throws org.fermat.fermat_dap_api.layer.dap_actor.asset_user.exceptions.CantGetAssetUserGroupException;
+    List<ActorAssetUserGroup> getAssetUserGroupsList() throws CantGetAssetUserGroupException;
 
-    List<org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser> getListActorAssetUserByGroups(String groupName) throws CantGetAssetUserActorsException;
+    List<ActorAssetUser> getListActorAssetUserByGroups(String groupName) throws CantGetAssetUserActorsException;
 
-    void addUserToDeliver(org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser user);
+    void addUserToDeliver(ActorAssetUser user);
 
-    void addGroupToDeliver(org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup group) throws CantGetAssetUserActorsException;
+    void addGroupToDeliver(ActorAssetUserGroup group) throws CantGetAssetUserActorsException;
 
-    void removeUserToDeliver(org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser user);
+    void removeUserToDeliver(ActorAssetUser user);
 
-    void removeGroupToDeliver(org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup group) throws CantGetAssetUserActorsException;
+    void removeGroupToDeliver(ActorAssetUserGroup group) throws CantGetAssetUserActorsException;
 
     void clearDeliverList();
 
     void addAllRegisteredUsersToDeliver() throws CantGetAssetUserActorsException;
 
-    List<org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser> getSelectedUsersToDeliver();
+    List<ActorAssetUser> getSelectedUsersToDeliver();
 
-    void transferAssets(String assetPublicKey, String walletPublicKey, int assetsAmount) throws CantTransferDigitalAssetsException;
+    void transferAssets(CryptoAddress cryptoAddress, String walletPublicKey, int assetsAmount) throws CantTransferDigitalAssetsException;
 
-    org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser getActorByPublicKey(String publicKey) throws CantGetAssetUserActorsException;
+    ActorAssetUser getActorByPublicKey(String publicKey) throws CantGetAssetUserActorsException;
 
     //ASSET SELL METHODS
-    void startSell(org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser userToDeliver, long amountPerUnity, long totalAmount, int quantityToBuy, String assetToOffer) throws org.fermat.fermat_dap_api.layer.dap_funds_transaction.asset_seller.exceptions.CantStartAssetSellTransactionException;
+    void startSell(ActorAssetUser userToDeliver, long amountPerUnity, long totalAmount, int quantityToBuy, String assetToOffer) throws CantStartAssetSellTransactionException;
 
 
     //ASSET BUY METHODS
@@ -99,14 +112,14 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<org.fe
      * Gets the list of pending asset negotiations
      *
      * @return a list of pending asset negotiations
-     * @throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetAssetNegotiationsException
+     * @throws CantGetAssetNegotiationsException
      */
-    List<org.fermat.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation> getPendingAssetNegotiations() throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetAssetNegotiationsException;
+    List<AssetNegotiation> getPendingAssetNegotiations() throws CantGetAssetNegotiationsException;
 
     /**
      * This method notifies the seller that we've accepted one of its asset and the transaction for this asset can proceed.
      *
-     * @param negotiationId {@link UUID} instance that is the {@link org.fermat.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation} ID.
+     * @param negotiationId {@link UUID} instance that is the {@link AssetNegotiation} ID.
      * @throws CantProcessBuyingTransactionException
      */
     void acceptAsset(UUID negotiationId) throws CantProcessBuyingTransactionException;
@@ -114,7 +127,7 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<org.fe
     /**
      * This method notifies the seller that we've rejected one of its asset and the transaction for this asset won't proceed.
      *
-     * @param negotiationId {@link UUID} instance that is the {@link org.fermat.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation} ID.
+     * @param negotiationId {@link UUID} instance that is the {@link AssetNegotiation} ID.
      * @throws CantProcessBuyingTransactionException
      */
     void declineAsset(UUID negotiationId) throws CantProcessBuyingTransactionException;
@@ -130,6 +143,6 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<org.fe
 
     List<com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet> getInstallWallets() throws CantListWalletsException;
 
-    org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser getSellerFromNegotiation(UUID negotiationID) throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetAssetNegotiationsException;
+    ActorAssetUser getSellerFromNegotiation(UUID negotiationID) throws CantGetAssetNegotiationsException;
 
 }

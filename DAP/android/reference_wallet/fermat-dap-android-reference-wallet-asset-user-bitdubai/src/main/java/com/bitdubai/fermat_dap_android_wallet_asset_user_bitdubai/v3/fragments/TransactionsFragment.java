@@ -32,10 +32,9 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.Asset
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
-import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
-import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -81,10 +80,13 @@ public class TransactionsFragment extends FermatWalletListFragment<Transaction>
         errorManager = appSession.getErrorManager();
         settingsManager = appSession.getModuleManager().getSettingsManager();
 
-        String digitalAssetPublicKey = ((Asset) appSession.getData("asset_data")).getDigitalAsset().getPublicKey();
+        Asset assetData = (Asset) appSession.getData("asset_data");
         try {
-            digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
-        } catch (CantLoadWalletException e) {
+            digitalAsset = Data.getDigitalAsset(moduleManager, assetData.getDigitalAsset().getPublicKey());
+            if (digitalAsset != null) {
+                digitalAsset.setDigitalAsset(assetData.getDigitalAsset());
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

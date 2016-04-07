@@ -28,6 +28,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
@@ -41,13 +42,12 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.data
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.common.adapters.HomeCardAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.common.filters.HomeCardAdapterFilter;
-
-import org.fermat.fermat_dap_api.layer.all_definition.DAPConstants;
-import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
-import org.fermat.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.exceptions.CantProcessBuyingTransactionException;
-import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.all_definition.DAPConstants;
+import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
+import com.bitdubai.fermat_dap_api.layer.dap_funds_transaction.asset_buyer.exceptions.CantProcessBuyingTransactionException;
+import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -340,7 +340,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
         return adapter;
     }
 
-    private void doAppropriate(final String assetPublicKey) {
+    private void doAppropriate(final CryptoAddress cryptoAddress) {
         final Activity activity = getActivity();
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
@@ -355,7 +355,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
 //                            asset.getActorAssetRedeemPoint()
 //                    );
                 //TODO: only for Appropriate test
-                moduleManager.appropriateAsset(assetPublicKey, null);
+                moduleManager.appropriateAsset(cryptoAddress, null);
                 return true;
             }
         };
@@ -514,7 +514,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
                 .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                     @Override
                     public void onClick() {
-                        doAppropriate(asset.getDigitalAsset().getPublicKey());
+                        doAppropriate(asset.getDigitalAsset().getGenesisAddress());
                     }
                 }).build().show();
     }
@@ -530,8 +530,8 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
                     .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                         @Override
                         public void onClick() {
-
                             doBuy(asset.getAssetUserNegotiation().getId());
+                            asset.setAssetUserNegotiation(null);
                         }
                     }).build().show();
         }
@@ -541,6 +541,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
     public void doRejectNegotiation() {
         final Asset asset = (Asset) appSession.getData("asset_data");
         doDecline(asset);
+        asset.setAssetUserNegotiation(null);
     }
 
 

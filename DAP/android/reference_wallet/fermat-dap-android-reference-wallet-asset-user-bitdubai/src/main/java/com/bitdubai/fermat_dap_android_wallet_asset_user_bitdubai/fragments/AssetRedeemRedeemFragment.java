@@ -27,6 +27,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -39,10 +40,9 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.Sessi
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.data.DataManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
-import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
-
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -175,9 +175,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
                             .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                                 @Override
                                 public void onClick() {
-                                    int assetsAmount = Integer.parseInt("1");
-                                    doRedeem(digitalAssetPublicKey, redeemPoints, assetsAmount);
-
+                                    doRedeem(assetToRedeem.getDigitalAsset().getGenesisAddress(), redeemPoints, 1);
                                 }
                             }).build().show();
 
@@ -373,7 +371,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         }
     }
 
-    private void doRedeem(final String assetPublicKey, final List<RedeemPoint> redeemPoints, final int assetAmount) {
+    private void doRedeem(final CryptoAddress cryptoAddress, final List<RedeemPoint> redeemPoints, final int assetAmount) {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
         dialog.setCancelable(false);
@@ -381,7 +379,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         FermatWorker task = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                moduleManager.redeemAssetToRedeemPoint(assetPublicKey, WalletUtilities.WALLET_PUBLIC_KEY, DataManager.getRedeemPoints(redeemPoints), assetAmount);
+                moduleManager.redeemAssetToRedeemPoint(cryptoAddress, WalletUtilities.WALLET_PUBLIC_KEY, DataManager.getRedeemPoints(redeemPoints), assetAmount);
                 return true;
             }
         };

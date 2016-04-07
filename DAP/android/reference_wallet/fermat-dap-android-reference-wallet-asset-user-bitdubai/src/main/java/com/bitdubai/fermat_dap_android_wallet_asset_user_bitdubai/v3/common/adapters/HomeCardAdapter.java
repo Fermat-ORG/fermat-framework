@@ -117,7 +117,8 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
             holder.cardConfirmedImage.setImageResource(image);
             holder.cardConfirmedText.setText((asset.getStatus().equals(Asset.Status.CONFIRMED)) ?
                     holder.res.getString(R.string.card_confirmed) : holder.res.getString(R.string.card_pending));
-
+            holder.negotiationV3Asset.setVisibility(View.GONE);
+            holder.normalV3Asset.setVisibility(View.VISIBLE);
             holder.cardAssetName.setText(asset.getName());
             holder.cardExpDate.setText(asset.getFormattedExpDate());
 

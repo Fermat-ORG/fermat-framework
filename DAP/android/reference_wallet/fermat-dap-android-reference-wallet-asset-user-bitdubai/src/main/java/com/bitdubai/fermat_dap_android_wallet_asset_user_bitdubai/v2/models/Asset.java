@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models;
 
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.Utils;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
@@ -68,14 +69,15 @@ public class Asset {
         this.name = name;
     }
 
-    public Asset(AssetUserWalletList assetUserWalletList, List<AssetUserWalletTransaction> transactions) {
+    public Asset(AssetUserWalletList assetUserWalletList, List<AssetUserWalletTransaction> transactions, CryptoAddress cryptoAddress) {
         if (transactions.isEmpty())
             throw new IllegalStateException("Can't initialize this object without transactions!!");
         AssetUserWalletTransaction lastTransaction = transactions.get(transactions.size() - 1);
         AssetUserWalletTransaction firstTransaction = transactions.get(0);
         this.assetUserWalletTransaction = lastTransaction;
         this.assetUserWalletList = assetUserWalletList;
-        this.digitalAsset = assetUserWalletList.getDigitalAsset();
+        this.digitalAsset = DigitalAsset.copyAsset(assetUserWalletList.getDigitalAsset());
+        this.digitalAsset.setGenesisAddress(cryptoAddress);
         setId(assetUserWalletTransaction.getTransactionHash());
         if (digitalAsset.getResources().size() != 0) {
             setImage(digitalAsset.getResources().get(0).getResourceBinayData());

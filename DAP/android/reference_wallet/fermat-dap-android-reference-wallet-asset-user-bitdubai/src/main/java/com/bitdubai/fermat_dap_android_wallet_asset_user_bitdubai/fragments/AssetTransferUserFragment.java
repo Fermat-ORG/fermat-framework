@@ -27,6 +27,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -39,10 +40,9 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.Sessi
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.data.DataManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
-import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
-
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -178,8 +178,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
                             .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                                 @Override
                                 public void onClick() {
-                                    int assetsAmount = Integer.parseInt("1");
-                                    doTransfer(digitalAssetPublicKey, users, assetsAmount);
+                                    doTransfer(assetToTransfer.getDigitalAsset().getGenesisAddress(), users, 1);
                                 }
                             }).build().show();
 
@@ -351,7 +350,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
         }
     }
 
-    private void doTransfer(final String assetPublicKey, final List<User> users, final int assetAmount) {
+    private void doTransfer(final CryptoAddress cryptoAddress, final List<User> users, final int assetAmount) {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
         dialog.setCancelable(false);
@@ -364,7 +363,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
                         moduleManager.addUserToDeliver(user.getActorAssetUser());
                     }
                 }
-                moduleManager.transferAssets(assetPublicKey, WalletUtilities.WALLET_PUBLIC_KEY, assetAmount);
+                moduleManager.transferAssets(cryptoAddress, WalletUtilities.WALLET_PUBLIC_KEY, assetAmount);
                 return true;
             }
         };

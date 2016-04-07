@@ -430,7 +430,7 @@ public class AssetEditorFragment extends AbstractFermatFragment implements View.
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             Bitmap imageBitmap = null;
-            contextMenuInUse = true;
+            contextMenuInUse = false;
             switch (requestCode) {
                 case REQUEST_IMAGE_CAPTURE:
                     Bundle extras = data.getExtras();

@@ -19,36 +19,36 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
-import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
-import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
-import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
-import org.fermat.fermat_dap_api.layer.all_definition.util.ActorUtils;
-import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
-import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
-import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
-import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
-import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
-import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
-import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
-import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
-import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantInitializeAssetIssuerWalletException;
-import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantSaveStatisticException;
-import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
-import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
-import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
-import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransactionSummary;
-import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetStatistic;
-import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
-import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
-import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
-import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
-import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
-import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
-import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
-import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
-import org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDao;
-import org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDatabaseFactory;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetCurrentStatus;
+import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
+import com.bitdubai.fermat_dap_api.layer.all_definition.util.ActorUtils;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserManager;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPointManager;
+import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.exceptions.CantGetAssetStatisticException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantInitializeAssetIssuerWalletException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantSaveStatisticException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWallet;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletBalance;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransaction;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletTransactionSummary;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetStatistic;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
+import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDao;
+import com.bitdubai.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -296,8 +296,8 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         List<AssetIssuerWalletTransaction> debitAvailable = getTransactionsAll(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
         List<AssetIssuerWalletTransaction> debitBook = getTransactionsAll(BalanceType.BOOK, TransactionType.DEBIT, assetPublicKey);
         List<AssetIssuerWalletTransaction> toReturn = new ArrayList<>();
-        toReturn.addAll(getTransactionsForDisplay(creditAvailable, creditBook));
-        toReturn.addAll(getTransactionsForDisplay(debitBook, debitAvailable));
+        toReturn.addAll(getCreditsForDisplay(creditAvailable, creditBook));
+        toReturn.addAll(getDebitsForDisplay(debitAvailable, debitBook));
         Collections.sort(toReturn, new Comparator<AssetIssuerWalletTransaction>() {
             @Override
             public int compare(AssetIssuerWalletTransaction o1, AssetIssuerWalletTransaction o2) {
@@ -307,7 +307,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         return toReturn;
     }
 
-    private List<AssetIssuerWalletTransaction> getTransactionsForDisplay(List<AssetIssuerWalletTransaction> available, List<AssetIssuerWalletTransaction> book) {
+    private List<AssetIssuerWalletTransaction> getCreditsForDisplay(List<AssetIssuerWalletTransaction> available, List<AssetIssuerWalletTransaction> book) {
         for (AssetIssuerWalletTransaction transaction : book) {
             if (!available.contains(transaction)) {
                 available.add(transaction);
@@ -316,6 +316,16 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         return available;
     }
 
+    private List<AssetIssuerWalletTransaction> getDebitsForDisplay(List<AssetIssuerWalletTransaction> available, List<AssetIssuerWalletTransaction> book) {
+        Collections.reverse(available);
+        for (AssetIssuerWalletTransaction transaction : book) {
+            if (available.contains(transaction)) {
+                available.remove(transaction); //YES, THIS IS NECESSARY.
+            }
+            available.add(transaction);
+        }
+        return available;
+    }
 
     @Override
     public DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException {
