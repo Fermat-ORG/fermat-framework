@@ -11,7 +11,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -28,23 +27,18 @@ import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
-import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.factory.session.ArtistIdentitySubAppSession;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantCreateNewIdentityAssetUserException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUpdateIdentityAssetUserException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_identity.UserIdentitySettings;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.ArtistIdentityManagerModule;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.ArtistIdentitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.sub_app.artist_identity.R;
 
 import java.io.ByteArrayOutputStream;
-import java.util.List;
 
 import static android.widget.Toast.makeText;
 
@@ -65,7 +59,7 @@ public class CreateArtistIndentityFragment extends AbstractFermatFragment {
 
     private byte[] brokerImageByteArray;
 
-    private AssetUserCommunitySubAppModuleManager moduleManager;
+    private ArtistIdentityManagerModule moduleManager;
     private ErrorManager errorManager;
 
     private Button createButton;
@@ -73,11 +67,11 @@ public class CreateArtistIndentityFragment extends AbstractFermatFragment {
     private ImageView mIdentityImage;
 
     ArtistIdentitySubAppSession artistIdentitySubAppSession;
-    private IdentityAssetUser identitySelected;
+    private Fanatic identitySelected;
     private boolean isUpdate = false;
 
-    SettingsManager<UserIdentitySettings> settingsManager;
-    UserIdentitySettings userIdentitySettings = null;
+    SettingsManager<ArtistIdentitySettings> settingsManager;
+    ArtistIdentitySettings userIdentitySettings = null;
 
     public static CreateArtistIndentityFragment newInstance() {
         return new CreateArtistIndentityFragment();
@@ -104,7 +98,7 @@ public class CreateArtistIndentityFragment extends AbstractFermatFragment {
             }
 
             if (userIdentitySettings == null) {
-                userIdentitySettings = new UserIdentitySettings();
+                userIdentitySettings = new ArtistIdentitySettings();
                 userIdentitySettings.setIsPresentationHelpEnabled(true);
                 if (appSession.getAppPublicKey() != null) {
                     settingsManager.persistSettings(appSession.getAppPublicKey(), userIdentitySettings);
@@ -256,10 +250,10 @@ public class CreateArtistIndentityFragment extends AbstractFermatFragment {
     }
 
     private void loadIdentity() {
-        if (identitySelected.getImage() != null) {
+        if (identitySelected.getProfileImage() != null) {
             Bitmap bitmap = null;
-            if (identitySelected.getImage().length > 0) {
-                bitmap = BitmapFactory.decodeByteArray(identitySelected.getImage(), 0, identitySelected.getImage().length);
+            if (identitySelected.getProfileImage().length > 0) {
+                bitmap = BitmapFactory.decodeByteArray(identitySelected.getProfileImage(), 0, identitySelected.getProfileImage().length);
 //                bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
             } else {
                 //bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.);
