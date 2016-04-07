@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.developer_utils;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.developer_utils;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -16,8 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_distribution.exceptions.CantInitializeAssetDistributionTransactionDatabaseException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +77,7 @@ public class AssetDistributionDeveloperDatabaseFactory implements DealsWithPlugi
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            AssetDistributionDatabaseFactory assetDistributionDatabaseFactory = new AssetDistributionDatabaseFactory(pluginDatabaseSystem);
+            org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDatabaseFactory assetDistributionDatabaseFactory = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*

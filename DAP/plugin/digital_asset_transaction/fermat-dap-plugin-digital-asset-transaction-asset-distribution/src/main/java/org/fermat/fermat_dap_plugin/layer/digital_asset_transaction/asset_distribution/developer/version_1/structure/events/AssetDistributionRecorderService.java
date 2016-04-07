@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -9,7 +9,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectEx
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -25,13 +25,13 @@ public class AssetDistributionRecorderService implements DealsWithEvents, AssetT
      */
     private EventManager eventManager;
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
-    private AssetDistributionDao assetDistributionDao;
+    private org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao assetDistributionDao;
     /**
      * TransactionService Interface member variables.
      */
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
 
-    public AssetDistributionRecorderService(AssetDistributionDao assetDistributionDao, EventManager eventManager) throws CantStartServiceException {
+    public AssetDistributionRecorderService(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao assetDistributionDao, EventManager eventManager) throws CantStartServiceException {
         try {
             setAssetDistributionDao(assetDistributionDao);
             setEventManager(eventManager);
@@ -40,7 +40,7 @@ public class AssetDistributionRecorderService implements DealsWithEvents, AssetT
         }
     }
 
-    private void setAssetDistributionDao(AssetDistributionDao assetDistributionDao) throws CantSetObjectException {
+    private void setAssetDistributionDao(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao assetDistributionDao) throws CantSetObjectException {
         if (assetDistributionDao == null) {
             throw new CantSetObjectException("The AssetIssuingDao is null");
         }

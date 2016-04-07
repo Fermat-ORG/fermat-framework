@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.events;
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
@@ -59,12 +59,9 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.AssetDistributionDigitalAssetTransactionPluginRoot;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.exceptions.CantCheckAssetDistributionProgressException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.functional.DeliverRecord;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.functional.DigitalAssetDistributionVault;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.functional.DigitalAssetDistributor;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.AssetDistributionDigitalAssetTransactionPluginRoot;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.exceptions.CantCheckAssetDistributionProgressException;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -84,10 +81,10 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
     private PluginDatabaseSystem pluginDatabaseSystem;
     private UUID pluginId;
     private AssetVaultManager assetVaultManager;
-    private DigitalAssetDistributionVault digitalAssetDistributionVault;
+    private org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DigitalAssetDistributionVault digitalAssetDistributionVault;
     private AssetTransmissionNetworkServiceManager assetTransmissionManager;
     private BitcoinNetworkManager bitcoinNetworkManager;
-    private DigitalAssetDistributor distributor;
+    private org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DigitalAssetDistributor distributor;
 
     public AssetDistributionMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
                                          ErrorManager errorManager,
@@ -96,7 +93,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                                          AssetVaultManager assetVaultManager,
                                          BitcoinNetworkManager bitcoinNetworkManager,
                                          LogManager logManager,
-                                         DigitalAssetDistributionVault digitalAssetDistributionVault,
+                                         org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DigitalAssetDistributionVault digitalAssetDistributionVault,
                                          AssetTransmissionNetworkServiceManager assetTransmissionManager) throws CantSetObjectException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -105,7 +102,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
         this.digitalAssetDistributionVault = digitalAssetDistributionVault;
         this.assetTransmissionManager = assetTransmissionManager;
         this.bitcoinNetworkManager = bitcoinNetworkManager;
-        this.distributor = new DigitalAssetDistributor(
+        this.distributor = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DigitalAssetDistributor(
                 assetVaultManager,
                 errorManager,
                 pluginId,
@@ -121,7 +118,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
         this.assetVaultManager = assetVaultManager;
     }
 
-    public void setDigitalAssetDistributionVault(DigitalAssetDistributionVault digitalAssetDistributionVault) throws CantSetObjectException {
+    public void setDigitalAssetDistributionVault(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DigitalAssetDistributionVault digitalAssetDistributionVault) throws CantSetObjectException {
         if (digitalAssetDistributionVault == null) {
             throw new CantSetObjectException("DigitalAssetDistributionVault is null");
         }
@@ -144,7 +141,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
 
             monitorAgent.setPluginDatabaseSystem(this.pluginDatabaseSystem);
             monitorAgent.setErrorManager(this.errorManager);
-            monitorAgent.setAssetDistributionDao(new AssetDistributionDao(pluginDatabaseSystem, pluginId, digitalAssetDistributionVault));
+            monitorAgent.setAssetDistributionDao(new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao(pluginDatabaseSystem, pluginId, digitalAssetDistributionVault));
             this.agentThread = new Thread(monitorAgent, "Asset Distribution MonitorAgent");
             this.agentThread.start();
         } catch (Exception exception) {
@@ -189,7 +186,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
         int iterationNumber = 0;
-        AssetDistributionDao assetDistributionDao;
+        org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao assetDistributionDao;
 
         @Override
         public void setErrorManager(ErrorManager errorManager) {
@@ -278,7 +275,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
          */
         private void checkPendingTransactions() throws CantExecuteQueryException, CantCheckAssetDistributionProgressException, CantGetCryptoTransactionException, UnexpectedResultReturnedFromDatabaseException, CantGetDigitalAssetFromLocalStorageException, CantDeliverDigitalAssetToAssetWalletException, CantLoadWalletException, RecordsNotFoundException, CantGetAssetStatisticException, CantGetTransactionCryptoStatusException, CantGetBroadcastStatusException, CantBroadcastTransactionException, CantCancellBroadcastTransactionException, CantGetTransactionsException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantRegisterCreditException, CantCreateDigitalAssetFileException {
 
-            for (DeliverRecord record : assetDistributionDao.getDeliveredRecords()) {
+            for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DeliverRecord record : assetDistributionDao.getDeliveredRecords()) {
                 switch (bitcoinNetworkManager.getCryptoStatus(record.getGenesisTransactionSent())) {
                     case ON_BLOCKCHAIN:
                     case IRREVERSIBLE:
@@ -301,7 +298,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                 }
             }
 
-            for (DeliverRecord record : assetDistributionDao.getSendingCryptoRecords()) {
+            for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DeliverRecord record : assetDistributionDao.getSendingCryptoRecords()) {
                 BroadcastStatus status = bitcoinNetworkManager.getBroadcastStatus(record.getGenesisTransactionSent());
                 switch (status.getStatus()) {
                     case WITH_ERROR:
@@ -362,7 +359,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
                 //For now, I set the cryptoAddress for Bitcoins
                 CryptoAddress cryptoAddressTo = new CryptoAddress(actorUserCryptoAddress, CryptoCurrency.BITCOIN);
                 System.out.println("ASSET DISTRIBUTION cryptoAddressTo: " + cryptoAddressTo);
-                DeliverRecord record = assetDistributionDao.getLastDelivering(assetAcceptedGenesisTransaction);
+                org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DeliverRecord record = assetDistributionDao.getLastDelivering(assetAcceptedGenesisTransaction);
                 switch (record.getState()) {
                     case DELIVERING:
                         DigitalAssetMetadata digitalAsset = digitalAssetDistributionVault.getDigitalAssetMetadataFromWallet(assetAcceptedGenesisTransaction, record.getNetworkType());
@@ -409,7 +406,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
         }
 
         private void checkDeliveringTime() throws CantExecuteDatabaseOperationException, CantCheckAssetDistributionProgressException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantGetCryptoTransactionException, CantGetTransactionsException, CantLoadWalletException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantSendTransactionNewStatusNotificationException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, InvalidParameterException {
-            for (DeliverRecord record : assetDistributionDao.getDeliveringRecords()) {
+            for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DeliverRecord record : assetDistributionDao.getDeliveringRecords()) {
                 DistributionStatus currentStatus = assetDistributionDao.getDistributionStatusForGenesisTx(record.getGenesisTransaction());
                 if (new Date().after(record.getTimeOut()) && currentStatus == DistributionStatus.DELIVERING) {
                     try {
@@ -432,7 +429,7 @@ public class AssetDistributionMonitorAgent implements Agent, DealsWithLogger, De
             return assetDistributionDao.isPendingNetworkLayerEvents();
         }
 
-        public void setAssetDistributionDao(AssetDistributionDao assetDistributionDao) {
+        public void setAssetDistributionDao(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao assetDistributionDao) {
             this.assetDistributionDao = assetDistributionDao;
         }
 

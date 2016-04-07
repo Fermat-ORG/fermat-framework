@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
@@ -42,14 +42,8 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExe
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.developer_utils.AssetDistributionDeveloperDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.AssetDistributionMonitorAgent;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.events.AssetDistributionRecorderService;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.functional.AssetDistributionTransactionManager;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.functional.DigitalAssetDistributionVault;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDatabaseConstants;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -84,9 +78,9 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
     BitcoinNetworkManager bitcoinNetworkManager;
     @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_VAULT, plugin = Plugins.BITCOIN_ASSET_VAULT)
     AssetVaultManager assetVaultManager;
-    DigitalAssetDistributionVault digitalAssetDistributionVault;
-    AssetDistributionTransactionManager assetDistributionTransactionManager;
-    AssetDistributionMonitorAgent assetDistributionMonitorAgent;
+    org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DigitalAssetDistributionVault digitalAssetDistributionVault;
+    org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.AssetDistributionTransactionManager assetDistributionTransactionManager;
+    org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.events.AssetDistributionMonitorAgent assetDistributionMonitorAgent;
     Database assetDistributionDatabase;
     @NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR, plugin = Plugins.ASSET_USER)
     private ActorAssetUserManager actorAssetUserManager;
@@ -120,7 +114,7 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
     }
 
     private void createAssetDistributionTransactionDatabase() throws CantCreateDatabaseException {
-        AssetDistributionDatabaseFactory databaseFactory = new AssetDistributionDatabaseFactory(this.pluginDatabaseSystem);
+        org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDatabaseFactory databaseFactory = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDatabaseFactory(this.pluginDatabaseSystem);
         assetDistributionDatabase = databaseFactory.createDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE);
     }
 
@@ -136,16 +130,16 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
                     throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException, "Starting Asset Distribution plugin - " + this.pluginId, "Cannot open or create the plugin database");
                 }
             }
-            this.digitalAssetDistributionVault = new DigitalAssetDistributionVault(this.pluginId,
+            this.digitalAssetDistributionVault = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.DigitalAssetDistributionVault(this.pluginId,
                     this.pluginFileSystem,
                     this.errorManager,
                     assetIssuerWalletManager,
                     actorAssetIssuerManager,
                     bitcoinNetworkManager);
-            AssetDistributionDao assetDistributionDao = new AssetDistributionDao(pluginDatabaseSystem,
+            org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao assetDistributionDao = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao(pluginDatabaseSystem,
                     pluginId,
                     digitalAssetDistributionVault);
-            this.assetDistributionTransactionManager = new AssetDistributionTransactionManager(
+            this.assetDistributionTransactionManager = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional.AssetDistributionTransactionManager(
                     this.assetVaultManager,
                     this.errorManager,
                     this.pluginId,
@@ -157,7 +151,7 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
                     assetTransmissionNetworkServiceManager,
                     actorAssetIssuerManager);
             //Starting Event Recorder
-            AssetDistributionRecorderService assetDistributionRecorderService = new AssetDistributionRecorderService(assetDistributionDao, eventManager);
+            org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.events.AssetDistributionRecorderService assetDistributionRecorderService = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.events.AssetDistributionRecorderService(assetDistributionDao, eventManager);
             try {
                 assetDistributionRecorderService.start();
             } catch (CantStartServiceException exception) {
@@ -192,7 +186,7 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
      */
     private void startMonitorAgent() throws CantGetLoggedInDeviceUserException, CantSetObjectException, CantStartAgentException {
         if (this.assetDistributionMonitorAgent == null) {
-            this.assetDistributionMonitorAgent = new AssetDistributionMonitorAgent(this.pluginDatabaseSystem,
+            this.assetDistributionMonitorAgent = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.events.AssetDistributionMonitorAgent(this.pluginDatabaseSystem,
                     this.errorManager,
                     this.pluginId,
                     pluginFileSystem,
@@ -214,13 +208,13 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        AssetDistributionDeveloperDatabaseFactory assetDistributionDeveloperDatabaseFactory = new AssetDistributionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.developer_utils.AssetDistributionDeveloperDatabaseFactory assetDistributionDeveloperDatabaseFactory = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.developer_utils.AssetDistributionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return assetDistributionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return AssetDistributionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        return org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.developer_utils.AssetDistributionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
@@ -228,7 +222,7 @@ public class AssetDistributionDigitalAssetTransactionPluginRoot extends Abstract
         Database database;
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, AssetDistributionDatabaseConstants.ASSET_DISTRIBUTION_DATABASE);
-            return AssetDistributionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
+            return org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.developer_utils.AssetDistributionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**
              * The database exists but cannot be open. I can not handle this situation.
