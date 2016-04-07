@@ -29,6 +29,8 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils.CryptoBrokerIdentityInformationImpl;
+import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.squareup.picasso.Picasso;
@@ -79,13 +81,13 @@ public class EditChatIdentityFragment extends AbstractFermatFragment implements 
                 errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY,
                         UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             else
-                Log.e("EditCustomerIdentity", e.getMessage(), e);
+                Log.e("EditChatIdentity", e.getMessage(), e);
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootLayout = inflater.inflate(R.layout.fragment_edit_crypto_broker_identity, container, false);
+        View rootLayout = inflater.inflate(R.layout.fragment_edit_chat_identity, container, false);
         initViews(rootLayout);
         return rootLayout;
     }
@@ -95,6 +97,7 @@ public class EditChatIdentityFragment extends AbstractFermatFragment implements 
      *
      * @param layout el layout de este Fragment que contiene las vistas
      */
+
     private void initViews(View layout) {
         final Button botonU = (Button) layout.findViewById(R.id.update_crypto_broker_button);
 
@@ -106,7 +109,7 @@ public class EditChatIdentityFragment extends AbstractFermatFragment implements 
         final ImageView camara = (ImageView) layout.findViewById(R.id.camara);
         final ImageView galeria = (ImageView) layout.findViewById(R.id.galeria);
 
-        final CryptoBrokerIdentityInformation identityInfo = (CryptoBrokerIdentityInformation) appSession.getData(IDENTITY_INFO);
+  /*      final ChatIdentity identityInfo = (ChatIdentity) appSession.getData(IDENTITY_INFO);
 
 
         botonU.setOnClickListener(new View.OnClickListener() {
@@ -117,16 +120,16 @@ public class EditChatIdentityFragment extends AbstractFermatFragment implements 
             }
         });
 
-        if (identityInfo != null) {
+      //  if (identityInfo != null) {
 
-            cryptoBrokerPublicKey = identityInfo.getPublicKey();
+           cryptoBrokerPublicKey = identityInfo.getPublicKey();
             mBrokerName.setText(identityInfo.getAlias());
             mBrokerName.selectAll();
             mBrokerName.requestFocus();
             mBrokerName.performClick();
-            wantPublishIdentity = identityInfo.isPublished();
+      //      wantPublishIdentity = identityInfo.
 
-            profileImage = identityInfo.getProfileImage();
+     //       profileImage = identityInfo.getProfileImage();
 
             if (profileImage.length == 0) {
                 mBrokerImage.setImageResource(R.drawable.pic_space);
@@ -148,7 +151,7 @@ public class EditChatIdentityFragment extends AbstractFermatFragment implements 
         });
 
         if (wantPublishIdentity) {
-            sw.setImageResource(R.drawable.switch_visible);
+      //      sw.setImageResource(R.drawable.switch_visible);
         } else {
             sw.setImageResource(R.drawable.switch_notvisible);
         }
@@ -174,7 +177,7 @@ public class EditChatIdentityFragment extends AbstractFermatFragment implements 
                     sw.setImageResource(R.drawable.switch_notvisible);
                     wantPublishIdentity = false;
                 } else {
-                    sw.setImageResource(R.drawable.switch_visible);
+       //             sw.setImageResource(R.drawable.switch_visible);
                     wantPublishIdentity = true;
                 }
             }
@@ -282,5 +285,16 @@ public class EditChatIdentityFragment extends AbstractFermatFragment implements 
         }
         Toast.makeText(getActivity().getApplicationContext(), "Error trying to edit the identity.", Toast.LENGTH_SHORT).show();
         errorManager.reportUnexpectedSubAppException(SubApps.CBP_CRYPTO_BROKER_IDENTITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+    }*/
+    }
+
+    @Override
+    public void onPostExecute(Object... result) {
+
+    }
+
+    @Override
+    public void onErrorOccurred(Exception ex) {
+
     }
 }
