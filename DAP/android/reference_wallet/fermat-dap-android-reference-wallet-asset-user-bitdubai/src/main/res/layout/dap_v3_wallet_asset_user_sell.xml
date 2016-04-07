@@ -38,7 +38,8 @@
                 android:imeOptions="actionNext"
                 android:inputType="numberDecimal"
                 android:textColor="@color/card_toolbar"
-                android:textSize="15sp" />
+                android:textSize="15sp"
+                android:longClickable="true" />
             <!--android:background="@null"-->
             <Spinner
                 android:id="@+id/assetCurrencySpinner"
@@ -268,20 +269,20 @@
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/toText"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/sellToText"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="9dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="5dp"
                 android:fontFamily="ROBOTO"
                 android:text="@string/dap_user_wallet_to"
                 android:textColor="@color/card_toolbar"
-                android:textSize="14sp" />
+                android:textSize="13sp" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditText
                 android:id="@+id/userToSelectText"
-                android:layout_width="324dp"
-                android:layout_height="33dp"
+                android:layout_width="match_parent"
+                android:layout_height="27dp"
                 android:layout_below="@+id/sellToText"
                 android:layout_centerHorizontal="true"
                 android:background="@null"
@@ -294,7 +295,7 @@
                 android:singleLine="true"
                 android:fontFamily="ROBOTO"
                 android:textColor="@color/color_black"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <RelativeLayout
                 android:id="@+id/listReferenceLine"
