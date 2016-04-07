@@ -35,6 +35,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
+import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.structure.LossProtectedWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.ChunckValuesHistoryAdapter;
@@ -68,7 +69,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
      */
     private LossProtectedWallet cryptoWallet;
-    private LossProtectedWalletTransaction cryptowalletTransaction;
+    private LossProtectedWalletModuleManager moduleManager;
     /**
      * DATA
      */
@@ -107,7 +108,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
-            //lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+            lstTransactionRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 
             getExecutor().execute(new Runnable() {
                 @Override
@@ -273,7 +274,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
     @Override
     public List<LossProtectedWalletTransaction> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoLossProtectedWalletException, CantListLossProtectedTransactionsException {
-        List<LossProtectedWalletTransaction> lstPaymentRequest  = new ArrayList<LossProtectedWalletTransaction>();
+        List<LossProtectedWalletTransaction> lstWalletTransaction  = new ArrayList<LossProtectedWalletTransaction>();
 
         try {
 
@@ -288,21 +289,21 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             //when refresh offset set 0
             if (refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
-
-            List<LossProtectedWalletTransaction> lst = cryptoWallet.listLastActorTransactionsByTransactionType(
+            lstWalletTransaction = moduleManager.listLastActorTransactionsByTransactionType(
                     BalanceType.AVAILABLE,
                     TransactionType.DEBIT,
                     referenceWalletSession.getAppPublicKey(),
                     intraUserPk,
                     blockchainNetworkType,
                     20, 0);
+
         } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
            e.printStackTrace();
        }
 
-        return lstPaymentRequest;
+        return lstWalletTransaction;
     }
 
     @Override
