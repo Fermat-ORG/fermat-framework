@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
@@ -12,10 +12,17 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ut
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageEncoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.caches.ClientsSessionMemoryCache;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.ClientChannelConfigurator;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.ActorTraceDiscoveryQueryRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInActorRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInClientRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInNetworkServiceRequestProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInProfileDiscoveryQueryRequestProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckOutActorRequestProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckOutClientRequestProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckOutNetworkServiceRequestProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.NearNodeListRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ClientsConnectionHistory;
 
 import org.jboss.logging.Logger;
@@ -31,7 +38,7 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketClientChannelServerEndpoint</code> this
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketClientChannelServerEndpoint</code> this
  * is a especial channel to manage all the communication between the clients and the node
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 12/11/15.
@@ -45,7 +52,7 @@ import javax.websocket.server.ServerEndpoint;
         encoders = {PackageEncoder.class},
         decoders = {PackageDecoder.class}
 )
-public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServerEndpoint{
+public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServerEndpoint {
 
     /**
      * Represent the LOG
@@ -68,7 +75,7 @@ public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServer
     /**
      * (non-javadoc)
      *
-     * @see WebSocketChannelServerEndpoint#initPackageProcessorsRegistration()
+     * @see com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketChannelServerEndpoint#initPackageProcessorsRegistration()
      */
     @Override
     void initPackageProcessorsRegistration(){
@@ -77,9 +84,15 @@ public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServer
          * Register all messages processor for this
          * channel
          */
+        registerMessageProcessor(new ActorTraceDiscoveryQueryRequestProcessor(this));
         registerMessageProcessor(new CheckInClientRequestProcessor(this));
         registerMessageProcessor(new CheckInNetworkServiceRequestProcessor(this));
         registerMessageProcessor(new CheckInActorRequestProcessor(this));
+        registerMessageProcessor(new CheckInProfileDiscoveryQueryRequestProcessor(this));
+        registerMessageProcessor(new CheckOutActorRequestProcessor(this));
+        registerMessageProcessor(new CheckOutClientRequestProcessor(this));
+        registerMessageProcessor(new CheckOutNetworkServiceRequestProcessor(this));
+        registerMessageProcessor(new NearNodeListRequestProcessor(this));
 
     }
 

@@ -90,4 +90,8 @@ public class DesktopRecord  implements DatabaseRecord {
 
     }
 
+    @Override
+    public String toString() {
+        return recordName+"="+recordValue;
+    }
 }
