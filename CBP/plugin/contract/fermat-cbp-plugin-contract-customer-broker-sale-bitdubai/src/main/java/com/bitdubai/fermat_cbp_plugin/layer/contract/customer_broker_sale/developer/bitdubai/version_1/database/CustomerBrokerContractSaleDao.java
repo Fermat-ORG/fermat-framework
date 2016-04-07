@@ -359,6 +359,7 @@ public class CustomerBrokerContractSaleDao {
             Long DateTime = record.getLongValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_DATE_TIME_COLUMN_NAME);
             ContractStatus status = ContractStatus.getByCode(record.getStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME));
             String nearExpirationDatetime = record.getStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME);
+            String cancelReason = record.getStringValue(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_CANCEL_REASON_COLUMN_NAME);
 
             Boolean _NearExpirationDatetime = true;
             if(nearExpirationDatetime.equals("0")){
@@ -373,7 +374,8 @@ public class CustomerBrokerContractSaleDao {
                     DateTime,
                     status,
                     getAllCustomerBrokerSaleContractClauses(contractID),
-                    _NearExpirationDatetime
+                    _NearExpirationDatetime,
+                    cancelReason
             );
         }
 
@@ -386,6 +388,7 @@ public class CustomerBrokerContractSaleDao {
             Long DateTime = record.getLongValue("Column4");
             ContractStatus status = ContractStatus.getByCode(record.getStringValue("Column5"));
             String nearExpirationDatetime = record.getStringValue("Column6");
+            String cancelReason = record.getStringValue("Column7");
 
 
             Boolean _NearExpirationDatetime = true;
@@ -401,7 +404,8 @@ public class CustomerBrokerContractSaleDao {
                     DateTime,
                     status,
                     getAllCustomerBrokerSaleContractClauses(contractID),
-                    _NearExpirationDatetime
+                    _NearExpirationDatetime,
+                    cancelReason
             );
         }
 
