@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.database;
+package org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -15,7 +15,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException;
+
+import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +72,7 @@ public class AssetUserIdentityDeveloperDatabaseFactory implements DealsWithPlugi
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DB_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DB_NAME);
             database.closeDatabase();
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
@@ -113,7 +114,7 @@ public class AssetUserIdentityDeveloperDatabaseFactory implements DealsWithPlugi
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DB_NAME, this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DB_NAME, this.pluginId.toString()));
         return databases;
     }
 
@@ -125,13 +126,13 @@ public class AssetUserIdentityDeveloperDatabaseFactory implements DealsWithPlugi
          */
         List<String> AssetUserColumns = new ArrayList<String>();
 
-        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME);
-        AssetUserColumns.add(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
+        AssetUserColumns.add(org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        AssetUserColumns.add(org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME);
+        AssetUserColumns.add(org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
         /**
          * Table Asset User addition.
          */
-        DeveloperDatabaseTable assetUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME, AssetUserColumns);
+        DeveloperDatabaseTable assetUserTable = developerObjectFactory.getNewDeveloperDatabaseTable(org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME, AssetUserColumns);
         tables.add(assetUserTable);
 
 

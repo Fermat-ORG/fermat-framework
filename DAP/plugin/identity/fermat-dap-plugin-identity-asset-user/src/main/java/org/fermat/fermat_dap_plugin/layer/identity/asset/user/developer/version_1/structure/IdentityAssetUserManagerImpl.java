@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.structure;
+package org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
@@ -16,9 +16,9 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGe
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantListAssetUsersException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUpdateIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.database.AssetUserIdentityDao;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantListAssetUserIdentitiesException;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDao;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
@@ -124,7 +124,7 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
 
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantListAssetUsersException("CAN'T GET ASSET USER IDENTITIES", e, "Error get logged user device", "");
-        } catch (CantListAssetUserIdentitiesException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException e) {
             throw new CantListAssetUsersException("CAN'T GET ASSET USER  IDENTITIES", e, "", "");
         } catch (Exception e) {
             throw new CantListAssetUsersException("CAN'T GET ASSET USER IDENTITIES", FermatException.wrapException(e), "", "");
@@ -160,7 +160,7 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
             registerIdentities();
         } catch (CantInitializeAssetUserIdentityDatabaseException e) {
             e.printStackTrace();
-        } catch (CantListAssetUserIdentitiesException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException e) {
             e.printStackTrace();
         }
     }
@@ -182,14 +182,14 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
             return getAssetUserIdentityDao().getIdentityAssetUsersFromCurrentDeviceUser(loggedUser).size() > 0;
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantListAssetUsersException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Error get logged user device", "");
-        } catch (CantListAssetUserIdentitiesException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException e) {
             throw new CantListAssetUsersException("CAN'T GET IF ASSET USER IDENTITIES EXISTS", e, "", "");
         } catch (Exception e) {
             throw new CantListAssetUsersException("CAN'T GET ASSET USER USER IDENTITY EXISTS", FermatException.wrapException(e), "", "");
         }
     }
 
-    public void registerIdentities() throws CantListAssetUserIdentitiesException {
+    public void registerIdentities() throws org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException {
         try {
             List<IdentityAssetUser> identityAssetUsers = getAssetUserIdentityDao().getIdentityAssetUsersFromCurrentDeviceUser(deviceUserManager.getLoggedInDeviceUser());
             if (identityAssetUsers.size() > 0) {
@@ -198,13 +198,13 @@ public class IdentityAssetUserManagerImpl implements DealsWithErrors, DealsWithL
                 }
             }
         } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
-        } catch (CantListAssetUserIdentitiesException e) {
-            throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant List Asset User Identities", "");
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Get Logged InDevice User", "");
+        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException e) {
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant List Asset User Identities", "");
         } catch (CantCreateAssetUserActorException e) {
-            throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Create Actor Asset User", "");
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Create Actor Asset User", "");
         } catch (CantInitializeAssetUserIdentityDatabaseException e) {
-            throw new CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Initialize Asset User Identity Database", "");
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException("CAN'T GET IF ASSET USER IDENTITIES  EXISTS", e, "Cant Initialize Asset User Identity Database", "");
         }
     }
 

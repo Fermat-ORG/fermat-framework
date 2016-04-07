@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.database;
+package org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
@@ -28,14 +28,8 @@ import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeve
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantGetAssetUserIdentitiesException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUpdateIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.AssetUserIdentityPluginRoot;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserIdentityPrivateKeyException;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantGetAssetUserIdentityProfileImageException;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantListAssetUserIdentitiesException;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.structure.IdentityAssetUsermpl;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantGetAssetUserIdentityProfileImageException;
+
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;
@@ -61,15 +55,15 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
 
-    public AssetUserIdentityDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) throws CantInitializeAssetUserIdentityDatabaseException {
+    public AssetUserIdentityDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) throws org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
 
         try {
             initializeDatabase();
-        } catch (CantInitializeAssetUserIdentityDatabaseException e) {
-            throw new CantInitializeAssetUserIdentityDatabaseException(e.getMessage());
+        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException e) {
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException(e.getMessage());
         }
     }
 
@@ -86,9 +80,9 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeAssetUserIdentityDatabaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException
      */
-    private void initializeDatabase() throws CantInitializeAssetUserIdentityDatabaseException {
+    private void initializeDatabase() throws org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException {
         try {
 
              /*
@@ -102,7 +96,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeAssetUserIdentityDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -122,11 +116,11 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeAssetUserIdentityDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException(cantCreateDatabaseException.getMessage());
             }
         } catch (Exception e) {
 
-            throw new CantInitializeAssetUserIdentityDatabaseException(e.getMessage());
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException(e.getMessage());
 
         }
     }
@@ -168,7 +162,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
             // Cant insert record.
             throw new CantCreateNewDeveloperException(e.getMessage(), e, "Asset User Identity", "Cant create new Asset User, insert database problems.");
 
-        } catch (CantPersistPrivateKeyException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantPersistPrivateKeyException e) {
             // Cant insert record.
             throw new CantCreateNewDeveloperException(e.getMessage(), e, "Asset User Identity", "Cant create new Asset User,persist private key error.");
 
@@ -210,7 +204,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
 
         } catch (CantUpdateRecordException e) {
             throw new CantUpdateIdentityAssetUserException(e.getMessage(), e, "Asset User Identity", "Cant update Asset User Identity, database problems.");
-        } catch (CantPersistProfileImageException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantPersistProfileImageException e) {
             throw new CantUpdateIdentityAssetUserException(e.getMessage(), e, "Asset User Identity", "Cant update Asset User Identity, persist image error.");
         } catch (Exception e) {
             throw new CantUpdateIdentityAssetUserException(e.getMessage(), FermatException.wrapException(e), "Asset User Identity", "Cant update Asset User Identity, unknown failure.");
@@ -249,7 +243,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
             for (DatabaseTableRecord record : table.getRecords()) {
 
                 // Add records to list.
-                IdentityAssetUserrRecord = new IdentityAssetUsermpl(
+                IdentityAssetUserrRecord = new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.structure.IdentityAssetUsermpl(
                         record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)));
@@ -264,7 +258,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
         return IdentityAssetUserrRecord;
     }
 
-    public List<IdentityAssetUser> getIdentityAssetUsersFromCurrentDeviceUser(DeviceUser deviceUser) throws CantListAssetUserIdentitiesException {
+    public List<IdentityAssetUser> getIdentityAssetUsersFromCurrentDeviceUser(DeviceUser deviceUser) throws org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException {
 
 
         // Setup method.
@@ -296,7 +290,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
             for (DatabaseTableRecord record : table.getRecords()) {
 
                 // Add records to list.
-                list.add(new IdentityAssetUsermpl(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME),
+                list.add(new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.structure.IdentityAssetUsermpl(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getAssetUserIdentityPrivateKey(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         getAssetUserProfileImagePrivateKey(record.getStringValue(AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
@@ -304,13 +298,13 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
                         pluginId));
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListAssetUserIdentitiesException(e.getMessage(), e, "Asset User Identity", "Cant load " + AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME + " table in memory.");
-        } catch (CantGetAssetUserIdentityPrivateKeyException e) {
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException(e.getMessage(), e, "Asset User Identity", "Cant load " + AssetUserIdentityDatabaseConstants.ASSET_USER_IDENTITY_TABLE_NAME + " table in memory.");
+        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantGetAssetUserIdentityPrivateKeyException e) {
             // Failure unknown.
-            throw new CantListAssetUserIdentitiesException(e.getMessage(), e, "Asset User Identity", "Can't get private key.");
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException(e.getMessage(), e, "Asset User Identity", "Can't get private key.");
 
         } catch (Exception e) {
-            throw new CantListAssetUserIdentitiesException(e.getMessage(), FermatException.wrapException(e), "Asset User Identity", "Cant get Asset User identity list, unknown failure.");
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantListAssetUserIdentitiesException(e.getMessage(), FermatException.wrapException(e), "Asset User Identity", "Cant get Asset User identity list, unknown failure.");
         }
 
         // Return the list values.
@@ -322,7 +316,7 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
         try {
             PluginBinaryFile file = this.pluginFileSystem.getBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    AssetUserIdentityPluginRoot.ASSET_USER_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.AssetUserIdentityPluginRoot.ASSET_USER_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -347,11 +341,11 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
      * Private Methods
      */
 
-    private void persistNewUserPrivateKeysFile(String publicKey, String privateKey) throws CantPersistPrivateKeyException {
+    private void persistNewUserPrivateKeysFile(String publicKey, String privateKey) throws org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantPersistPrivateKeyException {
         try {
             PluginTextFile file = this.pluginFileSystem.createTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    AssetUserIdentityPluginRoot.ASSET_USER_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
+                    org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.AssetUserIdentityPluginRoot.ASSET_USER_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -360,19 +354,19 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
 
             file.persistToMedia();
         } catch (CantPersistFileException e) {
-            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error persist file.", null);
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error persist file.", null);
         } catch (CantCreateFileException e) {
-            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error creating file.", null);
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", e, "Error creating file.", null);
         } catch (Exception e) {
-            throw new CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", FermatException.wrapException(e), "", "");
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantPersistPrivateKeyException("CAN'T PERSIST PRIVATE KEY ", FermatException.wrapException(e), "", "");
         }
     }
 
-    private void persistNewUserProfileImage(String publicKey, byte[] profileImage) throws CantPersistProfileImageException {
+    private void persistNewUserProfileImage(String publicKey, byte[] profileImage) throws org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantPersistProfileImageException {
         try {
             PluginBinaryFile file = this.pluginFileSystem.createBinaryFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    AssetUserIdentityPluginRoot.ASSET_USER_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
+                    org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.AssetUserIdentityPluginRoot.ASSET_USER_PROFILE_IMAGE_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -381,11 +375,11 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
 
             file.persistToMedia();
         } catch (CantPersistFileException e) {
-            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error persist file.", null);
         } catch (CantCreateFileException e) {
-            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", e, "Error creating file.", null);
         } catch (Exception e) {
-            throw new CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", FermatException.wrapException(e), "", "");
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantPersistProfileImageException("CAN'T PERSIST PROFILE IMAGE ", FermatException.wrapException(e), "", "");
         }
     }
 
@@ -426,12 +420,12 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
-    public String getAssetUserIdentityPrivateKey(String publicKey) throws CantGetAssetUserIdentityPrivateKeyException {
+    public String getAssetUserIdentityPrivateKey(String publicKey) throws org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantGetAssetUserIdentityPrivateKeyException {
         String privateKey = "";
         try {
             PluginTextFile file = this.pluginFileSystem.getTextFile(pluginId,
                     DeviceDirectory.LOCAL_USERS.getName(),
-                    AssetUserIdentityPluginRoot.ASSET_USER_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
+                    org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.AssetUserIdentityPluginRoot.ASSET_USER_PRIVATE_KEYS_FILE_NAME + "_" + publicKey,
                     FilePrivacy.PRIVATE,
                     FileLifeSpan.PERMANENT
             );
@@ -442,12 +436,12 @@ public class AssetUserIdentityDao implements DealsWithPluginDatabaseSystem {
             privateKey = file.getContent();
 
         } catch (CantLoadFileException e) {
-            throw new CantGetAssetUserIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error loaded file.", null);
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantGetAssetUserIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error loaded file.", null);
 
         } catch (FileNotFoundException | CantCreateFileException e) {
-            throw new CantGetAssetUserIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", null);
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantGetAssetUserIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", e, "Error getting developer identity private keys file.", null);
         } catch (Exception e) {
-            throw new CantGetAssetUserIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", FermatException.wrapException(e), "", "");
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantGetAssetUserIdentityPrivateKeyException("CAN'T GET PRIVATE KEY ", FermatException.wrapException(e), "", "");
         }
 
         return privateKey;

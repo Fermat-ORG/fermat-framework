@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1;
+package org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -33,9 +33,7 @@ import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.exceptions.CantUp
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUserManager;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.database.AssetUserIdentityDeveloperDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.bitdubai.version_1.structure.IdentityAssetUserManagerImpl;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
@@ -78,7 +76,7 @@ public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
         super(new PluginVersionReference(new Version()));
     }
 
-    IdentityAssetUserManagerImpl identityAssetUserManager;
+    org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.structure.IdentityAssetUserManagerImpl identityAssetUserManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -128,7 +126,7 @@ public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
     public void start() throws CantStartPluginException {
         try {
             this.serviceStatus = ServiceStatus.STARTED;
-            identityAssetUserManager = new IdentityAssetUserManagerImpl(
+            identityAssetUserManager = new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.structure.IdentityAssetUserManagerImpl(
                     this.errorManager,
                     this.logManager,
                     this.pluginDatabaseSystem,
@@ -150,23 +148,23 @@ public class AssetUserIdentityPluginRoot extends AbstractPlugin implements
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        AssetUserIdentityDeveloperDatabaseFactory dbFactory = new AssetUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDeveloperDatabaseFactory dbFactory = new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        AssetUserIdentityDeveloperDatabaseFactory dbFactory = new AssetUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDeveloperDatabaseFactory dbFactory = new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         try {
-            AssetUserIdentityDeveloperDatabaseFactory dbFactory = new AssetUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+            org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDeveloperDatabaseFactory dbFactory = new org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.database.AssetUserIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
             dbFactory.initializeDatabase();
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (CantInitializeAssetUserIdentityDatabaseException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.identity.asset.user.developer.version_1.exceptions.CantInitializeAssetUserIdentityDatabaseException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_ASSET_USER_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empty list
