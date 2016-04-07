@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.database.communications;
+package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.database.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -8,10 +8,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
-import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.exceptions.CantDeleteRecordDataBaseException;
-import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.exceptions.CantInsertRecordDataBaseException;
-import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.exceptions.CantReadRecordDataBaseException;
-import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatMessageContentType;
@@ -65,9 +61,9 @@ public class IncomingMessageDao {
      *
      * @param id Long id.
      * @return FermatMessage found.
-     * @throws CantReadRecordDataBaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantReadRecordDataBaseException
      */
-    public FermatMessage findById(String id) throws CantReadRecordDataBaseException {
+    public FermatMessage findById(String id) throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantReadRecordDataBaseException {
 
         if (id == null) {
             throw new IllegalArgumentException("The id is required, can not be null");
@@ -109,7 +105,7 @@ public class IncomingMessageDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantReadRecordDataBaseException cantReadRecordDataBaseException = new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantReadRecordDataBaseException(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
         }
 
@@ -120,9 +116,9 @@ public class IncomingMessageDao {
      * Method that list the all entities on the data base.
      *
      * @return All FermatMessage.
-     * @throws CantReadRecordDataBaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantReadRecordDataBaseException
      */
-    public List<FermatMessage> findAll() throws CantReadRecordDataBaseException {
+    public List<FermatMessage> findAll() throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantReadRecordDataBaseException {
 
         List<FermatMessage> list = null;
         try {
@@ -160,7 +156,7 @@ public class IncomingMessageDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantReadRecordDataBaseException cantReadRecordDataBaseException = new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantReadRecordDataBaseException(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
         }
 
@@ -175,10 +171,10 @@ public class IncomingMessageDao {
      * the column name are the att of the <code>CommunicationNetworkServiceDatabaseConstants</code>
      *
      * @return All FermatMessage.
-     * @throws CantReadRecordDataBaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantReadRecordDataBaseException
      * @see CommunicationNetworkServiceDatabaseConstants
      */
-    public List<FermatMessage> findAll(String columnName, String columnValue) throws CantReadRecordDataBaseException {
+    public List<FermatMessage> findAll(String columnName, String columnValue) throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantReadRecordDataBaseException {
 
         if (columnName == null ||
                 columnName.isEmpty() ||
@@ -236,7 +232,7 @@ public class IncomingMessageDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantReadRecordDataBaseException cantReadRecordDataBaseException = new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantReadRecordDataBaseException(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
         }
 
@@ -250,9 +246,9 @@ public class IncomingMessageDao {
      * Method that create a new entity in the data base.
      *
      * @param entity FermatMessage to create.
-     * @throws CantInsertRecordDataBaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantInsertRecordDataBaseException
      */
-    public void create(FermatMessage entity) throws CantInsertRecordDataBaseException {
+    public void create(FermatMessage entity) throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantInsertRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -280,7 +276,7 @@ public class IncomingMessageDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
-            CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantInsertRecordDataBaseException(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantInsertRecordDataBaseException;
         }
 
@@ -291,9 +287,9 @@ public class IncomingMessageDao {
      * Method that update an entity in the data base.
      *
      * @param entity FermatMessage to update.
-     * @throws CantUpdateRecordDataBaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantUpdateRecordDataBaseException
      */
-    public void update(FermatMessage entity) throws CantUpdateRecordDataBaseException {
+    public void update(FermatMessage entity) throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantUpdateRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -320,7 +316,7 @@ public class IncomingMessageDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
-            CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantUpdateRecordDataBaseException(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
         }
     }
@@ -329,9 +325,9 @@ public class IncomingMessageDao {
      * Method that delete a entity in the data base.
      *
      * @param id Long id.
-     * @throws CantDeleteRecordDataBaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantDeleteRecordDataBaseException
      */
-    public void delete(Long id) throws CantDeleteRecordDataBaseException {
+    public void delete(Long id) throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantDeleteRecordDataBaseException {
 
         if (id == null) {
             throw new IllegalArgumentException("The id is required can not be null");
@@ -356,7 +352,7 @@ public class IncomingMessageDao {
 
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
-            CantDeleteRecordDataBaseException cantDeleteRecordDataBaseException = new CantDeleteRecordDataBaseException(CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantDeleteRecordDataBaseException cantDeleteRecordDataBaseException = new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantDeleteRecordDataBaseException(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions.CantDeleteRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantDeleteRecordDataBaseException;
         }
 

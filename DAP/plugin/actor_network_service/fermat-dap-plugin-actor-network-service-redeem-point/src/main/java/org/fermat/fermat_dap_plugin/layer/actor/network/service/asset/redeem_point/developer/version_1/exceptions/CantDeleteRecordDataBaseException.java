@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.bitdubai.version_1.exceptions;
+package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.redeem_point.developer.version_1.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
