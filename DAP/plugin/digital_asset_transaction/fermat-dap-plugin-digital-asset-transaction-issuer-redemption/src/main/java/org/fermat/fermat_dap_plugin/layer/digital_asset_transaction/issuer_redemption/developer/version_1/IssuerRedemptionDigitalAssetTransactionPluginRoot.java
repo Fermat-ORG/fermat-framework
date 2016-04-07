@@ -1,11 +1,9 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1;
 
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.developers_utils.IssuerRedemptionDeveloperDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database.IssuerRedemptionDao;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database.IssuerRedemptionDatabaseConstants;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database.IssuerRedemptionDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.events.IssuerRedemptionMonitorAgent;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.events.IssuerRedemptionRecorderService;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.developers_utils.IssuerRedemptionDeveloperDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.structure.database.IssuerRedemptionDao;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.structure.database.IssuerRedemptionDatabaseConstants;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.structure.events.IssuerRedemptionRecorderService;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
@@ -216,7 +214,7 @@ public class IssuerRedemptionDigitalAssetTransactionPluginRoot extends AbstractP
         try {
             IssuerRedemptionDao issuerRedemptionDao = new IssuerRedemptionDao(pluginId, pluginDatabaseSystem);
             IssuerRedemptionRecorderService issuerRedemptionRecorderService = new IssuerRedemptionRecorderService(issuerRedemptionDao, eventManager);
-            IssuerRedemptionMonitorAgent issuerRedemptionMonitorAgent = new IssuerRedemptionMonitorAgent(assetIssuerWalletManager, actorAssetIssuerManager, bitcoinNetworkManager, cryptoAddressBookManager, errorManager, pluginId, pluginDatabaseSystem, AssetVaultManager, issuerAppropriationManager, walletMiddlewareManager, assetTransmissionManager, actorAssetUserManager, actorAssetRedeemPointManager, incomingCryptoManager);
+            org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.structure.events.IssuerRedemptionMonitorAgent issuerRedemptionMonitorAgent = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.structure.events.IssuerRedemptionMonitorAgent(assetIssuerWalletManager, actorAssetIssuerManager, bitcoinNetworkManager, cryptoAddressBookManager, errorManager, pluginId, pluginDatabaseSystem, AssetVaultManager, issuerAppropriationManager, walletMiddlewareManager, assetTransmissionManager, actorAssetUserManager, actorAssetRedeemPointManager, incomingCryptoManager);
             try {
                 issuerRedemptionRecorderService.start();
                 issuerRedemptionMonitorAgent.start();
@@ -240,7 +238,7 @@ public class IssuerRedemptionDigitalAssetTransactionPluginRoot extends AbstractP
      * @throws CantCreateDatabaseException
      */
     private void createIssuerRedemptionDatabase() throws CantCreateDatabaseException {
-        IssuerRedemptionDatabaseFactory databaseFactory = new IssuerRedemptionDatabaseFactory(this.pluginDatabaseSystem);
+        org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.structure.database.IssuerRedemptionDatabaseFactory databaseFactory = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.structure.database.IssuerRedemptionDatabaseFactory(this.pluginDatabaseSystem);
         databaseFactory.createDatabase(pluginId, IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_DATABASE);
     }
 }

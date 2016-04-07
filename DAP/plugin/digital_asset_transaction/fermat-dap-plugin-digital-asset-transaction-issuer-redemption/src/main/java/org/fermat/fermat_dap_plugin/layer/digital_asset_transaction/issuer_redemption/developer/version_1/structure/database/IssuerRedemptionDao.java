@@ -1,7 +1,5 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.structure.database;
 
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.exceptions.CantCheckAssetIssuerRedemptionProgressException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.exceptions.CantLoadIssuerRedemptionEventListException;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -105,7 +103,7 @@ public class IssuerRedemptionDao {
     }
 
 
-    private String getStringFieldByEventId(String columnName, String id) throws RecordsNotFoundException, CantLoadIssuerRedemptionEventListException {
+    private String getStringFieldByEventId(String columnName, String id) throws RecordsNotFoundException, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.exceptions.CantLoadIssuerRedemptionEventListException {
         String context = "Column Name: " + columnName + " - Id: " + id;
         DatabaseTable databaseTable;
         databaseTable = database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
@@ -114,7 +112,7 @@ public class IssuerRedemptionDao {
         try {
             databaseTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantLoadIssuerRedemptionEventListException(e, context, null);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.exceptions.CantLoadIssuerRedemptionEventListException(e, context, null);
         }
         if (databaseTable.getRecords().isEmpty()) {
             throw new RecordsNotFoundException(null, context, "");
@@ -122,7 +120,7 @@ public class IssuerRedemptionDao {
         return databaseTable.getRecords().get(0).getStringValue(columnName);
     }
 
-    private List<String> getPendingDAPEventsByType(org.fermat.fermat_dap_api.layer.all_definition.enums.EventType eventType) throws CantLoadIssuerRedemptionEventListException {
+    private List<String> getPendingDAPEventsByType(org.fermat.fermat_dap_api.layer.all_definition.enums.EventType eventType) throws org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.exceptions.CantLoadIssuerRedemptionEventListException {
         String context = "Event Type: " + eventType.getCode();
 
         DatabaseTable eventsRecordedTable;
@@ -134,7 +132,7 @@ public class IssuerRedemptionDao {
         try {
             eventsRecordedTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantLoadIssuerRedemptionEventListException(e, context, null);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.exceptions.CantLoadIssuerRedemptionEventListException(e, context, null);
         }
         List<String> eventIdList = new ArrayList<>();
         for (DatabaseTableRecord record : eventsRecordedTable.getRecords()) {
@@ -143,7 +141,7 @@ public class IssuerRedemptionDao {
         return eventIdList;
     }
 
-    private List<String> getPendingDAPEventsByType(EventType eventType) throws CantLoadIssuerRedemptionEventListException {
+    private List<String> getPendingDAPEventsByType(EventType eventType) throws org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.exceptions.CantLoadIssuerRedemptionEventListException {
         String context = "Event Type: " + eventType.getCode();
 
         DatabaseTable eventsRecordedTable;
@@ -155,7 +153,7 @@ public class IssuerRedemptionDao {
         try {
             eventsRecordedTable.loadToMemory();
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantLoadIssuerRedemptionEventListException(e, context, null);
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.exceptions.CantLoadIssuerRedemptionEventListException(e, context, null);
         }
         List<String> eventIdList = new ArrayList<>();
         for (DatabaseTableRecord record : eventsRecordedTable.getRecords()) {
@@ -165,7 +163,7 @@ public class IssuerRedemptionDao {
     }
 
 
-    private List<String> getPendingEventsBySource(EventSource eventSource) throws CantLoadIssuerRedemptionEventListException {
+    private List<String> getPendingEventsBySource(EventSource eventSource) throws org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.exceptions.CantLoadIssuerRedemptionEventListException {
         try {
             DatabaseTable eventsRecordedTable;
             eventsRecordedTable = database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_TABLE_NAME);
@@ -180,9 +178,9 @@ public class IssuerRedemptionDao {
             }
             return eventIdList;
         } catch (CantLoadTableToMemoryException exception) {
-            throw new CantLoadIssuerRedemptionEventListException(exception, "Getting pending events.", "Cannot load table to memory.");
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.exceptions.CantLoadIssuerRedemptionEventListException(exception, "Getting pending events.", "Cannot load table to memory.");
         } catch (Exception exception) {
-            throw new CantLoadIssuerRedemptionEventListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.exceptions.CantLoadIssuerRedemptionEventListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
         }
     }
 
@@ -219,7 +217,7 @@ public class IssuerRedemptionDao {
 
     //GETTER AND SETTERS
 
-    public Map<BlockchainNetworkType, String> getToBeAppliedGenesisTransaction() throws CantCheckAssetIssuerRedemptionProgressException {
+    public Map<BlockchainNetworkType, String> getToBeAppliedGenesisTransaction() throws org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.exceptions.CantCheckAssetIssuerRedemptionProgressException {
         try {
             DatabaseTable issuerRedemptionTable;
             issuerRedemptionTable = database.getTable(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_TABLE_NAME);
@@ -232,22 +230,22 @@ public class IssuerRedemptionDao {
             }
             return toReturn;
         } catch (CantLoadTableToMemoryException exception) {
-            throw new CantCheckAssetIssuerRedemptionProgressException(exception, "Getting pending events.", "Cannot load table to memory.");
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.exceptions.CantCheckAssetIssuerRedemptionProgressException(exception, "Getting pending events.", "Cannot load table to memory.");
         } catch (Exception exception) {
-            throw new CantCheckAssetIssuerRedemptionProgressException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+            throw new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.exceptions.CantCheckAssetIssuerRedemptionProgressException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
         }
     }
 
-    public List<String> getPendingCryptoRouterEvents() throws CantLoadIssuerRedemptionEventListException {
+    public List<String> getPendingCryptoRouterEvents() throws org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.exceptions.CantLoadIssuerRedemptionEventListException {
         return getPendingEventsBySource(EventSource.CRYPTO_ROUTER);
     }
 
 
-    public EventType getEventTypeById(String id) throws CantLoadIssuerRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
+    public EventType getEventTypeById(String id) throws org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.exceptions.CantLoadIssuerRedemptionEventListException, InvalidParameterException, RecordsNotFoundException {
         return EventType.getByCode(getStringFieldByEventId(IssuerRedemptionDatabaseConstants.ASSET_ISSUER_REDEMPTION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
     }
 
-    public List<String> getPendingNewReceiveMessageActorEvents() throws CantLoadIssuerRedemptionEventListException {
+    public List<String> getPendingNewReceiveMessageActorEvents() throws org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.exceptions.CantLoadIssuerRedemptionEventListException {
         return getPendingDAPEventsByType(org.fermat.fermat_dap_api.layer.all_definition.enums.EventType.NEW_RECEIVE_MESSAGE_ACTOR);
     }
     //INNER CLASSES

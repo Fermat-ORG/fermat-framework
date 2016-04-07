@@ -1,7 +1,7 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.developers_utils;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.developers_utils;
 
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database.IssuerRedemptionDatabaseConstants;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.bitdubai.version_1.structure.database.IssuerRedemptionDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.structure.database.IssuerRedemptionDatabaseConstants;
+
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -77,7 +77,7 @@ public class IssuerRedemptionDeveloperDatabaseFactory implements DealsWithPlugin
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            IssuerRedemptionDatabaseFactory issuerRedemptionDatabaseFactory = new IssuerRedemptionDatabaseFactory(pluginDatabaseSystem);
+            org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.structure.database.IssuerRedemptionDatabaseFactory issuerRedemptionDatabaseFactory = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_redemption.developer.version_1.structure.database.IssuerRedemptionDatabaseFactory(pluginDatabaseSystem);
 
             try {
                   /*
