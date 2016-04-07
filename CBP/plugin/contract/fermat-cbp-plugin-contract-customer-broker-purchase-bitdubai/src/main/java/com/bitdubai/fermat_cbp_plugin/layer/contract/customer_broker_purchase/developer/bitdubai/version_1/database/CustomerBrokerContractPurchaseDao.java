@@ -125,6 +125,7 @@ public class CustomerBrokerContractPurchaseDao {
             }
         }
 
+        //ADD YORDIN ALAYN 07.04.16
         public void cancelContract(String contractID, String reason) throws CantUpdateCustomerBrokerContractPurchaseException {
             try {
                 DatabaseTable PurchaseTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME);
