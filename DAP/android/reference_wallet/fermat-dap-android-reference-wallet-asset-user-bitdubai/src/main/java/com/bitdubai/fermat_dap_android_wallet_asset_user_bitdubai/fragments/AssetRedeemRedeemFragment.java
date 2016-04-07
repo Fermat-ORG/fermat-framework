@@ -171,7 +171,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
 
                     new ConfirmDialog.Builder(getActivity(), appSession)
                             .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
+                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_redeem))
                             .setColorStyle(getResources().getColor(R.color.card_toolbar))
                             .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                                 @Override
