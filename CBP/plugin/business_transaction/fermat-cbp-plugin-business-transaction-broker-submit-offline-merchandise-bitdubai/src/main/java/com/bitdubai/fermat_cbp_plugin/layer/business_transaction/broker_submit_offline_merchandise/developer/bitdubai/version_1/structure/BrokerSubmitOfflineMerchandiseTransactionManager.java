@@ -92,18 +92,19 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             String contractHash) throws CantSubmitMerchandiseException {
         try {
             //Checking the arguments
-            Object[] arguments={referencePrice, cbpWalletPublicKey, offlineWalletPublicKey, contractHash};
+            final Object[] arguments={referencePrice, cbpWalletPublicKey, offlineWalletPublicKey, contractHash};
             ObjectChecker.checkArguments(arguments);
-            CustomerBrokerContractSale customerBrokerContractSale=
-                    this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(
-                            contractHash);
-            String negotiationId=customerBrokerContractSale.getNegotiatiotId();
-            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation=
-                    getCustomerBrokerSaleNegotiation(
-                            negotiationId);
-            long amount = getCryptoAmount(customerBrokerSaleNegotiation);
-            MoneyType merchandiseType = getMerchandiseType(customerBrokerSaleNegotiation);
-            FiatCurrency fiatCurrencyType = getFiatCurrency(customerBrokerSaleNegotiation);
+
+            final CustomerBrokerContractSale customerBrokerContractSale = this.customerBrokerContractSaleManager.
+                    getCustomerBrokerContractSaleForContractId(contractHash);
+
+            final String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+            final CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = getCustomerBrokerSaleNegotiation(negotiationId);
+
+            final long amount = getCryptoAmount(customerBrokerSaleNegotiation);
+            final MoneyType merchandiseType = getMerchandiseType(customerBrokerSaleNegotiation);
+            final FiatCurrency fiatCurrencyType = getFiatCurrency(customerBrokerSaleNegotiation);
+
             this.brokerSubmitOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(
                     customerBrokerContractSale,
                     offlineWalletPublicKey,
@@ -189,23 +190,23 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             //Checking the arguments
             Object[] arguments={referencePrice, cbpWalletPublicKey, contractHash};
             ObjectChecker.checkArguments(arguments);
-            CryptoBrokerWallet cryptoBrokerWallet=cryptoBrokerWalletManager.loadCryptoBrokerWallet(
-                    cbpWalletPublicKey);
-            CryptoBrokerWalletSetting cryptoBrokerWalletSetting=
-                    cryptoBrokerWallet.getCryptoWalletSetting();
-            List<CryptoBrokerWalletAssociatedSetting> cryptoBrokerWalletAssociatedSettingList =
-                    cryptoBrokerWalletSetting.getCryptoBrokerWalletAssociatedSettings();
+            CryptoBrokerWallet cryptoBrokerWallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(cbpWalletPublicKey);
+            CryptoBrokerWalletSetting cryptoBrokerWalletSetting = cryptoBrokerWallet.getCryptoWalletSetting();
+
+            List<CryptoBrokerWalletAssociatedSetting> cryptoBrokerWalletAssociatedSettingList = cryptoBrokerWalletSetting.
+                    getCryptoBrokerWalletAssociatedSettings();
+
             if(cryptoBrokerWalletAssociatedSettingList.isEmpty()){
                 //Cannot handle this situation, throw an exception
-                throw new CantSubmitMerchandiseException(
-                        "Cannot get the crypto Wallet Associates Setting because the list is null");
+                throw new CantSubmitMerchandiseException("Cannot get the crypto Wallet Associates Setting because the list is null");
             }
+
             boolean isCryptoWalletSets=false;
             String offlineWalletPublicKey="WalletNotSet";
-            for(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting :
-                    cryptoBrokerWalletAssociatedSettingList){
+            for(CryptoBrokerWalletAssociatedSetting cryptoBrokerWalletAssociatedSetting : cryptoBrokerWalletAssociatedSettingList){
                 MoneyType moneyType =cryptoBrokerWalletAssociatedSetting.getMoneyType();
                 System.out.println("Currency type: "+ moneyType);
+
                 switch (moneyType){
                     case BANK:
                         offlineWalletPublicKey=cryptoBrokerWalletAssociatedSetting.getWalletPublicKey();
