@@ -12,7 +12,11 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionManager;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
+import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
 import com.bitdubai.fermat_art_plugin.layer.sub_app_module.artist_community.developer.bitdubai.version_1.structure.ArtistCommunityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -21,11 +25,25 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/03/16.
  */
 public class ArtistCommunityPluginRoot extends AbstractPlugin {
+
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.IDENTITY,              plugin = Plugins.ARTIST_IDENTITY     )
+    private ArtistIdentityManager artistIdentityManager;
+
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_CONNECTION,              plugin = Plugins.FAN_ACTOR_CONNECTION)
+    private ArtistActorConnectionManager artistActorConnectionManager;
+
+
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ARTIST_IDENTITY   )
+    private ArtistManager artistNetworkServiceManager;
+
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.IDENTITY,              plugin = Plugins.ARTIST_IDENTITY   )
+    private FanaticIdentityManager fanaticIdentityManager;
+
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededPluginReference(platform = Platforms.ART_PLATFORM, layer = Layers.IDENTITY,plugin = Plugins.ARTIST_ACTOR_CONNECTION)
-    private ArtistActorConnectionManager artistCommunityModuleManager;
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM,                addon  = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
 
     private ArtistCommunityManager artistCommunityManager;
     /**
@@ -37,9 +55,14 @@ public class ArtistCommunityPluginRoot extends AbstractPlugin {
 
     private void initPluginManager(){
         this.artistCommunityManager = new ArtistCommunityManager(
-                errorManager
-                ,artistCommunityModuleManager
-        );
+                artistIdentityManager,
+                artistActorConnectionManager,
+                artistNetworkServiceManager,
+                fanaticIdentityManager,
+                errorManager,
+                pluginFileSystem,
+                pluginId,
+                this.getPluginVersionReference());
     }
     public ModuleManager getManager(){
         return this.artistCommunityManager;
