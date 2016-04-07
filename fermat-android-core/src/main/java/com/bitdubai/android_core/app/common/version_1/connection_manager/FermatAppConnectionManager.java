@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection.ChatFermatAppConnection;
+import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.app_connection.ChatIdentityFermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.app_connection.AssetFactoryFermatAppConnection;
@@ -145,9 +146,14 @@ public class FermatAppConnectionManager {
                 break;
 
 
+
             // CHT Sub Apps
             case "public_key_cht_chat":
                 fermatAppConnection = new ChatFermatAppConnection(activity);
+                break;
+
+            case "public_key_cht_identity_chat":
+                fermatAppConnection = new ChatIdentityFermatAppConnection(activity);
                 break;
             //TKY Fan wallet
             case "fan_wallet":
