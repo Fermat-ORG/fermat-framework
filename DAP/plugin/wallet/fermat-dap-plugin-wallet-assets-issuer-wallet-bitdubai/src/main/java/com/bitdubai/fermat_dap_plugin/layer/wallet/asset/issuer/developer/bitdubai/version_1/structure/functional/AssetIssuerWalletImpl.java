@@ -296,8 +296,8 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         List<AssetIssuerWalletTransaction> debitAvailable = getTransactionsAll(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
         List<AssetIssuerWalletTransaction> debitBook = getTransactionsAll(BalanceType.BOOK, TransactionType.DEBIT, assetPublicKey);
         List<AssetIssuerWalletTransaction> toReturn = new ArrayList<>();
-        toReturn.addAll(getTransactionsForDisplay(creditAvailable, creditBook));
-        toReturn.addAll(getTransactionsForDisplay(debitBook, debitAvailable));
+        toReturn.addAll(getCreditsForDisplay(creditAvailable, creditBook));
+        toReturn.addAll(getDebitsForDisplay(debitAvailable, debitBook));
         Collections.sort(toReturn, new Comparator<AssetIssuerWalletTransaction>() {
             @Override
             public int compare(AssetIssuerWalletTransaction o1, AssetIssuerWalletTransaction o2) {
@@ -307,7 +307,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         return toReturn;
     }
 
-    private List<AssetIssuerWalletTransaction> getTransactionsForDisplay(List<AssetIssuerWalletTransaction> available, List<AssetIssuerWalletTransaction> book) {
+    private List<AssetIssuerWalletTransaction> getCreditsForDisplay(List<AssetIssuerWalletTransaction> available, List<AssetIssuerWalletTransaction> book) {
         for (AssetIssuerWalletTransaction transaction : book) {
             if (!available.contains(transaction)) {
                 available.add(transaction);
@@ -316,6 +316,16 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         return available;
     }
 
+    private List<AssetIssuerWalletTransaction> getDebitsForDisplay(List<AssetIssuerWalletTransaction> available, List<AssetIssuerWalletTransaction> book) {
+        Collections.reverse(available);
+        for (AssetIssuerWalletTransaction transaction : book) {
+            if (available.contains(transaction)) {
+                available.remove(transaction); //YES, THIS IS NECESSARY.
+            }
+            available.add(transaction);
+        }
+        return available;
+    }
 
     @Override
     public DigitalAssetMetadata getDigitalAssetMetadata(String transactionHash) throws CantGetDigitalAssetFromLocalStorageException {
