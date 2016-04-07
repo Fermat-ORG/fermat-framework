@@ -70,7 +70,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 
@@ -106,76 +105,62 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
 
     public List<CurrencyMatching> getCryptoBrokerTransactionCurrencyMatchings() throws CantGetTransactionCryptoBrokerWalletMatchingException {
         List<CurrencyMatching> currencyMatchingList = new ArrayList<>();
-        boolean sw = true;
-
-        DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME);
-        table.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_SEEN_COLUMN_NAME, "false", DatabaseFilterType.EQUAL);
-        table.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_COLUMN_NAME, OriginTransaction.SALE.getCode(), DatabaseFilterType.EQUAL);
-        table.addFilterOrder(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
-
-        Currency currencyGiving = null;
-        Currency currencyReceiving;
-        float amountGiving = 0;
-        float amountReceiving;
-        String originTransactionId ;
 
         try {
-            table.loadToMemory();
+            final List<DatabaseTableRecord> saleCreditRecords = getAvailableSaleRecordsFromTable(TransactionType.CREDIT);
+            final List<DatabaseTableRecord> saleDebitRecords = getAvailableSaleRecordsFromTable(TransactionType.DEBIT);
 
-            for (final DatabaseTableRecord records : table.getRecords()) {
-                if (sw) {
-                    //Giving
-                    originTransactionId = records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
+            for (final DatabaseTableRecord creditRecord : saleCreditRecords) {
+                String originTransactionId = creditRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.
+                        CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
 
-                    try {
-                        //TODO YORDIN, SE TENIA LA COLUMNA ERRADA Y NO SE ESTABA LLAMANDO EL CONTENIDO DE LA COLUMNA SI NO SU NOMBRE
-                        if (MoneyType.CRYPTO.equals(MoneyType.getByCode(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MONEY_TYPE_COLUMN_NAME)))) {
-//                            if (MoneyType.CRYPTO.equals(MoneyType.getByCode(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MONEY_TYPE_COLUMN_NAME))) {
-                            //TODO YORDIN: NO SE ESTABA LLAMANDO EL CONTENIDO DE LA COLUMNA SI NO SU NOMBRE
-                            currencyGiving = getCurrencyData("BTC", CurrencyTypes.CRYPTO, records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
-                        } else
-                            //TODO YORDIN: NO SE ESTABA LLAMANDO EL CONTENIDO DE LA COLUMNA SI NO SU NOMBRE
-                            currencyGiving = getCurrencyData("FIAT", CurrencyTypes.FIAT, records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
-                    } catch (InvalidParameterException e) {
-                        throw new CantGetTransactionCryptoBrokerWalletMatchingException("Invalid Parameter", e, "", "");
-                    }
+                for (final DatabaseTableRecord debitRecord : saleDebitRecords) {
+                    String debitOriginTransactionId = debitRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.
+                            CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
 
-                    amountGiving = records.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME);
-                    originTransactionId = records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
-                    sw = false;
-                }
-                if (!sw) //TODO: Validar que entre por aca tambien cuando sea el segundo registro del orden OriginTransactionId
-                {
-                    CurrencyMatchingImp currencyMatchingImp;
+                    if (originTransactionId.equals(debitOriginTransactionId)) {
+                        String currencyCode, moneyTypeCode;
 
-                    //Receiving
-                    originTransactionId = records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
+                        currencyCode = debitRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME);
+                        moneyTypeCode = debitRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MONEY_TYPE_COLUMN_NAME);
+                        final Currency currencyGiving = MoneyType.CRYPTO.getCode().equals(moneyTypeCode) ?
+                                createCurrencyObject("BTC", CurrencyTypes.CRYPTO, currencyCode) :
+                                createCurrencyObject("FIAT", CurrencyTypes.FIAT, currencyCode);
 
-                    try {
-                        if (MoneyType.CRYPTO.equals(MoneyType.getByCode(records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_BALANCE_MONEY_TYPE_COLUMN_NAME)))){
-                            currencyReceiving = getCurrencyData("BTC", CurrencyTypes.CRYPTO, records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
-                            ;
-                        } else
-                            currencyReceiving = getCurrencyData("FIAT", CurrencyTypes.FIAT, records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME));
-                    } catch (InvalidParameterException e) {
-                        throw new CantGetTransactionCryptoBrokerWalletMatchingException("Invalid Parameter", e, "", "");
-                    }
-                    amountReceiving = records.getFloatValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME);
+                        currencyCode = creditRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME);
+                        moneyTypeCode = creditRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MONEY_TYPE_COLUMN_NAME);
+                        final Currency currencyReceiving = MoneyType.CRYPTO.getCode().equals(moneyTypeCode) ?
+                                createCurrencyObject("BTC", CurrencyTypes.CRYPTO, currencyCode) :
+                                createCurrencyObject("FIAT", CurrencyTypes.FIAT, currencyCode);
 
-                    if (Objects.equals(originTransactionId, records.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME))) {
-                        currencyMatchingImp = new CurrencyMatchingImp(originTransactionId, currencyGiving, currencyReceiving, amountGiving, amountReceiving);
+                        final float amountReceiving = new BigDecimal(creditRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME)).floatValue();
+                        final float amountGiving = new BigDecimal(debitRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME)).floatValue();
+
+                        final CurrencyMatchingImp currencyMatchingImp = new CurrencyMatchingImp(originTransactionId, currencyGiving, currencyReceiving, amountGiving, amountReceiving);
                         currencyMatchingList.add(currencyMatchingImp);
                     }
-                    originTransactionId = null;
-
-                    sw = true;
                 }
             }
+
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetTransactionCryptoBrokerWalletMatchingException("Cant Load Table Memory", e, "", "");
         }
 
         return currencyMatchingList;
+    }
+
+    public List<DatabaseTableRecord> getAvailableSaleRecordsFromTable(TransactionType transactionType) throws CantLoadTableToMemoryException {
+        DatabaseTable table = getDatabaseTable(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TABLE_NAME);
+
+        table.clearAllFilters();
+        table.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_SEEN_COLUMN_NAME, "false", DatabaseFilterType.EQUAL);
+        table.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_COLUMN_NAME, OriginTransaction.SALE.getCode(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_BALANCE_TYPE_COLUMN_NAME, BalanceType.AVAILABLE.getCode(), DatabaseFilterType.EQUAL);
+        table.addStringFilter(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_TRANSACTION_TYPE_COLUMN_NAME, transactionType.getCode(), DatabaseFilterType.EQUAL);
+        table.addFilterOrder(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+        table.loadToMemory();
+
+        return table.getRecords();
     }
 
     public void markAsSeen(List<String> transactionIds) throws CantMarkAsSeenException {
@@ -824,8 +809,9 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
         return cryptoBrokerWalletProviderSettings;
     }
 
-    private Currency getCurrencyData(final String friendlyName, final CurrencyTypes type, final String code) {
-        Currency currency = new Currency() {
+    private Currency createCurrencyObject(final String friendlyName, final CurrencyTypes type, final String code) {
+
+        return new Currency() {
             @Override
             public String getFriendlyName() {
                 return friendlyName;
@@ -841,8 +827,6 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                 return code;
             }
         };
-
-        return currency;
     }
 
     private float getVolatilityCalculation(final Currency merchandise, MoneyType moneyType) throws CantGetCryptoBrokerStockTransactionException {
