@@ -1,6 +1,7 @@
 package unit.CryptoBrokerStockTransactionImpl;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
@@ -30,7 +31,7 @@ public class ConstructionTest {
     BalanceType balanceType = BalanceType.AVAILABLE;
     TransactionType transactionType = TransactionType.CREDIT;
     MoneyType moneyType = MoneyType.BANK;
-    FermatEnum merchandise = BalanceType.BOOK;
+    Currency merchandise = FiatCurrency.US_DOLLAR;
     String walletPublicKey = new String();
     String brokerPublicKey = new String();
     BigDecimal amount = BigDecimal.ONE;
@@ -38,6 +39,7 @@ public class ConstructionTest {
     String memo = new String();
     BigDecimal priceReference = BigDecimal.ONE;
     OriginTransaction originTransaction;
+    String originTransactionId = "123456789";
 
     @Test
     public void Construction_ValidParameters_NewObjectCreated() {
@@ -58,7 +60,9 @@ public class ConstructionTest {
                 this.timestamp,
                 this.memo,
                 this.priceReference,
-                this.originTransaction
+                this.originTransaction,
+                this.originTransactionId,
+                false
         );
         assertThat(cryptoBrokerStockTransaction).isNotNull();
     }

@@ -16,9 +16,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.CryptoBrokerWalletSettingImpl;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
@@ -80,6 +82,11 @@ public class ConstructionTest {
         }
 
         @Override
+        public boolean isTextFileExist(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws Exception {
+            return false;
+        }
+
+        @Override
         public PluginBinaryFile getBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException, CantCreateFileException {
             return null;
         }
@@ -98,6 +105,11 @@ public class ConstructionTest {
         public void deleteBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
 
         }
+
+        @Override
+        public String getAppPath() {
+            return null;
+        }
     };
 
     @Test
@@ -106,7 +118,8 @@ public class ConstructionTest {
         CryptoBrokerWalletSettingImpl cryptoBrokerWalletSetting = new CryptoBrokerWalletSettingImpl(
                 this.database,
                 this.plugin,
-                this.pluginFileSystem
+                this.pluginFileSystem,
+                Mockito.any(ErrorManager.class)
         );
         assertThat(cryptoBrokerWalletSetting).isNotNull();
     }

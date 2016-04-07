@@ -2,6 +2,7 @@ package unit.CryptoBrokerWalletImpl;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerMarketRateException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.FiatIndex;
@@ -25,7 +26,7 @@ public class GetMarketRateTest {
     @Test
     public void getMarketRate() throws CantGetCryptoBrokerMarketRateException {
         CryptoBrokerWalletImpl cryptoBrokerWallet = mock(CryptoBrokerWalletImpl.class);
-        when(cryptoBrokerWallet.getMarketRate(Mockito.any(FermatEnum.class), Mockito.any(FiatCurrency.class), Mockito.any(MoneyType.class))).thenReturn(new FiatIndex() {
+        when(cryptoBrokerWallet.getMarketRate(Mockito.any(Currency.class), Mockito.any(FiatCurrency.class), Mockito.any(MoneyType.class))).thenReturn(new FiatIndex() {
             @Override
             public FermatEnum getMerchandise() {
                 return null;
@@ -71,7 +72,7 @@ public class GetMarketRateTest {
                 return null;
             }
         }).thenCallRealMethod();
-        assertThat(cryptoBrokerWallet.getMarketRate(Mockito.any(FermatEnum.class), Mockito.any(FiatCurrency.class), Mockito.any(MoneyType.class))).isNotNull();
+        assertThat(cryptoBrokerWallet.getMarketRate(Mockito.any(Currency.class), Mockito.any(FiatCurrency.class), Mockito.any(MoneyType.class))).isNotNull();
     }
 
 }

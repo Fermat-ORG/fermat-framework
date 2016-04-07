@@ -1,5 +1,6 @@
 package unit.StockBalanceImpl;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetBookedBalanceCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletBalanceRecord;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.StockBalanceImpl;
@@ -18,7 +19,7 @@ import static org.mockito.Mockito.when;
 public class GetCryptoBrokerWalletBalanceBookTest {
 
     @Test
-    public void getCryptoBrokerWalletBalanceBook() throws CantGetBookedBalanceCryptoBrokerWalletException {
+    public void getCryptoBrokerWalletBalanceBook() throws CantGetBookedBalanceCryptoBrokerWalletException, CantStartPluginException {
         StockBalanceImpl stockBalance = mock(StockBalanceImpl.class);
         when(stockBalance.getCryptoBrokerWalletBalanceBook()).thenReturn(new ArrayList<CryptoBrokerWalletBalanceRecord>());
         assertThat(stockBalance.getCryptoBrokerWalletBalanceBook()).isNotNull();

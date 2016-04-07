@@ -1,5 +1,6 @@
 package unit.StockBalanceImpl;
 
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -16,9 +17,11 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.StockBalanceImpl;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
@@ -80,6 +83,11 @@ public class ConstructionTest {
         }
 
         @Override
+        public boolean isTextFileExist(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws Exception {
+            return false;
+        }
+
+        @Override
         public PluginBinaryFile getBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException, CantCreateFileException {
             return null;
         }
@@ -98,6 +106,11 @@ public class ConstructionTest {
         public void deleteBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
 
         }
+
+        @Override
+        public String getAppPath() {
+            return null;
+        }
     };
 
     @Test
@@ -106,7 +119,9 @@ public class ConstructionTest {
         StockBalanceImpl stockBalance = new StockBalanceImpl(
                 this.database,
                 this.plugin,
-                this.pluginFileSystem
+                this.pluginFileSystem,
+                Mockito.any(ErrorManager.class),
+                Mockito.any(Broadcaster.class)
         );
         assertThat(stockBalance).isNotNull();
     }

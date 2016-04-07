@@ -1,5 +1,6 @@
 package unit.StockBalanceImpl;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddDebitCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransactionRecord;
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.mock;
 public class DebitTest {
 
     @Test
-    public void DebitTest() throws CantAddDebitCryptoBrokerWalletException {
+    public void DebitTest() throws CantAddDebitCryptoBrokerWalletException, CantStartPluginException {
         StockBalanceImpl stockBalance = mock(StockBalanceImpl.class, Mockito.RETURNS_DEEP_STUBS);
         doCallRealMethod().when(stockBalance).debit(Mockito.any(CryptoBrokerStockTransactionRecord.class),Mockito.any(BalanceType.class));
     }
