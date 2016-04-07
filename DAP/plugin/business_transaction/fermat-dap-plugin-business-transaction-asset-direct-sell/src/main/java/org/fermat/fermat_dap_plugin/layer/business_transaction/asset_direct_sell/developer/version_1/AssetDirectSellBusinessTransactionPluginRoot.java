@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.bitdubai.version_1;
+package org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
@@ -21,11 +21,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import org.fermat.fermat_dap_api.layer.dap_business_transaction.asset_direct_sell.interfaces.AssetDirectSellManager;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
-import org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.bitdubai.version_1.developer_utils.AssetDirectSellDeveloperDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.bitdubai.version_1.structure.database.AssetDirectSellDAO;
-import org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.bitdubai.version_1.structure.database.AssetDirectSellDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.bitdubai.version_1.structure.events.AssetDirectSellMonitorAgent;
-import org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.bitdubai.version_1.structure.events.AssetDirectSellRecorderService;
+import org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.version_1.developer_utils.AssetDirectSellDeveloperDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.version_1.structure.database.AssetDirectSellDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.version_1.structure.events.AssetDirectSellMonitorAgent;
+import org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.version_1.structure.events.AssetDirectSellRecorderService;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -55,7 +54,7 @@ public class AssetDirectSellBusinessTransactionPluginRoot extends AbstractPlugin
 
     private AssetDirectSellRecorderService recorderService;
     private AssetDirectSellMonitorAgent agent;
-    private AssetDirectSellDAO dao;
+    private org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.version_1.structure.database.AssetDirectSellDAO dao;
 
     //CONSTRUCTORS
     public AssetDirectSellBusinessTransactionPluginRoot() {
@@ -69,7 +68,7 @@ public class AssetDirectSellBusinessTransactionPluginRoot extends AbstractPlugin
         try {
             System.out.println("LFTL: EL PLUGIN INICIA");
             createDatabase();
-            dao = new AssetDirectSellDAO(pluginDatabaseSystem,pluginId);
+            dao = new org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.version_1.structure.database.AssetDirectSellDAO(pluginDatabaseSystem,pluginId);
             initializeMonitorAgent();
             initializeRecorderService();
             super.start();

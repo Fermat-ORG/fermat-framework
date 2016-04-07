@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.bitdubai.version_1.developer_utils;
+package org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.version_1.developer_utils;
 
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -15,8 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import org.fermat.fermat_dap_api.layer.all_definition.util.Validate;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_redemption.exceptions.CantInitializeAssetRedeemPointRedemptionTransactionDatabaseException;
-import org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.bitdubai.version_1.structure.database.AssetDirectSellDatabaseConstants;
-import org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.bitdubai.version_1.structure.database.AssetDirectSellDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.version_1.structure.database.AssetDirectSellDatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,7 +65,7 @@ public class AssetDirectSellDeveloperDatabaseFactory {
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            AssetDirectSellDatabaseFactory assetAppropriationDatabaseFactory = new AssetDirectSellDatabaseFactory(pluginDatabaseSystem, pluginId);
+            org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.version_1.structure.database.AssetDirectSellDatabaseFactory assetAppropriationDatabaseFactory = new org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.version_1.structure.database.AssetDirectSellDatabaseFactory(pluginDatabaseSystem, pluginId);
 
             try {
                   /*

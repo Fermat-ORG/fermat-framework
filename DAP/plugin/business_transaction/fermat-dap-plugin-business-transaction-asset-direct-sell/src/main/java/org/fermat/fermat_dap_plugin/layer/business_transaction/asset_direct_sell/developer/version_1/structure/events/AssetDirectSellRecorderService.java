@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.bitdubai.version_1.structure.events;
+package org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.version_1.structure.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -8,7 +8,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.util.Validate;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
-import org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.bitdubai.version_1.structure.database.AssetDirectSellDAO;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class AssetDirectSellRecorderService implements AssetTransactionService {
     private final EventManager eventManager;
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
-    private final AssetDirectSellDAO assetDirectSellDAO;
+    private final org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.version_1.structure.database.AssetDirectSellDAO assetDirectSellDAO;
     private List<FermatEventListener> listenersAdded;
 
     {
@@ -39,7 +39,7 @@ public class AssetDirectSellRecorderService implements AssetTransactionService {
 
     //CONSTRUCTORS
 
-    public AssetDirectSellRecorderService(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, AssetDirectSellDAO assetDirectSellDAO) {
+    public AssetDirectSellRecorderService(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, org.fermat.fermat_dap_plugin.layer.business_transaction.asset_direct_sell.developer.version_1.structure.database.AssetDirectSellDAO assetDirectSellDAO) {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
