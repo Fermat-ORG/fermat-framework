@@ -69,11 +69,10 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
      */
     private LossProtectedWallet cryptoWallet;
-    private LossProtectedWalletModuleManager moduleManager;
-    /**
+     /**
      * DATA
      */
-    private List<LossProtectedWalletTransaction> lstTransactionRequest;
+    private List<LossProtectedWalletTransaction> lstTransaction;
     private LossProtectedWalletTransaction selectedItem;
     /**
      * Executor Service
@@ -104,11 +103,11 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
         referenceWalletSession = (LossProtectedWalletSession)appSession;
 
-        lstTransactionRequest = new ArrayList<LossProtectedWalletTransaction>();
+        lstTransaction = new ArrayList<LossProtectedWalletTransaction>();
         try {
             cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
 
-            lstTransactionRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
+            //lstTransactionRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 
             getExecutor().execute(new Runnable() {
                 @Override
@@ -218,7 +217,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-            lstTransactionRequest = new ArrayList<LossProtectedWalletTransaction>();
+            lstTransaction = new ArrayList<LossProtectedWalletTransaction>();
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -257,7 +256,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     public FermatAdapter getAdapter() {
         if (adapter == null) {
             //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new ChunckValuesHistoryAdapter(getActivity(), lstTransactionRequest,cryptoWallet,referenceWalletSession,this);
+            adapter = new ChunckValuesHistoryAdapter(getActivity(), lstTransaction,cryptoWallet,referenceWalletSession,this);
             adapter.setFermatListEventListener(this); // setting up event listeners
 
         }
@@ -289,7 +288,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             //when refresh offset set 0
             if (refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
-            lstWalletTransaction = moduleManager.listLastActorTransactionsByTransactionType(
+            lstTransaction = cryptoWallet.listLastActorTransactionsByTransactionType(
                     BalanceType.AVAILABLE,
                     TransactionType.DEBIT,
                     referenceWalletSession.getAppPublicKey(),
@@ -303,7 +302,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
            e.printStackTrace();
        }
 
-        return lstWalletTransaction;
+        return lstTransaction;
     }
 
     @Override
@@ -331,10 +330,10 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
-                lstTransactionRequest = (ArrayList) result[0];
+                lstTransaction = (ArrayList) result[0];
                 if (adapter != null)
-                    adapter.changeDataSet(lstTransactionRequest);
-                if(lstTransactionRequest.isEmpty()) FermatAnimationsUtils.showEmpty(getActivity(),true,empty);
+                    adapter.changeDataSet(lstTransaction);
+                if(lstTransaction.isEmpty()) FermatAnimationsUtils.showEmpty(getActivity(),true,empty);
                 else FermatAnimationsUtils.showEmpty(getActivity(),false,empty);
 
             }
