@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.bitdubai.android_core.app.NotificationService;
 import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerService;
 
 /**
  * Created by mati on 2016.04.04..
@@ -15,26 +16,26 @@ public class ServicesHelpers {
 
     private AppManagerServiceHelper appManagerServiceHelper;
     private NotificationServiceHelper notificationServiceHelper;
-    private CommunicationServiceHelper communicationServiceHelper;
+    private ClientSideBrokerServiceHelper clientSideBrokerServiceHelper;
 
     public ServicesHelpers(Context contextWeakReference){
         appManagerServiceHelper = new AppManagerServiceHelper(contextWeakReference);
         notificationServiceHelper = new NotificationServiceHelper(contextWeakReference);
-        communicationServiceHelper = new CommunicationServiceHelper(contextWeakReference);
+        clientSideBrokerServiceHelper = new ClientSideBrokerServiceHelper(contextWeakReference);
     }
 
     public void bindServices(){
-        Log.d(TAG,"binding every service");
+        Log.d(TAG, "binding every service");
         appManagerServiceHelper.bindAppManagerService();
         notificationServiceHelper.bindNotificationService();
-        //communicationServiceHelper.bindCommService();
+        //clientSideBrokerServiceHelper.clientSideBrokerBoundService();
     }
 
     public void unbindServices(){
-        Log.d(TAG,"unbind every service");
+        Log.d(TAG, "unbind every service");
         appManagerServiceHelper.unbindAppManagerService();
         notificationServiceHelper.unbindNotificationService();
-        //communicationServiceHelper.unbindCommService();
+        //clientSideBrokerServiceHelper.unbindClientSideBrokerService();
     }
 
     public FermatAppsManagerService getAppManager(){
@@ -45,8 +46,15 @@ public class ServicesHelpers {
         return notificationServiceHelper.getNotificationService();
     }
 
+    public ClientSystemBrokerService getClientSideBrokerService() {
+        return clientSideBrokerServiceHelper.getClientSystemBrokerService();
+    }
+
     public void clear(){
         appManagerServiceHelper.clear();
         notificationServiceHelper.clear();
+        clientSideBrokerServiceHelper.clear();
     }
+
+
 }
