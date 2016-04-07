@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -32,6 +33,7 @@ public class WelcomeScrennDialog extends FermatDialog<ReferenceWalletSession,Sub
     private List<RadioButton> radioButtons;
     private int radioSelected;
     private LinearLayout pager_container;
+    private Button btc_got_it;
 
 
     /**
@@ -56,8 +58,9 @@ public class WelcomeScrennDialog extends FermatDialog<ReferenceWalletSession,Sub
             radio_group = (RadioGroup) findViewById(R.id.radio_group);
             pager_container = (LinearLayout) findViewById(R.id.pager_container);
             dialog_pager = (ViewPager) findViewById(R.id.dialog_pager);
+            btc_got_it = (Button) findViewById(R.id.btc_got_it);
 
-            List list = itemList();
+            List list = WelcomeDialogsData.getWelcomeDialogData();
 
 
             for (int i = 0; i < list.size(); i++) {
@@ -93,19 +96,19 @@ public class WelcomeScrennDialog extends FermatDialog<ReferenceWalletSession,Sub
                 }
             });
 
+            btc_got_it.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                }
+            });
+
         }catch (Exception e){
             e.printStackTrace();
         }
 
     }
 
-
-    private List itemList() {
-        List list = new ArrayList();
-        list.add("String");
-        list.add("String");
-        return list;
-    }
 
     @Override
     protected int setLayoutId() {
