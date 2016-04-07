@@ -104,6 +104,7 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerContractPurc
         }
     }
 
+    //ADD YORDIN ALAYN 07.04.16
     @Override
     public void cancelContract(String contractId, String reason)  throws CantUpdateCustomerBrokerContractPurchaseException {
         try{
