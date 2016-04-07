@@ -22,7 +22,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.callback.AppStatusCallbackChanges;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 
 import java.lang.ref.WeakReference;
 
@@ -201,7 +200,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem>,AppStatu
                 new AppStatusDialog(fermatActivity.get(), FermatSystemUtils.getAndroidCoreModule(), this).show();
                 break;
             case FERMAT_NETWORK:
-                fermatActivity.get().changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(), "main_desktop");
+                //fermatActivity.get().changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(), "main_desktop");
                 break;
             case BITCOIN_NETWORK:
                 break;
