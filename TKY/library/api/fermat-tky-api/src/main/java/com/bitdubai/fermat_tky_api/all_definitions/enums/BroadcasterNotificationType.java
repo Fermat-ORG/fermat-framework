@@ -13,6 +13,7 @@ public enum BroadcasterNotificationType implements FermatEnum {
      */
     DOWNLOAD_EXCEPTION("DWE"),
     DOWNLOAD_PERCENTAGE("DWP"),
+    SONG_ID("SID"),
     SONG_INFO("SGI"),
     ;
 
