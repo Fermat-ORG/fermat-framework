@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -13,7 +13,6 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.asset_issuing.interfaces.
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDAO;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 9/03/16.
@@ -21,11 +20,11 @@ import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuin
 public class AssetIssuingTransactionManager implements AssetIssuingManager {
 
     //VARIABLE DECLARATION
-    private final AssetIssuingDAO dao;
+    private final org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database.AssetIssuingDAO dao;
     private final BitcoinWalletManager manager;
 
     //CONSTRUCTORS
-    public AssetIssuingTransactionManager(AssetIssuingDAO dao, BitcoinWalletManager manager) {
+    public AssetIssuingTransactionManager(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database.AssetIssuingDAO dao, BitcoinWalletManager manager) {
         this.dao = dao;
         this.manager = manager;
     }

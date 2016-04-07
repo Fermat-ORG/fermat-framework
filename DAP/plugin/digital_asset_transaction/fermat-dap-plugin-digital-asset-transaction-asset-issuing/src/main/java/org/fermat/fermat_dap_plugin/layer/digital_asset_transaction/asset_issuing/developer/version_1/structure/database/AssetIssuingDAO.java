@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -30,10 +30,9 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGet
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetTransactionException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional.DigitalAssetIssuingVault;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional.IssuingRecord;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional.MetadataRecord;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.exceptions.CantCreateDigitalAssetTransactionException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.DigitalAssetIssuingVault;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.IssuingRecord;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -297,12 +296,12 @@ public class AssetIssuingDAO {
     }
 
 
-    private MetadataRecord constructMetadataRecord(DatabaseTableRecord record) throws CantGetDigitalAssetFromLocalStorageException, InvalidParameterException {
+    private org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.MetadataRecord constructMetadataRecord(DatabaseTableRecord record) throws CantGetDigitalAssetFromLocalStorageException, InvalidParameterException {
         UUID transactionId = UUID.fromString(record.getStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_METADATA_ID_COLUMN_NAME));
         IssuingStatus status = IssuingStatus.getByCode(record.getStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_METADATA_ISSUING_STATUS_COLUMN_NAME));
         UUID outgoingId = UUID.fromString(record.getStringValue(AssetIssuingDatabaseConstants.ASSET_ISSUING_METADATA_OUTGOING_ID_COLUMN_NAME));
         DigitalAssetMetadata metadata = vault.getDigitalAssetMetadataFromLocalStorage(transactionId.toString());
-        return new MetadataRecord(outgoingId, status, metadata, transactionId);
+        return new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.MetadataRecord(outgoingId, status, metadata, transactionId);
     }
 
     private void updateRecordsForTableByFilter(DatabaseTable table, String recordName, Object recordValue, String filterColumn, String filterValue) throws CantUpdateRecordException, CantLoadTableToMemoryException, RecordsNotFoundException {
@@ -361,8 +360,8 @@ public class AssetIssuingDAO {
         return issuingRecords;
     }
 
-    private List<MetadataRecord> constructMetadataRecords(List<DatabaseTableRecord> records) throws CantGetDigitalAssetFromLocalStorageException, InvalidParameterException {
-        List<MetadataRecord> issuingRecords = new ArrayList<>();
+    private List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.MetadataRecord> constructMetadataRecords(List<DatabaseTableRecord> records) throws CantGetDigitalAssetFromLocalStorageException, InvalidParameterException {
+        List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.MetadataRecord> issuingRecords = new ArrayList<>();
         for (DatabaseTableRecord record : records) {
             issuingRecords.add(constructMetadataRecord(record));
         }
@@ -385,7 +384,7 @@ public class AssetIssuingDAO {
         return constructIssuingRecords(getIssuingByStatus(status));
     }
 
-    public List<MetadataRecord> getMetadataForStatus(IssuingStatus status) throws CantLoadTableToMemoryException, CantGetDigitalAssetFromLocalStorageException, InvalidParameterException {
+    public List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.MetadataRecord> getMetadataForStatus(IssuingStatus status) throws CantLoadTableToMemoryException, CantGetDigitalAssetFromLocalStorageException, InvalidParameterException {
         return constructMetadataRecords(getMetadataByStatus(status));
     }
 

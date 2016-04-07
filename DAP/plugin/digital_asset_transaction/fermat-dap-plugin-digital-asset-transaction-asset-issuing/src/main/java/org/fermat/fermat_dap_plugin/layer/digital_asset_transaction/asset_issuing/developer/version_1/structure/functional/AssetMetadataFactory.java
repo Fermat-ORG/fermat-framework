@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrencyVault;
@@ -21,8 +21,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDAO;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.events.AssetIssuingMonitorAgent;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.events.AssetIssuingMonitorAgent;
 
 import java.util.UUID;
 import java.util.concurrent.Callable;
@@ -36,14 +35,14 @@ public class AssetMetadataFactory implements Callable<Boolean> {
     private final AssetVaultManager assetVaultManager;
     private final ActorAssetIssuer actorAssetIssuer;
     private final IntraWalletUserIdentity intraActor;
-    private final AssetIssuingDAO dao;
+    private final org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database.AssetIssuingDAO dao;
     private final IntraActorCryptoTransactionManager manager;
     private final CryptoAddressBookManager cryptoAddressBookManager;
     private final BitcoinWalletManager bitcoinWalletManager;
 
     //CONSTRUCTORS
 
-    public AssetMetadataFactory(IssuingRecord issuingRecord, AssetVaultManager assetVaultManager, ActorAssetIssuer actorAssetIssuer, IntraWalletUserIdentity intraActor, AssetIssuingDAO dao, IntraActorCryptoTransactionManager manager, CryptoAddressBookManager cryptoAddressBookManager, BitcoinWalletManager bitcoinWalletManager) {
+    public AssetMetadataFactory(IssuingRecord issuingRecord, AssetVaultManager assetVaultManager, ActorAssetIssuer actorAssetIssuer, IntraWalletUserIdentity intraActor, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database.AssetIssuingDAO dao, IntraActorCryptoTransactionManager manager, CryptoAddressBookManager cryptoAddressBookManager, BitcoinWalletManager bitcoinWalletManager) {
         this.issuingRecord = issuingRecord;
         this.assetVaultManager = assetVaultManager;
         this.actorAssetIssuer = actorAssetIssuer;

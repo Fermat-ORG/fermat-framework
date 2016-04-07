@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.events;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.events;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStopAgentException;
@@ -44,11 +44,8 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.exceptions.CantCreateDigitalAssetTransactionException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDAO;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional.AssetMetadataFactory;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional.IssuingRecord;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional.MetadataRecord;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.IssuingRecord;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -78,7 +75,7 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
     private final CryptoAddressBookManager cryptoAddressBookManager;
     private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
     private final AssetIssuerWalletManager assetIssuerWalletManager;
-    private final AssetIssuingDAO dao;
+    private final org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database.AssetIssuingDAO dao;
 
     private IssuingAgent issuingAgent;
     private FactoryAgent factoryAgent;
@@ -89,7 +86,7 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
 
     //CONSTRUCTORS
 
-    public AssetIssuingMonitorAgent(IncomingCryptoManager incomingCryptoManager, ErrorManager errorManager, BitcoinNetworkManager bitcoinNetworkManager, OutgoingIntraActorManager outgoingIntraActorManager, ActorAssetIssuerManager actorAssetIssuerManager, AssetVaultManager assetVaultManager, BitcoinWalletManager bitcoinWalletManager, CryptoAddressBookManager cryptoAddressBookManager, IntraWalletUserIdentityManager intraWalletUserIdentityManager, AssetIssuerWalletManager assetIssuerWalletManager, AssetIssuingDAO dao) {
+    public AssetIssuingMonitorAgent(IncomingCryptoManager incomingCryptoManager, ErrorManager errorManager, BitcoinNetworkManager bitcoinNetworkManager, OutgoingIntraActorManager outgoingIntraActorManager, ActorAssetIssuerManager actorAssetIssuerManager, AssetVaultManager assetVaultManager, BitcoinWalletManager bitcoinWalletManager, CryptoAddressBookManager cryptoAddressBookManager, IntraWalletUserIdentityManager intraWalletUserIdentityManager, AssetIssuerWalletManager assetIssuerWalletManager, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database.AssetIssuingDAO dao) {
         this.incomingCryptoManager = incomingCryptoManager;
         this.protocolManager = incomingCryptoManager.getTransactionManager();
         this.errorManager = errorManager;
@@ -180,16 +177,16 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
             }
         }
 
-        private void doTheMainTask() throws CantLoadTableToMemoryException, CantGetDigitalAssetFromLocalStorageException, RecordsNotFoundException, InvalidParameterException, CantUpdateRecordException, CantGetCryptoTransactionException, CantCreateDigitalAssetFileException, CantGetBroadcastStatusException, CantGetOutgoingIntraActorTransactionManagerException, CantSaveStatisticException, CantLoadWalletException, OutgoingIntraActorCantGetSendCryptoTransactionHashException, CantDeliverDigitalAssetToAssetWalletException, CantCreateDigitalAssetTransactionException, CantConfirmTransactionException, CantDeliverPendingTransactionsException {
+        private void doTheMainTask() throws CantLoadTableToMemoryException, CantGetDigitalAssetFromLocalStorageException, RecordsNotFoundException, InvalidParameterException, CantUpdateRecordException, CantGetCryptoTransactionException, CantCreateDigitalAssetFileException, CantGetBroadcastStatusException, CantGetOutgoingIntraActorTransactionManagerException, CantSaveStatisticException, CantLoadWalletException, OutgoingIntraActorCantGetSendCryptoTransactionHashException, CantDeliverDigitalAssetToAssetWalletException, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.exceptions.CantCreateDigitalAssetTransactionException, CantConfirmTransactionException, CantDeliverPendingTransactionsException {
             checkPendingEvents();
             checkSendingBitcoins();
         }
 
-        private void checkPendingEvents() throws CantLoadTableToMemoryException, RecordsNotFoundException, InvalidParameterException, CantGetDigitalAssetFromLocalStorageException, CantGetCryptoTransactionException, CantUpdateRecordException, CantDeliverDigitalAssetToAssetWalletException, CantCreateDigitalAssetTransactionException, CantDeliverPendingTransactionsException, CantConfirmTransactionException {
+        private void checkPendingEvents() throws CantLoadTableToMemoryException, RecordsNotFoundException, InvalidParameterException, CantGetDigitalAssetFromLocalStorageException, CantGetCryptoTransactionException, CantUpdateRecordException, CantDeliverDigitalAssetToAssetWalletException, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.exceptions.CantCreateDigitalAssetTransactionException, CantDeliverPendingTransactionsException, CantConfirmTransactionException {
             for (String eventId : dao.getPendingEvents()) {
                 switch (dao.getEventType(eventId)) {
                     case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_ISSUER: {
-                        for (MetadataRecord record : dao.getMetadataForStatus(IssuingStatus.WAITING_CONFIRMATION)) {
+                        for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.MetadataRecord record : dao.getMetadataForStatus(IssuingStatus.WAITING_CONFIRMATION)) {
                             Transaction<CryptoTransaction> transaction = transactionForHash(record.getAssetMetadata());
                             if (transaction == null) {
                                 System.out.println("ASSET ISSUING The genesis transaction " + record.getAssetMetadata().getLastTransactionHash() + " could not be found in crypto network");
@@ -203,7 +200,7 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
                     }
 
                     case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_ISSUER: {
-                        for (MetadataRecord record : dao.getMetadataForStatus(IssuingStatus.ON_CRYPTO_NETWORK)) {
+                        for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.MetadataRecord record : dao.getMetadataForStatus(IssuingStatus.ON_CRYPTO_NETWORK)) {
                             Transaction<CryptoTransaction> transaction = transactionForHash(record.getAssetMetadata());
                             if (transaction == null) {
                                 System.out.println("ASSET ISSUING The genesis transaction " + record.getAssetMetadata().getLastTransactionHash() + " could not be found in crypto network");
@@ -222,7 +219,7 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
         }
 
         private void checkSendingBitcoins() throws CantGetDigitalAssetFromLocalStorageException, InvalidParameterException, CantLoadTableToMemoryException, CantGetOutgoingIntraActorTransactionManagerException, OutgoingIntraActorCantGetSendCryptoTransactionHashException, CantGetCryptoTransactionException, CantCreateDigitalAssetFileException, CantLoadWalletException, CantSaveStatisticException, RecordsNotFoundException, CantUpdateRecordException, CantGetBroadcastStatusException {
-            for (MetadataRecord record : dao.getMetadataForStatus(IssuingStatus.SENDING_CRYPTO)) {
+            for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.MetadataRecord record : dao.getMetadataForStatus(IssuingStatus.SENDING_CRYPTO)) {
                 String genesisTransaction = outgoingIntraActorManager.getTransactionManager().getSendCryptoTransactionHash(record.getOutgoingId());
                 if (!Validate.isValidString(genesisTransaction) || genesisTransaction.equals("UNKNOWN YET")) {
                     System.out.println("ASSET ISSUING is null - continue asking");
@@ -235,7 +232,7 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
                 dao.unProcessingAsset(record.getAssetMetadata().getDigitalAsset().getPublicKey());
             }
 
-            for (MetadataRecord record : dao.getMetadataForStatus(IssuingStatus.WAITING_CONFIRMATION)) {
+            for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.MetadataRecord record : dao.getMetadataForStatus(IssuingStatus.WAITING_CONFIRMATION)) {
                 BroadcastStatus broadcastStatus = bitcoinNetworkManager.getBroadcastStatus(record.getAssetMetadata().getLastTransactionHash());
                 switch (broadcastStatus.getStatus()) {
                     case CANCELLED:
@@ -329,7 +326,7 @@ public class AssetIssuingMonitorAgent extends FermatAgent {
                     outOfKeys = true;
                     return;
                 } else {
-                    AssetMetadataFactory assetMetadataFactory = new AssetMetadataFactory(record, assetVaultManager, issuer, intraActor, dao, outgoingIntraActorManager.getTransactionManager(), cryptoAddressBookManager, bitcoinWalletManager);
+                    org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.AssetMetadataFactory assetMetadataFactory = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.functional.AssetMetadataFactory(record, assetVaultManager, issuer, intraActor, dao, outgoingIntraActorManager.getTransactionManager(), cryptoAddressBookManager, bitcoinWalletManager);
                     Future<Boolean> result = executor.submit(assetMetadataFactory);
                 }
             }

@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.events;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.events;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDAO;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -19,14 +19,14 @@ public class AssetIssuingRecorderService {
 
     //VARIABLE DECLARATION
     private final EventManager eventManager;
-    private final AssetIssuingDAO assetIssuingDAO;
+    private final org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database.AssetIssuingDAO assetIssuingDAO;
 
     private ServiceStatus serviceStatus = ServiceStatus.CREATED;
     private List<FermatEventListener> listenersAdded = new ArrayList<>();
 
     //CONSTRUCTORS
 
-    public AssetIssuingRecorderService(EventManager eventManager, AssetIssuingDAO assetIssuingDAO) {
+    public AssetIssuingRecorderService(EventManager eventManager, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database.AssetIssuingDAO assetIssuingDAO) {
         this.eventManager = eventManager;
         this.assetIssuingDAO = assetIssuingDAO;
     }
