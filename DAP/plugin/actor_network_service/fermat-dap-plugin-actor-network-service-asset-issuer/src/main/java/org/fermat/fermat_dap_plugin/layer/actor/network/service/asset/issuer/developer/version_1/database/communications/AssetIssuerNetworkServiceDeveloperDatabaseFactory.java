@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.database.communications;
+package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
+
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 
 import java.util.ArrayList;
@@ -54,21 +54,21 @@ public class AssetIssuerNetworkServiceDeveloperDatabaseFactory implements DealsW
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeTemplateNetworkServiceDatabaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeTemplateNetworkServiceDatabaseException {
+    public void initializeDatabase() throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException {
         try {
 
              /*
               * Open new database connection
               */
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -82,18 +82,18 @@ public class AssetIssuerNetworkServiceDeveloperDatabaseFactory implements DealsW
                   /*
                    * We create the new database
                    */
-                database = assetIssuerNetworkServiceDatabaseFactory.createDatabase(pluginId, AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                database = assetIssuerNetworkServiceDatabaseFactory.createDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME);
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
 
 
-    public void initializeDatabaseCommunication() throws CantInitializeTemplateNetworkServiceDatabaseException {
+    public void initializeDatabaseCommunication() throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException {
 
         try {
 
@@ -101,7 +101,7 @@ public class AssetIssuerNetworkServiceDeveloperDatabaseFactory implements DealsW
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
-            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException);
+            throw new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException);
 
         } catch (DatabaseNotFoundException e) {
 
@@ -116,7 +116,7 @@ public class AssetIssuerNetworkServiceDeveloperDatabaseFactory implements DealsW
 
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
-                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantCreateDatabaseException);
+                throw new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException(cantCreateDatabaseException);
 
             }
         }
@@ -127,7 +127,7 @@ public class AssetIssuerNetworkServiceDeveloperDatabaseFactory implements DealsW
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
         databases.add(developerObjectFactory.getNewDeveloperDatabase(CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME, this.pluginId.toString()));
         return databases;
     }
@@ -141,25 +141,25 @@ public class AssetIssuerNetworkServiceDeveloperDatabaseFactory implements DealsW
          */
         List<String> outgoingNotificationsColumns = new ArrayList<String>();
 
-        outgoingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME);
-        outgoingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME);
-        outgoingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
-        outgoingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME);
-        outgoingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME);
-        outgoingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
-        outgoingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
-        outgoingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
-        outgoingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
-        outgoingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME);
-        outgoingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME);
-        outgoingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
-        outgoingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
-        outgoingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_MESSAGE);
+        outgoingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_ID_COLUMN_NAME);
+        outgoingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME);
+        outgoingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
+        outgoingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME);
+        outgoingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME);
+        outgoingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
+        outgoingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
+        outgoingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
+        outgoingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
+        outgoingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_READ_MARK_COLUMN_NAME);
+        outgoingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_SENT_COUNT_COLUMN_NAME);
+        outgoingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
+        outgoingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
+        outgoingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_MESSAGE);
 
         /**
          * Table incoming messages addition.
          */
-        DeveloperDatabaseTable outgoingNotificationsTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME, outgoingNotificationsColumns);
+        DeveloperDatabaseTable outgoingNotificationsTable = developerObjectFactory.getNewDeveloperDatabaseTable(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.OUTGOING_NOTIFICATION_TABLE_NAME, outgoingNotificationsColumns);
         tables.add(outgoingNotificationsTable);
 
         /**
@@ -167,24 +167,24 @@ public class AssetIssuerNetworkServiceDeveloperDatabaseFactory implements DealsW
          */
         List<String> incomingNotificationsColumns = new ArrayList<String>();
 
-        incomingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME);
-        incomingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME);
-        incomingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
-        incomingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME);
-        incomingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME);
-        incomingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
-        incomingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
-        incomingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
-        incomingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
-        incomingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME);
-        incomingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
-        incomingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
-        incomingNotificationsColumns.add(AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_MESSAGE);
+        incomingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_ID_COLUMN_NAME);
+        incomingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_PUBLIC_KEY_COLUMN_NAME);
+        incomingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_PUBLIC_KEY_COLUMN_NAME);
+        incomingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_TYPE_COLUMN_NAME);
+        incomingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RECEIVER_TYPE_COLUMN_NAME);
+        incomingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TIMESTAMP_COLUMN_NAME);
+        incomingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_SENDER_ALIAS_COLUMN_NAME);
+        incomingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_DESCRIPTOR_COLUMN_NAME);
+        incomingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_PROTOCOL_STATE_COLUMN_NAME);
+        incomingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_READ_MARK_COLUMN_NAME);
+        incomingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
+        incomingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_RESPONSE_TO_NOTIFICATION_ID_COLUMN_NAME);
+        incomingNotificationsColumns.add(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_MESSAGE);
 
         /**
          * Table outgoing messages addition.
          */
-        DeveloperDatabaseTable incomingNotificationsTable = developerObjectFactory.getNewDeveloperDatabaseTable(AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TABLE_NAME, incomingNotificationsColumns);
+        DeveloperDatabaseTable incomingNotificationsTable = developerObjectFactory.getNewDeveloperDatabaseTable(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.INCOMING_NOTIFICATION_TABLE_NAME, incomingNotificationsColumns);
         tables.add(incomingNotificationsTable);
 
         return tables;
@@ -248,7 +248,7 @@ public class AssetIssuerNetworkServiceDeveloperDatabaseFactory implements DealsW
          */
         List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
         try {
-            if (!developerDatabase.getName().equals(AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME))
+            if (!developerDatabase.getName().equals(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.issuer.developer.version_1.database.communications.AssetIssuerNetworkServiceDatabaseConstants.DATA_BASE_NAME))
                 initializeDatabaseCommunication();
             else
                 initializeDatabase();
