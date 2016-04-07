@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.messages;
 
-import android.util.Base64;
-
+import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.enums.MessageTypes;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
