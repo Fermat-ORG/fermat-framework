@@ -34,6 +34,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import static android.widget.Toast.makeText;
+import static org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser.*;
 
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 3/1/16.
