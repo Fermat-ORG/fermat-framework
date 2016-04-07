@@ -307,11 +307,11 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
             }
 
             /**
-             * IN_PAYMENT_SUBMIT -> Update Contract Status to CANCELLED for expiration time in payment submit:
+             * IN_CONTRACT_SUBMIT -> Update Contract Status to CANCELLED for expiration time in payment submit:
              *
              * If Expiration Time is done, Update the contract status to CANCELLED.
              */
-            for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_PAYMENT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
+            for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_CONTRACT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
             {
                 for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_PAYMENT)) {
 
@@ -319,25 +319,35 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
 
                     if (customerBrokerPurchase.getTransactionId().equals(negotiationId)) {
 
-                        long dateTimeToDelivery                 = 0;
+                        long timeToDelivery                     = 0;
                         long timeStampToday                     = new Date().getTime();
                         Negotiation negotiation                 = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
                         Collection<Clause> negotiationClause    = negotiation.getClauses();
                         String clauseValue                      = getNegotiationClause(negotiationClause, ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
 
-                        if(clauseValue != null) dateTimeToDelivery = Long.parseLong(clauseValue);
+                        if(clauseValue != null) timeToDelivery = Long.parseLong(clauseValue);
 
-                        System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN PAYMENT ***\n" +
-                                "\n - timeStampToday: "+timeStampToday+
-                                "\n - dateTimeToDelivery: "+dateTimeToDelivery
-                        );
+//                        System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN PAYMENT ***\n" +
+//                                "\n - Contract: "+customerBrokerContractPurchase.getContractId()+
+//                                "\n - timeStampToday: "+timeStampToday+
+//                                "\n - dateTimeToDelivery: String: "+clauseValue+". Long"+timeToDelivery
+//                        );
 
                         //TODO FOR TEST
-                        dateTimeToDelivery = timeStampToday;
+//                        timeToDelivery = timeStampToday;
 
-                        if (timeStampToday >= dateTimeToDelivery) {
+                        if (timeStampToday >= timeToDelivery) {
 
-                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(customerBrokerContractPurchase.getContractId(), ContractStatus.CANCELLED);
+                            //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION//UPDATE CONTRACT STATUS
+                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
+                                    customerBrokerContractPurchase.getContractId(),
+                                    ContractStatus.CANCELLED);
+
+                            //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION
+                            customerBrokerPurchase.setTransactionStatus(TransactionStatus.CANCELLED);
+                            userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.saveCustomerBrokerPurchaseTransactionData(customerBrokerPurchase);
+
+                            //BROADCASTER
                             broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION);
                             broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
 
@@ -347,11 +357,11 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
             }
 
             /**
-             * IN_MERCHANDISE_SUBMIT -> Update Contract Status to CANCELLED for expiration time in merchandise:
+             * IN_PAYMENT_SUBMIT -> Update Contract Status to CANCELLED for expiration time in merchandise:
              *
              * If Expiration Time is done, Update the contract status to CANCELLED.
              */
-            for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_MERCHANDISE_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
+            for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_PAYMENT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
             {
                 for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_MERCHANDISE)) {
 
@@ -359,22 +369,35 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
 
                     if (customerBrokerPurchase.getTransactionId().equals(negotiationId)) {
 
-                        long dateTimeToDelivery                 = 0;
+                        long timeToDelivery                     = 0;
                         long timeStampToday                     = new Date().getTime();
                         Negotiation negotiation                 = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
                         Collection<Clause> negotiationClause    = negotiation.getClauses();
                         String clauseValue                      = getNegotiationClause(negotiationClause, ClauseType.BROKER_DATE_TIME_TO_DELIVER);
 
-                        if(clauseValue != null) dateTimeToDelivery = Long.parseLong(clauseValue);
+                        if(clauseValue != null) timeToDelivery = Long.parseLong(clauseValue);
 
-                        System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN MERCHANDISE ***\n" +
-                                        "\n - timeStampToday: "+timeStampToday+
-                                        "\n - dateTimeToDelivery: "+dateTimeToDelivery
-                        );
+//                        System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN MERCHANDISE ***\n" +
+//                                        "\n - Contract: "+customerBrokerContractPurchase.getContractId()+
+//                                        "\n - timeStampToday: "+timeStampToday+
+//                                        "\n - dateTimeToDelivery: "+timeToDelivery
+//                        );
 
-                        if (timeStampToday >= dateTimeToDelivery) {
+                        //TODO FOR TEST
+//                        timeToDelivery = timeStampToday;
 
-                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(customerBrokerContractPurchase.getContractId(), ContractStatus.CANCELLED);
+                        if (timeStampToday >= timeToDelivery) {
+
+                            //UPDATE CONTRACT STATUS
+                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
+                                    customerBrokerContractPurchase.getContractId(),
+                                    ContractStatus.CANCELLED);
+
+                            //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION
+                            customerBrokerPurchase.setTransactionStatus(TransactionStatus.CANCELLED);
+                            userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.saveCustomerBrokerPurchaseTransactionData(customerBrokerPurchase);
+
+                            //BROADCASTER
                             broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION);
                             broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
 
@@ -646,14 +669,9 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
      */
     private String getNegotiationClause(Collection<Clause> negotiationClause, ClauseType clauseType){
 
-        String value = null;
-
-        for (Clause clause : negotiationClause) {
-            if (clause.getType().getCode().equals(clauseType.getCode())) value = clause.getValue();
-            break;
-        }
-
-        return value;
+        for (Clause clause : negotiationClause)
+            if (clause.getType().getCode().equals(clauseType.getCode())) return clause.getValue();
+        return null;
 
     }
 }
