@@ -280,19 +280,6 @@ public class AssetAppropriationMonitorAgent implements Agent {
                         }
                         break;
                     case BITCOINS_SENT: {
-                        CryptoTransaction cryptoTransaction = AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, record.assetMetadata(), CryptoTransactionType.OUTGOING, record.addressTo());
-                        if (cryptoTransaction == null) continue;
-                        AssetUserWallet userWallet = assetUserWalletManager.loadAssetUserWallet(record.walletPublicKey(), cryptoTransaction.getBlockchainNetworkType());
-                        AssetUserWalletBalance balance = userWallet.getBalance();
-                        ActorAssetUser mySelf = actorAssetUserManager.getActorAssetUser();
-                        AssetUserWalletTransactionRecordWrapper walletRecord = new AssetUserWalletTransactionRecordWrapper(record.assetMetadata(),
-                                cryptoTransaction,
-                                mySelf.getActorPublicKey(),
-                                Actors.DAP_ASSET_USER,
-                                mySelf.getActorPublicKey(),
-                                Actors.DAP_ASSET_USER,
-                                WalletUtilities.DEFAULT_MEMO_APPROPRIATION);
-                        balance.debit(walletRecord, BalanceType.AVAILABLE);
                         dao.updateTransactionStatusAssetDebited(record.transactionRecordId());
                         break;
                     }
