@@ -96,7 +96,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
                     /*
                      * Process the transaction
                      */
-                    processTransaction(nodesCatalogTransaction);
+                    lateNotificationsCounter = lateNotificationsCounter + processTransaction(nodesCatalogTransaction);
                 }
 
                 /*
