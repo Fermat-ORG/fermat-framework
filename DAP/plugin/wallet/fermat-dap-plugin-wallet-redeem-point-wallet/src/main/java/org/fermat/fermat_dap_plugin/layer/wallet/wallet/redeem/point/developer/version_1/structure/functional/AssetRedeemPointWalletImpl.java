@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.functional;
+package org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -39,8 +39,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTran
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
-import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.database.AssetRedeemPointWalletDao;
-import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.database.AssetRedeemPointWalletDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.database.AssetRedeemPointWalletDatabaseFactory;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -70,7 +69,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
         createdWallets = new ArrayList<>();
     }
 
-    private AssetRedeemPointWalletDao assetRedeemPointWalletDao;
+    private org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.database.AssetRedeemPointWalletDao assetRedeemPointWalletDao;
 
     private final ErrorManager errorManager;
 
@@ -113,7 +112,7 @@ public class AssetRedeemPointWalletImpl implements AssetRedeemPointWallet {
 
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
-            assetRedeemPointWalletDao = new AssetRedeemPointWalletDao(database, pluginFileSystem, pluginId, actorAssetUserManager, issuerManager, redeemPointManager);
+            assetRedeemPointWalletDao = new org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.database.AssetRedeemPointWalletDao(database, pluginFileSystem, pluginId, actorAssetUserManager, issuerManager, redeemPointManager);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeRedeemPointWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {

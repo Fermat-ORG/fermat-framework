@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.database;
+package org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -47,12 +47,10 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTransactionException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
-import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.AssetRedeemPointWalletPluginRoot;
-import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.exceptions.CantExecuteAssetRedeemPointTransactionException;
-import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.exceptions.CantGetBalanceRecordException;
-import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.functional.AssetRedeemPointWalletBalance;
-import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.functional.AssetRedeemPointWalletTransactionWrapper;
-import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.functional.RedeemPointStatisticImpl;
+import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.AssetRedeemPointWalletPluginRoot;
+import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.exceptions.CantGetBalanceRecordException;
+import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.functional.AssetRedeemPointWalletBalance;
+import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.functional.AssetRedeemPointWalletTransactionWrapper;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -215,7 +213,7 @@ public class AssetRedeemPointWalletDao {
         return getCurrentBalanceByAsset(BalanceType.BOOK, assetPublicKey);
     }
 
-    private void executeTransaction(final AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord, final TransactionType transactionType, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance, final long quantityAvailableRunningBalance, final long quantityBookRunningBalance) throws CantExecuteAssetRedeemPointTransactionException {
+    private void executeTransaction(final AssetRedeemPointWalletTransactionRecord assetRedeemPointWalletTransactionRecord, final TransactionType transactionType, final BalanceType balanceType, final long availableRunningBalance, final long bookRunningBalance, final long quantityAvailableRunningBalance, final long quantityBookRunningBalance) throws org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.exceptions.CantExecuteAssetRedeemPointTransactionException {
         try {
             DatabaseTableRecord assetRedeemPointWalletRecord = constructAssetRdeemPointWalletRecord(assetRedeemPointWalletTransactionRecord, transactionType, balanceType, availableRunningBalance, bookRunningBalance);
             DatabaseTableRecord assetBalanceRecord = constructAssetBalanceRecord(assetRedeemPointWalletTransactionRecord.getDigitalAsset(), availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
@@ -246,7 +244,7 @@ public class AssetRedeemPointWalletDao {
 
         } catch (Exception e) {
             e.printStackTrace();
-            throw new CantExecuteAssetRedeemPointTransactionException("Error to get balances record", e, "Can't load balance table", "");
+            throw new org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.exceptions.CantExecuteAssetRedeemPointTransactionException("Error to get balances record", e, "Can't load balance table", "");
         }
     }
 
@@ -336,7 +334,7 @@ public class AssetRedeemPointWalletDao {
             long quantityBookRunningBalance = calculateQuantityBookRunningBalanceByAsset(-quantityBookAmount, assetRedeemPointWalletTransactionRecord.getDigitalAsset().getPublicKey());
 
             executeTransaction(assetRedeemPointWalletTransactionRecord, TransactionType.DEBIT, balanceType, availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
-        } catch (CantGetBalanceRecordException | CantExecuteAssetRedeemPointTransactionException exception) {
+        } catch (CantGetBalanceRecordException | org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.exceptions.CantExecuteAssetRedeemPointTransactionException exception) {
             throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception) {
             throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
@@ -363,7 +361,7 @@ public class AssetRedeemPointWalletDao {
 
             executeTransaction(assetRedeemPointWalletTransactionRecord, TransactionType.CREDIT, balanceType, availableRunningBalance, bookRunningBalance, quantityAvailableRunningBalance, quantityBookRunningBalance);
 
-        } catch (CantGetBalanceRecordException | CantExecuteAssetRedeemPointTransactionException exception) {
+        } catch (CantGetBalanceRecordException | org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.exceptions.CantExecuteAssetRedeemPointTransactionException exception) {
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, exception, null, "Check the cause");
         } catch (Exception exception) {
             throw new CantRegisterCreditException(CantRegisterCreditException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Check the cause");
@@ -650,7 +648,7 @@ public class AssetRedeemPointWalletDao {
 
             DatabaseTableRecord record = statisticTable.getRecords().get(0);
 
-            RedeemPointStatisticImpl statistic = new RedeemPointStatisticImpl();
+            org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.functional.RedeemPointStatisticImpl statistic = new org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.functional.RedeemPointStatisticImpl();
             statistic.setStatisticId(uuid);
             statistic.setAssetMetadata(getDigitalAssetMetadata(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_POINT_STATISTIC_GENESIS_TRANSACTION_KEY_COLUMN_NAME)));
             statistic.setActorAssetUser(getActorAssetUser(record.getStringValue(AssetWalletRedeemPointDatabaseConstant.ASSET_WALLET_REDEEM_POINT_STATISTIC_USER_PUBLICKEY_COLUMN_NAME)));

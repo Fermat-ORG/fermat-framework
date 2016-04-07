@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.database;
+package org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.database;
 
 /**
  * Created by franklin on 14/10/15.

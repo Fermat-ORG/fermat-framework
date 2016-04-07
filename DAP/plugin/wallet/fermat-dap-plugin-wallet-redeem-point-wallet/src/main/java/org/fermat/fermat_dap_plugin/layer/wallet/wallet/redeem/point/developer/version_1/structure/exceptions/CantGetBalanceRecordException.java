@@ -1,11 +1,11 @@
-package org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.exceptions;
+package org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
  * Created by franklin on 15/10/15.
  */
-public class CantDeliverDatabaseException extends FermatException {
+public class CantGetBalanceRecordException extends FermatException {
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantDeliverDatabaseException extends FermatException {
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantDeliverDatabaseException(String message, Exception cause, String context, String possibleReason) {
+    public CantGetBalanceRecordException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

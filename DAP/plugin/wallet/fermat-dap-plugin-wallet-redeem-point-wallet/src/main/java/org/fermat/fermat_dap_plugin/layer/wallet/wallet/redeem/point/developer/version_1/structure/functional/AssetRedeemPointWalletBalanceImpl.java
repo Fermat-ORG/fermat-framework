@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.functional;
+package org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
@@ -9,7 +9,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions.CantRegisterDebitException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.*;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
-import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.bitdubai.version_1.structure.database.AssetRedeemPointWalletDao;
+import org.fermat.fermat_dap_plugin.layer.wallet.wallet.redeem.point.developer.version_1.structure.database.AssetRedeemPointWalletDao;
 
 import java.util.List;
 
