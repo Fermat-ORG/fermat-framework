@@ -36,14 +36,15 @@ public class CreateChatIdentityFragment  extends AbstractFermatFragment {
         return new CreateChatIdentityFragment();
     }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootLayout = inflater.inflate(R.layout.fragment_cht_identity_create, container, false);
-        initViews(rootLayout);
-        return rootLayout;
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        //NOTHING
     }
-    private void initViews(View layout) {
-        Button botonG = (Button) layout.findViewById(R.id.cht_button);
 
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        final View layout = inflater.inflate(R.layout.fragment_cht_identity_create, container, false);
+        Button botonG = (Button) layout.findViewById(R.id.cht_button);
         botonG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,7 +77,7 @@ public class CreateChatIdentityFragment  extends AbstractFermatFragment {
            }
        });
         ((InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
-
+        return layout;
     }
     private void createNewIdentityInBackDevice(String donde){
         String brokerNameText = chatName.getText().toString();
