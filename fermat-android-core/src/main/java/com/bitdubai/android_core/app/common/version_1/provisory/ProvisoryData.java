@@ -282,6 +282,23 @@ public class ProvisoryData {
         item1.setPosition(5);
         lstCommunities.add(item1);
 
+        //ART communities
+        installedSubApp = new InstalledSubApp(
+                SubApps.ART_FAN_COMMUNITY,
+                null,
+                null,
+                "sub_app_art_fan_community",
+                "Fans",
+                SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
+                "sub_app_art_fan_community",
+                new Version(1, 0, 0),
+                Platforms.ART_PLATFORM);
+
+        item1 = new Item(installedSubApp);
+        item1.setIconResource(R.drawable.communities_bar);
+        item1.setPosition(6);
+        lstCommunities.add(item1);
+
 //        installedSubApp = new InstalledSubApp(
 //                SubApps.CBP_CUSTOMERS,
 //                null,

@@ -2,6 +2,7 @@ package com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.ver
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -10,6 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExposingData;
@@ -17,22 +19,29 @@ import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantCreateFanId
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
+import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.database.FanaticIdentityDao;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.exceptions.CantInitializeFanaticIdentityDatabaseException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.TokenlyFanIdentityManager;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Gabriel Araujo 10/03/16.
  */
-public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem {
+public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLogger, DealsWithPluginDatabaseSystem, DealsWithPluginFileSystem,FanaticIdentityManager {
     /**
      * IdentityAssetIssuerManagerImpl member variables
      */
@@ -66,6 +75,8 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
 
     private FanManager fanManager;
 
+    private TokenlyFanIdentityManager tokenlyFanIdentityManager;
+
     @Override
     public void setErrorManager(ErrorManager errorManager) {
         this.errorManager = errorManager;
@@ -94,7 +105,7 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public IdentityFanaticManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, FanManager fanManager){
+    public IdentityFanaticManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, FanManager fanManager, TokenlyFanIdentityManager tokenlyFanIdentityManager){
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
@@ -102,6 +113,7 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
         this.pluginId = pluginId;
         this.deviceUserManager = deviceUserManager;
         this.fanManager = fanManager;
+        this.tokenlyFanIdentityManager = tokenlyFanIdentityManager;
     }
 
     private FanaticIdentityDao getFanaticIdentityDao() throws CantInitializeFanaticIdentityDatabaseException {
@@ -184,4 +196,91 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
     }
 
 
+    @Override
+    public List<Fanatic> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
+        return getIdentityArtistFromCurrentDeviceUser();
+    }
+
+    @Override
+    public HashMap<ExternalPlatform, HashMap<UUID, String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
+
+        /*
+            We'll return a HashMap based on the external platform containing another hashmap with the user and the id to that platform
+         */
+        HashMap<ExternalPlatform, HashMap<UUID,String>> externalArtistIdentities = new HashMap<>();
+        HashMap<UUID,String> externalArtist = new HashMap<>();
+        for (ExternalPlatform externalPlatform:
+                ExternalPlatform.values()) {
+            //Future platform will need to be added manually to the switch
+            switch (externalPlatform){
+                case TOKENLY:
+                    try {
+                        final List<Fan> tokenlyArtists = tokenlyFanIdentityManager.listIdentitiesFromCurrentDeviceUser();
+
+                        for (Fan Fanatic:
+                                tokenlyArtists) {
+                            externalArtist.put(Fanatic.getId(),Fanatic.getUsername());
+                        }
+                        if(externalArtist.size()>0)
+                            externalArtistIdentities.put(externalPlatform,externalArtist);
+                    } catch (com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+        return externalArtistIdentities;
+    }
+
+    @Override
+    public ArtIdentity getLinkedIdentity(String publicKey) {
+        ArtIdentity artIdentity = null;
+        try {
+            Fanatic Fanatic = getIdentitFanatic(publicKey);
+            if(Fanatic != null){
+                for (ExternalPlatform externalPlatform:
+                        ExternalPlatform.values()) {
+                    //Future platform will need to be added manually to the switch
+                    switch (externalPlatform){
+                        case TOKENLY:
+                            final Fan tokenlyArtist = tokenlyFanIdentityManager.getFanIdentity(Fanatic.getExternalIdentityID());
+                            if(tokenlyArtist != null){
+                                artIdentity = new FanaticIdentityImp(tokenlyArtist.getPublicKey(),tokenlyArtist.getProfileImage(),tokenlyArtist.getUsername(),tokenlyArtist.getId(),externalPlatform);
+                            }
+                            break;
+                    }
+                }
+            }
+        } catch (CantGetFanIdentityException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        } catch (com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        } catch (com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantGetFanIdentityException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        }
+        return artIdentity;
+    }
+
+
+    @Override
+    public Fanatic createFanaticIdentity(String alias, byte[] imageBytes, UUID externalIdentityId) throws CantCreateFanIdentityException {
+        return createNewIdentityArtist(alias, imageBytes, externalIdentityId);
+    }
+
+    @Override
+    public void updateFanIdentity(String alias, String publicKey, byte[] imageProfile, UUID externalIdentityID) throws CantUpdateFanIdentityException {
+        updateIdentityArtist(alias, publicKey, imageProfile, externalIdentityID);
+    }
+
+    @Override
+    public Fanatic getFanIdentity(String publicKey) throws CantGetFanIdentityException, IdentityNotFoundException {
+        return getIdentitFanatic(publicKey);
+    }
+
+    @Override
+    public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
+        registerIdentitiesANS(publicKey);
+    }
 }

@@ -17,14 +17,15 @@ public class SliderAdapter extends AbstractViewPagerAdapter<Integer> {
         super(context);
     }
 
+    @Override
+    protected void bindHolder(View item_view, int position, Integer item) {
+
+    }
+
     public SliderAdapter(Context context,List<Integer> list) {
         super(context,list);
     }
 
-    @Override
-    protected void bindHolder(View item_view) {
-
-    }
 
     @Override
     protected int getItemLayout(Integer item, int position) {
