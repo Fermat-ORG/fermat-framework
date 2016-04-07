@@ -43,7 +43,19 @@ public class CompleteUpdateActorNotificationEventHandler implements FermatEventH
     @Override
     public void handleEvent(CompleteUpdateActorNotificationEvent completeUpdateActorNotificationEvent) throws FermatException {
         if (this.networkService.getStatus() == ServiceStatus.STARTED) {
-            if(completeUpdateActorNotificationEvent.getNetworkServiceTypeApplicant() == this.networkService.getNetworkServiceProfile().getNetworkServiceType()) {
+
+            if(this.networkService.getNetworkServiceProfile() == null ||
+                    completeUpdateActorNotificationEvent.getNetworkServiceTypeApplicant() == null) {
+
+                if (networkService.getNetworkServiceProfile() == null)
+                    System.out.println("********************************************************** \n\n plugin " + this.networkService.eventSource + " networkService.getNetworkServiceProfile() == null \n\n\n **********************************************************");
+
+                if (completeUpdateActorNotificationEvent.getNetworkServiceTypeApplicant() == null)
+                    System.out.println("********************************************************** \n\n plugin " + this.networkService.eventSource + " completeUpdateActorNotificationEvent.getNetworkServiceTypeApplicant() == null \n\n\n **********************************************************");
+
+
+
+            }else if(completeUpdateActorNotificationEvent.getNetworkServiceTypeApplicant() == this.networkService.getNetworkServiceProfile().getNetworkServiceType()) {
                 this.networkService.handleCompleteUpdateActorNotificationEvent(completeUpdateActorNotificationEvent);
             }
         }
