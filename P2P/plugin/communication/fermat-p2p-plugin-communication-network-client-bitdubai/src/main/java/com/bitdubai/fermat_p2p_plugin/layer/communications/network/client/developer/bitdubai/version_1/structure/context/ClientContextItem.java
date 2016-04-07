@@ -17,7 +17,7 @@ public enum ClientContextItem {
      */
 
     CLIENT_IDENTITY            ,
-    DAO_FACTORY                ,
+    DATABASE,
     ERROR_MANAGER              ,
     EVENT_MANAGER              ,
 
