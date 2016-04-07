@@ -6,8 +6,9 @@ import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
-import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManager;
+import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
+import com.bitdubai.android_core.app.common.version_1.util.services_helpers.ServicesHelpers;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_core.FermatSystem;
@@ -48,11 +49,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     private FermatSystem fermatSystem;
 
     /**
-     * Apps manager
-     */
-    private FermatAppsManager fermatAppsManager;
-
-    /**
      *  Application state
      */
     public static int applicationState=STATE_NOT_CREATED;
@@ -64,6 +60,12 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
     private Thread.UncaughtExceptionHandler defaultUncaughtHandler = Thread.getDefaultUncaughtExceptionHandler();
 
+
+    /**
+     * Services helpers
+     */
+    private ServicesHelpers servicesHelpers;
+
     /**
      *  Application session constructor
      */
@@ -72,7 +74,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         super();
         instance = this;
         fermatSystem = FermatSystem.getInstance();
-        fermatAppsManager = new FermatAppsManager();
 
 
     }
@@ -87,15 +88,6 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
             fermatSystem = FermatSystem.getInstance();
         }
         return fermatSystem;
-    }
-
-    /**
-     * Fermat app manager
-     *
-     * @return FermatAppsManager
-     */
-    public FermatAppsManager getFermatAppsManager() {
-        return fermatAppsManager;
     }
 
     /**
@@ -121,6 +113,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
     @Override
     public void onTerminate(){
+        servicesHelpers.unbindServices();
         super.onTerminate();
     }
 
@@ -133,9 +126,14 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable e) {
+                e.printStackTrace();
                 handleUncaughtException(thread, e);
             }
         });
+
+        servicesHelpers = new ServicesHelpers(this);
+        servicesHelpers.bindServices();
+
         super.onCreate();
     }
     protected void attachBaseContext(Context base) {
@@ -150,5 +148,15 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         startActivity(intent);
     }
 
+    public FermatAppsManagerService getAppManager(){
+        return getServicesHelpers().getAppManager();
+    }
 
+    public NotificationService getNotificationService(){
+        return getServicesHelpers().getNotificationService();
+    }
+
+    public ServicesHelpers getServicesHelpers() {
+        return servicesHelpers;
+    }
 }

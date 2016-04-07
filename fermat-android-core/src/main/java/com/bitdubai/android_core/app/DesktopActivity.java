@@ -40,10 +40,12 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.sub_app.wallet_manager.fragment.FermatNetworkSettings;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getCloudClient;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getDesktopRuntimeManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getErrorManager;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getSubAppRuntimeMiddleware;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getWalletRuntimeManager;
 
@@ -55,6 +57,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
 
     private BottomMenuReveal bottomMenuReveal;
+    private ExecutorService executorService;
 
     /**
      *  Called when the activity is first created
@@ -66,7 +69,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
         super.onCreate(savedInstanceState);
         setActivityType(ActivityType.ACTIVITY_TYPE_DESKTOP);
         try {
-            getFermatAppManager().init();
             loadUI();
         } catch (Exception e) {
             //reportUnexpectedUICoreException
@@ -183,9 +185,22 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             if(activity.getType() == Activities.DESKTOP_SETTING_FERMAT_NETWORK){
                 try {
                     String[] ipPort = ((FermatNetworkSettings) getAdapter().getLstCurrentFragments().get(0)).getIpPort();
-                    String ip = ipPort[0];
-                    String port = ipPort[1];
-                    getCloudClient().changeIpAndPortProperties(ip, Integer.parseInt(port));
+                    final String ip = ipPort[0];
+                    final String port = ipPort[1];
+
+                    Thread threadChangeIP = new Thread() {
+                        @Override
+                        public void run(){
+                            getCloudClient().changeIpAndPortProperties(ip, Integer.parseInt(port));
+                        }
+                    };
+
+                    if(executorService != null)
+                        executorService.shutdown();
+
+                    executorService = Executors.newSingleThreadExecutor();
+                    executorService.submit(threadChangeIP);
+
                 }catch (Exception e){
 
                 }
@@ -415,13 +430,14 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             try {
                 AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection("main_desktop", this);
 
-                getFermatAppManager().openApp(getDesktopManager(),fermatAppConnection);
+                
+                ApplicationSession.getInstance().getAppManager().openApp(getDesktopManager(), fermatAppConnection);
                 //TODO: ver esto de pasarle el appConnection en null al desktop o hacerle uno
                 /**
                  * Get current activity to paint
                  */
 
-                FermatStructure fermatStructure = getFermatAppManager().getLastAppStructure();
+                FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
                 activity = fermatStructure.getLastActivity();
                 loadBasicUI(activity, fermatAppConnection);
 
@@ -438,7 +454,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                     paintScreen(activity);
 
                     if (activity.getFragments().size() == 1) {
-                        setOneFragmentInScreen(fermatAppConnection.getFragmentFactory(),getFermatAppManager().lastAppSession(),fermatStructure);
+                        setOneFragmentInScreen(fermatAppConnection.getFragmentFactory(),ApplicationSession.getInstance().getAppManager().lastAppSession(),fermatStructure);
                     }
                 }
             } catch (Exception e) {

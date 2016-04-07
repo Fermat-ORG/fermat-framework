@@ -149,6 +149,7 @@
             android:theme="@style/AppThemeDesktop"
             />
 
+        <service android:name="com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService"/>
 
     </application>
 </manifest>

@@ -8,6 +8,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 
 import com.bitdubai.android_core.app.FermatActivity;
+import com.bitdubai.android_core.app.common.version_1.dialogs.WelcomeScrennDialog;
 import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsCallback;
 import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsItem;
 import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsSlider;
@@ -47,6 +48,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem>,AppStatu
     private WeakReference<FermatActivity> fermatActivity;
     private View.OnClickListener onClickListener;
     private SettingsSlider settingsSlider;
+    private WelcomeScrennDialog welcomeScreenDialog;
 
     public BottomMenuReveal(final ViewGroup mRevealView, final FermatActivity activity) {
         this.hidden = false;
@@ -207,6 +209,12 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem>,AppStatu
                 break;
             case RECENTS:
                 fermatActivity.get().openRecentsScreen();
+                break;
+            case HELP:
+                if(welcomeScreenDialog == null){
+                    welcomeScreenDialog = new WelcomeScrennDialog(fermatActivity.get(),null,null);
+                }
+                welcomeScreenDialog.show();
                 break;
         }
     }

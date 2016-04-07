@@ -2,13 +2,13 @@ package com.bitdubai.android_core.app.common.version_1.runtime_estructure_manage
 
 import android.widget.Toast;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.FermatActivity;
 import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
-import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getFermatAppManager;
 
 import java.lang.ref.WeakReference;
 
@@ -36,7 +36,7 @@ public class RuntimeStructureManager implements FermatRuntime {
     @Override
     public void changeStartActivity(int optionActivity){
         try {
-            FermatStructure fermatStructure = getFermatAppManager().getLastAppStructure();
+            FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
             fermatStructure.changeActualStartActivity(optionActivity);
             selectRuntimeManager().recordNAvigationStructure(fermatStructure);
         }catch (Exception e){
