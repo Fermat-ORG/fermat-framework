@@ -2,6 +2,8 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.devel
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContext;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContextItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,23 +21,14 @@ import javax.websocket.ClientEndpointConfig;
  */
 public class ClientChannelConfigurator extends ClientEndpointConfig.Configurator {
 
-    /**
-     * Represent the clientIdentity
-     */
-    private final ECCKeyPair clientIdentity;
-
-    public ClientChannelConfigurator(final ECCKeyPair clientIdentity){
-
-        this.clientIdentity = clientIdentity;
-    }
-
     @Override
     public void beforeRequest(Map<String, List<String>> headers) {
 
+        ECCKeyPair clientIdentity = (ECCKeyPair)   ClientContext.get(ClientContextItem.CLIENT_IDENTITY);
+
         List<String> values = new ArrayList<>();
         values.add(clientIdentity.getPublicKey());
-        System.out.println("Client Public Key = " + clientIdentity.getPublicKey());
-        headers.put(HeadersAttName.CPKI_ATT_HEADER_NAME,values);
+        headers.put(HeadersAttName.CPKI_ATT_HEADER_NAME, values);
     }
 
 }

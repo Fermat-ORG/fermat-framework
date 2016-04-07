@@ -15,6 +15,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,9 @@ import javax.websocket.Session;
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.endpoints.CommunicationsNetworkClientChannel</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 27/11/15.
+ * Updated by Leon Acosta - (laion.cj91@gmail.com) on 07/04/2016.
  *
+ * @author lnacosta
  * @version 1.0
  * @since Java JDK 1.7
  */
@@ -51,18 +54,9 @@ public class CommunicationsNetworkClientChannel {
      */
     private boolean isRegister;
 
-    /**
-     * Represent the Header Before Request
-     */
-    private ClientChannelConfigurator clientChannelConfigurator;
-
-    /**
-     * Represent the clientIdentity
-     */
-    private ECCKeyPair clientIdentity;
-
-    private ErrorManager errorManager;
-    private EventManager eventManager;
+    private ECCKeyPair   clientIdentity;
+    private ErrorManager errorManager  ;
+    private EventManager eventManager  ;
 
     public CommunicationsNetworkClientChannel(){
 
@@ -70,8 +64,8 @@ public class CommunicationsNetworkClientChannel {
         this.errorManager              = (ErrorManager) ClientContext.get(ClientContextItem.ERROR_MANAGER  );
         this.eventManager              = (EventManager) ClientContext.get(ClientContextItem.EVENT_MANAGER  );
 
+        this.packageProcessors         = new HashMap<>();
         this.isRegister                = Boolean.FALSE;
-        this.clientChannelConfigurator = new ClientChannelConfigurator(this.clientIdentity);
 
         initPackageProcessorsRegistration();
     }
