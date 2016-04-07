@@ -24,6 +24,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.CommunicationsNetworkClientConnection;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContext;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.exceptions.CantInitializeNetworkClientP2PDatabaseException;
@@ -116,11 +118,23 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
             initializeDb();
 
             URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT+"/client-channel");
-            communicationsNetworkClientConnection = new CommunicationsNetworkClientConnection(uri,eventManager,locationManager, identity);
+
+            communicationsNetworkClientConnection = new CommunicationsNetworkClientConnection(
+                    uri            ,
+                    eventManager   ,
+                    locationManager,
+                    identity
+            );
             communicationsNetworkClientConnection.start();
 
+            /*
+             * Add references to the node context
+             */
+            ClientContext.add(ClientContextItem.CLIENT_IDENTITY, identity    );
+            ClientContext.add(ClientContextItem.ERROR_MANAGER  , errorManager);
+            ClientContext.add(ClientContextItem.EVENT_MANAGER  , eventManager);
 
-        }catch (Exception exception){
+        } catch (Exception exception){
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
