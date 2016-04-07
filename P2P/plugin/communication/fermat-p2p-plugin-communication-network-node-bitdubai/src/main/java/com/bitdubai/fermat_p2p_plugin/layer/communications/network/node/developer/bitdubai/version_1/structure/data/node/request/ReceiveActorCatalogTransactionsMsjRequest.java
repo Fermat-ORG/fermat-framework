@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request;
 
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
 
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ReceiveActorCatalogTransactionsMsjRequest {
+public class ReceiveActorCatalogTransactionsMsjRequest extends PackageContent {
 
     /**
      * Represent the list of transactions
