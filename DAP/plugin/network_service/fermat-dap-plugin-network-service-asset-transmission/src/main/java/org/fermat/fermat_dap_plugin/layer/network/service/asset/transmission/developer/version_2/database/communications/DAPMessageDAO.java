@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.database.communications;
+package org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.database.communications;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -12,11 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
-import org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantDeleteRecordDataBaseException;
-import org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantInsertRecordDataBaseException;
-import org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantLoadDAPMessageException;
-import org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantReadRecordDataBaseException;
-import org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.bitdubai.version_2.exceptions.CantUpdateRecordDataBaseException;
+
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageStatus;
 
 import java.util.ArrayList;
@@ -44,9 +40,9 @@ public class DAPMessageDAO {
      * Method that create a new entity in the data base.
      *
      * @param entity DAPMessage to create.
-     * @throws CantInsertRecordDataBaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantInsertRecordDataBaseException
      */
-    public void create(DAPMessage entity, MessageStatus status) throws CantInsertRecordDataBaseException {
+    public void create(DAPMessage entity, MessageStatus status) throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantInsertRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -63,7 +59,7 @@ public class DAPMessageDAO {
 
             String context = contextBuffer.toString();
             String possibleCause = "The Template Database triggered an unexpected problem that wasn't able to solve by itself";
-            CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new CantInsertRecordDataBaseException(CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantInsertRecordDataBaseException cantInsertRecordDataBaseException = new org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantInsertRecordDataBaseException(org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantInsertRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantInsertRecordDataBaseException;
 
         }
@@ -73,9 +69,9 @@ public class DAPMessageDAO {
      * Method that update an entity in the data base.
      *
      * @param entity DAPMessage to update.
-     * @throws CantUpdateRecordDataBaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantUpdateRecordDataBaseException
      */
-    public void update(DAPMessage entity, MessageStatus status) throws CantUpdateRecordDataBaseException {
+    public void update(DAPMessage entity, MessageStatus status) throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantUpdateRecordDataBaseException {
 
         if (entity == null) {
             throw new IllegalArgumentException("The entity is required, can not be null");
@@ -96,7 +92,7 @@ public class DAPMessageDAO {
 
             String context = contextBuffer.toString();
             String possibleCause = "The record do not exist";
-            CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new CantUpdateRecordDataBaseException(CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
+            org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantUpdateRecordDataBaseException cantUpdateRecordDataBaseException = new org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantUpdateRecordDataBaseException(org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantUpdateRecordDataBaseException.DEFAULT_MESSAGE, databaseTransactionFailedException, context, possibleCause);
             throw cantUpdateRecordDataBaseException;
         }
     }
@@ -105,9 +101,9 @@ public class DAPMessageDAO {
      * Method that delete a entity in the data base.
      *
      * @param id String id.
-     * @throws CantDeleteRecordDataBaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantDeleteRecordDataBaseException
      */
-    public void delete(String id) throws CantDeleteRecordDataBaseException {
+    public void delete(String id) throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantDeleteRecordDataBaseException {
 
         if (id == null) {
             throw new IllegalArgumentException("The id is required can not be null");
@@ -135,7 +131,7 @@ public class DAPMessageDAO {
         try {
 
             return constructDAPMessageListFromRecord(getDAPMessagesTable().getRecords());
-        } catch (CantLoadDAPMessageException | InvalidParameterException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantLoadDAPMessageException | InvalidParameterException e) {
             throw new DAPException(e);
         }
     }
@@ -145,9 +141,9 @@ public class DAPMessageDAO {
      *
      * @param id Long id.
      * @return DigitalAssetMetadataTransactionImpl found.
-     * @throws CantReadRecordDataBaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException
      */
-    public DAPMessage findById(String id) throws CantReadRecordDataBaseException {
+    public DAPMessage findById(String id) throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException {
 
         if (id == null) {
             throw new IllegalArgumentException("The id is required, can not be null");
@@ -188,7 +184,7 @@ public class DAPMessageDAO {
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException cantReadRecordDataBaseException = new org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException(org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
         }
 
@@ -200,9 +196,9 @@ public class DAPMessageDAO {
      *
      * @param code String.
      * @return A list of DAPMessage found.
-     * @throws CantReadRecordDataBaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException
      */
-    public List<DAPMessage> findUnreadByType(String code) throws CantReadRecordDataBaseException {
+    public List<DAPMessage> findUnreadByType(String code) throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException {
 
         if (code == null) {
             throw new IllegalArgumentException("The code type is required, can not be null");
@@ -246,7 +242,7 @@ public class DAPMessageDAO {
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException cantReadRecordDataBaseException = new org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException(org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
         }
 
@@ -258,9 +254,9 @@ public class DAPMessageDAO {
      *
      * @param code String.
      * @return List of DAPMessage found.
-     * @throws CantReadRecordDataBaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException
      */
-    public List<DAPMessage> findUnreadBySubject(String code) throws CantReadRecordDataBaseException {
+    public List<DAPMessage> findUnreadBySubject(String code) throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException {
 
         if (code == null) {
             throw new IllegalArgumentException("The code subject is required, can not be null");
@@ -304,7 +300,7 @@ public class DAPMessageDAO {
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException cantReadRecordDataBaseException = new org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException(org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
         }
 
@@ -315,9 +311,9 @@ public class DAPMessageDAO {
      * Method that find an unread DAPMessage by Subject in the data base.
      *
      * @return List of DAPMessage found.
-     * @throws CantReadRecordDataBaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException
      */
-    public List<DAPMessage> findUnreadMessages() throws CantReadRecordDataBaseException {
+    public List<DAPMessage> findUnreadMessages() throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException {
 
         List<DAPMessage> listDAPMessage = new ArrayList<DAPMessage>();
         DAPMessage dapMessage = null;
@@ -356,7 +352,7 @@ public class DAPMessageDAO {
 
             String context = contextBuffer.toString();
             String possibleCause = "The data no exist";
-            CantReadRecordDataBaseException cantReadRecordDataBaseException = new CantReadRecordDataBaseException(CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
+            org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException cantReadRecordDataBaseException = new org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException(org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantReadRecordDataBaseException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
             throw cantReadRecordDataBaseException;
         }
 
@@ -368,7 +364,7 @@ public class DAPMessageDAO {
     *
     * */
 
-    public void confirmDAPMessageReception(DAPMessage dapMessage) throws CantUpdateRecordDataBaseException {
+    public void confirmDAPMessageReception(DAPMessage dapMessage) throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantUpdateRecordDataBaseException {
         update(dapMessage, MessageStatus.READ);
     }
 
@@ -390,11 +386,11 @@ public class DAPMessageDAO {
         entityRecord.setStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_DATA_COLUMN_NAME, dapMessage.toXML());
     }
 
-    private DAPMessage constructDAPMessageByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, CantLoadDAPMessageException {
+    private DAPMessage constructDAPMessageByDatabaseRecord(DatabaseTableRecord record) throws InvalidParameterException, org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantLoadDAPMessageException {
         return DAPMessage.fromXML(record.getStringValue(CommunicationNetworkServiceDatabaseConstants.DAP_MESSAGE_DATA_COLUMN_NAME));
     }
 
-    private List<DAPMessage> constructDAPMessageListFromRecord(List<DatabaseTableRecord> records) throws CantLoadDAPMessageException, InvalidParameterException {
+    private List<DAPMessage> constructDAPMessageListFromRecord(List<DatabaseTableRecord> records) throws org.fermat.fermat_dap_plugin.layer.network.service.asset.transmission.developer.version_2.exceptions.CantLoadDAPMessageException, InvalidParameterException {
         List<DAPMessage> toReturn = new ArrayList<>();
         for (DatabaseTableRecord record : records) {
             toReturn.add(constructDAPMessageByDatabaseRecord(record));
