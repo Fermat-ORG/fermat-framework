@@ -156,14 +156,14 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
             empty = (LinearLayout) rootView.findViewById(R.id.empty);
-            setUp();
+            //setUp();
             return rootView;
         }catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
         return container;
     }
-    private void setUp(){
+   private void setUp(){
         FrameLayout frameLayout = new FrameLayout(getActivity());
 
         FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
