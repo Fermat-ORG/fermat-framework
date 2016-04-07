@@ -416,29 +416,29 @@ public class ChatListFragment extends AbstractFermatFragment{
                // Locate the search item
                //MenuItem searchItem = menu.findItem(R.id.menu_search);
 
-               searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-               searchView.setQueryHint(getResources().getString(R.string.search_hint));
-               searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                   @Override
-                   public boolean onQueryTextSubmit(String s) {
-                       return false;
-                   }
-
-                   @Override
-                   public boolean onQueryTextChange(String s) {
-                       if (s.equals(searchView.getQuery().toString())) {
-                           adapter.getFilter().filter(s);
-                       }
-                       return false;
-                   }
-               });
-               if (chatSession.getData("filterString") != null) {
-                   String filterString = (String) chatSession.getData("filterString");
-                   if (filterString.length() > 0) {
-                       searchView.setQuery(filterString, true);
-                       searchView.setIconified(false);
-                   }
-               }
+//               searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+//               searchView.setQueryHint(getResources().getString(R.string.search_hint));
+//               searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//                   @Override
+//                   public boolean onQueryTextSubmit(String s) {
+//                       return false;
+//                   }
+//
+//                   @Override
+//                   public boolean onQueryTextChange(String s) {
+//                       if (s.equals(searchView.getQuery().toString())) {
+//                           adapter.getFilter().filter(s);
+//                       }
+//                       return false;
+//                   }
+//               });
+//               if (chatSession.getData("filterString") != null) {
+//                   String filterString = (String) chatSession.getData("filterString");
+//                   if (filterString.length() > 0) {
+//                       searchView.setQuery(filterString, true);
+//                       searchView.setIconified(false);
+//                   }
+//               }
            //}
            menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
