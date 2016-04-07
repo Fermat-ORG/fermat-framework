@@ -1,29 +1,21 @@
-/*
-* @#WsCommunicationsNetworkClientPluginRoot.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.Plugin;
-import com.bitdubai.fermat_api.Service;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -36,58 +28,38 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.exceptions.CantInitializeNetworkClientP2PDatabaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.util.HarcodeConstants;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
-
-import java.lang.System;
 import java.net.URI;
-import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.WsCommunicationsNetworkClientPluginRoot</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 12/11/15.
+ * Updated by Leon Acosta - (laion.cj91@gmail.com) on 07/04/2016.
  *
+ * @author xxxxxxxxxx
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WsCommunicationsNetworkClientPluginRoot implements Plugin, Service, DealsWithEvents, DealsWithErrors, DealsWithPluginFileSystem, DealsWithPluginDatabaseSystem {
+public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
 
-
-
-    /**
-     * Addons References definition.
-     */
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
 
-    /**
-     * PluginFileSystem references definition.
-     */
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem        ;
 
-    /**
-     * PluginDatabaseSystem references definition.
-     */
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
-
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.DEVICE_LOCATION)
     private LocationManager locationManager;
-
-    /**
-     * DealsWithPluginIdentity Interface member variables.
-     */
-    private UUID pluginId;
 
     /**
      * Represent the node identity
@@ -111,41 +83,20 @@ public class WsCommunicationsNetworkClientPluginRoot implements Plugin, Service,
 
     private CommunicationsNetworkClientConnection communicationsNetworkClientConnection;
 
-    @Override
-    public void setId(UUID pluginId) {
-        this.pluginId=pluginId;
-    }
 
     @Override
     public FermatManager getManager() {
         return null;
     }
 
-
-    @Override
-    public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager = errorManager;
-    }
-
-    @Override
-    public void setEventManager(EventManager eventManager) {
-        this.eventManager = eventManager;
-    }
-
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) {
-        this.pluginFileSystem = pluginFileSystem;
+    public NetworkClientCommunicationPluginRoot() {
+        super(new PluginVersionReference(new Version()));
     }
 
     @Override
     public void start() throws CantStartPluginException {
 
-        System.out.println("Calling the method - start() in WsCommunicationsNetworkClientPluginRoot");
+        System.out.println("Calling the method - start() in NetworkClientCommunicationPluginRoot");
 
         /*
          * Validate required resources
@@ -164,7 +115,7 @@ public class WsCommunicationsNetworkClientPluginRoot implements Plugin, Service,
              */
             initializeDb();
 
-            URI uri = new URI(HarcodeConstants.WS_PROTOCOL + WsCommunicationsNetworkClientPluginRoot.SERVER_IP + ":" + HarcodeConstants.DEFAULT_PORT+"/client-channel");
+            URI uri = new URI(HarcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HarcodeConstants.DEFAULT_PORT+"/client-channel");
             communicationsNetworkClientConnection = new CommunicationsNetworkClientConnection(uri,eventManager,locationManager, identity);
             communicationsNetworkClientConnection.start();
 
@@ -187,28 +138,6 @@ public class WsCommunicationsNetworkClientPluginRoot implements Plugin, Service,
         }
 
 
-    }
-
-
-
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
-    public void stop() {
-
-    }
-
-    @Override
-    public ServiceStatus getStatus() {
-        return null;
     }
 
     /**
