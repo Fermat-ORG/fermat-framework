@@ -354,7 +354,7 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
         try{
             String testURL="https://www.dropbox.com/s/l8df6ixyiweq8yt/appSessionFragmenContract?dl=0";
             String testName="testFileName";
-            this.tokenlyWalletSongVault.downloadFile(testURL, testName);
+            this.tokenlyWalletSongVault.downloadFile(testURL, testName, UUID.randomUUID());
         } catch (Exception e){
             System.out.println("TKY: Test Download exception");
             e.printStackTrace();

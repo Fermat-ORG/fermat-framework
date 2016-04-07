@@ -52,10 +52,12 @@ public class TimeOutMonitoringAgent implements Agent {
 
     @Override
     public void start() throws CantStartAgentException {
-        if (monitoringAgent != null)
+        if (monitoringAgent == null)
             monitoringAgent = new MonitoringAgent(this.dao);
 
-        monitorThread = new Thread(monitoringAgent, "TimeOutNotifier");
+        if (monitorThread == null)
+            monitorThread = new Thread(monitoringAgent, "TimeOutNotifier");
+
         monitorThread.start();
         this.agentStatus = AgentStatus.STARTED;
     }

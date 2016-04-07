@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
@@ -53,6 +54,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 
 /**
@@ -204,14 +209,13 @@ public class ChatAdapterView extends LinearLayout {
                     long timemess = mess.getMessageDate().getTime();
                     long nanos = (mess.getMessageDate().getNanos() / 1000000);
                     long milliseconds = timemess + nanos;
-                    Date dated= new Date(milliseconds);
+                    Date dated= new java.util.Date(milliseconds);
+                    DateFormat formatter = DateFormat.getDateTimeInstance();
                     if (Validate.isDateToday(dated)) {
-                        String S = new SimpleDateFormat("HH:mm").format(new Date(milliseconds));
-                        msg.setDate(S);
-                    }else
-                    {
-                        msg.setDate(DateFormat.getDateTimeInstance().format(new Date(milliseconds)));
+                        formatter = new SimpleDateFormat("HH:mm");
                     }
+                    formatter.setTimeZone(TimeZone.getDefault());
+                    msg.setDate(formatter.format(new java.util.Date(milliseconds)));
                     msg.setUserId(mess.getContactId());
                     msg.setMessage(message);
                     msg.setType(mess.getType().toString());
@@ -219,11 +223,7 @@ public class ChatAdapterView extends LinearLayout {
                 }
                 adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
                 messagesContainer.setAdapter(adapter);
-            }//else{
-             //   Toast.makeText(getContext(),"Waiting for chat message", Toast.LENGTH_SHORT).show();
-            //}
-        //}catch (CantSaveMessageException e) {
-           // errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
         }catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }catch (Exception e){
@@ -364,6 +364,7 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setChatName("Chat_" + newContact.getAlias());
                         chat.setDate(new Timestamp(dv));
                         chat.setLastMessageDate(new Timestamp(dv));
+                        chat.setTypeChat(TypeChat.INDIVIDUAL);
                         /**
                          * Now we got the identities registered in the device.
                          * To avoid nulls, I'll put default data in chat object
