@@ -10,7 +10,7 @@ import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.R
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.holders.IssuerViewHolder;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.interfaces.AdapterChangeListener;
 import com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.models.ActorIssuer;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
+import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;

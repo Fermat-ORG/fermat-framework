@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models;
 
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
+import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 
 /**
  * Created by Frank Contreras (contrerasfrank@gmail.com) on 3/3/16.

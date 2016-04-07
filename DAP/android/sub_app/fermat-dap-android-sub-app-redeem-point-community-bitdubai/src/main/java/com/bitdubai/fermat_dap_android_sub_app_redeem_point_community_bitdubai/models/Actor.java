@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_dap_android_sub_app_redeem_point_community_bitdubai.models;
 
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.RedeemPointActorRecord;
+import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 
 /**
  * Actor Model
