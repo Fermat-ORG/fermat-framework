@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models;
 
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 
 import java.util.UUID;
 
