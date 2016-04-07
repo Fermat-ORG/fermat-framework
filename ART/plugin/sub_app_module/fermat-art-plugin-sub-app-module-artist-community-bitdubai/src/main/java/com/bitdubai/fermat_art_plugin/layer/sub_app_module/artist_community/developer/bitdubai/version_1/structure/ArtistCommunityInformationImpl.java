@@ -64,7 +64,7 @@ public class ArtistCommunityInformationImpl implements ArtistCommunityInformatio
 
     @Override
     public String getPublicKey() {
-        return null;
+        return this.publicKey;
     }
 
     @Override
