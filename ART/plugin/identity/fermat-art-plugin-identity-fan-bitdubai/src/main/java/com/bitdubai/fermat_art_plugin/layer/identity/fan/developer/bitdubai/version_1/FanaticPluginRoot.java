@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -59,7 +60,7 @@ import java.util.UUID;
  */
 public class FanaticPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
-        FanaticIdentityManager,
+        //FanaticIdentityManager,
         LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
@@ -106,7 +107,8 @@ public class FanaticPluginRoot extends AbstractPlugin implements
                     this.pluginFileSystem,
                     this.pluginId,
                     this.deviceUserManager,
-                    this.fanManager);
+                    this.fanManager,
+                    this.tokenlyFanIdentityManager);
 
             System.out.println("############\n ART IDENTITY Fanatic STARTED\n");
            // testCreateArtist();
@@ -117,7 +119,7 @@ public class FanaticPluginRoot extends AbstractPlugin implements
         }
     }
 
-    private void testCreateArtist(){
+    /*private void testCreateArtist(){
         String alias = "perezilla";
         byte[] image = new byte[0];
         String password = "milestone";
@@ -164,94 +166,7 @@ public class FanaticPluginRoot extends AbstractPlugin implements
             e.printStackTrace();
         }
 
-    }
-    @Override
-    public List<Fanatic> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
-        return identityFanaticManager.getIdentityArtistFromCurrentDeviceUser();
-    }
-
-    @Override
-    public HashMap<ExternalPlatform, HashMap<UUID, String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
-
-        /*
-            We'll return a HashMap based on the external platform containing another hashmap with the user and the id to that platform
-         */
-        HashMap<ExternalPlatform, HashMap<UUID,String>> externalArtistIdentities = new HashMap<>();
-        HashMap<UUID,String> externalArtist = new HashMap<>();
-        for (ExternalPlatform externalPlatform:
-             ExternalPlatform.values()) {
-            //Future platform will need to be added manually to the switch
-            switch (externalPlatform){
-                case TOKENLY:
-                    try {
-                        final List<Fan> tokenlyArtists = tokenlyFanIdentityManager.listIdentitiesFromCurrentDeviceUser();
-
-                        for (Fan Fanatic:
-                                tokenlyArtists) {
-                            externalArtist.put(Fanatic.getId(),Fanatic.getUsername());
-                        }
-                        if(externalArtist.size()>0)
-                            externalArtistIdentities.put(externalPlatform,externalArtist);
-                    } catch (com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException e) {
-                        e.printStackTrace();
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-        return externalArtistIdentities;
-    }
-
-    @Override
-    public ArtIdentity getLinkedIdentity(String publicKey) {
-        ArtIdentity artIdentity = null;
-        try {
-            Fanatic Fanatic = identityFanaticManager.getIdentitFanatic(publicKey);
-            if(Fanatic != null){
-                for (ExternalPlatform externalPlatform:
-                        ExternalPlatform.values()) {
-                    //Future platform will need to be added manually to the switch
-                    switch (externalPlatform){
-                        case TOKENLY:
-                            final Fan tokenlyArtist = tokenlyFanIdentityManager.getFanIdentity(Fanatic.getExternalIdentityID());
-                            if(tokenlyArtist != null){
-                                artIdentity = new FanaticIdentityImp(tokenlyArtist.getPublicKey(),tokenlyArtist.getProfileImage(),tokenlyArtist.getUsername(),tokenlyArtist.getId(),externalPlatform);
-                            }
-                            break;
-                    }
-                }
-            }
-        } catch (CantGetFanIdentityException e) {
-        errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        } catch (com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        } catch (com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantGetFanIdentityException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        }
-        return artIdentity;
-    }
-
-
-    @Override
-    public Fanatic createFanaticIdentity(String alias, byte[] imageBytes, UUID externalIdentityId) throws CantCreateFanIdentityException {
-        return identityFanaticManager.createNewIdentityArtist(alias,imageBytes,externalIdentityId);
-    }
-
-    @Override
-    public void updateFanIdentity(String alias, String publicKey, byte[] imageProfile, UUID externalIdentityID) throws CantUpdateFanIdentityException {
-        identityFanaticManager.updateIdentityArtist(alias, publicKey, imageProfile, externalIdentityID);
-    }
-
-    @Override
-    public Fanatic getFanIdentity(String publicKey) throws CantGetFanIdentityException, IdentityNotFoundException {
-        return identityFanaticManager.getIdentitFanatic(publicKey);
-    }
-
-    @Override
-    public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
-        identityFanaticManager.registerIdentitiesANS(publicKey);
-    }
+    }*/
 
 
     @Override
@@ -316,5 +231,14 @@ public class FanaticPluginRoot extends AbstractPlugin implements
             //FermatException e = new CantGetLogTool(CantGetLogTool.DEFAULT_MESSAGE, FermatException.wrapException(exception), "setLoggingLevelPerClass: " + ActorIssuerPluginRoot.newLoggingLevel, "Check the cause");
             // this.errorManager.reportUnexpectedAddonsException(Addons.EXTRA_USER, UnexpectedAddonsExceptionSeverity.DISABLES_THIS_ADDONS, e);
         }
+    }
+
+    /**
+     * This method returns the plugin manager
+     * @return
+     */
+    @Override
+    public FermatManager getManager() {
+        return this.identityFanaticManager;
     }
 }

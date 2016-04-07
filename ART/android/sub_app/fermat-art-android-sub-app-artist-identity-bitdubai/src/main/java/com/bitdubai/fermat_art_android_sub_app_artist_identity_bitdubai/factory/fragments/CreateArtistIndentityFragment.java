@@ -168,7 +168,7 @@ public class CreateArtistIndentityFragment extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootLayout = inflater.inflate(R.layout.fragment_art_create_issuer_identity, container, false);
+        View rootLayout = inflater.inflate(R.layout.confirm_dialog, container, false);
         initViews(rootLayout);
         setUpIdentity();
 
@@ -181,9 +181,9 @@ public class CreateArtistIndentityFragment extends AbstractFermatFragment {
      * @param layout el layout de este Fragment que contiene las vistas
      */
     private void initViews(View layout) {
-        createButton = (Button) layout.findViewById(R.id.art_issuer_button);
-        mIdentityName = (EditText) layout.findViewById(R.id.art_issuer_name);
-        mIdentityImage = (ImageView) layout.findViewById(R.id.art_issuer_image);
+        createButton = (Button) layout.findViewById(R.id.confirmDialogNoButton);
+        mIdentityName = (EditText) layout.findViewById(R.id.confirmDialogNoButton);
+        mIdentityImage = (ImageView) layout.findViewById(R.id.confirmDialogContentText);
 
         createButton.setText((!isUpdate) ? "Create" : "Update");
 
@@ -304,7 +304,7 @@ public class CreateArtistIndentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
         menu.setHeaderTitle("Choose mode");
-        menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
+        menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.image_round_corners));
         menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
         menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
 
