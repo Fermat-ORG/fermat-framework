@@ -28,6 +28,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseFactory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.exceptions.CantInitializeNetworkClientP2PDatabaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.util.HardcodeConstants;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -72,6 +73,12 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
      * Represent the database of the node
      */
     private Database dataBase;
+
+    /**
+     * Represent the daoFactory instance
+     */
+    private DaoFactory daoFactory;
+
 
     /**
      * Represent the NetworkClientP2PDatabaseFactory of the client
@@ -131,6 +138,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
              * Add references to the node context
              */
             ClientContext.add(ClientContextItem.CLIENT_IDENTITY, identity    );
+            ClientContext.add(ClientContextItem.DAO_FACTORY    , daoFactory  );
             ClientContext.add(ClientContextItem.ERROR_MANAGER  , errorManager);
             ClientContext.add(ClientContextItem.EVENT_MANAGER  , eventManager);
 
@@ -302,6 +310,16 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
                 throw new CantInitializeNetworkClientP2PDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
+        }
+
+        //Validate if database is ok
+        if (dataBase != null) {
+
+            /*
+             * Create the daoFactory
+             */
+            this.daoFactory = new DaoFactory(dataBase);
+
         }
 
     }
