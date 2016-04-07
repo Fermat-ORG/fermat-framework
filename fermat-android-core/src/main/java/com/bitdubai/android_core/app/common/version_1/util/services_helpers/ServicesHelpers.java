@@ -28,14 +28,14 @@ public class ServicesHelpers {
         Log.d(TAG, "binding every service");
         appManagerServiceHelper.bindAppManagerService();
         notificationServiceHelper.bindNotificationService();
-        //clientSideBrokerServiceHelper.clientSideBrokerBoundService();
+        clientSideBrokerServiceHelper.clientSideBrokerBoundService();
     }
 
     public void unbindServices(){
         Log.d(TAG, "unbind every service");
         appManagerServiceHelper.unbindAppManagerService();
         notificationServiceHelper.unbindNotificationService();
-        //clientSideBrokerServiceHelper.unbindClientSideBrokerService();
+        clientSideBrokerServiceHelper.unbindClientSideBrokerService();
     }
 
     public FermatAppsManagerService getAppManager(){

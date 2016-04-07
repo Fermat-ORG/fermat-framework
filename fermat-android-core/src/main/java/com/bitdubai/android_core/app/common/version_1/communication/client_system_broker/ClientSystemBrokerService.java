@@ -70,14 +70,15 @@ public class ClientSystemBrokerService extends Service {
         bufferChannel = new BufferChannel();
         poolExecutor = Executors.newFixedThreadPool(THREADS_NUM);
         PackageManager packageManager = getPackageManager();
-        Intent serviceIntent = new Intent("org.fermat.COMM_SERVICE");
+        Intent serviceIntent = new Intent("org.fermat.alpha.COMM_SERVICE");
         List<ResolveInfo> services = packageManager.queryIntentServices(serviceIntent, 0);
         if (services.size() > 0) {
             ResolveInfo service = services.get(0);
             Intent intent = new Intent();
             intent.setClassName(service.serviceInfo.packageName, service.serviceInfo.name);
-            intent.setAction("my.command");
+            intent.setAction("org.fermat.alpha.COMM_SERVICE");
             //ComponentName cn = startService(intent);
+            startService(intent);
             doBindService(intent);
         }
     }
@@ -105,6 +106,7 @@ public class ClientSystemBrokerService extends Service {
                 bundle.putSerializable(CommunicationDataKeys.DATA_PARAMS_TO_EXECUTE_METHOD, params);
                 bundle.putString(CommunicationDataKeys.DATA_KEY_TO_RESPONSE, keyToResponse);
                 msg.setData(bundle);
+                Log.i(TAG,"Sending request");
                 mServiceMcu.send(msg);
 
                 return bufferChannel.getObject(requestId);
@@ -121,6 +123,8 @@ public class ClientSystemBrokerService extends Service {
             Log.e(TAG, "FermatService is not running");
         } catch (InterruptedException e) {
             //todo: lanzar la excepcion para arriba para que se avise al module que no tiene datos
+            e.printStackTrace();
+        } catch (Exception e){
             e.printStackTrace();
         }
         return null;
@@ -207,6 +211,8 @@ public class ClientSystemBrokerService extends Service {
                 // disconnected (and then reconnected if it can be restarted)
                 // so there is no need to do anything here.
                 Log.e(TAG, "FermatService is not running");
+            } catch (Exception e){
+                e.printStackTrace();
             }
         }
 
@@ -235,6 +241,8 @@ public class ClientSystemBrokerService extends Service {
             }
         } catch (SecurityException e) {
             Log.e(TAG, "can't bind to ModemWatcherService, check permission in Manifest");
+        } catch (Exception e){
+            e.printStackTrace();
         }
         mIsBound = true;
         Log.d(TAG, "Binding.");

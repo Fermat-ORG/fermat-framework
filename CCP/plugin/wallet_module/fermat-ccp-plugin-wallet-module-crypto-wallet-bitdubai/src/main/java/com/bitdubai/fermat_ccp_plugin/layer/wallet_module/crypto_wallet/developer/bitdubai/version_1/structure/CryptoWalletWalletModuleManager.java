@@ -1487,12 +1487,22 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleMana
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return null;
+        try {
+            List<IntraWalletUserIdentity> lst = getActiveIdentities();
+            if(lst.isEmpty()){
+                return null;
+            }else{
+                return lst.get(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-
+        createIntraUser(name, phrase, profile_img);
     }
 
     @Override

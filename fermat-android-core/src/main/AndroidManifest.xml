@@ -141,7 +141,7 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
                 <!-- Service name -->
-                <action android:name="org.fermat.COMM_SERVICE" />
+                <action android:name="org.fermat.alpha.COMM_SERVICE" />
             </intent-filter>
         </service>
 

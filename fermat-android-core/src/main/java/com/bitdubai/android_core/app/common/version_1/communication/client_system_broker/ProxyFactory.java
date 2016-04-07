@@ -28,7 +28,6 @@ public class ProxyFactory {
         if(!openModules.containsKey(pluginVersionReference)) {
             try {
                 Class clazz = FermatSystem.getInstance().getModuleManager2(pluginVersionReference).getClass();
-
                 moduleManager = (ModuleManager) Proxy.newProxyInstance(
                         clazz.getClassLoader(),
                         clazz.getInterfaces(),

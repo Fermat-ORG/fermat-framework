@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.support.annotation.Nullable;
 
 import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentApp;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentAppComparator;
@@ -74,10 +75,7 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
     @Override
     public IBinder onBind(Intent intent) {
         String key = intent.getStringExtra(AppManagerKeys.AUTENTIFICATION_CLIENT_KEY);
-        if(key==null){
-            return localBinder;
-        }
-        return null;
+        return localBinder;
     }
 
     public void init(){
@@ -173,13 +171,13 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
             fermatSession = fermatSessionManager.getAppsSession(fermatApp.getAppPublicKey());
         }else {
             ModuleManager moduleManager = null;
-//            try {
-//                moduleManager = ApplicationSession.getInstance().getClientSideBrokerService().getModuleManager(fermatAppConnection.getPluginVersionReference());
-//            } catch (CantCreateProxyException e) {
-//                e.printStackTrace();
-//            }
-//            fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), moduleManager, fermatAppConnection);
-            fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), FermatSystemUtils.getModuleManager(fermatAppConnection.getPluginVersionReference()), fermatAppConnection);
+            try {
+                moduleManager = ApplicationSession.getInstance().getClientSideBrokerService().getModuleManager(fermatAppConnection.getPluginVersionReference());
+            } catch (CantCreateProxyException e) {
+                e.printStackTrace();
+            }
+            fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), moduleManager, fermatAppConnection);
+//            fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), FermatSystemUtils.getModuleManager(fermatAppConnection.getPluginVersionReference()), fermatAppConnection);
         }
         fermatAppConnection.setFullyLoadedSession(fermatSession);
         return fermatSession;
