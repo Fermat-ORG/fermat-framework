@@ -16,28 +16,46 @@ public class BufferChannel {
 
     private ConcurrentMap<UUID,Object> buffer;
     private ConcurrentMap<UUID,Semaphore> locks;
+    private ConcurrentMap<UUID,Lock> locks1;
 
     public BufferChannel() {
         buffer = new ConcurrentHashMap<>();
         locks = new ConcurrentHashMap<>();
+        locks1 = new ConcurrentHashMap<>();
     }
 
     public Object getObject(UUID id) throws InterruptedException {
         if(!buffer.containsKey(id)){
             Log.i(TAG,"waiting for object");
-            Semaphore semaphore = new Semaphore(1);
-            locks.put(id, semaphore);
-            semaphore.acquire();
+            //Semaphore semaphore = new Semaphore(1);
+            //locks.put(id, semaphore);
+            Lock lock = new Lock();
+            synchronized (lock){
+                lock.block();
+                locks1.put(id, lock);
+                while(lock.getIsBlock()){
+                    lock.wait();
+                    Log.i(TAG, "thread wake up");
+                    Log.i(TAG, "Lock is: "+lock.getIsBlock());
+                }
+            }
+            //semaphore.acquire();
         }
-        return buffer.get(id);
+        Object o = buffer.get(id);
+        buffer.remove(id);
+        locks1.remove(id);
+        return o;
     }
 
     public void notificateObject(UUID id,Object o){
         Log.i(TAG, "Notification object arrived");
         Log.i(TAG, o.toString());
-        synchronized (this){
-            buffer.put(id,o);
-            locks.get(id).release();
+        Lock lock = locks1.get(id);
+        synchronized (lock){
+            buffer.put(id, o);
+            //locks.get(id).release();
+            lock.unblock();
+            lock.notify();
         }
 
     }
