@@ -84,6 +84,8 @@ public class CustomerBrokerCloseNegotiationTransactionDatabaseFactory implements
             table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_TYPE_COLUMN_NAME       , DatabaseDataType.STRING       , 50, Boolean.FALSE);
             table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_XML_COLUMN_NAME        , DatabaseDataType.STRING       , 4000, Boolean.FALSE);
             table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TIMESTAMP_COLUMN_NAME              , DatabaseDataType.LONG_INTEGER , 0, Boolean.FALSE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_SEND_TRANSACTION_COLUMN_NAME       , DatabaseDataType.STRING       , 10, Boolean.FALSE);
+            table.addColumn(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_CONFIRM_TRANSACTION_COLUMN_NAME    , DatabaseDataType.STRING       , 10, Boolean.FALSE);
 
             table.addIndex(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_FIRST_KEY_COLUMN);
 

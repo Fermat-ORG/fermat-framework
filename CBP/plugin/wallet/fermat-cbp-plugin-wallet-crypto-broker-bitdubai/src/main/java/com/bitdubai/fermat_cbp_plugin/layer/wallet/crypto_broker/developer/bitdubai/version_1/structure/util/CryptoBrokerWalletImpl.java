@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitd
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -67,16 +68,17 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
     private PluginFileSystem pluginFileSystem;
     private CryptoBrokerWalletDatabaseDao cryptoBrokerWalletDatabaseDao;
     private CurrencyExchangeProviderFilterManager providerFilter;
-
+    private Broadcaster broadcaster;
     /**
      * Constructor
      */
-    public CryptoBrokerWalletImpl(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, CurrencyExchangeProviderFilterManager providerFilter) {
+    public CryptoBrokerWalletImpl(ErrorManager errorManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, CurrencyExchangeProviderFilterManager providerFilter,Broadcaster broadcaster) {
         this.errorManager = errorManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.providerFilter = providerFilter;
+        this.broadcaster=broadcaster;
     }
 
     /**
@@ -87,7 +89,7 @@ public class CryptoBrokerWalletImpl implements CryptoBrokerWallet {
      */
     @Override
     public StockBalance getStockBalance() throws CantGetStockCryptoBrokerWalletException {
-        return new StockBalanceImpl(database, pluginId, pluginFileSystem, errorManager);
+        return new StockBalanceImpl(database, pluginId, pluginFileSystem, errorManager,broadcaster);
     }
 
     /**

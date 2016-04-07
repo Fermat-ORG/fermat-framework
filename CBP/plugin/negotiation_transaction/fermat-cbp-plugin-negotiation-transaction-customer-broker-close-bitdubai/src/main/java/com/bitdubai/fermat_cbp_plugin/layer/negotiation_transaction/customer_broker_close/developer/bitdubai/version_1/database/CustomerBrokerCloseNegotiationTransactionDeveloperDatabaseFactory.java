@@ -129,6 +129,8 @@ public class CustomerBrokerCloseNegotiationTransactionDeveloperDatabaseFactory i
         customerBrokerCloseColumns.add(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_TYPE_COLUMN_NAME);
         customerBrokerCloseColumns.add(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_NEGOTIATION_XML_COLUMN_NAME);
         customerBrokerCloseColumns.add(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_TIMESTAMP_COLUMN_NAME);
+        customerBrokerCloseColumns.add(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_SEND_TRANSACTION_COLUMN_NAME);
+        customerBrokerCloseColumns.add(CustomerBrokerCloseNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_CLOSE_CONFIRM_TRANSACTION_COLUMN_NAME);
         /**
          * Table Customer Broker Close addition.
          */
