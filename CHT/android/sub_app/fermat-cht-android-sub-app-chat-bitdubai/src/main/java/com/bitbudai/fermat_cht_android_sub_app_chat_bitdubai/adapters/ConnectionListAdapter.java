@@ -34,7 +34,6 @@ import java.util.UUID;
 
 public class ConnectionListAdapter extends ArrayAdapter<String> {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
-
     List<ContactList> contactsList = new ArrayList<>();
     ArrayList<String> contactinfo=new ArrayList<String>();
     ArrayList<Bitmap> contacticon=new ArrayList<Bitmap>();
