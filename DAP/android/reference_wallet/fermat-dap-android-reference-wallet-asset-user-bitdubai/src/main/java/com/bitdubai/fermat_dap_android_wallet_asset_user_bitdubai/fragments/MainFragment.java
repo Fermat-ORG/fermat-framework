@@ -23,7 +23,6 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.Digit
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
@@ -90,6 +89,7 @@ public class MainFragment extends AbstractFermatFragment
                                         assetUserWallet.getQuantityBookBalance(), assetUserWallet.getQuantityAvailableBalance())));
                         asset.setAssetPublicKey(assetUserWallet.getDigitalAsset().getPublicKey());
                         asset.setWalletPublicKey("public_key");
+                        asset.setDigitalAsset(assetUserWallet.getDigitalAsset());
                         bookAssets.add(asset);
                     }
                 }
@@ -163,7 +163,7 @@ public class MainFragment extends AbstractFermatFragment
                 @Override
                 protected Object doInBackground() throws Exception {
                     //TODO GET THE AMOUNT TO APPROPRIATE.
-                    manager.appropriateAsset(asset.getAssetPublicKey(), null);
+                    manager.appropriateAsset(asset.getDigitalAsset().getGenesisAddress(), null);
                     return true;
                 }
             };
@@ -195,7 +195,7 @@ public class MainFragment extends AbstractFermatFragment
             FermatWorker task = new FermatWorker() {
                 @Override
                 protected Object doInBackground() throws Exception {
-                    manager.redeemAssetToRedeemPoint(asset.getAssetPublicKey(), null, null, 1);
+                    manager.redeemAssetToRedeemPoint(asset.getDigitalAsset().getGenesisAddress(), null, null, 1);
                     return true;
                 }
             };

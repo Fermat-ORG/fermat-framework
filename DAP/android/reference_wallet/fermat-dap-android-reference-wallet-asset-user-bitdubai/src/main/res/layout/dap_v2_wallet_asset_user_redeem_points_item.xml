@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:background="@color/fab_material_white">
+
+    <RelativeLayout
+        android:id="@+id/redeemPointImageLayout"
+        android:layout_width="87dp"
+        android:layout_height="87dp"
+        android:background="@drawable/bg_circular_home_issuer"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="8dp">
+
+        <ImageView
+            android:id="@+id/redeemPointImage"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/redeemPointName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Redeem Point Name"
+        android:layout_toRightOf="@+id/redeemPointImageLayout"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/fab_material_black"
+        android:textSize="14sp"/>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/redeemPointAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Redeem Point Direccion Redeem Point Direccion Redeem Point Direccion Redeem Redeem Poin "
+        android:layout_below="@+id/redeemPointName"
+        android:layout_toRightOf="@+id/redeemPointImageLayout"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="8dp"
+        android:textColor="@color/gray"
+        android:textSize="12sp"/>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/fab_material_grey_500"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"/>
+
+</RelativeLayout>

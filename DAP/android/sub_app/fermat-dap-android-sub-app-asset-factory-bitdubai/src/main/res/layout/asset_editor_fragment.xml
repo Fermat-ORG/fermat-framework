@@ -25,8 +25,8 @@
             <ImageView
                 android:id="@+id/picture"
                 android:layout_width="match_parent"
-                android:layout_height="210dp"
-                android:scaleType="centerCrop"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
                 android:src="@drawable/img_asset_image"
                 tools:ignore="ContentDescription" />
 
@@ -77,7 +77,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="6dp"
                     android:orientation="vertical">
 
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -105,7 +105,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="6dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -151,7 +151,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="6dp">
 
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:id="@+id/bitcoinsLabelText"
@@ -167,33 +167,33 @@
                         android:id="@+id/bitcoins"
                         android:layout_width="100dp"
                         android:layout_height="38dp"
+                        android:layout_below="@+id/bitcoinsLabelText"
+                        android:layout_marginTop="2dp"
                         android:ems="10"
                         android:imeOptions="actionNext"
                         android:inputType="numberDecimal"
                         android:nextFocusDown="@+id/expiration_date"
                         android:padding="8dp"
                         android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:layout_marginTop="2dp"
-                        android:layout_below="@+id/bitcoinsLabelText"/>
+                        android:textSize="12sp" />
 
                     <Spinner
                         android:id="@+id/bitcoinsSpinner"
                         android:layout_width="100dp"
                         android:layout_height="41dp"
-                        android:layout_toRightOf="@+id/bitcoins"
-                        android:layout_alignBottom="@+id/bitcoins"/>
+                        android:layout_alignBottom="@+id/bitcoins"
+                        android:layout_toRightOf="@+id/bitcoins" />
 
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:id="@+id/bitcoinsText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:textColor="@color/text_color_hint"
                         android:layout_alignBottom="@+id/bitcoins"
-                        android:layout_marginBottom="3dp"
                         android:layout_alignParentRight="true"
-                        android:text="0.111111 BTC"/>
+                        android:layout_marginBottom="3dp"
+                        android:text="0.111111 BTC"
+                        android:textColor="@color/text_color_hint"
+                        android:textSize="14sp" />
 
                 </RelativeLayout>
 
@@ -207,27 +207,27 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginTop="10dp"
-                        android:textSize="14sp"
+                        android:text="bitcoin Wallet Balance:"
                         android:textColor="@color/text_color_hint"
-                        android:text="bitcoin Wallet Balance:"/>
+                        android:textSize="14sp" />
 
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                         android:id="@+id/bitcoinBalanceText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="14sp"
-                        android:textColor="@color/fab_material_orange_500"
-                        android:layout_toRightOf="@id/bitcoinBalanceLabelText"
-                        android:layout_marginTop="10dp"
                         android:layout_marginLeft="5dp"
-                        android:text="0.111111 BTC"/>
+                        android:layout_marginTop="10dp"
+                        android:layout_toRightOf="@id/bitcoinBalanceLabelText"
+                        android:text="0.111111 BTC"
+                        android:textColor="@color/fab_material_orange_500"
+                        android:textSize="14sp" />
 
                 </RelativeLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="6dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -308,7 +308,7 @@
                     android:id="@+id/isRedeemable"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="6dp"
                     android:checked="true"
                     android:text="This asset is redeemable"
                     android:textColor="@color/black"
@@ -318,7 +318,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp">
+                    android:layout_marginTop="16dp">
 
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                         android:id="@+id/action_create"

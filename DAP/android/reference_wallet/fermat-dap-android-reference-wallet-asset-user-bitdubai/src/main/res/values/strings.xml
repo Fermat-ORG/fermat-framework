@@ -9,10 +9,11 @@
     <string name="help">Help</string>
     <string name="dap_user_wallet_search">Search</string>
     <string name="dap_user_wallet_search_hint">Asset name</string>
-    <string name="dap_user_wallet_action_redeem">Redeem Asset</string>
-    <string name="dap_user_wallet_action_appropriate">Appropriate Asset</string>
-    <string name="dap_user_wallet_action_transfer">Transfer Asset</string>
-    <string name="dap_user_wallet_action_sell">Sell Asset</string>
+    <string name="dap_user_wallet_action_redeem">Redeem</string>
+    <string name="dap_user_wallet_action_appropriate">Appropriate</string>
+    <string name="dap_user_wallet_action_transfer">Transfer</string>
+    <string name="dap_user_wallet_action_sell">Sell</string>
+    <string name="dap_user_wallet_action_redeem_title">Redeem Asset</string>
     <!-- -->
 
     <!-- empty list views -->
@@ -40,10 +41,10 @@
     <string name="dap_user_wallet_validate_assets_to_redeem">Must be enter the number of assets to redeem</string>
     <string name="dap_user_wallet_validate_assets_to_redeem_greater">Value can\'t be greater than </string>
     <string name="dap_user_wallet_validate_no_available_assets">There is not assets to redeem</string>
+    <string name="dap_user_wallet_validate_no_rp">No redeem point selected</string>
     <string name="dap_user_wallet_validate_no_redeem_points">No redeem points selected</string>
     <string name="dap_user_wallet_validate_no_users">No users selected</string>
     <string name="dap_user_wallet_validate_no_user">No user selected</string>
-    <string name="dap_user_wallet_validate_no_rp">No redeem point selected</string>
     <string name="dap_user_wallet_validate_not_enought_assets">There is not enought assets to redeem</string>
     <string name="dap_user_wallet_identity">Identity must be created</string>
     <string name="dap_user_wallet_validate_sell_quantity_zero">Must be enter number of assets to sell</string>
@@ -61,6 +62,7 @@
     <string name="dap_user_wallet_confirm_entered_info">Are you sure that the entered information is correct? This action is irreversible</string>
     <string name="dap_user_wallet_confirm_asset_buy">Are you sure that you want to buy this asset?</string>
     <string name="dap_user_wallet_confirm_sure">Are you sure you want to do this? This action is irreversible</string>
+    <string name="dap_user_wallet_confirm_appropriate">Are you sure you want to appropriate this asset? This action is irreversible</string>
     <!-- -->
 
     <!-- app messages -->
@@ -79,7 +81,7 @@
     <string name="dap_user_wallet_sell_to">User to sell</string>
     <string name="dap_user_wallet_sell_button">Sell</string>
     <string name="dap_user_wallet_buy_no_available">No Available</string>
-    <string name="dap_user_wallet_to">To</string>
+    <string name="dap_user_wallet_to">To: </string>
     <string name="dap_user_wallet_x_button">X</string>
     <!-- -->
 
@@ -129,4 +131,19 @@
     <string name="dap_user_wallet_sell_select_subTitle">User Selection.</string>
     <string name="dap_user_wallet_sell_select_body">[add something here]</string>
     <!--Dialog Help - End-->
+
+    <!-- v2 -->
+    <string name="dap_user_wallet_v2_home_issuer_item_num_assets">assets</string>
+    <string name="dap_user_wallet_v2_detail_received">Received by</string>
+    <string name="dap_user_wallet_v2_confirm_title">Do this Redeem Point?</string>
+    <string name="dap_user_wallet_v2_confirm_body">Let Asset Issuer Wallet know if you ... Let Asset Issuer Wallet know if you ... Let Asset Issuer Wallet know if you ...</string>
+    <string name="dap_user_wallet_v2_confirm_button_agree">AGREE</string>
+    <string name="dap_user_wallet_v2_confirm_button_disagree">DISAGREE</string>
+    <!-- -->
+
+    <!-- v3 -->
+    <string name="card_confirmed">Confirmed</string>
+    <string name="card_pending">Pending</string>
+    <string name="card_locked">Locked</string>
+    <!-- -->
 </resources>

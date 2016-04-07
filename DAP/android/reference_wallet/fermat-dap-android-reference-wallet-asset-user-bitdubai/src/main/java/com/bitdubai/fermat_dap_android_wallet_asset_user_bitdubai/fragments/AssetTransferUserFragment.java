@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.ConfirmDialog;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
@@ -26,18 +27,19 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.AssetTransferSelectUsersAdapter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.AssetTransferUserAdapter;
-import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.Data;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.User;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.SessionConstantsAssetUser;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.data.DataManager;
+import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.AssetUserSettings;
 import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
@@ -51,7 +53,7 @@ import java.util.List;
 import static android.widget.Toast.makeText;
 
 /**
- * Created by Jinmy Bohorquez on 18/02/2016.
+ * Created by Penelope Quintero on 18/02/2016.
  */
 public class AssetTransferUserFragment extends FermatWalletListFragment<User>
         implements FermatListItemListeners<User> {
@@ -66,7 +68,10 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
     // Data
     private List<User> users;
     private User userSelected;
-    private DigitalAsset assetToTransfer;
+    private Asset assetToTransfer;
+    String digitalAssetPublicKey;
+
+    private DigitalAsset digitalAsset;
 
     SettingsManager<AssetUserSettings> settingsManager;
 
@@ -74,6 +79,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
     private View noUsersView;
     private Toolbar toolbar;
     private Activity activity;
+    private FermatTextView titleUser;
 
     public static AssetTransferUserFragment newInstance() {
         return new AssetTransferUserFragment();
@@ -89,15 +95,26 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
 
             settingsManager = appSession.getModuleManager().getSettingsManager();
 
+            try {
+
+                assetToTransfer = (Asset) appSession.getData("asset_data");
+                digitalAssetPublicKey = assetToTransfer.getDigitalAsset().getPublicKey();
+
+//                digitalAsset = Data.getDigitalAsset(moduleManager, digitalAssetPublicKey);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             users = (List) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-            assetToTransfer = (DigitalAsset) appSession.getData("asset_data");
+
             activity = getActivity();
 
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.DAP_ASSET_ISSUER_WALLET,
+                errorManager.reportUnexpectedWalletException(Wallets.DAP_ASSET_USER_WALLET,
                         UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
         }
     }
@@ -109,6 +126,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
         configureToolbar();
 
         noUsersView = layout.findViewById(R.id.dap_wallet_asset_user_transfer_no_users);
+        titleUser = (FermatTextView) layout.findViewById(R.id.select_user_to_transfer);
 
         showOrHideNoUsersView(users.isEmpty());
     }
@@ -138,7 +156,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
         menu.add(0, SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER, 0, "Transfer")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //menu.add(1, SessionConstantsAssetUser.IC_ACTION_USER_HELP_TRANSFER_SELECT, 0, "Help")
-                //.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+        //.setShowAsAction(MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
     }
 
@@ -150,21 +168,19 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
             if (id == SessionConstantsAssetUser.IC_ACTION_USER_HELP_TRANSFER_SELECT) {
                 setUpHelpAssetRedeem(settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
-            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER){
+            } else if (id == SessionConstantsAssetUser.IC_ACTION_USER_ASSET_TRANSFER) {
                 if (userSelected != null) {
 
-                            new ConfirmDialog.Builder(getActivity(), appSession)
-                                    .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
-                                    .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
-                                    .setColorStyle(getResources().getColor(R.color.dap_user_wallet_principal))
-                                    .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
-                                        @Override
-                                        public void onClick() {
-                                            int assetsAmount = Integer.parseInt("1");
-                                            doTransfer(assetToTransfer.getAssetPublicKey(), users, assetsAmount);
-                                            //changeActivity(Activities.DAP_WALLET_ASSET_USER_V3_HOME, appSession.getAppPublicKey());
-                                        }
-                                    }).build().show();
+                    new ConfirmDialog.Builder(getActivity(), appSession)
+                            .setTitle(getResources().getString(R.string.dap_user_wallet_confirm_title))
+                            .setMessage(getResources().getString(R.string.dap_user_wallet_confirm_entered_info))
+                            .setColorStyle(getResources().getColor(R.color.card_toolbar))
+                            .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
+                                @Override
+                                public void onClick() {
+                                    doTransfer(assetToTransfer.getDigitalAsset().getGenesisAddress(), users, 1);
+                                }
+                            }).build().show();
 
                 } else {
                     Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_validate_no_user), Toast.LENGTH_SHORT).show();
@@ -197,12 +213,12 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
     private void configureToolbar() {
         toolbar = getToolbar();
         if (toolbar != null) {
-            toolbar.setBackgroundColor(getResources().getColor(R.color.dap_user_wallet_new));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.card_toolbar));
             toolbar.setTitleTextColor(Color.WHITE);
             toolbar.setBottom(Color.WHITE);
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
                 Window window = getActivity().getWindow();
-                window.setStatusBarColor(getResources().getColor(R.color.dap_user_wallet_principal));
+                window.setStatusBarColor(getResources().getColor(R.color.card_toolbar));
             }
         }
     }
@@ -276,12 +292,10 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
     @Override
     public void onItemClickListener(User data, int position) {
         //TODO select user
-       //appSession.setData("user_selected", data);
+        //appSession.setData("user_selected", data);
 
-        for (int i=0; i < users.size(); i++)
-        {
-            if (i != position)
-            {
+        for (int i = 0; i < users.size(); i++) {
+            if (i != position) {
                 users.get(i).setSelected(false);
             }
         }
@@ -289,8 +303,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
 
         if (users.get(position).isSelected()) {
             userSelected = data;
-        }
-        else {
+        } else {
             userSelected = null;
         }
         getAdapter().changeDataSet(users);
@@ -305,7 +318,8 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
         List<User> users = new ArrayList<>();
         if (moduleManager != null) {
             try {
-                users = Data.getConnectedUsers(moduleManager);
+//                users = Data.getConnectedUsers(moduleManager);
+                users = DataManager.getConnectedUsers();
                 appSession.setData("users_to_transfer", users);
             } catch (Exception ex) {
                 CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -328,13 +342,15 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
         if (show) {
             recyclerView.setVisibility(View.GONE);
             noUsersView.setVisibility(View.VISIBLE);
+            titleUser.setVisibility(View.GONE);
         } else {
             recyclerView.setVisibility(View.VISIBLE);
             noUsersView.setVisibility(View.GONE);
+            titleUser.setVisibility(View.VISIBLE);
         }
     }
 
-    private void doTransfer(final String assetPublicKey, final List<User> users, final int assetAmount) {
+    private void doTransfer(final CryptoAddress cryptoAddress, final List<User> users, final int assetAmount) {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
         dialog.setCancelable(false);
@@ -347,7 +363,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
                         moduleManager.addUserToDeliver(user.getActorAssetUser());
                     }
                 }
-                moduleManager.transferAssets(assetPublicKey, WalletUtilities.WALLET_PUBLIC_KEY, assetAmount);
+                moduleManager.transferAssets(cryptoAddress, WalletUtilities.WALLET_PUBLIC_KEY, assetAmount);
                 return true;
             }
         };
@@ -360,7 +376,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
                 if (activity != null) {
 //                    refreshUIData();
                     Toast.makeText(activity, getResources().getString(R.string.dap_user_wallet_transfer_ok), Toast.LENGTH_LONG).show();
-                    changeActivity(Activities.DAP_WALLET_ASSET_USER_ASSET_DETAIL, appSession.getAppPublicKey());
+                    changeActivity(Activities.DAP_WALLET_ASSET_USER_V3_HOME, appSession.getAppPublicKey());
                 }
             }
 

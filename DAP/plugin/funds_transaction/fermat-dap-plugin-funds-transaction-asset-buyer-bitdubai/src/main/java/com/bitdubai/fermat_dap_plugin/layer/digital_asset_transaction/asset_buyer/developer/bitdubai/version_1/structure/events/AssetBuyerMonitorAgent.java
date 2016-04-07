@@ -8,13 +8,19 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetCryptoTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
+import com.bitdubai.fermat_bch_api.layer.crypto_router.incoming_crypto.IncomingCryptoManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.transactions.DraftTransaction;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.exceptions.CantCreateDraftTransactionException;
@@ -58,6 +64,7 @@ import com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_buye
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -79,10 +86,11 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
     private final OutgoingDraftManager outgoingDraftManager;
     private final IntraWalletUserIdentityManager intraWalletUserIdentityManager;
     private final ExtraUserManager extraUserManager;
+    private final TransactionProtocolManager<CryptoTransaction> protocolManager;
 
     //CONSTRUCTORS
 
-    public AssetBuyerMonitorAgent(ErrorManager errorManager, AssetBuyerDAO dao, AssetBuyerTransactionManager transactionManager, AssetUserWalletManager userWalletManager, ActorAssetUserManager actorAssetUserManager, AssetTransmissionNetworkServiceManager assetTransmission, CryptoVaultManager cryptoVaultManager, BitcoinNetworkManager bitcoinNetworkManager, OutgoingDraftManager outgoingDraftManager, IntraWalletUserIdentityManager intraWalletUserIdentityManager, ExtraUserManager extraUserManager) {
+    public AssetBuyerMonitorAgent(ErrorManager errorManager, AssetBuyerDAO dao, AssetBuyerTransactionManager transactionManager, AssetUserWalletManager userWalletManager, ActorAssetUserManager actorAssetUserManager, AssetTransmissionNetworkServiceManager assetTransmission, CryptoVaultManager cryptoVaultManager, BitcoinNetworkManager bitcoinNetworkManager, OutgoingDraftManager outgoingDraftManager, IntraWalletUserIdentityManager intraWalletUserIdentityManager, ExtraUserManager extraUserManager, IncomingCryptoManager incomingCryptoManager) {
         this.errorManager = errorManager;
         this.dao = dao;
         this.transactionManager = transactionManager;
@@ -94,6 +102,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
         this.outgoingDraftManager = outgoingDraftManager;
         this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
         this.extraUserManager = extraUserManager;
+        this.protocolManager = incomingCryptoManager.getTransactionManager();
     }
 
     //PUBLIC METHODS
@@ -166,7 +175,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void doTheMainTask() throws DAPException, CantInsertRecordException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException, CantGetTransactionsException, CantLoadWalletException, InvalidParameterException, CantGetCryptoTransactionException, CantRegisterCreditException, CantCreateDraftTransactionException, CantListIntraWalletUsersException, CantCreateExtraUserException {
+        private void doTheMainTask() throws DAPException, CantInsertRecordException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException, CantGetTransactionsException, CantLoadWalletException, InvalidParameterException, CantGetCryptoTransactionException, CantRegisterCreditException, CantCreateDraftTransactionException, CantListIntraWalletUsersException, CantCreateExtraUserException, CantConfirmTransactionException, CantDeliverPendingTransactionsException {
             checkPendingMessages();
             checkNegotiationStatus();
             checkBuyingStatus();
@@ -249,7 +258,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void checkPendingEvents() throws CantLoadTableToMemoryException, DAPException, InvalidParameterException, CantGetTransactionsException, CantLoadWalletException, CantRegisterCreditException, CantGetCryptoTransactionException, CantUpdateRecordException {
+        private void checkPendingEvents() throws CantLoadTableToMemoryException, DAPException, InvalidParameterException, CantGetTransactionsException, CantLoadWalletException, CantRegisterCreditException, CantGetCryptoTransactionException, CantUpdateRecordException, CantConfirmTransactionException, CantDeliverPendingTransactionsException {
             for (String eventId : dao.getPendingOutgoingDraftEvents()) {
                 for (BuyingRecord buyingRecord : dao.getAddingInputsBuying()) {
                     DraftTransaction signedTx = outgoingDraftManager.getPending(buyingRecord.getOutgoingId());
@@ -265,6 +274,10 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                     case INCOMING_ASSET_ON_CRYPTO_NETWORK_WAITING_TRANSFERENCE_ASSET_USER: {
                         for (BuyingRecord record : dao.getWaitingCompleteSignature()) {
                             creditUserWallet(record, BalanceType.BOOK);
+                            Transaction<CryptoTransaction> transaction = transactionForHash(record.getMetadata());
+                            if (transaction != null) {
+                                protocolManager.confirmReception(transaction.getTransactionID());
+                            }
                             dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.COMPLETE_SIGNATURE);
                         }
                         break;
@@ -272,6 +285,10 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                     case INCOMING_ASSET_ON_BLOCKCHAIN_WAITING_TRANSFERENCE_ASSET_USER: {
                         for (BuyingRecord record : dao.getCompletedSignedBuying()) {
                             creditUserWallet(record, BalanceType.AVAILABLE);
+                            Transaction<CryptoTransaction> transaction = transactionForHash(record.getMetadata());
+                            if (transaction != null) {
+                                protocolManager.confirmReception(transaction.getTransactionID());
+                            }
                             dao.updateSellingStatus(record.getRecordId(), AssetSellStatus.SELL_FINISHED);
                         }
                         break;
@@ -314,7 +331,7 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                 throw new CantGetTransactionsException(null, null, null, null);
             }
             metadata.addNewTransaction(cryptoTransaction);
-            AssetUserWalletTransactionRecord transactionRecord = new AssetUserWalletTransactionRecordWrapper(metadata, cryptoTransaction, mySelf, record.getSeller(), WalletUtilities.DEFAULT_MEMO_BUY);
+            AssetUserWalletTransactionRecord transactionRecord = new AssetUserWalletTransactionRecordWrapper(metadata, cryptoTransaction, record.getSeller(), mySelf, WalletUtilities.DEFAULT_MEMO_BUY);
             userWallet.getBalance().credit(transactionRecord, balance);
         }
 
@@ -338,6 +355,17 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
         public void startAgent() {
             agentRunning = true;
         }
+
+        private Transaction<CryptoTransaction> transactionForHash(DigitalAssetMetadata metadata) throws CantDeliverPendingTransactionsException {
+            List<Transaction<CryptoTransaction>> pendingTransactions = protocolManager.getPendingTransactions(Specialist.ASSET_USER_SPECIALIST);
+            for (Transaction<CryptoTransaction> transaction : pendingTransactions) {
+                if (transaction.getInformation().getTransactionHash().equals(metadata.getLastTransactionHash())) {
+                    return transaction;
+                }
+            }
+            return null;
+        }
+
 
     }
 }

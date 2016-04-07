@@ -13,6 +13,7 @@ public class AssetUserWalletDatabaseConstant {
     // We can't use the transaction hash because some credit/debit operations do not involve a hash
     public static final String ASSET_WALLET_USER_VERIFICATION_ID_COLUMN_NAME = "VerificationId";
     public static final String ASSET_WALLET_USER_ASSET_PUBLIC_KEY_COLUMN_NAME = "assetPublicKey";
+    public static final String ASSET_WALLET_USER_ASSET_CRYPTO_ADDRESS_COLUMN_NAME = "cryptoAddress";
     public static final String ASSET_WALLET_USER_ADDRESS_FROM_COLUMN_NAME = "addressFrom";
     public static final String ASSET_WALLET_USER_ADDRESS_TO_COLUMN_NAME = "addressTo";
     public static final String ASSET_WALLET_USER_ACTOR_FROM_COLUMN_NAME= "actorFrom";
@@ -44,5 +45,14 @@ public class AssetUserWalletDatabaseConstant {
     public static final String ASSET_WALLET_USER_METADATA_LOCK_METADATA_ID_COLUMN_NAME = "metadataId";
     public static final String ASSET_WALLET_USER_METADATA_LOCK_GENESIS_TX_COLUMN_NAME = "genesisTx";
     public static final String ASSET_WALLET_USER_METADATA_LOCK_STATUS_COLUMN_NAME = "status";
+
+
+    public static final String ASSET_WALLET_USER_ADDRESSES_TABLE_NAME = "AssetAddresses";
+    public static final String ASSET_WALLET_USER_ADDRESSES_ID_COLUMN_NAME = "id";
+    public static final String ASSET_WALLET_USER_ADDRESSES_ASSET_PUBLICKEY_COLUMN_NAME = "assetPublicKey";
+    public static final String ASSET_WALLET_USER_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME = "cryptoAddress";
+    public static final String ASSET_WALLET_USER_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME = "cryptoCurrency";
+    public static final String ASSET_WALLET_USER_ADDRESSES_AVAILABLE_COLUMN_NAME = "available";
+
 
 }

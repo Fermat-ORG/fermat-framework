@@ -21,7 +21,7 @@
         android:paddingStart="20dp"
         android:paddingTop="8dp"
         android:text="Notifications"
-        android:textColor="#381a5e"
+        android:textColor="#1371A7"
         app:typeface="ROBOTO_REGULAR"
         tools:ignore="HardcodedText" />
 

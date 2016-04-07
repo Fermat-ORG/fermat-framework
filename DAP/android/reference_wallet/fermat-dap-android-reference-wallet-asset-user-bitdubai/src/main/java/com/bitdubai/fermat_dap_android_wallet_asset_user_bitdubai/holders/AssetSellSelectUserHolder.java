@@ -42,7 +42,7 @@ public class AssetSellSelectUserHolder extends FermatViewHolder {
 
         nameText = (FermatTextView) itemView.findViewById(R.id.userName);
         imageViewUser = (ImageView) itemView.findViewById(R.id.imageView_user_sell_avatar);
-        userLayout = (RelativeLayout) itemView.findViewById(R.id.selectedUserEffect);
+        userLayout = (RelativeLayout) itemView.findViewById(R.id.selectedUserEffectSell);
 
 
     }

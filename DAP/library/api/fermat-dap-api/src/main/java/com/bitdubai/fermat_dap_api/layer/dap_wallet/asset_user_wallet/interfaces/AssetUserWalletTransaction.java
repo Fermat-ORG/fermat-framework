@@ -12,6 +12,8 @@ public interface AssetUserWalletTransaction {
 
     String getActualTransactionHash();
 
+    String getTransactionHash();
+
     String getGenesisTransaction();
 
     DAPActor getActorFrom();
