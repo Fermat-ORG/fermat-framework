@@ -355,7 +355,9 @@ public class CustomerBrokerCloseAgent  implements
 
                         //Update the Negotiation Transaction
                         System.out.print("\n\n**** 7) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.SENDING_NEGOTIATION.getCode() + " ****\n");
-                        customerBrokerCloseNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(transactionId, NegotiationTransactionStatus.SENDING_NEGOTIATION);
+                        customerBrokerCloseNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(
+                                transactionId,
+                                NegotiationTransactionStatus.SENDING_NEGOTIATION);
 
                     }
                 }
@@ -385,7 +387,12 @@ public class CustomerBrokerCloseAgent  implements
 
                         System.out.print("\n\n**** 25) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - AGENT - UPDATE STATUS SALE NEGOTIATION STATUS : " + NegotiationTransactionStatus.CONFIRM_NEGOTIATION.getCode() + " ****\n");
                         //Update the Negotiation Transaction
-                        customerBrokerCloseNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(transactionId, NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
+                        customerBrokerCloseNegotiationTransactionDatabaseDao.updateStatusRegisterCustomerBrokerCloseNegotiationTranasction(
+                                transactionId,
+                                NegotiationTransactionStatus.CONFIRM_NEGOTIATION);
+
+                        //CONFIRM TRANSACTION IS DONE
+                        customerBrokerCloseNegotiationTransactionDatabaseDao.confirmTransaction(transactionId);
                     }
                 }
 
