@@ -122,6 +122,8 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
             holder.cardAssetName.setText(asset.getName());
             holder.cardExpDate.setText(asset.getFormattedExpDate());
 
+            initActions(holder, asset);
+
         }
 
         int imageLocked = R.drawable.locked;
@@ -134,7 +136,7 @@ public class HomeCardAdapter extends FermatAdapter<Asset, HomeCardViewHolder> im
             holder.cardSellButton.setVisibility(View.GONE);
         }
 
-        initActions(holder, asset);
+
     }
 
     private void initActions(HomeCardViewHolder holder, final Asset asset) {
