@@ -41,6 +41,7 @@ public enum SubApps {
 
 
     CHT_CHAT("CHTCHAT"),
+    CHT_CHAT_IDENTITY("CHTCHATI"),
     Scanner("S"),
     SETTINGS("SET");
 
@@ -54,6 +55,8 @@ public enum SubApps {
     public static SubApps getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
+            case "CHTCHATI":
+                return SubApps.CHT_CHAT_IDENTITY;
             case "TAISA":
                 return SubApps.TKY_ARTIST_IDENTITY_SUB_APP;
             case "AAIA":
