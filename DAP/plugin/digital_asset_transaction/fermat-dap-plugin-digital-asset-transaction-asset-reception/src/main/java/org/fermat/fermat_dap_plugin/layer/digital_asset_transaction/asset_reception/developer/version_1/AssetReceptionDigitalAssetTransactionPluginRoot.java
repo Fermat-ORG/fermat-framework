@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
@@ -39,14 +39,13 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDel
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.developer_utils.AssetReceptionDeveloperDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.DigitalAssetReceptionVault;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.DigitalAssetReceptor;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDao;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDatabaseConstants;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database.AssetReceptionDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.events.AssetReceptionMonitorAgent;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.events.AssetReceptionRecorderService;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.developer_utils.AssetReceptionDeveloperDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure.DigitalAssetReceptionVault;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure.database.AssetReceptionDao;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure.database.AssetReceptionDatabaseConstants;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure.database.AssetReceptionDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure.events.AssetReceptionMonitorAgent;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -108,7 +107,7 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
     private AssetReceptionMonitorAgent assetReceptionMonitorAgent;
-    private DigitalAssetReceptor digitalAssetReceptor;
+    private org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure.DigitalAssetReceptor digitalAssetReceptor;
 
     public AssetReceptionDigitalAssetTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -200,7 +199,7 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
                     pluginFileSystem,
                     errorManager,
                     assetUserWalletManager);
-            digitalAssetReceptor = new DigitalAssetReceptor(this.errorManager,
+            digitalAssetReceptor = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure.DigitalAssetReceptor(this.errorManager,
                     this.pluginId,
                     this.pluginFileSystem,
                     this.bitcoinNetworkManager,
@@ -208,7 +207,7 @@ public class AssetReceptionDigitalAssetTransactionPluginRoot extends AbstractPlu
                     assetReceptionDao);
 
 
-            AssetReceptionRecorderService assetReceptionRecorderService = new AssetReceptionRecorderService(assetReceptionDao, eventManager);
+            org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure.events.AssetReceptionRecorderService assetReceptionRecorderService = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.version_1.structure.events.AssetReceptionRecorderService(assetReceptionDao, eventManager);
             try {
                 //I need to check if this works
                 assetReceptionRecorderService.start();
