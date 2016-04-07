@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.structure;
+package org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.AssetIssuerIdentityPluginRoot;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.AssetIssuerIdentityPluginRoot;
 
 import java.util.UUID;
 

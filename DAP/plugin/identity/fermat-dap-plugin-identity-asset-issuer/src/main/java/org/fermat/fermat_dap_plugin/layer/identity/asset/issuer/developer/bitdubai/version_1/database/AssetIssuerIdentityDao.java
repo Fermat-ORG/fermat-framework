@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.database;
+package org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
@@ -26,17 +26,16 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantGetAssetIssuerIdentitiesException;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantListAssetIssuersException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.exceptions.CantUpdateIdentityAssetIssuerException;
 import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.AssetIssuerIdentityPluginRoot;
-import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantGetAssetIssuerIdentityPrivateKeyException;
-import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantGetAssetIssuerIdentityProfileImageException;
-import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException;
-import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantListAssetIssuerIdentitiesException;
-import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
-import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
-import com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.structure.IdentityAssetIssuerImpl;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.AssetIssuerIdentityPluginRoot;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantGetAssetIssuerIdentityPrivateKeyException;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantGetAssetIssuerIdentityProfileImageException;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantListAssetIssuerIdentitiesException;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
+import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.structure.IdentityAssetIssuerImpl;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;

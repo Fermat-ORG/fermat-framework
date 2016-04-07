@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.database;
+package org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
