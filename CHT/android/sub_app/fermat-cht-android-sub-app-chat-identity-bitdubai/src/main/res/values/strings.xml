@@ -5,6 +5,7 @@
     <string name="app_name">CHT</string>
     <string name="create">Create Identity</string>
     <string name="help">Help</string>
+    <string name="update">UPDATE</string>
     <string name="activity_contacts_list">Contacts List</string>
     <string name="activity_contact_detail">Contact Detail</string>
     <string name="contacts_list_search_results_title">Contacts List Search for \"%s\"</string>
