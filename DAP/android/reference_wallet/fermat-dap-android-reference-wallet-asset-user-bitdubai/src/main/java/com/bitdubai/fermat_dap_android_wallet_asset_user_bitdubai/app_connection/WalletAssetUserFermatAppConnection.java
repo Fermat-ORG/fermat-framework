@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.app_connection;
 
-import android.app.Activity;
-
 import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
@@ -20,8 +18,8 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.common.header.
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.factory.WalletAssetUserFragmentFactory;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.navigation_drawer.UserWalletNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
+import org.fermat.fermat_dap_api.layer.dap_identity.asset_user.interfaces.IdentityAssetUser;
+import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..

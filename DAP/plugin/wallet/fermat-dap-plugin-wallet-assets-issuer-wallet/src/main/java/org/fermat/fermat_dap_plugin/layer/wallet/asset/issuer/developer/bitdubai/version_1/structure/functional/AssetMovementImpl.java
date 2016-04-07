@@ -1,8 +1,8 @@
 package org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.functional;
 
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetMovement;
+import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
+import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetMovement;
 
 import java.util.Date;
 

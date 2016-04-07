@@ -1,8 +1,8 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import org.fermat.fermat_dap_api.layer.all_definition.enums.IssuingStatus;
 
 import java.util.Date;
 

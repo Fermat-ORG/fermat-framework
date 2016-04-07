@@ -1,6 +1,6 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.exceptions;
 
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
+import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 
 /**
  * Created by Víctor A. Mars M. (marsvicam@gmail.com) on 06/11/15.

@@ -1,7 +1,7 @@
 package org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.developerUtils;
 
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroupMember;
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroupMember;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.developerUtils.mocks.MockGroup;
 import org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.developerUtils.mocks.MockGroupMember;
 

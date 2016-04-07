@@ -9,7 +9,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.R;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.common.holders.RedeemPointIdentityViewHolder;
 import com.bitdubai.fermat_dap_android_sub_app_redeem_point_identity_bitdubai.util.UtilsFuncs;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 
 import java.util.ArrayList;
 

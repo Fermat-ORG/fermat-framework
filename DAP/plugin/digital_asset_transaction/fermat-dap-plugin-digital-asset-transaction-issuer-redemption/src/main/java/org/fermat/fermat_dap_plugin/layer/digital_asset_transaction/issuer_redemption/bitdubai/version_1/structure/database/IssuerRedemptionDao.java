@@ -20,12 +20,12 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
 
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import org.fermat.fermat_dap_api.layer.all_definition.enums.EventStatus;
 
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteDatabaseOperationException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,7 +122,7 @@ public class IssuerRedemptionDao {
         return databaseTable.getRecords().get(0).getStringValue(columnName);
     }
 
-    private List<String> getPendingDAPEventsByType(com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType eventType) throws CantLoadIssuerRedemptionEventListException {
+    private List<String> getPendingDAPEventsByType(org.fermat.fermat_dap_api.layer.all_definition.enums.EventType eventType) throws CantLoadIssuerRedemptionEventListException {
         String context = "Event Type: " + eventType.getCode();
 
         DatabaseTable eventsRecordedTable;
@@ -248,7 +248,7 @@ public class IssuerRedemptionDao {
     }
 
     public List<String> getPendingNewReceiveMessageActorEvents() throws CantLoadIssuerRedemptionEventListException {
-        return getPendingDAPEventsByType(com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.NEW_RECEIVE_MESSAGE_ACTOR);
+        return getPendingDAPEventsByType(org.fermat.fermat_dap_api.layer.all_definition.enums.EventType.NEW_RECEIVE_MESSAGE_ACTOR);
     }
     //INNER CLASSES
 }

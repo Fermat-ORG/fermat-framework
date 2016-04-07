@@ -23,10 +23,10 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.adapters.Digit
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models.DigitalAsset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.sessions.AssetUserSession;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.util.CommonLogger;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
+
+import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;

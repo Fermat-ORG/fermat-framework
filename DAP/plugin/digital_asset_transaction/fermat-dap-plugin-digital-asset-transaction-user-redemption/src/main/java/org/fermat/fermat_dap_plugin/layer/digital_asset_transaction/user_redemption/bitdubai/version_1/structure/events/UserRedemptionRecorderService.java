@@ -5,10 +5,10 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_bch_api.layer.definition.event_manager.enums.EventType;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
+import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.DealsWithEvents;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -81,7 +81,7 @@ public class UserRedemptionRecorderService implements DealsWithEvents, AssetTran
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);
 
-        fermatEventListener = eventManager.getNewListener(com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.RECEIVE_NEW_DAP_MESSAGE);
+        fermatEventListener = eventManager.getNewListener(org.fermat.fermat_dap_api.layer.all_definition.enums.EventType.RECEIVE_NEW_DAP_MESSAGE);
         fermatEventListener.setEventHandler(fermatEventHandler);
         eventManager.addListener(fermatEventListener);
         listenersAdded.add(fermatEventListener);

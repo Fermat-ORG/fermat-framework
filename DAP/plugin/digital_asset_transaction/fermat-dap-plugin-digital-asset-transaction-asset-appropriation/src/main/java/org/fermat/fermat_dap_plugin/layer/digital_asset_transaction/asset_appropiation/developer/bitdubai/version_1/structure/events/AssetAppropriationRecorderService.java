@@ -7,11 +7,13 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
+
+import org.fermat.fermat_dap_api.layer.all_definition.enums.EventType;
+import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+import org.fermat.fermat_dap_api.layer.all_definition.util.Validate;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database.AssetAppropriationDAO;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationVault;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -73,7 +75,7 @@ public class AssetAppropriationRecorderService implements AssetTransactionServic
         String context = "PluginDatabaseSystem: " + pluginDatabaseSystem + " - Plugin ID: " + pluginId + " Event Manager: " + eventManager;
 
         try {
-            FermatEventListener newNetworkServiceMessageListener = eventManager.getNewListener(com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.NEW_RECEIVE_MESSAGE_ACTOR);
+            FermatEventListener newNetworkServiceMessageListener = eventManager.getNewListener(EventType.NEW_RECEIVE_MESSAGE_ACTOR);
             newNetworkServiceMessageListener.setEventHandler(new AssetAppropriationEventHandler(this));
             addListener(newNetworkServiceMessageListener);
 

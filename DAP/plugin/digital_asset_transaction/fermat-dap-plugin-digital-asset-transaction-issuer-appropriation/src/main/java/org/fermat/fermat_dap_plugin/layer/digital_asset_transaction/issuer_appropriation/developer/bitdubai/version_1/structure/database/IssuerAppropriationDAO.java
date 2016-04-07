@@ -21,19 +21,19 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventStatus;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantLoadAssetAppropriationTransactionListException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
-import com.bitdubai.fermat_dap_api.layer.dap_transaction.common.interfaces.AppropriationTransactionRecord;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import org.fermat.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
+import org.fermat.fermat_dap_api.layer.all_definition.enums.EventStatus;
+import org.fermat.fermat_dap_api.layer.all_definition.util.Validate;
+import org.fermat.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantLoadAssetAppropriationTransactionListException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantGetDigitalAssetFromLocalStorageException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
+import org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces.AppropriationTransactionRecord;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.exceptions.CantLoadIssuerAppropriationEventListException;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.functional.IssuerAppropriationTransactionRecordImpl;
 import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.functional.IssuerAppropriationVault;
@@ -528,8 +528,8 @@ public class IssuerAppropriationDAO {
         return EventType.getByCode(getStringFieldByEventId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
     }
 
-    public com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType getDAPEventTypeById(String id) throws CantLoadIssuerAppropriationEventListException, InvalidParameterException, RecordsNotFoundException {
-        return com.bitdubai.fermat_dap_api.layer.all_definition.enums.EventType.getByCode(getStringFieldByEventId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
+    public org.fermat.fermat_dap_api.layer.all_definition.enums.EventType getDAPEventTypeById(String id) throws CantLoadIssuerAppropriationEventListException, InvalidParameterException, RecordsNotFoundException {
+        return org.fermat.fermat_dap_api.layer.all_definition.enums.EventType.getByCode(getStringFieldByEventId(IssuerAppropriationDatabaseConstants.ISSUER_APPROPRIATION_EVENTS_RECORDED_EVENT_COLUMN_NAME, id));
     }
 
     public EventSource getEventSourceById(String id) throws CantLoadIssuerAppropriationEventListException, InvalidParameterException, RecordsNotFoundException {

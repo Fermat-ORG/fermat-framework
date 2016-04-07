@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.app_connection;
 
-import android.app.Activity;
-
 import android.content.Context;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
@@ -20,9 +18,9 @@ import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.heade
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.common.navigation_drawer.IssuerWalletNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.factory.IssuerWalletFragmentFactory;
 import com.bitdubai.fermat_dap_android_wallet_asset_issuer_bitdubai.sessions.AssetIssuerSession;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
+
+import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
+import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_issuer.interfaces.AssetIssuerWalletSupAppModuleManager;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..

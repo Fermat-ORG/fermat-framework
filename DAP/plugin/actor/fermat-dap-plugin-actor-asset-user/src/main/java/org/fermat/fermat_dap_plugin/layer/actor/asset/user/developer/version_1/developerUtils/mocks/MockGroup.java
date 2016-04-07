@@ -1,6 +1,6 @@
 package org.fermat.fermat_dap_plugin.layer.actor.asset.user.developer.version_1.developerUtils.mocks;
 
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUserGroup;
 
 /**
  * Created by lcampo on 30/11/15.

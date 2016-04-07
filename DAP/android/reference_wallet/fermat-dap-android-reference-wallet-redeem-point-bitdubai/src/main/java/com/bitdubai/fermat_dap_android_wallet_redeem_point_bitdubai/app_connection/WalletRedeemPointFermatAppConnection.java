@@ -18,8 +18,8 @@ import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.common.heade
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.factory.WalletRedeemPointFragmentFactory;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.navigation_drawer.RedeemPointWalletNavigationViewPainter;
 import com.bitdubai.fermat_dap_android_wallet_redeem_point_bitdubai.sessions.RedeemPointSession;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
+import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
+import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.interfaces.AssetRedeemPointWalletSubAppModule;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..

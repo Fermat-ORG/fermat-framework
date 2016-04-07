@@ -1,6 +1,6 @@
 package org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_1.exceptions;
 
-import com.bitdubai.fermat_dap_api.layer.all_definition.exceptions.DAPException;
+import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 
 /**
  * Created by natalia on 12/08/15.
