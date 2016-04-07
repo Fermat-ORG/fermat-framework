@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.database;
+package org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.database;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.bitdubai.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,9 +62,9 @@ public class AssetIssuerIdentityDeveloperDatabaseFactory implements DealsWithPlu
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeAssetIssuerIdentityDatabaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeAssetIssuerIdentityDatabaseException {
+    public void initializeDatabase() throws org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException {
         try {
 
              /*
@@ -79,7 +78,7 @@ public class AssetIssuerIdentityDeveloperDatabaseFactory implements DealsWithPlu
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeAssetIssuerIdentityDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -99,11 +98,11 @@ public class AssetIssuerIdentityDeveloperDatabaseFactory implements DealsWithPlu
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeAssetIssuerIdentityDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException(cantCreateDatabaseException.getMessage());
             }
         } catch (Exception e) {
 
-            throw new CantInitializeAssetIssuerIdentityDatabaseException(e.getMessage());
+            throw new org.fermat.fermat_dap_plugin.layer.identity.asset.issuer.developer.version_1.exceptions.CantInitializeAssetIssuerIdentityDatabaseException(e.getMessage());
 
         }
     }
