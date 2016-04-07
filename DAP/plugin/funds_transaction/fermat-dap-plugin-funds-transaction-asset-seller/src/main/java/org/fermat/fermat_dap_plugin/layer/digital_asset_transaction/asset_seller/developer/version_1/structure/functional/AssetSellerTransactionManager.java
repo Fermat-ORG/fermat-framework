@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.functional;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -28,7 +28,6 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantExecuteLockOperationException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.database.AssetSellerDAO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,10 +41,10 @@ public final class AssetSellerTransactionManager {
     private final AssetUserWalletManager assetUserWalletManager;
     private final AssetTransmissionNetworkServiceManager assetTransmission;
     private final ActorAssetUserManager actorAssetUserManager;
-    private final AssetSellerDAO dao;
+    private final org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.database.AssetSellerDAO dao;
 
     //CONSTRUCTORS
-    public AssetSellerTransactionManager(AssetUserWalletManager assetUserWalletManager, AssetTransmissionNetworkServiceManager assetTransmission, ActorAssetUserManager actorAssetUserManager, AssetSellerDAO dao) {
+    public AssetSellerTransactionManager(AssetUserWalletManager assetUserWalletManager, AssetTransmissionNetworkServiceManager assetTransmission, ActorAssetUserManager actorAssetUserManager, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.database.AssetSellerDAO dao) {
         this.assetUserWalletManager = assetUserWalletManager;
         this.assetTransmission = assetTransmission;
         this.actorAssetUserManager = actorAssetUserManager;

@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.events;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.events;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -9,7 +9,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.util.Validate;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.bitdubai.version_1.structure.database.AssetSellerDAO;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class AssetSellerRecorderService implements AssetTransactionService {
     private final EventManager eventManager;
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
-    private final AssetSellerDAO dao;
+    private final org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.database.AssetSellerDAO dao;
     private List<FermatEventListener> listenersAdded;
 
     {
@@ -40,7 +40,7 @@ public class AssetSellerRecorderService implements AssetTransactionService {
 
     //CONSTRUCTORS
 
-    public AssetSellerRecorderService(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, AssetSellerDAO assetSellerDAO) {
+    public AssetSellerRecorderService(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.database.AssetSellerDAO assetSellerDAO) {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
