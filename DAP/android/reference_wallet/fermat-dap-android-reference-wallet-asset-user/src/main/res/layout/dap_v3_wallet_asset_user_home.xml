@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v3.fragments.HomeCardFragment"
+    tools:context="org.fermat.fermat_dap_android_wallet_asset_user.v3.fragments.HomeCardFragment"
     android:background="@color/card_background_back">
 
     <android.support.v4.widget.SwipeRefreshLayout
