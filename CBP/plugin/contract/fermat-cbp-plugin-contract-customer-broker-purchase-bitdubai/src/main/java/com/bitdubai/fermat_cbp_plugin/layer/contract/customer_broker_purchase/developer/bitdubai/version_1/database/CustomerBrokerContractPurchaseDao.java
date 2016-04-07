@@ -125,6 +125,19 @@ public class CustomerBrokerContractPurchaseDao {
             }
         }
 
+        public void cancelContract(String contractID, String reason) throws CantUpdateCustomerBrokerContractPurchaseException {
+            try {
+                DatabaseTable PurchaseTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME);
+                PurchaseTable.addStringFilter(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_CONTRACT_ID_COLUMN_NAME, contractID, DatabaseFilterType.EQUAL);
+                DatabaseTableRecord recordToUpdate = PurchaseTable.getEmptyRecord();
+                recordToUpdate.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_CANCEL_REASON_COLUMN_NAME, reason);
+                recordToUpdate.setStringValue(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME, ContractStatus.CANCELLED.getCode());
+                PurchaseTable.updateRecord(recordToUpdate);
+            } catch (CantUpdateRecordException e) {
+                throw new CantUpdateCustomerBrokerContractPurchaseException("An exception happened", e, "", "");
+            }
+        }
+
         public Collection<CustomerBrokerContractPurchase> getAllCustomerBrokerContractPurchase() throws CantGetListCustomerBrokerContractPurchaseException {
             try {
                 DatabaseTable ContractPurchaseTable = this.database.getTable(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_TABLE_NAME);
