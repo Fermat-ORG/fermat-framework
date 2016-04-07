@@ -4,9 +4,11 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
@@ -15,11 +17,13 @@ import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantUpdateAr
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.ArtistIdentityManagerModule;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.ArtistIdentitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,16 +33,35 @@ import java.util.UUID;
 public class ModuleArtistIdentityManager implements ArtistIdentityManagerModule {
     private final ArtistIdentityManager artistIdentityManager;
     private final ErrorManager errorManager;
+    private final PluginFileSystem pluginFileSystem;
+    private final UUID pluginId;
+
+    private SettingsManager<ArtistIdentitySettings> settingsManager;
 
     public ModuleArtistIdentityManager(ErrorManager errorManager,
-                                       ArtistIdentityManager artistIdentityManager) {
+                                       ArtistIdentityManager artistIdentityManager,
+                                       PluginFileSystem pluginFileSystem,
+                                       UUID pluginId) {
         this.errorManager = errorManager;
         this.artistIdentityManager = artistIdentityManager;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
+
     }
 
     @Override
     public List<Artist> listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
         return artistIdentityManager.listIdentitiesFromCurrentDeviceUser();
+    }
+
+    @Override
+    public HashMap<ExternalPlatform, HashMap<UUID, String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
+        return artistIdentityManager.listExternalIdentitiesFromCurrentDeviceUser();
+    }
+
+    @Override
+    public ArtIdentity getLinkedIdentity(String publicKey) {
+        return artistIdentityManager.getLinkedIdentity(publicKey);
     }
 
     @Override
@@ -66,9 +89,18 @@ public class ModuleArtistIdentityManager implements ArtistIdentityManagerModule 
         artistIdentityManager.hideIdentity(publicKey);
     }
 
+
     @Override
-    public SettingsManager getSettingsManager() {
-        return null;
+    public SettingsManager<ArtistIdentitySettings> getSettingsManager() {
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override
