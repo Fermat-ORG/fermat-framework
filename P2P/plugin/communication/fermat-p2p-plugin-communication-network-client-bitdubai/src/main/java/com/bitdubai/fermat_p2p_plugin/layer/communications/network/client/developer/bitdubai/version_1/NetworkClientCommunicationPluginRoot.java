@@ -27,7 +27,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.exceptions.CantInitializeNetworkClientP2PDatabaseException;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.util.HarcodeConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.util.HardcodeConstants;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -79,7 +79,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
     /**
      * Represent the SERVER_IP by default conexion to request nodes list
      */
-    public static final String SERVER_IP = HarcodeConstants.SERVER_IP_DEFAULT;
+    public static final String SERVER_IP = HardcodeConstants.SERVER_IP_DEFAULT;
 
     private CommunicationsNetworkClientConnection communicationsNetworkClientConnection;
 
@@ -115,7 +115,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
              */
             initializeDb();
 
-            URI uri = new URI(HarcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HarcodeConstants.DEFAULT_PORT+"/client-channel");
+            URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT+"/client-channel");
             communicationsNetworkClientConnection = new CommunicationsNetworkClientConnection(uri,eventManager,locationManager, identity);
             communicationsNetworkClientConnection.start();
 

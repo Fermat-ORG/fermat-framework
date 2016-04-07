@@ -1,18 +1,13 @@
-/*
-* @#ClientChannelConfigurator.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.conf;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import javax.websocket.ClientEndpointConfig;
 
+import javax.websocket.ClientEndpointConfig;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.conf.ClientChannelConfigurator</code>
@@ -27,16 +22,17 @@ public class ClientChannelConfigurator extends ClientEndpointConfig.Configurator
     /**
      * Represent the clientIdentity
      */
-    ECCKeyPair clientIdentity;
+    private final ECCKeyPair clientIdentity;
 
-    public ClientChannelConfigurator(ECCKeyPair clientIdentity){
-        this.clientIdentity=clientIdentity;
+    public ClientChannelConfigurator(final ECCKeyPair clientIdentity){
+
+        this.clientIdentity = clientIdentity;
     }
 
     @Override
     public void beforeRequest(Map<String, List<String>> headers) {
 
-        List<String> values = new ArrayList<String>();
+        List<String> values = new ArrayList<>();
         values.add(clientIdentity.getPublicKey());
         System.out.println("Client Public Key = " + clientIdentity.getPublicKey());
         headers.put(HeadersAttName.CPKI_ATT_HEADER_NAME,values);

@@ -1,27 +1,17 @@
-/*
-* @#CommunicationsNetworkClientConnection.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ProfileCheckInMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.CommunicationsNetworkClientChannel;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+
 import java.net.URI;
+
 import javax.websocket.ContainerProvider;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
-
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.CommunicationsNetworkClientConnection</code>
@@ -106,14 +96,14 @@ public class CommunicationsNetworkClientConnection extends Thread{
             e.printStackTrace();
         }
 
-        ProfileCheckInMsgRequest profileCheckInMsgRequest = new ProfileCheckInMsgRequest(clientProfile);
+     /*   ProfileCheckInMsgRequest profileCheckInMsgRequest = new ProfileCheckInMsgRequest(clientProfile);
         profileCheckInMsgRequest.setMessageContentType(MessageContentType.JSON);
 
         try {
             session.getBasicRemote().sendObject(Package.createInstance(profileCheckInMsgRequest, NetworkServiceType.UNDEFINED, PackageType.CHECK_IN_CLIENT_REQUEST, clientIdentity.getPrivateKey(), serverIdentity));
         }catch (Exception e){
             e.printStackTrace();
-        }
+        }*/
     }
 
 }

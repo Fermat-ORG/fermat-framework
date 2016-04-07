@@ -1,9 +1,3 @@
-/*
-* @#ClientConnectionHistoryDao.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.daos;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -91,7 +85,7 @@ public class ClientConnectionHistoryDao {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable table = getDatabaseTable();
-            table.setStringFilter(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            table.addStringFilter(NetworkClientP2PDatabaseConstants.CLIENT_CONNECTION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             /*
@@ -208,7 +202,7 @@ public class ClientConnectionHistoryDao {
              * 1 - load the data base to memory with filters
              */
             DatabaseTable table = getDatabaseTable();
-            table.setStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            table.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             /*

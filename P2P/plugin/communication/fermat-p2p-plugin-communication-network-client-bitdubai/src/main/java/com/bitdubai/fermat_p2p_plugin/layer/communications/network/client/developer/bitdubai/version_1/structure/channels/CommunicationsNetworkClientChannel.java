@@ -1,28 +1,18 @@
-/*
-* @#CommunicationsNetworkClientChannel.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ProfileCheckInMsjRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageEncoder;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.conf.ClientChannelConfigurator;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
-
-import static com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType.CHECK_IN_CLIENT_RESPOND;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.CommunicationsNetworkClientChannel</code>
@@ -60,11 +50,13 @@ public class CommunicationsNetworkClientChannel {
      */
     private EventManager eventManager;
 
-    public CommunicationsNetworkClientChannel(ECCKeyPair clientIdentity,EventManager eventManager){
-        this.clientIdentity = clientIdentity;
-        this.isRegister = Boolean.FALSE;
-        this.eventManager = eventManager;
-        this.clientChannelConfigurator=new ClientChannelConfigurator(this.clientIdentity);
+    public CommunicationsNetworkClientChannel(final ECCKeyPair   clientIdentity,
+                                              final EventManager eventManager  ){
+
+        this.clientIdentity            = clientIdentity;
+        this.isRegister                = Boolean.FALSE;
+        this.eventManager              = eventManager;
+        this.clientChannelConfigurator = new ClientChannelConfigurator(this.clientIdentity);
     }
 
     @OnOpen
@@ -86,7 +78,7 @@ public class CommunicationsNetworkClientChannel {
 
                 case CHECK_IN_CLIENT_RESPOND:
 
-                        ProfileCheckInMsjRespond respondProfileCheckInMsj = (ProfileCheckInMsjRespond) packageReceived.getContent();
+                 /*       ProfileCheckInMsjRespond respondProfileCheckInMsj = (ProfileCheckInMsjRespond) packageReceived.getContent();
 
                         if(respondProfileCheckInMsj.getStatus() == ProfileCheckInMsjRespond.STATUS.SUCCESS){
                              //raise event
@@ -94,7 +86,7 @@ public class CommunicationsNetworkClientChannel {
                         }else{
                              //there is some wrong
                         }
-
+*/
                         break;
 
                 case CHECK_IN_NETWORK_SERVICE_RESPOND:
