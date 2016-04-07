@@ -581,8 +581,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
             relationship = actorExtraDataManager.getCustomerIdentityWalletRelationshipByWallet(walletPublicKey);
 
-            System.out.println("VLZ: relationship: "+relationship);
-
             if( relationship == null ){
 
                 return false;

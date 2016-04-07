@@ -44,6 +44,13 @@ public class CustomerBrokerNewSaleNegotiationTransaction {
         this.pluginVersionReference                             = pluginVersionReference;
     }
 
+    /**
+     * Process negotiation transaction receive: register the sale negotiation and reception of the transaction
+     *
+     * @param transactionId
+     * @param customerBrokerSaleNegotiation
+     * @throws CantNewSaleNegotiationTransactionException
+     */
     public void receiveSaleNegotiationTranasction(UUID transactionId, CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation)  throws CantNewSaleNegotiationTransactionException{
         try {
 

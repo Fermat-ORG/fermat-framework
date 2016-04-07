@@ -25,6 +25,6 @@ public class LocationsAdapter extends SingleDeletableItemAdapter<String, Locatio
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.ccw_wizard_recycler_view_item;
+        return R.layout.ccw_wizard_recycler_view_locations_item;
     }
 }
