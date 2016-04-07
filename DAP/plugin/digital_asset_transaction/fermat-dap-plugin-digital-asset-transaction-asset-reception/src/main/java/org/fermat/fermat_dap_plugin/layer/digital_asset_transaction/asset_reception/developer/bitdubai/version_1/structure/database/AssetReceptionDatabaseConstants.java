@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_reception.developer.bitdubai.version_1.structure.database;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 12/10/15.
