@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -29,10 +29,7 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSav
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartDeliveringException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.UserRedemptionDigitalAssetTransactionPluginRoot;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.exceptions.CantCheckAssetUserRedemptionProgressException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional.DeliverRecord;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional.DigitalAssetUserRedemptionVault;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.exceptions.CantCheckAssetUserRedemptionProgressException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,11 +47,11 @@ public class UserRedemptionDao {
     private UUID pluginId;
     private Database database;
     private PluginDatabaseSystem pluginDatabaseSystem;
-    private DigitalAssetUserRedemptionVault userRedemptionVault;
+    private org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DigitalAssetUserRedemptionVault userRedemptionVault;
 
     public UserRedemptionDao(PluginDatabaseSystem pluginDatabaseSystem,
                              UUID pluginId,
-                             DigitalAssetUserRedemptionVault userRedemptionVault) throws CantExecuteDatabaseOperationException {
+                             org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DigitalAssetUserRedemptionVault userRedemptionVault) throws CantExecuteDatabaseOperationException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId = pluginId;
         database = openDatabase();
@@ -81,7 +78,7 @@ public class UserRedemptionDao {
 
         String transactionId = UUID.randomUUID().toString();
         long startTime = System.currentTimeMillis();
-        long timeOut = startTime + UserRedemptionDigitalAssetTransactionPluginRoot.DELIVERING_TIMEOUT;
+        long timeOut = startTime + org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.UserRedemptionDigitalAssetTransactionPluginRoot.DELIVERING_TIMEOUT;
 
         try {
             DatabaseTable databaseTable = getDatabaseTable(UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME);
@@ -165,9 +162,9 @@ public class UserRedemptionDao {
     }
 
 
-    private DeliverRecord constructRecordFromTransactionId(String transactionId) throws CantCheckAssetUserRedemptionProgressException {
+    private org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord constructRecordFromTransactionId(String transactionId) throws CantCheckAssetUserRedemptionProgressException {
         try {
-            DeliverRecord recordToReturn = new DeliverRecord();
+            org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord recordToReturn = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord();
             recordToReturn.setTransactionId(transactionId);
             recordToReturn.setGenesisTransaction(getStringFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME));
             recordToReturn.setRedeemPointPublicKey(getStringFieldByDeliveringId(transactionId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_REPO_PUBLICKEY_COLUMN_NAME));
@@ -318,8 +315,8 @@ public class UserRedemptionDao {
     }
 
 
-    public DeliverRecord getLastDelivering(String genesisTx) throws CantCheckAssetUserRedemptionProgressException {
-        List<DeliverRecord> records = getDeliverRecordsForGenesisTransaction(genesisTx);
+    public org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord getLastDelivering(String genesisTx) throws CantCheckAssetUserRedemptionProgressException {
+        List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord> records = getDeliverRecordsForGenesisTransaction(genesisTx);
         return records.get(records.size() - 1);
     }
 
@@ -327,8 +324,8 @@ public class UserRedemptionDao {
         return DistributionStatus.getByCode(getStringValueFromSelectedTableTableByFieldCode(UserRedemptionDatabaseConstants.USER_REDEMPTION_TABLE_NAME, genesisTx, UserRedemptionDatabaseConstants.USER_REDEMPTION_REDEMPTION_STATUS_COLUMN_NAME, UserRedemptionDatabaseConstants.USER_REDEMPTION_GENESIS_TRANSACTION_COLUMN_NAME));
     }
 
-    public List<DeliverRecord> getSendingCryptoRecords() throws CantCheckAssetUserRedemptionProgressException {
-        List<DeliverRecord> toReturn = new ArrayList<>();
+    public List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord> getSendingCryptoRecords() throws CantCheckAssetUserRedemptionProgressException {
+        List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord> toReturn = new ArrayList<>();
         for (String txId : getValueListFromTableByColumn(DistributionStatus.SENDING_CRYPTO.getCode(),
                 UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME,
                 UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME,
@@ -338,8 +335,8 @@ public class UserRedemptionDao {
         return toReturn;
     }
 
-    public List<DeliverRecord> getDeliveredRecords() throws CantCheckAssetUserRedemptionProgressException {
-        List<DeliverRecord> toReturn = new ArrayList<>();
+    public List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord> getDeliveredRecords() throws CantCheckAssetUserRedemptionProgressException {
+        List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord> toReturn = new ArrayList<>();
         for (String txId : getValueListFromTableByColumn(DistributionStatus.DELIVERED.getCode(),
                 UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME,
                 UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME,
@@ -349,8 +346,8 @@ public class UserRedemptionDao {
         return toReturn;
     }
 
-    public List<DeliverRecord> getDeliveringRecords() throws CantCheckAssetUserRedemptionProgressException {
-        List<DeliverRecord> toReturn = new ArrayList<>();
+    public List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord> getDeliveringRecords() throws CantCheckAssetUserRedemptionProgressException {
+        List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord> toReturn = new ArrayList<>();
         for (String txId : getValueListFromTableByColumn(DistributionStatus.DELIVERING.getCode(),
                 UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME,
                 UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_STATE_COLUMN_NAME,
@@ -360,8 +357,8 @@ public class UserRedemptionDao {
         return toReturn;
     }
 
-    public List<DeliverRecord> getDeliverRecordsForGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException {
-        List<DeliverRecord> toReturn = new ArrayList<>();
+    public List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord> getDeliverRecordsForGenesisTransaction(String genesisTransaction) throws CantCheckAssetUserRedemptionProgressException {
+        List<org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord> toReturn = new ArrayList<>();
         for (String txId : getValueListFromTableByColumn(genesisTransaction,
                 UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_TABLE_NAME,
                 UserRedemptionDatabaseConstants.USER_REDEMPTION_DELIVERING_GENESIS_TRANSACTION_COLUMN_NAME,

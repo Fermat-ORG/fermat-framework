@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -44,7 +44,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDao;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.List;
@@ -58,13 +58,13 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
 
     private ActorAssetUser actorAssetUser;
     private String digitalAssetFileStoragePath;
-    private UserRedemptionDao userRedemptionDao;
+    private org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.database.UserRedemptionDao userRedemptionDao;
     private DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault;
     private ActorAssetUserManager actorAssetUserManager;
 
     public UserRedemptionRedeemer(ErrorManager errorManager, UUID pluginId, PluginFileSystem pluginFileSystem,
                                   AssetTransmissionNetworkServiceManager assetTransmissionNetworkServiceManager,
-                                  UserRedemptionDao userRedemptionDao,
+                                  org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.database.UserRedemptionDao userRedemptionDao,
                                   DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault,
                                   BitcoinNetworkManager bitcoinNetworkManager,
                                   ActorAssetUserManager actorAssetUserManager,
@@ -78,7 +78,7 @@ public class UserRedemptionRedeemer extends AbstractDigitalAssetSwap {
         setActorAssetUserManager(actorAssetUserManager);
     }
 
-    public void setUserRedemptionDao(UserRedemptionDao userRedemptionDao) throws CantSetObjectException {
+    public void setUserRedemptionDao(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.database.UserRedemptionDao userRedemptionDao) throws CantSetObjectException {
         this.userRedemptionDao = userRedemptionDao;
     }
 

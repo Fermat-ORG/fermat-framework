@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
@@ -42,14 +42,11 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSta
 import org.fermat.fermat_dap_api.layer.dap_transaction.user_redemption.exceptions.CantRedeemDigitalAssetException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.user_redemption.interfaces.UserRedemptionManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.developers_utils.UserRedemptionDeveloperDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDao;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDatabaseConstants;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.events.UserRedemptionMonitorAgent;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.events.UserRedemptionRecorderService;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional.DigitalAssetUserRedemptionVault;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional.UserRedemptionRedeemer;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.database.UserRedemptionDao;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.database.UserRedemptionDatabaseConstants;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.database.UserRedemptionDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.events.UserRedemptionMonitorAgent;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.UserRedemptionRedeemer;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -110,7 +107,7 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
 
     private UserRedemptionRedeemer userRedemptionRedeemer;
     UserRedemptionMonitorAgent userRedemptionMonitorAgent;
-    DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault;
+    org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault;
 
     public UserRedemptionDigitalAssetTransactionPluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -123,13 +120,13 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        UserRedemptionDeveloperDatabaseFactory userRedemptionDeveloperDatabaseFactory = new UserRedemptionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.developers_utils.UserRedemptionDeveloperDatabaseFactory userRedemptionDeveloperDatabaseFactory = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.developers_utils.UserRedemptionDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return userRedemptionDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return UserRedemptionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        return org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.developers_utils.UserRedemptionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
@@ -137,7 +134,7 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
         Database database;
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, UserRedemptionDatabaseConstants.USER_REDEMPTION_DATABASE);
-            return UserRedemptionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
+            return org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.developers_utils.UserRedemptionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**
              * The database exists but cannot be open. I can not handle this situation.
@@ -213,14 +210,14 @@ public class UserRedemptionDigitalAssetTransactionPluginRoot extends AbstractPlu
                     throw new CantStartPluginException(CantCreateDatabaseException.DEFAULT_MESSAGE, innerException, "Starting Asset User Redemption plugin - " + this.pluginId, "Cannot open or create the plugin database");
                 }
             }
-            this.digitalAssetUserRedemptionVault = new DigitalAssetUserRedemptionVault(pluginId,
+            this.digitalAssetUserRedemptionVault = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DigitalAssetUserRedemptionVault(pluginId,
                     pluginFileSystem,
                     assetUserWalletManager,
                     actorAssetUserManager
             );
             UserRedemptionDao userRedemptionDao = new UserRedemptionDao(pluginDatabaseSystem, pluginId, digitalAssetUserRedemptionVault);
             //Starting Event Recorder
-            UserRedemptionRecorderService userRedemptionRecorderService = new UserRedemptionRecorderService(userRedemptionDao, eventManager);
+            org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.events.UserRedemptionRecorderService userRedemptionRecorderService = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.events.UserRedemptionRecorderService(userRedemptionDao, eventManager);
             try {
                 userRedemptionRecorderService.start();
             } catch (CantStartServiceException exception) {

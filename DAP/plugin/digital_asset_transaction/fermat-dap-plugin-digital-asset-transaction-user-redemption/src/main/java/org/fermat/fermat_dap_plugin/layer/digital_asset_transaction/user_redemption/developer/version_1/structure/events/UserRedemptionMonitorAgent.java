@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.events;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.events;
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
@@ -67,11 +67,9 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.UserRedemptionDigitalAssetTransactionPluginRoot;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.exceptions.CantCheckAssetUserRedemptionProgressException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.database.UserRedemptionDao;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional.DeliverRecord;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.bitdubai.version_1.structure.functional.DigitalAssetUserRedemptionVault;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.exceptions.CantCheckAssetUserRedemptionProgressException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.database.UserRedemptionDao;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.DealsWithErrors;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -89,7 +87,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
     private LogManager logManager;
     private ErrorManager errorManager;
     private AssetVaultManager assetVaultManager;
-    private DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault;
+    private org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault;
     private AssetTransmissionNetworkServiceManager assetTransmissionManager;
     private BitcoinNetworkManager bitcoinNetworkManager;
     private UserRedemptionDao userRedemptionDao;
@@ -103,7 +101,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                                       AssetVaultManager assetVaultManager,
                                       LogManager logManager,
                                       BitcoinNetworkManager bitcoinNetworkManager,
-                                      DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault,
+                                      org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault,
                                       AssetTransmissionNetworkServiceManager assetTransmissionManager, ActorAssetUserManager actorAssetUserManager) throws CantSetObjectException, CantExecuteDatabaseOperationException {
         this.errorManager = errorManager;
         this.redeemPointManager = redeemPointManager;
@@ -130,7 +128,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
         this.assetVaultManager = assetVaultManager;
     }
 
-    public void setDigitalAssetUserRedemptionVault(DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault) throws CantSetObjectException {
+    public void setDigitalAssetUserRedemptionVault(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DigitalAssetUserRedemptionVault digitalAssetUserRedemptionVault) throws CantSetObjectException {
         if (digitalAssetUserRedemptionVault == null) {
             throw new CantSetObjectException("DigitalAssetDistributionVault is null");
         }
@@ -178,7 +176,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
         @Override
         public void run() {
 
-            logManager.log(UserRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "ASSET USER REDEMPTION Protocol Notification Agent: running...", null, null);
+            logManager.log(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.UserRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "ASSET USER REDEMPTION Protocol Notification Agent: running...", null, null);
             while (true) {
                 /**
                  * Increase the iteration counter
@@ -195,7 +193,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                  */
                 try {
 
-                    logManager.log(UserRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
+                    logManager.log(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.UserRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "Iteration number " + iterationNumber, null, null);
                     doTheMainTask();
                 } catch (CantCheckAssetUserRedemptionProgressException | CantExecuteQueryException exception) {
                     errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_USER_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
@@ -237,7 +235,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
 
 
         private void checkDeliveringTime() throws CantExecuteDatabaseOperationException, CantExecuteQueryException, UnexpectedResultReturnedFromDatabaseException, CantGetCryptoTransactionException, CantGetTransactionsException, CantLoadWalletException, CantRegisterCreditException, CantRegisterDebitException, CantGetAssetIssuerActorsException, CantSendTransactionNewStatusNotificationException, CantGetAssetUserActorsException, CantAssetUserActorNotFoundException, RecordsNotFoundException, CantCheckAssetUserRedemptionProgressException, InvalidParameterException {
-            for (DeliverRecord record : userRedemptionDao.getDeliveringRecords()) {
+            for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord record : userRedemptionDao.getDeliveringRecords()) {
                 DistributionStatus currentStatus = userRedemptionDao.getDistributionStatusForGenesisTx(record.getGenesisTransaction());
                 if (new Date().after(record.getTimeOut()) && currentStatus == DistributionStatus.DELIVERING) {
                     try {
@@ -278,7 +276,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 CryptoAddress cryptoAddressTo = new CryptoAddress(actorUserCryptoAddress, CryptoCurrency.BITCOIN);
                 System.out.println("ASSET USER REDEMPTION cryptoAddressTo: " + cryptoAddressTo);
                 updateDistributionStatus(DistributionStatus.SENDING_CRYPTO, assetAcceptedGenesisTransaction);
-                DeliverRecord record = userRedemptionDao.getLastDelivering(assetAcceptedGenesisTransaction);
+                org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord record = userRedemptionDao.getLastDelivering(assetAcceptedGenesisTransaction);
                 switch (record.getState()) {
                     case DELIVERING:
                         DigitalAssetMetadata metadata = digitalAssetUserRedemptionVault.getDigitalAssetMetadataFromWallet(assetAcceptedGenesisTransaction, record.getNetworkType());
@@ -337,7 +335,7 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
          * @throws CantDeliverDigitalAssetToAssetWalletException
          */
         private void checkPendingTransactions() throws CantExecuteQueryException, CantCheckAssetUserRedemptionProgressException, CantGetCryptoTransactionException, UnexpectedResultReturnedFromDatabaseException, CantGetDigitalAssetFromLocalStorageException, CantDeliverDigitalAssetToAssetWalletException, CantGetTransactionCryptoStatusException, RecordsNotFoundException, CantGetBroadcastStatusException, CantCancellBroadcastTransactionException, CantBroadcastTransactionException, CantGetTransactionsException, CantGetAssetUserActorsException, CantRegisterDebitException, CantAssetUserActorNotFoundException, CantLoadWalletException, CantGetAssetIssuerActorsException, CantRegisterCreditException, CantCreateDigitalAssetFileException {
-            for (DeliverRecord record : userRedemptionDao.getDeliveredRecords()) {
+            for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord record : userRedemptionDao.getDeliveredRecords()) {
                 switch (bitcoinNetworkManager.getCryptoStatus(record.getGenesisTransactionSent())) {
                     case ON_BLOCKCHAIN:
                     case IRREVERSIBLE:
@@ -356,12 +354,12 @@ public class UserRedemptionMonitorAgent implements Agent, DealsWithLogger, Deals
                 }
             }
 
-            for (DeliverRecord record : userRedemptionDao.getSendingCryptoRecords()) {
+            for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.structure.functional.DeliverRecord record : userRedemptionDao.getSendingCryptoRecords()) {
                 BroadcastStatus status = bitcoinNetworkManager.getBroadcastStatus(record.getGenesisTransactionSent());
                 switch (status.getStatus()) {
                     case WITH_ERROR:
                         System.out.println("VAMM: USER REDEMPTION BROADCAST WITH ERROR");
-                        if (record.getAttemptNumber() < UserRedemptionDigitalAssetTransactionPluginRoot.BROADCASTING_MAX_ATTEMPT_NUMBER) {
+                        if (record.getAttemptNumber() < org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.user_redemption.developer.version_1.UserRedemptionDigitalAssetTransactionPluginRoot.BROADCASTING_MAX_ATTEMPT_NUMBER) {
                             System.out.println("VAMM: ATTEMPT NUMBER: " + record.getAttemptNumber());
                             userRedemptionDao.newAttempt(record.getTransactionId());
                             bitcoinNetworkManager.broadcastTransaction(record.getGenesisTransactionSent());
