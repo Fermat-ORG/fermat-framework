@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1;
+package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -62,12 +62,10 @@ import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantGetActorAssetNotificationException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.exceptions.CantUpdateRecordDataBaseException;
 import org.fermat.fermat_dap_api.layer.dap_actor_network_service.interfaces.ActorNotification;
-import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.AssetUserNetworkServiceDatabaseConstants;
-import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.AssetUserNetworkServiceDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.AssetUserNetworkServiceDeveloperDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.IncomingNotificationDao;
-import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications.OutgoingNotificationDao;
-import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
+import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.database.communications.AssetUserNetworkServiceDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.database.communications.AssetUserNetworkServiceDeveloperDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.database.communications.OutgoingNotificationDao;
+import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatMessageCommunication;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
@@ -133,7 +131,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
     /**
      * DAO
      */
-    private IncomingNotificationDao incomingNotificationsDao;
+    private org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.database.communications.IncomingNotificationDao incomingNotificationsDao;
     private OutgoingNotificationDao outgoingNotificationDao;
 
     private long reprocessTimer = 300000; //five minutes
@@ -174,7 +172,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
             assetUserNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
 
             //DAO
-            incomingNotificationsDao = new IncomingNotificationDao(dataBase, this.pluginFileSystem, this.pluginId);
+            incomingNotificationsDao = new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.database.communications.IncomingNotificationDao(dataBase, this.pluginFileSystem, this.pluginId);
 
             outgoingNotificationDao = new OutgoingNotificationDao(dataBase, this.pluginFileSystem, this.pluginId);
 
@@ -493,7 +491,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
             /*
              * Open new database connection
              */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, AssetUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.database.communications.AssetUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
@@ -516,7 +514,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
                 /*
                  * We create the new database
                  */
-                this.dataBase = assetUserNetworkServiceDatabaseFactory.createDatabase(pluginId, AssetUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
+                this.dataBase = assetUserNetworkServiceDatabaseFactory.createDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.database.communications.AssetUserNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
             } catch (CantCreateDatabaseException cantOpenDatabaseException) {
 
@@ -1191,7 +1189,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
     public List<ActorNotification> getPendingNotifications() throws CantGetActorAssetNotificationException {
         try {
             if(incomingNotificationsDao == null)
-                incomingNotificationsDao = new IncomingNotificationDao(dataBase, pluginFileSystem, pluginId);
+                incomingNotificationsDao = new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.database.communications.IncomingNotificationDao(dataBase, pluginFileSystem, pluginId);
             return incomingNotificationsDao.listUnreadNotifications();
 
         } catch (CantGetActorAssetNotificationException e) {
@@ -1263,7 +1261,7 @@ public class AssetUserActorNetworkServicePluginRoot extends AbstractNetworkServi
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        if(developerDatabase.getName().equals(AssetUserNetworkServiceDatabaseConstants.DATA_BASE_NAME))
+        if(developerDatabase.getName().equals(org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.database.communications.AssetUserNetworkServiceDatabaseConstants.DATA_BASE_NAME))
             return new AssetUserNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableList(developerObjectFactory);
         else
             return new AssetUserNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem, pluginId).getDatabaseTableListCommunication(developerObjectFactory);

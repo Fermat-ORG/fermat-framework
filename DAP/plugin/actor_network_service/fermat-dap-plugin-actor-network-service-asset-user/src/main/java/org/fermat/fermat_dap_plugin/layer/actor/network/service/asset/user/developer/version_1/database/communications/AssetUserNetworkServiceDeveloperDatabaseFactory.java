@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.database.communications;
+package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.database.communications;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -21,7 +21,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 
 import java.util.ArrayList;
@@ -67,9 +66,9 @@ public class AssetUserNetworkServiceDeveloperDatabaseFactory implements DealsWit
     /**
      * This method open or creates the database i'll be working with
      *
-     * @throws CantInitializeTemplateNetworkServiceDatabaseException
+     * @throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException
      */
-    public void initializeDatabase() throws CantInitializeTemplateNetworkServiceDatabaseException {
+    public void initializeDatabase() throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException {
         try {
 
              /*
@@ -82,7 +81,7 @@ public class AssetUserNetworkServiceDeveloperDatabaseFactory implements DealsWit
              /*
               * The database exists but cannot be open. I can not handle this situation.
               */
-            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getMessage());
+            throw new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getMessage());
 
         } catch (DatabaseNotFoundException e) {
 
@@ -101,13 +100,13 @@ public class AssetUserNetworkServiceDeveloperDatabaseFactory implements DealsWit
                   /*
                    * The database cannot be created. I can not handle this situation.
                    */
-                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantCreateDatabaseException.getMessage());
+                throw new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException(cantCreateDatabaseException.getMessage());
             }
         }
     }
 
 
-    public void initializeDatabaseCommunication() throws CantInitializeTemplateNetworkServiceDatabaseException {
+    public void initializeDatabaseCommunication() throws org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException {
 
         try {
 
@@ -115,7 +114,7 @@ public class AssetUserNetworkServiceDeveloperDatabaseFactory implements DealsWit
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
 
-            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException);
+            throw new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException);
 
         } catch (DatabaseNotFoundException e) {
 
@@ -130,7 +129,7 @@ public class AssetUserNetworkServiceDeveloperDatabaseFactory implements DealsWit
 
             } catch (CantCreateDatabaseException cantCreateDatabaseException) {
 
-                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantCreateDatabaseException);
+                throw new org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException(cantCreateDatabaseException);
 
             }
         }

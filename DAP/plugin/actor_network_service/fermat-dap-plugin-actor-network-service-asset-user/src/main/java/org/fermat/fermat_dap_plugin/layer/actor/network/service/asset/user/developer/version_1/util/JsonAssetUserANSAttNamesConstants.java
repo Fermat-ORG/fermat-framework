@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
 * BITDUBAI/CONFIDENTIAL
 */
-package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.util;
+package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.util;
 
 /**
  * The Class <code>JsonAssetUserANSAttNamesConstants</code>

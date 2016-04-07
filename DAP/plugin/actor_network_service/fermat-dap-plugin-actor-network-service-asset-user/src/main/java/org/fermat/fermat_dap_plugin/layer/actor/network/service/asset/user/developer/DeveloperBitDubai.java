@@ -4,7 +4,7 @@
  * You may not modify, use, reproduce or distribute this software.
 * BITDUBAI/CONFIDENTIAL
 */
-package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai;
+package org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantRegisterVersionException;
@@ -15,7 +15,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
 //import AssetUserActorNetworkServicePluginRoot;
-import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.bitdubai.version_1.AssetUserActorNetworkServicePluginRoot;
+import org.fermat.fermat_dap_plugin.layer.actor.network.service.asset.user.developer.version_1.AssetUserActorNetworkServicePluginRoot;
 
 /**
 * The Class <code>DeveloperBitDubai</code> is
