@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.module.asset.issuer.developer.bitdubai.version_1;
+package org.fermat.fermat_dap_plugin.layer.module.asset.issuer.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.Service;
@@ -55,7 +55,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantCreateWalletException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import org.fermat.fermat_dap_plugin.layer.module.asset.issuer.developer.bitdubai.version_1.structure.AssetIssuerWalletModuleManager;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.exceptions.CantListWalletsException;
@@ -120,7 +120,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
 
     // TODO PLEASE MAKE USE OF THE ERROR MANAGER.
 
-    private AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
+    private org.fermat.fermat_dap_plugin.layer.module.asset.issuer.developer.version_1.structure.AssetIssuerWalletModuleManager assetIssuerWalletModuleManager;
 
     public AssetIssuerWalletModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -134,7 +134,7 @@ public class AssetIssuerWalletModulePluginRoot extends AbstractPlugin implements
     @Override
     public void start() throws CantStartPluginException {
         try {
-            assetIssuerWalletModuleManager = new AssetIssuerWalletModuleManager(
+            assetIssuerWalletModuleManager = new org.fermat.fermat_dap_plugin.layer.module.asset.issuer.developer.version_1.structure.AssetIssuerWalletModuleManager(
                     assetIssuerWalletManager,
                     actorAssetUserManager,
                     assetDistributionManager,
