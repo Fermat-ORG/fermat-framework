@@ -17,7 +17,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionManager;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.utils.ArtistLinkedActorIdentity;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.community.ArtistCommunityModuleManager;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.ArtistCommunityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.UUID;

@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutAgent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -52,11 +53,11 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
     /**
      * Class Variables
      */
-    TimeOutNotifierAgentDeveloperDatabaseFactory timeOutNotifierAgentDeveloperDatabaseFactory;
-    TimeOutNotifierAgentPool timeOutNotifierAgentPool;
-    TimeOutNotifierManager timeOutNotifierManager;
-    TimeOutNotifierAgentDatabaseDao dao;
-    TimeOutMonitoringAgent monitoringAgent;
+    private TimeOutNotifierAgentDeveloperDatabaseFactory timeOutNotifierAgentDeveloperDatabaseFactory;
+    private TimeOutNotifierAgentPool timeOutNotifierAgentPool;
+    private TimeOutNotifierManager timeOutNotifierManager;
+    private TimeOutNotifierAgentDatabaseDao dao;
+    private TimeOutMonitoringAgent monitoringAgent;
 
     /**
      * constructor
@@ -104,18 +105,9 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
         /**
          * Instantiate agents.
          */
-        timeOutNotifierAgentPool = new TimeOutNotifierAgentPool(getDao(), this.errorManager);
+        monitoringAgent = new TimeOutMonitoringAgent(getDao(), errorManager, eventManager);
+        timeOutNotifierAgentPool = new TimeOutNotifierAgentPool(getDao(), this.errorManager, this.monitoringAgent);
         timeOutNotifierManager = new TimeOutNotifierManager(getDao(), this.errorManager, this.timeOutNotifierAgentPool);
-
-        //starts the agent
-        monitoringAgent = new TimeOutMonitoringAgent(getDao(), timeOutNotifierAgentPool, errorManager, eventManager);
-        try {
-            monitoringAgent.start();
-        } catch (CantStartAgentException e) {
-            CantStartPluginException exception = new CantStartPluginException(e, "Unable to start Timeout Monitoring agent", "unknown");
-            errorManager.reportUnexpectedPluginException(Plugins.TIMEOUT_NOTIFIER, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
-            throw exception;
-        }
 
         testAddNewAgent();
     }
@@ -132,10 +124,9 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
             owner.setPublicKey(UUID.randomUUID().toString());
             owner.setType(Actors.CBP_CRYPTO_CUSTOMER);
             owner.setName("Test Rodrigo");
-            timeOutNotifierManager.addNew(40000, "Prueba Rodrigo 1", owner);
+            TimeOutAgent timeOutAgent = timeOutNotifierManager.addNew(50000, "Prueba Rodrigo 1", owner);
+            timeOutNotifierManager.startTimeOutAgent(timeOutAgent);
 
-            System.out.println("***TimeOutNotifier*** " + timeOutNotifierManager.getTimeOutAgents(owner).toString());
-            System.out.println("***TimeOutNotifier*** " + timeOutNotifierManager.getTimeOutAgents().size());
     } catch (Exception e) {
         e.printStackTrace();
     }

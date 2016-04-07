@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/rouded_corners_dialog">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4.5dp"
+        android:background="@drawable/round_corner_line_dialog"
+        android:fitsSystemWindows="true"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/pager_container">
+
+
+        <android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:id="@+id/dialog_pager"/>
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/radio_group"
+            android:gravity="center"
+            android:layout_marginBottom="12dp"
+            android:orientation="horizontal">
+
+            
+        </RadioGroup>
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

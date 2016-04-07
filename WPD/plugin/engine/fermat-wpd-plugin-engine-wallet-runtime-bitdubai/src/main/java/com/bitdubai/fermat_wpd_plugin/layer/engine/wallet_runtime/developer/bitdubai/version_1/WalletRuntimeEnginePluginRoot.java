@@ -5092,6 +5092,93 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setType(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_WALLET_FORM_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_WALLET_FORM_FRAGMENT.getKey(), runtimeFragment);
 
+        /**
+         * Chunk Values Activity
+         */
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_CHUNCK_VALUES);
+        runtimeActivity.setActivityType(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_CHUNCK_VALUES.getCode());
+        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeActivity.setBackPublicKey(publicKey);
+
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Chunk Value");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setColor("#12aca1");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#12aca1");
+        //runtimeActivity.setColor("#d07b62");
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+
+        runtimeTabStrip = new TabStrip();
+
+        runtimeTabStrip.setTabsColor("#1173aa");
+
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_CHUNCK_VALUES.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_CHUNCK_VALUES.getKey());
+        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_CHUNCK_VALUES.getKey(), runtimeFragment);
+
+        //Side Menu
+        runtimeActivity.setSideMenu(loadSideMenuLossProtectedWallet(publicKey));
+
+
+        /**
+         * Chunck Values Detalil
+         */
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUE_DETAIL_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUE_DETAIL_ACTIVITY.getCode());
+        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setBackActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUE_DETAIL_ACTIVITY);
+        runtimeActivity.setBackPublicKey(publicKey);
+
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Chunck Value detail");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setColor("#12aca1");
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#12aca1");
+        //runtimeActivity.setColor("#d07b62");
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+
+        runtimeTabStrip = new TabStrip();
+
+        runtimeTabStrip.setTabsColor("#1173aa");
+
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUES_DETAIL_FRAGMENT.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUES_DETAIL_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUES_DETAIL_FRAGMENT.getKey(), runtimeFragment);
 
         /**
          * Request form Activity
@@ -5497,6 +5584,20 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem.setLabel("Payment requests");
         runtimeMenuItem.setIcon("request");
         runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_PAYMENT_REQUEST);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Transactions");
+        runtimeMenuItem.setIcon("request");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_TRANSACTIONS);
+        runtimeMenuItem.setAppLinkPublicKey(publicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Chunck Values");
+        runtimeMenuItem.setIcon("request");
+        runtimeMenuItem.setLinkToActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_CHUNCK_VALUES);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 

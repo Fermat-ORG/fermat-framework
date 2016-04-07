@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_issuer_community_bitdubai.models;
 
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.AssetIssuerActorRecord;
 
 /**
  * Actor Model

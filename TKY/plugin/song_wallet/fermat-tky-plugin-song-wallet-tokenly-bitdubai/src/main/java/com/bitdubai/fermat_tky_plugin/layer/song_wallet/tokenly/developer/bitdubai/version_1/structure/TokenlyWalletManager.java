@@ -209,6 +209,8 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             int limit=3;
             int c=0;
             FermatBundle fermatBundle;
+            //SongId
+            UUID songId;
             for(Song song : songs){
                 //Check if song is in database
                 tokenlySongId = song.getId();
@@ -234,13 +236,15 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                     //System.out.println("TKY - "+song.getReleaseDate());
                     //Inform to UI that I'll begin to download the song.
                     fermatBundle = new FermatBundle();
+                    songId = UUID.randomUUID();
                     fermatBundle.put(BroadcasterNotificationType.SONG_INFO.getCode(),song);
+                    fermatBundle.put(BroadcasterNotificationType.SONG_ID.getCode(), songId);
                     broadcaster.publish(
                             BroadcasterType.UPDATE_VIEW,
                             WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
                             fermatBundle);
                     //Download the song.
-                    downloadSong(song, user.getUsername());
+                    downloadSong(song, user.getUsername(), songId);
                     /**
                      * I'll try to avoid the download list process interruption because an exception
                      * in one song download request. I will report the error, but, I'll continue to
@@ -350,7 +354,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             String tokenlySongId = walletSong.getId();
             Song song = this.tokenlyApiManager.getSongByAuthenticatedUser(user, tokenlySongId);
             //Request download song.
-            String songPath = this.tokenlyWalletSongVault.downloadSong(song);
+            String songPath = this.tokenlyWalletSongVault.downloadSong(song,songId);
             this.tokenlySongWalletDao.updateSongStoragePath(songId, songPath);
             //Update song status
             this.tokenlySongWalletDao.updateSongStatus(songId, SongStatus.AVAILABLE);
@@ -420,18 +424,25 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
      * This method downloads a song to the wallet and the device storage.
      * This method must be private because a previous data check must be done.
      * @param song
+     * @param username
+     * @param songId
      * @throws CantDownloadSongException
      * @throws CantPersistSongException
      */
-    private void downloadSong(Song song, String username) throws
+    private void downloadSong(Song song, String username, UUID songId) throws
             CantDownloadSongException,
             CantPersistSongException,
             ObjectNotSetException,
             CancelDownloadException {
         ObjectChecker.checkArgument(song, "The song is null");
         //Request download song.
-        String songPath = this.tokenlyWalletSongVault.downloadSong(song);
+        String songPath = this.tokenlyWalletSongVault.downloadSong(song, songId);
         //Persist the song data in database
-        this.tokenlySongWalletDao.saveSong(song,songPath, username, SongStatus.AVAILABLE);
+        this.tokenlySongWalletDao.saveSong(
+                song,
+                songPath,
+                username,
+                SongStatus.AVAILABLE,
+                songId);
     }
 }

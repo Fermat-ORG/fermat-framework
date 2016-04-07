@@ -1,11 +1,10 @@
 package com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.models;
 
-import com.bitdubai.fermat_dap_api.layer.dap_actor.DAPActor;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
-import com.bitdubai.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
+import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
+import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.TransactionType;
+import org.fermat.fermat_dap_api.layer.all_definition.util.DAPStandardFormats;
+import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletTransaction;
 
 import java.sql.Timestamp;
 

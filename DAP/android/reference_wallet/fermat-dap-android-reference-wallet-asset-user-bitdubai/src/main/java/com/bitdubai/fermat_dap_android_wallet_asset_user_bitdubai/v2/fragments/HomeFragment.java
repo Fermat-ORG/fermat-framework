@@ -27,7 +27,6 @@ import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.common.data
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Asset;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.GrouperItem;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.v2.models.Issuer;
-import com.bitdubai.fermat_dap_api.layer.dap_module.wallet_asset_user.interfaces.AssetUserWalletSubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 

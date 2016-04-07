@@ -1,10 +1,8 @@
 package com.bitdubai.fermat_dap_android_sub_app_asset_user_community_bitdubai.app_connection;
 
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
-
-import java.util.UUID;
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import org.fermat.fermat_dap_api.layer.dap_sub_app_module.asset_user_community.interfaces.AssetUserCommunitySubAppModuleManager;
 
 /**
  * Created by Nerio on 07/03/16.
