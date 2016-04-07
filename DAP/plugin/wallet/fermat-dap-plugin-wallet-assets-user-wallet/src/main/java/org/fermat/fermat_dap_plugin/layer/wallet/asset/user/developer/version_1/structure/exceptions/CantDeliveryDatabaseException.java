@@ -1,11 +1,11 @@
-package org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.exceptions;
+package org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * Created by franklin on 06/10/15.
+ * Created by franklin on 11/10/15.
  */
-public class CantGetAssetUserTransactionException extends FermatException{
+public class CantDeliveryDatabaseException extends FermatException{
     /**
      * This is the constructor that every inherited FermatException must implement
      *
@@ -14,7 +14,7 @@ public class CantGetAssetUserTransactionException extends FermatException{
      * @param context        a String that provides the values of the variables that could have affected the exception
      * @param possibleReason an explicative reason of why we believe this exception was most likely thrown
      */
-    public CantGetAssetUserTransactionException(String message, Exception cause, String context, String possibleReason) {
+    public CantDeliveryDatabaseException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
     }
 }

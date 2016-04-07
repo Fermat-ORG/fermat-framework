@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.functional;
+package org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
@@ -11,7 +11,6 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.exceptions
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletList;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.*;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
-import org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.bitdubai.version_1.structure.database.AssetUserWalletDao;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,13 +21,13 @@ import java.util.Map;
  */
 public class AssetUserWalletBalanceImpl implements org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletBalance {
 
-    private final AssetUserWalletDao assetUserWalletDao;
+    private final org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.database.AssetUserWalletDao assetUserWalletDao;
     private Broadcaster broadcaster;
 
     /**
      * Constructor.
      */
-    public AssetUserWalletBalanceImpl(AssetUserWalletDao assetUserWalletDao, Broadcaster broadcaster) {
+    public AssetUserWalletBalanceImpl(org.fermat.fermat_dap_plugin.layer.wallet.asset.user.developer.version_1.structure.database.AssetUserWalletDao assetUserWalletDao, Broadcaster broadcaster) {
         this.assetUserWalletDao = assetUserWalletDao;
         this.broadcaster = broadcaster;
     }
