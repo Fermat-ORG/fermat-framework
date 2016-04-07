@@ -583,7 +583,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
 
 
     public void onItemClickListener(Asset data, int position) {
-        appSession.setData("asset_data", data);
+        //appSession.setData("asset_data", data);
     }
 
     @Override
