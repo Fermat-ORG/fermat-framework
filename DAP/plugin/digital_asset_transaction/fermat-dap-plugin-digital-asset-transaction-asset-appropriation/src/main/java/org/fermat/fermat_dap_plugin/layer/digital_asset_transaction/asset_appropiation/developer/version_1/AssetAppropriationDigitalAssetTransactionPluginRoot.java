@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
@@ -55,13 +55,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.A
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.developer_utils.AssetAppropriationDeveloperDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database.AssetAppropriationDAO;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database.AssetAppropriationDatabaseConstants;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database.AssetAppropriationDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.events.AssetAppropriationMonitorAgent;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.events.AssetAppropriationRecorderService;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationVault;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -131,9 +125,9 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
-    AssetAppropriationRecorderService recorderService;
-    AssetAppropriationMonitorAgent monitorAgent;
-    AssetAppropriationVault assetVault;
+    org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.events.AssetAppropriationRecorderService recorderService;
+    org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.events.AssetAppropriationMonitorAgent monitorAgent;
+    org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.functional.AssetAppropriationVault assetVault;
 
     //CONSTRUCTORS
 
@@ -158,7 +152,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     public void appropriateAsset(DigitalAssetMetadata digitalAssetMetadata, String assetUserWalletPublicKey, String bitcoinWalletPublicKey, BlockchainNetworkType networkType) throws CantExecuteAppropriationTransactionException, TransactionAlreadyStartedException {
         String context = "Asset: " + digitalAssetMetadata + " - User Wallet: " + assetUserWalletPublicKey + " - BTC Wallet: " + bitcoinWalletPublicKey + " - NetworkType: " + networkType;
 
-        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
+        try (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO dao = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             String transactionId = dao.startAppropriation(digitalAssetMetadata, assetUserWalletPublicKey, bitcoinWalletPublicKey, networkType);
             CryptoTransaction cryptoTransaction = AssetVerification.foundCryptoTransaction(bitcoinNetworkManager, digitalAssetMetadata, CryptoTransactionType.INCOMING, null);
             if (cryptoTransaction == null) return;
@@ -195,14 +189,14 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 
         try {
             //CREATES ASSET APPROPRIATION DATABASE AND ITS TABLES.
-            AssetAppropriationDatabaseFactory databaseFactory = new AssetAppropriationDatabaseFactory(pluginDatabaseSystem);
+            org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDatabaseFactory databaseFactory = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDatabaseFactory(pluginDatabaseSystem);
             if (!databaseFactory.isDatabaseCreated(pluginId)) {
                 databaseFactory.createDatabase(pluginId);
             }
-            assetVault = new AssetAppropriationVault(pluginId, pluginFileSystem);
-            recorderService = new AssetAppropriationRecorderService(pluginId, eventManager, pluginDatabaseSystem, assetVault);
+            assetVault = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.functional.AssetAppropriationVault(pluginId, pluginFileSystem);
+            recorderService = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.events.AssetAppropriationRecorderService(pluginId, eventManager, pluginDatabaseSystem, assetVault);
             recorderService.start();
-            monitorAgent = new AssetAppropriationMonitorAgent(assetVault,
+            monitorAgent = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.events.AssetAppropriationMonitorAgent(assetVault,
                     pluginDatabaseSystem,
                     logManager,
                     errorManager,
@@ -254,7 +248,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     @Override
     public AppropriationTransactionRecord getTransaction(DigitalAssetMetadata digitalAssetMetadata, String assetUserWalletPublicKey, String bitcoinWalletPublicKey) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
         String context = "Asset: " + digitalAssetMetadata + " - User Wallet: " + assetUserWalletPublicKey + " - BTC Wallet: " + bitcoinWalletPublicKey;
-        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
+        try (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO dao = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             return dao.getTransaction(digitalAssetMetadata, assetUserWalletPublicKey, bitcoinWalletPublicKey);
         } catch (RecordsNotFoundException | CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch block.
             throw e;
@@ -275,7 +269,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     @Override
     public AppropriationTransactionRecord getTransaction(String genesisTransaction) throws RecordsNotFoundException, CantLoadAssetAppropriationTransactionListException {
         String context = "Genesis Transaction: " + genesisTransaction;
-        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
+        try (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO dao = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             return dao.getTransaction(genesisTransaction);
         } catch (RecordsNotFoundException | CantLoadAssetAppropriationTransactionListException e) { //If I don't catch these two they'll be elapsed by the exception catch block.
             throw e;
@@ -287,7 +281,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     @Override
     public List<AppropriationTransactionRecord> getTransactionsForUserWallet(String assetUserWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
         String context = "User Wallet: " + assetUserWalletPublicKey;
-        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
+        try (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO dao = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             return dao.getTransactionsForUserWallet(assetUserWalletPublicKey);
         } catch (CantLoadAssetAppropriationTransactionListException e) {  //If I don't catch this exception it'll be elapsed by the exception catch block.
             throw e;
@@ -299,7 +293,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     @Override
     public List<AppropriationTransactionRecord> getTransactionsForStatus(AppropriationStatus status) throws CantLoadAssetAppropriationTransactionListException {
         String context = "Status: " + status.getCode();
-        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
+        try (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO dao = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             return dao.getTransactionsForStatus(status);
         } catch (CantLoadAssetAppropriationTransactionListException e) { //If I don't catch this exception it'll be elapsed by the exception catch block.
             throw e;
@@ -318,7 +312,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
     @Override
     public List<AppropriationTransactionRecord> getTransactionsForBitcoinWallet(String bitcoinWalletPublicKey) throws CantLoadAssetAppropriationTransactionListException {
         String context = "BitcoinWallet: " + bitcoinWalletPublicKey;
-        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
+        try (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO dao = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             return dao.getTransactionsForBitcoinWallet(bitcoinWalletPublicKey);
         } catch (CantLoadAssetAppropriationTransactionListException e) { //If I don't catch this exception it'll be elapsed by the exception catch block.
             throw e;
@@ -363,20 +357,20 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        return AssetAppropriationDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory, pluginId);
+        return org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.developer_utils.AssetAppropriationDeveloperDatabaseFactory.getDatabaseList(developerObjectFactory, pluginId);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return AssetAppropriationDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        return org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.developer_utils.AssetAppropriationDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         Database database;
         try {
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_DATABASE);
-            return AssetAppropriationDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_DATABASE);
+            return org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.developer_utils.AssetAppropriationDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**
              * The database exists but cannot be open. I can not handle this situation.
@@ -394,7 +388,7 @@ public class AssetAppropriationDigitalAssetTransactionPluginRoot extends Abstrac
         return Collections.EMPTY_LIST;
     }
 
-    public AssetAppropriationVault getAssetVault() {
+    public org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.functional.AssetAppropriationVault getAssetVault() {
         return assetVault;
     }
 }

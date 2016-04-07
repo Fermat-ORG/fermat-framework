@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.events;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.events;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -14,8 +14,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.util.Validate;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database.AssetAppropriationDAO;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationVault;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -45,10 +44,10 @@ public class AssetAppropriationRecorderService implements AssetTransactionServic
         listenersAdded = new ArrayList<>();
     }
 
-    private final AssetAppropriationVault assetVault;
+    private final org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.functional.AssetAppropriationVault assetVault;
     //CONSTRUCTORS
 
-    public AssetAppropriationRecorderService(UUID pluginId, EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, AssetAppropriationVault assetVault) throws CantSetObjectException {
+    public AssetAppropriationRecorderService(UUID pluginId, EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.functional.AssetAppropriationVault assetVault) throws CantSetObjectException {
         this.pluginId = Validate.verifySetter(pluginId, "pluginId is null");
         this.eventManager = Validate.verifySetter(eventManager, "eventManager is null");
         this.pluginDatabaseSystem = Validate.verifySetter(pluginDatabaseSystem, "pluginDatabaseSystem is null");
@@ -61,7 +60,7 @@ public class AssetAppropriationRecorderService implements AssetTransactionServic
     void receiveNewEvent(FermatEvent event) throws CantSaveEventException {
         String context = "pluginDatabaseSystem: " + pluginDatabaseSystem + " - pluginId: " + pluginId + " - event: " + event;
 
-        try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
+        try (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO dao = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
             dao.saveNewEvent(event);
         } catch (DatabaseNotFoundException | CantOpenDatabaseException e) {
             throw new CantSaveEventException(e, context, CantSaveEventException.DEFAULT_MESSAGE);

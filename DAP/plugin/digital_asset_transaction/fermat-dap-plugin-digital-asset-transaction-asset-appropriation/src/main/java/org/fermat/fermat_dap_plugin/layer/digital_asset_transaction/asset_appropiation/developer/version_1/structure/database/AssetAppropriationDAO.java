@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
@@ -33,9 +33,9 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSav
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces.AppropriationTransactionRecord;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.exceptions.CantLoadAssetAppropriationEventListException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationTransactionRecordImpl;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationVault;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.exceptions.CantLoadAssetAppropriationEventListException;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.functional.AssetAppropriationTransactionRecordImpl;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType;
 
 import java.io.Closeable;
@@ -50,10 +50,10 @@ public class AssetAppropriationDAO implements AutoCloseable {
 
     //VARIABLE DECLARATION
     private Database database;
-    private AssetAppropriationVault vault;
+    private org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.functional.AssetAppropriationVault vault;
 
     //CONSTRUCTORS
-    public AssetAppropriationDAO(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, AssetAppropriationVault vault) throws CantOpenDatabaseException, DatabaseNotFoundException {
+    public AssetAppropriationDAO(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.functional.AssetAppropriationVault vault) throws CantOpenDatabaseException, DatabaseNotFoundException {
         database = pluginDatabaseSystem.openDatabase(pluginId, AssetAppropriationDatabaseConstants.ASSET_APPROPRIATION_DATABASE);
         this.vault = vault;
     }

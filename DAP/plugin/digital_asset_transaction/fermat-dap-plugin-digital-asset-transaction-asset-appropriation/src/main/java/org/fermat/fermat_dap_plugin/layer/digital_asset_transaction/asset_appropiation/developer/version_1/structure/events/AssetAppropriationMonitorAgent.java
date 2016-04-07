@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.events;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.events;
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
@@ -61,10 +61,9 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantLoadWalletException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.AssetAppropriationDigitalAssetTransactionPluginRoot;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.exceptions.CantLoadAssetAppropriationEventListException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.database.AssetAppropriationDAO;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.bitdubai.version_1.structure.functional.AssetAppropriationVault;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.AssetAppropriationDigitalAssetTransactionPluginRoot;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.exceptions.CantLoadAssetAppropriationEventListException;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -87,7 +86,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
     private final ErrorManager errorManager;
     private final LogManager logManager;
     private final PluginDatabaseSystem pluginDatabaseSystem;
-    private final AssetAppropriationVault assetVault;
+    private final org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.functional.AssetAppropriationVault assetVault;
     private final UUID pluginId;
     private final AssetVaultManager assetVaultManager;
     private final AssetUserWalletManager assetUserWalletManager;
@@ -109,7 +108,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
     //CONSTRUCTORS
 
 
-    public AssetAppropriationMonitorAgent(AssetAppropriationVault assetVault,
+    public AssetAppropriationMonitorAgent(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.functional.AssetAppropriationVault assetVault,
                                           PluginDatabaseSystem pluginDatabaseSystem,
                                           LogManager logManager,
                                           ErrorManager errorManager,
@@ -211,7 +210,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
         }
 
         private void doTheMainTask() {
-            try (AssetAppropriationDAO dao = new AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
+            try (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO dao = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO(pluginDatabaseSystem, pluginId, assetVault)) {
 
                 messageMonitoring();
                 statusMonitoring(dao);
@@ -238,7 +237,7 @@ public class AssetAppropriationMonitorAgent implements Agent {
             }
         }
 
-        private void statusMonitoring(AssetAppropriationDAO dao) throws Exception {
+        private void statusMonitoring(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_appropiation.developer.version_1.structure.database.AssetAppropriationDAO dao) throws Exception {
             for (AppropriationTransactionRecord record : dao.getUnsendedTransactions()) {
                 AssetAppropriationDigitalAssetTransactionPluginRoot.debugAssetAppropriation(dao.getUnsendedTransactions().size() + " unsended transactions were found.");
                 switch (record.status()) {
