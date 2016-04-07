@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.developer_utils;
+package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.version_1.developer_utils;
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
@@ -18,8 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
 import org.fermat.fermat_dap_api.layer.all_definition.util.Validate;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_redemption.exceptions.CantInitializeAssetRedeemPointRedemptionTransactionDatabaseException;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.database.IssuerAppropriationDatabaseConstants;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.bitdubai.version_1.structure.database.IssuerAppropriationDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.version_1.structure.database.IssuerAppropriationDatabaseConstants;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -70,9 +69,9 @@ public class IssuerAppropriationDeveloperDatabaseFactory implements DealsWithPlu
               * The database no exist may be the first time the plugin is running on this device,
               * We need to create the new database
               */
-            IssuerAppropriationDatabaseFactory issuerAppropriationDatabaseFactory = null;
+            org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.version_1.structure.database.IssuerAppropriationDatabaseFactory issuerAppropriationDatabaseFactory = null;
             try {
-                issuerAppropriationDatabaseFactory = new IssuerAppropriationDatabaseFactory(pluginDatabaseSystem);
+                issuerAppropriationDatabaseFactory = new org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.issuer_appropriation.developer.version_1.structure.database.IssuerAppropriationDatabaseFactory(pluginDatabaseSystem);
             } catch (CantSetObjectException e1) {
                 throw new CantInitializeAssetRedeemPointRedemptionTransactionDatabaseException(e1.getMessage());
             }
