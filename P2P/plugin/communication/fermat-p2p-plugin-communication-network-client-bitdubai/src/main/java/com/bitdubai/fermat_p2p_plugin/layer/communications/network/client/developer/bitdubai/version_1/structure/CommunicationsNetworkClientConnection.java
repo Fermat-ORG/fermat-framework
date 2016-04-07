@@ -1,10 +1,15 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.endpoints.CommunicationsNetworkClientChannel;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.net.URI;
@@ -21,7 +26,7 @@ import javax.websocket.WebSocketContainer;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CommunicationsNetworkClientConnection extends Thread{
+public class CommunicationsNetworkClientConnection extends Thread {
 
     private URI uri;
     private EventManager eventManager;
@@ -60,7 +65,7 @@ public class CommunicationsNetworkClientConnection extends Thread{
         try{
 
             container = ContainerProvider.getWebSocketContainer();
-            session =  container.connectToServer(CommunicationsNetworkClientChannel.class, uri);
+            session   = container.connectToServer(CommunicationsNetworkClientChannel.class, uri);
 
             //validate if is connected
             if(session.isOpen()){
@@ -96,14 +101,14 @@ public class CommunicationsNetworkClientConnection extends Thread{
             e.printStackTrace();
         }
 
-     /*   ProfileCheckInMsgRequest profileCheckInMsgRequest = new ProfileCheckInMsgRequest(clientProfile);
+        CheckInProfileMsgRequest profileCheckInMsgRequest = new CheckInProfileMsgRequest(clientProfile);
         profileCheckInMsgRequest.setMessageContentType(MessageContentType.JSON);
 
         try {
             session.getBasicRemote().sendObject(Package.createInstance(profileCheckInMsgRequest, NetworkServiceType.UNDEFINED, PackageType.CHECK_IN_CLIENT_REQUEST, clientIdentity.getPrivateKey(), serverIdentity));
         }catch (Exception e){
             e.printStackTrace();
-        }*/
+        }
     }
 
 }
