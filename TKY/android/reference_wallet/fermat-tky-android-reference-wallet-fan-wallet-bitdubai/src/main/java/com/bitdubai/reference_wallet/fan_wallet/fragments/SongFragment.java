@@ -124,6 +124,13 @@ public class SongFragment extends AbstractFermatFragment {
 
     }
 
+    void initvalues(){
+        fanWalletModule=fanwalletmoduleManager.getFanWalletModule();
+        compareViewAndDatabase();
+        syncTokenlyAndUpdateThreads(true);
+
+    }
+
     @Override
     public void onUpdateViewOnUIThread(String code) {
         this.code=code;
@@ -141,14 +148,14 @@ public class SongFragment extends AbstractFermatFragment {
     final Runnable myRunnablebundle = new Runnable() {
 
         public void run() {
-            updateViewFromMainActivity(0, bundle,"");
+            updateViewForBroadcaster(0, bundle, "");
         }
     };
 
     final Runnable myRunnablecode = new Runnable() {
 
         public void run() {
-            updateViewFromMainActivity(1, null,code);
+            updateViewForBroadcaster(1, null,code);
         }
     };
 
@@ -209,7 +216,7 @@ public class SongFragment extends AbstractFermatFragment {
 
 
 
-    return view;
+        return view;
     }
 
 
@@ -219,7 +226,7 @@ public class SongFragment extends AbstractFermatFragment {
         syncthread=new SyncThreadClass(autosync); // Firstthread
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) // Above Api Level 13
         {
-           // syncthread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            // syncthread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
             syncthread.execute();
         }
         else // Below Api Level 13
@@ -239,15 +246,17 @@ public class SongFragment extends AbstractFermatFragment {
 
     }
 
+    int searchInViewBySongId(UUID song_Id){
 
-    void initvalues(){
-        fanWalletModule=fanwalletmoduleManager.getFanWalletModule();
-        compareViewAndDatabase();
-        syncTokenlyAndUpdateThreads(true);
-
+        for(int i=0;i<items.size();i++){
+            if(items.get(i).getSong_id().equals(song_Id)){
+                return i;
+            }
+        }
+        return 0;
     }
 
-    int searchInViewPosition(Song songOfBroadcast){
+    void searchInViewPosition(Song songOfBroadcast,UUID song_Id){
        int position;
        String songInfo;
        List<String> listComposerAndSongNameOnView=new ArrayList<>();
@@ -258,13 +267,10 @@ public class SongFragment extends AbstractFermatFragment {
                }
         }
         songInfo=songOfBroadcast.getComposers()+"@#@#"+songOfBroadcast.getName();
-        if(listComposerAndSongNameOnView.contains(songInfo)){
-            return listComposerAndSongNameOnView.indexOf(songInfo);
-        }else{
-            //"52d7fab8-a423-458f-bcc9-49cdb3e9ba8f"
-            items.add(new SongItems(R.drawable.tky_tokenly_album, songOfBroadcast.getName(), songOfBroadcast.getComposers(), SongStatus.DNG.getCode(),UUID.randomUUID(), 0, false));
+        if(!listComposerAndSongNameOnView.contains(songInfo)){
+            items.add(new SongItems(R.drawable.tky_tokenly_album, songOfBroadcast.getName(), songOfBroadcast.getComposers(), SongStatus.DNG.getCode(),song_Id, 0, false));
             adapter.setFilter(items);
-            return items.size();
+
         }
 
     }
@@ -325,7 +331,7 @@ public class SongFragment extends AbstractFermatFragment {
             public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 int position=viewHolder.getAdapterPosition();
                 final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-                final int swipeFlags = ItemTouchHelper.START;       // delete one in case you want just one direction
+                final int swipeFlags = ItemTouchHelper.END;       // delete one in case you want just one direction
                 if(items.get(position).getStatus()=="Downloading" ||items.get(position).getStatus()=="Pending"){
                     return 0;
                 }else{
@@ -464,23 +470,28 @@ public class SongFragment extends AbstractFermatFragment {
 
 
 
-    public void updateViewFromMainActivity(int infotype,FermatBundle bundle,String code) {
+    public void updateViewForBroadcaster(int infotype,FermatBundle bundle,String code) {
 
         int position=0;
         if(infotype==0) {
             try {
                 System.out.println("TKY_Broad_Arrive:");
+
                 if (bundle.contains(BroadcasterNotificationType.SONG_INFO.getCode())) {
                     System.out.println("TKY_BROAD_SONGINFO:"+ ((Song)bundle.getSerializable(BroadcasterNotificationType.SONG_INFO.getCode())).getName());
-                    position = searchInViewPosition((Song) bundle.getSerializable(BroadcasterNotificationType.SONG_INFO.getCode()));
+                    searchInViewPosition((Song) bundle.getSerializable(BroadcasterNotificationType.SONG_INFO.getCode()),
+                            (UUID) bundle.getSerializable(BroadcasterNotificationType.SONG_ID.getCode()));
                 }
 
                 if (bundle.contains(BroadcasterNotificationType.DOWNLOAD_PERCENTAGE.getCode())) {
                     System.out.println("TKY_BROAD_DOWNLOAD_PERCENTAGE:"+bundle.getString(BroadcasterNotificationType.DOWNLOAD_PERCENTAGE.getCode()));
+                    position=searchInViewBySongId((UUID) bundle.getSerializable(BroadcasterNotificationType.SONG_ID.getCode()));
                     updateprogress(position, bundle.getString(BroadcasterNotificationType.DOWNLOAD_PERCENTAGE.getCode()).split("%")[0]);
                 }
+
                 if (bundle.contains(BroadcasterNotificationType.DOWNLOAD_EXCEPTION.getCode())) {
                     System.out.println("TKY_BROAD_DOWNLOAD_EXCEPTION:"+bundle.getString(BroadcasterNotificationType.DOWNLOAD_EXCEPTION.getCode()));
+                    position=searchInViewBySongId((UUID) bundle.getSerializable(BroadcasterNotificationType.SONG_ID.getCode()));
                     downloadproblem(position);
                 }
 
