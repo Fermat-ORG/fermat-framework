@@ -54,8 +54,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.CreateContactDialogCallback;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.FermatListViewFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.SubActionButton;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.views_contacts_fragment.IndexBarView;
@@ -187,7 +187,9 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                     if (walletContactRecords.isEmpty()) {
                         rootView.findViewById(R.id.fragment_container2).setVisibility(View.GONE);
                         try {
-                            setUpTutorial();
+                            boolean isHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
+
+                            setUpTutorial(isHelpEnabled);
                         } catch (CantGetSettingsException e) {
                             e.printStackTrace();
                         } catch (SettingsNotFoundException e) {
@@ -288,7 +290,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.help_icon)
+        menu.add(0, LossProtectedWalletConstants.IC_ACTION_HELP_CONTACT, 0, "help").setIcon(R.drawable.help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //inflater.inflate(R.menu.home_menu, menu);
     }
@@ -299,8 +301,8 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
             int id = item.getItemId();
 
-            if (id == BitcoinWalletConstants.IC_ACTION_HELP_CONTACT) {
-                setUpTutorial();
+            if (id == LossProtectedWalletConstants.IC_ACTION_HELP_CONTACT) {
+                setUpTutorial(true);
                 return true;
             }
 
@@ -333,8 +335,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         refreshAdapter();
     }
 
-    private void setUpTutorial() throws CantGetSettingsException, SettingsNotFoundException {
-        boolean isHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
+    private void setUpTutorial(boolean isHelpEnabled) throws CantGetSettingsException, SettingsNotFoundException {
         if (isHelpEnabled) {
             ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), referenceWalletSession, null, settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).isContactsHelpEnabled());
             contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {

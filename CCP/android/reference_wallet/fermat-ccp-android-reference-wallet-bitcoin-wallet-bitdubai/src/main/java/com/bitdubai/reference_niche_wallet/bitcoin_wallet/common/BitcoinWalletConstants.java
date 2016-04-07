@@ -9,5 +9,6 @@ public class BitcoinWalletConstants {
     public static int IC_ACTION_SEND = 100;
     public static final int IC_ACTION_ADD_CONNECTION = 101;
     public static final int IC_ACTION_HELP_PRESENTATION = 102;
+    public static final int IC_ACTION_REPORT = 103;
 
 }

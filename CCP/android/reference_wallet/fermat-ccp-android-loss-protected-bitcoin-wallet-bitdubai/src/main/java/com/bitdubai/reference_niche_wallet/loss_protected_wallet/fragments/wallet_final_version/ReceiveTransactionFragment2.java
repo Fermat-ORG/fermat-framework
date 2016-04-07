@@ -52,7 +52,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.BitcoinWalletConstants;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.models.GrouperItem;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.PresentationBitcoinWalletDialog;
@@ -194,10 +194,10 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         super.onCreateOptionsMenu(menu, inflater);
 
-        menu.add(0, BitcoinWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
+        menu.add(0, LossProtectedWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help").setIcon(R.drawable.help_icon)
+        menu.add(1, LossProtectedWalletConstants.IC_ACTION_HELP_CONTACT, 1, "help").setIcon(R.drawable.help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //inflater.inflate(R.menu.home_menu, menu);
     }
@@ -208,10 +208,10 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
             int id = item.getItemId();
 
-            if(id == BitcoinWalletConstants.IC_ACTION_SEND){
+            if(id == LossProtectedWalletConstants.IC_ACTION_SEND){
                 changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,referenceWalletSession.getAppPublicKey());
                 return true;
-            }else if(id == BitcoinWalletConstants.IC_ACTION_HELP_CONTACT){
+            }else if(id == LossProtectedWalletConstants.IC_ACTION_HELP_CONTACT){
                 setUpPresentation();
                 return true;
             }

@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
@@ -167,40 +168,43 @@ public class WebSocketCloudServerChannel {
             LOG.info(" --------------------------------------------------------------------- ");
             LOG.info("Starting method onWebSocketText");
 
+            if(!isJSONVALID(messageComplete)) {
+                LOG.info(" --------------------------------MESSAGE BAD ASSEMBLY------------------------------------- ");
+            }else {
             /*
              * Get the server identity for this client connection
              */
-            ECCKeyPair serverIdentity = activeClientConnection.getServerIdentity();
+                ECCKeyPair serverIdentity = activeClientConnection.getServerIdentity();
 
             /*
              * Decode the fermatPacketEncode into a fermatPacket
              */
-            FermatPacket fermatPacketReceive = FermatPacketDecoder.decode(messageComplete, serverIdentity.getPrivateKey());
+                FermatPacket fermatPacketReceive = FermatPacketDecoder.decode(messageComplete, serverIdentity.getPrivateKey());
 
 
-            LOG.info("fermatPacket.getFermatPacketType() = " + fermatPacketReceive.getFermatPacketType());
+                LOG.info("fermatPacket.getFermatPacketType() = " + fermatPacketReceive.getFermatPacketType());
 
 
-            //verify is packet supported
-            if (MemoryCache.getInstance().getPacketProcessorsRegister().containsKey(fermatPacketReceive.getFermatPacketType())) {
+                //verify is packet supported
+                if (MemoryCache.getInstance().getPacketProcessorsRegister().containsKey(fermatPacketReceive.getFermatPacketType())) {
 
 
             /*
              * Call the processors for this packet
              */
-                for (FermatJettyPacketProcessor fermatPacketProcessor : MemoryCache.getInstance().getPacketProcessorsRegister().get(fermatPacketReceive.getFermatPacketType())) {
+                    for (FermatJettyPacketProcessor fermatPacketProcessor : MemoryCache.getInstance().getPacketProcessorsRegister().get(fermatPacketReceive.getFermatPacketType())) {
 
                 /*
                  * Processor make his job
                  */
-                    fermatPacketProcessor.processingPackage(activeClientConnection, fermatPacketReceive);
+                        fermatPacketProcessor.processingPackage(activeClientConnection, fermatPacketReceive);
+                    }
+
+
+                } else {
+                    LOG.info("Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
                 }
-
-
-            } else {
-                LOG.info("Packet type " + fermatPacketReceive.getFermatPacketType() + "is not supported");
             }
-
             /*
              * we set the messageComplete to empty because if we do with null the messageComplete after will concat like a word
              * and show exception in its handle
@@ -272,6 +276,24 @@ public class WebSocketCloudServerChannel {
             activeClientConnection.getSession().close(new CloseReason(CloseReason.CloseCodes.UNEXPECTED_CONDITION, cause.getMessage()));
         }
 
+    }
+
+    private boolean isJSONVALID(String JSON_STRING){
+
+        ECCKeyPair serverIdentity = activeClientConnection.getServerIdentity();
+
+        try{
+
+            FermatPacket fermatPacketReceive = FermatPacketDecoder.decode(JSON_STRING, serverIdentity.getPrivateKey());
+
+            return Boolean.TRUE;
+
+        }catch (Exception e){
+
+//            LOG.info(AsymmetricCryptography.decryptMessagePrivateKey(JSON_STRING, serverIdentity.getPrivateKey()));
+
+            return Boolean.FALSE;
+        }
     }
 
 }

@@ -1,7 +1,7 @@
 package com.bitdubai.fermat_pip_plugin.layer.network_service.subapp_fermat_monitor.developer.bitdubai.version_1.database;
 
 /**
- * The Class <code>com.bitdubai.fermat_pip_plugin.layer.network_service.system_monitor.developer.bitdubai.version_1.database.SystemMonitorNetworkServiceDatabaseConstants</code>
+ * The Class <code>com.bitdubai.fermat_pip_plugin.layer.network_service.system_monitor.developer.bitdubai.version_1.database.SystemMonitorNetworkServiceDeveloperDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
  * <p/>
  *

@@ -24,7 +24,7 @@ public class NetworkServiceLayer extends AbstractLayer {
         try {
 
            registerPlugin(new SubAppResourcesPluginSubsystem());
-           //registerPlugin(new FermatMonitorPluginSubsystem());
+           registerPlugin(new FermatMonitorPluginSubsystem());
 
         } catch (CantRegisterPluginException e) {
 
