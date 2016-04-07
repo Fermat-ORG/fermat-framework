@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.AbstractViewPagerAdapter;
+import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 
 import java.util.List;
 
@@ -18,7 +19,12 @@ public class SliderAdapter extends AbstractViewPagerAdapter<Integer> {
     }
 
     @Override
-    protected void bindHolder(View item_view, int position, Integer item) {
+    protected FermatViewHolder createHolder(View item_view, int position) {
+        return null;
+    }
+
+    @Override
+    protected void bindHolder(FermatViewHolder fermatViewHolder, int position, Integer item) {
 
     }
 
