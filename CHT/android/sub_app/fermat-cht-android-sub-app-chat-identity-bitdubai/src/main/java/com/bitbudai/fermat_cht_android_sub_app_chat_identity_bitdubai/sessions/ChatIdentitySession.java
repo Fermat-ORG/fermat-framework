@@ -7,6 +7,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.Abstrac
  * Developed by Lozadaa on 05/04/16.
  */
 public class ChatIdentitySession extends AbstractFermatSession {
+    public static final String IDENTITY_INFO = "CHAT_IDENTITY_INFO";
     public ChatIdentitySession(){
 
     }
