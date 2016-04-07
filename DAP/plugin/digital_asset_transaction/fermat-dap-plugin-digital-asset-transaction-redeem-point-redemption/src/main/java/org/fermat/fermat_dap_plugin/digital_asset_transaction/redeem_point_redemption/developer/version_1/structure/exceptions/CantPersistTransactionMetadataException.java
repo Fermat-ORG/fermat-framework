@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions;
+package org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions;
 
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 

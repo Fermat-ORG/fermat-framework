@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.events;
+package org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.events;
 
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
@@ -52,10 +52,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletTransactionRecord;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.WalletUtilities;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.enums.BalanceType;
-import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.RedeemPointRedemptionDigitalAssetTransactionPluginRoot;
-import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database.AssetRedeemPointRedemptionDAO;
-import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionEventListException;
-import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -130,7 +127,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         try {
-            logManager.log(RedeemPointRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "RedeemPoint Redemption Protocol Notification Agent: starting...", null, null);
+            logManager.log(org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.RedeemPointRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "RedeemPoint Redemption Protocol Notification Agent: starting...", null, null);
             latch = new CountDownLatch(1);
             agent = new RedemptionAgent(pluginId, pluginFileSystem, actorAssetUserManager, actorAssetIssuerManager, bitcoinNetworkManager);
             Thread agentThread = new Thread(agent, "Redeem Point Redemption MonitorAgent");
@@ -139,12 +136,12 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
             throw new CantStartAgentException();
         }
         this.status = ServiceStatus.STARTED;
-        logManager.log(RedeemPointRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "RedeemPoint Redemption Protocol Notification Agent: successfully started...", null, null);
+        logManager.log(org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.RedeemPointRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "RedeemPoint Redemption Protocol Notification Agent: successfully started...", null, null);
     }
 
     @Override
     public void stop() {
-        logManager.log(RedeemPointRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "RedeemPoint Redemption Protocol Notification Agent: stopping...", null, null);
+        logManager.log(org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.RedeemPointRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "RedeemPoint Redemption Protocol Notification Agent: stopping...", null, null);
         agent.stopAgent();
         try {
             latch.await(); //WAIT UNTIL THE LAST RUN FINISH
@@ -152,7 +149,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.NOT_IMPORTANT, e);
         }
         agent = null; //RELEASE RESOURCES.
-        logManager.log(RedeemPointRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "RedeemPoint Redemption Protocol Notification Agent: successfully stopped...", null, null);
+        logManager.log(org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.RedeemPointRedemptionDigitalAssetTransactionPluginRoot.getLogLevelByClass(this.getClass().getName()), "RedeemPoint Redemption Protocol Notification Agent: successfully stopped...", null, null);
         this.status = ServiceStatus.STOPPED;
     }
 
@@ -169,7 +166,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
 
         private boolean agentRunning;
         private static final int WAIT_TIME = 20; //SECONDS
-        private AssetRedeemPointRedemptionDAO dao;
+        private org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.database.AssetRedeemPointRedemptionDAO dao;
 
         public RedemptionAgent(UUID pluginId, PluginFileSystem pluginFileSystem, ActorAssetUserManager actorAssetUserManager, ActorAssetIssuerManager actorAssetIssuerManager, BitcoinNetworkManager bitcoinNetworkManager) throws CantSetObjectException, CantOpenDatabaseException, DatabaseNotFoundException {
             super.setPluginId(pluginId);
@@ -177,7 +174,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
             super.setActorAssetUserManager(actorAssetUserManager);
             super.setActorAssetIssuerManager(actorAssetIssuerManager);
             super.setBitcoinCryptoNetworkManager(bitcoinNetworkManager);
-            dao = new AssetRedeemPointRedemptionDAO(pluginDatabaseSystem, pluginId);
+            dao = new org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.database.AssetRedeemPointRedemptionDAO(pluginDatabaseSystem, pluginId);
             startAgent();
         }
 
@@ -363,7 +360,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
                         dao.updateEventStatus(EventStatus.NOTIFIED, eventId); //I can't do anything with this event!
                     }
                 }
-            } catch (CantGetAssetUserActorsException | CantLoadAssetRedemptionEventListException | CantLoadAssetRedemptionMetadataListException e) {
+            } catch (CantGetAssetUserActorsException | org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionEventListException | org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_REDEEM_POINT_REDEMPTION_TRANSACTION, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -386,7 +383,7 @@ public class RedeemPointRedemptionMonitorAgent implements Agent {
             System.out.println("REDEEM POINT REDEMPTION - " + message);
         }
 
-        private void updateStatusAndSendMessage(DistributionStatus status, DAPMessage message) throws CantSendTransactionNewStatusNotificationException, RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException, CantConfirmTransactionException, CantSetObjectException, CantSendMessageException, CantUpdateMessageStatusException {
+        private void updateStatusAndSendMessage(DistributionStatus status, DAPMessage message) throws CantSendTransactionNewStatusNotificationException, RecordsNotFoundException, org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException, CantConfirmTransactionException, CantSetObjectException, CantSendMessageException, CantUpdateMessageStatusException {
             AssetMetadataContentMessage content = (AssetMetadataContentMessage) message.getMessageContent();
             DigitalAssetMetadata metadata = content.getAssetMetadata();
             String transactionId = metadata.getGenesisTransaction();

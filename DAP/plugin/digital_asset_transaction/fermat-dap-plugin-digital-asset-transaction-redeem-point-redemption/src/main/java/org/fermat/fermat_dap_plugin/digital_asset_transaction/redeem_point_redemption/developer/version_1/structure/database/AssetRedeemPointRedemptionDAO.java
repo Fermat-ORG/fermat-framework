@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database;
+package org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.database;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -26,9 +26,8 @@ import org.fermat.fermat_dap_api.layer.all_definition.enums.EventType;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantSaveEventException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.RecordsNotFoundException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.TransactionAlreadyStartedException;
-import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionEventListException;
-import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException;
-import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.exceptions.CantPersistTransactionMetadataException;
+import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionEventListException;
+import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantPersistTransactionMetadataException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,11 +166,11 @@ public class AssetRedeemPointRedemptionDAO {
         databaseTable.insertRecord(metadataRecord);
     }
 
-    public void updateTransactionStatusById(DistributionStatus status, String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException {
+    public void updateTransactionStatusById(DistributionStatus status, String transactionId) throws RecordsNotFoundException, org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException {
         updateStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_STATUS_COLUMN_NAME, status.getCode(), transactionId);
     }
 
-    public void updateTransactionCryptoStatusById(CryptoStatus status, String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException {
+    public void updateTransactionCryptoStatusById(CryptoStatus status, String transactionId) throws RecordsNotFoundException, org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException {
         updateStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, status.getCode(), transactionId);
     }
 
@@ -180,7 +179,7 @@ public class AssetRedeemPointRedemptionDAO {
         return !getPendingEventsBySource(eventSource).isEmpty();
     }
 
-    private void updateStringFieldByTransactionId(String columnName, String value, String transactionId) throws CantLoadAssetRedemptionMetadataListException, RecordsNotFoundException {
+    private void updateStringFieldByTransactionId(String columnName, String value, String transactionId) throws org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException, RecordsNotFoundException {
         String context = "Column Name: " + columnName + " - Value: " + value + " - Id: " + transactionId;
         try {
             DatabaseTable metadataTable;
@@ -195,9 +194,9 @@ public class AssetRedeemPointRedemptionDAO {
                 metadataTable.updateRecord(record);
             }
         } catch (CantLoadTableToMemoryException exception) {
-            throw new CantLoadAssetRedemptionMetadataListException(exception, context, "Cannot load table to memory.");
+            throw new org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException(exception, context, "Cannot load table to memory.");
         } catch (CantUpdateRecordException exception) {
-            throw new CantLoadAssetRedemptionMetadataListException(exception, context, "Cannot update record.");
+            throw new org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException(exception, context, "Cannot update record.");
         }
     }
 
@@ -222,7 +221,7 @@ public class AssetRedeemPointRedemptionDAO {
         }
     }
 
-    private String getStringFieldByTransactionId(String columnName, String id) throws CantLoadAssetRedemptionMetadataListException, RecordsNotFoundException {
+    private String getStringFieldByTransactionId(String columnName, String id) throws org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException, RecordsNotFoundException {
         try {
             String context = "Column Name: " + columnName + " - Id: " + id;
             DatabaseTable databaseTable;
@@ -235,9 +234,9 @@ public class AssetRedeemPointRedemptionDAO {
             }
             throw new RecordsNotFoundException(null, context, "");
         } catch (CantLoadTableToMemoryException exception) {
-            throw new CantLoadAssetRedemptionMetadataListException(exception, "Getting pending events.", "Cannot load table to memory.");
+            throw new org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException(exception, "Getting pending events.", "Cannot load table to memory.");
         } catch (Exception exception) {
-            throw new CantLoadAssetRedemptionMetadataListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+            throw new org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
         }
     }
 
@@ -300,20 +299,20 @@ public class AssetRedeemPointRedemptionDAO {
         }
     }
 
-    private boolean isPendingTransactionByCryptoStatus(CryptoStatus status) throws CantLoadAssetRedemptionMetadataListException {
+    private boolean isPendingTransactionByCryptoStatus(CryptoStatus status) throws org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException {
         return getGenesisTransactionByCryptoStatus(status).isEmpty();
     }
 
     private boolean isTransactionRegistered(String transactionId) {
         try {
             getStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_STATUS_COLUMN_NAME, transactionId);
-        } catch (CantLoadAssetRedemptionMetadataListException | RecordsNotFoundException e) {
+        } catch (org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException | RecordsNotFoundException e) {
             return false;
         }
         return true;
     }
 
-    private List<String> getGenesisTransactionByCryptoStatus(CryptoStatus status) throws CantLoadAssetRedemptionMetadataListException {
+    private List<String> getGenesisTransactionByCryptoStatus(CryptoStatus status) throws org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException {
         try {
             DatabaseTable metadataTable;
             metadataTable = database.getTable(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TABLE_NAME);
@@ -327,9 +326,9 @@ public class AssetRedeemPointRedemptionDAO {
             }
             return genesisTransactionList;
         } catch (CantLoadTableToMemoryException exception) {
-            throw new CantLoadAssetRedemptionMetadataListException(exception, "Getting pending events.", "Cannot load table to memory.");
+            throw new org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException(exception, "Getting pending events.", "Cannot load table to memory.");
         } catch (Exception exception) {
-            throw new CantLoadAssetRedemptionMetadataListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
+            throw new org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException(FermatException.wrapException(exception), "Getting pending events.", "Unexpected exception");
         }
     }
     //GETTER AND SETTERS
@@ -338,43 +337,43 @@ public class AssetRedeemPointRedemptionDAO {
         return database;
     }
 
-    public boolean isPendingSubmitTransactions() throws CantLoadAssetRedemptionMetadataListException {
+    public boolean isPendingSubmitTransactions() throws org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException {
         return isPendingTransactionByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
     }
 
-    public boolean isOnCryptoNetworkTransactions() throws CantLoadAssetRedemptionMetadataListException {
+    public boolean isOnCryptoNetworkTransactions() throws org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException {
         return isPendingTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
     }
 
-    public boolean isOnBlockChainTransactions() throws CantLoadAssetRedemptionMetadataListException {
+    public boolean isOnBlockChainTransactions() throws org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException {
         return isPendingTransactionByCryptoStatus(CryptoStatus.ON_BLOCKCHAIN);
     }
 
-    public String getSenderPublicKeyById(String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException {
+    public String getSenderPublicKeyById(String transactionId) throws RecordsNotFoundException, org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException {
         return getStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_SENDER_KEY_COLUMN_NAME, transactionId);
     }
 
-    public String getReceiverPublicKeyById(String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException {
+    public String getReceiverPublicKeyById(String transactionId) throws RecordsNotFoundException, org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException {
         return getStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_RECEIVER_KEY_COLUMN_NAME, transactionId);
     }
 
-    public CryptoStatus getTransactionCryptoStatusById(String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException, InvalidParameterException {
+    public CryptoStatus getTransactionCryptoStatusById(String transactionId) throws RecordsNotFoundException, org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException, InvalidParameterException {
         return CryptoStatus.getByCode(getStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_CRYPTO_STATUS_COLUMN_NAME, transactionId));
     }
 
-    public DistributionStatus getTransactionStatusById(String transactionId) throws RecordsNotFoundException, CantLoadAssetRedemptionMetadataListException, InvalidParameterException {
+    public DistributionStatus getTransactionStatusById(String transactionId) throws RecordsNotFoundException, org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException, InvalidParameterException {
         return DistributionStatus.getByCode(getStringFieldByTransactionId(AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_METADATA_TRANSACTION_STATUS_COLUMN_NAME, transactionId));
     }
 
-    public List<String> getPendingSubmitGenesisTransactions() throws CantLoadAssetRedemptionMetadataListException {
+    public List<String> getPendingSubmitGenesisTransactions() throws org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException {
         return getGenesisTransactionByCryptoStatus(CryptoStatus.PENDING_SUBMIT);
     }
 
-    public List<String> getOnCryptoNetworkGenesisTransactions() throws CantLoadAssetRedemptionMetadataListException {
+    public List<String> getOnCryptoNetworkGenesisTransactions() throws org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException {
         return getGenesisTransactionByCryptoStatus(CryptoStatus.ON_CRYPTO_NETWORK);
     }
 
-    public List<String> getOnBlockChainGenesisTransactions() throws CantLoadAssetRedemptionMetadataListException {
+    public List<String> getOnBlockChainGenesisTransactions() throws org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.exceptions.CantLoadAssetRedemptionMetadataListException {
         return getGenesisTransactionByCryptoStatus(CryptoStatus.REVERSED_ON_BLOCKCHAIN);
     }
 

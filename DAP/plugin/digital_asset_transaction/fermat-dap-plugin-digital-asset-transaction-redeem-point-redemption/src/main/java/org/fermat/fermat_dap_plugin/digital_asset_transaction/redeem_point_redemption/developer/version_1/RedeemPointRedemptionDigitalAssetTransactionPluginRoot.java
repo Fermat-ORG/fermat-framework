@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1;
+package org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.CantStartPluginException;
@@ -42,11 +42,10 @@ import org.fermat.fermat_dap_api.layer.dap_transaction.asset_redemption.interfac
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantDeliverDatabaseException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.asset_redeem_point.interfaces.AssetRedeemPointWalletManager;
-import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.developer_utils.AssetRedeemPointRedemptionDeveloperDatabaseFactory;
-import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database.AssetRedeemPointRedemptionDatabaseConstants;
-import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.database.AssetRedeemPointRedemptionDatabaseFactory;
-import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.events.RedeemPointRedemptionMonitorAgent;
-import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.bitdubai.version_1.structure.events.RedeemPointRedemptionRecorderService;
+import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.database.AssetRedeemPointRedemptionDatabaseConstants;
+import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.database.AssetRedeemPointRedemptionDatabaseFactory;
+import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.events.RedeemPointRedemptionMonitorAgent;
+import org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.structure.events.RedeemPointRedemptionRecorderService;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -252,13 +251,13 @@ public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends Abst
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        AssetRedeemPointRedemptionDeveloperDatabaseFactory factory = new AssetRedeemPointRedemptionDeveloperDatabaseFactory(this.pluginId, this.pluginDatabaseSystem);
+        org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.developer_utils.AssetRedeemPointRedemptionDeveloperDatabaseFactory factory = new org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.developer_utils.AssetRedeemPointRedemptionDeveloperDatabaseFactory(this.pluginId, this.pluginDatabaseSystem);
         return factory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        return AssetRedeemPointRedemptionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
+        return org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.developer_utils.AssetRedeemPointRedemptionDeveloperDatabaseFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
@@ -266,7 +265,7 @@ public class RedeemPointRedemptionDigitalAssetTransactionPluginRoot extends Abst
         Database database;
         try {
             database = this.pluginDatabaseSystem.openDatabase(pluginId, AssetRedeemPointRedemptionDatabaseConstants.ASSET_RPR_DATABASE);
-            return AssetRedeemPointRedemptionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
+            return org.fermat.fermat_dap_plugin.digital_asset_transaction.redeem_point_redemption.developer.version_1.developer_utils.AssetRedeemPointRedemptionDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             /**
              * The database exists but cannot be open. I can not handle this situation.
