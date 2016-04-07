@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1;
+package org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -33,9 +33,8 @@ import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentity;
 import org.fermat.fermat_dap_api.layer.dap_identity.redeem_point.interfaces.RedeemPointIdentityManager;
 import org.fermat.fermat_dap_api.layer.dap_module.wallet_asset_redeem_point.RedeemPointSettings;
-import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.database.AssetRedeemPointIdentityDeveloperDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException;
-import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.bitdubai.version_1.structure.IdentityAssetRedeemPointManagerImpl;
+import org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.database.AssetRedeemPointIdentityDeveloperDatabaseFactory;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
@@ -78,7 +77,7 @@ public class ReedemPointIdentityPluginRoot extends AbstractPlugin implements
         super(new PluginVersionReference(new Version()));
     }
 
-    IdentityAssetRedeemPointManagerImpl identityAssetRedeemPointManager;
+    org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.structure.IdentityAssetRedeemPointManagerImpl identityAssetRedeemPointManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -128,7 +127,7 @@ public class ReedemPointIdentityPluginRoot extends AbstractPlugin implements
     public void start() throws CantStartPluginException {
         try {
             this.serviceStatus = ServiceStatus.STARTED;
-            identityAssetRedeemPointManager = new IdentityAssetRedeemPointManagerImpl(
+            identityAssetRedeemPointManager = new org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.structure.IdentityAssetRedeemPointManagerImpl(
                     this.errorManager,
                     this.logManager,
                     this.pluginDatabaseSystem,
@@ -166,7 +165,7 @@ public class ReedemPointIdentityPluginRoot extends AbstractPlugin implements
             AssetRedeemPointIdentityDeveloperDatabaseFactory dbFactory = new AssetRedeemPointIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
             dbFactory.initializeDatabase();
             return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (CantInitializeAssetRedeemPointIdentityDatabaseException e) {
+        } catch (org.fermat.fermat_dap_plugin.layer.identity.redeem.point.developer.version_1.exceptions.CantInitializeAssetRedeemPointIdentityDatabaseException e) {
             this.errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_DAP_REDEEM_POINT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
         // If we are here the database could not be opened, so we return an empty list
