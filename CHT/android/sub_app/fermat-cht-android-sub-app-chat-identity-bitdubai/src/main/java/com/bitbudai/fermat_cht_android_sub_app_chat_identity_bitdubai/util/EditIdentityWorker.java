@@ -22,7 +22,7 @@ public class EditIdentityWorker extends FermatWorker {
     private ChatIdentity identityInfo;
     private ChatIdentity identity;
 
-    public EditIdentityWorker(Activity context, FermatSession session, ChatIdentity identity, FermatWorkerCallBack callBack) {
+    public EditIdentityWorker(Activity context, FermatSession session, CryptoBrokerIdentityInformation identity, FermatWorkerCallBack callBack) {
         super(context, callBack);
 
         this.identity = identity;
