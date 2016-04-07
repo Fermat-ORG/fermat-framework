@@ -126,6 +126,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable e) {
+                e.printStackTrace();
                 handleUncaughtException(thread, e);
             }
         });

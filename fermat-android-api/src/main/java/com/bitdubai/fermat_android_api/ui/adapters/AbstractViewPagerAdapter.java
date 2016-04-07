@@ -2,7 +2,6 @@ package com.bitdubai.fermat_android_api.ui.adapters;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,13 +53,14 @@ public abstract class AbstractViewPagerAdapter<I> extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View item_view = layoutInflater.inflate(getItemLayout(lstItems.get(position),position),container,false);
-        bindHolder(item_view);
+        I item = lstItems.get(position);
+        View item_view = layoutInflater.inflate(getItemLayout(item,position),container,false);
+        bindHolder(item_view,position,item);
         container.addView(item_view);
         return item_view;
     }
 
-    protected abstract void bindHolder(View item_view);
+    protected abstract void bindHolder(View item_view,int position,I item);
 
 
     protected abstract int getItemLayout(I item,int position);
