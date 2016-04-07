@@ -1,4 +1,4 @@
-package org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.functional;
+package org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -47,8 +47,7 @@ import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantFindTran
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetActorTransactionSummaryException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantGetTransactionsException;
 import org.fermat.fermat_dap_api.layer.dap_wallet.common.exceptions.CantStoreMemoException;
-import org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDao;
-import org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.bitdubai.version_1.structure.database.AssetIssuerWalletDatabaseFactory;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
@@ -76,7 +75,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
         createdWallets = new ArrayList<>();
     }
 
-    private AssetIssuerWalletDao assetIssuerWalletDao;
+    private org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.AssetIssuerWalletDao assetIssuerWalletDao;
     private ErrorManager errorManager;
 
     private PluginDatabaseSystem pluginDatabaseSystem;
@@ -117,7 +116,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
         try {
             database = this.pluginDatabaseSystem.openDatabase(this.pluginId, walletId.toString());
-            assetIssuerWalletDao = new AssetIssuerWalletDao(database, pluginFileSystem, pluginId, actorAssetUserManager, assetIssuerManager, actorAssetRedeemPointManager);
+            assetIssuerWalletDao = new org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.AssetIssuerWalletDao(database, pluginFileSystem, pluginId, actorAssetUserManager, assetIssuerManager, actorAssetRedeemPointManager);
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             throw new CantInitializeAssetIssuerWalletException("I can't open database", cantOpenDatabaseException, "WalletId: " + walletId.toString(), "");
         } catch (DatabaseNotFoundException databaseNotFoundException) {
@@ -171,7 +170,7 @@ public class AssetIssuerWalletImpl implements AssetIssuerWallet {
 
     private void createWalletDatabase(final UUID internalWalletId) throws CantCreateWalletException {
         try {
-            AssetIssuerWalletDatabaseFactory databaseFactory = new AssetIssuerWalletDatabaseFactory(pluginDatabaseSystem);
+            org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.AssetIssuerWalletDatabaseFactory databaseFactory = new org.fermat.fermat_dap_plugin.layer.wallet.asset.issuer.developer.version_1.structure.database.AssetIssuerWalletDatabaseFactory(pluginDatabaseSystem);
             database = databaseFactory.createDatabase(this.pluginId, internalWalletId);
         } catch (CantCreateDatabaseException cantCreateDatabaseException) {
             throw new CantCreateWalletException("Database could not be created", cantCreateDatabaseException, "internalWalletId: " + internalWalletId.toString(), "");
