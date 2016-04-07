@@ -1,8 +1,15 @@
 package com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces;
 
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
+import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetUserException;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Album;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.DownloadSong;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
@@ -17,6 +24,7 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/17/16.
@@ -94,12 +102,27 @@ public interface FanWalletModule {
      * This Id is assigned by the Song Wallet Tokenly implementation, can be different to the
      * Tonkenly Id.
      * @param songId
+     * @param musicUser
      * @throws CantDownloadSongException
      */
     void downloadSong(UUID songId, MusicUser musicUser) throws
             CantDownloadSongException,
             CantUpdateSongDevicePathException,
             CantUpdateSongStatusException;
+
+    /**
+     * This method returns a WalletSong object that includes a byte array that represents the song
+     * ready to be played.
+     * @param songId
+     * @return
+     * @throws CantGetSongException
+     */
+    WalletSong getSongWithBytes(UUID songId) throws CantGetSongException;
+
+    /**
+     * This method reports to wallet manager that the ser wants to download a song
+     */
+    void cancelDownload();
 
     //Fan Identity
 
@@ -128,7 +151,42 @@ public interface FanWalletModule {
     Bot getBotBySwapbotUsername(String username) throws CantGetBotException;
 
     /**
-     * This method report to wallet manager that the ser wants to download a song
+     * This method returns a Tokenly Album.
+     * @return
+     * @throws CantGetAlbumException
      */
-    void cancelDownload();
+    Album[] getAlbums() throws CantGetAlbumException;
+
+    /**
+     * This method returns a download song by song Id.
+     * @param id
+     * @return
+     */
+    DownloadSong getDownloadSongBySongId(String id) throws CantGetSongException;
+
+    /**
+     * This method returns a User object by a username and key pair.
+     * @param username
+     * @param userKey
+     * @return
+     */
+    User validateTokenlyUser(String username, String userKey) throws CantGetUserException, ExecutionException, InterruptedException;
+
+    /**
+     * This method returns a song array. This songs are provided by the Tokenly protected API, only
+     * authenticated users can get the songs.
+     * @param musicUser
+     * @return
+     */
+    Song[] getSongsByAuthenticatedUser(MusicUser musicUser) throws CantGetAlbumException;
+
+    /**
+     * This method returns a song. This song is provided by the Tokenly protected API, only
+     * authenticated users can get the song.
+     * @param musicUser
+     * @param tokenlySongId
+     * @return
+     * @throws CantGetSongException
+     */
+    Song getSongByAuthenticatedUser(MusicUser musicUser, String tokenlySongId) throws CantGetSongException;
 }

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1;
+package com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -22,29 +22,29 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
-import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
-import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
-import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
-import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
-import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
-import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
-import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
-import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
-import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.database.ArtistIdentityDeveloperDatabaseFactory;
-import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.exceptions.CantInitializeArtistIdentityDatabaseException;
-import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.structure.ArtistIdentityImp;
-import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.structure.IdentityArtistManagerImpl;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
+import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
+import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
+import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
+import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
+import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.database.FanaticIdentityDeveloperDatabaseFactory;
+import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.exceptions.CantInitializeFanaticIdentityDatabaseException;
+import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.structure.FanaticIdentityImp;
+import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.structure.IdentityFanaticManagerImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
-import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.TokenlyArtistIdentityManager;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.TokenlyFanIdentityManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -57,9 +57,9 @@ import java.util.UUID;
 /**
  * Created by Gabriel Araujo on 10/03/16.
  */
-public class ArtistIdentityPluginRoot extends AbstractPlugin implements
+public class FanaticPluginRoot extends AbstractPlugin implements
         DatabaseManagerForDevelopers,
-        ArtistIdentityManager,
+        FanaticIdentityManager,
         LogManagerForDevelopers {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
@@ -77,43 +77,43 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
     private DeviceUserManager deviceUserManager;
 
-    @NeededPluginReference(platform =  Platforms.ART_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ARTIST)
-    private ArtistManager artistManager;
+    @NeededPluginReference(platform =  Platforms.ART_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.FAN)
+    private FanManager fanManager;
 
-    @NeededPluginReference(platform = Platforms.TOKENLY,layer = Layers.IDENTITY, plugin = Plugins.TOKENLY_ARTIST)
-    private TokenlyArtistIdentityManager tokenlyArtistIdentityManager;
+    @NeededPluginReference(platform = Platforms.TOKENLY,layer = Layers.IDENTITY, plugin = Plugins.TOKENLY_FAN)
+    private TokenlyFanIdentityManager tokenlyFanIdentityManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
-    public static final String ARTIST_PROFILE_IMAGE_FILE_NAME = "artistIdentityProfileImage";
-    public static final String ARTIST_PRIVATE_KEYS_FILE_NAME = "artistIdentityPrivateKey";
+    public static final String FANATIC_PROFILE_IMAGE_FILE_NAME = "fanaticIdentityProfileImage";
+    public static final String FANATIC_PRIVATE_KEYS_FILE_NAME = "fanaticIdentityPrivateKey";
 
-    private IdentityArtistManagerImpl identityArtistManager;
+    private IdentityFanaticManagerImpl identityFanaticManager;
     /**
      * Default constructor
      */
-    public ArtistIdentityPluginRoot() {
+    public FanaticPluginRoot() {
         super(new PluginVersionReference(new Version()));
     }
     @Override
     public void start() throws CantStartPluginException {
         try {
             this.serviceStatus = ServiceStatus.STARTED;
-            identityArtistManager = new IdentityArtistManagerImpl(
+            identityFanaticManager = new IdentityFanaticManagerImpl(
                     this.errorManager,
                     this.logManager,
                     this.pluginDatabaseSystem,
                     this.pluginFileSystem,
                     this.pluginId,
                     this.deviceUserManager,
-                    this.artistManager);
+                    this.fanManager);
 
-            System.out.println("############\n ART IDENTITY ARTIST STARTED\n");
+            System.out.println("############\n ART IDENTITY Fanatic STARTED\n");
            // testCreateArtist();
             //testAskForConnection();
         } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantStartPluginException(e, Plugins.ARTIST_IDENTITY);
+            errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, Plugins.FANATIC_IDENTITY);
         }
     }
 
@@ -126,10 +126,13 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
         ArtistAcceptConnectionsType artistAcceptConnectionsTypeTokenly = ArtistAcceptConnectionsType.DEFAULT_ARTIST_ACCEPT_CONNECTION_TYPE;
 
         try {
+            tokenlyFanIdentityManager.createFanIdentity(alias, image, password, externalPlatformTokenly);
 
-            tokenlyArtistIdentityManager.createArtistIdentity(alias, image, password, externalPlatformTokenly, exposureLevelTokenly, artistAcceptConnectionsTypeTokenly);
-            HashMap<ExternalPlatform, HashMap<UUID,String>> externalIdentites = listExternalIdentitiesFromCurrentDeviceUser();
-            Iterator<Map.Entry<ExternalPlatform, HashMap<UUID, String>>> entries = externalIdentites.entrySet().iterator();
+        HashMap<ExternalPlatform, HashMap<UUID,String>> externalIdentites = null;
+
+            externalIdentites = listExternalIdentitiesFromCurrentDeviceUser();
+
+        Iterator<Map.Entry<ExternalPlatform, HashMap<UUID, String>>> entries = externalIdentites.entrySet().iterator();
             UUID externalIdentityID = null;
             while (entries.hasNext()) {
                 Map.Entry<ExternalPlatform, HashMap<UUID, String>> entry = entries.next();
@@ -143,35 +146,32 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
             }
             System.out.println("externalIdentites = " + XMLParser.parseObject(externalIdentites));
 
-            Artist artist = null;
+            Fanatic Fanatic = null;
             if(externalIdentityID != null){
-                artist = createArtistIdentity(alias,image,externalIdentityID);
-                ArtIdentity artIdentity = getLinkedIdentity(artist.getPublicKey());
+                Fanatic = createFanaticIdentity(alias, image, externalIdentityID);
+                ArtIdentity artIdentity = getLinkedIdentity(Fanatic.getPublicKey());
                 System.out.println("artIdentity = " + artIdentity.toString());
             }else{
                 System.out.println("###############\nNo funciona.");
             }
-
-
-        } catch (com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException e) {
+        } catch ( com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantCreateFanIdentityException e) {
             e.printStackTrace();
-        } catch (com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException e) {
+        } catch (FanIdentityAlreadyExistsException e) {
             e.printStackTrace();
-        } catch (CantCreateArtistIdentityException e) {
+        } catch (CantListFanIdentitiesException e) {
             e.printStackTrace();
-        } catch (ArtistIdentityAlreadyExistsException e) {
-            e.printStackTrace();
-        } catch (CantListArtistIdentitiesException e) {
+        } catch (CantCreateFanIdentityException e) {
             e.printStackTrace();
         }
+
     }
     @Override
-    public List<Artist> listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
-        return identityArtistManager.getIdentityArtistFromCurrentDeviceUser();
+    public List<Fanatic> listIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
+        return identityFanaticManager.getIdentityArtistFromCurrentDeviceUser();
     }
 
     @Override
-    public HashMap<ExternalPlatform, HashMap<UUID, String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
+    public HashMap<ExternalPlatform, HashMap<UUID, String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException {
 
         /*
             We'll return a HashMap based on the external platform containing another hashmap with the user and the id to that platform
@@ -184,17 +184,16 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
             switch (externalPlatform){
                 case TOKENLY:
                     try {
-                        final List<com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist> tokenlyArtists = tokenlyArtistIdentityManager.listIdentitiesFromCurrentDeviceUser();
+                        final List<Fan> tokenlyArtists = tokenlyFanIdentityManager.listIdentitiesFromCurrentDeviceUser();
 
-                        for (com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist artist:
+                        for (Fan Fanatic:
                                 tokenlyArtists) {
-                            externalArtist.put(artist.getId(),artist.getUsername());
+                            externalArtist.put(Fanatic.getId(),Fanatic.getUsername());
                         }
                         if(externalArtist.size()>0)
                             externalArtistIdentities.put(externalPlatform,externalArtist);
-                    } catch (com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException e) {
+                    } catch (com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException e) {
                         e.printStackTrace();
-                        errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
                     }
                     break;
                 default:
@@ -208,86 +207,82 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
     public ArtIdentity getLinkedIdentity(String publicKey) {
         ArtIdentity artIdentity = null;
         try {
-            Artist artist = identityArtistManager.getIdentitArtist(publicKey);
-            if(artist != null){
+            Fanatic Fanatic = identityFanaticManager.getIdentitFanatic(publicKey);
+            if(Fanatic != null){
                 for (ExternalPlatform externalPlatform:
                         ExternalPlatform.values()) {
                     //Future platform will need to be added manually to the switch
                     switch (externalPlatform){
                         case TOKENLY:
-                            final com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist tokenlyArtist = tokenlyArtistIdentityManager.getArtistIdentity(artist.getExternalIdentityID());
+                            final Fan tokenlyArtist = tokenlyFanIdentityManager.getFanIdentity(Fanatic.getExternalIdentityID());
                             if(tokenlyArtist != null){
-                                artIdentity = new ArtistIdentityImp(tokenlyArtist.getPublicKey(),tokenlyArtist.getProfileImage(),tokenlyArtist.getUsername(),tokenlyArtist.getId(),externalPlatform);
+                                artIdentity = new FanaticIdentityImp(tokenlyArtist.getPublicKey(),tokenlyArtist.getProfileImage(),tokenlyArtist.getUsername(),tokenlyArtist.getId(),externalPlatform);
                             }
                             break;
                     }
                 }
             }
-        } catch (CantGetArtistIdentityException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        } catch (CantGetFanIdentityException e) {
+        errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         } catch (com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-        } catch (com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantGetArtistIdentityException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        } catch (com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantGetFanIdentityException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         return artIdentity;
     }
 
 
     @Override
-    public Artist createArtistIdentity(String alias, byte[] imageBytes,UUID externalIdentityId) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
-        return identityArtistManager.createNewIdentityArtist(alias,imageBytes,externalIdentityId);
+    public Fanatic createFanaticIdentity(String alias, byte[] imageBytes, UUID externalIdentityId) throws CantCreateFanIdentityException {
+        return identityFanaticManager.createNewIdentityArtist(alias,imageBytes,externalIdentityId);
     }
 
     @Override
-    public void updateArtistIdentity(String alias, String publicKey, byte[] profileImage, UUID externalIdentityID) throws CantUpdateArtistIdentityException {
-        identityArtistManager.updateIdentityArtist(alias,publicKey,profileImage,externalIdentityID);
+    public void updateFanIdentity(String alias, String publicKey, byte[] imageProfile, UUID externalIdentityID) throws CantUpdateFanIdentityException {
+        identityFanaticManager.updateIdentityArtist(alias, publicKey, imageProfile, externalIdentityID);
     }
 
     @Override
-    public Artist getArtistIdentity(String publicKey) throws CantGetArtistIdentityException, IdentityNotFoundException {
-        return identityArtistManager.getIdentitArtist(publicKey);
+    public Fanatic getFanIdentity(String publicKey) throws CantGetFanIdentityException, IdentityNotFoundException {
+        return identityFanaticManager.getIdentitFanatic(publicKey);
     }
 
     @Override
     public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
-        identityArtistManager.registerIdentitiesANS(publicKey);
+        identityFanaticManager.registerIdentitiesANS(publicKey);
     }
 
-    @Override
-    public void hideIdentity(String publicKey) throws CantHideIdentityException, IdentityNotFoundException {
-
-    }
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        ArtistIdentityDeveloperDatabaseFactory dbFactory = new ArtistIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        FanaticIdentityDeveloperDatabaseFactory dbFactory = new FanaticIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        ArtistIdentityDeveloperDatabaseFactory dbFactory = new ArtistIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
+        FanaticIdentityDeveloperDatabaseFactory dbFactory = new FanaticIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         return dbFactory.getDatabaseTableList(developerObjectFactory);
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
+            FanaticIdentityDeveloperDatabaseFactory dbFactory = new FanaticIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
         try {
-            ArtistIdentityDeveloperDatabaseFactory dbFactory = new ArtistIdentityDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
             dbFactory.initializeDatabase();
-            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
-        } catch (CantInitializeArtistIdentityDatabaseException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CantInitializeFanaticIdentityDatabaseException e) {
+            e.printStackTrace();
         }
+        return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabaseTable);
+
         // If we are here the database could not be opened, so we return an empty list
-        return new ArrayList<>();
     }
 
     @Override
     public List<String> getClassesFullPath() {
         List<String> returnedClasses = new ArrayList<String>();
-        returnedClasses.add("com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.ArtistIdentityPluginRoot");
+        returnedClasses.add("com.bitdubai.fermat_art_plugin.layer.identity.Fanatic.developer.bitdubai.version_1.FanaticPluginRoot");
         /**
          * I return the values.
          */
@@ -309,11 +304,11 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
                 /**
                  * if this path already exists in the Root.bewLoggingLevel I'll update the value, else, I will put as new
                  */
-                if (ArtistIdentityPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
-                    ArtistIdentityPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
-                    ArtistIdentityPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                if (FanaticPluginRoot.newLoggingLevel.containsKey(pluginPair.getKey())) {
+                    FanaticPluginRoot.newLoggingLevel.remove(pluginPair.getKey());
+                    FanaticPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 } else {
-                    ArtistIdentityPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
+                    FanaticPluginRoot.newLoggingLevel.put(pluginPair.getKey(), pluginPair.getValue());
                 }
             }
 
