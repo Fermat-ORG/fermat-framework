@@ -148,28 +148,28 @@ project(':fermat-dap-android-reference-wallet-asset-issuer-bitdubai').projectDir
 include ':fermat-dap-android-reference-wallet-asset-user-bitdubai'
 project(':fermat-dap-android-reference-wallet-asset-user-bitdubai').projectDir = new File('DAP/android/reference_wallet/fermat-dap-android-reference-wallet-asset-user-bitdubai')
 
-include ':fermat-dap-android-reference-wallet-redeem-point-bitdubai'
-project(':fermat-dap-android-reference-wallet-redeem-point-bitdubai').projectDir = new File('DAP/android/reference_wallet/fermat-dap-android-reference-wallet-redeem-point-bitdubai')
+include ':fermat-dap-android-reference-wallet-redeem-point'
+project(':fermat-dap-android-reference-wallet-redeem-point').projectDir = new File('DAP/android/reference_wallet/fermat-dap-android-reference-wallet-redeem-point')
 
 // android dap sub apps
-include ':fermat-dap-android-sub-app-asset-factory-bitdubai'
-project(':fermat-dap-android-sub-app-asset-factory-bitdubai').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-asset-factory-bitdubai')
+include ':fermat-dap-android-sub-app-asset-factory'
+project(':fermat-dap-android-sub-app-asset-factory').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-asset-factory')
 
-include ':fermat-dap-android-sub-app-asset-issuer-community-bitdubai'
-project(':fermat-dap-android-sub-app-asset-issuer-community-bitdubai').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-asset-issuer-community-bitdubai')
+include ':fermat-dap-android-sub-app-asset-issuer-community'
+project(':fermat-dap-android-sub-app-asset-issuer-community').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-asset-issuer-community')
 
-include ':fermat-dap-android-sub-app-asset-user-community-bitdubai'
-project(':fermat-dap-android-sub-app-asset-user-community-bitdubai').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-asset-user-community-bitdubai')
+include ':fermat-dap-android-sub-app-asset-user-community'
+project(':fermat-dap-android-sub-app-asset-user-community').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-asset-user-community')
 
-include ':fermat-dap-android-sub-app-redeem-point-community-bitdubai'
-project(':fermat-dap-android-sub-app-redeem-point-community-bitdubai').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-redeem-point-community-bitdubai')
+include ':fermat-dap-android-sub-app-redeem-point-community'
+project(':fermat-dap-android-sub-app-redeem-point-community').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-redeem-point-community')
 
 // android dap identities
-include ':fermat-dap-android-sub-app-asset-issuer-identity-bitdubai'
-project(':fermat-dap-android-sub-app-asset-issuer-identity-bitdubai').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-asset-issuer-identity-bitdubai')
+include ':fermat-dap-android-sub-app-asset-issuer-identity'
+project(':fermat-dap-android-sub-app-asset-issuer-identity').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-asset-issuer-identity')
 
-include ':fermat-dap-android-sub-app-asset-user-identity-bitdubai'
-project(':fermat-dap-android-sub-app-asset-user-identity-bitdubai').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-asset-user-identity-bitdubai')
+include ':fermat-dap-android-sub-app-asset-user-identity'
+project(':fermat-dap-android-sub-app-asset-user-identity').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-asset-user-identity')
 
-include ':fermat-dap-android-sub-app-redeem-point-identity-bitdubai'
-project(':fermat-dap-android-sub-app-redeem-point-identity-bitdubai').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-redeem-point-identity-bitdubai')
+include ':fermat-dap-android-sub-app-redeem-point-identity'
+project(':fermat-dap-android-sub-app-redeem-point-identity').projectDir = new File('DAP/android/sub_app/fermat-dap-android-sub-app-redeem-point-identity')
