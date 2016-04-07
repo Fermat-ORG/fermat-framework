@@ -206,6 +206,8 @@ We are in charge of Android-core, Fermat-Core, Android framework development and
 
 ### Disruptor Team:
 -----------------------------------
+<br>
+### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/2b7f511ca8ba2f796df1178ecc065e884fc7ca69/Logotype/FermatTeams/Logo_disruptors_team.jpg "Logo Disruptors Team")
 
 We are team that wants to combine technical capacity with creative talent, where passion for development and satisfaction for the work done are important ingredients of the daily motivation, and also so engaged that we do not hesitate in sharing nights without sleep to fullfill the goals! The spirit of gentle collaboration is also very important to us. We are willing to share our work with new members.
 
