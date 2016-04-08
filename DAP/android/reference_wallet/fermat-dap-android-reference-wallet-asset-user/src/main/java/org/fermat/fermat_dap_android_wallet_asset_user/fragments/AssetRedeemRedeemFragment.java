@@ -176,7 +176,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
                             .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                                 @Override
                                 public void onClick() {
-                                    doRedeem(assetToRedeem.getDigitalAsset().getGenesisAddress(), redeemPoints, 1);
+                                    doRedeem(assetToRedeem.getDigitalAsset(), redeemPoints, 1);
                                 }
                             }).build().show();
 
@@ -372,7 +372,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         }
     }
 
-    private void doRedeem(final CryptoAddress cryptoAddress, final List<RedeemPoint> redeemPoints, final int assetAmount) {
+    private void doRedeem(final org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset asset, final List<RedeemPoint> redeemPoints, final int assetAmount) {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
         dialog.setCancelable(false);
@@ -380,7 +380,7 @@ public class AssetRedeemRedeemFragment extends FermatWalletListFragment<RedeemPo
         FermatWorker task = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                moduleManager.redeemAssetToRedeemPoint(cryptoAddress, WalletUtilities.WALLET_PUBLIC_KEY, DataManager.getRedeemPoints(redeemPoints), assetAmount);
+                moduleManager.redeemAssetToRedeemPoint(asset, WalletUtilities.WALLET_PUBLIC_KEY, DataManager.getRedeemPoints(redeemPoints), assetAmount);
                 return true;
             }
         };

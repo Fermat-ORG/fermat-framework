@@ -280,7 +280,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
                         .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                             @Override
                             public void onClick() {
-                                doAppropriate(digitalAsset.getDigitalAsset().getGenesisAddress());
+                                doAppropriate(digitalAsset);
                             }
                         }).build().show();
                 return true;
@@ -416,7 +416,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         }
     }
 
-    private void doAppropriate(final CryptoAddress cryptoAddress) {
+    private void doAppropriate(final DigitalAsset asset) {
         final Activity activity = getActivity();
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
@@ -431,7 +431,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
 //                            asset.getActorAssetRedeemPoint()
 //                    );
                 //TODO: only for Appropriate test
-                moduleManager.appropriateAsset(cryptoAddress, null);
+                moduleManager.appropriateAsset(asset.getDigitalAsset(), null);
                 return true;
             }
         };
@@ -456,7 +456,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         task.execute();
     }
 
-    private void transferAsset(final CryptoAddress cryptoAddress) {
+    private void transferAsset(final DigitalAsset asset) {
         final Activity activity = getActivity();
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
@@ -465,7 +465,7 @@ public class AssetDetailTransactionsFragment extends FermatWalletListFragment<Tr
         FermatWorker task = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                moduleManager.transferAssets(cryptoAddress, null, 1);
+                moduleManager.transferAssets(asset.getDigitalAsset(), null, 1);
                 return true;
             }
         };

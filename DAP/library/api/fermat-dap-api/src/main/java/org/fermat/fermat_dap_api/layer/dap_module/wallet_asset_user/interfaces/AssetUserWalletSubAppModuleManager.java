@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantCalculateBalanceException;
 
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetAssetNegotiationsException;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantGetIdentityAssetUserException;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
@@ -64,9 +65,9 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetU
 
     IdentityAssetUser getActiveAssetUserIdentity() throws CantGetIdentityAssetUserException;
 
-    void redeemAssetToRedeemPoint(CryptoAddress cryptoAddress, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoints, int assetAmount) throws CantRedeemDigitalAssetException;
+    void redeemAssetToRedeemPoint(DigitalAsset asset, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoints, int assetAmount) throws CantRedeemDigitalAssetException;
 
-    void appropriateAsset(CryptoAddress cryptoAddress, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException;
+    void appropriateAsset(DigitalAsset asset, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException;
 
     AssetFactory getAssetFactory(final String publicKey) throws CantGetAssetFactoryException, CantCreateFileException;
 
@@ -100,7 +101,7 @@ public interface AssetUserWalletSubAppModuleManager extends ModuleManager<AssetU
 
     List<ActorAssetUser> getSelectedUsersToDeliver();
 
-    void transferAssets(CryptoAddress cryptoAddress, String walletPublicKey, int assetsAmount) throws CantTransferDigitalAssetsException;
+    void transferAssets(DigitalAsset asset, String walletPublicKey, int assetsAmount) throws CantTransferDigitalAssetsException;
 
     ActorAssetUser getActorByPublicKey(String publicKey) throws CantGetAssetUserActorsException;
 
