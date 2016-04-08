@@ -49,4 +49,7 @@ public class CustomerBrokerContractPurchaseMock implements CustomerBrokerContrac
     public Boolean getNearExpirationDatetime() {
         return Boolean.FALSE;
     }
+
+    @Override
+    public String getCancelReason(){ return "";}
 }
