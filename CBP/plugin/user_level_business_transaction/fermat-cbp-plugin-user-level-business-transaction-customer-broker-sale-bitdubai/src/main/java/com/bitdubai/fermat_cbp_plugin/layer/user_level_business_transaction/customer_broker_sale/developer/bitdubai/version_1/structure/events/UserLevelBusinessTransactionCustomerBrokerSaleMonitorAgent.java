@@ -15,13 +15,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
-import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.exceptions.CantCloseContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.CloseContractManager;
@@ -106,10 +106,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
     public final int DELAY_HOURS = 2;
     public final int TIME_BETWEEN_NOTIFICATIONS = 600000; //10min
     private long lastNotificationTime = 0;
-    private BigDecimal priceReference = null;
-    private BigDecimal amount = null;
-    private String bankAccount = null;
-    private Currency fiatCurrency = null;
     CustomerBrokerSaleImpl customerBrokerSale = null;
 
     public UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(ErrorManager errorManager,
@@ -215,7 +211,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 //        private BigDecimal priceReference = null;
 //        private BigDecimal amount         = null;
 //        private String bankAccount        = null;
-//        private FiatCurrency fiatCurrency = null;
+//        private FiatCurrency currency = null;
 //        CustomerBrokerSaleImpl customerBrokerSale = null;
 //        //UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
 //
@@ -333,7 +329,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
             Collection<CustomerBrokerContractSale> contractSalesPendingPayment = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_PAYMENT);
 
-            for (CustomerBrokerSale customerBrokerSale : customerBrokerSales){
+            for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
                 for (CustomerBrokerContractSale customerBrokerContractSale : contractSalesPendingPayment) {
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         customerBrokerSale.setTransactionStatus(TransactionStatus.IN_CONTRACT_SUBMIT);
@@ -362,8 +358,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         long timeStampToday = ((customerBrokerContractSale.getDateTime() - (date != null ? date.getTime() : 0)) / 3600000);
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
-                            // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
-                            //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
 
                             if (new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
                                 lastNotificationTime = new Date().getTime();
@@ -488,86 +482,109 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
             Collection<CustomerBrokerContractSale> contractSalePaymentSubmit = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PAYMENT_SUBMIT);
 
-            for (CustomerBrokerSale customerBrokerSale : customerBrokerSales){
+            for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
                 for (CustomerBrokerContractSale customerBrokerContractSale : contractSalePaymentSubmit) {
-                    if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
+                    final String transactionId = customerBrokerSale.getTransactionId();
+                    final String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+
+                    if (transactionId.equals(negotiationId)) {
                         // Si se detecta la realización de un pago se procede actulizar el estatus de la transacción
                         // y a monitorear la llegada de la mercadería.
                         // Se verifica si el broker configuró procesar Restock de manera automática
 
-                        int sw = 0;
                         if (cryptoBrokerWalletSettingSpread.getRestockAutomatic()) {
-                            //Recorrer las clausulas del contrato
-                            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractSale.getNegotiatiotId()));
-                            for (ContractClause contractClause : customerBrokerContractSale.getContractClause()) {
-                                if (contractClause.getType() == ContractClauseType.CRYPTO_TRANSFER)
-                                    sw = 1;
-                                else if (contractClause.getType() == ContractClauseType.BANK_TRANSFER)
-                                    sw = 2;
-                                else if (contractClause.getType() == ContractClauseType.CASH_DELIVERY || contractClause.getType() == ContractClauseType.CASH_ON_HAND)
-                                    sw = 3;
-                            }
 
-                            final NumberFormat instance = NumberFormat.getInstance();
-                            for (Clause clause : customerBrokerSaleNegotiation.getClauses()) {
-                                switch (clause.getType()) {
+                            BigDecimal amount = null;
+                            String bankAccount = null;
+                            Currency currency = null;
+                            MoneyType paymentMethod = null;
+                            BigDecimal priceReference = null;
+
+                            final NumberFormat numberFormat = NumberFormat.getInstance();
+                            final CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+
+                            // Obtengo info de las clausulas de la negociacion
+                            final Collection<Clause> saleNegotiationClauses = saleNegotiation.getClauses();
+                            for (Clause clause : saleNegotiationClauses) {
+                                ClauseType clauseType = clause.getType();
+
+                                switch (clauseType) {
                                     case EXCHANGE_RATE:
-                                        priceReference = new BigDecimal(instance.parse(clause.getValue()).doubleValue());
+                                        priceReference = new BigDecimal(numberFormat.parse(clause.getValue()).doubleValue());
                                         break;
                                     case BROKER_CURRENCY_QUANTITY:
-                                        amount = new BigDecimal(instance.parse(clause.getValue()).doubleValue());
+                                        amount = new BigDecimal(numberFormat.parse(clause.getValue()).doubleValue());
                                         break;
                                     case BROKER_BANK_ACCOUNT:
-                                        bankAccount = getAccountNumberFromClause(clause);
+                                        bankAccount = NegotiationClauseHelper.getAccountNumberFromClause(clause);
                                         break;
                                     case BROKER_CURRENCY:
-                                        if(CryptoCurrency.codeExists(clause.getValue())){
-                                            fiatCurrency = CryptoCurrency.getByCode(clause.getValue());
-                                        }else{
-                                            fiatCurrency = FiatCurrency.getByCode(clause.getValue());
-                                        }
-
+                                        currency = CryptoCurrency.codeExists(clause.getValue()) ?
+                                                CryptoCurrency.getByCode(clause.getValue()) :
+                                                FiatCurrency.getByCode(clause.getValue());
                                         break;
+                                    case CUSTOMER_PAYMENT_METHOD:
+                                        paymentMethod = MoneyType.getByCode(clause.getValue());
                                 }
                             }
 
-                            if (sw == 1) {
-                                cryptoMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
-                                        CryptoCurrency.BITCOIN,
-                                        "walletPublicKey",
-                                        "walletPublicKey",
-                                        amount,
-                                        "RESTOCK AUTOMATIC",
-                                        priceReference,
-                                        OriginTransaction.RESTOCK_AUTOMATIC,
-                                        customerBrokerContractSale.getContractId(),
-                                        BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO: Revisar de donde saco esto
-
-                            } else if (sw == 2) {
-                                bankMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
-                                        (FiatCurrency)fiatCurrency,
-                                        "walletPublicKey",
-                                        "walletPublicKey",
-                                        bankAccount,
-                                        amount,
-                                        "RESTOCK AUTOMATIC",
-                                        priceReference,
-                                        OriginTransaction.RESTOCK_AUTOMATIC,
-                                        customerBrokerContractSale.getContractId());
-
-                            } else if (sw == 3) {
-                                cashMoneyRestockManager.createTransactionRestock(customerBrokerContractSale.getPublicKeyBroker(),
-                                        (FiatCurrency)fiatCurrency,
-                                        "walletPublicKey",
-                                        "walletPublicKey",
-                                        "cashReference",
-                                        amount,
-                                        "memo",
-                                        priceReference,
-                                        OriginTransaction.RESTOCK_AUTOMATIC,
-                                        customerBrokerContractSale.getContractId());
+                            //Ejecuto el restock dependiendo del tipo de transferencia a realizar
+                            switch (paymentMethod) {
+                                case CRYPTO:
+                                    cryptoMoneyRestockManager.createTransactionRestock(
+                                            customerBrokerContractSale.getPublicKeyBroker(),
+                                            (CryptoCurrency) currency,
+                                            brokerWalletPublicKey,
+                                            "reference_wallet", // TODO: obtenerlo de installed wallets
+                                            amount,
+                                            "Credit from a Sale Payment",
+                                            priceReference,
+                                            OriginTransaction.SALE,
+                                            customerBrokerContractSale.getContractId(),
+                                            BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO: Revisar de donde saco esto
+                                    break;
+                                case BANK:
+                                    bankMoneyRestockManager.createTransactionRestock(
+                                            customerBrokerContractSale.getPublicKeyBroker(),
+                                            (FiatCurrency) currency,
+                                            brokerWalletPublicKey,
+                                            "banking_wallet", // TODO: obtenerlo de installed wallets
+                                            bankAccount,
+                                            amount,
+                                            "Credit from a Sale Payment",
+                                            priceReference,
+                                            OriginTransaction.SALE,
+                                            customerBrokerContractSale.getContractId());
+                                    break;
+                                case CASH_ON_HAND:
+                                    cashMoneyRestockManager.createTransactionRestock(
+                                            customerBrokerContractSale.getPublicKeyBroker(),
+                                            (FiatCurrency) currency,
+                                            brokerWalletPublicKey,
+                                            "cash_wallet",  // TODO: obtenerlo de installed wallets
+                                            "cashReference",
+                                            amount,
+                                            "Credit from a 'Cash on Hand' Sale Payment",
+                                            priceReference,
+                                            OriginTransaction.SALE,
+                                            customerBrokerContractSale.getContractId());
+                                    break;
+                                case CASH_DELIVERY:
+                                    cashMoneyRestockManager.createTransactionRestock(
+                                            customerBrokerContractSale.getPublicKeyBroker(),
+                                            (FiatCurrency) currency,
+                                            brokerWalletPublicKey,
+                                            "cash_wallet",  // TODO: obtenerlo de installed wallets
+                                            "cashReference",
+                                            amount,
+                                            "Credit from a 'Cash Delivery' Sale Payment",
+                                            priceReference,
+                                            OriginTransaction.SALE,
+                                            customerBrokerContractSale.getContractId());
+                                    break;
                             }
                         }
+
                         customerBrokerSale.setTransactionStatus(TransactionStatus.IN_PAYMENT_SUBMIT);
                         userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
                         broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CBW_CONTRACT_UPDATE_VIEW);
@@ -613,8 +630,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         long timeStampToday = ((customerBrokerContractSale.getDateTime() - (date != null ? date.getTime() : 0)) / 3600000);
                         if (timeStampToday <= DELAY_HOURS) {
                             customerBrokerContractSaleManager.updateContractNearExpirationDatetime(customerBrokerContractSale.getContractId(), true);
-                            // TODO: Esto es provisorio. hay que obtenerlo del Wallet Manager de WPD hasta que matias haga los cambios para que no sea necesario enviar esto
-                            //esta publicKey es la usada en la clase FermatAppConnectionManager y en los navigationStructure de las wallets y subapps
 
                             if (new Date().getTime() - lastNotificationTime > TIME_BETWEEN_NOTIFICATIONS) {
                                 lastNotificationTime = new Date().getTime();
@@ -635,7 +650,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
             Collection<CustomerBrokerContractSale> contractSalesMerchandiseSubmit = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.MERCHANDISE_SUBMIT);
 
-            for (CustomerBrokerSale customerBrokerSale : customerBrokerSales){
+            for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
                 for (CustomerBrokerContractSale customerBrokerContractSale : contractSalesMerchandiseSubmit) {
                     if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
                         customerBrokerSale.setTransactionStatus(TransactionStatus.IN_MERCHANDISE_SUBMIT);
@@ -720,13 +735,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER_SALE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
-    }
-
-    private String getAccountNumberFromClause(Clause clause) {
-        /* The account Account data that come from the clause have this format*/
-        String clauseValue = clause.getValue();
-        String[] split = clauseValue.split("\\D+:\\s*");
-        return split.length == 1 ? split[0] : split[1];
     }
 
     private DatabaseTableFilter getFilterTable(final String valueFilter, final String columnValue) {
