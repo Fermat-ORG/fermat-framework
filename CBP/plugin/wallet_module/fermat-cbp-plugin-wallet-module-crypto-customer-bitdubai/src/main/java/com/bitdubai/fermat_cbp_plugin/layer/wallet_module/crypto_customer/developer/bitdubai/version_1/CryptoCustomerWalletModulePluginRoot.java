@@ -297,8 +297,6 @@ public class CryptoCustomerWalletModulePluginRoot extends AbstractPlugin impleme
                 InstalledWallet installedWallet = getInstalledWallet(Platforms.CRYPTO_CURRENCY_PLATFORM);
                 assert installedWallet != null;
 
-                System.out.println("VLZ: getWalletPublicKey: "+installedWallet.getWalletPublicKey());
-
                 CryptoCustomerWalletAssociatedSettingImpl associatedWalletSetting = new CryptoCustomerWalletAssociatedSettingImpl();
                 associatedWalletSetting.setCustomerPublicKey(customerWalletPublicKey);
                 associatedWalletSetting.setId(UUID.randomUUID());

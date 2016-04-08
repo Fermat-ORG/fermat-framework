@@ -31,25 +31,24 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
      * class variables
      */
     private boolean isSupossedToBeRunning;
-    private final int AGENT_DELAY = 10000; // 10 seconds of delay
+    private final int AGENT_DELAY = 1000 * 10; // 10 seconds of delay
+    private final BitcoinCryptoNetworkDatabaseDao dao;
 
     /**
      * platform variables
      */
-    PluginDatabaseSystem pluginDatabaseSystem;
-    UUID pluginId;
     EventManager eventManager;
 
     /**
      * Constructor
-     * @param pluginDatabaseSystem
-     * @param pluginId
      * @param eventManager
+     * @param bitcoinCryptoNetworkDatabaseDao
      */
-    public BitcoinCryptoNetworkEventsAgent(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, EventManager eventManager) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
+    public BitcoinCryptoNetworkEventsAgent(EventManager eventManager,
+                                           BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao) {
+
         this.eventManager = eventManager;
+        this.dao = bitcoinCryptoNetworkDatabaseDao;
     }
 
     /**
@@ -59,7 +58,7 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         isSupossedToBeRunning = true;
-        Thread agentThread = new Thread(new NetworkAgent());
+        Thread agentThread = new Thread(new NetworkAgent(this.dao));
         agentThread.start();
     }
 
@@ -78,7 +77,15 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
         /**
          * DAO object to access the db
          */
-        BitcoinCryptoNetworkDatabaseDao dao;
+        final BitcoinCryptoNetworkDatabaseDao dao;
+
+        /**
+         * constructor
+         * @param bitcoinCryptoNetworkDatabaseDao
+         */
+        public NetworkAgent(BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao) {
+            this.dao = bitcoinCryptoNetworkDatabaseDao;
+        }
 
         @Override
         public void run() {
@@ -155,7 +162,7 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
          */
         private void raiseOutgoingTransactionEvent() {
             try {
-                Set<CryptoStatus> cryptoStatuses = getDao().getPendingCryptoStatus(TransactionTypes.OUTGOING);
+                Set<CryptoStatus> cryptoStatuses = dao.getPendingCryptoStatus(TransactionTypes.OUTGOING);
                 for (CryptoStatus cryptoStatus : cryptoStatuses){
                     raiseOutgoingEvent(cryptoStatus);
                 }
@@ -205,7 +212,7 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
          */
         private void raiseIncomingTransactionEvent() {
             try {
-                Set<CryptoStatus> cryptoStatuses = getDao().getPendingCryptoStatus(TransactionTypes.INCOMING);
+                Set<CryptoStatus> cryptoStatuses = dao.getPendingCryptoStatus(TransactionTypes.INCOMING);
                 for (CryptoStatus cryptoStatus : cryptoStatuses){
                     raiseIncomingEvent(cryptoStatus);
                 }
@@ -251,8 +258,9 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
          */
         private void updateEventAgentStats(int pendingIncoming, int pendingOutgoing) {
             try {
-                getDao().updateEventAgentStats(pendingIncoming, pendingOutgoing);
-            } catch (CantExecuteDatabaseOperationException e) {
+                dao.updateEventAgentStats(pendingIncoming, pendingOutgoing);
+            } catch (Exception e) {
+                //if stats are not updated, we can go on.
                 e.printStackTrace();
             }
         }
@@ -263,7 +271,7 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
          */
         private int getPendingNotifiedIncomingTransactions(){
             try {
-                return getDao().getPendingNotifiedTransactions(TransactionTypes.INCOMING);
+                return dao.getPendingNotifiedTransactions(TransactionTypes.INCOMING);
             } catch (CantExecuteDatabaseOperationException e) {
                 return 0;
             }
@@ -275,21 +283,10 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
          */
         private int getPendingNotifiedOutgoingTransactions(){
             try {
-                return getDao().getPendingNotifiedTransactions(TransactionTypes.OUTGOING);
+                return dao.getPendingNotifiedTransactions(TransactionTypes.OUTGOING);
             } catch (CantExecuteDatabaseOperationException e) {
                 return 0;
             }
-        }
-
-        /**
-         * gets an instance of the dao object to access the db
-         * @return
-         */
-        private BitcoinCryptoNetworkDatabaseDao getDao(){
-            if (dao == null)
-                dao = new BitcoinCryptoNetworkDatabaseDao(pluginId, pluginDatabaseSystem);
-
-            return dao;
         }
     }
 }

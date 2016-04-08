@@ -1,6 +1,8 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,7 +64,21 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
 
         layout.findViewById(R.id.ccw_create_new_location_button).setOnClickListener(this);
 
+
+        configureToolbar();
+
         return layout;
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
+
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
     @Override
@@ -79,8 +95,6 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
     public void onClick(View view) {
         StringBuilder location = new StringBuilder();
 
-        if (selectedCountry != null)
-            location.append(selectedCountry.getCountry()).append(", ");
 
         if (cityTextView.getText().toString().length() > 0)
             location.append(cityTextView.getText().toString()).append(", ");
@@ -96,6 +110,9 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
 
         if (addressLineTwoEditText.getText().toString().length() > 0)
             location.append(addressLineTwoEditText.getText().toString()).append(", ");
+
+        if (selectedCountry != null)
+            location.append(selectedCountry.getCountry()).append(".");
 
         if (location.length() > 0) {
             List<String> locations = (List<String>) appSession.getData(CryptoCustomerWalletSession.LOCATION_LIST);

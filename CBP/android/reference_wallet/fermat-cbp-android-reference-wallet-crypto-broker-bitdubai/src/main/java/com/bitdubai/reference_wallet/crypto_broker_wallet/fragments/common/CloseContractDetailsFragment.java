@@ -18,9 +18,11 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButto
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
@@ -104,7 +106,11 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment {
         amountReceivedOrToReceiveValue.setText(String.format("%1$s %2$s", amountToReceive, contractBasicInfo.getPaymentCurrency()));
 
         FermatTextView paymentMethod = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_payment_method);
-        paymentMethod.setText(contractBasicInfo.getTypeOfPayment());
+        String typeOfPaymentStr = "";
+        try{
+            typeOfPaymentStr = MoneyType.getByCode(contractBasicInfo.getTypeOfPayment()).getFriendlyName();
+        }catch (InvalidParameterException e) {}
+        paymentMethod.setText(typeOfPaymentStr);
 
         LinearLayout cancellationReasonContainer = (LinearLayout) rootView.findViewById(R.id.cbw_cancellation_reason_container);
         if (status.equals(ContractStatus.CANCELLED)) {

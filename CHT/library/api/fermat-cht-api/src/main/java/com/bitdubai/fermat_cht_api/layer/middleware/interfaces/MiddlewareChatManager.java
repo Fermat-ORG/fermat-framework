@@ -55,6 +55,10 @@ public interface MiddlewareChatManager extends FermatManager{
 
     void deleteChat(Chat chat) throws CantDeleteChatException;
 
+    void deleteChats() throws CantDeleteChatException;
+
+    void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException;
+
     List<Message> getMessages() throws CantGetMessageException;
 
     List<Message> getMessagesByChatId(UUID chatId) throws CantGetMessageException;
@@ -77,18 +81,6 @@ public interface MiddlewareChatManager extends FermatManager{
 
     void sendDeliveredMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
 
-    List<Contact> getContacts() throws CantGetContactException;
-
-    Contact getContactByContactId(UUID contactId) throws CantGetContactException;
-
-    Contact newEmptyInstanceContact() throws CantNewEmptyContactException;
-
-    void saveContact(Contact contact) throws CantSaveContactException;
-
-    void deleteContact(Contact contact) throws CantDeleteContactException;
-
-    List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException;
-
     void notificationNewIncomingMessage(
             String publicKey,
             String tittle,
@@ -96,40 +88,6 @@ public interface MiddlewareChatManager extends FermatManager{
 
     String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
 
-    /**
-     * This method return a HashMap with the possible self identities.
-     * The HashMap contains a Key-value like PlatformComponentType-ActorPublicKey.
-     * If there no identities created in any platform, this hashMaps contains the public chat Network
-     * Service.
-     * @return
-     */
-    HashMap<PlatformComponentType, Object> getSelfIdentities() throws CantGetOwnIdentitiesException;
-
-    /**
-     * This method returns the contact id by local public key.
-     * @param localPublicKey
-     * @return
-     * @throws CantGetContactException
-     */
-    Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException;
-
-    void saveChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantSaveChatUserIdentityException;
-
-    void deleteChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantDeleteChatUserIdentityException;
-
-    List<ChatUserIdentity> getChatUserIdentities() throws CantGetChatUserIdentityException;
-
-    ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException;
-
-    void saveContactConnection(ContactConnection contactConnection) throws CantSaveContactConnectionException;
-
-    void deleteContactConnection(ContactConnection chatUserIdentity) throws CantDeleteContactConnectionException;
-
-    List<ContactConnection> getContactConnections() throws CantGetContactConnectionException;
-
-    ContactConnection getContactConnection(UUID contactId) throws CantGetContactConnectionException;
-
-    void createSelfIdentities() throws CantCreateSelfIdentityException;
 
     /**
      * This method sends the message through the Chat Network Service
@@ -137,13 +95,6 @@ public interface MiddlewareChatManager extends FermatManager{
      * @throws CantSendChatMessageException
      */
     void sendMessage(Message createdMessage) throws CantSendChatMessageException;
-
-    void saveGroup(Group group) throws CantSaveGroupException;
-
-    void deleteGroup(Group group) throws CantDeleteGroupException;
-
-    List<Group> getGroups() throws CantListGroupException;
-    Group getGroup(UUID groupId) throws CantGetGroupException;
 
     void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException;
 

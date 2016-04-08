@@ -208,20 +208,22 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         DeveloperDatabaseTable identitiesTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME, identitiesColumns);
         tables.add(identitiesTable);
 
-        /**
-         * Table Group columns.
-         */
-        List<String> groupColumns = new ArrayList<String>();
-
-        groupColumns.add(ChatMiddlewareDatabaseConstants.GROUP_ID_COLUMN_NAME);
-        groupColumns.add(ChatMiddlewareDatabaseConstants.GROUP_NAME_COLUMN_NAME);
-
-
-        /**
-         * Table Group addition.
-         */
-        DeveloperDatabaseTable groupTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.GROUP_TABLE_NAME, groupColumns);
-        tables.add(groupTable);
+        //TODO:Eliminar
+//        /**
+//         * Table Group columns.
+//         */
+//        List<String> groupColumns = new ArrayList<String>();
+//
+//        groupColumns.add(ChatMiddlewareDatabaseConstants.GROUP_ID_COLUMN_NAME);
+//        groupColumns.add(ChatMiddlewareDatabaseConstants.GROUP_NAME_COLUMN_NAME);
+//        groupColumns.add(ChatMiddlewareDatabaseConstants.GROUP_TYPE_CHAT_COLUMN_NAME);
+//
+//
+//        /**
+//         * Table Group addition.
+//         */
+//        DeveloperDatabaseTable groupTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.GROUP_TABLE_NAME, groupColumns);
+//        tables.add(groupTable);
 
         /**
          * Table Group Member columns.

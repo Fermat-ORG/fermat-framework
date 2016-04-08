@@ -187,7 +187,7 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
         createButton = (Button) layout.findViewById(R.id.create_tokenly_Artist_identity);
         mArtistExternalUserName = (EditText) layout.findViewById(R.id.external_username);
         mArtistExternalPassword = (EditText) layout.findViewById(R.id.tokenly_access_password);
-        ArtistImage = (ImageView) layout.findViewById(R.id.tokenly_Artist_image);
+        ArtistImage =  (ImageView) layout.findViewById(R.id.tokenly_Artist_image);
         mArtistExternalPlatform = (Spinner) layout.findViewById(R.id.external_platform);
         MexposureLevel = (Spinner) layout.findViewById(R.id.exposureLevel);
         MartistAcceptConnectionsType = (Spinner) layout.findViewById(R.id.artistAcceptConnectionsType);
@@ -374,10 +374,10 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
      */
     private int createNewIdentity() throws InvalidParameterException {
 
-        String fanExternalName = mArtistExternalUserName.getText().toString();
-        String fanPassword = "";
+        String ArtistExternalName = mArtistExternalUserName.getText().toString();
+        String ArtistPassword = "";
         if (!mArtistExternalPassword.getText().toString().isEmpty()){
-            fanPassword = mArtistExternalPassword.getText().toString();
+            ArtistPassword = mArtistExternalPassword.getText().toString();
         }
         ExternalPlatform externalPlatform = ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM;
         if(mArtistExternalPlatform.isSelected()){
@@ -394,25 +394,29 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
             artistAcceptConnectionsType = ArtistAcceptConnectionsType.getByCode(MartistAcceptConnectionsType.getSelectedItem().toString());
         }
 
-        boolean dataIsValid = validateIdentityData(fanExternalName, fanPassword, ArtistImageByteArray, externalPlatform);
+        boolean dataIsValid = validateIdentityData(ArtistExternalName, ArtistPassword, ArtistImageByteArray, externalPlatform);
 
 
         if (dataIsValid) {
             if (moduleManager != null) {
                 try {
-                    if (!isUpdate)
+                    if (!isUpdate) {
                         //moduleManager.createFanIdentity(fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,fanPassword,externalPlatform) ;
-                        new ManageIdentity(fanExternalName,fanPassword,externalPlatform,exposureLevel,artistAcceptConnectionsType, ManageIdentity.CREATE_IDENTITY).execute();
+                         new ManageIdentity(ArtistExternalName,ArtistPassword,externalPlatform,exposureLevel,artistAcceptConnectionsType, ManageIdentity.CREATE_IDENTITY).execute();
+
+                    }
                     else
                     if(updateProfileImage)
                         //moduleManager.updateFanIdentity(fanExternalName, fanPassword, identitySelected.getId(), identitySelected.getPublicKey(), fanImageByteArray, externalPlatform);
-                        new ManageIdentity(fanExternalName,fanPassword,externalPlatform, exposureLevel,artistAcceptConnectionsType, ManageIdentity.UPDATE_IMAGE_IDENTITY).execute();
+                        new ManageIdentity(ArtistExternalName,ArtistPassword,externalPlatform, exposureLevel,artistAcceptConnectionsType, ManageIdentity.UPDATE_IMAGE_IDENTITY).execute();
                     else
                         //moduleManager.updateFanIdentity(fanExternalName,fanPassword,identitySelected.getId(), identitySelected.getPublicKey(), identitySelected.getProfileImage(),externalPlatform);
-                        new ManageIdentity(fanExternalName,fanPassword,externalPlatform,exposureLevel,artistAcceptConnectionsType,  ManageIdentity.UPDATE_IDENTITY).execute();
+                        new ManageIdentity(ArtistExternalName,ArtistPassword,externalPlatform,exposureLevel,artistAcceptConnectionsType,  ManageIdentity.UPDATE_IDENTITY).execute();
                 } /*catch (CantCreateFanIdentityException | FanIdentityAlreadyExistsException |CantUpdateFanIdentityException e) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                } */catch (Exception e){
+                } */
+
+                catch (Exception e){
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                     e.printStackTrace();
                 }
@@ -424,14 +428,14 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
 
     }
 
-    private boolean validateIdentityData(String fanExternalName, String fanPassWord, byte[] fanImageBytes, ExternalPlatform externalPlatform) {
-        if (fanExternalName.isEmpty())
+    private boolean validateIdentityData(String ArtistExternalName, String ArtistPassWord, byte[] ArtistImageBytes, ExternalPlatform externalPlatform) {
+        if (ArtistExternalName.isEmpty())
             return false;
-        if (fanPassWord.isEmpty())
+        if (ArtistPassWord.isEmpty())
             return false;
-        if (fanImageBytes == null)
+        if (ArtistImageBytes == null)
             return false;
-        if (fanImageBytes.length > 0)
+        if (ArtistImageBytes.length > 0)
             return true;
 //        if(externalPlatform != null)
 //            return  true;
@@ -471,7 +475,9 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
             try{
                 switch (identityAction){
                     case CREATE_IDENTITY:
-                        createIdentity(fanExternalName,fanPassword,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+                       createIdentity(fanExternalName,fanPassword,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+
+
                         break;
                     case UPDATE_IDENTITY:
                         updateIdentity(fanExternalName,fanPassword,externalPlatform,exposureLevel,artistAcceptConnectionsType);
@@ -504,10 +510,14 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
     private void createIdentity(
             String fanExternalName,
             String fanPassword,
-            ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws
+            ExternalPlatform externalPlatform,
+            ExposureLevel exposureLevel,
+            ArtistAcceptConnectionsType artistAcceptConnectionsType) throws
+
             CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
         moduleManager.createArtistIdentity(
-                fanExternalName,(ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : ArtistImageByteArray,
+                fanExternalName,
+                (ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : ArtistImageByteArray,
                 fanPassword,
                 externalPlatform,
                 exposureLevel,

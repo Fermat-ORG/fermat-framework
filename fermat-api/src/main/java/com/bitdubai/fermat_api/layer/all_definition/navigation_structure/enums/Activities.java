@@ -318,6 +318,7 @@ public enum Activities implements FermatEnum {
      * Chat
      */
     CHT_CHAT_OPEN_CHATLIST("CHTOCHL"),
+    CHT_CHAT_CREATE_IDENTITY("CHTCI"),
     CHT_CHAT_OPEN_CONTACTLIST("CHTOCONTL"),
     CHT_CHAT_OPEN_MESSAGE_LIST("CHTOML"),
     CHT_CHAT_OPEN_CONTACT_DETAIL("CHTOCOD"),
@@ -329,6 +330,9 @@ public enum Activities implements FermatEnum {
 
     //ART
     ART_ARTIST_IDENTITY_HOME("AACACP"),
+    ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST("ASAFCCFL"),
+    ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS("ASAFCCN"),
+    ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD("ASAFCCW"),
     ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE("ASAFCCOP"),
 
     //TKY
@@ -754,6 +758,8 @@ public enum Activities implements FermatEnum {
                 return Activities.CHT_CHAT_OPEN_CONNECTIONLIST;
             case "CHTOPRL":
                 return Activities.CHT_CHAT_OPEN_PROFILELIST;
+            case "CHTCI":
+                return Activities.CHT_CHAT_CREATE_IDENTITY;
             case "CHTOPOD":
                 return Activities.CHT_CHAT_OPEN_PROFILE_DETAIL;
             case "CHTOSER":
@@ -873,6 +879,12 @@ public enum Activities implements FermatEnum {
             //ART
             case "ASAFCCOP":
                 return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE;
+            case "ASAFCCW":
+                return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD;
+            case "ASAFCCFL":
+                return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST;
+            case "ASAFCCN":
+                return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,
