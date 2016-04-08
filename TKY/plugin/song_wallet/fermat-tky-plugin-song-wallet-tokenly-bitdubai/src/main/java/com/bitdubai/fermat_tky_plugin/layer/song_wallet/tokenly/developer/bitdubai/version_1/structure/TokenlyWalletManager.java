@@ -173,6 +173,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                 synchronizeSongsByUser(fanIdentity);
             }
         } catch (CantGetLastUpdateDateException e) {
+
             throw new CantSynchronizeWithExternalAPIException(
                     e,
                     "Synchronizing songs automatically",
@@ -278,10 +279,14 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
                     databaseSongsId.size(),
                     toDownloadSongList.size());
         } catch (CantGetAlbumException e) {
+            broadcaster.publish(BroadcasterType.UPDATE_VIEW,
+                    WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
+                    "Conection Error");
             throw new CantSynchronizeWithExternalAPIException(
                     e,
                     "Synchronizing songs by user request",
                     "Cannot get the album from Tokenly public API");
+
         } catch (CantGetSongListException e) {
             throw new CantSynchronizeWithExternalAPIException(
                     e,

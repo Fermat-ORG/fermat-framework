@@ -50,7 +50,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     /**
      * Class variables
      */
-    BitcoinCryptoNetworkDatabaseDao dao;
+    private final BitcoinCryptoNetworkDatabaseDao dao;
     File walletFilename;
     final BlockchainNetworkType NETWORK_TYPE;
     final Context context;
@@ -58,27 +58,23 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     BlockchainDownloadProgress blockchainDownloadProgress;
     Wallet cryptoNetworkWallet;
     int broadcasterID;
-
-    /**
-     * Platform variables
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
-    UUID pluginId;
-    Broadcaster broadcaster;
+    final Broadcaster broadcaster;
 
     /**
      * Constructor
-     * @param pluginDatabaseSystem
      */
-    public BitcoinNetworkEvents(BlockchainNetworkType blockchainNetworkType, PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, File walletFilename, Context context, Broadcaster broadcaster, Wallet wallet) {
+    public BitcoinNetworkEvents(BlockchainNetworkType blockchainNetworkType,
+                                File walletFilename,
+                                Context context,
+                                Broadcaster broadcaster,
+                                Wallet wallet, BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao) {
         this.NETWORK_TYPE = blockchainNetworkType;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
         this.walletFilename = walletFilename;
         this.context = context;
         this.NETWORK_PARAMETERS = context.getParams();
         this.broadcaster = broadcaster;
         this.cryptoNetworkWallet = wallet;
+        this.dao = bitcoinCryptoNetworkDatabaseDao;
 
         //define the blockchain download progress class with zero values
         blockchainDownloadProgress = new BlockchainDownloadProgress(NETWORK_TYPE, 0, 0, 0, 0);
@@ -198,7 +194,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
      */
     public void saveCryptoTransaction(CryptoTransaction cryptoTransaction) {
         try {
-            getDao().saveCryptoTransaction(cryptoTransaction, null);
+            dao.saveCryptoTransaction(cryptoTransaction, null);
         } catch (CantExecuteDatabaseOperationException e) {
             //todo maybe try saving to disk if database fails.
             e.printStackTrace();
@@ -254,15 +250,6 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         // I may need to reset the wallet in this case?
     }
 
-    /**
-     * instantiates the database object
-     * @return
-     */
-    private BitcoinCryptoNetworkDatabaseDao getDao(){
-        if (dao == null)
-            dao = new BitcoinCryptoNetworkDatabaseDao(this.pluginId, this.pluginDatabaseSystem);
-        return dao;
-    }
 
     /**
      * Blockchain events
