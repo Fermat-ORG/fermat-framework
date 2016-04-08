@@ -29,6 +29,9 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupMember
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
+import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
@@ -51,10 +54,12 @@ import java.util.UUID;
 public class ChatSupAppModuleManager implements ChatManager {
 
     private final MiddlewareChatManager middlewareChatManager;
+    private final ChatIdentityManager chatIdentityManager;
 
-    public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager)
+    public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager, ChatIdentityManager chatIdentityManager)
     {
         this.middlewareChatManager = middlewareChatManager;
+        this.chatIdentityManager   = chatIdentityManager;
     }
 
     @Override
@@ -155,12 +160,16 @@ public class ChatSupAppModuleManager implements ChatManager {
     }
 
 
-    //TODO: Actualizar para que veas la chat Identity
     @Override
-    public boolean isIdentityDevice() throws CantGetChatUserIdentityException {
-        if(true)
+    public boolean isIdentityDevice() throws  CantListChatIdentityException {
+        if(chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser().isEmpty())
             return false;
         else return true;
+    }
+
+    @Override
+    public List<ChatIdentity> getIdentityChatUsersFromCurrentDeviceUser() throws CantListChatIdentityException {
+        return chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
     }
 
     /**
@@ -176,12 +185,12 @@ public class ChatSupAppModuleManager implements ChatManager {
 
     @Override
     public void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException {
-
+        middlewareChatManager.saveGroupMember(groupMember);
     }
 
     @Override
     public void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException {
-
+        middlewareChatManager.deleteGroupMember(groupMember);
     }
 
 

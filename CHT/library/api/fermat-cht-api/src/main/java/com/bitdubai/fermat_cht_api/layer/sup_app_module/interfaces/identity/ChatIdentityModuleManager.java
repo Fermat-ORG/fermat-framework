@@ -44,7 +44,7 @@ public interface ChatIdentityModuleManager extends ModuleManager<ChatPreferenceS
      * @return the intra user created
      * @throws CantCreateNewChatIdentityException if something goes wrong.
      */
-    ChatIdentity createNewIdentityChat(String alias,
+    void createNewIdentityChat(String alias,
                                        byte[] profileImage) throws CantCreateNewChatIdentityException;
 
     /**
