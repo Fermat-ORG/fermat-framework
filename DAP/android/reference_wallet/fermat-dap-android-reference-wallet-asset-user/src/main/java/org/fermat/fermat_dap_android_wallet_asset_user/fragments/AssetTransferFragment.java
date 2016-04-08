@@ -186,7 +186,7 @@ public class AssetTransferFragment extends AbstractFermatFragment {
                                         @Override
                                         public void onClick() {
                                             int assetsAmount = Integer.parseInt(assetsToTransferEditText.getText().toString());
-                                            doTransfer(digitalAsset.getDigitalAsset().getGenesisAddress(), users, assetsAmount);
+                                            doTransfer(digitalAsset, users, assetsAmount);
                                         }
                                     }).build().show();
                         }
@@ -261,7 +261,7 @@ public class AssetTransferFragment extends AbstractFermatFragment {
         return count;
     }
 
-    private void doTransfer(final CryptoAddress cryptoAddress, final List<User> users, final int assetAmount) {
+    private void doTransfer(final DigitalAsset asset, final List<User> users, final int assetAmount) {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
         dialog.setCancelable(false);
@@ -274,7 +274,7 @@ public class AssetTransferFragment extends AbstractFermatFragment {
                         moduleManager.addUserToDeliver(user.getActorAssetUser());
                     }
                 }
-                moduleManager.transferAssets(cryptoAddress, WalletUtilities.WALLET_PUBLIC_KEY, assetAmount);
+                moduleManager.transferAssets(asset.getDigitalAsset(), WalletUtilities.WALLET_PUBLIC_KEY, assetAmount);
                 return true;
             }
         };

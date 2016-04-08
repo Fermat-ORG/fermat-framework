@@ -28,7 +28,7 @@ public interface AssetUserWallet {
 
     List<AssetUserWalletTransaction> getAllTransactions(CryptoAddress cryptoAddress) throws CantGetTransactionsException;
 
-    List<AssetUserWalletTransaction> getAllAvailableTransactions(CryptoAddress cryptoAddress) throws CantGetTransactionsException;
+    List<AssetUserWalletTransaction> getAllAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException;
 
     List<AssetUserWalletTransaction> getTransactionsForDisplay(CryptoAddress cryptoAddress) throws CantGetTransactionsException;
 

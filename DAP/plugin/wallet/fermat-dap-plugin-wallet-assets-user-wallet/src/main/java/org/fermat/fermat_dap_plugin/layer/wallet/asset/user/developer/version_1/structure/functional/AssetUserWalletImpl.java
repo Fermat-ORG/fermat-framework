@@ -192,10 +192,10 @@ public class AssetUserWalletImpl implements AssetUserWallet {
     }
 
     @Override
-    public List<AssetUserWalletTransaction> getAllAvailableTransactions(CryptoAddress cryptoAddress) throws CantGetTransactionsException {
+    public List<AssetUserWalletTransaction> getAllAvailableTransactions(String assetPublicKey) throws CantGetTransactionsException {
         List<AssetUserWalletTransaction> toReturn = new ArrayList<>();
-        List<AssetUserWalletTransaction> allCreditAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.CREDIT, cryptoAddress);
-        List<AssetUserWalletTransaction> alldebitAvailable = getTransactions(BalanceType.AVAILABLE, TransactionType.DEBIT, cryptoAddress);
+        List<AssetUserWalletTransaction> allCreditAvailable = assetUserWalletDao.listsTransactionsByAssets(BalanceType.AVAILABLE, TransactionType.CREDIT, assetPublicKey);
+        List<AssetUserWalletTransaction> alldebitAvailable = assetUserWalletDao.listsTransactionsByAssets(BalanceType.AVAILABLE, TransactionType.DEBIT, assetPublicKey);
         for (AssetUserWalletTransaction transaction : alldebitAvailable) {
             allCreditAvailable.remove(transaction);
         }
