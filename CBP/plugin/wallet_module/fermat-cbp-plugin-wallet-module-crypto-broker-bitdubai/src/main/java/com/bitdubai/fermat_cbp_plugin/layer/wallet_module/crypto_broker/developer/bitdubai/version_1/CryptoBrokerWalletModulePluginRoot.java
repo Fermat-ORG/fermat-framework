@@ -371,10 +371,11 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
                     walletManager.addNewAccount(bankAccountNumber, installedWallet.getWalletPublicKey());
 
                     bankAccountNumber = walletManager.newEmptyBankAccountNumber(
-                            "Banesco", BankAccountType.CHECKING,
+                            "Mercantil",
+                            BankAccountType.CHECKING,
                             "Pre-configured Bank Wallet",
                             "123456789",
-                            FiatCurrency.VENEZUELAN_BOLIVAR
+                            FiatCurrency.ARGENTINE_PESO
                     );
 
                     walletManager.addNewAccount(bankAccountNumber, installedWallet.getWalletPublicKey());
