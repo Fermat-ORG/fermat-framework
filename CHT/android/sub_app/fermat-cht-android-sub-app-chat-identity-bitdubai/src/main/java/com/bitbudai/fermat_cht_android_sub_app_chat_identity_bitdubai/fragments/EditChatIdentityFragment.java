@@ -1,41 +1,22 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.fragments;
 
-import android.app.Activity;
-import android.content.ContentResolver;
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.EditIdentityWorker;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.ExposureLevel;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.interfaces.CryptoBrokerIdentityInformation;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_identity.utils.CryptoBrokerIdentityInformationImpl;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
-import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayInputStream;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -240,8 +221,8 @@ public class EditChatIdentityFragment extends AbstractFermatFragment implements 
                     }
                     Toast.makeText(getActivity(), "Crypto Broker Identity Updated.", Toast.LENGTH_LONG).show();
                     CryptoBrokerIdentityInformation identity = new CryptoBrokerIdentityInformationImpl(brokerNameText, cryptoBrokerPublicKey, imgInBytes, ex);
-                    EditIdentityWorker EditIdentityWorker = new EditIdentityWorker(getActivity(), appSession, identity, this);
-                    executor = EditIdentityWorker.execute();
+                    EditIdentityExecutor EditIdentityExecutor = new EditIdentityExecutor(getActivity(), appSession, identity, this);
+                    executor = EditIdentityExecutor.execute();
                 }
             }
         }

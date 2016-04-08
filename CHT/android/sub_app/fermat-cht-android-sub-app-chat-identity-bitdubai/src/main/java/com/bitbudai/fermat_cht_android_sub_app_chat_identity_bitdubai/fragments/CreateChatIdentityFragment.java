@@ -8,9 +8,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -22,45 +20,33 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySession;
-import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.SessionConstants;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CommonLogger;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor.SUCCESS;
+
+import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.EditIdentityExecutor;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
-import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
-import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantUpdateChatIdentityException;
-import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.ChatIdentitySubAppModulePluginRoot;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
-import java.util.List;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
@@ -295,7 +281,34 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         super.onActivityResult(requestCode, resultCode, data);
     }
-
+    private void updateIdentityInBackDevice(String donde) {
+        String brokerNameText = mBrokerName.getText().toString();
+        if (brokerNameText.trim().equals("")) {
+            Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
+        } else {
+            if (cryptoBrokerBitmap == null) {
+                Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            } else {
+                byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
+                EditIdentityExecutor executor = null;
+                try {
+                    executor = new EditIdentityExecutor(appSession,imgInBytes,brokerNameText,moduleManager.getChatIdentityManager().getIdentityChatUser().getPublicKey());
+                } catch (CHTException e) {
+                    //e.printStackTrace();
+                }
+                int resultKey = executor.execute();
+                switch (resultKey) {
+                    case SUCCESS:
+                        if (donde.equalsIgnoreCase("onClick")) {
+                            textViewChtTitle.setText(mBrokerName.getText());
+                            Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
+                            changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+                        }
+                        break;
+                }
+            }
+        }
+    }
     private void createNewIdentityInBackDevice(String donde) {
         String brokerNameText = mBrokerName.getText().toString();
         if (brokerNameText.trim().equals("")) {
