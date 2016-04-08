@@ -116,7 +116,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         BitcoinWalletSettings bitcoinWalletSettings = null;
         try {
             referenceWalletSession = (ReferenceWalletSession) appSession;
-            moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
+            moduleManager = referenceWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
             bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
