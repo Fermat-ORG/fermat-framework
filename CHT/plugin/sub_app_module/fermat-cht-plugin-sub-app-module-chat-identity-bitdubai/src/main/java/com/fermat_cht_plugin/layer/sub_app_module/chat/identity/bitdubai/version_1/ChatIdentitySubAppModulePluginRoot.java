@@ -33,7 +33,7 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractPlugin implement
 
     private ChatIdentityModuleManager chatIdentityModuleManager;
 
-    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CHAT_IDENTITY)
+    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CHAT_IDENTITY_SUP_APP_MODULE)
     private  ChatIdentityManager identityManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
@@ -42,7 +42,7 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractPlugin implement
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CHAT_IDENTITY)
+    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CHAT_IDENTITY_SUP_APP_MODULE)
     private ChatIdentityManager chatIdentityManager;
 
     public ChatIdentitySubAppModulePluginRoot() {

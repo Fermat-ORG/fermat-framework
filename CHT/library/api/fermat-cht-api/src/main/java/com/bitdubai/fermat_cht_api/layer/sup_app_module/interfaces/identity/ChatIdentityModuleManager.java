@@ -18,7 +18,7 @@ import java.util.List;
  * Developed by Lozadaa on 30/03/16.
  */
 
-public interface ChatIdentityModuleManager extends ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> {
+public interface ChatIdentityModuleManager extends ModuleManager<ChatIdentityPreferenceSettings, ActiveActorIdentityInformation> {
     /**
      * The method <code>getIdentityAssetUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
      *
