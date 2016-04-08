@@ -97,7 +97,7 @@ public class ChatActorConnectionPluginRoot extends AbstractPlugin implements Dat
                     this.getPluginVersionReference()
             );
 
-            FermatEventListener newsListener = eventManager.getNewListener(EventType.CHAT_ACTOR_CONNECTION_NEW_CONNECTION);
+            FermatEventListener newsListener = eventManager.getNewListener(EventType.CHAT_ACTOR_CONNECTION_REQUEST_NEW);
             newsListener.setEventHandler(new ChatConnectionRequestNewsEventHandler(eventActions, this));
             eventManager.addListener(newsListener);
             listenersAdded.add(newsListener);
