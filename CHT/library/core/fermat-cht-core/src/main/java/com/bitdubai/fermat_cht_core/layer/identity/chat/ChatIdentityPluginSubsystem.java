@@ -12,7 +12,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 public class ChatIdentityPluginSubsystem extends AbstractPluginSubsystem {
 
     public ChatIdentityPluginSubsystem() {
-        super(new PluginReference(Plugins.CHAT_IDENTITY));
+        super(new PluginReference(Plugins.CHAT_IDENTITY_SUP_APP_MODULE));
     }
 
     @Override
