@@ -776,14 +776,16 @@ public class ChatMiddlewareMonitorAgent implements
             Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
 //                Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
             String contactLocalPublicKey = chatFromDatabase.getRemoteActorPublicKey();
+            //TODO:Vilchez revisar esta logica ya no aplica, los contactos son los actor connections
             Contact contact = chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
-            if (contact == null) {
-                contact = createUnregisteredContact(chatMetadata);
-                if (contact == null) return null;
-            }
+//            if (contact == null) {
+//                //TODO:Vilchez revisar esta logica ya no aplica
+//                //contact = createUnregisteredContact(chatMetadata);
+//                if (contact == null) return null;
+//            }
 
             //I'll associated the contact, message and chat with the following method
-            addContactToChat(chatFromDatabase, contact);
+//            addContactToChat(chatFromDatabase, contact);
             UUID contactId = contact.getContactId();
             Message message = new MessageImpl(
                     chatFromDatabase.getChatId(),
@@ -801,25 +803,11 @@ public class ChatMiddlewareMonitorAgent implements
             throw new CantGetMessageException(e,
                     "Getting message from ChatMetadata",
                     "Cannot get the contact");
-        } catch (CantSaveContactException e) {
-            throw new CantGetMessageException(e,
-                    "Getting message from ChatMetadata",
-                    "Cannot save the contact");
-
         } catch (CantGetChatException e) {
             throw new CantGetMessageException(e,
                     "Getting message from ChatMetadata",
                     "Cannot get the chat");
-        } catch (CantGetContactConnectionException e) {
-            throw new CantGetMessageException(e,
-                    "Getting message from ChatMetadata",
-                    "Cannot get the chat");
-        } catch (CantDeleteContactConnectionException e) {
-            throw new CantGetMessageException(e,
-                    "Getting message from ChatMetadata",
-                    "Cannot get the chat");
         }
-
     }
 
     /**
@@ -830,6 +818,7 @@ public class ChatMiddlewareMonitorAgent implements
      * @throws CantSaveContactException
      * @throws DatabaseOperationException
      */
+    //TODO:Vilchez revisar esta logica ya no aplica
     private Contact createUnregisteredContact(
             ChatMetadata chatMetadata) throws
             CantSaveContactException,
@@ -840,14 +829,14 @@ public class ChatMiddlewareMonitorAgent implements
         contactConnection = chatMiddlewareDatabaseDao.getContactConnectionByLocalPublicKey(chatMetadata.getLocalActorPublicKey());
         if (contactConnection == null) {
 
-            List<ContactConnection> contactConnections = chatMiddlewareManager.getContactConnections();
-
-            for (ContactConnection contactConnectionNew : contactConnections)
-                chatMiddlewareManager.deleteContactConnection(contactConnectionNew);
-
-            chatMiddlewareManager.discoverActorsRegistered();
-
-            contactConnection = chatMiddlewareDatabaseDao.getContactConnectionByLocalPublicKey(chatMetadata.getLocalActorPublicKey());
+//            List<ContactConnection> contactConnections = chatMiddlewareManager.getContactConnections();
+//
+//            for (ContactConnection contactConnectionNew : contactConnections)
+//                chatMiddlewareManager.deleteContactConnection(contactConnectionNew);
+//
+//            chatMiddlewareManager.discoverActorsRegistered();
+//
+//            contactConnection = chatMiddlewareDatabaseDao.getContactConnectionByLocalPublicKey(chatMetadata.getLocalActorPublicKey());
 
             if (contactConnection == null)
                 return null;
