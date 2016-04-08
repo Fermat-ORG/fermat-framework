@@ -265,7 +265,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                             status,
                             customerBrokerContractPurchase.getNearExpirationDatetime(),
                             PurchaseNegotiation,
-                            customerBrokerContractPurchase.getContractId());
+                            customerBrokerContractPurchase.getContractId(),
+                            customerBrokerContractPurchase.getCancelReason());
 
                     filteredList.add(contract);
                 }
@@ -291,6 +292,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                                 statusContractCancelled,
                                 false,
                                 PurchaseNegotiation,
+                                "",
                                 "");
 
                         filteredList.add(contract);
@@ -323,7 +325,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                             customerBrokerContractPurchase.getStatus(),
                             customerBrokerContractPurchase.getNearExpirationDatetime(),
                             PurchaseNegotiation,
-                            customerBrokerContractPurchase.getContractId());
+                            customerBrokerContractPurchase.getContractId(),
+                            customerBrokerContractPurchase.getCancelReason());
 
                     filteredList.add(contract);
                 }
@@ -347,6 +350,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                             statusContractCancelled,
                             false,
                             PurchaseNegotiation,
+                            "",
                             "");
 
                     filteredList.add(contract);
@@ -390,7 +394,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                         customerBrokerContract.getStatus(),
                         customerBrokerContract.getNearExpirationDatetime(),
                         negotiation,
-                        customerBrokerContract.getContractId());
+                        customerBrokerContract.getContractId(),
+                        customerBrokerContract.getCancelReason());
 
                 waitingForBroker.add(contract);
             }
@@ -431,7 +436,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                         customerBrokerContract.getStatus(),
                         customerBrokerContract.getNearExpirationDatetime(),
                         negotiation,
-                        customerBrokerContract.getContractId());
+                        customerBrokerContract.getContractId(),
+                        customerBrokerContract.getCancelReason());
 
                 waitingForBroker.add(contract);
             }
