@@ -54,6 +54,7 @@ import java.util.UUID;
  */
 public class ChatMiddlewareContactFactory {
 
+    //TODO:Eliminar
     /**
      * Compatible platforms.
      * This object contains the compatible or implemented platforms in this version.
@@ -65,12 +66,14 @@ public class ChatMiddlewareContactFactory {
             //Platforms.CRYPTO_BROKER_PLATFORM
     };
 
+    //TODO:Eliminar
     /**
      * This object contains all the compatible actor network service in this version.
      * Please, use the Platforms enum code as key in this HashMap
      */
     HashMap<String, Object> actorNetworkServiceMap;
 
+    //TODO:Eliminar
     /**
      * This object contains all the compatibles checked actor network service in this version.
      */
@@ -81,6 +84,7 @@ public class ChatMiddlewareContactFactory {
      */
     ErrorManager errorManager;
 
+    //TODO:Eliminar
 //    /**
 //     * This represents the ActorAssetUserManager.
 //     * actorAssetUserManager is used to determinate the own DAP identity.
