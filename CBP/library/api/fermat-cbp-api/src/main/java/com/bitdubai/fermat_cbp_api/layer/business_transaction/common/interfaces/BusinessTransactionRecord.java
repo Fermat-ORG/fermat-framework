@@ -119,7 +119,7 @@ public class BusinessTransactionRecord {
      * This method returns the FiatCurrency.
      * @return
      */
-    public FiatCurrency getCurrencyType() {
+    public FiatCurrency getCurrency() {
         return currencyType;
     }
 
