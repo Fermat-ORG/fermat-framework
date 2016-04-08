@@ -1,9 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 /**
@@ -131,7 +129,7 @@ public class ContractDetail {
         this.contractDetailType = contractDetailType;
     }
 
-    public String getCurrencyType() {
+    public String getCurrency() {
         return currencyTypeCode;
     }
 
