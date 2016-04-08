@@ -1,5 +1,7 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util;
 
+import android.util.Log;
+
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
@@ -30,22 +32,15 @@ public class CreateChatIdentityExecutor {
         this.identityName = identityName;
     }
 
-    public CreateChatIdentityExecutor(ChatIdentityModuleManager moduleManager, ErrorManager errorManager, byte[] imageInBytes, String identityName) {
-        this(imageInBytes, identityName);
-
-        this.moduleManager = moduleManager;
-        this.errorManager = errorManager;
-        identity = null;
-    }
-
     public CreateChatIdentityExecutor(FermatSession session, String identityName, byte[] imageInBytes) {
         this(imageInBytes, identityName);
         identity = null;
-
         if (session != null) {
             ChatIdentitySession subAppSession = (ChatIdentitySession) session;
             this.moduleManager = (ChatIdentityModuleManager) subAppSession.getModuleManager();
             this.errorManager = subAppSession.getErrorManager();
+        }else{
+            Log.i("*****CHT IDENTITY******", "LA SESION ES NULA!!!!!!!");
         }
     }
 

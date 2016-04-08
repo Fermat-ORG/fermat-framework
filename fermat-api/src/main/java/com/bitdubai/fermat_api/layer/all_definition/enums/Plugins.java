@@ -296,7 +296,6 @@ public enum Plugins implements FermatPluginsEnum {
     CHAT_NETWORK_SERVICE                ("CHTNS"),
     CHAT_SUP_APP_MODULE                 ("CHTSAM"),
     CHAT_IDENTITY_SUP_APP_MODULE        ("CHTISAM"),
-    CHAT_IDENTITY                       ("CHTIDE"),
     CCP_OUTGOING_DRAFT_TRANSACTION      ("CCPODT"),
     CHAT_ACTOR_CONNECTION               ("CHTAC"),
     CHAT_ACTOR_NETWORK_SERVICE          ("CHTANS"),
