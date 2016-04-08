@@ -41,7 +41,7 @@ public class MusicUserRecord implements MusicUser {
      */
     public MusicUserRecord(
             User user){
-        this.id = user.getId();
+        this.id = user.getTokenlyId();
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.apiToken = user.getApiToken();
@@ -53,7 +53,7 @@ public class MusicUserRecord implements MusicUser {
      * @return
      */
     @Override
-    public String getId() {
+    public String getTokenlyId() {
         return this.id;
     }
 

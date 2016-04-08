@@ -102,6 +102,7 @@ public final class EventManagerPlatformServiceManager implements EventManager {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void execute(final FermatEventListener fermatEventListener,
                          final FermatEvent         fermatEvent        ) {
 

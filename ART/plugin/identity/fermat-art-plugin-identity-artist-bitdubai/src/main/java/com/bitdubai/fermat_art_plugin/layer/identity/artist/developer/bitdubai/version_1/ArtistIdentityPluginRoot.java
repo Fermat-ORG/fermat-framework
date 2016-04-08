@@ -5,7 +5,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -18,7 +17,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -29,11 +27,7 @@ import com.bitdubai.fermat_art_api.all_definition.enums.ExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantAskConnectionActorArtistNetworkServiceException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRegisterActorArtistNetworkServiceException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestListActorArtistNetworkServiceRegisteredException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ActorArtistNetworkServiceManager;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistActor;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
@@ -43,7 +37,6 @@ import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.database.ArtistIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.exceptions.CantInitializeArtistIdentityDatabaseException;
-import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.structure.ArtistIdentityImp;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.structure.IdentityArtistManagerImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -53,7 +46,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 
 /**
@@ -79,8 +71,8 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.USER, addon = Addons.DEVICE_USER)
     private DeviceUserManager deviceUserManager;
 
-    @NeededPluginReference(platform =  Platforms.ART_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ACTOR_NETWORK_SERVICE_ARTIST)
-    private ActorArtistNetworkServiceManager actorArtistNetworkServiceManager;
+    @NeededPluginReference(platform =  Platforms.ART_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ARTIST)
+    private ArtistManager artistManager;
 
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
@@ -105,7 +97,7 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
                     this.pluginFileSystem,
                     this.pluginId,
                     this.deviceUserManager,
-                    this.actorArtistNetworkServiceManager);
+                    this.artistManager);
 
             System.out.println("############\n ART IDENTITY ARTIST STARTED\n");
             //testCreateArtist();
@@ -122,66 +114,55 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
 //        }
     }
 
-    public void testAskForConnection()  {
-        try {
-            List<Artist> artists = listIdentitiesFromCurrentDeviceUser();
-            Artist transmisor = artists.get(0);
-            List<ArtistActor> artistActors = actorArtistNetworkServiceManager.getListActorArtistRegistered();
-            Artist receptor = null;
-            for (Artist aux: artistActors){
-                if(!Objects.equals(aux.getPublicKey(), transmisor.getPublicKey())){
-                    receptor = aux;
-                    break;
-                }
+//    public void testAskForConnection()  {
+//        try {
+//            List<Artist> artists = listIdentitiesFromCurrentDeviceUser();
+//            Artist transmisor = artists.get(0);
+//            List<ArtistActor> artistActors = artistManager.getListActorArtistRegistered();
+//            Artist receptor = null;
+//            for (Artist aux: artistActors){
+//                if(!Objects.equals(aux.getPublicKey(), transmisor.getPublicKey())){
+//                    receptor = aux;
+//                    break;
+//                }
+//
+//            }
+//            if(receptor != null){
+//                System.out.println("#########################\nSolicitando conexión:\n"+
+//                "From:"+transmisor.getAlias()+"\n"+transmisor.getPublicKey()+"\n"+"To:"+receptor.getAlias()+"\n"+receptor.getPublicKey()+"\n#######################################");
+//                artistManager.askConnectionActorArtist(
+//                        transmisor.getPublicKey(),
+//                        transmisor.getAlias(),
+//                        PlatformComponentType.NETWORK_SERVICE,
+//                        receptor.getPublicKey(),
+//                        receptor.getAlias(),
+//                        PlatformComponentType.NETWORK_SERVICE,
+//                        transmisor.getProfileImage()
+//                );
+//            }
+//        } catch (CantListArtistIdentitiesException e) {
+//            e.printStackTrace();
+//        } catch (CantAskConnectionActorArtistNetworkServiceException e) {
+//            e.printStackTrace();
+//        } catch (CantRequestListActorArtistNetworkServiceRegisteredException e) {
+//            e.printStackTrace();
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+//    }
+//    private void testCreateArtist(){
+//        try {
+//            Artist artist = createArtistIdentity("El Gabo que envia",new byte[0]);
+//            System.out.println("#######################ART TEST");
+//            testUpdateArtist(artist);
+//            publishIdentity(artist.getPublicKey());
+//        } catch (CantCreateArtistIdentityException | ArtistIdentityAlreadyExistsException e) {
+//            e.printStackTrace();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-            }
-            if(receptor != null){
-                System.out.println("#########################\nSolicitando conexión:\n"+
-                "From:"+transmisor.getAlias()+"\n"+transmisor.getPublicKey()+"\n"+"To:"+receptor.getAlias()+"\n"+receptor.getPublicKey()+"\n#######################################");
-                actorArtistNetworkServiceManager.askConnectionActorArtist(
-                        transmisor.getPublicKey(),
-                        transmisor.getAlias(),
-                        PlatformComponentType.NETWORK_SERVICE,
-                        receptor.getPublicKey(),
-                        receptor.getAlias(),
-                        PlatformComponentType.NETWORK_SERVICE,
-                        transmisor.getProfileImage()
-                );
-            }
-        } catch (CantListArtistIdentitiesException e) {
-            e.printStackTrace();
-        } catch (CantAskConnectionActorArtistNetworkServiceException e) {
-            e.printStackTrace();
-        } catch (CantRequestListActorArtistNetworkServiceRegisteredException e) {
-            e.printStackTrace();
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-    private void testCreateArtist(){
-        try {
-            Artist artist = createArtistIdentity("El Gabo que envia",new byte[0]);
-            System.out.println("#######################ART TEST");
-            testUpdateArtist(artist);
-            publishIdentity(artist.getPublicKey());
-        } catch (CantCreateArtistIdentityException | ArtistIdentityAlreadyExistsException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    private void testUpdateArtist(Artist artist){
-        String externalName = "El gabo artist que envia";
-        String externalAccessToken = "El access token";
-        ExternalPlatform externalPlatform = ExternalPlatform.TOKENLY;
-        ExposureLevel exposureLevel = ExposureLevel.PRIVATE;
-        ArtistAcceptConnectionsType artistAcceptConnectionsType = ArtistAcceptConnectionsType.MANUAL;
-        try {
-            updateArtistIdentity(artist.getAlias(),artist.getPublicKey(),artist.getProfileImage(),externalName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
-        } catch (CantUpdateArtistIdentityException e) {
-            e.printStackTrace();
-        }
-    }
     @Override
     public List<Artist> listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
         return identityArtistManager.getIdentityArtistFromCurrentDeviceUser();
@@ -203,11 +184,11 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
 
     @Override
     public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
-        try {
-            identityArtistManager.registerIdentitiesANS(publicKey);
-        } catch (CantRegisterActorArtistNetworkServiceException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            identityArtistManager.registerIdentitiesANS(publicKey);
+//        } catch (CantRegisterActorArtistNetworkServiceException e) {
+//            e.printStackTrace();
+//        }
     }
 
     @Override

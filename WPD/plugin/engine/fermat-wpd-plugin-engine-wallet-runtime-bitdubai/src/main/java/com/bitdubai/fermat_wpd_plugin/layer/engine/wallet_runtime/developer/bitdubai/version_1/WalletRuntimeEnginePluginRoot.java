@@ -354,6 +354,13 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
          * */
         runtimeWalletNavigationStructure = createCashMoneyWalletNavigationStructure();
         recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
+
+         /**
+         * tky Fan Wallet
+         * */
+        runtimeWalletNavigationStructure = createFanWalletNavigationStructure();
+        recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
+
         /**
          * fin asset issuer
          */
@@ -3717,6 +3724,49 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment.setType(Fragments.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL.getKey());
         runtimeActivity.addFragment(Fragments.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CSH_CASH_MONEY_WALLET_TRANSACTION_DETAIL.getKey());
+
+
+        return runtimeWalletNavigationStructure;
+    }
+
+    //TKYFanWallet
+    public WalletNavigationStructure createFanWalletNavigationStructure() {
+        WalletNavigationStructure runtimeWalletNavigationStructure;
+        Activity runtimeActivity;
+        Fragment runtimeFragment;
+        StatusBar runtimeStatusBar;
+        TitleBar runtimeTitleBar;
+
+        final String publicKey = WalletsPublicKeys.TKY_FAN_WALLET.getCode();
+
+        //final String statusBarColor = "#00b9ff";
+        final String statusBarColor = "#000000";
+        final String titleBarLabelColor = "#FFFFFF";
+        final String titleBarColor = "#00b9ff";
+        final int titleBarLabelSize = 20;
+
+        runtimeWalletNavigationStructure = new WalletNavigationStructure();
+        runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
+        runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
+        runtimeWalletNavigationStructure.setPublicKey(publicKey);
+        lstWalletNavigationStructureOpen.put(publicKey, runtimeWalletNavigationStructure);
+
+
+        //Setup Activity
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.TKY_FAN_WALLET_MAIN_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.TKY_FAN_WALLET_MAIN_ACTIVITY.getCode());
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.TKY_FAN_WALLET_MAIN_ACTIVITY);
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor(statusBarColor);
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.TKY_FAN_WALLET_MAIN_ACTIVITY.getKey());
+        runtimeActivity.addFragment(Fragments.TKY_FAN_WALLET_MAIN_ACTIVITY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.TKY_FAN_WALLET_MAIN_ACTIVITY.getKey());
 
 
         return runtimeWalletNavigationStructure;

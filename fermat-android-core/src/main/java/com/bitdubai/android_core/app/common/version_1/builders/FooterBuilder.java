@@ -7,10 +7,8 @@ import android.widget.RelativeLayout;
 
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 
-import javax.annotation.CheckForNull;
-
 /**
- * Created by mati on 2016.01.09..
+ * Created by Matias Furszyfer on 2016.01.09..
  */
 public class FooterBuilder{
 

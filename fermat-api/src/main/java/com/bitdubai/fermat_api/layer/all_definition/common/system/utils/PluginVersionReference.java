@@ -16,8 +16,6 @@ import java.io.Serializable;
  */
 public class PluginVersionReference implements Serializable {
 
-    private static final String KEY_SEPARATOR = "+";
-
     private static final int HASH_PRIME_NUMBER_PRODUCT = 1523;
     private static final int HASH_PRIME_NUMBER_ADD = 2819;
 

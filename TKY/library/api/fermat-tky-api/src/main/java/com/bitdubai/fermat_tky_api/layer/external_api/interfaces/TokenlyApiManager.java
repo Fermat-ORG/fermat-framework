@@ -12,6 +12,8 @@ import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 
+import java.util.concurrent.ExecutionException;
+
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/03/16.
  */
@@ -52,7 +54,7 @@ public interface TokenlyApiManager extends FermatManager {
      * @param userKey
      * @return
      */
-    User validateTokenlyUser(String username, String userKey) throws CantGetUserException;
+    User validateTokenlyUser(String username, String userKey) throws CantGetUserException, ExecutionException, InterruptedException;
 
     /**
      * This method returns a song array. This songs are provided by the Tokenly protected API, only

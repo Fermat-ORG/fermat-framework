@@ -12,7 +12,7 @@ import com.bitdubai.fermat_api.FermatException;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface FermatEventHandler{
+public interface FermatEventHandler<T extends FermatEvent>{
 
     /**
      * Throw the method <code>handleEvent</code> you can handle the fermat event.
@@ -20,6 +20,6 @@ public interface FermatEventHandler{
      * @param fermatEvent event to be handled.
      * @throws FermatException if something goes wrong.
      */
-    void handleEvent(FermatEvent fermatEvent) throws FermatException;
+    void handleEvent(T fermatEvent) throws FermatException;
 
 }

@@ -26,6 +26,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
 import com.bitdubai.fermat_art_api.all_definition.enums.ExternalPlatform;
+import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
@@ -37,8 +38,6 @@ import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.v
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.exceptions.CantPersistPrivateKeyException;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
 import com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.version_1.structure.ArtistIdentityImp;
-import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.exceptions.CantCreateNewDeveloperException;
-import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.exceptions.CantGetUserDeveloperIdentitiesException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 
 import java.util.ArrayList;
@@ -144,13 +143,13 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
      * @param privateKey
      * @param deviceUser
      * @param profileImage
-     * @throws CantCreateNewDeveloperException
+     * @throws CantCreateArtistIdentityException
      */
-    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage) throws CantCreateNewDeveloperException {
+    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage) throws CantCreateArtistIdentityException {
 
         try {
             if (aliasExists(alias)) {
-                throw new CantCreateNewDeveloperException("Cant create new Redeem Point Identity, alias exists.", "Redeem Point Identity", "Cant create new Redeem Point, alias exists.");
+                throw new CantCreateArtistIdentityException("Cant create new Redeem Point Identity, alias exists.", "Redeem Point Identity", "Cant create new Redeem Point, alias exists.");
             }
 
             persistNewUserPrivateKeysFile(publicKey, privateKey);
@@ -169,16 +168,16 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
 
         } catch (CantInsertRecordException e) {
             // Cant insert record.
-            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Redeem Point Identity", "Cant create new Redeem Point, insert database problems.");
+            throw new CantCreateArtistIdentityException(e.getMessage(), e, "Redeem Point Identity", "Cant create new Redeem Point, insert database problems.");
 
         } catch (CantPersistPrivateKeyException e) {
             // Cant insert record.
-            throw new CantCreateNewDeveloperException(e.getMessage(), e, "ARedeem Point Identity", "Cant create new Redeem Point, persist private key error.");
+            throw new CantCreateArtistIdentityException(e.getMessage(), e, "ARedeem Point Identity", "Cant create new Redeem Point, persist private key error.");
 
         } catch (Exception e) {
             // Failure unknown.
 
-            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Identity", "Cant create new Redeem Point, unknown failure.");
+            throw new CantCreateArtistIdentityException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Identity", "Cant create new Redeem Point, unknown failure.");
         }
     }
 
@@ -192,15 +191,15 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
      * @param privateKey
      * @param deviceUser
      * @param profileImage
-     * @throws CantCreateNewDeveloperException
+     * @throws CantCreateArtistIdentityException
      */
     public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage,
                               String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform,
-                              ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateNewDeveloperException {
+                              ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException {
 
         try {
             if (aliasExists(alias)) {
-                throw new CantCreateNewDeveloperException("Cant create new Redeem Point Identity, alias exists.", "Redeem Point Identity", "Cant create new Redeem Point, alias exists.");
+                throw new CantCreateArtistIdentityException("Cant create new Redeem Point Identity, alias exists.", "Redeem Point Identity", "Cant create new Redeem Point, alias exists.");
             }
 
             persistNewUserPrivateKeysFile(publicKey, privateKey);
@@ -225,16 +224,16 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
 
         } catch (CantInsertRecordException e) {
             // Cant insert record.
-            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Redeem Point Identity", "Cant create new Redeem Point, insert database problems.");
+            throw new CantCreateArtistIdentityException(e.getMessage(), e, "Redeem Point Identity", "Cant create new Redeem Point, insert database problems.");
 
         } catch (CantPersistPrivateKeyException e) {
             // Cant insert record.
-            throw new CantCreateNewDeveloperException(e.getMessage(), e, "ARedeem Point Identity", "Cant create new Redeem Point, persist private key error.");
+            throw new CantCreateArtistIdentityException(e.getMessage(), e, "ARedeem Point Identity", "Cant create new Redeem Point, persist private key error.");
 
         } catch (Exception e) {
             // Failure unknown.
 
-            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Identity", "Cant create new Redeem Point, unknown failure.");
+            throw new CantCreateArtistIdentityException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Identity", "Cant create new Redeem Point, unknown failure.");
         }
     }
 
@@ -251,7 +250,7 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 /**
                  * Table not found.
                  */
-                throw new CantGetUserDeveloperIdentitiesException("Cant get Redeem Point Identity list, table not found.", "Redeem Point Identity", "Cant get Redeem Point identity list, table not found.");
+                throw new CantUpdateArtistIdentityException("Cant get Redeem Point Identity list, table not found.", "Redeem Point Identity", "Cant get Redeem Point identity list, table not found.");
             }
 
             // 2) Find the Intra users.
@@ -304,7 +303,7 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 /**
                  * Table not found.
                  */
-                throw new CantGetUserDeveloperIdentitiesException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
+                throw new CantUpdateArtistIdentityException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
             }
 
 
@@ -361,7 +360,7 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 /**
                  * Table not found.
                  */
-                throw new CantGetUserDeveloperIdentitiesException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
+                throw new CantUpdateArtistIdentityException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
             }
 
 
@@ -419,7 +418,7 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 /**
                  * Table not found.
                  */
-                throw new CantGetUserDeveloperIdentitiesException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
+                throw new CantUpdateArtistIdentityException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
             }
 
 
@@ -537,9 +536,9 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
      *
      * @param alias
      * @return boolean exists
-     * @throws CantCreateNewDeveloperException
+     * @throws CantCreateArtistIdentityException
      */
-    private boolean aliasExists(String alias) throws CantCreateNewDeveloperException {
+    private boolean aliasExists(String alias) throws CantCreateArtistIdentityException {
 
 
         DatabaseTable table;
@@ -552,7 +551,7 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             table = this.database.getTable(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_TABLE_NAME);
 
             if (table == null) {
-                throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists", "Asset Issuer Identity", "");
+                throw new CantUpdateArtistIdentityException("Cant check if alias exists", "Asset Issuer Identity", "");
             }
 
             table.addStringFilter(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
@@ -562,10 +561,10 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
 
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantCreateNewDeveloperException(em.getMessage(), em, "Asset Issuer  Identity", "Cant load " + ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_TABLE_NAME + " table in memory.");
+            throw new CantCreateArtistIdentityException(em.getMessage(), em, "Asset Issuer  Identity", "Cant load " + ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_TABLE_NAME + " table in memory.");
 
         } catch (Exception e) {
-            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer  Identity", "unknown failure.");
+            throw new CantCreateArtistIdentityException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer  Identity", "unknown failure.");
         }
     }
 

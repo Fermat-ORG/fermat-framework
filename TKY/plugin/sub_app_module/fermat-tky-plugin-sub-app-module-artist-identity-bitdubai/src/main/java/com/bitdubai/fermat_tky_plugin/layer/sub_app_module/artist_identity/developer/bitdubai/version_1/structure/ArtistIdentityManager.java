@@ -42,26 +42,24 @@ public class ArtistIdentityManager implements TokenlyArtistIdentityManagerModule
     }
 
     @Override
-    public Artist createArtistIdentity(String alias, byte[] profileImage, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
+    public Artist createArtistIdentity(String username, byte[] profileImage,String password, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
         return tokenlyArtistIdentityManager.createArtistIdentity(
-                alias,
+                username,
                 profileImage,
-                externalUserName,
-                externalAccessToken,
+                password,
                 externalPlatform,
                 exposureLevel,
                 artistAcceptConnectionsType);
     }
 
     @Override
-    public void updateArtistIdentity(String alias, UUID id, String publicKey, byte[] profileImage, String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
+    public void updateArtistIdentity(String username,String password, UUID id,String publicKey, byte[] profileImage, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
         tokenlyArtistIdentityManager.updateArtistIdentity(
-                alias,
+                username,
+                password,
                 id,
                 publicKey,
                 profileImage,
-                externalUserName,
-                externalAccessToken,
                 externalPlatform,
                 exposureLevel,
                 artistAcceptConnectionsType);

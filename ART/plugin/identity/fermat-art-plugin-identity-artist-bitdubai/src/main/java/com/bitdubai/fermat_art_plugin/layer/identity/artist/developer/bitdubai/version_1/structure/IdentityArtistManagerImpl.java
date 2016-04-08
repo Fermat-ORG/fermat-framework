@@ -11,10 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_art_api.all_definition.enums.ExposureLevel;
 import com.bitdubai.fermat_art_api.all_definition.enums.ExternalPlatform;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRegisterActorArtistNetworkServiceException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ActorArtistNetworkServiceManager;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistActor;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.util.ArtistActorImp;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
@@ -66,7 +63,7 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
      */
     private DeviceUserManager deviceUserManager;
 
-    private ActorArtistNetworkServiceManager actorArtistNetworkServiceManager;
+    private ArtistManager artistManager;
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
@@ -96,14 +93,14 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
      * @param pluginDatabaseSystem
      * @param pluginFileSystem
      */
-    public IdentityArtistManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, ActorArtistNetworkServiceManager actorArtistNetworkServiceManager){
+    public IdentityArtistManagerImpl(ErrorManager errorManager, LogManager logManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, DeviceUserManager deviceUserManager, ArtistManager artistManager){
         this.errorManager = errorManager;
         this.logManager = logManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.deviceUserManager = deviceUserManager;
-        this.actorArtistNetworkServiceManager = actorArtistNetworkServiceManager;
+        this.artistManager = artistManager;
     }
 
     private ArtistIdentityDao getArtistIdentityDao() throws CantInitializeArtistIdentityDatabaseException {
@@ -217,13 +214,5 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
 //    }
 
 
-    public void registerIdentitiesANS(String publicKey) throws CantRegisterActorArtistNetworkServiceException {
-        try {
-            Artist artist = getArtistIdentityDao().getIdentityArtist(publicKey);
-            actorArtistNetworkServiceManager.registerActorArtist(new ArtistActorImp(artist));
-        } catch (CantRegisterActorArtistNetworkServiceException | CantGetArtistIdentityException | CantInitializeArtistIdentityDatabaseException e) {
-            e.printStackTrace();
-        }
-    }
 
 }

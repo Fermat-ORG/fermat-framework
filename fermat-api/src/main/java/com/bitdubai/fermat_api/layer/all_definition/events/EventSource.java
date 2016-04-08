@@ -20,6 +20,8 @@ public enum EventSource implements FermatEnum {
     ACTOR_NETWORK_SERVICE_CRYPTO_BROKER     ("ACB"),
     ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER   ("ACC"),
     ACTOR_NETWORK_SERVICE_ARTIST            ("ANSA"),
+    ACTOR_NETWORK_SERVICE_FAN               ("ANSF"),
+    ARTIST_ACTOR_CONNECTION                 ("ARTAC"),
     BROKER_ACK_OFFLINE_PAYMENT              ("BAFP"),
     BROKER_ACK_ONLINE_PAYMENT               ("BAOP"),
     BROKER_SUBMIT_OFFLINE_MERCHANDISE       ("BSFM"),
@@ -94,6 +96,8 @@ public enum EventSource implements FermatEnum {
             case "ACB":    return ACTOR_NETWORK_SERVICE_CRYPTO_BROKER;
             case "ACC":    return ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER;
             case "ANSA":   return ACTOR_NETWORK_SERVICE_ARTIST;
+            case "ANSF":   return ACTOR_NETWORK_SERVICE_FAN;
+            case "ARTAC":   return ARTIST_ACTOR_CONNECTION;
             case "BAFP":   return BROKER_ACK_OFFLINE_PAYMENT;
             case "BAOP":   return BROKER_ACK_ONLINE_PAYMENT;
             case "BSFM":   return BROKER_SUBMIT_OFFLINE_MERCHANDISE;

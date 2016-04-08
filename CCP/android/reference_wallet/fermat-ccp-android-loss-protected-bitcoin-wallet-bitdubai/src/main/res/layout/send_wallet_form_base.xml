@@ -39,6 +39,13 @@
                     android:paddingBottom="16dp"
                     android:paddingTop="16dp">
 
+                    <ImageView
+                        android:id="@+id/wallet_image"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginLeft="12dp"
+                        tools:src="@drawable/bitcoin_wallet_2" />
+
 
                     <FrameLayout
                         android:layout_width="match_parent"

@@ -1,0 +1,30 @@
+
+    <resources>
+
+
+
+        <style name="AppThemefanwallet" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        </style>
+
+        <style name="ActionBarThemeOverlay" parent="">
+            <item name="android:textColorPrimary">@color/colortoolbartext</item>
+            <item name="colorControlNormal">@color/colortoolbar</item>
+            <item name="colorControlHighlight">@color/colortoolbar</item>
+        </style>
+
+        <style name="HeaderBar">
+            <item name="android:background">@color/colortoolbar</item>
+        </style>
+
+
+
+
+
+
+
+    </resources>
+

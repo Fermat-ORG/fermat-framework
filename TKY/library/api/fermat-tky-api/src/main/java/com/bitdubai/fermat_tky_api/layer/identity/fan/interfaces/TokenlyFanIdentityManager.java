@@ -28,35 +28,30 @@ public interface TokenlyFanIdentityManager extends FermatManager {
 
     /**
      *
-     * @param alias
+     * @param userName
      * @param profileImage
-     * @param externalUserName
-     * @param externalAccessToken
+     * @param externalPassword
      * @param externalPlatform
      * @return
      * @throws CantCreateFanIdentityException
      * @throws FanIdentityAlreadyExistsException
      */
     Fan createFanIdentity(
-            String alias, byte[] profileImage,
-            String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform) throws
+            String userName, byte[] profileImage, String externalPassword, ExternalPlatform externalPlatform) throws
             CantCreateFanIdentityException,
             FanIdentityAlreadyExistsException;
 
     /**
      *
-     * @param alias
+     * @param userName
      * @param id
      * @param publicKey
      * @param profileImage
-     * @param externalUserName
-     * @param externalAccessToken
      * @param externalPlatform
      * @throws CantUpdateFanIdentityException
      */
     void updateFanIdentity(
-            String alias, UUID id,String publicKey, byte[] profileImage,
-            String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform) throws
+            String userName,String password, UUID id,String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws
             CantUpdateFanIdentityException;
 
     /**

@@ -29,6 +29,7 @@ Teams are organized in a hierarchical way. This helps the task of reviewing chan
 * Mordor
 * Kabuto
 * Skynet
+* Yayo
 * Navi Charlie
 * Navi Sierra
 * Fsociety
@@ -384,6 +385,11 @@ We are responsible of only one thing, making fermat a successfully project, shar
       Skype:   luis.fernando.torres.leon
       Github:  https://github.com/iLutor
 
+* **Eduardo Guerere [New Developer]** <br/>
+---
+      Email:   eduardoguerere@gmail.com
+      Skype:   eduardo.guerere
+      Github:  https://github.com/eduardoguerere
 
 <br>
 We don't mean to make fun of everything, just about the serious things.

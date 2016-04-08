@@ -3,9 +3,13 @@ package com.bitdubai.fermat_cht_api.layer.middleware.utils;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactListException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Group;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -30,6 +34,7 @@ public class ChatImpl implements Chat {
     private Timestamp                   date;
     private Timestamp                   lastMessageDate;
     private List<Contact>               contactAssociated;
+    private TypeChat                    typeChat;
 
     /**
      * Constructor without arguments
@@ -60,7 +65,8 @@ public class ChatImpl implements Chat {
                     String chatName,
                     ChatStatus status,
                     Timestamp date,
-                    Timestamp lastMessageDate
+                    Timestamp lastMessageDate,
+                    TypeChat typeChat
     )
     {
         this.chatId               = chatId;
@@ -73,6 +79,7 @@ public class ChatImpl implements Chat {
         this.status               = status;
         this.date                 = date;
         this.lastMessageDate      = lastMessageDate;
+        this.typeChat             = typeChat;
     }
 
     @Override
@@ -237,6 +244,46 @@ public class ChatImpl implements Chat {
                     "Parsing the XML String to a List<Contact>",
                     "Unexpected exception");
         }
+
+    }
+
+    @Override
+    public List<Message> getMessagesAsociated() {
+        return null;
+    }
+
+    @Override
+    public void setMessagesAsociated(List<Message> messages) {
+
+    }
+
+    @Override
+    public TypeChat getTypeChat() {
+        return typeChat;
+    }
+
+    @Override
+    public void setTypeChat(TypeChat typeChat) {
+        this.typeChat = typeChat;
+    }
+
+    @Override
+    public Group getGroupAssociated() {
+        return null;
+    }
+
+    @Override
+    public void setGroupAssociated(Group group) {
+
+    }
+
+    @Override
+    public List<GroupMember> getGroupMembersAssociated() {
+        return null;
+    }
+
+    @Override
+    public void setGroupMembersAssociated(List<GroupMember> groupMembers) {
 
     }
 

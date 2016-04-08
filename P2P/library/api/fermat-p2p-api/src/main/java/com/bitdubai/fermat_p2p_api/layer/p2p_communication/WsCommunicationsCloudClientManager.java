@@ -9,9 +9,6 @@ package com.bitdubai.fermat_p2p_api.layer.p2p_communication;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager</code>
  * <p/>

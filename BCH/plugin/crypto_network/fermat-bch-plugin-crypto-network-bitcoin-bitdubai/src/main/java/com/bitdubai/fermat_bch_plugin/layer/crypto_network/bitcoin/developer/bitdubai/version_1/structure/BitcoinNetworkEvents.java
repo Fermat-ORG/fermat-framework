@@ -106,18 +106,32 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         blockchainDownloadProgress.setDownloader(peer.toString());
 
         /**
-         * broadcast the progress bar
+         * broadcast the progress bar if the delta is greated than 5 blocks.
          */
-        if (blockchainDownloadProgress.getProgress() < 101){
+        if (blockchainDownloadProgress.getPendingBlocks() > 5){
             FermatBundle fermatBundle = new FermatBundle();
             fermatBundle.put(Broadcaster.PROGRESS_BAR, blockchainDownloadProgress.getProgress());
-            fermatBundle.put(Broadcaster.PROGRESS_BAR_TEXT, "Blockchain download for " + blockchainDownloadProgress.getBlockchainNetworkType().getCode() + " network.");
+            fermatBundle.put(Broadcaster.PROGRESS_BAR_TEXT, "Blocks download for " + blockchainDownloadProgress.getBlockchainNetworkType().getCode() + " network.");
 
             if (broadcasterID != 0){
                 fermatBundle.put(Broadcaster.PUBLISH_ID, broadcasterID);
                 broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
             } else
                 broadcasterID = broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
+        } else{
+            //if I have almost completed the download (less than 5 blocks)
+            // I will mark the progress as complete and close the broadcaster.
+            if (broadcasterID != 0){
+                FermatBundle fermatBundle = new FermatBundle();
+                fermatBundle.put(Broadcaster.PROGRESS_BAR, 100);
+                fermatBundle.put(Broadcaster.PROGRESS_BAR_TEXT, "Completed. Network " + blockchainDownloadProgress.getBlockchainNetworkType().getCode() + " synchronized.");
+                fermatBundle.put(Broadcaster.PUBLISH_ID, broadcasterID);
+                broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, fermatBundle);
+
+                // disabled the broadcast.
+                broadcasterID = 0;
+            }
+
         }
     }
 

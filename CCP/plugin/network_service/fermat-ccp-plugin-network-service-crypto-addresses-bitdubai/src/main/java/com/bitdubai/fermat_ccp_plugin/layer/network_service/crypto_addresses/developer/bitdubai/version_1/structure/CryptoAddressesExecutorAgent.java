@@ -18,17 +18,13 @@ import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.except
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.CantListPendingCryptoAddressRequestsException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.exceptions.PendingRequestNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.network_service.crypto_addresses.interfaces.CryptoAddressRequest;
-import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.CryptoAddressesNetworkServicePluginRoot;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.database.CryptoAddressesNetworkServiceDao;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.AcceptMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.DenyMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.ReceivedMessage;
 import com.bitdubai.fermat_ccp_plugin.layer.network_service.crypto_addresses.developer.bitdubai.version_1.messages.RequestMessage;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.WsCommunicationsCloudClientManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.HashMap;
 import java.util.List;
@@ -44,17 +40,19 @@ import java.util.concurrent.Future;
  *
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 15/10/2015.
  */
+
+//DEPRECATE
 public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
     // Represent the sleep time for the cycles of receive and send in this agent, with both cycles send and receive 15000 millis.
-    private static final long SLEEP_TIME = 7500;
+  /*  private static final long SLEEP_TIME = 7500;
     private final Runnable agentTask;
     private ExecutorService executorService;
 
     // network services registered
     private Map<String, String> poolConnectionsWaitingForResponse;
 
-    private final CryptoAddressesNetworkServicePluginRoot cryptoAddressesNetworkServicePluginRoot;
+   // private final CryptoAddressesNetworkServicePluginRoot cryptoAddressesNetworkServicePluginRoot;
     private final CryptoAddressesNetworkServiceDao        dao                                    ;
 
     private Future<?> future;
@@ -62,7 +60,7 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
     public CryptoAddressesExecutorAgent(final CryptoAddressesNetworkServicePluginRoot cryptoAddressesNetworkServicePluginRoot,
                                         final CryptoAddressesNetworkServiceDao        dao                                    ) {
 
-        this.cryptoAddressesNetworkServicePluginRoot      = cryptoAddressesNetworkServicePluginRoot;
+       // this.cryptoAddressesNetworkServicePluginRoot      = cryptoAddressesNetworkServicePluginRoot;
         this.dao                                          = dao                                    ;
 
         this.status                                       = AgentStatus.CREATED                    ;
@@ -498,5 +496,5 @@ public final class CryptoAddressesExecutorAgent extends FermatAgent {
 
     public Map<String, String> getPoolConnectionsWaitingForResponse() {
         return poolConnectionsWaitingForResponse;
-    }
+    }*/
 }

@@ -358,7 +358,7 @@ public interface LossProtectedWallet extends Serializable {
     long getBalance(BalanceType balanceType,
                     String walletPublicKey,
                     BlockchainNetworkType blockchainNetworkType,
-                    long exangeRate) throws CantGetLossProtectedBalanceException;
+                    String exangeRate) throws CantGetLossProtectedBalanceException;
 
     /**
      * Throw the method <code>getTransactions</code> you cant get all the transactions for an specific balance type.
@@ -611,7 +611,7 @@ public interface LossProtectedWallet extends Serializable {
      */
     List<InstalledWallet> getInstalledWallets() throws CantListWalletsException;
 
-    UUID getExchangeProvider(String walletPublicKey) throws CantGetBasicWalletExchangeProviderException;
+    UUID getExchangeProvider() throws CantGetBasicWalletExchangeProviderException;
 
-    void setExchangeProvider(UUID idProvider,String walletPublicKey) throws CantSetBasicWalletExchangeProviderException;
+    void setExchangeProvider(UUID idProvider) throws CantSetBasicWalletExchangeProviderException;
 }

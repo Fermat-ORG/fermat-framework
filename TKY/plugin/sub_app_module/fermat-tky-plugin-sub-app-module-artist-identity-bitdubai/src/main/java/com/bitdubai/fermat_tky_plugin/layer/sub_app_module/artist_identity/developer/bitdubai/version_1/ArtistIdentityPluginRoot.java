@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TKYException;
@@ -63,7 +64,7 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin {
      * This method is used by the fermat-core to get the plugin manager in execution time.
      * @return
      */
-    public FermatManager getManager(){
+    public ModuleManager getManager(){
         return this.artistIdentityManager;
     }
 

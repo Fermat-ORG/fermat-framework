@@ -25,6 +25,13 @@ public class CantUpdateArtistIdentityException extends ARTException {
     }
 
     public CantUpdateArtistIdentityException(
+            String message,
+            String context,
+            String possibleReason) {
+        super(message , null, context, possibleReason);
+    }
+
+    public CantUpdateArtistIdentityException(
             final String message,
             final Exception cause) {
         this(message, cause, "", "");

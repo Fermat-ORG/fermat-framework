@@ -5,6 +5,7 @@ import com.bitdubai.fermat_tky_api.all_definitions.interfaces.Identity;
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 09/03/16.
  */
+
 public interface Fan extends Identity {
 
     /**

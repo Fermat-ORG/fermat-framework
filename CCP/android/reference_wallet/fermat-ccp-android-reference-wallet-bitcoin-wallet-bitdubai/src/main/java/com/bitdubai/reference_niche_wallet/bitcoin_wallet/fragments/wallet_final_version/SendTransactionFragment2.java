@@ -182,6 +182,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     }
 
+    int progress = 1;
+    int broadcasterID = 0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -208,6 +210,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         }
                     });
                 }
+
             }
         });
 

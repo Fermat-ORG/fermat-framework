@@ -1,957 +1,394 @@
 package com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1;
 
-import android.util.Base64;
+
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.DiscoveryQueryParameters;
-import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
-import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_art_api.all_definition.exceptions.CantConfirmActorNotificationException;
-import com.bitdubai.fermat_art_api.all_definition.exceptions.CantGetActortNotificationException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.NotificationDescriptor;
+import com.bitdubai.fermat_art_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ProtocolState;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantAcceptActorArtistNetworkServiceException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantAskConnectionActorArtistNetworkServiceException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantCancelActorArtistNetworkServiceException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDenyActorArtistNetworkServiceException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDisconectActorArtistNetworkServiceException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRegisterActorArtistNetworkServiceException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestListActorArtistNetworkServiceRegisteredException;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorNotification;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ActorArtistNetworkServiceManager;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistActor;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.util.ArtistActorImp;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.util.ArtistActorNetworkServiceRecord;
-import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.ArtistActorNetworkServiceDatabaseConstants;
-import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.ArtistActorNetworkServiceDatabaseFactory;
-import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.ArtistActorNetworkServiceDeveloperDatabaseFactory;
-import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.IncomingNotificationDao;
-import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.communications.OutgoingNotificationDao;
-import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantCreateActorArtistNotificationException;
-import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantInitializeTemplateNetworkServiceDatabaseException;
-import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantRecieveMessageException;
-import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure.EncodeMsjContent;
-import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure.TransmissionJsonAttNames;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.RequestType;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantAcceptConnectionRequestException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDenyConnectionRequestException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDisconnectException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.ArtistActorNetworkServiceDao;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.ArtistActorNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.messages.InformationMessage;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.messages.NetworkServiceMessage;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.messages.RequestMessage;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure.ArtistActorNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.CommunicationsClientConnection;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRequestListException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
- * Created by Gabriel Araujo on 08/03/16.
+ * Created by Gabriel Araujo 1/04/2016.
+ * @author gaboHub
+ * @version 1.0
+ * @since Java JDK 1.7
  */
-public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceBase implements
-        ActorArtistNetworkServiceManager,
-        DatabaseManagerForDevelopers,
-        LogManagerForDevelopers {
+public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceBase implements DatabaseManagerForDevelopers {
 
-    private long reprocessTimer = 300000; //five minutes
-    private Timer timer = new Timer();
-    private Database dataBase;
-    protected final static String ART_PROFILE_IMG = "ART_PROFILE_IMG";
 
-    private ArtistActorNetworkServiceDeveloperDatabaseFactory artistActorNetworkServiceDeveloperDatabaseFactory;
-    private IncomingNotificationDao incomingNotificationDao;
-    private OutgoingNotificationDao outgoingNotificationDao;
-
-    private List<PlatformComponentProfile> actorArtistPendingToRegistration;
-    private List<ArtistActor> actorArtistRegistered;
+    ArtistActorNetworkServiceDao artistActorNetworkServiceDao;
+    
+    ArtistActorNetworkServiceManager artistActorNetworkServiceManager;
     /**
-     * Executor
-     */
-    ExecutorService executorService;
-    /**
-     * Default constructor
+     * Constructor of the Network Service.
      */
     public ArtistActorNetworkServicePluginRoot() {
-        super(new PluginVersionReference(new Version()),
+
+        super(
+                new PluginVersionReference(new Version()),
                 EventSource.ACTOR_NETWORK_SERVICE_ARTIST,
                 PlatformComponentType.NETWORK_SERVICE,
                 NetworkServiceType.ARTIST_ACTOR,
-                "Actor Network Service Artist",
-                null);
-        this.actorArtistPendingToRegistration = new ArrayList<>();
-        this.actorArtistRegistered = new ArrayList<>();
+                "Artist",
+                null
+        );
     }
 
-    @Override
-    protected void onStart() throws CantStartPluginException {
-
-        try {
-            initializeDb();
-            artistActorNetworkServiceDeveloperDatabaseFactory = new ArtistActorNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem,pluginId);
-            //artistActorNetworkServiceDeveloperDatabaseFactory.initializeDatabaseCommunication();
-            artistActorNetworkServiceDeveloperDatabaseFactory.initializeDatabase();
-            incomingNotificationDao = new IncomingNotificationDao(dataBase,pluginFileSystem,pluginId);
-            outgoingNotificationDao = new OutgoingNotificationDao(dataBase,pluginFileSystem,pluginId);
-            executorService = Executors.newFixedThreadPool(2);
-            this.startTimer();
-            System.out.println("########################\nART ACTOR STARTED\n####################################");
-        } catch (CantInitializeTemplateNetworkServiceDatabaseException e) {
-            e.printStackTrace();
-            reportUnexpectedError(e);
-        }catch (Exception e){
-            e.printStackTrace();
-            reportUnexpectedError(e);
-        }
-
-    }
-
-    private ArtistActorNetworkServiceRecord swapActor(ArtistActorNetworkServiceRecord artistActorNetworkServiceRecord) {
-        // swap actor
-        String actorDestination = artistActorNetworkServiceRecord.getActorDestinationPublicKey();
-        PlatformComponentType actorsType = artistActorNetworkServiceRecord.getActorDestinationType();
-
-        artistActorNetworkServiceRecord.setActorDestinationPublicKey(artistActorNetworkServiceRecord.getActorSenderPublicKey());
-        artistActorNetworkServiceRecord.setActorDestinationType(artistActorNetworkServiceRecord.getActorSenderType());
-
-        artistActorNetworkServiceRecord.setActorSenderPublicKey(actorDestination);
-        artistActorNetworkServiceRecord.setActorSenderType(actorsType);
-
-        return artistActorNetworkServiceRecord;
-    }
-
-    // respond receive and done notification
-    private void respondReceiveAndDoneCommunication(ArtistActorNetworkServiceRecord artistActorNetworkServiceRecord) {
-
-        artistActorNetworkServiceRecord = swapActor(artistActorNetworkServiceRecord);
-        try {
-            UUID newNotificationID = UUID.randomUUID();
-            long currentTime = System.currentTimeMillis();
-            ProtocolState actorAssetProtocolState = ProtocolState.PROCESSING_SEND;
-            artistActorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.RECEIVED);
-            outgoingNotificationDao.createNotification(
-                    newNotificationID,
-                    artistActorNetworkServiceRecord.getActorSenderPublicKey(),
-                    artistActorNetworkServiceRecord.getActorSenderType(),
-                    artistActorNetworkServiceRecord.getActorDestinationPublicKey(),
-                    artistActorNetworkServiceRecord.getActorSenderAlias(),
-                    artistActorNetworkServiceRecord.getActorSenderProfileImage(),
-                    artistActorNetworkServiceRecord.getActorDestinationType(),
-                    artistActorNetworkServiceRecord.getNotificationDescriptor(),
-                    currentTime,
-                    actorAssetProtocolState,
-                    false,
-                    1,
-                    artistActorNetworkServiceRecord.getId()
-            );
-        } catch (CantCreateActorArtistNotificationException e) {
-            reportUnexpectedError(e);
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onNewMessagesReceive(FermatMessage newFermatMessageReceive) {
-        try {
-            System.out.println("ACTOR ARTIST MENSAJE ENTRANTE A JSON: " + newFermatMessageReceive.toJson());
-            JsonObject messageData = EncodeMsjContent.decodeMsjContent(newFermatMessageReceive);
-            Gson gson = new Gson();
-            
-            ArtistActorNetworkServiceRecord artistActorNetworkServiceRecord = gson.fromJson(messageData.get(TransmissionJsonAttNames.METADATA), ArtistActorNetworkServiceRecord.class);
-
-            switch (artistActorNetworkServiceRecord.getNotificationDescriptor()) {
-                case ASKFORCONNECTION:
-                    System.out.println("ACTOR ARTIST MENSAJE LLEGO: " + artistActorNetworkServiceRecord.getActorSenderAlias());
-                    artistActorNetworkServiceRecord.changeState(ProtocolState.PROCESSING_RECEIVE);
-                    System.out.println("ACTOR ARTIST REGISTRANDO EN INCOMING NOTIFICATION DAO");
-                    artistActorNetworkServiceRecord.setFlagRead(false);
-                    incomingNotificationDao.createNotification(artistActorNetworkServiceRecord);
-
-                    //NOTIFICATION LAUNCH
-                    //launchNotificationActorAsset();
-//                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, "CONNECTION_REQUEST|" + artistActorNetworkServiceRecord.getActorSenderPublicKey());
-                  //  broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, DAPPublicKeys.DAP_COMMUNITY_REDEEM.getCode(), "CONNECTION-REQUEST_" + artistActorNetworkServiceRecord.getActorSenderPublicKey());
-
-                    respondReceiveAndDoneCommunication(artistActorNetworkServiceRecord);
-                    break;
-
-                case ACCEPTED:
-                    //TODO: ver si me conviene guardarlo en el outogoing DAO o usar el incoming para las que llegan directamente
-                    artistActorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.ACCEPTED);
-                    artistActorNetworkServiceRecord.changeState(ProtocolState.DONE);
-                    outgoingNotificationDao.update(artistActorNetworkServiceRecord);
-
-                    //create incoming notification
-                    artistActorNetworkServiceRecord.changeState(ProtocolState.PROCESSING_RECEIVE);
-                    artistActorNetworkServiceRecord.setFlagRead(false);
-                    incomingNotificationDao.createNotification(artistActorNetworkServiceRecord);
-                    System.out.println("ACTOR ARTIST MENSAJE ACCEPTED LLEGÓ: " + artistActorNetworkServiceRecord.getActorSenderAlias());
-
-                    //NOTIFICATION LAUNCH
-                   // launchNotificationActorAsset();
-                    respondReceiveAndDoneCommunication(artistActorNetworkServiceRecord);
-                    break;
-
-                case RECEIVED:
-                    //launchIncomingRequestConnectionNotificationEvent(actorNetworkServiceRecord);
-                    System.out.println("ACTOR ARTIST THE RECORD WAS CHANGE TO THE STATE OF DELIVERY: " + artistActorNetworkServiceRecord.getActorSenderAlias());
-                    if (artistActorNetworkServiceRecord.getResponseToNotificationId() != null)
-                        outgoingNotificationDao.changeProtocolState(artistActorNetworkServiceRecord.getResponseToNotificationId(), ProtocolState.DONE);
-
-                    // close connection, sender is the destination
-                    System.out.println("ACTOR ARTIST THE CONNECTION WAS CHANGE TO DONE" + artistActorNetworkServiceRecord.getActorSenderAlias());
-
-                    getCommunicationNetworkServiceConnectionManager().closeConnection(artistActorNetworkServiceRecord.getActorSenderPublicKey());
-                    System.out.println("ACTOR ARTIST THE CONNECTION WAS CLOSED AND THE AWAITING POOL CLEARED." + artistActorNetworkServiceRecord.getActorSenderAlias());
-                    break;
-
-                case DENIED:
-                    artistActorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.DENIED);
-                    artistActorNetworkServiceRecord.changeState(ProtocolState.DONE);
-                    outgoingNotificationDao.update(artistActorNetworkServiceRecord);
-
-                    artistActorNetworkServiceRecord.changeState(ProtocolState.PROCESSING_RECEIVE);
-                    artistActorNetworkServiceRecord.setFlagRead(false);
-                    incomingNotificationDao.createNotification(artistActorNetworkServiceRecord);
-                    System.out.println("ACTOR ARTIST MENSAJE DENIED LLEGÓ: " + artistActorNetworkServiceRecord.getActorDestinationPublicKey());
-
-                    //NOTIFICATION LAUNCH
-                   // launchNotificationActorAsset();
-                    respondReceiveAndDoneCommunication(artistActorNetworkServiceRecord);
-                    break;
-
-                case DISCONNECTED:
-                    artistActorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.DISCONNECTED);
-                    artistActorNetworkServiceRecord.changeState(ProtocolState.DONE);
-                    outgoingNotificationDao.update(artistActorNetworkServiceRecord);
-
-                    artistActorNetworkServiceRecord.changeState(ProtocolState.PROCESSING_RECEIVE);
-                    artistActorNetworkServiceRecord.setFlagRead(false);
-                    incomingNotificationDao.createNotification(artistActorNetworkServiceRecord);
-                    System.out.println("ACTOR ARTIST MENSAJE DISCONNECTED LLEGÓ: " + artistActorNetworkServiceRecord.getActorSenderAlias());
-
-                    //NOTIFICATION LAUNCH
-                  //  launchNotificationActorAsset();
-                    respondReceiveAndDoneCommunication(artistActorNetworkServiceRecord);
-                    break;
-                default:
-                    throw new CantRecieveMessageException("DEFAULT CASE, THE JSON IS WRONG ART ARTIST");
-            }
-
-        } catch (Exception e) {
-            reportUnexpectedError(e);
-            //quiere decir que no estoy reciviendo metadata si no una respuesta
-            e.printStackTrace();
-
-        }
-
-        System.out.println("Actor ARTIST Llegaron mensajes!!!!");
-
-        try {
-            getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().markAsRead(newFermatMessageReceive);
-        } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException e) {
-            reportUnexpectedError(e);
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    protected void onNetworkServiceRegistered() {
-        try {
-            //TODO Test this functionality
-            for (PlatformComponentProfile platformComponentProfile : actorArtistPendingToRegistration) {
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
-                System.out.println("##################################\nArtistActorNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
-            }
-        } catch (Exception e) {
-            reportUnexpectedError(e);
-            e.printStackTrace();
-        }
-    }
-
-    private void startTimer() {
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                // change message state to process retry later
-                // reprocessPendingMessage();
-            }
-        }, 0, reprocessTimer);
-    }
     /**
-     * This method initialize the database
-     *
-     * @throws CantInitializeTemplateNetworkServiceDatabaseException
+     * Service Interface implementation
      */
-    private void initializeDb() throws CantInitializeTemplateNetworkServiceDatabaseException {
+    @Override
+    public void onStart() throws CantStartPluginException {
 
         try {
-            /*
-             * Open new database connection
-             */
-            this.dataBase = this.pluginDatabaseSystem.openDatabase(pluginId, ArtistActorNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
-        } catch (CantOpenDatabaseException cantOpenDatabaseException) {
+            artistActorNetworkServiceDao = new ArtistActorNetworkServiceDao(pluginDatabaseSystem, pluginFileSystem, pluginId);
 
-            /*
-             * The database exists but cannot be open. I can not handle this situation.
-             */
-            errorManager.reportUnexpectedPluginException(Plugins.ACTOR_NETWORK_SERVICE_ARTIST, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
-            throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
+            artistActorNetworkServiceDao.initialize();
 
-        } catch (DatabaseNotFoundException e) {
+            artistActorNetworkServiceManager = new ArtistActorNetworkServiceManager(
+                    getCommunicationsClientConnection(),
+                    artistActorNetworkServiceDao ,
+                    this,
+                    errorManager                       ,
+                    getPluginVersionReference()
+            );
 
-            /*
-             * The database no exist may be the first time the plugin is running on this device,
-             * We need to create the new database
-             */
-            ArtistActorNetworkServiceDatabaseFactory artistActorNetworkServiceDatabaseFactory = new ArtistActorNetworkServiceDatabaseFactory(pluginDatabaseSystem);
+        } catch(final CantInitializeDatabaseException e) {
 
-            try {
-
-                /*
-                 * We create the new database
-                 */
-                this.dataBase = artistActorNetworkServiceDatabaseFactory.createDatabase(pluginId, ArtistActorNetworkServiceDatabaseConstants.DATA_BASE_NAME);
-
-            } catch (CantCreateDatabaseException cantOpenDatabaseException) {
-
-                /*
-                 * The database cannot be created. I can not handle this situation.
-                 */
-                reportUnexpectedError(e);
-                throw new CantInitializeTemplateNetworkServiceDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
-
-            }
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException(e, "", "Problem initializing artist ans dao.");
         }
     }
 
-    private void reportUnexpectedError(final Exception e) {
-        errorManager.reportUnexpectedPluginException(Plugins.ACTOR_NETWORK_SERVICE_ARTIST, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+    @Override
+    public FermatManager getManager() {
+        return artistActorNetworkServiceManager;
     }
+
+    @Override
+    public void pause() {
+
+        artistActorNetworkServiceManager.setPlatformComponentProfile(null);
+        getCommunicationNetworkServiceConnectionManager().pause();
+
+        super.pause();
+    }
+
+    @Override
+    public void resume() {
+
+        // resume connections manager.
+        getCommunicationNetworkServiceConnectionManager().resume();
+
+        super.resume();
+    }
+
     @Override
     public void stop() {
+
+        artistActorNetworkServiceManager.setPlatformComponentProfile(null);
+        getCommunicationNetworkServiceConnectionManager().stop();
+
         super.stop();
-        executorService.shutdownNow();
     }
 
-    private PlatformComponentProfile constructPlatformComponentProfile(ArtistActor artist, CommunicationsClientConnection communicationsClientConnection) {
-   /*
-    * Construct the profile
-    */
-        Gson gson = new Gson();
-
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(ART_PROFILE_IMG, Base64.encodeToString(artist.getProfileImage(), Base64.DEFAULT));
-
-        String extraData = gson.toJson(jsonObject);
-
-        return communicationsClientConnection.constructPlatformComponentProfileFactory(
-                artist.getPublicKey(),
-                artist.getAlias().toLowerCase().trim(),
-                artist.getAlias(),
-                NetworkServiceType.ARTIST_ACTOR,
-                PlatformComponentType.NETWORK_SERVICE,
-                extraData);
-    }
     @Override
-    public void registerActorArtist(ArtistActor actorArtistNetworkService) throws CantRegisterActorArtistNetworkServiceException {
+    public final void onSentMessage(final FermatMessage fermatMessage) {
+        System.out.println("************ Mensaje supuestamente enviado artist actor network service");
+
         try {
-            if (isRegister()) {
-                final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
 
-                /*
-                 * Construct the profile
-                 */
+            String jsonMessage = fermatMessage.getContent();
 
-                final PlatformComponentProfile platformComponentProfileActorArtist = constructPlatformComponentProfile(
-                        actorArtistNetworkService, communicationsClientConnection);
-                /*
-                 * ask to the communication cloud client to register
-                 */
-                /**
-                 * I need to add this in a new thread other than the main android thread
-                 */
-                if (!actorArtistPendingToRegistration.contains(platformComponentProfileActorArtist)) {
-                    actorArtistPendingToRegistration.add(platformComponentProfileActorArtist);
-                }
+            NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.fromJson(jsonMessage);
 
-                Thread thread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            communicationsClientConnection.registerComponentForCommunication(
-                                    getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfileActorArtist);
-                            onComponentRegistered(platformComponentProfileActorArtist);
-                        } catch (CantRegisterComponentException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, "ACTOR ARTIST REGISTER-ACTOR");
-                thread.start();
-            }else{
-                actorArtistPendingToRegistration.add(constructPlatformComponentProfile(
-                        actorArtistNetworkService,wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection()));
+            System.out.println("********************* Message Sent Type:  " + networkServiceMessage.getMessageType());
+
+            switch (networkServiceMessage.getMessageType()) {
+
+                case CONNECTION_INFORMATION:
+                    InformationMessage informationMessage = InformationMessage.fromJson(jsonMessage);
+
+                    artistActorNetworkServiceDao.confirmActorConnectionRequest(informationMessage.getRequestId());
+                    break;
+
+                case CONNECTION_REQUEST:
+                    // update the request to processing receive state with the given action.
+
+                    RequestMessage requestMessage = RequestMessage.fromJson(jsonMessage);
+
+                    artistActorNetworkServiceDao.confirmActorConnectionRequest(requestMessage.getRequestId());
+                    break;
+                default:
+                    throw new CantHandleNewMessagesException(
+                            "message type: " +networkServiceMessage.getMessageType().name(),
+                            "Message type not handled."
+                    );
             }
+
         } catch (Exception e) {
-
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "Plugin was not registered";
-
-            CantRegisterActorArtistNetworkServiceException pluginStartException = new CantRegisterActorArtistNetworkServiceException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
-            errorManager.reportUnexpectedPluginException(Plugins.ACTOR_NETWORK_SERVICE_ARTIST, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-            throw pluginStartException;
+            System.out.println(e.toString());
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
     }
-
     @Override
-    public void updateActorArtist(ArtistActor actorArtistNetworkService) throws CantRegisterActorArtistNetworkServiceException {
+    public void onNewMessagesReceive(FermatMessage fermatMessage) {
+
+        System.out.println("****** ARTIST ACTOR NETWORK SERVICE NEW MESSAGE RECEIVED: " + fermatMessage);
         try {
-            if (isRegister()) {
-                final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
-                /*
-                 * Construct the profile
-                 */
-                final PlatformComponentProfile platformComponentProfileActorArtist = constructPlatformComponentProfile(actorArtistNetworkService, communicationsClientConnection);
-                /*
-                 * ask to the communication cloud client to register
-                 */
 
+            String jsonMessage = fermatMessage.getContent();
 
-                executorService.submit(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            communicationsClientConnection.updateRegisterActorProfile(
-                                    getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfileActorArtist);
-                            onComponentRegistered(platformComponentProfileActorArtist);
-                        } catch (CantRegisterComponentException e) {
-                           reportUnexpectedError(e);
-                        }
-                    }
-                }, "ARTIST ACTOR NETWORK SERVICE");
+            NetworkServiceMessage networkServiceMessage = NetworkServiceMessage.fromJson(jsonMessage);
+
+            System.out.println("********************* Message Type:  " + networkServiceMessage.getMessageType());
+
+            switch (networkServiceMessage.getMessageType()) {
+
+                case CONNECTION_INFORMATION:
+                    InformationMessage informationMessage = InformationMessage.fromJson(jsonMessage);
+
+                    System.out.println("********************* Content:  " + informationMessage);
+
+                    receiveConnectionInformation(informationMessage);
+
+                    String destinationPublicKey = artistActorNetworkServiceDao.getDestinationPublicKey(informationMessage.getRequestId());
+
+                    getCommunicationNetworkServiceConnectionManager().closeConnection(destinationPublicKey);
+                    break;
+
+                case CONNECTION_REQUEST:
+                    // update the request to processing receive state with the given action.
+
+                    RequestMessage requestMessage = RequestMessage.fromJson(jsonMessage);
+
+                    System.out.println("********************* Content:  " + requestMessage);
+
+                    receiveRequest(requestMessage);
+
+                    getCommunicationNetworkServiceConnectionManager().closeConnection(requestMessage.getSenderPublicKey());
+                    break;
+
+                default:
+                    throw new CantHandleNewMessagesException(
+                            "message type: " +networkServiceMessage.getMessageType().name(),
+                            "Message type not handled."
+                    );
             }
+
         } catch (Exception e) {
+            System.out.println(e.toString());
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        }
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-
-            String context = contextBuffer.toString();
-            String possibleCause = "Plugin was not registered";
-
-            CantRegisterActorArtistNetworkServiceException pluginStartException = new CantRegisterActorArtistNetworkServiceException(CantStartPluginException.DEFAULT_MESSAGE, e, context, possibleCause);
-            errorManager.reportUnexpectedPluginException(Plugins.ACTOR_NETWORK_SERVICE_ARTIST, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-            throw pluginStartException;
+        try {
+            getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().markAsRead(fermatMessage);
+        } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException e) {
+            e.printStackTrace();
         }
     }
+    /**
+     * I indicate to the Agent the action that it must take:
+     * - Protocol State: PROCESSING_RECEIVE.    .
+     */
+    private void receiveConnectionInformation(final InformationMessage informationMessage) throws CantHandleNewMessagesException {
 
-    @Override
-    public List<ArtistActor> getListActorArtistRegistered() throws CantRequestListActorArtistNetworkServiceRegisteredException {
         try {
-//            if (true) {
-            if(isRegister()){
-                if (actorArtistRegistered != null && !actorArtistRegistered.isEmpty()) {
-                    actorArtistRegistered.clear();
-                }
 
-                DiscoveryQueryParameters discoveryQueryParametersAssetUser = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().
-                        constructDiscoveryQueryParamsFactory(PlatformComponentType.NETWORK_SERVICE, //applicant = who made the request
-                                NetworkServiceType.ARTIST_ACTOR,
-                                null,                     // alias
-                                null,                     // identityPublicKey
-                                null,                     // location
-                                null,                     // distance
-                                null,                     // name
-                                null,                     // extraData
-                                null,                     // offset
-                                null,                     // max
-                                null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
-                                null);
+            ProtocolState state = ProtocolState.PENDING_LOCAL_ACTION;
 
-                final List<PlatformComponentProfile> platformComponentProfileRegisteredListRemote = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParametersAssetUser);
+            switch (informationMessage.getAction()) {
 
+                case ACCEPT:
 
-                if (platformComponentProfileRegisteredListRemote != null && !platformComponentProfileRegisteredListRemote.isEmpty()) {
+                    artistActorNetworkServiceDao.acceptConnection(
+                            informationMessage.getRequestId(),
+                            state
+                    );
+                    break;
 
-                    for (PlatformComponentProfile platformComponentProfile : platformComponentProfileRegisteredListRemote) {
+                case DENY:
 
-                        String profileImage = "";
-                        byte[] imageByte = null;
-                        if (!platformComponentProfile.getExtraData().equals("") || platformComponentProfile.getExtraData() != null) {
-                            try {
-                                JsonParser jParser = new JsonParser();
-                                JsonObject jsonObject = jParser.parse(platformComponentProfile.getExtraData()).getAsJsonObject();
+                    artistActorNetworkServiceDao.denyConnection(
+                            informationMessage.getRequestId(),
+                            state
+                    );
+                    break;
 
-                                profileImage = jsonObject.get(ART_PROFILE_IMG).getAsString();
-                            } catch (Exception e) {
-                                profileImage = platformComponentProfile.getExtraData();
-                            }
-                            imageByte = Base64.decode(profileImage, Base64.DEFAULT);
-                        }
+                case DISCONNECT:
 
+                    artistActorNetworkServiceDao.disconnectConnection(
+                            informationMessage.getRequestId(),
+                            state
+                    );
+                    break;
 
-                        ArtistActor artistActor = new ArtistActorImp(
-                                platformComponentProfile.getIdentityPublicKey(),
-                                platformComponentProfile.getName(),
-                                imageByte);
-
-                        actorArtistRegistered.add(artistActor);
-                    }
-                } else {
-                    return actorArtistRegistered;
-                }
-            }else{
-                Thread.sleep(5000);
-                getListActorArtistRegistered();
+                default:
+                    throw new CantHandleNewMessagesException(
+                            "action not supported: " +informationMessage.getAction(),
+                            "action not handled."
+                    );
             }
-        } catch (CantRequestListException e) {
 
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
+            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.ARTIST_CONNECTION_REQUEST_UPDATES);
+            eventToRaise.setSource(eventSource);
+            eventManager.raiseEvent(eventToRaise);
 
-            String context = contextBuffer.toString();
-            String possibleCause = "Cant Request List Actor Asset Redeem Point Registered";
+        } catch(CantAcceptConnectionRequestException | CantDenyConnectionRequestException | ConnectionRequestNotFoundException | CantDisconnectException e) {
+            // i inform to error manager the error.
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantHandleNewMessagesException(e, "", "Error in Artist ANS Dao.");
+        } catch(Exception e) {
 
-            CantRequestListActorArtistNetworkServiceRegisteredException pluginStartException = new CantRequestListActorArtistNetworkServiceRegisteredException(CantRequestListActorArtistNetworkServiceRegisteredException.DEFAULT_MESSAGE, null, context, possibleCause);
-
-            errorManager.reportUnexpectedPluginException(Plugins.ACTOR_NETWORK_SERVICE_ARTIST, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-            throw pluginStartException;
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
         }
-        catch (Exception e){
-            StringBuffer contextBuffer = new StringBuffer();
-            contextBuffer.append("Plugin ID: " + pluginId);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("wsCommunicationsCloudClientManager: " + wsCommunicationsCloudClientManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("pluginDatabaseSystem: " + pluginDatabaseSystem);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("errorManager: " + errorManager);
-            contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
-
-            String context = contextBuffer.toString();
-            String possibleCause =  e.getMessage();
-
-            CantRequestListActorArtistNetworkServiceRegisteredException pluginStartException = new CantRequestListActorArtistNetworkServiceRegisteredException(CantRequestListActorArtistNetworkServiceRegisteredException.DEFAULT_MESSAGE, e, context, possibleCause);
-
-            errorManager.reportUnexpectedPluginException(Plugins.ACTOR_NETWORK_SERVICE_ARTIST, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
-
-            throw pluginStartException;
-        }
-        return actorArtistRegistered;
     }
 
-    @Override
-    public void askConnectionActorArtist(String senderPublicKey, String senderName, PlatformComponentType senderType, String receiverPublicKey, String receiverName, PlatformComponentType destinationType, byte[] profileImage) throws CantAskConnectionActorArtistNetworkServiceException {
-        try {
-            UUID newNotificationID = UUID.randomUUID();
-            NotificationDescriptor notificationDescriptor = NotificationDescriptor.ASKFORCONNECTION;
-            long currentTime = System.currentTimeMillis();
-            ProtocolState protocolState = ProtocolState.PROCESSING_SEND;
+    /**
+     * I indicate to the Agent the action that it must take:
+     * - Protocol State: PROCESSING_RECEIVE.
+     * - Type          : RECEIVED.
+     */
+    private void receiveRequest(final RequestMessage requestMessage) throws CantHandleNewMessagesException {
 
-            final ArtistActorNetworkServiceRecord artistActorNetworkServiceRecord = outgoingNotificationDao.createNotification(
-                    newNotificationID,
-                    senderPublicKey,
-                    senderType,
-                    receiverPublicKey,
-                    senderName,
-//                    intraUserToAddPhrase,
-                    profileImage,
-                    destinationType,
-                    notificationDescriptor,
-                    currentTime,
-                    protocolState,
-                    false,
-                    1,
-                    null
+        try {
+
+            if (artistActorNetworkServiceDao.existsConnectionRequest(requestMessage.getRequestId()))
+                return;
+
+
+            final ProtocolState           state  = ProtocolState.PENDING_LOCAL_ACTION;
+            final RequestType type   = RequestType  .RECEIVED             ;
+
+            final ArtistConnectionInformation connectionInformation = new ArtistConnectionInformation(
+                    requestMessage.getRequestId(),
+                    requestMessage.getSenderPublicKey(),
+                    requestMessage.getSenderActorType(),
+                    requestMessage.getSenderAlias(),
+                    requestMessage.getSenderImage(),
+                    requestMessage.getDestinationPublicKey(),
+                    requestMessage.getDestinationActorType(),
+                    requestMessage.getSentTime()
             );
-            final String encondeMSG = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(artistActorNetworkServiceRecord);
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        sendNewMessage(
-                                getProfileSenderToRequestConnection(
-                                        artistActorNetworkServiceRecord.getActorSenderPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        artistActorNetworkServiceRecord.getActorSenderType()
-                                ),
-                                getProfileDestinationToRequestConnection(
-                                        artistActorNetworkServiceRecord.getActorDestinationPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        artistActorNetworkServiceRecord.getActorDestinationType()
-                                ),
-                                encondeMSG);
-                    } catch (CantSendMessageException e) {
-                        reportUnexpectedError(e);
-                    }
-                }
-            },"ARTIST ACTOR NETWORK SERVICE");
-            // Sending message to the destination
-        } catch (final CantCreateActorArtistNotificationException e) {
-            reportUnexpectedError(e);
-            throw new CantAskConnectionActorArtistNetworkServiceException(e, "actor ARTIST network service", "database corrupted");
-        } catch (final Exception e) {
-            reportUnexpectedError(e);
-            throw new CantAskConnectionActorArtistNetworkServiceException(e, "actor ARTIST network service", "Unhandled error.");
-        }
-    }
 
-    @Override
-    public void acceptConnectionActorArtist(String actorLoggedInPublicKey, String ActorToAddPublicKey) throws CantAcceptActorArtistNetworkServiceException {
-        try {
-            ArtistActorNetworkServiceRecord artistActorNetworkServiceRecord = incomingNotificationDao.changeActorNotificationDescriptor(actorLoggedInPublicKey,NotificationDescriptor.ACCEPTED,ProtocolState.DONE);
-
-            PlatformComponentType actorSwap = artistActorNetworkServiceRecord.getActorSenderType();
-
-            artistActorNetworkServiceRecord.setActorSenderPublicKey(actorLoggedInPublicKey);
-            artistActorNetworkServiceRecord.setActorSenderType(artistActorNetworkServiceRecord.getActorDestinationType());
-
-            artistActorNetworkServiceRecord.setActorDestinationPublicKey(ActorToAddPublicKey);
-            artistActorNetworkServiceRecord.setActorDestinationType(actorSwap);
-
-            artistActorNetworkServiceRecord.setActorSenderAlias(null);
-
-            artistActorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.ACCEPTED);
-
-            artistActorNetworkServiceRecord.changeState(ProtocolState.PROCESSING_SEND);
-
-            final ArtistActorNetworkServiceRecord messageToSend = outgoingNotificationDao.createNotification(
-                    UUID.randomUUID(),
-                    artistActorNetworkServiceRecord.getActorSenderPublicKey(),
-                    artistActorNetworkServiceRecord.getActorSenderType(),
-                    artistActorNetworkServiceRecord.getActorDestinationPublicKey(),
-                    artistActorNetworkServiceRecord.getActorSenderAlias(),
-                    artistActorNetworkServiceRecord.getActorSenderProfileImage(),
-                    artistActorNetworkServiceRecord.getActorDestinationType(),
-                    artistActorNetworkServiceRecord.getNotificationDescriptor(),
-                    System.currentTimeMillis(),
-                    artistActorNetworkServiceRecord.getProtocolState(),
-                    false,
-                    1,
-                    artistActorNetworkServiceRecord.getResponseToNotificationId()
+            artistActorNetworkServiceDao.createConnectionRequest(
+                    connectionInformation,
+                    state,
+                    type,
+                    requestMessage.getRequestAction()
             );
-            final String encondeMSG = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(messageToSend);
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // Sending message to the destination
-                        sendNewMessage(
-                                getProfileSenderToRequestConnection(
-                                        messageToSend.getActorSenderPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        messageToSend.getActorSenderType()
-                                ),
-                                getProfileDestinationToRequestConnection(
-                                        messageToSend.getActorDestinationPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        messageToSend.getActorDestinationType()
-                                ),
-                                encondeMSG);
-                    } catch (CantSendMessageException e) {
-                        reportUnexpectedError(e);
-                    }
-                }
-            },"ARTIST ACTOR NS ACCEPTING CONNECTIONS");
-        } catch (Exception e) {
-            reportUnexpectedError(e);
-            throw new CantAcceptActorArtistNetworkServiceException("ERROR ACTOR ARTIST NS WHEN ACCEPTING CONNECTION", e, "", "Generic Exception");
+
+            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.ARTIST_CONNECTION_REQUEST_NEWS);
+            eventToRaise.setSource(eventSource);
+            eventManager.raiseEvent(eventToRaise);
+
+        } catch(CantRequestConnectionException e) {
+            // i inform to error manager the error.
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantHandleNewMessagesException(e, "", "Error in Crypto Broker ANS Dao.");
+        } catch(Exception e) {
+
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantHandleNewMessagesException(e, "", "Unhandled Exception.");
         }
     }
-
     @Override
-    public void denyConnectionActorArtist(String actorLoggedInPublicKey, String ActorToAddPublicKey) throws CantDenyActorArtistNetworkServiceException {
-        try {
-            final ArtistActorNetworkServiceRecord artistActorNetworkServiceRecord = incomingNotificationDao.changeActorNotificationDescriptor(actorLoggedInPublicKey,NotificationDescriptor.DENIED,ProtocolState.DONE);
+    protected void onNetworkServiceRegistered() {
 
-            PlatformComponentType actorSwap = artistActorNetworkServiceRecord.getActorSenderType();
+        artistActorNetworkServiceManager.setPlatformComponentProfile(this.getNetworkServiceProfile());
+        testCreateAndList();
 
-            artistActorNetworkServiceRecord.setActorSenderPublicKey(actorLoggedInPublicKey);
-            artistActorNetworkServiceRecord.setActorSenderType(artistActorNetworkServiceRecord.getActorDestinationType());
-
-            artistActorNetworkServiceRecord.setActorDestinationPublicKey(ActorToAddPublicKey);
-            artistActorNetworkServiceRecord.setActorDestinationType(actorSwap);
-
-            artistActorNetworkServiceRecord.setActorSenderAlias(null);
-
-            artistActorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.DENIED);
-
-            artistActorNetworkServiceRecord.changeState(ProtocolState.PROCESSING_SEND);
-
-           outgoingNotificationDao.createNotification(artistActorNetworkServiceRecord);
-            
-            final String encondeMSG = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(artistActorNetworkServiceRecord);
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // Sending message to the destination
-                        sendNewMessage(
-                                getProfileSenderToRequestConnection(
-                                        artistActorNetworkServiceRecord.getActorSenderPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        artistActorNetworkServiceRecord.getActorSenderType()
-                                ),
-                                getProfileDestinationToRequestConnection(
-                                        artistActorNetworkServiceRecord.getActorDestinationPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        artistActorNetworkServiceRecord.getActorDestinationType()
-                                ),
-                                encondeMSG);
-                    } catch (CantSendMessageException e) {
-                        reportUnexpectedError(e);
-                    }
-                }
-            },"ARTIST ACTOR NS ACCEPTING CONNECTIONS");
-        } catch (Exception e) {
-            reportUnexpectedError(e);
-            throw new CantDenyActorArtistNetworkServiceException("ERROR ACTOR ARTIST NS WHEN DENYING CONNECTION", e, "", "Generic Exception");
-        }
     }
 
-    @Override
-    public void disconnectConnectionActorArtist(String actorLoggedInPublicKey, String actorToDisconnectPublicKey) throws CantDisconectActorArtistNetworkServiceException {
+    private void testCreateAndList(){
+        ECCKeyPair identity = new ECCKeyPair();
         try {
-            ArtistActorNetworkServiceRecord artistActorNetworkServiceRecord = incomingNotificationDao.changeActorNotificationDescriptor(actorLoggedInPublicKey,NotificationDescriptor.DISCONNECTED,ProtocolState.DONE);
-
-            PlatformComponentType actorSwap = artistActorNetworkServiceRecord.getActorSenderType();
-
-            artistActorNetworkServiceRecord.setActorSenderPublicKey(actorLoggedInPublicKey);
-            artistActorNetworkServiceRecord.setActorSenderType(artistActorNetworkServiceRecord.getActorDestinationType());
-
-            artistActorNetworkServiceRecord.setActorDestinationPublicKey(actorToDisconnectPublicKey);
-            artistActorNetworkServiceRecord.setActorDestinationType(actorSwap);
-
-            artistActorNetworkServiceRecord.setActorSenderAlias(null);
-
-            artistActorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.DISCONNECTED);
-
-            artistActorNetworkServiceRecord.changeState(ProtocolState.PROCESSING_SEND);
-
-            final ArtistActorNetworkServiceRecord messageToSend = outgoingNotificationDao.createNotification(
-                    UUID.randomUUID(),
-                    artistActorNetworkServiceRecord.getActorSenderPublicKey(),
-                    artistActorNetworkServiceRecord.getActorSenderType(),
-                    artistActorNetworkServiceRecord.getActorDestinationPublicKey(),
-                    artistActorNetworkServiceRecord.getActorSenderAlias(),
-                    artistActorNetworkServiceRecord.getActorSenderProfileImage(),
-                    artistActorNetworkServiceRecord.getActorDestinationType(),
-                    artistActorNetworkServiceRecord.getNotificationDescriptor(),
-                    System.currentTimeMillis(),
-                    artistActorNetworkServiceRecord.getProtocolState(),
-                    false,
-                    1,
-                    artistActorNetworkServiceRecord.getResponseToNotificationId()
-            );
-            final String encondeMSG = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(messageToSend);
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // Sending message to the destination
-                        sendNewMessage(
-                                getProfileSenderToRequestConnection(
-                                        messageToSend.getActorSenderPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        messageToSend.getActorSenderType()
-                                ),
-                                getProfileDestinationToRequestConnection(
-                                        messageToSend.getActorDestinationPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        messageToSend.getActorDestinationType()
-                                ),
-                                encondeMSG);
-                    } catch (CantSendMessageException e) {
-                        reportUnexpectedError(e);
-                    }
-                }
-            },"ARTIST ACTOR NS ACCEPTING CONNECTIONS");
-        } catch (Exception e) {
-            reportUnexpectedError(e);
-            throw new CantDisconectActorArtistNetworkServiceException("ERROR ACTOR ARTIST NS WHEN DISCONNECTING CONNECTION", e, "", "Generic Exception");
+            artistActorNetworkServiceManager.exposeIdentity(new ArtistExposingData(identity.getPublicKey(), "El Gabo artist", new byte[0]));
+            ActorSearch<ArtistExposingData> artistActorNetworkServiceSearch = artistActorNetworkServiceManager.getSearch();
+            List<ArtistExposingData> artistExposingDatas = artistActorNetworkServiceSearch.getResult();
+            for (ArtistExposingData artistExposingData:
+                    artistExposingDatas) {
+                System.out.println("#############################\nArtistas registrados:"+artistExposingData.getAlias()+"\nPublicKey:"+artistExposingData.getPublicKey());
+            }
+        } catch (CantExposeIdentityException e) {
+            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (CantListArtistsException e) {
+            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
-    }
 
-    @Override
-    public void cancelConnectionActorArtist(String actorLoggedInPublicKey, String actorToCancelPublicKey) throws CantCancelActorArtistNetworkServiceException {
-        try {
-            final ArtistActorNetworkServiceRecord artistActorNetworkServiceRecord = incomingNotificationDao.changeActorNotificationDescriptor(actorLoggedInPublicKey,NotificationDescriptor.CANCEL,ProtocolState.DONE);
-
-            PlatformComponentType actorSwap = artistActorNetworkServiceRecord.getActorSenderType();
-
-            artistActorNetworkServiceRecord.setActorSenderPublicKey(actorLoggedInPublicKey);
-            artistActorNetworkServiceRecord.setActorSenderType(artistActorNetworkServiceRecord.getActorDestinationType());
-
-            artistActorNetworkServiceRecord.setActorDestinationPublicKey(actorToCancelPublicKey);
-            artistActorNetworkServiceRecord.setActorDestinationType(actorSwap);
-
-            artistActorNetworkServiceRecord.setActorSenderAlias(null);
-
-            artistActorNetworkServiceRecord.changeDescriptor(NotificationDescriptor.CANCEL);
-
-            artistActorNetworkServiceRecord.changeState(ProtocolState.PROCESSING_SEND);
-
-            outgoingNotificationDao.createNotification(artistActorNetworkServiceRecord);
-
-            final String encondeMSG = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(artistActorNetworkServiceRecord);
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        // Sending message to the destination
-                        sendNewMessage(
-                                getProfileSenderToRequestConnection(
-                                        artistActorNetworkServiceRecord.getActorSenderPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        artistActorNetworkServiceRecord.getActorSenderType()
-                                ),
-                                getProfileDestinationToRequestConnection(
-                                        artistActorNetworkServiceRecord.getActorDestinationPublicKey(),
-                                        NetworkServiceType.UNDEFINED,
-                                        artistActorNetworkServiceRecord.getActorDestinationType()
-                                ),
-                                encondeMSG);
-                    } catch (CantSendMessageException e) {
-                        reportUnexpectedError(e);
-                    }
-                }
-            },"ARTIST ACTOR NS ACCEPTING CONNECTIONS");
-        } catch (Exception e) {
-            reportUnexpectedError(e);
-            throw new CantCancelActorArtistNetworkServiceException("ERROR ACTOR ARTIST NS WHEN CANCELING CONNECTION", e, "", "Generic Exception");
-        }
     }
 
     @Override
     public List<DeveloperDatabase> getDatabaseList(DeveloperObjectFactory developerObjectFactory) {
-        ArtistActorNetworkServiceDeveloperDatabaseFactory dbFactory = new ArtistActorNetworkServiceDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-        return dbFactory.getDatabaseList(developerObjectFactory);
+        return new ArtistActorNetworkServiceDeveloperDatabaseFactory(
+                pluginDatabaseSystem,
+                pluginId
+        ).getDatabaseList(
+                developerObjectFactory
+        );
     }
 
     @Override
     public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase) {
-        ArtistActorNetworkServiceDeveloperDatabaseFactory dbFactory = new ArtistActorNetworkServiceDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-        return dbFactory.getDatabaseTableList(developerObjectFactory);
+        return new ArtistActorNetworkServiceDeveloperDatabaseFactory(
+                pluginDatabaseSystem,
+                pluginId
+        ).getDatabaseTableList(
+                developerObjectFactory,
+                developerDatabase
+        );
     }
 
     @Override
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
-        try {
-            ArtistActorNetworkServiceDeveloperDatabaseFactory dbFactory = new ArtistActorNetworkServiceDeveloperDatabaseFactory(this.pluginDatabaseSystem, this.pluginId);
-            dbFactory.initializeDatabase();
-            return dbFactory.getDatabaseTableContent(developerObjectFactory, developerDatabase, developerDatabaseTable);
-        } catch (CantInitializeTemplateNetworkServiceDatabaseException e) {
-            this.errorManager.reportUnexpectedPluginException(Plugins.ACTOR_NETWORK_SERVICE_ARTIST, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        }
-        // If we are here the database could not be opened, so we return an empty list
-        return new ArrayList<>();
+        return new ArtistActorNetworkServiceDeveloperDatabaseFactory(
+                pluginDatabaseSystem,
+                pluginId
+        ).getDatabaseTableContent(
+                developerObjectFactory,
+                developerDatabase     ,
+                developerDatabaseTable
+        );
     }
 
-    @Override
-    public List<String> getClassesFullPath() {
-        return null;
-    }
-
-    @Override
-    public void setLoggingLevelPerClass(Map<String, LogLevel> newLoggingLevel) {
-
-    }
-
-    @Override
-    protected void onComponentRegistered(PlatformComponentProfile platformComponentProfileRegistered) {
-        for (PlatformComponentProfile actorPending :
-                actorArtistPendingToRegistration) {
-            if(actorPending.equals(platformComponentProfileRegistered) && actorArtistPendingToRegistration.contains(platformComponentProfileRegistered))
-                actorArtistPendingToRegistration.remove(platformComponentProfileRegistered);
-        }
-    }
-
-    @Override
-    protected void onFailureComponentRegistration(PlatformComponentProfile platformComponentProfile) {
-        try {
-            wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
-            System.out.println("##################################\nArtistActorNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
-        } catch (CantRegisterComponentException e) {
-            e.printStackTrace();
-            reportUnexpectedError(e);
-        }
-
-    }
-
-    @Override
-    public List<ActorNotification> getPendingNotifications() throws CantGetActortNotificationException {
-        try {
-            if(incomingNotificationDao == null)
-                incomingNotificationDao = new IncomingNotificationDao(dataBase, pluginFileSystem, pluginId);
-            return incomingNotificationDao.listUnreadNotifications();
-
-        } catch (Exception e) {
-            reportUnexpectedError(e);
-            throw new CantGetActortNotificationException(e);
-        }
-    }
-
-    @Override
-    public void confirmActorNotification(UUID notificationID) throws CantConfirmActorNotificationException {
-        try {
-            incomingNotificationDao.markNotificationAsRead(notificationID);
-        } catch (final Exception e) {
-            reportUnexpectedError(e);
-            throw new CantConfirmActorNotificationException(e, "notificationID: " + notificationID, "Unhandled error.");
-        }
-    }
 }

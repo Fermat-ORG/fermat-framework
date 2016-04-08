@@ -993,7 +993,7 @@ public class CryptoPaymentRequestNetworkServicePluginRootNew extends AbstractNet
         try {
             for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
                 wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
-                System.out.println("CryptoPaymentRequestNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
+                System.out.println("CryptoPaymentRequestNetworkServicePluginRootnew - Trying to register to: " + platformComponentProfile.getAlias());
             }
         }catch (Exception e){
             e.printStackTrace();

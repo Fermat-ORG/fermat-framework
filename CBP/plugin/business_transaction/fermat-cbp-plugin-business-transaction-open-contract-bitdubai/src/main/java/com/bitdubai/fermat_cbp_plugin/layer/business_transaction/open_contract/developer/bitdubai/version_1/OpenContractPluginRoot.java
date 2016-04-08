@@ -145,10 +145,6 @@ public class OpenContractPluginRoot extends AbstractPlugin implements
              * The database no exist may be the first time the plugin is running on this device,
              * We need to create the new database
              */
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.OPEN_CONTRACT,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    e);
             OpenContractBusinessTransactionDatabaseFactory openContractBusinessTransactionDatabaseFactory =
                     new OpenContractBusinessTransactionDatabaseFactory(pluginDatabaseSystem);
 

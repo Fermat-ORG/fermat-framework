@@ -16,6 +16,7 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserM
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
@@ -145,27 +146,8 @@ public class TokenlyIdentityArtistManagerImpl implements DealsWithErrors, DealsW
         }
         return artist;
     }
-    public Artist createNewIdentityArtist(String alias, byte[] profileImage) throws CantCreateArtistIdentityException {
-        try {
-            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
-            ECCKeyPair keyPair = new ECCKeyPair();
-            UUID id =UUID.randomUUID();
-            String publicKey = keyPair.getPublicKey();
-            String privateKey = keyPair.getPrivateKey();
-
-            getArtistIdentityDao().createNewUser(alias, id, publicKey, privateKey, loggedUser, profileImage);
-
-            return new TokenlyArtistIdentityImp(alias, id, publicKey, profileImage, pluginFileSystem, pluginId);
-        } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantCreateArtistIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", e, "Error getting current logged in device user", "");
-        } catch (Exception e) {
-            throw new CantCreateArtistIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", FermatException.wrapException(e), "", "");
-        }
-    }
-
-    public Artist createNewIdentityArtist(String alias, byte[] profileImage,
-                                                       String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform,
+    public Artist createNewIdentityArtist(User user,String password, byte[] profileImage, ExternalPlatform externalPlatform,
                                                        ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException {
         try {
             DeviceUser deviceUser = deviceUserManager.getLoggedInDeviceUser();
@@ -175,10 +157,10 @@ public class TokenlyIdentityArtistManagerImpl implements DealsWithErrors, DealsW
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            getArtistIdentityDao().createNewUser(alias,id,publicKey,privateKey,deviceUser,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+            getArtistIdentityDao().createNewUser(user,id,publicKey,privateKey,deviceUser,profileImage,password,externalPlatform,exposureLevel,artistAcceptConnectionsType);
 
 
-            return new TokenlyArtistIdentityImp(alias,id,publicKey,profileImage,externalUserName,externalAccessToken,externalPlatform,exposureLevel,artistAcceptConnectionsType, pluginFileSystem, pluginId);
+            return new TokenlyArtistIdentityImp(user,id,publicKey,profileImage,externalPlatform,exposureLevel,artistAcceptConnectionsType, pluginFileSystem, pluginId);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateArtistIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {
@@ -186,43 +168,14 @@ public class TokenlyIdentityArtistManagerImpl implements DealsWithErrors, DealsW
         }
     }
 
-    public void updateIdentityArtist(String alias,UUID id,String publicKey, byte[] profileImage,
-                                     String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform,
+    public void updateIdentityArtist(User user,String password, UUID id,String publicKey, byte[] profileImage,ExternalPlatform externalPlatform,
                                      ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
         try {
-            getArtistIdentityDao().updateIdentityArtistUser(id,publicKey, alias, profileImage, externalUserName,
-                    externalAccessToken, externalPlatform, exposureLevel, artistAcceptConnectionsType);
+            getArtistIdentityDao().updateIdentityArtistUser(user, password,id,publicKey,profileImage,externalPlatform, exposureLevel, artistAcceptConnectionsType);
 
         } catch (CantInitializeTokenlyArtistIdentityDatabaseException e) {
             e.printStackTrace();
         }
     }
-//
-//    public boolean hasRedeemPointIdentity() throws CantListAssetRedeemPointException {
-//        try {
-//
-//            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-//            if (getArtistIdentityDao().getIdentityAssetRedeemPointsFromCurrentDeviceUser(loggedUser).size() > 0)
-//                return true;
-//            else
-//                return false;
-//        } catch (CantGetLoggedInDeviceUserException e) {
-//            throw new CantListAssetRedeemPointException("CAN'T GET IF NEW ARTIST IDENTITIES  EXISTS", e, "Error get logged user device", "");
-//        } catch (CantListTokenlyArtistIdentitiesException e) {
-//            throw new CantListAssetRedeemPointException("CAN'T GET IF NEW ARTIST IDENTITIES EXISTS", e, "", "");
-//        } catch (Exception e) {
-//            throw new CantListAssetRedeemPointException("CAN'T GET ASSET NEW ARTIST IDENTITY EXISTS", FermatException.wrapException(e), "", "");
-//        }
-//    }
-
-//
-//    public void registerIdentitiesANS(String publicKey) throws CantRegisterActorArtistNetworkServiceException {
-//        try {
-//            Artist artist = getArtistIdentityDao().getIdentityArtist(publicKey);
-//            tokenlyApiManager.registerActorArtist(new ArtistActorImp(artist));
-//        } catch (CantRegisterActorArtistNetworkServiceException | CantGetArtistIdentityException | CantInitializeTokenlyArtistIdentityDatabaseException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
 }

@@ -26,6 +26,13 @@ public class CantCreateArtistIdentityException extends ARTException {
 
     public CantCreateArtistIdentityException(
             final String message,
+            String context,
+            String possibleReason) {
+        this(message, null, context, possibleReason);
+    }
+
+    public CantCreateArtistIdentityException(
+            final String message,
             final Exception cause) {
         this(message, cause, "", "");
     }

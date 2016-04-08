@@ -24,7 +24,7 @@ public class ARTPlatform extends AbstractPlatform {
         try {
             //registerLayer(new ActorConnectionLayer());
             registerLayer(new ActorNetworkServiceLayer());
-            registerLayer(new IdentityLayer());
+            //registerLayer(new IdentityLayer());
 
         } catch (CantRegisterLayerException e) {
 

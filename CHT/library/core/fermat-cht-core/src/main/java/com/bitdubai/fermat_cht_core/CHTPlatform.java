@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cht_core;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_cht_core.layer.identity.IdentityLayer;
 import com.bitdubai.fermat_cht_core.layer.middleware.MiddlewareLayer;
 import com.bitdubai.fermat_cht_core.layer.network_service.NetworkServiceLayer;
 import com.bitdubai.fermat_cht_core.layer.sup_app_module.SupAppModuleLayer;
@@ -25,6 +26,7 @@ public class CHTPlatform extends AbstractPlatform {
         try {
 
             registerLayer(new MiddlewareLayer());
+            registerLayer(new IdentityLayer());
             registerLayer(new NetworkServiceLayer());
             registerLayer(new SupAppModuleLayer());
 

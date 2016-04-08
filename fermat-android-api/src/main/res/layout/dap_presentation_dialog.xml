@@ -190,6 +190,7 @@
                     <!--android:buttonTint="@color/black_overlay"-->
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/checkbox_not_show_text"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="Don´t show this again"

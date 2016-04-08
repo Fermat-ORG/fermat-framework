@@ -1,16 +1,15 @@
 package com.bitdubai.reference_wallet.fan_wallet.fragmentFactory;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
-import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
 /**
  * Created by Miguel Payarez on 15/03/16.
  */
 public enum FanWalletEnumType implements FermatFragmentsEnumType <FanWalletEnumType> {
 
-
-    TKY_FAN_WALLET_SONGS_TAB_FRAGMENT("TKYWSTF"),
-    TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT("TKYWFTF");
+    TKY_FAN_WALLET_MAIN_ACTIVITY("TKYFWMA"),
+    TKY_FAN_WALLET_SONGS_TAB_FRAGMENT("TKYFWSTF"),
+    TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT("TKYFWFTF");
 
 
     private String key;

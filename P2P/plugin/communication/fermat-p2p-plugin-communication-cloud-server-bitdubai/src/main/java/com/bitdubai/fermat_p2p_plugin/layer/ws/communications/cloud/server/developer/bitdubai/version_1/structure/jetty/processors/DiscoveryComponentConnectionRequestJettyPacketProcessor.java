@@ -149,8 +149,6 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
             LOG.error("RemoteNsParticipant is available     = " + (remoteNsParticipant     != null ? "SI (" + remoteNsParticipant.getAlias()     + ")" : "NO"));
             LOG.error("Cause: " + e.getMessage());
 
-            e.printStackTrace();
-
             String details = "";
 
             if (applicantParticipant == null){
@@ -219,7 +217,7 @@ public class DiscoveryComponentConnectionRequestJettyPacketProcessor extends Fer
         packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_VPN, remoteParticipant.toJson());
         packetContent.addProperty(JsonAttNamesConstants.REMOTE_PARTICIPANT_NS_VPN, remoteParticipantNetworkService.toJson());
 
-        LOG.info("packetContent = " +gson.toJson(packetContent));
+        LOG.debug("packetContent = " +gson.toJson(packetContent));
 
         /*
          * Get the client connection destination

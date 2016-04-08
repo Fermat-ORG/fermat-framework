@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.crypto.util.CryptoHasher;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
@@ -25,6 +26,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
@@ -131,23 +133,22 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
 
         }
     }
-
     /**
      * first i persist private key on a file
      * second i insert the record in database
      * third i save the profile image file
      *
-     * @param alias
+     * @param user
      * @param id
      * @param privateKey
      * @param deviceUser
      * @param profileImage
      * @throws CantCreateNewDeveloperException
      */
-    public void createNewUser(String alias, UUID id,String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage) throws CantCreateNewDeveloperException {
+    public void createNewUser(User user, UUID id,String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage, String password, ExternalPlatform externalPlatform) throws CantCreateNewDeveloperException {
 
         try {
-            if (aliasExists(alias)) {
+            if (aliasExists(user.getUsername())) {
                 throw new CantCreateNewDeveloperException("Cant create new Redeem Point Identity, alias exists.");
             }
 
@@ -157,61 +158,14 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
             DatabaseTableRecord record = table.getEmptyRecord();
 
             record.setUUIDValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME, id);
-            record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey);
-            record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ALIAS_COLUMN_NAME, alias);
-            record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
-
-            table.insertRecord(record);
-
-            if (profileImage != null)
-                persistNewUserProfileImage(publicKey, profileImage);
-
-        } catch (CantInsertRecordException e) {
-            // Cant insert record.
-            throw new CantCreateNewDeveloperException(e.getMessage(), e, "Redeem Point Identity", "Cant create new Redeem Point, insert database problems.");
-
-        } catch (CantPersistPrivateKeyException e) {
-            // Cant insert record.
-            throw new CantCreateNewDeveloperException(e.getMessage(), e, "ARedeem Point Identity", "Cant create new Redeem Point, persist private key error.");
-
-        } catch (Exception e) {
-            // Failure unknown.
-
-            throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Identity", "Cant create new Redeem Point, unknown failure.");
-        }
-    }
-
-    /**
-     * first i persist private key on a file
-     * second i insert the record in database
-     * third i save the profile image file
-     *
-     * @param alias
-     * @param id
-     * @param privateKey
-     * @param deviceUser
-     * @param profileImage
-     * @throws CantCreateNewDeveloperException
-     */
-    public void createNewUser(String alias, UUID id,String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage,
-                              String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform) throws CantCreateNewDeveloperException {
-
-        try {
-            if (aliasExists(alias)) {
-                throw new CantCreateNewDeveloperException("Cant create new Redeem Point Identity, alias exists.");
-            }
-
-            persistNewUserPrivateKeysFile(publicKey, privateKey);
-
-            DatabaseTable table = this.database.getTable(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_TABLE_NAME);
-            DatabaseTableRecord record = table.getEmptyRecord();
-
-            record.setUUIDValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME, id);
+            record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ID_COLUMN_NAME, user.getTokenlyId());
             record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey);
             record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
-            record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ALIAS_COLUMN_NAME, alias);
-            record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_USER_NAME_COLUMN_NAME, externalUserName);
-            record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ACCESS_TOKEN_COLUMN_NAME, externalAccessToken);
+            record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_SECRET_KEY_COLUMN_NAME, user.getApiSecretKey());
+            record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PASSWORD_COLUMN_NAME, CryptoHasher.performSha256(password));
+            record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_USER_NAME_COLUMN_NAME, user.getUsername());
+            record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ACCESS_TOKEN_COLUMN_NAME, user.getApiToken());
+            record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EMAIL_COLUMN_NAME,user.getEmail());
             record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME, externalPlatform.getCode());
 
 
@@ -235,8 +189,7 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
-    public void updateIdentityFanUser(UUID id, String publickey, String alias, byte[] profileImage,
-                                      String externalUserName, String externalAccessToken, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+    public void updateIdentityFanUser(User user,String password,UUID id, String publickey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
         try {
             /**
              * 1) Get the table.
@@ -259,10 +212,12 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
             for (DatabaseTableRecord record : table.getRecords()) {
                 //set new values
                 record.setUUIDValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME, id);
+                record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ID_COLUMN_NAME, user.getTokenlyId());
                 record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publickey);
-                record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ALIAS_COLUMN_NAME, alias);
-                record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_USER_NAME_COLUMN_NAME, externalUserName);
-                record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ACCESS_TOKEN_COLUMN_NAME, externalAccessToken);
+                record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_SECRET_KEY_COLUMN_NAME, user.getApiSecretKey());
+                record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PASSWORD_COLUMN_NAME, CryptoHasher.performSha256(password));
+                record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_USER_NAME_COLUMN_NAME, user.getUsername());
+                record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ACCESS_TOKEN_COLUMN_NAME, user.getApiToken());
                 record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME, externalPlatform.getCode());
 
                 table.updateRecord(record);
@@ -280,7 +235,7 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
-    public List<Fan> getIdentityArtistsFromCurrentDeviceUser(DeviceUser deviceUser) throws CantListFanIdentitiesException {
+    public List<Fan> getIdentityFansFromCurrentDeviceUser(DeviceUser deviceUser) throws CantListFanIdentitiesException {
 
 
         // Setup method.
@@ -312,18 +267,21 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
             for (DatabaseTableRecord record : table.getRecords()) {
 
                 // Add records to list.
-                /*list.add(new IdentityAssetRedeemPointImpl(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ALIAS_COLUMN_NAME),
+                /*list.add(new IdentityAssetRedeemPointImpl(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_SECRET_KEY_COLUMN_NAME),
                         record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME),
                         getFanIdentityPrivateKey(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME)),
                         getFanProfileImagePrivateKey(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME)),
                         pluginFileSystem,
                         pluginId), );*/
-                list.add(new TokenlyFanIdentityImp(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ALIAS_COLUMN_NAME),
-                        record.getUUIDValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME),
+                list.add(new TokenlyFanIdentityImp(record.getUUIDValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ID_COLUMN_NAME),
                         record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_USER_NAME_COLUMN_NAME),
-                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ACCESS_TOKEN_COLUMN_NAME),
+                        getFanProfileImagePrivateKey(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_USER_NAME_COLUMN_NAME),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ACCESS_TOKEN_COLUMN_NAME),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_SECRET_KEY_COLUMN_NAME),
                         ExternalPlatform.getByCode(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME)),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EMAIL_COLUMN_NAME),
                         pluginFileSystem,
                         pluginId));
             }
@@ -370,17 +328,18 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
 
                 // Add records to list.
                 /*fan = new IdentityAssetRedeemPointImpl(
-                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ALIAS_COLUMN_NAME),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_SECRET_KEY_COLUMN_NAME),
                         record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME),
                         getFanProfileImagePrivateKey(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME)));*/
-                fan = new TokenlyFanIdentityImp(
-                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ALIAS_COLUMN_NAME),
-                        record.getUUIDValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME),
+                fan = new TokenlyFanIdentityImp(record.getUUIDValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ID_COLUMN_NAME),
                         record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        getFanProfileImagePrivateKey(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME)),
-                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_USER_NAME_COLUMN_NAME),
-                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ACCESS_TOKEN_COLUMN_NAME),
+                        getFanProfileImagePrivateKey(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_USER_NAME_COLUMN_NAME),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ACCESS_TOKEN_COLUMN_NAME),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_SECRET_KEY_COLUMN_NAME),
                         ExternalPlatform.getByCode(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME)),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EMAIL_COLUMN_NAME),
                         pluginFileSystem,
                         pluginId);
 
@@ -427,20 +386,20 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
 
                 // Add records to list.
                 /*fan = new IdentityAssetRedeemPointImpl(
-                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ALIAS_COLUMN_NAME),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_SECRET_KEY_COLUMN_NAME),
                         record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME),
                         getFanProfileImagePrivateKey(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME)));*/
-                fan = new TokenlyFanIdentityImp(
-                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ALIAS_COLUMN_NAME),
-                        record.getUUIDValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME),
+                fan =  new TokenlyFanIdentityImp(record.getUUIDValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ID_COLUMN_NAME),
                         record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
-                        getFanProfileImagePrivateKey(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME)),
-                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_USER_NAME_COLUMN_NAME),
-                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ACCESS_TOKEN_COLUMN_NAME),
+                        getFanProfileImagePrivateKey(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_USER_NAME_COLUMN_NAME),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ACCESS_TOKEN_COLUMN_NAME),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_SECRET_KEY_COLUMN_NAME),
                         ExternalPlatform.getByCode(record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME)),
+                        record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EMAIL_COLUMN_NAME),
                         pluginFileSystem,
                         pluginId);
-
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetFanIdentityException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_TABLE_NAME + " table in memory.");
@@ -547,7 +506,7 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
                 throw new CantGetUserDeveloperIdentitiesException("Cant check if alias exists");
             }
 
-            table.addStringFilter(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
+            table.addStringFilter(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_USER_NAME_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
             return table.getRecords().size() > 0;

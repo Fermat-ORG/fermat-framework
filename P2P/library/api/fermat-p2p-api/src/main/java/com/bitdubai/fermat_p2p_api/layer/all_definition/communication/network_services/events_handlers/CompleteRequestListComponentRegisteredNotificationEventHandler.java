@@ -12,7 +12,6 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteRequestListComponentRegisteredNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.interfaces.NetworkService;
 
 
 /**
@@ -24,7 +23,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_se
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CompleteRequestListComponentRegisteredNotificationEventHandler implements FermatEventHandler {
+public class CompleteRequestListComponentRegisteredNotificationEventHandler implements FermatEventHandler<CompleteRequestListComponentRegisteredNotificationEvent> {
 
     /**
      * Represent the networkService
@@ -36,8 +35,8 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler impl
      *
      * @param networkService
      */
-    public CompleteRequestListComponentRegisteredNotificationEventHandler(NetworkService networkService) {
-        this.networkService = (AbstractNetworkServiceBase) networkService;
+    public CompleteRequestListComponentRegisteredNotificationEventHandler(AbstractNetworkServiceBase networkService) {
+        this.networkService = networkService;
     }
 
 
@@ -46,9 +45,8 @@ public class CompleteRequestListComponentRegisteredNotificationEventHandler impl
      * @see FermatEventHandler#handleEvent(FermatEvent)
      */
     @Override
-    public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+    public void handleEvent(CompleteRequestListComponentRegisteredNotificationEvent completeRequestListComponentRegisteredNotificationEvent) throws FermatException {
         if (this.networkService.getStatus() == ServiceStatus.STARTED) {
-            CompleteRequestListComponentRegisteredNotificationEvent completeRequestListComponentRegisteredNotificationEvent = (CompleteRequestListComponentRegisteredNotificationEvent) fermatEvent;
             if(completeRequestListComponentRegisteredNotificationEvent.getNetworkServiceTypeApplicant() == networkService.getNetworkServiceProfile().getNetworkServiceType()) {
                 this.networkService.handleCompleteRequestListComponentRegisteredNotificationEvent(completeRequestListComponentRegisteredNotificationEvent);
             }

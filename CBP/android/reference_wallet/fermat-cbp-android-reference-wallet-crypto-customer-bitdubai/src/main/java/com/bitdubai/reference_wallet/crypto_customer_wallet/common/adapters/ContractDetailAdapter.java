@@ -61,6 +61,7 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
             case TYPE_BROKER:
                 ContractDetail brokerViewHolder= dataSet.get(position);
                 holder.setWalletModuleManager(this.walletManager);
+                holder.setSession(this.walletSession);
                 holder.setParentFragment(
                         (ContractDetailActivityFragment) this.walletSession.getData(
                                 "ContractDetailFragment"));
@@ -70,6 +71,7 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
             case TYPE_CUSTOMER:
                 ContractDetail customerHolder= dataSet.get(position);
                 holder.setWalletModuleManager(this.walletManager);
+                holder.setSession(this.walletSession);
                 holder.setParentFragment(
                         (ContractDetailActivityFragment) this.walletSession.getData(
                                 "ContractDetailFragment"));
