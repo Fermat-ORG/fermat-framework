@@ -58,7 +58,7 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
     @Override
     public void start() throws CantStartAgentException {
         isSupossedToBeRunning = true;
-        Thread agentThread = new Thread(new NetworkAgent());
+        Thread agentThread = new Thread(new NetworkAgent(this.dao));
         agentThread.start();
     }
 
@@ -77,7 +77,15 @@ public class BitcoinCryptoNetworkEventsAgent implements Agent {
         /**
          * DAO object to access the db
          */
-        BitcoinCryptoNetworkDatabaseDao dao;
+        final BitcoinCryptoNetworkDatabaseDao dao;
+
+        /**
+         * constructor
+         * @param bitcoinCryptoNetworkDatabaseDao
+         */
+        public NetworkAgent(BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao) {
+            this.dao = bitcoinCryptoNetworkDatabaseDao;
+        }
 
         @Override
         public void run() {
