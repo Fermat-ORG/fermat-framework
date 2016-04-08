@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_cht_api.layer.actor_network_service.utils;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -8,26 +10,29 @@ import java.util.UUID;
  */
 public class ChatConnectionInformation {
 
-    private final UUID   connectionId        ;
-    private final String senderPublicKey     ;
-    private final String senderAlias         ;
-    private final byte[] senderImage         ;
+    private final UUID connectionId;
+    private final String senderPublicKey;
+    private final Actors senderActorType;
+    private final String senderAlias;
+    private final byte[] senderImage;
     private final String destinationPublicKey;
-    private final long   sendingTime         ;
+    private final long sendingTime;
 
-    public ChatConnectionInformation(final UUID connectionId        ,
-                                             final String senderPublicKey     ,
-                                             final String senderAlias         ,
-                                             final byte[] senderImage         ,
-                                             final String destinationPublicKey,
-                                             final long   sendingTime         ) {
+    public ChatConnectionInformation(final UUID connectionId,
+                                     final String senderPublicKey,
+                                     final Actors senderActorType,
+                                     final String senderAlias,
+                                     final byte[] senderImage,
+                                     final String destinationPublicKey,
+                                     final long sendingTime) {
 
-        this.connectionId         = connectionId        ;
-        this.senderPublicKey      = senderPublicKey     ;
-        this.senderAlias          = senderAlias         ;
-        this.senderImage          = senderImage         ;
+        this.senderActorType = senderActorType;
+        this.connectionId = connectionId;
+        this.senderPublicKey = senderPublicKey;
+        this.senderAlias = senderAlias;
+        this.senderImage = senderImage;
         this.destinationPublicKey = destinationPublicKey;
-        this.sendingTime          = sendingTime         ;
+        this.sendingTime = sendingTime;
     }
 
     /**
@@ -35,6 +40,13 @@ public class ChatConnectionInformation {
      */
     public final String getSenderPublicKey() {
         return senderPublicKey;
+    }
+
+    /**
+     * @return an element of actors enum representing the actor type of the sender.
+     */
+    public final Actors getSenderActorType() {
+        return senderActorType;
     }
 
     /**
@@ -64,9 +76,10 @@ public class ChatConnectionInformation {
 
     @Override
     public String toString() {
-        return "CryptoBrokerConnectionInformation{" +
+        return "ChatConnectionInformation{" +
                 "connectionId=" + connectionId +
                 ", senderPublicKey='" + senderPublicKey + '\'' +
+                ", senderActorType=" + senderActorType +
                 ", senderAlias='" + senderAlias + '\'' +
                 ", senderImage=" + Arrays.toString(senderImage) +
                 ", destinationPublicKey='" + destinationPublicKey + '\'' +
