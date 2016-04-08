@@ -499,7 +499,8 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
 
         record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME, paymentType.getCode());
 
-        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME, CurrencyTypes.FIAT.getCode());
+//        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME, CurrencyTypes.FIAT.getCode());
+        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME, FiatCurrency.US_DOLLAR.getCode());
 
         //Sets the customerAlias
         record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CUSTOMER_ALIAS_COLUMN_NAME, customerAlias);
