@@ -41,22 +41,22 @@ import java.util.List;
  */
 public class FanActorConnectionPluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers {
 
-    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE, addon  = Addons.ERROR_MANAGER         )
+    @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM , layer = Layers.PLATFORM_SERVICE, addon  = Addons.ERROR_MANAGER )
     private ErrorManager errorManager;
 
-    @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE, addon  = Addons .EVENT_MANAGER         )
+    @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM , layer = Layers.PLATFORM_SERVICE, addon  = Addons .EVENT_MANAGER )
     private EventManager eventManager;
 
-    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM          , addon  = Addons .PLUGIN_FILE_SYSTEM    )
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM , addon  = Addons .PLUGIN_FILE_SYSTEM )
     protected PluginFileSystem pluginFileSystem        ;
 
-    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM          , addon  = Addons .PLUGIN_DATABASE_SYSTEM)
+    @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM , addon  = Addons .PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
     private Broadcaster broadcaster;
 
-    @NeededPluginReference(platform = Platforms.ART_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin =  Plugins.ARTIST_ACTOR_CONNECTION)
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin =  Plugins.ARTIST)
     private ArtistManager artistActorNetworkServiceManager;
 
     /**

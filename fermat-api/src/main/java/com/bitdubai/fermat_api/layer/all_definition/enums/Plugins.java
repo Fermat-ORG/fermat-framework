@@ -295,8 +295,11 @@ public enum Plugins implements FermatPluginsEnum {
     CHAT_MIDDLEWARE                     ("CHMID"),
     CHAT_NETWORK_SERVICE                ("CHTNS"),
     CHAT_SUP_APP_MODULE                 ("CHTSAM"),
+    CHAT_IDENTITY_SUP_APP_MODULE        ("CHTISAM"),
     CHAT_IDENTITY                       ("CHTIDE"),
-    CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT"),
+    CCP_OUTGOING_DRAFT_TRANSACTION      ("CCPODT"),
+    CHAT_ACTOR_CONNECTION               ("CHTAC"),
+    CHAT_ACTOR_NETWORK_SERVICE          ("CHTANS"),
 
     // ART
     ARTIST_ACTOR_CONNECTION             ("ARTAAC"),
@@ -305,6 +308,7 @@ public enum Plugins implements FermatPluginsEnum {
     FAN                                 ("FANS"),
     ACTOR_NETWORK_SERVICE_ARTIST        ("ANSART"),
     ARTIST_IDENTITY                     ("ARTIDNTY"),
+    FANATIC_IDENTITY                    ("FANIDNTY"),
     ART_ARTIST_SUB_APP_MODULE           ("AASAM"),
     ART_FAN_SUB_APP_MODULE              ("AFSAM"),
     MUSIC_PLAYER_SUB_APP_MODULE         ("ARTMPM"),

@@ -10,9 +10,11 @@ import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
+//import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
+//import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
+//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
@@ -65,9 +67,9 @@ import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.Network
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.ChatMiddlewarePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.database.ChatMiddlewareDatabaseDao;
 import com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
-import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
+//import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuer;
+//import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+//import com.bitdubai.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.ActorAssetRedeemPoint;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
@@ -313,6 +315,77 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
             throw new CantDeleteChatException(
                     FermatException.wrapException(exception),
                     "Deleting a chat from database",
+                    "Unexpected exception");
+        }
+    }
+
+    /**
+     * This method deletes all chats from database.
+     *
+     * @throws CantDeleteChatException
+     */
+    @Override
+    public void deleteChats() throws CantDeleteChatException {
+        try {
+            this.chatMiddlewareDatabaseDao.deleteChats();
+        } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantDeleteChatException(
+                    e,
+                    "Deleting all chats from database",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantDeleteChatException(
+                    FermatException.wrapException(exception),
+                    "Deleting all chats from database",
+                    "Unexpected exception");
+        }
+    }
+
+    /**
+     * This method deletes all messages of a chat from database.
+     *
+     * @param chatId
+     * @throws CantDeleteMessageException
+     */
+    @Override
+    public void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException {
+        try {
+            ObjectChecker.checkArgument(chatId, "The chat argument is null");
+            this.chatMiddlewareDatabaseDao.deleteMessagesByChatId(chatId);
+        } catch (ObjectNotSetException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantDeleteMessageException(
+                    e,
+                    "Deleting messages from database",
+                    "The chat id probably is null");
+        } catch (DatabaseOperationException e) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantDeleteMessageException(
+                    e,
+                    "Deleting messages from database",
+                    "An unexpected error happened in a database operation");
+        } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    Plugins.CHAT_MIDDLEWARE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    FermatException.wrapException(exception));
+            throw new CantDeleteMessageException(
+                    FermatException.wrapException(exception),
+                    "Deleting messages from database",
                     "Unexpected exception");
         }
     }
@@ -696,183 +769,6 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
     }
 
-    @Override
-    public List<Contact> getContacts() throws CantGetContactException {
-        DatabaseTableFilter filter = null;
-        try {
-            return this.chatMiddlewareDatabaseDao.getContacts(filter);
-        } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantGetContactException(
-                    e,
-                    "Getting the full contact list",
-                    "An unexpected error happened in a database operation");
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantGetContactException(
-                    FermatException.wrapException(exception),
-                    "Getting the full contact list",
-                    "Unexpected exception");
-        }
-    }
-
-    @Override
-    public Contact getContactByContactId(UUID contactId) throws CantGetContactException {
-        try {
-            ObjectChecker.checkArgument(contactId, "The contact id argument is null");
-            return this.chatMiddlewareDatabaseDao.getContactByContactId(contactId);
-        } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantGetContactException(
-                    e,
-                    "Getting a message from database",
-                    "The contact id is probably null");
-        } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantGetContactException(
-                    e,
-                    "Getting a message from database",
-                    "An unexpected error happened in a database operation");
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantGetContactException(
-                    FermatException.wrapException(exception),
-                    "Getting a message from database",
-                    "Unexpected exception");
-        }
-    }
-
-    @Override
-    public Contact newEmptyInstanceContact() throws CantNewEmptyContactException {
-        try {
-            return this.chatMiddlewareDatabaseDao.newEmptyInstanceContact();
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantNewEmptyContactException(
-                    FermatException.wrapException(exception),
-                    "Getting a new empty instance contact",
-                    "Unexpected exception");
-        }
-    }
-
-    @Override
-    public void saveContact(Contact contact) throws CantSaveContactException {
-        try {
-            ObjectChecker.checkArgument(contact, "The contact argument is null");
-            this.chatMiddlewareDatabaseDao.saveContact(contact);
-        } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantSaveContactException(
-                    e,
-                    "Saving a contact in database",
-                    "The message is probably null");
-        } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantSaveContactException(
-                    e,
-                    "Saving a contact in database",
-                    "An unexpected error happened in a database operation");
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantSaveContactException(
-                    FermatException.wrapException(exception),
-                    "Getting a new empty instance contact",
-                    "Unexpected exception");
-        }
-    }
-
-    @Override
-    public void deleteContact(Contact contact) throws CantDeleteContactException {
-        try {
-            ObjectChecker.checkArgument(contact, "The contact argument is null");
-            this.chatMiddlewareDatabaseDao.deleteContact(contact);
-        } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantDeleteContactException(
-                    e,
-                    "Deleting a message from database",
-                    "The message is probably null");
-        } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantDeleteContactException(
-                    e,
-                    "Deleting a message from database",
-                    "An unexpected error happened in a database operation");
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantDeleteContactException(
-                    FermatException.wrapException(exception),
-                    "Deleting a message from database",
-                    "Unexpected exception");
-        }
-    }
-
-    /**
-     * This method returns the active registered actors to contact list.
-     *
-     * @return
-     * @throws CantGetContactException
-     */
-    @Override
-    public List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException {
-        try {
-            List<ContactConnection> contactList;
-            contactList=this.chatMiddlewareContactFactory.discoverDeviceActors();
-            if(!contactList.isEmpty()){
-                for(ContactConnection contact : contactList){
-                    saveContactConnection(contact);
-                }
-            }
-            return contactList;
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantGetContactConnectionException(
-                    FermatException.wrapException(exception),
-                    "Getting the actors registered",
-                    "Unexpected exception");
-        }
-
-    }
-
     /**
      * This method will notify PIP to launch a new notification to user
      *
@@ -945,272 +841,6 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
 
     }
 
-    /**
-     * This method return a HashMap with the possible self identities.
-     * The HashMap contains a Key-value like PlatformComponentType-ActorPublicKey.
-     * If there no identities created in any platform, this hashMaps contains the public chat Network
-     * Service.
-     *
-     * @return
-     */
-    @Override
-    public HashMap<PlatformComponentType, Object> getSelfIdentities()
-            throws CantGetOwnIdentitiesException {
-        try {
-            HashMap<PlatformComponentType, Object> selfIdentitiesMap =
-                    this.chatMiddlewareContactFactory.getSelfIdentities();
-            selfIdentitiesMap = checkSelfIdentitiesMap(selfIdentitiesMap);
-            return selfIdentitiesMap;
-        } catch (CantGetNetworkServicePublicKeyException exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantGetOwnIdentitiesException(
-                    FermatException.wrapException(exception),
-                    "Checking own identities",
-                    "Unexpected Exception getting network service public key");
-        }
-    }
-
-    /**
-     * This method returns the contact id by local public key.
-     *
-     * @param localPublicKey
-     * @return
-     * @throws CantGetContactException
-     */
-    @Override
-    public Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException {
-        Contact contact = null;
-        try {
-            contact = chatMiddlewareDatabaseDao.getContactByLocalPublicKey(localPublicKey);
-        } catch (DatabaseOperationException e) {
-            e.printStackTrace();
-        }
-        return contact;
-    }
-
-    @Override
-    public void saveChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantSaveChatUserIdentityException {
-        try {
-            DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
-            KeyPair keyPair = AsymmetricCryptography.generateECCKeyPair();
-            chatMiddlewareDatabaseDao.saveCharUserIdentity(chatUserIdentity, keyPair.getPublicKey(), loggedUser);
-        } catch (DatabaseOperationException e) {
-            e.printStackTrace();
-        } catch (CantGetLoggedInDeviceUserException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void deleteChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantDeleteChatUserIdentityException {
-        chatMiddlewareDatabaseDao.deleteChatUserIdentity(chatUserIdentity);
-    }
-
-    @Override
-    public List<ChatUserIdentity> getChatUserIdentities() throws CantGetChatUserIdentityException {
-        try {
-            return chatMiddlewareDatabaseDao.getChatUserIdentities(null);
-        } catch (DatabaseOperationException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException {
-        return chatMiddlewareDatabaseDao.getChatUserIdentity(publicKey);
-    }
-
-    @Override
-    public void saveContactConnection(ContactConnection contactConnection) throws CantSaveContactConnectionException {
-
-        try {
-            ObjectChecker.checkArgument(contactConnection, "The contact argument is null");
-            this.chatMiddlewareDatabaseDao.saveContactConnection(contactConnection);
-        } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantSaveContactConnectionException(
-                    e,
-                    "Saving a contact in database",
-                    "The message is probably null");
-        } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantSaveContactConnectionException(
-                    e,
-                    "Saving a contact in database",
-                    "An unexpected error happened in a database operation");
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantSaveContactConnectionException(
-                    FermatException.wrapException(exception),
-                    "Getting a new empty instance contact",
-                    "Unexpected exception");
-        }
-    }
-
-    @Override
-    public void deleteContactConnection(ContactConnection contactConnection) throws CantDeleteContactConnectionException {
-        try {
-            ObjectChecker.checkArgument(contactConnection, "The contact argument is null");
-            this.chatMiddlewareDatabaseDao.deleteContactConnection(contactConnection);
-        } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantDeleteContactConnectionException(
-                    e,
-                    "Deleting a message from database",
-                    "The message is probably null");
-        } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantDeleteContactConnectionException(
-                    e,
-                    "Deleting a message from database",
-                    "An unexpected error happened in a database operation");
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantDeleteContactConnectionException(
-                    FermatException.wrapException(exception),
-                    "Deleting a message from database",
-                    "Unexpected exception");
-        }
-    }
-
-    @Override
-    public List<ContactConnection> getContactConnections() throws CantGetContactConnectionException {
-        DatabaseTableFilter filter = null;
-        try {
-            return this.chatMiddlewareDatabaseDao.getContactConnections(filter);
-        } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantGetContactConnectionException(
-                    e,
-                    "Getting the full contact list",
-                    "An unexpected error happened in a database operation");
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantGetContactConnectionException(
-                    FermatException.wrapException(exception),
-                    "Getting the full contact list",
-                    "Unexpected exception");
-        }
-    }
-
-    @Override
-    public ContactConnection getContactConnection(UUID contactId) throws CantGetContactConnectionException {
-        try {
-            ObjectChecker.checkArgument(contactId, "The contact id argument is null");
-            return this.chatMiddlewareDatabaseDao.getContactConnectionByContactId(contactId);
-        } catch (ObjectNotSetException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantGetContactConnectionException(
-                    e,
-                    "Getting a message from database",
-                    "The contact id is probably null");
-        } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    e);
-            throw new CantGetContactConnectionException(
-                    e,
-                    "Getting a message from database",
-                    "An unexpected error happened in a database operation");
-        } catch (Exception exception) {
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_MIDDLEWARE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
-                    FermatException.wrapException(exception));
-            throw new CantGetContactConnectionException(
-                    FermatException.wrapException(exception),
-                    "Getting a message from database",
-                    "Unexpected exception");
-        }
-    }
-
-    @Override
-    public void createSelfIdentities() throws CantCreateSelfIdentityException {
-        try {
-            HashMap<PlatformComponentType, Object> selfIdentitiesMap =
-                    this.chatMiddlewareContactFactory.getSelfIdentities();
-            selfIdentitiesMap = checkSelfIdentitiesMap(selfIdentitiesMap);
-
-            //List<ContactConnection> actorConnections = this.chatMiddlewareContactFactory.discoverDeviceActors();
-
-            Iterator it = selfIdentitiesMap.keySet().iterator();
-            while (it.hasNext()) {
-                PlatformComponentType key = (PlatformComponentType) it.next();
-
-                if (PlatformComponentType.ACTOR_ASSET_USER.getCode() == key.getCode()) {
-                    ActorAssetUser actorAssetUser = (ActorAssetUser) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetUser.getName(), null, actorAssetUser.getActorPublicKey(), null, actorAssetUser.getProfileImage(), actorAssetUser.getType(), PlatformComponentType.ACTOR_ASSET_USER);
-                    saveChatUserIdentity(chatUserIdentity);
-                }
-                if (PlatformComponentType.ACTOR_ASSET_ISSUER.getCode() == key.getCode()) {
-                    ActorAssetIssuer actorAssetIssuer = (ActorAssetIssuer) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetIssuer.getName(), null, actorAssetIssuer.getActorPublicKey(), null, actorAssetIssuer.getProfileImage(), actorAssetIssuer.getType(), PlatformComponentType.ACTOR_ASSET_ISSUER);
-                    saveChatUserIdentity(chatUserIdentity);
-                }
-                if (PlatformComponentType.ACTOR_ASSET_REDEEM_POINT.getCode() == key.getCode()) {
-                    ActorAssetRedeemPoint actorAssetRedeemPoint = (ActorAssetRedeemPoint) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(actorAssetRedeemPoint.getName(), null, actorAssetRedeemPoint.getActorPublicKey(), null, actorAssetRedeemPoint.getProfileImage(), actorAssetRedeemPoint.getType(), PlatformComponentType.ACTOR_ASSET_REDEEM_POINT);
-                    saveChatUserIdentity(chatUserIdentity);
-                }
-                if (PlatformComponentType.ACTOR_INTRA_USER.getCode() == key.getCode()) {
-                    IntraUserLoginIdentity intraUserLoginIdentity = (IntraUserLoginIdentity) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(intraUserLoginIdentity.getAlias(), null, intraUserLoginIdentity.getPublicKey(), null, intraUserLoginIdentity.getProfileImage(), Actors.INTRA_USER, PlatformComponentType.ACTOR_INTRA_USER);
-                    saveChatUserIdentity(chatUserIdentity);
-                }
-                if (PlatformComponentType.ACTOR_CRYPTO_BROKER.getCode() == key.getCode()) {
-                    CryptoBrokerIdentity brokerIdentity = (CryptoBrokerIdentity) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(brokerIdentity.getAlias(), null, brokerIdentity.getPublicKey(), null, brokerIdentity.getProfileImage(), Actors.CBP_CRYPTO_BROKER, PlatformComponentType.ACTOR_CRYPTO_BROKER);
-                    saveChatUserIdentity(chatUserIdentity);
-                }
-                if (PlatformComponentType.ACTOR_CRYPTO_CUSTOMER.getCode() == key.getCode()) {
-                    CryptoCustomerIdentity broCustomerIdentity = (CryptoCustomerIdentity) selfIdentitiesMap.get(key);
-                    ChatUserIdentityImpl chatUserIdentity = new ChatUserIdentityImpl(broCustomerIdentity.getAlias(), null, broCustomerIdentity.getPublicKey(), null, broCustomerIdentity.getProfileImage(), Actors.CBP_CRYPTO_CUSTOMER, PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
-                    saveChatUserIdentity(chatUserIdentity);
-                }
-            }
-
-        } catch (CantGetOwnIdentitiesException e) {
-            e.printStackTrace();
-        } catch (CantGetNetworkServicePublicKeyException e) {
-            e.printStackTrace();
-//        } catch (CantGetContactException e) {
-//            e.printStackTrace();
-        } catch (CantSaveChatUserIdentityException e) {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * This method sends the message through the Chat Network Service
@@ -1278,38 +908,26 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
     }
 
     @Override
-    public void saveGroup(Group group) throws CantSaveGroupException {
-
-    }
-
-    @Override
-    public void deleteGroup(Group group) throws CantDeleteGroupException {
-
-    }
-
-    @Override
-    public List<Group> getGroups() throws CantListGroupException {
-        return null;
-    }
-
-    @Override
-    public Group getGroup(UUID groupId) throws CantGetGroupException {
-        return null;
-    }
-
-    @Override
     public void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException {
-
+        try {
+            chatMiddlewareDatabaseDao.saveGroupMember(groupMember);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException {
-
+        try {
+            chatMiddlewareDatabaseDao.deleteGroupMember(groupMember);
+        } catch (DatabaseOperationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public List<GroupMember> getGroupMembersByGroupId(UUID groupId) throws CantListGroupMemberException {
-        return null;
+        return chatMiddlewareDatabaseDao.getGroupsMemberByGroupId(groupId);
     }
 
     /**
