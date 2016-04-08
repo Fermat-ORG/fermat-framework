@@ -117,7 +117,8 @@ public class TokenlyWalletSongVault {
             downloadFile(
                     downloadUrl,
                     songName,
-                    songId);
+                    songId,
+                    song);
             return DIRECTORY_NAME+"/"+songName.replace(" ","_");
         } catch (CantDownloadFileException e) {
             throw new CantDownloadSongException(
@@ -163,10 +164,11 @@ public class TokenlyWalletSongVault {
      * @param downloadUrl
      * @param fileName
      * @param songId
+     * @param song
      * @throws CantDownloadFileException
      * @throws CancelDownloadException
      */
-    public void downloadFile(String downloadUrl, String fileName, UUID songId) throws
+    public void downloadFile(String downloadUrl, String fileName, UUID songId, Song song) throws
             CantDownloadFileException,
             CancelDownloadException {
         try{
@@ -213,6 +215,7 @@ public class TokenlyWalletSongVault {
                     fermatBundle.put(BroadcasterNotificationType.DOWNLOAD_PERCENTAGE.getCode(),
                             downloadPercentage+"%");
                     fermatBundle.put(BroadcasterNotificationType.SONG_ID.getCode(), songId);
+                    fermatBundle.put(BroadcasterNotificationType.SONG_INFO.getCode(), song);
                     broadcaster.publish(
                             BroadcasterType.UPDATE_VIEW,
                             WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
@@ -243,6 +246,8 @@ public class TokenlyWalletSongVault {
             //Notify that the process is finished
             fermatBundle = new FermatBundle();
             fermatBundle.put(BroadcasterNotificationType.DOWNLOAD_PERCENTAGE.getCode(), "100%");
+            fermatBundle.put(BroadcasterNotificationType.SONG_ID.getCode(), songId);
+            fermatBundle.put(BroadcasterNotificationType.SONG_INFO.getCode(), song);
             broadcaster.publish(
                     BroadcasterType.UPDATE_VIEW,
                     WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
