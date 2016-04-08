@@ -42,7 +42,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoB
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletProviderSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerSaleConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.database.UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.user_level_business_transaction.customer_broker_sale.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
@@ -268,11 +267,11 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
         DatabaseTableFilter filterTable = getFilterTable(TransactionStatus.IN_PROCESS.getCode(), transactionStatusColumnName);
         customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
 
+        //Registra el Open Contract siempre y cuando el Transaction_Status de la Transaction Customer Broker Sale este IN_PROCESS
         for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.
                     getNegotiationsByNegotiationId(UUID.fromString(customerBrokerSale.getTransactionId()));
 
-            //Registra el Open Contract siempre y cuando el Transaction_Status de la Transaction Customer Broker Sale este IN_PROCESS
             //Find the negotiation's customerCurrency, to find the marketExchangeRate of that currency vs. USD
             String customerCurrency = "";
             for (Clause clause : customerBrokerSaleNegotiation.getClauses())
@@ -613,9 +612,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      * @throws ParseException
      */
     private void changeTransactionStatusFromInContractSubmitToInPaymentSubmitAndApplyCredit(String transactionStatusColumnName, String brokerWalletPublicKey) throws FermatException, ParseException {
-        final CryptoBrokerWalletSetting walletSettings = cryptoBrokerWalletManager.loadCryptoBrokerWallet("walletPublicKeyTest").getCryptoWalletSetting();
-        final CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread = walletSettings.getCryptoBrokerWalletSpreadSetting();
-
         final DatabaseTableFilter filterTable = getFilterTable(TransactionStatus.IN_CONTRACT_SUBMIT.getCode(), transactionStatusColumnName);
         final List<CustomerBrokerSale> customerBrokerSales = userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(filterTable);
         final Collection<CustomerBrokerContractSale> contractSalesPaymentSubmit = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PAYMENT_SUBMIT);
@@ -626,13 +622,10 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                 final String negotiationId = customerBrokerContractSale.getNegotiatiotId();
 
                 if (transactionId.equals(negotiationId)) {
-                    // Si se detecta la realización de un pago se procede actulizar el estatus de la transacción
-                    // y a monitorear la llegada de la mercadería.
-                    // Se verifica si el broker configuró procesar Restock de manera automática
+                    /* Si se detecta la realización de un pago se procede actulizar el estatus de la transacción y a monitorear
+                    la llegada de la mercadería. Se verifica si el broker configuró procesar Restock de manera automática. */
 
-                    if (cryptoBrokerWalletSettingSpread.getRestockAutomatic()) {
-                        applySaleCredit(brokerWalletPublicKey, customerBrokerContractSale, negotiationId);
-                    }
+                    applySalePaymentCredit(brokerWalletPublicKey, customerBrokerContractSale, negotiationId);
 
                     customerBrokerSale.setTransactionStatus(TransactionStatus.IN_PAYMENT_SUBMIT);
                     userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.saveCustomerBrokerSaleTransactionData(customerBrokerSale);
@@ -646,7 +639,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
     }
 
     /**
-     * Apply a sale credit to the broker wallet balance and the crypto, bank o cash wallet
+     * Apply a sale credit coming from a payment to the broker wallet and the crypto, bank o cash wallet
      *
      * @param brokerWalletPublicKey the broker wallet public key
      * @param contractSale          the sale contract information
@@ -655,7 +648,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
      * @throws FermatException
      * @throws ParseException
      */
-    private void applySaleCredit(String brokerWalletPublicKey, CustomerBrokerContractSale contractSale, String negotiationId) throws FermatException, ParseException {
+    private void applySalePaymentCredit(String brokerWalletPublicKey, CustomerBrokerContractSale contractSale, String negotiationId) throws FermatException, ParseException {
 
         final NumberFormat numberFormat = NumberFormat.getInstance();
         final CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.
@@ -698,7 +691,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             case BANK:
                 bankMoneyRestockManager.createTransactionRestock(
                         contractSale.getPublicKeyBroker(),
-                        FiatCurrency.getByCode(clauseValue),
+                        FiatCurrency.getByCode(currencyCode),
                         brokerWalletPublicKey,
                         "banking_wallet", // TODO: obtenerlo de installed wallets
                         bankAccount,
@@ -711,7 +704,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             case CASH_ON_HAND:
                 cashMoneyRestockManager.createTransactionRestock(
                         contractSale.getPublicKeyBroker(),
-                        FiatCurrency.getByCode(clauseValue),
+                        FiatCurrency.getByCode(currencyCode),
                         brokerWalletPublicKey,
                         "cash_wallet",  // TODO: obtenerlo de installed wallets
                         "cashReference",
@@ -724,7 +717,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
             case CASH_DELIVERY:
                 cashMoneyRestockManager.createTransactionRestock(
                         contractSale.getPublicKeyBroker(),
-                        FiatCurrency.getByCode(clauseValue),
+                        FiatCurrency.getByCode(currencyCode),
                         brokerWalletPublicKey,
                         "cash_wallet",  // TODO: obtenerlo de installed wallets
                         "cashReference",
