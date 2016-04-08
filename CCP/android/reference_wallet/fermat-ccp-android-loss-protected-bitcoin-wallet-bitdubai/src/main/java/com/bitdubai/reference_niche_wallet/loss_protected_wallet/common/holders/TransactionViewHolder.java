@@ -8,7 +8,7 @@ import android.widget.TextView;
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ChildViewHolder;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionState;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 
@@ -16,7 +16,7 @@ import java.text.SimpleDateFormat;
 import java.util.Locale;
 
 /**
- * Created by Matias Furszyfer on 28/10/15.
+ * Created by Natalia Cortez on 28/10/15.
  */
 public class TransactionViewHolder extends ChildViewHolder {
 
@@ -47,7 +47,7 @@ public class TransactionViewHolder extends ChildViewHolder {
         txt_time = (TextView) itemView.findViewById(R.id.txt_time);
     }
 
-    public void bind(CryptoWalletTransaction cryptoWalletTransaction) {
+    public void bind(LossProtectedWalletTransaction cryptoWalletTransaction) {
 
         if (cryptoWalletTransaction.getActorFromPublicKey() != null){
             txt_amount.setText(WalletUtils.formatBalanceString(cryptoWalletTransaction.getAmount(), ShowMoneyType.BITCOIN.getCode()) + " BTC");

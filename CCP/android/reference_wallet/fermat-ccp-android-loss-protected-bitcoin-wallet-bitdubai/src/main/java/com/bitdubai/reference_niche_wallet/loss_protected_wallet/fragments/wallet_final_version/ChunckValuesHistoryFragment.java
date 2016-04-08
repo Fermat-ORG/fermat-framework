@@ -273,8 +273,6 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
     @Override
     public List<LossProtectedWalletTransaction> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoLossProtectedWalletException, CantListLossProtectedTransactionsException {
-        List<LossProtectedWalletTransaction> lstWalletTransaction  = new ArrayList<LossProtectedWalletTransaction>();
-
         try {
 
 
@@ -288,6 +286,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             //when refresh offset set 0
             if (refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
+
             lstTransaction = cryptoWallet.listLastActorTransactionsByTransactionType(
                     BalanceType.AVAILABLE,
                     TransactionType.DEBIT,

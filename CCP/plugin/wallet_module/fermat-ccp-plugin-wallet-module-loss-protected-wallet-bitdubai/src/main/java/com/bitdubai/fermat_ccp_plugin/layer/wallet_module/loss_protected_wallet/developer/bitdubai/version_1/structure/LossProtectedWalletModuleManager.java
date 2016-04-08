@@ -1032,11 +1032,11 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                         }
                         @Override
                         public long getRunningBookBalance() {
-                            return 0;
+                            return 11;
                         }
                         @Override
                         public long getRunningAvailableBalance() {
-                            return 0;
+                            return 25;
                         }
                         @Override
                         public String getMemo() {
@@ -1060,10 +1060,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
                     cryptoWalletTransactionList.add(lstObjet);
                 }
-            }
 
-            if(cryptoWalletTransactionList.size() == 0)
-            {
                 Actor actor = new Actor() {
                     @Override
                     public String getActorPublicKey() {
@@ -1160,12 +1157,12 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
                     @Override
                     public long getRunningBookBalance() {
-                        return 0;
+                        return 10;
                     }
 
                     @Override
                     public long getRunningAvailableBalance() {
-                        return 0;
+                        return 12;
                     }
 
                     @Override
