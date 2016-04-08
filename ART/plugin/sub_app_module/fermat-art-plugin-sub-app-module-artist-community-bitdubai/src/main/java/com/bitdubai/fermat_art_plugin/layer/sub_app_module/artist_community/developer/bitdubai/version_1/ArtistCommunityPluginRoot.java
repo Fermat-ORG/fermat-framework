@@ -24,7 +24,7 @@ public class ArtistCommunityPluginRoot extends AbstractPlugin {
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededPluginReference(platform = Platforms.ART_PLATFORM, layer = Layers.IDENTITY,plugin = Plugins.ARTIST_ACTOR_CONNECTION)
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM, layer = Layers.ACTOR_CONNECTION,plugin = Plugins.ARTIST_ACTOR_CONNECTION)
     private ArtistActorConnectionManager artistCommunityModuleManager;
 
     private ArtistCommunityManager artistCommunityManager;

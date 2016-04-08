@@ -15,9 +15,11 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -91,7 +93,11 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment<CryptoC
         priceValue.setText(String.format("%1$s %2$s/%3$s", price, contractBasicInfo.getMerchandise(), contractBasicInfo.getPaymentCurrency()));
 
         FermatTextView paymentMethod = (FermatTextView) rootView.findViewById(R.id.ccw_contract_details_payment_method);
-        paymentMethod.setText(contractBasicInfo.getTypeOfPayment());
+        String typeOfPaymentStr = "";
+        try{
+            typeOfPaymentStr = MoneyType.getByCode(contractBasicInfo.getTypeOfPayment()).getFriendlyName();
+        }catch (InvalidParameterException e) {}
+        paymentMethod.setText(typeOfPaymentStr);
 
         LinearLayout cancellationReasonContainer = (LinearLayout) rootView.findViewById(R.id.ccw_cancellation_reason_container);
         if (status.equals(ContractStatus.CANCELLED)) {

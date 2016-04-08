@@ -44,30 +44,24 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ccw_add_your_bank_accounts"
-            android:textColor="@color/ccw_wizard_color"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/ccw_wizard_color"/>
-
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
             android:id="@+id/ccw_add_bank_account_button"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_marginTop="8dp"
-            android:background="@color/ccw_wizard_color"
+            android:background="#E5007E"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:text="@string/ccw_add_bank_account"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textAllCaps="false"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="#aeaeae"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -103,7 +97,7 @@
         android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
-        android:background="@color/ccw_wizard_color"
+        android:background="#E5007E"
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"
@@ -123,7 +117,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/ccw_arrow_right_selected"
+            android:src="@drawable/flecha"
             tools:ignore="contentDescription"
             android:visibility="gone"/>
     </LinearLayout>
