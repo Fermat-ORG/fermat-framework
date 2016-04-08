@@ -167,11 +167,11 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             empty = (LinearLayout) rootView.findViewById(R.id.empty);
             //setUp();
             setUpHeader(inflater);
-            return rootView;
+
         }catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
-        return container;
+        return rootView;
     }
 
     private void  setUpHeader(LayoutInflater inflater) {
@@ -191,12 +191,14 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
             chunck_header_container = (LinearLayout) chunk_balance_header.findViewById(R.id.chunck_header_container);
 
-            final String runningBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(), blockchainNetworkType), ShowMoneyType.BITCOIN.getCode());
+            final String realBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getRealBalance(referenceWalletSession.getAppPublicKey(), blockchainNetworkType), ShowMoneyType.BITCOIN.getCode());
+
             final double actualExchangeRate = referenceWalletSession.getActualExchangeRate();
+
             chunk_balance_TextView = (TextView) chunk_balance_header.findViewById(R.id.txt_amount);
             exchange_rate = (TextView) chunk_balance_header.findViewById(R.id.txt_exchange_rate);
 
-            chunk_balance_TextView.setText(runningBalance);
+            chunk_balance_TextView.setText(realBalance);
             exchange_rate.setText("Exchange Rate: 1 BTC = "+actualExchangeRate);
 
         } catch (CantGetLossProtectedBalanceException e) {
