@@ -266,16 +266,26 @@ public class DesktopDatabaseTable implements  DatabaseTable{
 
     }
 
+    @Override
+    public long getCount() throws CantLoadTableToMemoryException {
+
+        try {
+
+            ResultSet rs = this.database.rawQuery("SELECT COUNT(*) as COUNT FROM " + tableName + makeFilter(), null);
+
+            rs.next();
+
+            return rs.getLong("COUNT");
+
+        } catch (Exception e) {
+            throw new CantLoadTableToMemoryException();
+        }
+    }
 
     @Override
     public void loadToMemory() throws CantLoadTableToMemoryException {
 
-
-
-
-
         this.records = new ArrayList<DatabaseTableRecord>() ;
-
 
         String topSentence = "";
         try {
@@ -306,8 +316,6 @@ public class DesktopDatabaseTable implements  DatabaseTable{
         } catch (Exception e) {
             throw new CantLoadTableToMemoryException();
         }
-
-
 
     }
 
