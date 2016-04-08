@@ -1,5 +1,7 @@
 package com.bitdubai.android_core.app.common.version_1.communication.client_system_broker;
 
+import android.util.Log;
+
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.ModuleManagerNotFoundException;
@@ -16,6 +18,8 @@ import java.util.Map;
  * Created by mati on 2016.03.31..
  */
 public class ProxyFactory {
+
+    private static final String TAG = "ProxyFactory";
 
     private Map<PluginVersionReference,ModuleManager> openModules;
 
@@ -39,6 +43,10 @@ public class ProxyFactory {
             }
         }else{
             moduleManager = openModules.get(pluginVersionReference);
+        }
+        Log.i(TAG,"interfaces: ");
+        for (Class<?> aClass : moduleManager.getClass().getInterfaces()) {
+            Log.i(TAG,aClass.getName());
         }
         return moduleManager;
     }

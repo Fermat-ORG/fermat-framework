@@ -83,6 +83,7 @@ public class ClientSystemBrokerService extends Service {
         }
     }
 
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -90,20 +91,19 @@ public class ClientSystemBrokerService extends Service {
     }
 
 
-    protected Object sendMessage(String keyToResponse,Object module,Method method,Serializable[] params)  throws FermatServiceNotConnectedException {
+    protected Object sendMessage(String keyToResponse,Object module,Method method,Object params)  throws FermatServiceNotConnectedException {
         try {
-            if(mServiceMcu!=null) {
+            if(mServiceMcu!=null || mIsBound) {
                 Message msg = Message.obtain(null,
                         CommunicationMessages.MSG_REQUEST_DATA_MESSAGE);
                 msg.replyTo = mMessenger;
                 Bundle bundle = new Bundle();
                 bundle.putString(CommunicationDataKeys.DATA_PUBLIC_KEY, KEY);
                 UUID requestId = UUID.randomUUID();
-                object = requestId;
                 bundle.putString(CommunicationDataKeys.DATA_REQUEST_ID, requestId.toString());
                 bundle.putSerializable(CommunicationDataKeys.DATA_PLUGIN_VERSION_REFERENCE, ((ProxyInvocationHandler) Proxy.getInvocationHandler(module)).getPluginVersionReference());
                 bundle.putString(CommunicationDataKeys.DATA_METHOD_TO_EXECUTE, method.getName());
-                bundle.putSerializable(CommunicationDataKeys.DATA_PARAMS_TO_EXECUTE_METHOD, params);
+                bundle.putSerializable(CommunicationDataKeys.DATA_PARAMS_TO_EXECUTE_METHOD, (Serializable) params);
                 bundle.putString(CommunicationDataKeys.DATA_KEY_TO_RESPONSE, keyToResponse);
                 msg.setData(bundle);
                 Log.i(TAG,"Sending request");
@@ -194,6 +194,8 @@ public class ClientSystemBrokerService extends Service {
             mServiceMcu = new Messenger(service);
             Log.d(TAG, "Attached.");
 
+            mIsBound = true;
+
             // We want to monitor the service for as long as we are
             // connected to it.
             try {
@@ -210,7 +212,7 @@ public class ClientSystemBrokerService extends Service {
                 // do anything with it; we can count on soon being
                 // disconnected (and then reconnected if it can be restarted)
                 // so there is no need to do anything here.
-                Log.e(TAG, "FermatService is not running");
+                Log.e(TAG, "CommService is not running");
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -220,7 +222,8 @@ public class ClientSystemBrokerService extends Service {
             // This is called when the connection with the service has been
             // unexpectedly disconnected -- that is, its process crashed.
             mServiceMcu = null;
-            mBound = false;
+            mIsBound = false;
+            Log.e(TAG, "CommService disconnected");
 
 
         }
@@ -244,7 +247,7 @@ public class ClientSystemBrokerService extends Service {
         } catch (Exception e){
             e.printStackTrace();
         }
-        mIsBound = true;
+        //mIsBound = true;
         Log.d(TAG, "Binding.");
     }
 
@@ -269,8 +272,6 @@ public class ClientSystemBrokerService extends Service {
             Log.d(TAG, "Unbinding.");
         }
     }
-
-    UUID object;
 
     /**
      *  Proxy methods

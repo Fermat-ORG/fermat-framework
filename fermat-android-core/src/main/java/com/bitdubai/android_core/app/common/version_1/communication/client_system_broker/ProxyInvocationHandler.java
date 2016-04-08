@@ -5,7 +5,6 @@ import android.util.Log;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
@@ -30,14 +29,14 @@ public class ProxyInvocationHandler<T extends ModuleManager> implements Invocati
     public Object invoke(Object proxy, Method method, Object[] args)
             throws Throwable {
 
-        Log.i(TAG,"object: "+ proxy.getClass().getName());
+        Log.i(TAG,"object: "+ proxy.getClass().getInterfaces());
         Log.i(TAG,"method: "+ method.getName());
         Log.i(TAG, "args: " + args);
 
         return clientSystemBrokerService.sendMessage(responseStr,
                proxy,
                method,
-               (Serializable[]) args);
+               args);
 
     }
 
