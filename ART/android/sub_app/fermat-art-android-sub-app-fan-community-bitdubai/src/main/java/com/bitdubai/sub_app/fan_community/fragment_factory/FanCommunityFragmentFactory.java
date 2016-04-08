@@ -5,6 +5,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.sub_app.fan_community.fragments.ConnectionNotificationsFragment;
+import com.bitdubai.sub_app.fan_community.fragments.ConnectionOtherProfileFragment;
+import com.bitdubai.sub_app.fan_community.fragments.ConnectionsListFragment;
+import com.bitdubai.sub_app.fan_community.fragments.ConnectionsWorldFragment;
 import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
 
 /**
@@ -24,7 +28,7 @@ public class FanCommunityFragmentFactory extends
 
         switch (fragments) {
             case ART_WALLET_STORE_ALL_FRAGMENT:
-                //currentFragment = ConnectionsWorldFragment.newInstance();
+                currentFragment = ConnectionsWorldFragment.newInstance();
                 break;
             case ART_SUB_APP_FAN_COMMUNITY_CONNECTIONS:
                 //currentFragment = ConnectionsFragment.newInstance();
@@ -33,16 +37,16 @@ public class FanCommunityFragmentFactory extends
                 //currentFragment = null;
                 break;
             case ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS:
-                //currentFragment = ConnectionNotificationsFragment.newInstance();
+                currentFragment = ConnectionNotificationsFragment.newInstance();
                 break;
-            case CBP_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE:
-                //currentFragment = ConnectionOtherProfileFragment.newInstance();
+            case ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE:
+                currentFragment = ConnectionOtherProfileFragment.newInstance();
                 break;
-            case CBP_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD:
-                //currentFragment = ConnectionsWorldFragment.newInstance();
+            case ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD:
+                currentFragment = ConnectionsWorldFragment.newInstance();
                 break;
-            case CBP_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST:
-                //currentFragment = ConnectionsListFragment.newInstance();
+            case ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST:
+                currentFragment = ConnectionsListFragment.newInstance();
                 break;
             default:
                 throw new FragmentNotFoundException(

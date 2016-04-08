@@ -2,9 +2,11 @@ package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.wizard_pa
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,6 +107,8 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Cr
 
         View layout = inflater.inflate(R.layout.ccw_wizard_step_set_bank_accounts, container, false);
 
+        configureToolbar();
+
         adapter = new BankAccountsAdapter(getActivity(), bankAccountList);
         adapter.setDeleteButtonListener(this);
 
@@ -134,6 +138,20 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Cr
 
         return layout;
     }
+
+
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
+
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
+    }
+
 
     @Override
     public void deleteButtonClicked(BankAccountNumber data, final int position) {
