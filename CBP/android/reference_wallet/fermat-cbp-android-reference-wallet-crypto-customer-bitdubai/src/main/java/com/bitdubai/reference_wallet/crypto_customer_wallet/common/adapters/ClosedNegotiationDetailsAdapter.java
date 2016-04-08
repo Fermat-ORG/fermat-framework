@@ -86,9 +86,9 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
     protected int getCardViewResource(int type) {
         switch (type) {
             case TYPE_HEADER:
-                return R.layout.ccw_notes_item;
+                return R.layout.ccw_notes_item_close;
             case TYPE_DATE_TIME:
-                return R.layout.ccw_date_time_item;
+                return R.layout.ccw_date_time_item_close;
             case TYPE_SINGLE_CHOICE:
                 return R.layout.ccw_single_choice_item;
             case TYPE_EXCHANGE_RATE:
