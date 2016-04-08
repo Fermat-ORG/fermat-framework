@@ -15,10 +15,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
-import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
@@ -106,10 +105,6 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
     public final int DELAY_HOURS = 2;
     public final int TIME_BETWEEN_NOTIFICATIONS = 600000; //10min
     private long lastNotificationTime = 0;
-    private BigDecimal priceReference = null;
-    private BigDecimal amount = null;
-    private String bankAccount = null;
-    private Currency fiatCurrency = null;
     CustomerBrokerSaleImpl customerBrokerSale = null;
 
     public UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(ErrorManager errorManager,
@@ -215,7 +210,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 //        private BigDecimal priceReference = null;
 //        private BigDecimal amount         = null;
 //        private String bankAccount        = null;
-//        private FiatCurrency fiatCurrency = null;
+//        private FiatCurrency currency = null;
 //        CustomerBrokerSaleImpl customerBrokerSale = null;
 //        //UserLevelBusinessTransactionCustomerBrokerSaleDatabaseDao userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao;
 //
@@ -388,17 +383,24 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
             for (CustomerBrokerSale customerBrokerSale : customerBrokerSales) {
                 for (CustomerBrokerContractSale customerBrokerContractSale : contractSalePaymentSubmit) {
-                    if (Objects.equals(customerBrokerSale.getTransactionId(), customerBrokerContractSale.getNegotiatiotId())) {
+                    final String transactionId = customerBrokerSale.getTransactionId();
+                    final String negotiationId = customerBrokerContractSale.getNegotiatiotId();
+
+                    if (transactionId.equals(negotiationId)) {
                         // Si se detecta la realización de un pago se procede actulizar el estatus de la transacción
                         // y a monitorear la llegada de la mercadería.
                         // Se verifica si el broker configuró procesar Restock de manera automática
 
                         if (cryptoBrokerWalletSettingSpread.getRestockAutomatic()) {
 
+                            BigDecimal amount = null;
+                            String bankAccount = null;
+                            Currency currency = null;
+                            MoneyType paymentMethod = null;
+                            BigDecimal priceReference = null;
+
                             final NumberFormat numberFormat = NumberFormat.getInstance();
-                            final UUID negotiationId = UUID.fromString(customerBrokerContractSale.getNegotiatiotId());
-                            final CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.
-                                    getNegotiationsByNegotiationId(negotiationId);
+                            final CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
 
                             // Obtengo info de las clausulas de la negociacion
                             final Collection<Clause> saleNegotiationClauses = saleNegotiation.getClauses();
@@ -416,59 +418,69 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                                         bankAccount = NegotiationClauseHelper.getAccountNumberFromClause(clause);
                                         break;
                                     case BROKER_CURRENCY:
-                                        fiatCurrency = CryptoCurrency.codeExists(clause.getValue()) ?
+                                        currency = CryptoCurrency.codeExists(clause.getValue()) ?
                                                 CryptoCurrency.getByCode(clause.getValue()) :
                                                 FiatCurrency.getByCode(clause.getValue());
                                         break;
+                                    case CUSTOMER_PAYMENT_METHOD:
+                                        paymentMethod = MoneyType.getByCode(clause.getValue());
                                 }
                             }
 
                             //Ejecuto el restock dependiendo del tipo de transferencia a realizar
-                            final Collection<ContractClause> contractClauses = customerBrokerContractSale.getContractClause();
-                            for (ContractClause clause : contractClauses) {
-                                ContractClauseType clauseType = clause.getType();
-
-                                switch (clauseType) {
-                                    case CRYPTO_TRANSFER:
-                                        cryptoMoneyRestockManager.createTransactionRestock(
-                                                customerBrokerContractSale.getPublicKeyBroker(),
-                                                CryptoCurrency.BITCOIN,
-                                                brokerWalletPublicKey,
-                                                "reference_wallet", // TODO: obtenerlo de installed wallets
-                                                amount,
-                                                "Credit from a Sale Payment",
-                                                priceReference,
-                                                OriginTransaction.SALE,
-                                                customerBrokerContractSale.getContractId(),
-                                                BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO: Revisar de donde saco esto
-                                        break;
-                                    case BANK_TRANSFER:
-                                        bankMoneyRestockManager.createTransactionRestock(
-                                                customerBrokerContractSale.getPublicKeyBroker(),
-                                                (FiatCurrency) fiatCurrency,
-                                                brokerWalletPublicKey,
-                                                "banking_wallet", // TODO: obtenerlo de installed wallets
-                                                bankAccount,
-                                                amount,
-                                                "Credit from a Sale Payment",
-                                                priceReference,
-                                                OriginTransaction.SALE,
-                                                customerBrokerContractSale.getContractId());
-                                        break;
-                                    default:
-                                        cashMoneyRestockManager.createTransactionRestock(
-                                                customerBrokerContractSale.getPublicKeyBroker(),
-                                                (FiatCurrency) fiatCurrency,
-                                                brokerWalletPublicKey,
-                                                "cash_wallet",  // TODO: obtenerlo de installed wallets
-                                                "cashReference",
-                                                amount,
-                                                "Credit from a Sale Payment",
-                                                priceReference,
-                                                OriginTransaction.SALE,
-                                                customerBrokerContractSale.getContractId());
-                                        break;
-                                }
+                            switch (paymentMethod) {
+                                case CRYPTO:
+                                    cryptoMoneyRestockManager.createTransactionRestock(
+                                            customerBrokerContractSale.getPublicKeyBroker(),
+                                            (CryptoCurrency) currency,
+                                            brokerWalletPublicKey,
+                                            "reference_wallet", // TODO: obtenerlo de installed wallets
+                                            amount,
+                                            "Credit from a Sale Payment",
+                                            priceReference,
+                                            OriginTransaction.SALE,
+                                            customerBrokerContractSale.getContractId(),
+                                            BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO: Revisar de donde saco esto
+                                    break;
+                                case BANK:
+                                    bankMoneyRestockManager.createTransactionRestock(
+                                            customerBrokerContractSale.getPublicKeyBroker(),
+                                            (FiatCurrency) currency,
+                                            brokerWalletPublicKey,
+                                            "banking_wallet", // TODO: obtenerlo de installed wallets
+                                            bankAccount,
+                                            amount,
+                                            "Credit from a Sale Payment",
+                                            priceReference,
+                                            OriginTransaction.SALE,
+                                            customerBrokerContractSale.getContractId());
+                                    break;
+                                case CASH_ON_HAND:
+                                    cashMoneyRestockManager.createTransactionRestock(
+                                            customerBrokerContractSale.getPublicKeyBroker(),
+                                            (FiatCurrency) currency,
+                                            brokerWalletPublicKey,
+                                            "cash_wallet",  // TODO: obtenerlo de installed wallets
+                                            "cashReference",
+                                            amount,
+                                            "Credit from a 'Cash on Hand' Sale Payment",
+                                            priceReference,
+                                            OriginTransaction.SALE,
+                                            customerBrokerContractSale.getContractId());
+                                    break;
+                                case CASH_DELIVERY:
+                                    cashMoneyRestockManager.createTransactionRestock(
+                                            customerBrokerContractSale.getPublicKeyBroker(),
+                                            (FiatCurrency) currency,
+                                            brokerWalletPublicKey,
+                                            "cash_wallet",  // TODO: obtenerlo de installed wallets
+                                            "cashReference",
+                                            amount,
+                                            "Credit from a 'Cash Delivery' Sale Payment",
+                                            priceReference,
+                                            OriginTransaction.SALE,
+                                            customerBrokerContractSale.getContractId());
+                                    break;
                             }
                         }
 
