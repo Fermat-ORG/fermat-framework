@@ -300,35 +300,28 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
      * @return
      * @throws CantGetBrokerMerchandiseException
      */
-    private MoneyType getMerchandiseType(
-            CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantGetBrokerMerchandiseException {
-        try{
-            Collection<Clause> negotiationClauses=customerBrokerSaleNegotiation.getClauses();
-            String clauseValue;
+    private MoneyType getMerchandiseType(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantGetBrokerMerchandiseException {
+        try {
+            final Collection<Clause> negotiationClauses = customerBrokerSaleNegotiation.getClauses();
+
             for(Clause clause : negotiationClauses){
-                if(clause.getType().getCode().equals(ClauseType.BROKER_PAYMENT_METHOD.getCode())){
-                    clauseValue=clause.getValue();
-                    if(clauseValue.equals(MoneyType.CRYPTO)){
-                        throw new CantGetBrokerMerchandiseException(
-                                "The Broker merchandise is crypto.");
-                    }
+                if(clause.getType() == ClauseType.BROKER_PAYMENT_METHOD){
+                    final String clauseValue = clause.getValue();
+
+                    if(MoneyType.CRYPTO.getCode().equals(clauseValue))
+                        throw new CantGetBrokerMerchandiseException("The Broker Merchandise is Crypto.");
 
                     return MoneyType.getByCode(clauseValue);
                 }
             }
-            throw new CantGetBrokerMerchandiseException(
-                    "The Negotiation clauses doesn't include the broker payment method");
-            } catch (InvalidParameterException e) {
-                throw new CantGetBrokerMerchandiseException(
-                    e,
-                    "Getting the merchandise type",
-                    "Invalid parameter Clause value");
-            } catch (CantGetListClauseException e) {
-            throw new CantGetBrokerMerchandiseException(
-                    e,
-                    "Getting the merchandise type",
-                    "Cannot get the clauses list");
-            }
+
+            throw new CantGetBrokerMerchandiseException("The Negotiation clauses doesn't include the broker payment method");
+
+        } catch (InvalidParameterException e) {
+            throw new CantGetBrokerMerchandiseException(e, "Getting the merchandise type", "Invalid parameter Clause value");
+        } catch (CantGetListClauseException e) {
+            throw new CantGetBrokerMerchandiseException(e, "Getting the merchandise type", "Cannot get the clauses list");
+        }
     }
 
     /**
