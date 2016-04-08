@@ -32,13 +32,11 @@ public class FanCommunityPluginRoot extends AbstractPlugin {
     @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_CONNECTION,              plugin = Plugins.FAN_ACTOR_CONNECTION)
     private FanActorConnectionManager fanActorConnectionManager;
 
-    //this next lines will stay commented until the Fan Identity is completed
-
-    /*@NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ARTIST_IDENTITY   )
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.FAN   )
     private FanManager fanNetworkServiceManager;
 
-    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.IDENTITY,              plugin = Plugins.ARTIST_IDENTITY   )
-    private FanaticIdentityManager fanaticIdentityManager;*/
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,         layer = Layers.IDENTITY,              plugin = Plugins.FANATIC_IDENTITY   )
+    private FanaticIdentityManager fanaticIdentityManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,     layer = Layers.PLATFORM_SERVICE,      addon  = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -57,7 +55,7 @@ public class FanCommunityPluginRoot extends AbstractPlugin {
     private void initPluginManager(){
         //this next lines will stay commented until the Fan Identity is completed
 
-        /*this.fanCommunityManager = new FanCommunityManager(
+        this.fanCommunityManager = new FanCommunityManager(
                 artistIdentityManager,
                 fanActorConnectionManager,
                 fanNetworkServiceManager,
@@ -65,7 +63,7 @@ public class FanCommunityPluginRoot extends AbstractPlugin {
                 errorManager,
                 pluginFileSystem,
                 pluginId,
-                this.getPluginVersionReference());*/
+                this.getPluginVersionReference());
     }
     public ModuleManager getManager(){
         return this.fanCommunityManager;

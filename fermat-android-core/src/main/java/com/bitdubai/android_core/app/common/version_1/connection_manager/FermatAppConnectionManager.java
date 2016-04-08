@@ -171,7 +171,7 @@ public class FermatAppConnectionManager {
             case "sub_app_art_artist_community":
                 //fermatAppConnection = new ChatFermatAppConnection(activity);
                 break;
-            case "sub_app_art_fan_community":
+            case "public_key_art_fan_community":
                 fermatAppConnection = new FanCommunityFermatAppConnection(activity);
                 break;
 

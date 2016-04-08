@@ -128,6 +128,7 @@ import static java.lang.System.gc;
 
 /**
  * Created by Matias Furszyfer
+ * Update by Miguel Payarez on 2016.04.08
  */
 
 public abstract class FermatActivity extends AppCompatActivity implements
@@ -848,7 +849,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 tabLayout.setBackgroundColor(Color.parseColor(activity.getTabStrip().getTabsColor()));
             }
             if (tabs.getTabsTextColor() != null) {
-                tabLayout.setTabTextColors(Color.parseColor(activity.getTabStrip().getTabsTextColor()), Color.WHITE);
+                if(tabs.getSelectedTabTextColor()!=null){
+                    tabLayout.setTabTextColors(Color.parseColor(activity.getTabStrip().getTabsTextColor()), Color.parseColor(activity.getTabStrip().getSelectedTabTextColor()));
+                }else{
+                    tabLayout.setTabTextColors(Color.parseColor(activity.getTabStrip().getTabsTextColor()), Color.WHITE);
+                }
+
             }
             if (tabs.getTabsIndicateColor() != null) {
                 tabLayout.setSelectedTabIndicatorColor(Color.parseColor(activity.getTabStrip().getTabsIndicateColor()));

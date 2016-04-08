@@ -3736,14 +3736,14 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         Fragment runtimeFragment;
         StatusBar runtimeStatusBar;
         TitleBar runtimeTitleBar;
-
+        TabStrip runtimeTabStrip;
+        Tab runtimeTab;
         final String publicKey = WalletsPublicKeys.TKY_FAN_WALLET.getCode();
-
-        //final String statusBarColor = "#00b9ff";
         final String statusBarColor = "#000000";
-        final String titleBarLabelColor = "#FFFFFF";
-        final String titleBarColor = "#00b9ff";
+        final String titleBarLabelColor = "#000000";
+        final String BackgroundtitleBarLabelColor = "#f5f5f5";
         final int titleBarLabelSize = 20;
+
 
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
@@ -3751,22 +3751,62 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
         lstWalletNavigationStructureOpen.put(publicKey, runtimeWalletNavigationStructure);
 
-
-        //Setup Activity
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.TKY_FAN_WALLET_MAIN_ACTIVITY);
         runtimeActivity.setActivityType(Activities.TKY_FAN_WALLET_MAIN_ACTIVITY.getCode());
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
         runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.TKY_FAN_WALLET_MAIN_ACTIVITY);
 
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Fan Wallet");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor(titleBarLabelColor);
+        runtimeTitleBar.setColor(BackgroundtitleBarLabelColor);
+        runtimeTitleBar.setIsTitleTextStatic(false);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
+        /*runtimeHeader = new Header();
+        runtimeHeader.setLabel("Market rate");
+        runtimeHeader.setHasExpandable(true);
+        runtimeActivity.setHeader(runtimeHeader);*/
+
+        /*runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS.getKey());
+        runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_MARKET_RATE_STATISTICS.getKey(), runtimeFragment);*/
+
+
+        runtimeTabStrip = new TabStrip();
+        runtimeTabStrip.setTabsColor("#f5f5f5");
+        runtimeTabStrip.setTabsTextColor("#b9b9b9");
+        runtimeTabStrip.setTabsIndicateColor("#0c6908");
+        runtimeTabStrip.setSelectTabTextColor("#000000");
+        runtimeTabStrip.setDividerColor(0x72af9c);
+        runtimeActivity.setTabStrip(runtimeTabStrip);
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Song");
+        runtimeTab.setFragment(Fragments.TKY_FAN_WALLET_SONGS_TAB_FRAGMENT);
+        runtimeTabStrip.addTab(runtimeTab);
+
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.TKY_FAN_WALLET_MAIN_ACTIVITY.getKey());
-        runtimeActivity.addFragment(Fragments.TKY_FAN_WALLET_MAIN_ACTIVITY.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.TKY_FAN_WALLET_MAIN_ACTIVITY.getKey());
+        runtimeFragment.setType(Fragments.TKY_FAN_WALLET_SONGS_TAB_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.TKY_FAN_WALLET_SONGS_TAB_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.TKY_FAN_WALLET_SONGS_TAB_FRAGMENT.getKey());
+
+        runtimeTab = new Tab();
+        runtimeTab.setLabel("Following");
+        runtimeTab.setFragment(Fragments.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT);
+        runtimeTabStrip.addTab(runtimeTab);
+
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT.getKey(), runtimeFragment);
 
 
         return runtimeWalletNavigationStructure;
@@ -4640,6 +4680,49 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_MNEMONIC_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_MNEMONIC_FRAGMENT.getKey(), runtimeFragment);
+
+        /**
+         * Send Error Activity
+         */
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT);
+        runtimeActivity.setActivityType(Activities.CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT.getCode());
+        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Send Error Report");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setColor("#12aca1");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#12aca1");
+        //runtimeActivity.setColor("#d07b62");
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+
+        runtimeTabStrip = new TabStrip();
+
+        runtimeTabStrip.setTabsColor("#1173aa");
+
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_WALLET_SEND_ERROR_REPORT_FRAGMENT.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_WALLET_SEND_ERROR_REPORT_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_WALLET_SEND_ERROR_REPORT_FRAGMENT.getKey(), runtimeFragment);
+
 
         recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
 
@@ -5544,6 +5627,49 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_MNEMONIC_FRAGMENT.getKey(), runtimeFragment);
 
         //---
+
+        /**
+         * Send Error Activity
+         */
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_OPEN_SEND_ERROR_REPORT);
+        runtimeActivity.setActivityType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_OPEN_SEND_ERROR_REPORT.getCode());
+        runtimeActivity.setColor("#12aca1");
+        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_MAIN);
+
+        runtimeWalletNavigationStructure.addActivity(runtimeActivity);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Send Error Report");
+        runtimeTitleBar.setLabelSize(16);
+        runtimeTitleBar.setIconName("back");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setColor("#12aca1");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+        runtimeActivity.setColor("#12aca1");
+        //runtimeActivity.setColor("#d07b62");
+
+        runtimeStatusBar = new StatusBar();
+        runtimeStatusBar.setColor("#12aca1");
+
+        runtimeTabStrip = new TabStrip();
+
+        runtimeTabStrip.setTabsColor("#1173aa");
+
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+
+        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
+
+        runtimeActivity.setStatusBar(runtimeStatusBar);
+
+        runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_ERROR_REPORT_FRAGMENT.getKey());
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_ERROR_REPORT_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_ERROR_REPORT_FRAGMENT.getKey(), runtimeFragment);
+        //---------------------
 
         recordNavigationStructureIsNotExist(runtimeWalletNavigationStructure);
 
