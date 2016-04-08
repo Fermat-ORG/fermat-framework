@@ -682,7 +682,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         brokerWalletPublicKey,
                         "reference_wallet", // TODO: obtenerlo de installed wallets
                         amount,
-                        "Credit from a Sale Payment",
+                        "Payment from a Customer",
                         priceReference,
                         OriginTransaction.SALE,
                         contractSale.getContractId(),
@@ -696,7 +696,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         "banking_wallet", // TODO: obtenerlo de installed wallets
                         bankAccount,
                         amount,
-                        "Credit from a Sale Payment",
+                        "Payment from a Customer",
                         priceReference,
                         OriginTransaction.SALE,
                         contractSale.getContractId());
@@ -709,7 +709,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         "cash_wallet",  // TODO: obtenerlo de installed wallets
                         "cashReference",
                         amount,
-                        "Credit from a 'Cash on Hand' Sale Payment",
+                        "Cash on Hand Payment from a Customer",
                         priceReference,
                         OriginTransaction.SALE,
                         contractSale.getContractId());
@@ -722,7 +722,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                         "cash_wallet",  // TODO: obtenerlo de installed wallets
                         "cashReference",
                         amount,
-                        "Credit from a 'Cash Delivery' Sale Payment",
+                        "Cash Delivery Payment from a Customer",
                         priceReference,
                         OriginTransaction.SALE,
                         contractSale.getContractId());
