@@ -767,6 +767,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     public long getRealBalance( String walletPublicKey,
                            BlockchainNetworkType blockchainNetworkType) throws CantGetLossProtectedBalanceException {
         try {
+
             BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
             return bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getRealBalance(blockchainNetworkType);
         } catch (CantCalculateBalanceException e) {
@@ -1039,7 +1040,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                         }
                         @Override
                         public long getAmount() {
-                            return 2;
+                            return (long) 2.2;
                         }
                         @Override
                         public long getRunningBookBalance() {
@@ -1193,7 +1194,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
                     @Override
                     public long getExchangeRate() {
-                        return 420;
+                        return 21;
                     }
                 };
 
