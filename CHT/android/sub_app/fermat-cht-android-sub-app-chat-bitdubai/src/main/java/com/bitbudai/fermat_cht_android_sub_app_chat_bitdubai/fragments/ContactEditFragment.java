@@ -236,10 +236,11 @@ public class ContactEditFragment extends AbstractFermatFragment {
                 try {
                     Contact con = chatSession.getSelectedContact();
                     con.setAlias(aliasText);
-                    chatManager.saveContact(con);
+                    //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                    //chatManager.saveContact(con);
                     Toast.makeText(getActivity(), "Contact Updated", Toast.LENGTH_SHORT).show();
-                } catch (CantSaveContactException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                //} catch (CantSaveContactException e) {
+                //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }catch (Exception e){
                     if (errorManager != null)
                         errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

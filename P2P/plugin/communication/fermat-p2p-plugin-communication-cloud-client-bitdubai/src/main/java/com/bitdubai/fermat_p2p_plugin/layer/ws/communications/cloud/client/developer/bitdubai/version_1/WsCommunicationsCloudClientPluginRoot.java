@@ -272,7 +272,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
     public void reloadConnectClient() throws Exception {
 
         System.out.println(" WsCommunicationsCloudClientPluginRoot - ****************************************************************");
-        System.out.println(" WsCommunicationsCloudClientPluginRoot - ReConnecting with the cloud server. Server IP ("+SERVER_IP+")  Port "+PORT);
+        System.out.println(" WsCommunicationsCloudClientPluginRoot - ReloadConnecting with the cloud server. Server IP ("+SERVER_IP+")  Port "+PORT);
         System.out.println(" WsCommunicationsCloudClientPluginRoot - ****************************************************************");
 
         /*
