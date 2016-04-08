@@ -327,21 +327,21 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
 
                         if(clauseValue != null) timeToDelivery = Long.parseLong(clauseValue);
 
-//                        System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN PAYMENT ***\n" +
-//                                "\n - Contract: "+customerBrokerContractPurchase.getContractId()+
-//                                "\n - timeStampToday: "+timeStampToday+
-//                                "\n - dateTimeToDelivery: String: "+clauseValue+". Long"+timeToDelivery
-//                        );
-
-                        //TODO FOR TEST
-//                        timeToDelivery = timeStampToday;
+                        System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN PAYMENT ***\n" +
+                                "\n - Contract: "+customerBrokerContractPurchase.getContractId()+
+                                "\n - timeStampToday: "+timeStampToday+
+                                "\n - dateTimeToDelivery: String: "+clauseValue+". Long"+timeToDelivery
+                        );
 
                         if (timeStampToday >= timeToDelivery) {
 
                             //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION//UPDATE CONTRACT STATUS
-                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
+//                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
+//                                    customerBrokerContractPurchase.getContractId(),
+//                                    ContractStatus.CANCELLED);
+                            customerBrokerContractPurchaseManager.cancelContract(
                                     customerBrokerContractPurchase.getContractId(),
-                                    ContractStatus.CANCELLED);
+                                    "CANCELLATION CONTRACT BY EXPIRATION IN DATE OF SUBMIT PAYMENT.");
 
                             //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION
                             customerBrokerPurchase.setTransactionStatus(TransactionStatus.CANCELLED);
@@ -361,7 +361,7 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
              *
              * If Expiration Time is done, Update the contract status to CANCELLED.
              */
-            for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_PAYMENT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
+            for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_PENDING_MERCHANDISE.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
             {
                 for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_MERCHANDISE)) {
 
@@ -383,15 +383,12 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
 //                                        "\n - dateTimeToDelivery: "+timeToDelivery
 //                        );
 
-                        //TODO FOR TEST
-//                        timeToDelivery = timeStampToday;
-
                         if (timeStampToday >= timeToDelivery) {
 
                             //UPDATE CONTRACT STATUS
-                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
+                            customerBrokerContractPurchaseManager.cancelContract(
                                     customerBrokerContractPurchase.getContractId(),
-                                    ContractStatus.CANCELLED);
+                                    "CANCELLATION CONTRACT BY EXPIRATION IN DATE OF SUBMIT MERCHANDISE.");
 
                             //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION
                             customerBrokerPurchase.setTransactionStatus(TransactionStatus.CANCELLED);

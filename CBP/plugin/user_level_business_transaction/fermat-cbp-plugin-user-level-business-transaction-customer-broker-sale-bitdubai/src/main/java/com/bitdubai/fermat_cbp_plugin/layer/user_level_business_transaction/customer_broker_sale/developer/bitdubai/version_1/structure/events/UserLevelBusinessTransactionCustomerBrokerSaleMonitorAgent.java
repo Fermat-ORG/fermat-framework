@@ -396,21 +396,21 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
                         if(clauseValue != null) timeToDelivery = Long.parseLong(clauseValue);
 
-//                        System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN PAYMENT ***\n" +
-//                                "\n - Contract: "+customerBrokerContractSale.getContractId()+
-//                                "\n - timeStampToday: "+timeStampToday+
-//                                "\n - dateTimeToDelivery: "+timeToDelivery
-//                        );
-
-                        //TODO FOR TEST
-//                        timeToDelivery = timeStampToday;
+                        System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN PAYMENT ***\n" +
+                                "\n - Contract: "+customerBrokerContractSale.getContractId()+
+                                "\n - timeStampToday: "+timeStampToday+
+                                "\n - dateTimeToDelivery: "+timeToDelivery
+                        );
 
                         if (timeStampToday >= timeToDelivery) {
 
                             //UPDATE CONTRACT STATUS
-                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
+//                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
+//                                    customerBrokerContractSale.getContractId(),
+//                                    ContractStatus.CANCELLED);
+                            customerBrokerContractSaleManager.cancelContract(
                                     customerBrokerContractSale.getContractId(),
-                                    ContractStatus.CANCELLED);
+                                    "CANCELLATION CONTRACT BY EXPIRATION IN DATE OF SUBMIT PAYMENT.");
 
                             //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION
                             customerBrokerSale.setTransactionStatus(TransactionStatus.CANCELLED);
@@ -430,7 +430,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
              *
              * If Expiration Time is done, Update the contract status to CANCELLED.
              */
-            for (CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_PAYMENT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_PAYMENT_SUBMIT
+            for (CustomerBrokerSale customerBrokerSale : userLevelBusinessTransactionCustomerBrokerSaleDatabaseDao.getCustomerBrokerSales(getFilterTable(TransactionStatus.IN_PENDING_MERCHANDISE.getCode(), UserLevelBusinessTransactionCustomerBrokerSaleConstants.CUSTOMER_BROKER_SALE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_PAYMENT_SUBMIT
             {
                 for (CustomerBrokerContractSale customerBrokerContractSale : customerBrokerContractSaleManager.getCustomerBrokerContractSaleForStatus(ContractStatus.PENDING_MERCHANDISE)) {
 
@@ -452,15 +452,15 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 //                                        "\n - dateTimeToDelivery: "+timeToDelivery
 //                        );
 
-                        //TODO FOR TEST
-//                        timeToDelivery = timeStampToday;
-
                         if (timeStampToday >= timeToDelivery) {
 
                             //UPDATE CONTRACT STATUS
-                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
+//                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(
+//                                    customerBrokerContractSale.getContractId(),
+//                                    ContractStatus.CANCELLED);
+                            customerBrokerContractSaleManager.cancelContract(
                                     customerBrokerContractSale.getContractId(),
-                                    ContractStatus.CANCELLED);
+                                    "CANCELLATION CONTRACT BY EXPIRATION IN DATE OF SUBMIT MERCHANDISE.");
 
                             //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION
                             customerBrokerSale.setTransactionStatus(TransactionStatus.CANCELLED);
