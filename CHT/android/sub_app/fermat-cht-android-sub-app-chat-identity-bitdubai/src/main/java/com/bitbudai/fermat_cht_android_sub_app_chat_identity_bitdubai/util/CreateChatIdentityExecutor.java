@@ -8,11 +8,11 @@ import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatId
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.ChatIdentitySubAppModulePluginRoot;
 
 /**
- * Execute the method of the module manager to create a broker identity
- * <p/>
- * Created by nelson on 14/10/15.
+ * FERMAT-ORG
+ * Developed by Lozadaa on 05/04/16.
  */
 public class CreateChatIdentityExecutor {
     public static final int EXCEPTION_THROWN = 3;
@@ -23,7 +23,7 @@ public class CreateChatIdentityExecutor {
     private byte[] imageInBytes;
     private String identityName;
 
-    private ChatIdentityModuleManager moduleManager;
+    private ChatIdentitySubAppModulePluginRoot moduleManager;
     private ErrorManager errorManager;
     private ChatIdentity identity;
 
@@ -37,7 +37,8 @@ public class CreateChatIdentityExecutor {
         identity = null;
         if (session != null) {
             ChatIdentitySession subAppSession = (ChatIdentitySession) session;
-            this.moduleManager = subAppSession.getModuleManager();
+            Log.i("*****CHT IDENTITY******", "LA SESION tiene valorrrrrr!!!!!!!");
+            this.moduleManager = (ChatIdentitySubAppModulePluginRoot) subAppSession.getModuleManager();
             this.errorManager = subAppSession.getErrorManager();
         }else{
             Log.i("*****CHT IDENTITY******", "LA SESION ES NULA!!!!!!!");
@@ -53,9 +54,11 @@ public class CreateChatIdentityExecutor {
             return INVALID_ENTRY_DATA;
 
         try {
-            identity = moduleManager.createNewIdentityChat(identityName, imageInBytes);
+            moduleManager.getChatIdentityManager().createNewIdentityChat(identityName, imageInBytes);
 
         } catch (CantCreateNewChatIdentityException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
