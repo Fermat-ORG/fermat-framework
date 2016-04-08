@@ -31,6 +31,7 @@ public enum Activities implements FermatEnum {
     CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY_MAIN_NETWORK("CCPBWSAMN"),
     CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY("CCPBWACA"),
     CCP_BITCOIN_WALLET_NO_IDENTITY_ACTIVITY("CCPBWNIA"),
+    CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT("CCPBWSER"),
 
 
     /**
@@ -54,6 +55,7 @@ public enum Activities implements FermatEnum {
     CCP_BITCOIN_LOSS_PROTECTED_WALLET_NO_IDENTITY_ACTIVITY("CCPBLPWNIA"),
     CCP_BITCOIN_LOSS_PROTECTED_WALLET_MNEMONIC_ACTIVITY("CCPBLPWMNA"),
     CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUE_DETAIL_ACTIVITY("CCPBLPWCVD"),
+    CCP_BITCOIN_LOSS_PROTECTED_WALLET_OPEN_SEND_ERROR_REPORT("CCPBLPSER"),
 
     /**
      * Intra user
@@ -327,6 +329,7 @@ public enum Activities implements FermatEnum {
 
     //ART
     ART_ARTIST_IDENTITY_HOME("AACACP"),
+    ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE("ASAFCCOP"),
 
     //TKY
     TKY_ARTIST_IDENTITY("TAI"),
@@ -670,6 +673,8 @@ public enum Activities implements FermatEnum {
                 return CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY;
             case "CCPBWNIA":
                 return CCP_BITCOIN_WALLET_NO_IDENTITY_ACTIVITY;
+            case "CCPBWSER":
+                return CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT;
             case "CCPSAIUCCFL":
                 return CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST;
             case "CCPSAIUCCW":
@@ -856,7 +861,8 @@ public enum Activities implements FermatEnum {
                 return CCP_BITCOIN_LOSS_PROTECTED_WALLET_ADD_CONNECTION_ACTIVITY;
             case "CCPBLPWNIA":
                 return CCP_BITCOIN_LOSS_PROTECTED_WALLET_NO_IDENTITY_ACTIVITY;
-
+            case "CCPBLPSER":
+                return CCP_BITCOIN_LOSS_PROTECTED_WALLET_OPEN_SEND_ERROR_REPORT;
             case "CCPBLPWMNA":
                 return CCP_BITCOIN_LOSS_PROTECTED_WALLET_MNEMONIC_ACTIVITY;
             case "TKYSUBAPPFANCREATE":
@@ -864,6 +870,9 @@ public enum Activities implements FermatEnum {
             //TKY fan Wallet
             case "TKYFWMA":
                 return TKY_FAN_WALLET_MAIN_ACTIVITY;
+            //ART
+            case "ASAFCCOP":
+                return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

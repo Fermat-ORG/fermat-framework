@@ -58,4 +58,6 @@ public interface LossProtectedWalletTransaction extends Serializable {
 
     String getMemo();
 
+    double getExchangeRate();
+
 }

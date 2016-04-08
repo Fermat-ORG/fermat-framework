@@ -20,7 +20,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="16dp"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
     <LinearLayout
@@ -28,8 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center_horizontal"
-        android:layout_gravity="top"
-        android:paddingTop="16dp"
+        android:layout_gravity="center_horizontal"
+        android:paddingTop="50dp"
         android:orientation="vertical"
         android:visibility="gone">
 

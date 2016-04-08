@@ -23,6 +23,9 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
+import com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.event_handler.ArtistConnectionRequestNewsEventHandler;
+import com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.event_handler.ArtistConnectionRequestUpdatesEventHandler;
+import com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.structure.ActorConnectionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -92,19 +95,19 @@ public class ArtistActorConnectionPluginRoot extends AbstractPlugin implements D
             );
             FermatEventListener newsListener = eventManager.getNewListener(
                     EventType.ARTIST_CONNECTION_REQUEST_NEWS);
-            newsListener.setEventHandler(new com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.event_handler.ArtistConnectionRequestNewsEventHandler(
+            newsListener.setEventHandler(new ArtistConnectionRequestNewsEventHandler(
                     eventActions,
                     this));
             eventManager.addListener(newsListener);
             listenersAdded.add(newsListener);
             FermatEventListener updatesListener = eventManager.getNewListener(
                     EventType.ARTIST_CONNECTION_REQUEST_UPDATES);
-            updatesListener.setEventHandler(new com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.event_handler.ArtistConnectionRequestUpdatesEventHandler(
+            updatesListener.setEventHandler(new ArtistConnectionRequestUpdatesEventHandler(
                     eventActions,
                     this));
             eventManager.addListener(updatesListener);
             listenersAdded.add(updatesListener);
-            actorConnectionManager = new com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.bitdubai.version_1.structure.ActorConnectionManager(
+            actorConnectionManager = new ActorConnectionManager(
                     artistActorNetworkServiceManager,
                     artistActorConnectionDao,
                     errorManager,
