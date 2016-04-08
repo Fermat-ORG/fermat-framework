@@ -159,7 +159,13 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                     }
                 });
 
-
+                botonG.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        actualizable = false;
+                        updateIdentityInBackDevice("onClick");
+                    }
+                });
                 registerForContextMenu(mBrokerImage);
                 mBrokerImage.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -292,10 +298,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
                 EditIdentityExecutor executor = null;
                 try {
-                    executor = new EditIdentityExecutor(appSession,imgInBytes,brokerNameText,moduleManager.getChatIdentityManager().getIdentityChatUser().getPublicKey());
-                } catch (CHTException e) {
-                    //e.printStackTrace();
-                }
+                    executor = new EditIdentityExecutor(appSession,moduleManager.getChatIdentityManager().getIdentityChatUser().getPublicKey(),brokerNameText, imgInBytes);
+
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
@@ -305,6 +309,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
                         }
                         break;
+                }
+                } catch (CHTException e) {
+                    //e.printStackTrace();
                 }
             }
         }
@@ -333,9 +340,18 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         }
     }
     public boolean ExistIdentity() throws CHTException {
-        if(moduleManager.getChatIdentityManager().getIdentityChatUser().getAlias().length() > 0) return true;
-        if(moduleManager.getChatIdentityManager().getIdentityChatUser().getImage().length > 0) return true;
+        try {
+            if (moduleManager.getChatIdentityManager().getIdentityChatUser().getAlias().length() > 0)
+                return true;
+            if (moduleManager.getChatIdentityManager().getIdentityChatUser().getImage().length > 0)
+                return true;
+            Log.i("CHT EXIST IDENTITY", "TRUE");
+        }
+        catch (Exception e) {Log.i("CHT EXIST IDENTITY", "FALSE");
             return false;
+            }
+        Log.i("CHT EXIST IDENTITY", "FALSE");
+        return false;
     }
     private void dispatchTakePictureIntent() {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
