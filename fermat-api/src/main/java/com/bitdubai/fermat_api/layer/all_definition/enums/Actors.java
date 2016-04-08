@@ -31,7 +31,9 @@ public enum Actors implements FermatEnum {
     DAP_ASSET_USER          ("DAPASUS"),
 
     ART_ARTIST              ("AART"),
-    ART_FAN                 ("AFAN")
+    ART_FAN                 ("AFAN"),
+
+    CHAT                 ("CHT")
 
     ;
 
@@ -61,6 +63,8 @@ public enum Actors implements FermatEnum {
 
             case "AART":    return ART_ARTIST;
             case "AFAN":    return ART_FAN;
+
+            case "CHT":      return CHAT;
 
             default:
                 throw new IllegalArgumentException(
