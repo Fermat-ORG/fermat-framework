@@ -1,7 +1,6 @@
 package com.bitdubai.android_core.app;
 
 
-import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.support.multidex.MultiDexApplication;
@@ -125,20 +124,23 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         YourOwnSender yourSender = new YourOwnSender(getApplicationContext());
         ACRA.getErrorReporter().setReportSender(yourSender);
 
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+//        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+//            @Override
+//            public void uncaughtException(Thread thread, Throwable e) {
+//                e.printStackTrace();
+//                handleUncaughtException(thread, e);
+//            }
+//        });
+
+        new Thread(new Runnable() {
             @Override
-            public void uncaughtException(Thread thread, Throwable e) {
-                e.printStackTrace();
-                handleUncaughtException(thread, e);
+            public void run() {
+                servicesHelpers = new ServicesHelpers(getInstance().getApplicationContext());
+                servicesHelpers.bindServices();
             }
-        });
+        }).start();
 
-        servicesHelpers = new ServicesHelpers(this);
-        servicesHelpers.bindServices();
 
-        NotificationManager notificationManager = (NotificationManager)
-                getSystemService(NOTIFICATION_SERVICE);
-        notificationManager.cancelAll();
 
         super.onCreate();
     }

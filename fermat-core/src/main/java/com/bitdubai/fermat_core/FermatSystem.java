@@ -2,6 +2,7 @@ package com.bitdubai.fermat_core;
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
@@ -281,8 +282,8 @@ public final class FermatSystem {
 
             final FermatManager moduleManager = fermatPluginManager.getPlugin(pluginVersionReference);
 
-            if (moduleManager instanceof ModuleManager)
-                return (ModuleManager) moduleManager;
+            if (moduleManager instanceof AbstractModule)
+                return ((AbstractModule) moduleManager).getModuleManager();
             else
                 throw new CantGetModuleManagerException(pluginVersionReference.toString3(), "The plugin version requested not implements module manager interface.");
 
