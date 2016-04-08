@@ -129,11 +129,11 @@ public class ContractDetail {
         this.contractDetailType = contractDetailType;
     }
 
-    public String getCurrency() {
+    public String getFiatCurrency() {
         return currencyTypeCode;
     }
 
-    public void setCurrencyType(String currencyType) {
+    public void setFiatCurrency(String currencyType) {
         this.currencyTypeCode = currencyType;
     }
 

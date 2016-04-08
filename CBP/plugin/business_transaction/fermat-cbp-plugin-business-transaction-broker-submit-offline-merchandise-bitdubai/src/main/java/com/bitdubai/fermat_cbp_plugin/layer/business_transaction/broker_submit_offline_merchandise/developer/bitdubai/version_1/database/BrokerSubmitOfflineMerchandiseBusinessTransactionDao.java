@@ -318,7 +318,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
             long amount,
             String cbpWalletPublicKey,
             BigDecimal referencePrice,
-            FiatCurrency merchandiseType,
+            FiatCurrency fiatCurrency,
             MoneyType moneyType)
             throws CantInsertRecordException {
         try{
@@ -331,7 +331,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
                     amount,
                     cbpWalletPublicKey,
                     referencePrice,
-                    merchandiseType,
+                    fiatCurrency,
                     moneyType
             );
             databaseTable.insertRecord(databaseTableRecord);
@@ -604,8 +604,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
             CryptoAddress brokerCryptoAddress;
             String cryptoAddressString;
             BigDecimal referencePrice;
-            MoneyType merchandiseType;
-            FiatCurrency currencyType;
+            FiatCurrency fiatCurrency;
             double referencePriceFromDatabase;
             BusinessTransactionRecord businessTransactionRecord =new BusinessTransactionRecord();
             databaseTable.addStringFilter(
@@ -655,17 +654,17 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
             referencePrice=BigDecimal.valueOf(referencePriceFromDatabase);
             businessTransactionRecord.setPriceReference(referencePrice);
 
-            //Represent currencyType
+            //Represent fiatCurrency
             String paymentTypeString=record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
                     SUBMIT_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME);
-            currencyType = FiatCurrency.getByCode(paymentTypeString);
-            businessTransactionRecord.setCurrencyType(currencyType);
+            fiatCurrency = FiatCurrency.getByCode(paymentTypeString);
+            businessTransactionRecord.setFiatCurrency(fiatCurrency);
 
-            //Represent merchandiseType
-            String currencyTypeCode=record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
+            //Represent paymentType
+            String paymentTypeCode=record.getStringValue(BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.
                     SUBMIT_OFFLINE_MERCHANDISE_PAYMENT_TYPE_COLUMN_NAME);
-            merchandiseType = MoneyType.getByCode(currencyTypeCode);
-            businessTransactionRecord.setPaymentType(merchandiseType);
+            final MoneyType paymentType = MoneyType.getByCode(paymentTypeCode);
+            businessTransactionRecord.setPaymentType(paymentType);
 
             return businessTransactionRecord;
         } catch (CantLoadTableToMemoryException e) {
@@ -838,7 +837,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME,
                 businessTransactionRecord.getCBPWalletPublicKey()
         );
-        FiatCurrency fiatCurrency=businessTransactionRecord.getCurrency();
+        FiatCurrency fiatCurrency=businessTransactionRecord.getFiatCurrency();
         if(fiatCurrency!=null){
             record.setStringValue(
                     BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME,

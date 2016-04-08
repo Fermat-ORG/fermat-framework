@@ -128,7 +128,7 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                     final FiatCurrency currencyType = getCurrencyToDeliverFromContract(customerBrokerContractSale);
 
                     //Update the contract in database.
-                    this.brokerAckOfflinePaymentBusinessTransactionDao.updateRecordCurrencyTypeByContractHash(contractHash, currencyType);
+                    this.brokerAckOfflinePaymentBusinessTransactionDao.updateRecordCurrencyByContractHash(contractHash, currencyType);
                     this.brokerAckOfflinePaymentBusinessTransactionDao.updateRecordCBPWalletPublicKeyByContractHash(contractHash, walletPublicKey);
                     this.brokerAckOfflinePaymentBusinessTransactionDao.updateRecordPaymentTypeByContractHash(contractHash, paymentType);
                     this.brokerAckOfflinePaymentBusinessTransactionDao.updateCustomerAliasByContractHash(contractHash, customerAlias);

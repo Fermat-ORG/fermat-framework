@@ -19,7 +19,7 @@ public class BankMoneyDeStockRecord extends AbstractDeStockRecord {
     public BankMoneyDeStockRecord(BusinessTransactionRecord businessTransactionRecord) {
 
         this.publicKeyActor = businessTransactionRecord.getBrokerPublicKey();
-        this.fiatCurrency = businessTransactionRecord.getCurrency();
+        this.fiatCurrency = businessTransactionRecord.getFiatCurrency();
         this.cbpWalletPublicKey = businessTransactionRecord.getCBPWalletPublicKey();
         this.bankWalletPublicKey = businessTransactionRecord.getExternalWalletPublicKey();
         this.memo = generateMemo(businessTransactionRecord.getContractHash());
