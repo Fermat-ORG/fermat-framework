@@ -104,4 +104,15 @@ public class CustomerBrokerPurchaseManager implements CustomerBrokerContractPurc
         }
     }
 
+    //ADD YORDIN ALAYN 07.04.16
+    @Override
+    public void cancelContract(String contractId, String reason)  throws CantUpdateCustomerBrokerContractPurchaseException {
+        try{
+            this.customerBrokerContractPurchaseDao.cancelContract(contractId, reason);
+        } catch (CantUpdateCustomerBrokerContractPurchaseException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateCustomerBrokerContractPurchaseException(e.getMessage(), e, "", "Cant Update Customer Broker Contract Purchase");
+        }
+    }
+
 }

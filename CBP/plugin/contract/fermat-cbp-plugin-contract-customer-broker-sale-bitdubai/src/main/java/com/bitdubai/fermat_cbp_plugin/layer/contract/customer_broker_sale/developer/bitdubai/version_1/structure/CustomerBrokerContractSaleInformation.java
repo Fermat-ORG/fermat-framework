@@ -23,6 +23,7 @@ public class CustomerBrokerContractSaleInformation implements CustomerBrokerCont
     private final Long dateTime;
     private final ContractStatus status;
     private final Collection<ContractClause> clause;
+    private final String cancelReason;
 
     private final Boolean nearExpirationDatetime;
 
@@ -34,7 +35,8 @@ public class CustomerBrokerContractSaleInformation implements CustomerBrokerCont
             Long dateTime,
             ContractStatus status,
             Collection<ContractClause> clause,
-            Boolean nearExpirationDatetime
+            Boolean nearExpirationDatetime,
+            String cancelReason
     ){
         this.contractID = contractID;
         this.negotiationID = negotiationID;
@@ -44,6 +46,7 @@ public class CustomerBrokerContractSaleInformation implements CustomerBrokerCont
         this.status = status;
         this.clause = clause;
         this.nearExpirationDatetime = nearExpirationDatetime;
+        this.cancelReason = cancelReason;
     }
 
     @Override
@@ -85,6 +88,9 @@ public class CustomerBrokerContractSaleInformation implements CustomerBrokerCont
     public Boolean getNearExpirationDatetime() {
         return this.nearExpirationDatetime;
     }
+
+    @Override
+    public String getCancelReason() { return this.cancelReason; }
 
     @Override
     public boolean equals(final Object o){
