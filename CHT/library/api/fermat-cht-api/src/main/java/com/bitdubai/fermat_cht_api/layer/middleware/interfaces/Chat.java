@@ -59,4 +59,7 @@ public interface Chat {
 
     List<GroupMember> getGroupMembersAssociated();
     void setGroupMembersAssociated(List<GroupMember> groupMembers);
+
+    boolean getScheduledDelivery();
+    void setScheduledDelivery(boolean scheduledDelivery);
 }
