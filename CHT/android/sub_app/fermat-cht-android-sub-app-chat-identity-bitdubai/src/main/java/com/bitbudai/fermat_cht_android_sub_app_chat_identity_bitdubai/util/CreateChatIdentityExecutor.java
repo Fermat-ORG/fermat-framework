@@ -37,7 +37,7 @@ public class CreateChatIdentityExecutor {
         identity = null;
         if (session != null) {
             ChatIdentitySession subAppSession = (ChatIdentitySession) session;
-            this.moduleManager = (ChatIdentityModuleManager) subAppSession.getModuleManager();
+            this.moduleManager = subAppSession.getModuleManager();
             this.errorManager = subAppSession.getErrorManager();
         }else{
             Log.i("*****CHT IDENTITY******", "LA SESION ES NULA!!!!!!!");
