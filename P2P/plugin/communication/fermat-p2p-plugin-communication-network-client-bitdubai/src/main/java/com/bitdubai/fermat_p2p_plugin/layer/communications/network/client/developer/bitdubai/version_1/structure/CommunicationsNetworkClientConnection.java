@@ -10,6 +10,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.net.URI;
@@ -28,12 +29,15 @@ import javax.websocket.WebSocketContainer;
  */
 public class CommunicationsNetworkClientConnection extends Thread {
 
-    private URI uri;
-    private EventManager eventManager;
-    private LocationManager locationManager;
-    private ECCKeyPair clientIdentity;
-    private WebSocketContainer container;
-    private Session session;
+    private URI                uri            ;
+    private ErrorManager       errorManager   ;
+    private EventManager       eventManager   ;
+    private LocationManager    locationManager;
+    private ECCKeyPair         clientIdentity ;
+    private WebSocketContainer container      ;
+    private Session            session        ;
+
+    private CommunicationsNetworkClientChannel communicationsNetworkClientChannel;
 
     /**
      * Represent the if is Connected
@@ -45,14 +49,18 @@ public class CommunicationsNetworkClientConnection extends Thread {
      */
     private String serverIdentity;
 
-    public CommunicationsNetworkClientConnection(URI uri, EventManager eventManager, LocationManager locationManager,ECCKeyPair clientIdentity){
-        this.uri = uri;
-        this.eventManager = eventManager;
+    public CommunicationsNetworkClientConnection(final URI             uri            ,
+                                                 final ErrorManager    errorManager   ,
+                                                 final EventManager    eventManager   ,
+                                                 final LocationManager locationManager,
+                                                 final ECCKeyPair      clientIdentity ){
+        this.uri             = uri            ;
+        this.errorManager    = errorManager   ;
+        this.eventManager    = eventManager   ;
         this.locationManager = locationManager;
-        this.clientIdentity = clientIdentity;
-        this.isConnected = Boolean.FALSE;
+        this.clientIdentity  = clientIdentity ;
 
-
+        this.isConnected     = Boolean.FALSE  ;
     }
 
     public String getServerIdentity() {
@@ -65,7 +73,13 @@ public class CommunicationsNetworkClientConnection extends Thread {
         try{
 
             container = ContainerProvider.getWebSocketContainer();
-            session   = container.connectToServer(CommunicationsNetworkClientChannel.class, uri);
+            this.communicationsNetworkClientChannel = new CommunicationsNetworkClientChannel(
+                    clientIdentity,
+                    errorManager  ,
+                    eventManager
+            );
+
+            session   = container.connectToServer(communicationsNetworkClientChannel, uri);
 
             //validate if is connected
             if(session.isOpen()){

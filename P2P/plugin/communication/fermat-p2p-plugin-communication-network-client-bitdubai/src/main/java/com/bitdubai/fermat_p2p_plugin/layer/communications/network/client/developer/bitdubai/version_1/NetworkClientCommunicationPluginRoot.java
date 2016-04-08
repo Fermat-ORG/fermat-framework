@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
-import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -122,6 +121,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
 
             communicationsNetworkClientConnection = new CommunicationsNetworkClientConnection(
                     uri            ,
+                    errorManager   ,
                     eventManager   ,
                     locationManager,
                     identity
@@ -132,7 +132,6 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
              * Add references to the node context
              */
             ClientContext.add(ClientContextItem.CLIENT_IDENTITY, identity    );
-            ClientContext.add(ClientContextItem.DATABASE       , dataBase    );
             ClientContext.add(ClientContextItem.ERROR_MANAGER  , errorManager);
             ClientContext.add(ClientContextItem.EVENT_MANAGER  , eventManager);
 
