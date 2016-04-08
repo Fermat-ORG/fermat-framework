@@ -33,6 +33,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageExce
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 
 import java.util.HashMap;
 import java.util.List;
@@ -88,6 +89,7 @@ public interface MiddlewareChatManager extends FermatManager{
 
     String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
 
+    List<ChatActorConnection> getChatActorConnections(String localPublicKey);
 
     /**
      * This method sends the message through the Chat Network Service
