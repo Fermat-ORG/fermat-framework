@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_ack_offline_payment.developer.bitdubai.version_1.database;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -332,13 +331,14 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
      * This method creates a database table record from a CustomerBrokerContractSale in crypto broker side, only for backup
      * @param customerBrokerContractSale
      * @param paymentType
-     * @param actorPublicKey
-     * @param customerAlias
-     * @throws CantInsertRecordException
+     * @param fiatCurrency
+     *@param actorPublicKey
+     * @param customerAlias   @throws CantInsertRecordException
      */
     public void persistContractInDatabase(
             CustomerBrokerContractSale customerBrokerContractSale,
             MoneyType paymentType,
+            FiatCurrency fiatCurrency,
             String actorPublicKey,
             String customerAlias)
             throws CantInsertRecordException {
@@ -350,6 +350,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
                     databaseTableRecord,
                     customerBrokerContractSale,
                     paymentType,
+                    fiatCurrency,
                     actorPublicKey,
                     customerAlias
             );
@@ -448,9 +449,9 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
      * @param record
      * @param customerBrokerContractSale
      * @param paymentType
-     * @param actorPublicKey
-     * @param customerAlias
-     * @return
+     * @param fiatCurrency
+     *@param actorPublicKey
+     * @param customerAlias   @return
      * @throws ObjectNotSetException
      * @throws InvalidParameterException
      */
@@ -458,6 +459,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             DatabaseTableRecord record,
             CustomerBrokerContractSale customerBrokerContractSale,
             MoneyType paymentType,
+            FiatCurrency fiatCurrency,
             String actorPublicKey,
             String customerAlias) throws ObjectNotSetException, InvalidParameterException {
 
@@ -499,7 +501,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
 
         record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_PAYMENT_TYPE_COLUMN_NAME, paymentType.getCode());
 
-        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME, CurrencyTypes.FIAT.getCode());
+        record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME, fiatCurrency.getCode());
 
         //Sets the customerAlias
         record.setStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.ACK_OFFLINE_PAYMENT_CUSTOMER_ALIAS_COLUMN_NAME, customerAlias);
@@ -619,7 +621,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             ContractTransactionStatus contractTransactionStatus;
             long paymentAmount;
             MoneyType paymentType;
-            FiatCurrency currencyType;
+            FiatCurrency fiatCurrency;
             BusinessTransactionRecord businessTransactionRecord = new BusinessTransactionRecord();
             databaseTable.addStringFilter(keyColumn, keyValue, DatabaseFilterType.EQUAL);
             databaseTable.loadToMemory();
@@ -665,9 +667,9 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
             String currencyTypeString=record.getStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
                     ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME);
             if(currencyTypeString == null || currencyTypeString.isEmpty())
-                throw new InvalidParameterException("The currencyType is null");
-            currencyType= FiatCurrency.getByCode(currencyTypeString);
-            businessTransactionRecord.setCurrencyType(currencyType);
+                throw new InvalidParameterException("The fiatCurrency is null");
+            fiatCurrency = FiatCurrency.getByCode(currencyTypeString);
+            businessTransactionRecord.setCurrencyType(fiatCurrency);
 
             String cbpWalletPublicKey=record.getStringValue(BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
                     ACK_OFFLINE_PAYMENT_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME);
@@ -866,7 +868,7 @@ public class BrokerAckOfflinePaymentBusinessTransactionDao {
         record.setStringValue(
                 BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.
                         ACK_OFFLINE_PAYMENT_CURRENCY_TYPE_COLUMN_NAME,
-                businessTransactionRecord.getCurrencyType().getCode());
+                businessTransactionRecord.getCurrency().getCode());
         //Set the external Id
         record.setStringValue(
                 BrokerAckOfflinePaymentBusinessTransactionDatabaseConstants.

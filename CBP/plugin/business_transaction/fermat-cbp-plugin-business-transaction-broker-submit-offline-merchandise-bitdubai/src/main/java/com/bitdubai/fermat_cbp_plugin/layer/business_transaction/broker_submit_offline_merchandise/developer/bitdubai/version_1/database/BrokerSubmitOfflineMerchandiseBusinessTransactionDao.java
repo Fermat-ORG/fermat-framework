@@ -838,12 +838,12 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CBP_WALLET_PUBLIC_KEY_COLUMN_NAME,
                 businessTransactionRecord.getCBPWalletPublicKey()
         );
-        FiatCurrency currencyType=businessTransactionRecord.getCurrencyType();
-        if(currencyType!=null){
+        FiatCurrency fiatCurrency=businessTransactionRecord.getCurrency();
+        if(fiatCurrency!=null){
             record.setStringValue(
                     BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME,
-                    currencyType.getCode()
-                    );
+                    fiatCurrency.getCode()
+            );
         }
         record.setStringValue(
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_PAYMENT_TYPE_COLUMN_NAME,
