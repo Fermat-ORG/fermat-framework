@@ -301,6 +301,21 @@ public class ChatAdapterView extends LinearLayout {
             }
         });
 
+//        messageET.setOnTouchListener(new OnTouchListener() {
+//            public boolean onTouch(View view, MotionEvent event) {
+//                // TODO Auto-generated method stub
+//                if (view.getId() == R.id.messageEdit) {
+//                    view.getParent().requestDisallowInterceptTouchEvent(true);
+//                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+//                        case MotionEvent.ACTION_UP:
+//                            view.getParent().requestDisallowInterceptTouchEvent(false);
+//                            break;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
+
         sendBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -345,8 +360,9 @@ public class ChatAdapterView extends LinearLayout {
                          * LocalActorType as is defined in database
                          */
                         //chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-                        Contact newContact = chatManager.getContactByContactId(
-                                contactId);
+                        //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                        Contact newContact = null;//chatManager.getContactByContactId(
+                                //contactId);
                         PlatformComponentType remoteActorType = newContact.getRemoteActorType();
                         remotePublicKey = newContact.getRemoteActorPublicKey();
                         chat.setRemoteActorType(remoteActorType);
