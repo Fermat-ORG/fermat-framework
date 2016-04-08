@@ -1,5 +1,6 @@
 package unit.CryptoBrokerWalletDatabaseDao;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
@@ -159,11 +160,11 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
         assertThat(currencyMatching.getOriginTransactionId()).isEqualTo(ORIGIN_TRANSACTION_ID_1);
 
         assertThat(currencyMatching.getCurrencyGiving()).isNotNull();
-        assertThat(currencyMatching.getCurrencyGiving().getCode()).isEqualTo(FiatCurrency.US_DOLLAR.getCode());
+        assertThat(currencyMatching.getCurrencyGiving()).isEqualTo(CryptoCurrency.BITCOIN);
         assertThat(currencyMatching.getAmountGiving()).isEqualTo(1);
 
         assertThat(currencyMatching.getCurrencyReceiving()).isNotNull();
-        assertThat(currencyMatching.getCurrencyReceiving().getCode()).isEqualTo(FiatCurrency.VENEZUELAN_BOLIVAR.getCode());
+        assertThat(currencyMatching.getCurrencyReceiving()).isEqualTo(FiatCurrency.VENEZUELAN_BOLIVAR);
         assertThat(currencyMatching.getAmountReceiving()).isEqualTo(1150);
     }
 
@@ -188,11 +189,11 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
         assertThat(currencyMatching.getOriginTransactionId()).isEqualTo(ORIGIN_TRANSACTION_ID_1);
 
         assertThat(currencyMatching.getCurrencyGiving()).isNotNull();
-        assertThat(currencyMatching.getCurrencyGiving().getCode()).isEqualTo(FiatCurrency.US_DOLLAR.getCode());
+        assertThat(currencyMatching.getCurrencyGiving()).isEqualTo(CryptoCurrency.BITCOIN);
         assertThat(currencyMatching.getAmountGiving()).isEqualTo(1);
 
         assertThat(currencyMatching.getCurrencyReceiving()).isNotNull();
-        assertThat(currencyMatching.getCurrencyReceiving().getCode()).isEqualTo(FiatCurrency.VENEZUELAN_BOLIVAR.getCode());
+        assertThat(currencyMatching.getCurrencyReceiving()).isEqualTo(FiatCurrency.VENEZUELAN_BOLIVAR);
         assertThat(currencyMatching.getAmountReceiving()).isEqualTo(1150);
 
 
@@ -200,11 +201,11 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
         assertThat(currencyMatching.getOriginTransactionId()).isEqualTo(ORIGIN_TRANSACTION_ID_2);
 
         assertThat(currencyMatching.getCurrencyGiving()).isNotNull();
-        assertThat(currencyMatching.getCurrencyGiving().getCode()).isEqualTo(FiatCurrency.US_DOLLAR.getCode());
+        assertThat(currencyMatching.getCurrencyGiving()).isEqualTo(FiatCurrency.US_DOLLAR);
         assertThat(currencyMatching.getAmountGiving()).isEqualTo(1);
 
         assertThat(currencyMatching.getCurrencyReceiving()).isNotNull();
-        assertThat(currencyMatching.getCurrencyReceiving().getCode()).isEqualTo(FiatCurrency.ARGENTINE_PESO.getCode());
+        assertThat(currencyMatching.getCurrencyReceiving()).isEqualTo(FiatCurrency.ARGENTINE_PESO);
         assertThat(currencyMatching.getAmountReceiving()).isEqualTo(15.4f);
     }
 
@@ -227,11 +228,11 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
         assertThat(currencyMatching.getOriginTransactionId()).isEqualTo(ORIGIN_TRANSACTION_ID_1);
 
         assertThat(currencyMatching.getCurrencyGiving()).isNotNull();
-        assertThat(currencyMatching.getCurrencyGiving().getCode()).isEqualTo(FiatCurrency.US_DOLLAR.getCode());
+        assertThat(currencyMatching.getCurrencyGiving()).isEqualTo(CryptoCurrency.BITCOIN);
         assertThat(currencyMatching.getAmountGiving()).isEqualTo(1);
 
         assertThat(currencyMatching.getCurrencyReceiving()).isNotNull();
-        assertThat(currencyMatching.getCurrencyReceiving().getCode()).isEqualTo(FiatCurrency.VENEZUELAN_BOLIVAR.getCode());
+        assertThat(currencyMatching.getCurrencyReceiving()).isEqualTo(FiatCurrency.VENEZUELAN_BOLIVAR);
         assertThat(currencyMatching.getAmountReceiving()).isEqualTo(1150.0f);
     }
 
@@ -254,11 +255,11 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
         assertThat(currencyMatching.getOriginTransactionId()).isEqualTo(ORIGIN_TRANSACTION_ID_1);
 
         assertThat(currencyMatching.getCurrencyGiving()).isNotNull();
-        assertThat(currencyMatching.getCurrencyGiving().getCode()).isEqualTo(FiatCurrency.US_DOLLAR.getCode());
+        assertThat(currencyMatching.getCurrencyGiving()).isEqualTo(CryptoCurrency.BITCOIN);
         assertThat(currencyMatching.getAmountGiving()).isEqualTo(1);
 
         assertThat(currencyMatching.getCurrencyReceiving()).isNotNull();
-        assertThat(currencyMatching.getCurrencyReceiving().getCode()).isEqualTo(FiatCurrency.VENEZUELAN_BOLIVAR.getCode());
+        assertThat(currencyMatching.getCurrencyReceiving()).isEqualTo(FiatCurrency.VENEZUELAN_BOLIVAR);
         assertThat(currencyMatching.getAmountReceiving()).isEqualTo(1150.0f);
     }
 
@@ -267,10 +268,10 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
         debitRecords.add(constructStockWalletTransactionRecord(
                 new CryptoBrokerStockTransactionRecordMock(
                         UUID.randomUUID(),
-                        FiatCurrency.US_DOLLAR,
+                        CryptoCurrency.BITCOIN,
                         BalanceType.AVAILABLE,
                         TransactionType.CREDIT,
-                        MoneyType.CASH_ON_HAND,
+                        MoneyType.CRYPTO,
                         BROKER_WALLET_PUBLIC_KEY,
                         BROKER_PUBLIC_KEY,
                         new BigDecimal(1),
@@ -306,10 +307,10 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
         debitRecords.add(constructStockWalletTransactionRecord(
                 new CryptoBrokerStockTransactionRecordMock(
                         UUID.randomUUID(),
-                        FiatCurrency.US_DOLLAR,
+                        CryptoCurrency.BITCOIN,
                         BalanceType.AVAILABLE,
                         TransactionType.DEBIT,
-                        MoneyType.CASH_ON_HAND,
+                        MoneyType.CRYPTO,
                         BROKER_WALLET_PUBLIC_KEY,
                         BROKER_PUBLIC_KEY,
                         new BigDecimal(1.0),
