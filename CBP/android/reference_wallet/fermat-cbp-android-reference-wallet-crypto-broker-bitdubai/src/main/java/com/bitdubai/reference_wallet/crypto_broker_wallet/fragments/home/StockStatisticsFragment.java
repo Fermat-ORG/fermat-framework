@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerStockTransaction;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.StockStatisticsData;
@@ -35,7 +36,7 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class StockStatisticsFragment extends AbstractFermatFragment {
+public class StockStatisticsFragment extends AbstractFermatFragment implements CBPBroadcasterConstants {
 
     private NumberFormat numberFormat = DecimalFormat.getInstance();
     private Currency currency;
@@ -247,4 +248,13 @@ public class StockStatisticsFragment extends AbstractFermatFragment {
         }
 
     }
+/*
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code){
+            case CBW_OPERATION_DEBIT_OR_CREDIT_UPDATE_VIEW:
+
+                break;
+        }
+    }*/
 }
