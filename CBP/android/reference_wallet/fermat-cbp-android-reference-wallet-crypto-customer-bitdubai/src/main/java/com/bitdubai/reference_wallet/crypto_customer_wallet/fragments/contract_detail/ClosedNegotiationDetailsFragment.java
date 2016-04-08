@@ -67,6 +67,8 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Cry
             errorManager = appSession.getErrorManager();
             
             negotiationInfo = walletManager.getNegotiationInformation(appSession.getNegotiationId());
+
+            //negotiationInfo = TestData.getOpenNegotiations(NegotiationStatus.WAITING_FOR_BROKER).get(0);
             
         } catch (Exception ex) {
             // TODO: Just for test purposes
