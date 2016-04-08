@@ -2,7 +2,7 @@ package com.bitdubai.fermat_dap_plugin.layer.middleware.asset.issuer.developer.b
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
-import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.bitdubai.DeveloperBitDubai;
+import org.fermat.fermat_dap_plugin.layer.middleware.asset.issuer.developer.DeveloperBitDubai;
 
 import org.junit.Assert;
 import org.junit.Test;

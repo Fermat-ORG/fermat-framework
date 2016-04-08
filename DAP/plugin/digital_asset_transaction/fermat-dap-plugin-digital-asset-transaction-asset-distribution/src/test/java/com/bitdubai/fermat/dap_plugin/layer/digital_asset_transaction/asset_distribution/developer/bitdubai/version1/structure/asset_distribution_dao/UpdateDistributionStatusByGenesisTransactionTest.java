@@ -9,8 +9,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.UnexpectedResultReturnedFromDatabaseException;
 
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDao;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.bitdubai.version_1.structure.database.AssetDistributionDatabaseConstants;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDao;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.database.AssetDistributionDatabaseConstants;
 
 import org.junit.Assert;
 import org.junit.Before;

@@ -2,8 +2,8 @@ package unit.com.bitdubai.fermat_dap_plugin.layer.digital_asset_transaction.asse
 
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
-import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.bitdubai.version_1.structure.database.AssetIssuingDatabaseConstants;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.developer_utils.AssetIssuingTransactionDeveloperDatabaseFactory;
+import org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_issuing.developer.version_1.structure.database.AssetIssuingDatabaseConstants;
 
 import org.junit.Before;
 import org.junit.Test;
