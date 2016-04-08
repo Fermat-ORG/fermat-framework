@@ -15,7 +15,6 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_tky_api.all_definitions.enums.BroadcasterNotificationType;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
-import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.DownloadSong;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDeleteSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDownloadSongException;
@@ -198,10 +197,13 @@ public class TokenlyWalletSongVault {
             FermatBundle fermatBundle;
             while(bytesRead != -1) {
                 if(CANCEL_DOWNLOAD){
+                    fermatBundle = new FermatBundle();
+                    fermatBundle.put(BroadcasterNotificationType.SONG_CANCEL.getCode(), "Download canceled by user request");
+                    fermatBundle.put(BroadcasterNotificationType.SONG_ID.getCode(), songId);
                     broadcaster.publish(
                             BroadcasterType.UPDATE_VIEW,
                             WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
-                            "Download canceled by user request");
+                            fermatBundle);
                     throw new CancelDownloadException();
                 }
                 for(byte byteRead : data){

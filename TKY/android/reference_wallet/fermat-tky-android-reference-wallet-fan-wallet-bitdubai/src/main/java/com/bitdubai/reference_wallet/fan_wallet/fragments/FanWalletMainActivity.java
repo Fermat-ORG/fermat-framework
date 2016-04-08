@@ -89,6 +89,7 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
         super.onCreateView(inflater, container, savedInstanceState);
         configureToolbar();
         getActivity().getWindow().setBackgroundDrawableResource(R.drawable.fanwallet_background_viewpager);
+
         /*view= inflater.inflate(R.layout.tky_fan_wallet_activity,container,false);
 
         toolbar = (Toolbar) view.findViewById(R.id.toolbar);

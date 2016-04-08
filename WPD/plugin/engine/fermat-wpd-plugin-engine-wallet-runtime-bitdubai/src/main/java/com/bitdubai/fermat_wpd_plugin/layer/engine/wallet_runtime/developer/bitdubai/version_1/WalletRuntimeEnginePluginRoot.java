@@ -3782,8 +3782,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTabStrip = new TabStrip();
         runtimeTabStrip.setTabsColor("#f5f5f5");
-        runtimeTabStrip.setTabsTextColor("#000000");
+        runtimeTabStrip.setTabsTextColor("#b9b9b9");
         runtimeTabStrip.setTabsIndicateColor("#0c6908");
+        runtimeTabStrip.setSelectTabTextColor("#000000");
         runtimeTabStrip.setDividerColor(0x72af9c);
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
@@ -3801,6 +3802,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTab.setLabel("Following");
         runtimeTab.setFragment(Fragments.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT);
         runtimeTabStrip.addTab(runtimeTab);
+
+
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.TKY_FAN_WALLET_FOLLOWING_TAB_FRAGMENT.getKey(), runtimeFragment);
