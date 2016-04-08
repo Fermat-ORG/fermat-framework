@@ -1088,6 +1088,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             protected Object doInBackground() throws Exception {
 
                 ExchangeRate rate =  moduleManager.getCurrencyExchange(exchangeProviderId);
+                lossProtectedWalletSession.setActualExchangeRate(rate);
                 return rate;
             }
         };

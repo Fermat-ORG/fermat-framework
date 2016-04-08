@@ -55,7 +55,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@string/no_history_send_or_receive"
+                android:text="@string/you_dont_have_chunck_values"
                 android:textColor="#fff"
                 android:textSize="20sp" />
 

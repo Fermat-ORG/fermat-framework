@@ -239,6 +239,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             bitcoinWalletSettings = new BitcoinWalletSettings();
                             bitcoinWalletSettings.setIsContactsHelpEnabled(true);
                             bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
+                            bitcoinWalletSettings.setNotificationEnabled(true);
+
 
                             if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
                                 bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
@@ -264,13 +266,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                 if (bitcoinWalletSettingsTemp.isPresentationHelpEnabled()) {
                                     setUpPresentation(false);
                                 }
-//                    Object o = referenceWalletSession.getData(SessionConstant.PRESENTATION_SCREEN_ENABLED);
-//                    if(o!=null) {
-//                        if (!(Boolean) o)
-//                            setUpPresentation();
-//                    }else{
-//
-//                    }
                             }
                         }, 500);
                     }catch (Exception e){
@@ -287,6 +282,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                 }
             });
+
 
         } catch (Exception ex) {
             if (errorManager != null)
@@ -306,13 +302,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
                         checkButton);
 
-//        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(),appSession)
-//                .setBannerRes(R.drawable.banner_bitcoin_wallet)
-//                .setIconRes(R.drawable.bitcoin_wallet_2)
-//                .setBody("Hola que tal")
-//                .setSubTitle("Soy un subtitulo")
-//                .setTextFooter("soy un footer y me la re banco")
-//                .build();
 
         presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
@@ -536,23 +525,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
 
                             GET("",getActivity());
-
-//                        CryptoAddress cryptoAddress = new CryptoAddress(receivedAddress, CryptoCurrency.BITCOIN);
-//                            CryptoWalletWalletContact cryptoWalletWalletContact = moduleManager.createWalletContact(cryptoAddress, "mati_bitcoins", "", "", Actors.EXTRA_USER, appSession.getAppPublicKey());
-//
-//                            String myCryptoAddress = getWalletAddress(cryptoWalletWalletContact.getActorPublicKey());
-//                            String url = "http://52.27.68.19:15400/mati/hello/?address="+myCryptoAddress;
-//                            String response = GET(url);
-//                            if(!response.equals("transaccion fallida")){
-//                                Toast.makeText(getActivity(),"Mati Bitcoins!!",Toast.LENGTH_SHORT).show();
-//                            }
-//                        } catch (CantCreateWalletContactException e) {
-//                            e.printStackTrace();
-//                        } catch (ContactNameAlreadyExistsException e) {
-//                            e.printStackTrace();
-//                        } catch (Exception e){
-//                            e.printStackTrace();
-//                        }
                         progress1 = 1;
                         circularProgressBar.setProgressValue(progress1);
                         return true;
@@ -562,16 +534,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     return false;
             }
         });
-
-//        txt_type_balance.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                //Toast.makeText(getActivity(),"balance cambiado",Toast.LENGTH_SHORT).show();
-//                //txt_type_balance.setText(referenceWalletSession.getBalanceTypeSelected());
-//                changeBalanceType(txt_type_balance, txt_balance_amount);
-//            }
-//        });
-
 
         txt_balance_amount = (TextView) balance_header.findViewById(R.id.txt_balance_amount);
 
@@ -857,7 +819,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 //available_offset = lstCryptoWalletTransactionsAvailable.size();
 
                 for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
-//                    List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, MAX_TRANSACTIONS, 0);
                     List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
 
                     GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction> grouperItem = new GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction>(lst, false, cryptoWalletTransaction);
@@ -865,7 +826,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 }
 
                 if(!data.isEmpty()){
-                    FermatAnimationsUtils.showEmpty(getActivity(),false,emptyListViewsContainer);
+                    FermatAnimationsUtils.showEmpty(getActivity(),true,emptyListViewsContainer);
                 }
 
 
