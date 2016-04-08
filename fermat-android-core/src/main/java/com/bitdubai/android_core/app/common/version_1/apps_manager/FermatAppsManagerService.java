@@ -1,5 +1,11 @@
 package com.bitdubai.android_core.app.common.version_1.apps_manager;
 
+import android.app.Service;
+import android.content.Intent;
+import android.os.Binder;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
+
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.recents.RecentApp;
@@ -34,16 +40,43 @@ import static com.bitdubai.android_core.app.common.version_1.util.system.FermatS
     // obtener conexiones, etc
 //TODO: falta agregar el tema de cargar el AppsConfig cuando se incia la app por primera vez
 
-public class FermatAppsManager implements com.bitdubai.fermat_android_api.engine.FermatAppsManager {
+public class FermatAppsManagerService extends Service implements com.bitdubai.fermat_android_api.engine.FermatAppsManager {
+
+    private static final String TAG = "AppsManagerService";
 
     private Map<String,RecentApp> recentsAppsStack;
     private FermatSessionManager fermatSessionManager;
     private HashMap<String,FermatAppType> appsInstalledInDevice = new HashMap<>();
+    // Binder given to clients
+    private final IBinder localBinder = new AppManagerLocalBinder();
 
+    /**
+     * Class used for the client Binder.  Because we know this service always
+     * runs in the same process as its clients, we don't need to deal with IPC.
+     */
+    public class AppManagerLocalBinder extends Binder {
+        public FermatAppsManagerService getService() {
+            // Return this instance of LocalService so clients can call public methods
+            return FermatAppsManagerService.this;
+        }
+    }
 
-    public FermatAppsManager() {
+    @Override
+    public void onCreate() {
+        super.onCreate();
         this.recentsAppsStack = new HashMap<>();
         this.fermatSessionManager = new FermatSessionManager();
+        init();
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        String key = intent.getStringExtra(AppManagerKeys.AUTENTIFICATION_CLIENT_KEY);
+        if(key==null){
+            return localBinder;
+        }
+        return null;
     }
 
     public void init(){

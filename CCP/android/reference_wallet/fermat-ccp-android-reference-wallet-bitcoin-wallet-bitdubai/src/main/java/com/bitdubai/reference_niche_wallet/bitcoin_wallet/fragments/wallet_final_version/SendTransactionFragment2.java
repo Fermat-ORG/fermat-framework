@@ -182,6 +182,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     }
 
+    int progress = 1;
+    int broadcasterID = 0;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -208,6 +210,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         }
                     });
                 }
+
             }
         });
 
@@ -785,16 +788,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                 BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType().getCode());
 
-                List<CryptoWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, available_offset);
+                List<CryptoWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
 
                 lstCryptoWalletTransactionsAvailable.addAll(list);
 
-                available_offset = lstCryptoWalletTransactionsAvailable.size();
-
-                //lstCryptoWalletTransactionsBook.addAll(moduleManager.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, MAX_TRANSACTIONS, book_offset));
-
-                //book_offset = lstCryptoWalletTransactionsBook.size();
-
+                //available_offset = lstCryptoWalletTransactionsAvailable.size();
 
                 for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
 //                    List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, MAX_TRANSACTIONS, 0);

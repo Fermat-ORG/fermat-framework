@@ -713,7 +713,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         if (openNegotiationList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer =(LinearLayout) layout.findViewById(R.id.empty);
-            FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+            FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
             //emptyListViewsContainer.setVisibility(View.VISIBLE);
         }
     }
@@ -758,6 +758,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     @Override
     public List<GrouperItem> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
         ArrayList<GrouperItem> data = new ArrayList<>();
+
         lstCryptoWalletTransactionsAvailable = new ArrayList<>();
 
         try {
@@ -767,14 +768,21 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                 BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(settingsManager.loadAndGetSettings(lossProtectedWalletSession.getAppPublicKey()).getBlockchainNetworkType().getCode());
 
-                List<LossProtectedWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossProtectedWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, available_offset);
+                List<LossProtectedWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossProtectedWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
 
                 lstCryptoWalletTransactionsAvailable.addAll(list);
 
-                available_offset = lstCryptoWalletTransactionsAvailable.size();
+               // available_offset = lstCryptoWalletTransactionsAvailable.size();
 
                 for (LossProtectedWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
+
                     List<LossProtectedWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossProtectedWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
+
+                    lst.add(cryptoWalletTransaction);
+                    if(!cryptoWalletTransaction.getActorFromType().equals(Actors.DEVICE_USER)){
+                        lst = moduleManager.listTransactionsByActorAndType(BalanceType.AVAILABLE, TransactionType.DEBIT, lossProtectedWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
+                    }
+
 
                     GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction> grouperItem = new GrouperItem<LossProtectedWalletTransaction, LossProtectedWalletTransaction>(lst, false, cryptoWalletTransaction);
                     data.add(grouperItem);

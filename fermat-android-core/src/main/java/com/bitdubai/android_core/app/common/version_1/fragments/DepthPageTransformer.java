@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.util;
+package com.bitdubai.android_core.app.common.version_1.fragments;
 
 import android.support.v4.view.ViewPager;
 import android.view.View;

@@ -316,6 +316,7 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                     String context = contextBuffer.toString();
                     String possibleCause = "The Template triggered an unexpected problem that wasn't able to solve by itself";
                     CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
+                    exception.printStackTrace();
 
                     errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
                     throw pluginStartException;

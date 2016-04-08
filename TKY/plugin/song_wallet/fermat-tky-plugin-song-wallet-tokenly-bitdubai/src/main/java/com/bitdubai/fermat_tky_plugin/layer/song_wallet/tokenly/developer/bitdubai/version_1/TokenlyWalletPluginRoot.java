@@ -220,6 +220,7 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             //testDeleteSong();
             //testDownloadDeletedSong();
             //testDownloadSongsAndRecoverBytesArray();
+            //testCancelDownload();
         } catch(CantInitializeDatabaseException e){
             errorManager.reportUnexpectedPluginException(
                     Plugins.TOKENLY_API,
@@ -425,6 +426,16 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             fos.close();
         } catch (Exception e){
             System.out.println("TKY: array bytes exception");
+            e.printStackTrace();
+        }
+    }
+
+    private void testCancelDownload(){
+        try {
+            Fan fanIdentity = getTestFanIdentity();
+            this.tokenlyWalletManager.synchronizeSongsByUser(fanIdentity);
+        } catch (Exception e){
+            System.out.println("TKY: cancel download exception");
             e.printStackTrace();
         }
     }

@@ -25,7 +25,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 /**
- * Created by mati on 2016.01.06..
+ * Created by Matias Furszyfer on 2016.01.06..
  */
 public class SideMenuBuilder {
 
