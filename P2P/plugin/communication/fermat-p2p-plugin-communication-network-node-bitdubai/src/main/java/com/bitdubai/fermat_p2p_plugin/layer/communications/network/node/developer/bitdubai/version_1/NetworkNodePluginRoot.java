@@ -236,6 +236,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
     }
 
+    private static final String IDENTITY_FILE_DIRECTORY = "private";
+    private static final String IDENTITY_FILE_NAME      = "nodeIdentity";
+
     /**
      * Initialize the identity of this plugin
      */
@@ -250,7 +253,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
          /*
           * Load the file with the identity
           */
-            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "identity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, IDENTITY_FILE_DIRECTORY, IDENTITY_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             String content = pluginTextFile.getContent();
 
             System.out.println("content = " + content);
@@ -265,7 +268,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              */
             try {
 
-                System.out.println("No previous identity finder - Proceed to create new one");
+                System.out.println("No previous identity found - Proceed to create new one");
 
                 /*
                  * Create the new identity
@@ -278,7 +281,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
                 /*
                  * save into the file
                  */
-                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "private", "identity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, IDENTITY_FILE_DIRECTORY, IDENTITY_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 pluginTextFile.setContent(identity.getPrivateKey());
                 pluginTextFile.persistToMedia();
 

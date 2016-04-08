@@ -22,7 +22,7 @@ public enum Plugins implements FermatPluginsEnum {
     BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER      ("BWSCCLSERVER" ),
 
     NETWORK_NODE("BCNNODE"),
-    BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT      ("BCNCLIENT"),
+    NETWORK_CLIENT("BCNCLIENT"),
 
     BITDUBAI_CLOUD_SERVER_COMMUNICATION                             ("BCLOUSC"      ),
     BITDUBAI_USER_NETWORK_SERVICE                                   ("BUSERNETS"    ),

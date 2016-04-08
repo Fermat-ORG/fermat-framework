@@ -20,14 +20,14 @@ import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.CommunicationsNetworkClientConnection</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 07/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class CommunicationsNetworkClientConnection extends Thread {
+public class NetworkClientCommunicationConnection extends Thread {
 
     private URI                uri            ;
     private ErrorManager       errorManager   ;
@@ -49,11 +49,11 @@ public class CommunicationsNetworkClientConnection extends Thread {
      */
     private String serverIdentity;
 
-    public CommunicationsNetworkClientConnection(final URI             uri            ,
-                                                 final ErrorManager    errorManager   ,
-                                                 final EventManager    eventManager   ,
-                                                 final LocationManager locationManager,
-                                                 final ECCKeyPair      clientIdentity ){
+    public NetworkClientCommunicationConnection(final URI uri,
+                                                final ErrorManager errorManager,
+                                                final EventManager eventManager,
+                                                final LocationManager locationManager,
+                                                final ECCKeyPair clientIdentity){
         this.uri             = uri            ;
         this.errorManager    = errorManager   ;
         this.eventManager    = eventManager   ;

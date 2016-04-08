@@ -15,7 +15,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 public class NetworkClientPluginSubsystem extends AbstractPluginSubsystem {
 
     public NetworkClientPluginSubsystem() {
-        super(new PluginReference(Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT));
+        super(new PluginReference(Plugins.NETWORK_CLIENT));
     }
 
     @Override

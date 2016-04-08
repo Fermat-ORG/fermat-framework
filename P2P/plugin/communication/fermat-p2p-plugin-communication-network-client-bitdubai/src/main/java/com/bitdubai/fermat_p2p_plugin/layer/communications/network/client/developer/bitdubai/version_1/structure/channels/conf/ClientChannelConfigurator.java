@@ -24,11 +24,13 @@ public class ClientChannelConfigurator extends ClientEndpointConfig.Configurator
     @Override
     public void beforeRequest(Map<String, List<String>> headers) {
 
-        ECCKeyPair clientIdentity = (ECCKeyPair)   ClientContext.get(ClientContextItem.CLIENT_IDENTITY);
+        Object clientIdentity = ClientContext.get(ClientContextItem.CLIENT_IDENTITY);
 
-        List<String> values = new ArrayList<>();
-        values.add(clientIdentity.getPublicKey());
-        headers.put(HeadersAttName.CPKI_ATT_HEADER_NAME, values);
+        if (clientIdentity != null) {
+            List<String> values = new ArrayList<>();
+            values.add(((ECCKeyPair) clientIdentity).getPublicKey());
+            headers.put(HeadersAttName.CPKI_ATT_HEADER_NAME, values);
+        }
     }
 
 }

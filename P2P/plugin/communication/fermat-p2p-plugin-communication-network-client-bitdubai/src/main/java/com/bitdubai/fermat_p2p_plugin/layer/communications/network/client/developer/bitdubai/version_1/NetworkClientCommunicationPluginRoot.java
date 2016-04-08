@@ -23,7 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.CommunicationsNetworkClientConnection;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database.NetworkClientP2PDatabaseConstants;
@@ -83,7 +83,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
      */
     public static final String SERVER_IP = HardcodeConstants.SERVER_IP_DEFAULT;
 
-    private CommunicationsNetworkClientConnection communicationsNetworkClientConnection;
+    private NetworkClientCommunicationConnection networkClientCommunicationConnection;
 
 
     @Override
@@ -119,14 +119,14 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
 
             URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT+"/client-channel");
 
-            communicationsNetworkClientConnection = new CommunicationsNetworkClientConnection(
+            networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
                     uri            ,
                     errorManager   ,
                     eventManager   ,
                     locationManager,
                     identity
             );
-            communicationsNetworkClientConnection.start();
+            networkClientCommunicationConnection.start();
 
             /*
              * Add references to the node context
@@ -146,7 +146,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
             String possibleCause = "The  Network Client Service triggered an unexpected problem that wasn't able to solve by itself";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, exception, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.NETWORK_CLIENT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
 
             throw pluginStartException;
 
@@ -183,13 +183,15 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
             String possibleCause = "No all required resource are injected";
             CantStartPluginException pluginStartException = new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, null, context, possibleCause);
 
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
+            errorManager.reportUnexpectedPluginException(Plugins.NETWORK_CLIENT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, pluginStartException);
             throw pluginStartException;
 
         }
 
     }
 
+    private static final String IDENTITY_FILE_DIRECTORY = "private";
+    private static final String IDENTITY_FILE_NAME      = "clientIdentity";
 
     /**
      * Initialize the identity of this plugin
@@ -205,8 +207,11 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
          /*
           * Load the file with the identity
           */
-            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "identity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, IDENTITY_FILE_DIRECTORY, IDENTITY_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             String content = pluginTextFile.getContent();
+
+            System.out.println("content = " + content);
+
             identity = new ECCKeyPair(content);
 
         } catch (FileNotFoundException e) {
@@ -217,25 +222,28 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
              */
             try {
 
-                System.out.println("No previous identity finder - Proceed to create new one");
+                System.out.println("No previous identity found - Proceed to create new one");
 
                 /*
                  * Create the new identity
                  */
                 identity = new ECCKeyPair();
 
+                System.out.println("identity.getPrivateKey() = " + identity.getPrivateKey());
+                System.out.println("identity.getPublicKey() = " + identity.getPublicKey());
+
                 /*
                  * save into the file
                  */
-                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "private", "identity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, IDENTITY_FILE_DIRECTORY, IDENTITY_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 pluginTextFile.setContent(identity.getPrivateKey());
+                pluginTextFile.persistToMedia();
 
-            } catch (CantCreateFileException cantCreateFileException) {
+            } catch (Exception exception) {
                 /*
                  * The file cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
-                throw new CantInitializeNetworkClientP2PDatabaseException(cantCreateFileException.getLocalizedMessage());
+                throw new CantInitializeNetworkClientP2PDatabaseException(exception.getLocalizedMessage());
             }
 
 
@@ -244,7 +252,6 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
             /*
              * The file cannot be load. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantCreateFileException);
             throw new CantInitializeNetworkClientP2PDatabaseException(cantCreateFileException.getLocalizedMessage());
 
         }
@@ -274,7 +281,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
             /*
              * The database exists but cannot be open. I can not handle this situation.
              */
-            errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
+            errorManager.reportUnexpectedPluginException(Plugins.NETWORK_CLIENT, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantOpenDatabaseException);
             throw new CantInitializeNetworkClientP2PDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
         } catch (DatabaseNotFoundException e) {
@@ -299,7 +306,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
                 /*
                  * The database cannot be created. I can not handle this situation.
                  */
-                errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
+                errorManager.reportUnexpectedPluginException(Plugins.NETWORK_CLIENT, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantOpenDatabaseException);
                 throw new CantInitializeNetworkClientP2PDatabaseException(cantOpenDatabaseException.getLocalizedMessage());
 
             }
