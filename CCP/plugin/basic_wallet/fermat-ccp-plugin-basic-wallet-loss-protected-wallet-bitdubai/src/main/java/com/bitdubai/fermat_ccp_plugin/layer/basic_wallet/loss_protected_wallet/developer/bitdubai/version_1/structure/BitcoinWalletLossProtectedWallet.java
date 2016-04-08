@@ -291,7 +291,7 @@ public class BitcoinWalletLossProtectedWallet implements BitcoinLossProtectedWal
     public BitcoinLossProtectedWalletBalance getBalance(final BalanceType balanceType) {
 
         switch (balanceType) {
-            case AVAILABLE:
+               case AVAILABLE:
                 return new BitcoinWalletLossProtectedWalletAvailableBalance(database,this.broadcaster,exchangeProviderId,exchangeProviderFilterManagerproviderFilter);
             case BOOK:
                 return new BitcoinWalletLossProtectedWalletBookBalance(database,this.broadcaster,exchangeProviderId,exchangeProviderFilterManagerproviderFilter);
