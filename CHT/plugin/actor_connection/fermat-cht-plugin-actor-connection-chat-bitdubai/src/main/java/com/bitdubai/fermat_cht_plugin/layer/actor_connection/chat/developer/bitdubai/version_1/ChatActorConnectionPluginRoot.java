@@ -56,7 +56,7 @@ public class ChatActorConnectionPluginRoot extends AbstractPlugin implements Dat
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
     private Broadcaster broadcaster;
 
-    @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CHAT_ACTOR_NETWORK_SERVICE)
+    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CHAT_ACTOR_NETWORK_SERVICE)
     private ChatManager chatManagerNetworkService;
 
 
@@ -126,7 +126,7 @@ public class ChatActorConnectionPluginRoot extends AbstractPlugin implements Dat
 
             throw new CantStartPluginException(
                     cantInitializeActorConnectionDatabaseException,
-                    "Crypto Broker Actor Connection.",
+                    "Chat Actor Connection.",
                     "Problem initializing database of the plug-in."
             );
         }
