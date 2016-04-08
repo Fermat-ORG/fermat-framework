@@ -360,8 +360,9 @@ public class ChatAdapterView extends LinearLayout {
                          * LocalActorType as is defined in database
                          */
                         //chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-                        Contact newContact = chatManager.getContactByContactId(
-                                contactId);
+                        //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                        Contact newContact = null;//chatManager.getContactByContactId(
+                                //contactId);
                         PlatformComponentType remoteActorType = newContact.getRemoteActorType();
                         remotePublicKey = newContact.getRemoteActorPublicKey();
                         chat.setRemoteActorType(remoteActorType);
