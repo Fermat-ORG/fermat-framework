@@ -6,8 +6,8 @@ import com.bitdubai.fermat_api.layer.all_definition.events.common.AbstractEvent;
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 05/04/16.
  */
-public class ActorConnectionNewConnectionEvent extends AbstractEvent {
-    public ActorConnectionNewConnectionEvent(FermatEventEnum eventType) {
+public class ChatConnectionRequestNewEvent extends AbstractEvent {
+    public ChatConnectionRequestNewEvent(FermatEventEnum eventType) {
         super(eventType);
     }
 }
