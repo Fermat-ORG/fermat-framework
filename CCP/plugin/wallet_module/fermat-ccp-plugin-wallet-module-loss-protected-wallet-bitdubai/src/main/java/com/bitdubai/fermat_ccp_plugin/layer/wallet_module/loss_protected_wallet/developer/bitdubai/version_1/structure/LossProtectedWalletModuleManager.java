@@ -764,12 +764,24 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     }
 
     @Override
-    public long getBalance(BalanceType balanceType,
-                           String walletPublicKey,
+    public long getRealBalance( String walletPublicKey,
                            BlockchainNetworkType blockchainNetworkType) throws CantGetLossProtectedBalanceException {
         try {
+
             BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-            return bitcoinWalletWallet.getBalance(balanceType).getBalance(blockchainNetworkType);
+            return bitcoinWalletWallet.getBalance(BalanceType.AVAILABLE).getRealBalance(blockchainNetworkType);
+        } catch (CantCalculateBalanceException e) {
+            throw new CantGetLossProtectedBalanceException(CantGetLossProtectedBalanceException.DEFAULT_MESSAGE, e, "", "Cant Calculate Balance of the wallet.");
+        } catch(Exception e){
+            throw new CantGetLossProtectedBalanceException(CantGetLossProtectedBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+    }
+
+    @Override
+    public long geBookBalance(String walletPublicKey, BlockchainNetworkType blockchainNetworkType) throws CantGetLossProtectedBalanceException {
+        try {
+            BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            return bitcoinWalletWallet.getBalance(BalanceType.BOOK).getBalance(blockchainNetworkType);
         } catch (CantCalculateBalanceException e) {
             throw new CantGetLossProtectedBalanceException(CantGetLossProtectedBalanceException.DEFAULT_MESSAGE, e, "", "Cant Calculate Balance of the wallet.");
         } catch(Exception e){
@@ -1028,7 +1040,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                         }
                         @Override
                         public long getAmount() {
-                            return 2;
+                            return (long) 2.2;
                         }
                         @Override
                         public long getRunningBookBalance() {
@@ -1182,7 +1194,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
                     @Override
                     public long getExchangeRate() {
-                        return 420;
+                        return 21;
                     }
                 };
 

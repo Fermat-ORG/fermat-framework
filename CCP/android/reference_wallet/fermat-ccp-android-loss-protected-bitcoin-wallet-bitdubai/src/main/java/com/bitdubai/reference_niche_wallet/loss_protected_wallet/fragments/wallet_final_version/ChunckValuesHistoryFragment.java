@@ -1,5 +1,6 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
@@ -30,6 +32,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionTy
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
@@ -40,6 +43,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.ChunckValuesHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.PaymentRequestHistoryAdapter;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
@@ -74,6 +79,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
      */
     private List<LossProtectedWalletTransaction> lstTransaction;
     private LossProtectedWalletTransaction selectedItem;
+    private LossProtectedWalletModuleManager moduleManager;
     /**
      * Executor Service
      */
@@ -82,6 +88,9 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     private int offset = 0;
     private View rootView;
     private LinearLayout empty;
+    private LinearLayout chunck_header_container;
+    private TextView chunk_balance_TextView;
+    private  TextView exchange_rate;
 
     SettingsManager<LossProtectedWalletSettings> settingsManager;
 
@@ -157,13 +166,48 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             recyclerView.addItemDecoration(itemDecoration);
             empty = (LinearLayout) rootView.findViewById(R.id.empty);
             //setUp();
-            return rootView;
+            setUpHeader(inflater);
+
         }catch (Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
-        return container;
+        return rootView;
     }
-   private void setUp(){
+
+    private void  setUpHeader(LayoutInflater inflater) {
+        try {
+            final RelativeLayout container_header_balance = getToolbarHeader();
+            try {
+                container_header_balance.removeAllViews();
+            } catch (Exception e) {
+
+            }
+            container_header_balance.setBackgroundColor(Color.parseColor("#fff"));
+
+
+            final View chunk_balance_header = inflater.inflate(R.layout.chunck_header, container_header_balance, true);
+
+            container_header_balance.setVisibility(View.VISIBLE);
+
+            chunck_header_container = (LinearLayout) chunk_balance_header.findViewById(R.id.chunck_header_container);
+
+            final String realBalance = WalletUtils.formatBalanceStringNotDecimal(moduleManager.getRealBalance(referenceWalletSession.getAppPublicKey(), blockchainNetworkType), ShowMoneyType.BITCOIN.getCode());
+
+            final double actualExchangeRate = referenceWalletSession.getActualExchangeRate();
+
+            chunk_balance_TextView = (TextView) chunk_balance_header.findViewById(R.id.txt_amount);
+            exchange_rate = (TextView) chunk_balance_header.findViewById(R.id.txt_exchange_rate);
+
+            chunk_balance_TextView.setText(realBalance);
+            exchange_rate.setText("Exchange Rate: 1 BTC = "+actualExchangeRate);
+
+        } catch (CantGetLossProtectedBalanceException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void setUp(){
         FrameLayout frameLayout = new FrameLayout(getActivity());
 
         FrameLayout.LayoutParams lbs = new FrameLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
