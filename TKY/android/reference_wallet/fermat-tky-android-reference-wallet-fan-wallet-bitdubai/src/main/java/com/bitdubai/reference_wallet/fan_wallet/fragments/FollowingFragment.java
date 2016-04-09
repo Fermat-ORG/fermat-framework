@@ -12,6 +12,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -65,6 +66,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     List<FollowingItems> items=new ArrayList<>();
     List<Fan> fanList=new ArrayList<>();
     Bot artistBot;
+    final Handler searchArttisList = new Handler();
     public static FollowingFragment newInstance(){
         return new FollowingFragment();
     }
@@ -131,22 +133,29 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     }
 
     void loaditems(){
-        try {
-            fanList=fanwalletmoduleManager.getFanWalletModule().listIdentitiesFromCurrentDeviceUser();
-            for(Fan artistusername:fanList){
-                artistBot=fanwalletmoduleManager.getFanWalletModule().getBotBySwapbotUsername(artistusername.getUsername());
-                System.out.println("tky_artistBot:"+artistBot.getLogoImageDetails().originalUrl() +"  +  "+artistBot.getAddress()+"  +  "+artistBot.getName());
-                items.add(new FollowingItems(artistBot.getLogoImageDetails().originalUrl(),artistBot.getAddress(), artistBot.getName()));
-            }
-        } catch (CantListFanIdentitiesException e) {
-            System.out.println("tky_loaditem_fanidentity_exception:"+e);
-            e.printStackTrace();
-        } catch (CantGetBotException e) {
-            System.out.println("tky_loaditem_Bot_exception:"+e);
-            e.printStackTrace();
-        }
+        searchArttisList.post(myRunnable);
 
     }
+
+    final Runnable myRunnable = new Runnable() {
+
+        public void run() {
+            try {
+                fanList=fanwalletmoduleManager.getFanWalletModule().listIdentitiesFromCurrentDeviceUser();
+                for(Fan artistusername:fanList){
+                    artistBot=fanwalletmoduleManager.getFanWalletModule().getBotBySwapbotUsername(artistusername.getUsername());
+                    System.out.println("tky_artistBot:"+artistBot.getLogoImageDetails().originalUrl() +"  +  "+artistBot.getAddress()+"  +  "+artistBot.getName());
+                    items.add(new FollowingItems(artistBot.getLogoImageDetails().originalUrl(),artistBot.getAddress(), artistBot.getName()));
+                }
+            } catch (CantListFanIdentitiesException e) {
+                System.out.println("tky_loaditem_fanidentity_exception:"+e);
+                e.printStackTrace();
+            } catch (CantGetBotException e) {
+                System.out.println("tky_loaditem_Bot_exception:"+e);
+                e.printStackTrace();
+            }
+        }
+    };
 
 
     @Nullable
