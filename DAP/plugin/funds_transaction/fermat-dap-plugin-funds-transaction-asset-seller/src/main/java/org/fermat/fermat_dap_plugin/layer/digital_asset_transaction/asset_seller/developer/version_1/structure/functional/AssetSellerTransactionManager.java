@@ -80,7 +80,7 @@ public final class AssetSellerTransactionManager {
     }
 
     private void startSellingTransactions(AssetUserWallet userWallet, AssetNegotiation negotiation, ActorAssetUser actorTo) throws CantGetDigitalAssetFromLocalStorageException, CantGetTransactionsException, CantInsertRecordException, RecordsNotFoundException, CantExecuteLockOperationException {
-        List<AssetUserWalletTransaction> availableTransactions = userWallet.getAllAvailableTransactions(negotiation.getAssetToOffer().getGenesisAddress());
+        List<AssetUserWalletTransaction> availableTransactions = userWallet.getAllAvailableTransactions(negotiation.getAssetToOffer().getPublicKey());
         for (int i = 0; i < negotiation.getQuantityToBuy(); i++) {
             AssetUserWalletTransaction transaction = availableTransactions.get(i);
             DigitalAssetMetadata metadata = userWallet.getDigitalAssetMetadata(transaction.getGenesisTransaction());
@@ -96,7 +96,7 @@ public final class AssetSellerTransactionManager {
     }
 
     private List<DigitalAssetMetadata> getAvailableAssetMetadata(AssetUserWallet assetUserWallet, DigitalAsset digitalAsset) throws CantGetTransactionsException, CantGetDigitalAssetFromLocalStorageException {
-        List<AssetUserWalletTransaction> transactions = assetUserWallet.getAllAvailableTransactions(digitalAsset.getGenesisAddress());
+        List<AssetUserWalletTransaction> transactions = assetUserWallet.getAllAvailableTransactions(digitalAsset.getPublicKey());
         List<DigitalAssetMetadata> toReturn = new ArrayList<>();
         for (AssetUserWalletTransaction transaction : transactions) {
             toReturn.add(assetUserWallet.getDigitalAssetMetadata(transaction.getGenesisTransaction()));

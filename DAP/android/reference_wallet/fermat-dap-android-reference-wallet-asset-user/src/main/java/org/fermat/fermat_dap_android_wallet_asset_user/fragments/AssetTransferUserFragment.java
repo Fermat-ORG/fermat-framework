@@ -179,7 +179,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
                             .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                                 @Override
                                 public void onClick() {
-                                    doTransfer(assetToTransfer.getDigitalAsset().getGenesisAddress(), users, 1);
+                                    doTransfer(assetToTransfer.getDigitalAsset(), users, 1);
                                 }
                             }).build().show();
 
@@ -351,7 +351,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
         }
     }
 
-    private void doTransfer(final CryptoAddress cryptoAddress, final List<User> users, final int assetAmount) {
+    private void doTransfer(final org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset asset, final List<User> users, final int assetAmount) {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
         dialog.setCancelable(false);
@@ -364,7 +364,7 @@ public class AssetTransferUserFragment extends FermatWalletListFragment<User>
                         moduleManager.addUserToDeliver(user.getActorAssetUser());
                     }
                 }
-                moduleManager.transferAssets(cryptoAddress, WalletUtilities.WALLET_PUBLIC_KEY, assetAmount);
+                moduleManager.transferAssets(asset, WalletUtilities.WALLET_PUBLIC_KEY, assetAmount);
                 return true;
             }
         };

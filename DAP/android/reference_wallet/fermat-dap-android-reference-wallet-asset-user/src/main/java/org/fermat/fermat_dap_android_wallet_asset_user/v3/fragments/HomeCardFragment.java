@@ -34,6 +34,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_dap_android_wallet_asset_user_bitdubai.R;
+
+import org.fermat.fermat_dap_android_wallet_asset_user.models.DigitalAsset;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.AssetUserSession;
 import org.fermat.fermat_dap_android_wallet_asset_user.sessions.SessionConstantsAssetUser;
 import org.fermat.fermat_dap_android_wallet_asset_user.util.CommonLogger;
@@ -341,7 +343,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
         return adapter;
     }
 
-    private void doAppropriate(final CryptoAddress cryptoAddress) {
+    private void doAppropriate(final org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset asset) {
         final Activity activity = getActivity();
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
@@ -356,7 +358,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
 //                            asset.getActorAssetRedeemPoint()
 //                    );
                 //TODO: only for Appropriate test
-                moduleManager.appropriateAsset(cryptoAddress, null);
+                moduleManager.appropriateAsset(asset, null);
                 return true;
             }
         };
@@ -515,7 +517,7 @@ public class HomeCardFragment extends FermatWalletListFragment<Asset> implements
                 .setYesBtnListener(new ConfirmDialog.OnClickAcceptListener() {
                     @Override
                     public void onClick() {
-                        doAppropriate(asset.getDigitalAsset().getGenesisAddress());
+                        doAppropriate(asset.getDigitalAsset());
                     }
                 }).build().show();
     }

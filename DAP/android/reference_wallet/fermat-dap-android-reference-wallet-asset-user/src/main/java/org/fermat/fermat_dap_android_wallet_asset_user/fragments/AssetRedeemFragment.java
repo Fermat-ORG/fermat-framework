@@ -187,7 +187,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
                                                                 @Override
                                                                 public void onClick() {
                                                                     int assetsAmount = Integer.parseInt(assetsToRedeemEditText.getText().toString());
-                                                                    doRedeem(digitalAsset.getDigitalAsset().getGenesisAddress(), redeemPoints, assetsAmount);
+                                                                    doRedeem(digitalAsset, redeemPoints, assetsAmount);
                                                                 }
                                                             }).build().show();
                         }
@@ -262,7 +262,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         return count;
     }
 
-    private void doRedeem(final CryptoAddress cryptoAddress, final List<RedeemPoint> redeemPoints, final int assetAmount) {
+    private void doRedeem(final DigitalAsset asset, final List<RedeemPoint> redeemPoints, final int assetAmount) {
         final ProgressDialog dialog = new ProgressDialog(activity);
         dialog.setMessage(getResources().getString(R.string.dap_user_wallet_wait));
         dialog.setCancelable(false);
@@ -270,7 +270,7 @@ public class AssetRedeemFragment extends AbstractFermatFragment {
         FermatWorker task = new FermatWorker() {
             @Override
             protected Object doInBackground() throws Exception {
-                moduleManager.redeemAssetToRedeemPoint(cryptoAddress, WalletUtilities.WALLET_PUBLIC_KEY, Data.getRedeemPoints(redeemPoints), assetAmount);
+                moduleManager.redeemAssetToRedeemPoint(asset.getDigitalAsset(), WalletUtilities.WALLET_PUBLIC_KEY, Data.getRedeemPoints(redeemPoints), assetAmount);
                 return true;
             }
         };

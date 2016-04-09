@@ -245,9 +245,9 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void redeemAssetToRedeemPoint(CryptoAddress cryptoAddress, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoints, int assetAmount) throws CantRedeemDigitalAssetException {
+    public void redeemAssetToRedeemPoint(DigitalAsset asset, String walletPublicKey, List<ActorAssetRedeemPoint> actorAssetRedeemPoints, int assetAmount) throws CantRedeemDigitalAssetException {
         try {
-            assetUserWalletModule.redeemAssetToRedeemPoint(cryptoAddress, walletPublicKey, actorAssetRedeemPoints, assetAmount, selectedNetwork);
+            assetUserWalletModule.redeemAssetToRedeemPoint(asset, walletPublicKey, actorAssetRedeemPoints, assetAmount, selectedNetwork);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.USER_REDEMPTION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRedeemDigitalAssetException(e);
@@ -255,7 +255,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void appropriateAsset(CryptoAddress cryptoAddress, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException {
+    public void appropriateAsset(DigitalAsset asset, String bitcoinWalletPublicKey) throws CantExecuteAppropriationTransactionException {
         try {
             List<InstalledWallet> installedWallets = walletMiddlewareManager.getInstalledWallets();
             if (installedWallets.isEmpty()) {
@@ -264,7 +264,7 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
             }
             //TODO REMOVE HARDCODE
             InstalledWallet installedWallet = installedWallets.get(0);
-            assetUserWalletModule.appropriateAsset(cryptoAddress, installedWallet.getWalletPublicKey(), selectedNetwork);
+            assetUserWalletModule.appropriateAsset(asset, installedWallet.getWalletPublicKey(), selectedNetwork);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.ASSET_APPROPRIATION, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantExecuteAppropriationTransactionException(e);
@@ -396,9 +396,9 @@ public class AssetUserWalletModulePluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public void transferAssets(CryptoAddress cryptoAddress, String walletPublicKey, int assetsAmount) throws CantTransferDigitalAssetsException {
+    public void transferAssets(DigitalAsset asset, String walletPublicKey, int assetsAmount) throws CantTransferDigitalAssetsException {
         try {
-            assetUserWalletModule.transferAsset(cryptoAddress, walletPublicKey, selectedUsersToDeliver, assetsAmount, selectedNetwork);
+            assetUserWalletModule.transferAsset(asset, walletPublicKey, selectedUsersToDeliver, assetsAmount, selectedNetwork);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.ASSET_TRANSFER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantTransferDigitalAssetsException(e);
