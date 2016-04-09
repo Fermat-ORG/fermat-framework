@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -34,7 +35,9 @@ import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.Song;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDeleteSongException;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantDownloadSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongListException;
+import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongStatusException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.FanWalletPreferenceSettings;
@@ -70,10 +73,10 @@ public class SongFragment extends AbstractFermatFragment {
     DownloadThreadClass downloadthread;
     SyncThreadClass syncthread;
     final Handler myHandler = new Handler();
+    final Handler myCancelHandler = new Handler();
    // MonitorThreadClass monitorThreadClass;
     private SongAdapter adapter;
     private RecyclerView.LayoutManager lManager;
-
     String code;
     FermatBundle bundle;
 
@@ -133,44 +136,41 @@ public class SongFragment extends AbstractFermatFragment {
 
     @Override
     public void onUpdateViewOnUIThread(String code) {
-        this.code=code;
-        myHandler.post(myRunnablecode);
-
-
+        if (swipeContainer.isRefreshing()){
+            swipeContainer.setRefreshing(false);
+        }
+        Toast.makeText(getActivity(),"Connection Problem With External Platform",Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onUpdateViewUIThred(FermatBundle bundle) {
-        this.bundle=bundle;
+            this.bundle = bundle;
+        if (swipeContainer.isRefreshing()){
+            swipeContainer.setRefreshing(false);
+        }
         myHandler.post(myRunnablebundle);
     }
 
     final Runnable myRunnablebundle = new Runnable() {
 
         public void run() {
-            updateViewForBroadcaster(0, bundle, "");
+            updateViewForBroadcaster(bundle);
         }
     };
 
-    final Runnable myRunnablecode = new Runnable() {
-
-        public void run() {
-            updateViewForBroadcaster(1, null,code);
-        }
-    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view= inflater.inflate(R.layout.tky_fan_wallet_song_fragment,container,false);
+        view= inflater.inflate(R.layout.tky_fan_wallet_song_fragment, container, false);
+
         swipeContainer = (SwipeRefreshLayout) view.findViewById(R.id.swipeRefreshLayout);
         swipeContainer.setColorSchemeColors(Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW);
         recyclerView = (RecyclerView) view.findViewById(R.id.rv);
         lManager = new LinearLayoutManager(view.getContext());
         recyclerView.setLayoutManager(lManager);
-        initvalues();
         adapter = new SongAdapter(items);
         recyclerView.setAdapter(adapter);
-
+        initvalues();
 
         swipe_effect();
 
@@ -183,13 +183,13 @@ public class SongFragment extends AbstractFermatFragment {
 
                     public void onItemClick(View view, int position) {
 
-                        System.out.println("click position:"+position);
-                        if (items.get(position).getStatus().equals(SongStatus.AVA.getCode())) {
+                        System.out.println("click position:" + position);
+                        if (items.get(position).getStatus().equals(SongStatus.AVAILABLE.getFriendlyName()) ||items.get(position).getStatus().equals(SongStatus.DELETED.getFriendlyName())) {
                             askquestion(position, null, 1);
-                        } else if (items.get(position).getStatus().equals(SongStatus.DED.getCode())) {
+                        } else if (items.get(position).getStatus().equals(SongStatus.DOWNLOADED.getFriendlyName())) {
                             playsong();
-                        }else if(items.get(position).getStatus().equals(SongStatus.DNG.getCode())){
-                            askquestion(position,null,2);
+                        } else if (items.get(position).getStatus().equals(SongStatus.DOWNLOADING.getFriendlyName())) {
+                            askquestion(position, null, 2);
                         }
                     }
                 })
@@ -268,7 +268,7 @@ public class SongFragment extends AbstractFermatFragment {
         }
         songInfo=songOfBroadcast.getComposers()+"@#@#"+songOfBroadcast.getName();
         if(!listComposerAndSongNameOnView.contains(songInfo)){
-            items.add(new SongItems(R.drawable.tky_tokenly_album, songOfBroadcast.getName(), songOfBroadcast.getComposers(), SongStatus.DNG.getCode(),song_Id, 0, false));
+            items.add(new SongItems(R.drawable.tky_tokenly_album, songOfBroadcast.getName(), songOfBroadcast.getComposers(), SongStatus.DOWNLOADING.getFriendlyName(),song_Id, 0, false));
             adapter.setFilter(items);
 
         }
@@ -299,7 +299,7 @@ public class SongFragment extends AbstractFermatFragment {
                 if(!listComposerAndSongNameOnView.contains(databaseInfo)){
                     listComposerAndSongNameOnView.add("TKY_WALLET songs" + walletitems.getComposers() + "@#@#" + walletitems.getName());
                     //System.out.println("TKY_NOT in view" + walletitems.getComposers() + "@#@#" + walletitems.getName());
-                    items.add(new SongItems(R.drawable.tky_tokenly_album, walletitems.getName(), walletitems.getComposers(), SongStatus.DED.getCode(),walletitems.getSongId(), 0, false));
+                    items.add(new SongItems(R.drawable.tky_tokenly_album, walletitems.getName(), walletitems.getComposers(), walletitems.getSongStatus().toString(), walletitems.getSongId(), 0, false));
                     adapter.setFilter(items);
                 }
             }
@@ -332,7 +332,7 @@ public class SongFragment extends AbstractFermatFragment {
                 int position=viewHolder.getAdapterPosition();
                 final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
                 final int swipeFlags = ItemTouchHelper.END;       // delete one in case you want just one direction
-                if(items.get(position).getStatus()=="Downloading" ||items.get(position).getStatus()=="Pending"){
+                if(items.get(position).getStatus()==SongStatus.DOWNLOADING.getFriendlyName() ||items.get(position).getStatus()==SongStatus.NOT_AVAILABLE.getFriendlyName()){
                     return 0;
                 }else{
                     return makeMovementFlags(dragFlags, swipeFlags);
@@ -351,20 +351,21 @@ public class SongFragment extends AbstractFermatFragment {
                     float width = height / 3;
 
                     if(dX > 0){
-                        p.setColor(Color.parseColor("#388E3C"));
+                        p.setColor(Color.parseColor("#D32F2F"));
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
                         c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_chat);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_trash);
                         //Start draw left-top to right-bottom     RectF (left,top,right,bottom)
                         RectF icon_dest = new RectF((float) itemView.getLeft() + (width/4) ,(float) itemView.getTop() + 0.75f*width,(float) itemView.getLeft()+ 2f*width,(float)itemView.getBottom() -0.75f*width);
                         c.drawBitmap(icon,null,icon_dest,p);
                     } else {
-                        p.setColor(Color.parseColor("#D32F2F"));
+                        p.setColor(Color.parseColor("#388E3C"));
                         RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
                         c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_trash);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_chat);
                         RectF icon_dest = new RectF((float) itemView.getRight() - 1.75f*width ,(float) itemView.getTop() + 0.75f*width,(float) itemView.getRight() - width/4,(float)itemView.getBottom() - 0.75f*width);
-                        c.drawBitmap(icon,null,icon_dest,p);
+                        c.drawBitmap(icon, null, icon_dest, p);
+
                     }
                 }
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -441,7 +442,7 @@ public class SongFragment extends AbstractFermatFragment {
 
         try {
             fanWalletModule.deleteSong(items.get(position).getSong_id());
-            items.get(position).setStatus(SongStatus.AVA.getCode());
+            items.get(position).setStatus(SongStatus.DELETED.getFriendlyName());
             items.get(position).setProgress(0);
             adapter.setFilter(items);
         } catch (CantDeleteSongException e) {
@@ -459,8 +460,14 @@ public class SongFragment extends AbstractFermatFragment {
 
     void cancelsong(int position){
         try {
+            if(downloadthread!=null){
+                downloadthread.cancel(true);
+            }
+            else if(syncthread!=null){
+                myCancelHandler.post(myRunnablecancel);
+            }
 
-            downloadthread.cancel(true);
+
 
         } catch (Exception e) {
             Log.v(TAG, "EXCEPTION" + e);
@@ -468,12 +475,17 @@ public class SongFragment extends AbstractFermatFragment {
 
     }
 
+    final Runnable myRunnablecancel = new Runnable() {
 
+        public void run() {
+            fanwalletmoduleManager.getFanWalletModule().cancelDownload();
+        }
+    };
 
-    public void updateViewForBroadcaster(int infotype,FermatBundle bundle,String code) {
+    public void updateViewForBroadcaster(FermatBundle bundle) {
 
         int position=0;
-        if(infotype==0) {
+
             try {
                 System.out.println("TKY_Broad_Arrive:");
 
@@ -495,20 +507,21 @@ public class SongFragment extends AbstractFermatFragment {
                     downloadproblem(position);
                 }
 
+                if (bundle.contains(BroadcasterNotificationType.SONG_CANCEL.getCode())) {
+                    System.out.println("TKY_BROAD_SONG_CANCEL:"+bundle.getString(BroadcasterNotificationType.SONG_CANCEL.getCode()));
+                    position=searchInViewBySongId((UUID) bundle.getSerializable(BroadcasterNotificationType.SONG_ID.getCode()));
+                    cancelnotification(position);
+                }
+
 
             } catch (IllegalAccessException e) {
                 //errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 System.out.println("TKY_Error On update bundle:" + e);
                 e.printStackTrace();
             }
-        }else if(infotype==1) {
-            if (code.equals("Download canceled by user request")) {
-                System.out.println("TKY_BROAD_CANCELL");
-                //notification song cancell correct
-            }
         }
 
-    }
+
 
     void updateprogress(int position,String progress){
         System.out.println("Vista(" + position + "):" + progress);
@@ -516,12 +529,18 @@ public class SongFragment extends AbstractFermatFragment {
         items.get(position).setProgress(Integer.valueOf(progress));
         if(progress.equals("100")){
             items.get(position).setProgressbarvissible(false);
-            items.get(position).setStatus(SongStatus.DED.getCode());
+            items.get(position).setStatus(SongStatus.DOWNLOADED.getFriendlyName());
           //  items.get(position).setSong_id();  //TODO
         }
         adapter.setFilter(items);
     }
 
+    void cancelnotification(int position){
+        items.get(position).setProgressbarvissible(false);
+        items.get(position).setProgress(Integer.valueOf(0));
+        items.get(position).setStatus(SongStatus.AVAILABLE.getFriendlyName());
+        adapter.setFilter(items);
+    }
     // TODO: 04/04/16 what happen here?
     void downloadproblem(int position){
         //
@@ -540,6 +559,8 @@ public class SongFragment extends AbstractFermatFragment {
     Boolen for the  onPostExecute   */
     public class DownloadThreadClass extends AsyncTask<Void, Float, Boolean> {
     int position;
+        UUID songId;
+        Fan testfan=getTestFanIdentity();
         /**
          * parameters position
          */
@@ -555,6 +576,7 @@ public class SongFragment extends AbstractFermatFragment {
 
             items.get(position).setStatus("Downloading");
             items.get(position).setProgressbarvissible(true);
+            songId=items.get(position).getSong_id();
             Log.v(TAG, "Before start download");
             adapter.setFilter(items);
 
@@ -573,15 +595,14 @@ public class SongFragment extends AbstractFermatFragment {
                        break;
                     }
                     try {
-                        Thread.sleep((long) (1000));
-                    } catch (InterruptedException e) {
-                   //     cancel(true); //just in case something goes wrong
-                   //     e.printStackTrace();
+                        fanwalletmoduleManager.getFanWalletModule().downloadSong(songId,testfan.getMusicUser());
+                    } catch (CantDownloadSongException e) {
+                        e.printStackTrace();
+                    } catch (CantUpdateSongStatusException e) {
+                        e.printStackTrace();
+                    } catch (CantUpdateSongDevicePathException e) {
+                        e.printStackTrace();
                     }
-
-                    progreso = progreso+15;
-
-                    publishProgress(progreso);
 
 
             }
@@ -597,41 +618,21 @@ public class SongFragment extends AbstractFermatFragment {
         @Override
         protected void onProgressUpdate(Float... porcentajeProgreso) {
 
-            Log.v(TAG, "tiempo:" + porcentajeProgreso[0] + "");
-
-            items.get(position).setProgress(Math.round(porcentajeProgreso[0]));
-
-            adapter.setFilter(items);
         }
 
-        String crono(float tiempo){
-            float horas,minutos;
-            int segundos;
-            String conteo="NADA";
-
-            return conteo;
-        }
 
         /**
          * afte finish receive the value of doinbackground
          */
 
         protected void onPostExecute(Boolean ready) {
-            items.get(position).setStatus("Downloaded");
-            items.get(position).setProgressbarvissible(false);
-            Log.v(TAG, "Game Over thread");
-            adapter.setFilter(items);
         }
         /**
          * when the method cancel is called
          */
         @Override
         protected void onCancelled() {
-            items.get(position).setStatus("Pending");
-            items.get(position).setProgress(0);
-            items.get(position).setProgressbarvissible(false);
-            Log.v(TAG, "Donwload canceled");
-            adapter.setFilter(items);
+            fanwalletmoduleManager.getFanWalletModule().cancelDownload();
         }
 
     }
@@ -643,7 +644,7 @@ public class SongFragment extends AbstractFermatFragment {
    Boolen for the  onPostExecute   */
     public class SyncThreadClass extends AsyncTask<Void, WalletSong, Boolean> {
         boolean autosync;
-        boolean unfinish=true;
+
 
         /**
          * parameters position
@@ -703,7 +704,7 @@ public class SongFragment extends AbstractFermatFragment {
          */
 
         protected void onPostExecute(Boolean ready) {
-            unfinish=false;
+
             Log.v(TAG, "Game Over SyncThreadClass");
 
         }
@@ -727,6 +728,16 @@ public class SongFragment extends AbstractFermatFragment {
     private Fan getTestFanIdentity(){
         Fan fanIdentity = new Fan() {
 
+
+            @Override
+            public List<String> getConnectedArtists() {
+                return null;
+            }
+
+            @Override
+            public void addNewArtistConnected(String userName) {
+
+            }
 
             @Override
             public String getTokenlyId() {

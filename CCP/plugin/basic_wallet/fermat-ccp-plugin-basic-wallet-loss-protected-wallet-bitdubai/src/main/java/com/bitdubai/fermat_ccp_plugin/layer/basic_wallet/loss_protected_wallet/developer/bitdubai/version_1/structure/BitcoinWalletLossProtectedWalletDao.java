@@ -404,8 +404,9 @@ public class BitcoinWalletLossProtectedWalletDao {
             if (!isTransactionInTable(transactionRecord.getTransactionId(), TransactionType.DEBIT, balanceType))
                 executeTransaction(transactionRecord, TransactionType.DEBIT, balanceType, availableRunningBalance, bookRunningBalance,exchangeRate);
 
-            //calculate chunck values spent
-            insertSpending(transactionRecord, exchangeRate);
+            //calculate chunck values spent - not for intra wallet transfers
+            if(!transactionRecord.getActorToType().getCode().equals(Actors.DEVICE_USER.getCode())  )
+               insertSpending(transactionRecord, exchangeRate);
 
         } catch (CantGetLossProtectedBalanceRecordException | CantExecuteLossProtectedBitcoinTransactionException exception) {
             throw new CantRegisterDebitException(CantRegisterDebitException.DEFAULT_MESSAGE, exception, null, "Check the cause");
@@ -891,35 +892,39 @@ public class BitcoinWalletLossProtectedWalletDao {
 
             DatabaseTable bitcoinwalletTable = database.getTable(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_NAME);
 
-            long recordAmount = bitcoinwalletTable.getRecords().get(0).getLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_AMOUNT_COLUMN_NAME);
+            if(bitcoinwalletTable.getRecords().size() > 0)
+            {
+                long recordAmount = bitcoinwalletTable.getRecords().get(0).getLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_TABLE_AMOUNT_COLUMN_NAME);
 
-            for(DatabaseTableRecord record : bitcoinwalletTable.getRecords()){
+                for(DatabaseTableRecord record : bitcoinwalletTable.getRecords()){
 
-                if(recordAmount != 0)
-                    if(recordAmount >= transactionRecord.getAmount())
-                    {
-                        DatabaseTableRecord recordToInsert = bitcoinwalletTable.getEmptyRecord();
+                    if(recordAmount != 0)
+                        if(recordAmount >= transactionRecord.getAmount())
+                        {
+                            DatabaseTableRecord recordToInsert = bitcoinwalletTable.getEmptyRecord();
 
-                        recordToInsert.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME, transactionRecord.getTransactionId());
-                        recordToInsert.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_ID_COLUMN_NAME, UUID.randomUUID());
-                        recordToInsert.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_TIME_STAMP_COLUMN_NAME, transactionRecord.getTimestamp());
-                        recordToInsert.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_BTC_SPENT_COLUMN_NAME, recordAmount - transactionRecord.getAmount());
-                        bitcoinwalletTable.insertRecord(recordToInsert);
+                            recordToInsert.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME, transactionRecord.getTransactionId());
+                            recordToInsert.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_ID_COLUMN_NAME, UUID.randomUUID());
+                            recordToInsert.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_TIME_STAMP_COLUMN_NAME, transactionRecord.getTimestamp());
+                            recordToInsert.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_BTC_SPENT_COLUMN_NAME, recordAmount - transactionRecord.getAmount());
+                            bitcoinwalletTable.insertRecord(recordToInsert);
 
-                        return;
-                    }
-                    else
-                    {
-                        DatabaseTableRecord recordToInsert = bitcoinwalletTable.getEmptyRecord();
+                            return;
+                        }
+                        else
+                        {
+                            DatabaseTableRecord recordToInsert = bitcoinwalletTable.getEmptyRecord();
 
-                        recordToInsert.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME, transactionRecord.getTransactionId());
-                        recordToInsert.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_ID_COLUMN_NAME, UUID.randomUUID());
-                        recordToInsert.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_TIME_STAMP_COLUMN_NAME, transactionRecord.getTimestamp());
-                        recordToInsert.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_BTC_SPENT_COLUMN_NAME, transactionRecord.getAmount());
-                        bitcoinwalletTable.insertRecord(recordToInsert);
+                            recordToInsert.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME, transactionRecord.getTransactionId());
+                            recordToInsert.setUUIDValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_ID_COLUMN_NAME, UUID.randomUUID());
+                            recordToInsert.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_TIME_STAMP_COLUMN_NAME, transactionRecord.getTimestamp());
+                            recordToInsert.setLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_BTC_SPENT_COLUMN_NAME, transactionRecord.getAmount());
+                            bitcoinwalletTable.insertRecord(recordToInsert);
 
-                        recordAmount = transactionRecord.getAmount() - recordAmount;
-                    }
+                            recordAmount = transactionRecord.getAmount() - recordAmount;
+                        }
+
+                }
 
             }
 
