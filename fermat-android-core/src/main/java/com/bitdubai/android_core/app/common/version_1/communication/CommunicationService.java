@@ -38,6 +38,7 @@ public class CommunicationService extends Service{
 
     private static final String TAG = "CommService";
 
+    public int processingQueue = 0;
     /**
      * Clients connected
      */
@@ -72,7 +73,8 @@ public class CommunicationService extends Service{
                         unRegisterClient(msg.getData().getString(CommunicationDataKeys.DATA_PUBLIC_KEY));
                         break;
                     case CommunicationMessages.MSG_REQUEST_DATA_MESSAGE:
-
+                        processingQueue++;
+                        Log.i(TAG,"Processiong request queue:"+processingQueue);
                             executorService.submit(new Runnable() {
                                 @Override
                                 public void run() {
@@ -258,11 +260,6 @@ public class CommunicationService extends Service{
         executorService = Executors.newFixedThreadPool(5);
         clients = new HashMap<>();
 
-        Log.i(TAG,"Package name:"+getPackageName());
-        Log.i(TAG,"Class cannonical:"+getClass().getCanonicalName());
-        Log.i(TAG,"Class simple name:"+getClass().getSimpleName());
-        Log.i(TAG,"Class name:"+getClass().getName());
-        Log.i(TAG,"Class package:"+getClass().getPackage().toString());
     }
 
     /**

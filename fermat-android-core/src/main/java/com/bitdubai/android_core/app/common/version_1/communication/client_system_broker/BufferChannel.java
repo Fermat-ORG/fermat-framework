@@ -33,6 +33,7 @@ public class BufferChannel {
             synchronized (lock){
                 lock.block();
                 locks1.put(id, lock);
+                Log.i(TAG, "wainting queue quantity: " + locks1.size());
                 while(lock.getIsBlock()){
                     lock.wait();
                     Log.i(TAG, "thread wake up");

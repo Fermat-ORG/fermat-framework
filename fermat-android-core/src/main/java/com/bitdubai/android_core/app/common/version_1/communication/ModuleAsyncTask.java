@@ -145,6 +145,8 @@ public class ModuleAsyncTask extends AsyncTask<Object,Integer,Object> {
         super.onPostExecute(o);
         try {
             communicationServiceWeakReference.get().send(requestId,requestKey,o);
+            communicationServiceWeakReference.get().processingQueue--;
+            Log.i(TAG,"Processiong request queue:"+communicationServiceWeakReference.get().processingQueue);
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (Exception e){

@@ -121,6 +121,7 @@ public class ClientSystemBrokerService extends Service {
             // disconnected (and then reconnected if it can be restarted)
             // so there is no need to do anything here.
             Log.e(TAG, "FermatService is not running");
+            e.printStackTrace();
         } catch (InterruptedException e) {
             //todo: lanzar la excepcion para arriba para que se avise al module que no tiene datos
             e.printStackTrace();
@@ -174,7 +175,6 @@ public class ClientSystemBrokerService extends Service {
      * Target we publish for clients to send messages to IncomingHandler.
      */
     final Messenger mMessenger = new Messenger(new IncomingHandler());
-    boolean mBound;
 
     static Messenger mServiceMcu = null;
     /** Flag indicating whether we have called bind on the service. */
@@ -205,7 +205,11 @@ public class ClientSystemBrokerService extends Service {
                 Bundle bundle = new Bundle();
                 bundle.putString(CommunicationDataKeys.DATA_PUBLIC_KEY,KEY);
                 msg.setData(bundle);
+
+                Log.e(TAG, "service connected: " + mIsBound);
+                Log.e(TAG, "service is not null: " + mServiceMcu);
                 mServiceMcu.send(msg);
+
 
             } catch (RemoteException e) {
                 // In this case the service has crashed before we could even
@@ -213,6 +217,7 @@ public class ClientSystemBrokerService extends Service {
                 // disconnected (and then reconnected if it can be restarted)
                 // so there is no need to do anything here.
                 Log.e(TAG, "CommService is not running");
+                e.printStackTrace();
             } catch (Exception e){
                 e.printStackTrace();
             }
