@@ -27,8 +27,8 @@ public class CHTPlatform extends AbstractPlatform {
 
         try {
 
-//            registerLayer(new ActorConnectionLayer());
-//            registerLayer(new ActorNetworkServiceLayer());
+            registerLayer(new ActorConnectionLayer());
+            registerLayer(new ActorNetworkServiceLayer());
             registerLayer(new MiddlewareLayer());
             registerLayer(new IdentityLayer());
             registerLayer(new NetworkServiceLayer());

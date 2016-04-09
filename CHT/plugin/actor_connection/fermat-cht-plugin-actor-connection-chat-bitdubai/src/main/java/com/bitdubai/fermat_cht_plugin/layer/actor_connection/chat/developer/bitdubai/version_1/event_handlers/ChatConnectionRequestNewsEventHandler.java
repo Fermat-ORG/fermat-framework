@@ -19,10 +19,10 @@ public class ChatConnectionRequestNewsEventHandler implements FermatEventHandler
     private final ChatActorConnectionPluginRoot chatActorConnectionPluginRoot;
 
     public ChatConnectionRequestNewsEventHandler(final ActorConnectionEventActions actorConnectionEventActions,
-                                                 final ChatActorConnectionPluginRoot cryptoBrokerActorConnectionPluginRoot) {
+                                                 final ChatActorConnectionPluginRoot chatActorConnectionPluginRoot) {
 
         this.actorConnectionEventActions = actorConnectionEventActions;
-        this.chatActorConnectionPluginRoot = cryptoBrokerActorConnectionPluginRoot;
+        this.chatActorConnectionPluginRoot = chatActorConnectionPluginRoot;
     }
 
     /**
