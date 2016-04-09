@@ -70,6 +70,13 @@ public class ChatConnectionInformation {
         return sendingTime;
     }
 
+    /**
+     * @return a string with the sender alias
+     */
+    public String getSenderAlias() {
+        return senderAlias;
+    }
+
     public UUID getConnectionId() {
         return connectionId;
     }
