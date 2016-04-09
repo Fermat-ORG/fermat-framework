@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
@@ -24,7 +25,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPTransactionType;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DistributionStatus;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.ReceptionStatus;
-import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMetadataContentMessage;
@@ -248,7 +249,7 @@ public class AssetReceptionMonitorAgent implements Agent {
                 throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot deliver the digital asset metadata to asset user wallet");
             } catch (CantGetCryptoTransactionException exception) {
                 throw new CantCheckAssetReceptionProgressException(exception, "Exception in asset reception monitor agent", "Cannot get the genesis transaction from Crypto Network");
-            } catch (DAPException | CantRegisterCreditException | CantRegisterDebitException | CantLoadWalletException | CantGetTransactionsException | CantDeliverPendingTransactionsException | CantConfirmTransactionException e) {
+            } catch (DAPException | CantRegisterCreditException | CantRegisterDebitException | CantLoadWalletException | CantGetTransactionsException | CantDeliverPendingTransactionsException | CantConfirmTransactionException | CantSetObjectException e) {
                 e.printStackTrace();
             }
         }

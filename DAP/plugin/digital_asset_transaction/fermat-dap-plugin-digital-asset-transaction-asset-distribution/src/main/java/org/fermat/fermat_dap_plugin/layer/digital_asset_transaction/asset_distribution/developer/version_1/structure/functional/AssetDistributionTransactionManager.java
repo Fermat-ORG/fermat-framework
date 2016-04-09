@@ -1,11 +1,12 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_distribution.developer.version_1.structure.functional;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.asset_vault.interfaces.AssetVaultManager;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_issuer.interfaces.ActorAssetIssuerManager;
 import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
 import org.fermat.fermat_dap_api.layer.dap_network_services.asset_transmission.interfaces.AssetTransmissionNetworkServiceManager;
@@ -135,8 +136,6 @@ public class AssetDistributionTransactionManager implements AssetDistributionMan
         try {
             this.digitalAssetDistributor.setWalletPublicKey(walletPublicKey);
             this.digitalAssetDistributor.distributeAssets(digitalAssetsToDistribute);
-        } catch (CantSetObjectException exception) {
-            throw new CantDistributeDigitalAssetsException(exception, "Distributing Assets", "The wallet public key is null");
         } catch (Exception exception) {
             throw new CantDistributeDigitalAssetsException(exception, "Distributing Assets", "Unexpected exception");
         }

@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoStatus;
@@ -34,7 +35,7 @@ import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWal
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
-import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetAppropriationContentMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMovementContentMessage;
