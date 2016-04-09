@@ -41,6 +41,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
+import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.ChatIdentitySubAppModulePluginRoot;
@@ -70,6 +71,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     private boolean contextMenuInUse = false;
     TextView textViewChtTitle;
     byte[] fanImageByteArray;
+    ChatIdentitySession Session;
     SettingsManager<ChatIdentityPreferenceSettings> settingsManager;
     public static CreateChatIdentityFragment newInstance() {
         return new CreateChatIdentityFragment();
@@ -79,7 +81,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-            ChatIdentitySession Session = (ChatIdentitySession) appSession;
+             Session = (ChatIdentitySession) appSession;
             moduleManager = (ChatIdentitySubAppModulePluginRoot) Session.getModuleManager();
              errorManager = Session.getErrorManager();
             setHasOptionsMenu(false);
@@ -325,7 +327,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
             } else {
                 byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
-                CreateChatIdentityExecutor executor = new CreateChatIdentityExecutor(appSession,brokerNameText, imgInBytes);
+                CreateChatIdentityExecutor executor = null;
+                try {
+                    executor = new CreateChatIdentityExecutor(Session,brokerNameText, imgInBytes);
+
                 int resultKey = executor.execute();
                 switch (resultKey) {
                     case SUCCESS:
@@ -335,6 +340,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
                         }
                         break;
+                }      } catch (CantGetChatIdentityException e) {
+                    e.printStackTrace();
                 }
             }
         }
