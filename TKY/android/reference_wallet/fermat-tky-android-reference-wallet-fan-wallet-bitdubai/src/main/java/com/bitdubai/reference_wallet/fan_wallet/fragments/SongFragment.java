@@ -730,6 +730,16 @@ public class SongFragment extends AbstractFermatFragment {
 
 
             @Override
+            public List<String> getConnectedArtists() {
+                return null;
+            }
+
+            @Override
+            public void addNewArtistConnected(String userName) {
+
+            }
+
+            @Override
             public String getTokenlyId() {
                 return null;
             }

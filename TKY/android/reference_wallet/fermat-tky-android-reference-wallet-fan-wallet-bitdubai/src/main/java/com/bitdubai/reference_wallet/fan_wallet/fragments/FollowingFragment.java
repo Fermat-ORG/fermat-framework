@@ -29,6 +29,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.FanWalletPreferenceSettings;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModuleManager;
 import com.bitdubai.reference_wallet.fan_wallet.R;
@@ -59,8 +63,8 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     private FollowingAdapter adapter;
     private RecyclerView.LayoutManager lManager;
     List<FollowingItems> items=new ArrayList<>();
-
-
+    List<Fan> fanList=new ArrayList<>();
+    Bot artistBot;
     public static FollowingFragment newInstance(){
         return new FollowingFragment();
     }
@@ -127,9 +131,20 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     }
 
     void loaditems(){
-        /*items.add(new FollowingItems(R.drawable.ta, "http://www.tatianamoroz.com", "Tatiana Moroz"));
-        items.add(new FollowingItems(R.drawable.ma, "http://www.metallica.com", "Metallica"));
-        items.add(new FollowingItems(R.drawable.da, "http://www.dreamtheater.com.ve", "Dreamtheater"));*/
+        try {
+            fanList=fanwalletmoduleManager.getFanWalletModule().listIdentitiesFromCurrentDeviceUser();
+            for(Fan artistusername:fanList){
+                artistBot=fanwalletmoduleManager.getFanWalletModule().getBotBySwapbotUsername(artistusername.getUsername());
+                System.out.println("tky_artistBot:"+artistBot.getLogoImageDetails().originalUrl() +"  +  "+artistBot.getAddress()+"  +  "+artistBot.getName());
+                items.add(new FollowingItems(artistBot.getLogoImageDetails().originalUrl(),artistBot.getAddress(), artistBot.getName()));
+            }
+        } catch (CantListFanIdentitiesException e) {
+            System.out.println("tky_loaditem_fanidentity_exception:"+e);
+            e.printStackTrace();
+        } catch (CantGetBotException e) {
+            System.out.println("tky_loaditem_Bot_exception:"+e);
+            e.printStackTrace();
+        }
 
     }
 
