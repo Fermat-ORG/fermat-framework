@@ -696,6 +696,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+        menu.add(2, BitcoinWalletConstants.IC_ACTION_REPORT, 1, "report").setIcon(R.drawable.ic_action_email)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
         //inflater.inflate(R.menu.home_menu, menu);
     }
 
@@ -712,7 +716,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 setUpPresentation(settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
+            if (id == BitcoinWalletConstants.IC_ACTION_REPORT) {
+                changeActivity(Activities.CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());
+                return true;
+            }
 
+            if (id == R.id.menu_export_key) {
+                changeActivity(Activities.CCP_BITCOIN_WALLET_MNEMONIC_ACTIVITY, appSession.getAppPublicKey());
+                return true;
+            }
 
         } catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -788,16 +800,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                 BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType().getCode());
 
-                List<CryptoWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, available_offset);
+                List<CryptoWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
 
                 lstCryptoWalletTransactionsAvailable.addAll(list);
 
-                available_offset = lstCryptoWalletTransactionsAvailable.size();
-
-                //lstCryptoWalletTransactionsBook.addAll(moduleManager.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, MAX_TRANSACTIONS, book_offset));
-
-                //book_offset = lstCryptoWalletTransactionsBook.size();
-
+                //available_offset = lstCryptoWalletTransactionsAvailable.size();
 
                 for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
 //                    List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk, MAX_TRANSACTIONS, 0);

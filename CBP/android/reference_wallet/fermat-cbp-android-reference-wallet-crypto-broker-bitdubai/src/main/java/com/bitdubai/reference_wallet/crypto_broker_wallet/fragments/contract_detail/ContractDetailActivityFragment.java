@@ -269,7 +269,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 long merchandiseAckDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.READY_TO_CLOSE, merchandisePaymentMethod);
 
 
-
+                //Payment delivery
                 contractDetail = new ContractDetail(
                         1,
                         data.getStatus(),

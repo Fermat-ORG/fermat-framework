@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders;
 
 import android.view.View;
+import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -12,21 +13,24 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
  * Created by nelson on 28/12/15.
  */
 public class BankAccountViewHolder extends SingleDeletableItemViewHolder<BankAccountNumber> {
-    private FermatTextView title;
-    private FermatTextView subTitle;
+    private FermatTextView banco;
+    private TextView alias;
+    private FermatTextView numero;
 
 
     public BankAccountViewHolder(View itemView) {
         super(itemView);
 
-        title = (FermatTextView) itemView.findViewById(R.id.ccw_title);
-        subTitle = (FermatTextView) itemView.findViewById(R.id.ccw_sub_title);
+        banco = (FermatTextView) itemView.findViewById(R.id.ccw_title);
+        alias = (TextView) itemView.findViewById(R.id.textView);
+        numero = (FermatTextView) itemView.findViewById(R.id.ccw_sub_title);
     }
 
     @Override
     public void bind(BankAccountNumber data) {
-        subTitle.setText(data.getAlias());
-        title.setText(data.getCurrencyType().getCode());
+        banco.setText(data.getBankName());
+        alias.setText(data.getAlias());
+        numero.setText(data.getAccount());
     }
 
     @Override

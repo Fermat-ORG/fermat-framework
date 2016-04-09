@@ -12,10 +12,12 @@ import android.widget.LinearLayout;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_csh_api.all_definition.interfaces.CashTransactionParameters;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.exceptions.CantGetCashMoneyWalletTransactionsException;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet.interfaces.CashMoneyWalletTransaction;
 import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.CashMoneyWalletPreferenceSettings;
@@ -23,8 +25,12 @@ import com.bitdubai.fermat_csh_api.layer.csh_wallet_module.interfaces.CashMoneyW
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
+import com.bitdubai.reference_wallet.cash_money_wallet.common.CashTransactionParametersImpl;
 import com.bitdubai.reference_wallet.cash_money_wallet.common.dialogs.CreateTransactionFragmentDialog;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
+
+import java.math.BigDecimal;
+import java.util.UUID;
 
 /**
  * Created by Alejandro Bicelis on 12/18/2015.
@@ -97,6 +103,15 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
     }
 
     @Override
+    public void onBackPressed() {
+
+        //If transaction is editable, was stopped before completing and user presses the device's back button
+        //Create and apply the same transaction again.
+        if(transactionIsEditable)
+            reapplyTransaction();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
@@ -127,7 +142,11 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
     @Override
     public void onClick(View view) {
         int i = view.getId();
-        if (i == R.id.csh_transaction_detail_delete_btn || i == R.id.csh_transaction_detail_back_btn) {
+        if (i == R.id.csh_transaction_detail_back_btn) {
+            if(transactionIsEditable)
+                reapplyTransaction();
+            this.changeActivity(Activities.CSH_CASH_MONEY_WALLET_HOME, appSession.getAppPublicKey());
+        }if (i == R.id.csh_transaction_detail_delete_btn) {
             this.changeActivity(Activities.CSH_CASH_MONEY_WALLET_HOME, appSession.getAppPublicKey());
         }else if(i == R.id.csh_transaction_detail_update_btn) {
             transactionFragmentDialog = new CreateTransactionFragmentDialog(getActivity(), (CashMoneyWalletSession) appSession, getResources(), transaction.getTransactionType(), transaction.getAmount(), transaction.getMemo());
@@ -143,6 +162,11 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
 
 
     /* HELPER FUNCTIONS */
+    private void reapplyTransaction(){
+        CashTransactionParameters t = new CashTransactionParametersImpl(UUID.randomUUID(), "cash_wallet", "pkeyActorRefWallet", "pkeyPluginRefWallet", transaction.getAmount(), FiatCurrency.US_DOLLAR, transaction.getMemo(), transaction.getTransactionType());
+        moduleManager.createAsyncCashTransaction(t);
+    }
+
     private String getPrettyTime(long timestamp)
     {
         return DateUtils.getRelativeTimeSpanString(timestamp * 1000).toString();

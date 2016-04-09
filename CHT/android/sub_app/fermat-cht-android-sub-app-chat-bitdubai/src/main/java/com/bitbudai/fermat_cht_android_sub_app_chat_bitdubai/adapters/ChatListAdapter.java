@@ -2,23 +2,16 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Path;
-import android.graphics.Rect;
-import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatHolder;
 //import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
@@ -28,9 +21,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -41,7 +31,7 @@ import java.util.UUID;
  *
  */
 
-public class ChatListAdapter extends ArrayAdapter {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
+public class ChatListAdapter extends ArrayAdapter implements Filterable {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
     ArrayList<String> contactName=new ArrayList<>();
     ArrayList<String> message=new ArrayList<>();
