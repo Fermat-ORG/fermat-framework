@@ -38,7 +38,7 @@ public class ChatIdentityFermatAppConnection extends AppConnections {
         return new PluginVersionReference(
                 Platforms.CHAT_PLATFORM,
                 Layers.SUB_APP_MODULE,
-                Plugins.CHAT_IDENTITY_SUP_APP_MODULE,
+                Plugins.CHAT_IDENTITY,
                 Developers.BITDUBAI,
                 new Version()
         );
