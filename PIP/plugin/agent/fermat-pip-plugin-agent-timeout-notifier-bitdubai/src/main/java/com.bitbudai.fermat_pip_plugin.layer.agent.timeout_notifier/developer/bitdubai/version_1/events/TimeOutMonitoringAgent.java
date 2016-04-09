@@ -157,11 +157,13 @@ public class TimeOutMonitoringAgent implements Agent, FermatEventMonitor {
         private void raiseEvent(EventType eventType, TimeOutNotifierAgent timeOutNotifierAgent) {
             switch (eventType){
                 case TIMEOUT_REACHED:
-                    TimeOutReachedEvent event = new TimeOutReachedEvent(timeOutNotifierAgent);
+                    TimeOutReachedEvent event = new TimeOutReachedEvent();
+                    event.setTimeOutAgent(timeOutNotifierAgent);
                     eventManager.raiseEvent(event);
                     break;
                 case MAX_TIMEOUT_NOTIFICATION_REACHED:
-                    MaxTimeOutNotificationReachedEvent event1 = new MaxTimeOutNotificationReachedEvent(timeOutNotifierAgent);
+                    MaxTimeOutNotificationReachedEvent event1 = new MaxTimeOutNotificationReachedEvent();
+                    event1.setTimeOutAgent(timeOutNotifierAgent);
                     eventManager.raiseEvent(event1);
                     break;
             }
