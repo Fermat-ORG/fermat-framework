@@ -32,8 +32,9 @@ public enum SubApps {
     //ART sub apps
     ART_MUSIC_PLAYER("AMP"),
     ART_ARTIST_COMMUNITY("AACA"),
-    ART_FAN_COMMUNITY("AFC"),
     ART_ARTIST_IDENTITY("AAIA"),
+    ART_FAN_COMMUNITY("AFC"),
+    ART_FAN_IDENTITY("AFI"),
 
     //TKY sub apps
     TKY_ARTIST_IDENTITY("TAI"),
