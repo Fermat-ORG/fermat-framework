@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
@@ -11,7 +12,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtr
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;

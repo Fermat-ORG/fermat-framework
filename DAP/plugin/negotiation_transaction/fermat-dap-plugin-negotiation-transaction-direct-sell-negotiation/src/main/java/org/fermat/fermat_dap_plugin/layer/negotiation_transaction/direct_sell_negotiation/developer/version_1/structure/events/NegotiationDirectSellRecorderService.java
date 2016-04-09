@@ -2,10 +2,11 @@ package org.fermat.fermat_dap_plugin.layer.negotiation_transaction.direct_sell_n
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 
 import org.fermat.fermat_dap_api.layer.all_definition.enums.EventType;
-import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+
 import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;

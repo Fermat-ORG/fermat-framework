@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransactionType;
@@ -38,7 +39,7 @@ import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset
 import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetMovementType;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
-import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.DAPException;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetMovementContentMessage;
@@ -170,7 +171,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void doTheMainTask() throws CantDeleteRecordException, CantUpdateRecordException, DAPException, CantLoadTableToMemoryException, CantBroadcastTransactionException, CantRegisterDebitException, CantCreateDraftTransactionException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetTransactionsException, CantSignTransactionException, CantGetBroadcastStatusException, CantCreateBitcoinTransactionException, CantRegisterCryptoAddressBookRecordException, CantCreateExtraUserException {
+        private void doTheMainTask() throws CantDeleteRecordException, CantUpdateRecordException, DAPException, CantLoadTableToMemoryException, CantBroadcastTransactionException, CantRegisterDebitException, CantCreateDraftTransactionException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetTransactionsException, CantSignTransactionException, CantGetBroadcastStatusException, CantCreateBitcoinTransactionException, CantRegisterCryptoAddressBookRecordException, CantCreateExtraUserException, CantSetObjectException {
             checkTimeout();
             checkUnreadMessages();
             checkPendingSells();
@@ -219,7 +220,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void checkPendingSells() throws DAPException, CantCreateDraftTransactionException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException, CantCreateBitcoinTransactionException, CantBroadcastTransactionException, CantGetTransactionsException, CantRegisterDebitException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetBroadcastStatusException, CantRegisterCryptoAddressBookRecordException, CantCreateExtraUserException {
+        private void checkPendingSells() throws DAPException, CantCreateDraftTransactionException, CantUpdateRecordException, CantLoadTableToMemoryException, CantSignTransactionException, CantCreateBitcoinTransactionException, CantBroadcastTransactionException, CantGetTransactionsException, CantRegisterDebitException, CantLoadWalletException, CantGetCryptoTransactionException, CantGetBroadcastStatusException, CantRegisterCryptoAddressBookRecordException, CantCreateExtraUserException, CantSetObjectException {
             for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.functional.SellingRecord record : dao.getActionRequiredSellings()) {
                 switch (record.getStatus()) {
                     case NEGOTIATION_CONFIRMED: {
@@ -242,7 +243,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
                     }
                     case PARTIALLY_SIGNED: {
                         System.out.println("Negotiation partially signed...");
-                        if (Validate.isValidTransaction(record.getBuyerTransaction(), record.getSellerTransaction())) {
+                        if (org.fermat.fermat_dap_api.layer.all_definition.util.Validate.isValidTransaction(record.getBuyerTransaction(), record.getSellerTransaction())) {
                             DraftTransaction draftTransaction = assetVaultManager.signTransaction(record.getBuyerTransaction());
                             dao.updateSellerTransaction(record.getRecordId(), draftTransaction);
                             String txHash = assetVaultManager.createBitcoinTransaction(draftTransaction);
@@ -291,7 +292,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void checkTimeout() throws DAPException, CantUpdateRecordException, CantLoadTableToMemoryException, CantDeleteRecordException, CantLoadWalletException {
+        private void checkTimeout() throws DAPException, CantUpdateRecordException, CantLoadTableToMemoryException, CantDeleteRecordException, CantLoadWalletException, CantSetObjectException {
             for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.functional.NegotiationRecord negotiation : dao.getWaitingConfirmationNegotiations()) {
                 if (negotiation.isExpired()) {
                     cancellNegotiation(negotiation);
@@ -299,7 +300,7 @@ public class AssetSellerMonitorAgent extends FermatAgent {
             }
         }
 
-        private void cancellNegotiation(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.functional.NegotiationRecord negotiation) throws DAPException, CantLoadTableToMemoryException, CantUpdateRecordException, CantDeleteRecordException, CantLoadWalletException {
+        private void cancellNegotiation(org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.functional.NegotiationRecord negotiation) throws DAPException, CantLoadTableToMemoryException, CantUpdateRecordException, CantDeleteRecordException, CantLoadWalletException, CantSetObjectException {
             System.out.println("Cancelling negotiation for asset: " + negotiation.getNegotiation().getAssetToOffer().getName());
             dao.updateNegotiationStatus(negotiation.getNegotiation().getNegotiationId(), AssetSellStatus.NEGOTIATION_CANCELLED);
             for (org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.functional.SellingRecord record : dao.getAllSelingRecordsForNegotiation(negotiation.getNegotiation().getNegotiationId())) {

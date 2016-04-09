@@ -1,13 +1,14 @@
 package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_seller.developer.version_1.structure.functional;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.AssetNegotiation;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.AssetSellStatus;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject;
-import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
+
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.DAPMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.AssetNegotiationContentMessage;
 import org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.DAPContentMessage;

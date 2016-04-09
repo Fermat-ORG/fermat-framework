@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -210,7 +211,11 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
         private void checkNegotiationStatus() throws DAPException, CantUpdateRecordException, CantLoadTableToMemoryException {
             for (NegotiationRecord record : dao.getNegotiationAnswer()) {
                 System.out.println("New negotiation answer: " + record.getNegotiationStatus().name());
-                assetTransmission.sendMessage(transactionManager.constructNegotiationMessage(record));
+                try {
+                    assetTransmission.sendMessage(transactionManager.constructNegotiationMessage(record));
+                } catch (CantSetObjectException e) {
+                    e.printStackTrace();
+                }
                 dao.updateNegotiationStatus(record.getNegotiation().getNegotiationId(), AssetSellStatus.NO_ACTION_REQUIRED);
             }
         }
@@ -250,7 +255,12 @@ public class AssetBuyerMonitorAgent extends FermatAgent {
                     }
                     case PARTIALLY_SIGNED: {
                         System.out.println("Sending message...");
-                        DAPMessage message = transactionManager.constructSellingMessage(buyingRecord, AssetSellStatus.PARTIALLY_SIGNED);
+                        DAPMessage message = null;
+                        try {
+                            message = transactionManager.constructSellingMessage(buyingRecord, AssetSellStatus.PARTIALLY_SIGNED);
+                        } catch (CantSetObjectException e) {
+                            e.printStackTrace();
+                        }
                         assetTransmission.sendMessage(message);
                         dao.updateSellingStatus(buyingRecord.getRecordId(), AssetSellStatus.WAITING_COMPLETE_SIGNATURE);
                     }
