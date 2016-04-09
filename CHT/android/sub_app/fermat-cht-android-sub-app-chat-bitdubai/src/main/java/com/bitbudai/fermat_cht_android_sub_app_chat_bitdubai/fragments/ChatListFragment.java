@@ -179,7 +179,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                         if (mess != null) {
                             noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
                             contactId.add(mess.getContactId());
-                            Contact cont = chatManager.getContactByContactId(mess.getContactId());
+                            Contact cont = null; //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();//chatManager.getContactByContactId(mess.getContactId());
                             if(cont != null) {
                                 contactName.add(cont.getAlias());
                                 message.add(mess.getMessage());
@@ -257,20 +257,22 @@ public class ChatListFragment extends AbstractFermatFragment{
             }
         }
         try {
-            chatManager.createSelfIdentities();
-            List <ChatUserIdentity> con=  chatManager.getChatUserIdentities();
+            //TODO:Cardozo revisar esta logica ya no aplica
+            //chatManager.createSelfIdentities();
+            List<ChatUserIdentity> con = null; //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
             size = con.size();
-            if((chatSettings.getLocalPlatformComponentType()==null || chatSettings.getLocalPublicKey()==null) && size > 0) {
-                ChatUserIdentity profileSelected = chatManager.getChatUserIdentity(con.get(0).getPublicKey());
-                chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getPlatformComponentType());
+            if ((chatSettings.getLocalPlatformComponentType() == null || chatSettings.getLocalPublicKey() == null) && size > 0) {
+
+                ChatUserIdentity profileSelected = null;//TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();//chatManager.getChatUserIdentity(con.get(0).getPublicKey());
+                //chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getPlatformComponentType());
             }
-        }catch(CantCreateSelfIdentityException e)
-        {
+            //}catch(CantCreateSelfIdentityException e)
+        } catch (Exception e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }catch(CantGetChatUserIdentityException e)
-        {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
+        }//catch(CantGetChatUserIdentityException e)
+        //{
+        //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        //}
 
         // Let this fragment contribute menu items
         setHasOptionsMenu(true);
@@ -329,7 +331,8 @@ public class ChatListFragment extends AbstractFermatFragment{
         try {
             toolbar = getToolbar();
             if (chatSettings.getLocalPublicKey() != null) {
-                ChatUserIdentity localUser = chatManager.getChatUserIdentity(chatSettings.getLocalPublicKey());
+                //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
+                ChatUserIdentity localUser = null;//chatManager.getChatUserIdentity(chatSettings.getLocalPublicKey());
                 //toolbar = getToolbar();
                 //getContext().getActionBar().setTitle("");
                 ByteArrayInputStream bytes = new ByteArrayInputStream(localUser.getImage());
@@ -340,8 +343,8 @@ public class ChatListFragment extends AbstractFermatFragment{
                 toolbar.setLogo(contactIconCircular);
                 //getActivity().getActionBar().setLogo(contactIconCircular);
             }
-        }catch (CantGetChatUserIdentityException e){
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        //}catch (CantGetChatUserIdentityException e){
+         //   errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
@@ -356,11 +359,13 @@ public class ChatListFragment extends AbstractFermatFragment{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 try{
                     appSession.setData("whocallme", "chatlist");
-                    appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactId.get(position)));//esto no es necesario, haces click a un chat
+                    //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
+                    //appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactId.get(position)));//esto no es necesaio, haces click a un chat
+                    appSession.setData(ChatSession.CONTACT_DATA, null);//esto no es necesaio, haces click a un chat
                     //appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(UUID.fromString(converter.get(3))));//este si hace falta
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
-                } catch (CantGetContactException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                //} catch (CantGetContactException e) {
+                //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch(Exception e)
                 {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -416,29 +421,29 @@ public class ChatListFragment extends AbstractFermatFragment{
                // Locate the search item
                //MenuItem searchItem = menu.findItem(R.id.menu_search);
 
-               searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-               searchView.setQueryHint(getResources().getString(R.string.search_hint));
-               searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                   @Override
-                   public boolean onQueryTextSubmit(String s) {
-                       return false;
-                   }
-
-                   @Override
-                   public boolean onQueryTextChange(String s) {
-                       if (s.equals(searchView.getQuery().toString())) {
-                           adapter.getFilter().filter(s);
-                       }
-                       return false;
-                   }
-               });
-               if (chatSession.getData("filterString") != null) {
-                   String filterString = (String) chatSession.getData("filterString");
-                   if (filterString.length() > 0) {
-                       searchView.setQuery(filterString, true);
-                       searchView.setIconified(false);
-                   }
-               }
+//               searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+//               searchView.setQueryHint(getResources().getString(R.string.search_hint));
+//               searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//                   @Override
+//                   public boolean onQueryTextSubmit(String s) {
+//                       return false;
+//                   }
+//
+//                   @Override
+//                   public boolean onQueryTextChange(String s) {
+//                       if (s.equals(searchView.getQuery().toString())) {
+//                           adapter.getFilter().filter(s);
+//                       }
+//                       return false;
+//                   }
+//               });
+//               if (chatSession.getData("filterString") != null) {
+//                   String filterString = (String) chatSession.getData("filterString");
+//                   if (filterString.length() > 0) {
+//                       searchView.setQuery(filterString, true);
+//                       searchView.setIconified(false);
+//                   }
+//               }
            //}
            menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);

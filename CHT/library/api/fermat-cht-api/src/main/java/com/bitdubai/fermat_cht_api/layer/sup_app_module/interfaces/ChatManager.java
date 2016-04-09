@@ -29,6 +29,8 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupMember
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
+import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
@@ -82,69 +84,12 @@ public interface ChatManager {
 
     void sendReadMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
 
-    //TODO:Eliminar
-    List<Contact> getContacts() throws CantGetContactException;
-
-    //TODO:Eliminar
-    Contact getContactByContactId(UUID contactId) throws CantGetContactException;
-
-    //TODO:Eliminar
-    Contact newEmptyInstanceContact() throws CantNewEmptyContactException;
-
-    //TODO:Eliminar
-    void saveContact(Contact contact) throws CantSaveContactException;
-
-    //TODO:Eliminar
-    void deleteContact(Contact contact) throws CantDeleteContactException;
-
-    //TODO:Eliminar
-    List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException;
-
     String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
 
-    //TODO:Eliminar
-    /**
-     * This method return a HashMap with the possible self identities.
-     * The HashMap contains a Key-value like PlatformComponentType-ActorPublicKey.
-     * If there no identities created in any platform, this hashMaps contains the public chat Network
-     * Service.
-     * @return
-     */
-    HashMap<PlatformComponentType, Object> getSelfIdentities() throws CantGetOwnIdentitiesException;
+    boolean isIdentityDevice() throws  CantListChatIdentityException;
 
-    //TODO:Eliminar
-    /**
-     * This method returns the contact id by local public key.
-     * @param localPublicKey
-     * @return
-     * @throws CantGetContactException
-     */
-    Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException;
+    List<ChatIdentity> getIdentityChatUsersFromCurrentDeviceUser() throws CantListChatIdentityException;
 
-    //TODO:Eliminar
-    void createSelfIdentities() throws CantCreateSelfIdentityException;
-
-    boolean isIdentityDevice() throws CantGetChatUserIdentityException;
-
-    //TODO:Eliminar
-    List<ChatUserIdentity> getChatUserIdentities() throws CantGetChatUserIdentityException;
-
-    //TODO:Eliminar
-    ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException;
-
-    //TODO:Eliminar
-    void saveContactConnection(ContactConnection contactConnection) throws CantSaveContactConnectionException;
-
-    //void deleteContactConnections( ) throws CantDeleteContactConnectionException;
-
-    //TODO:Eliminar
-    void deleteContactConnection(ContactConnection chatUserIdentity) throws CantDeleteContactConnectionException;
-
-    //TODO:Eliminar
-    List<ContactConnection> getContactConnections() throws CantGetContactConnectionException;
-
-    //TODO:Eliminar
-    ContactConnection getContactConnectionByContactId(UUID contactId) throws CantGetContactConnectionException;
 
     /**
      * This method sends the message through the Chat Network Service
@@ -152,13 +97,6 @@ public interface ChatManager {
      * @throws CantSendChatMessageException
      */
     void sendMessage(Message createdMessage) throws CantSendChatMessageException;
-
-    void saveGroup(Group group) throws CantSaveGroupException;
-
-    void deleteGroup(Group group) throws CantDeleteGroupException;
-
-    List<Group> getGroups() throws CantListGroupException;
-    Group getGroup(UUID groupId) throws CantGetGroupException;
 
     void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException;
 

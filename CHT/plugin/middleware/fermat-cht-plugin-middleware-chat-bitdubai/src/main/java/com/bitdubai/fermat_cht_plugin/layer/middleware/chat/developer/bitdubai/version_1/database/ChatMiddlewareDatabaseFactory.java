@@ -78,6 +78,7 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME, DatabaseDataType.STRING, 50 , Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST, DatabaseDataType.STRING, 256 , Boolean.FALSE);
             table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT, DatabaseDataType.STRING, 10 , Boolean.FALSE);
+            table.addColumn(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY, DatabaseDataType.STRING, 10 , Boolean.FALSE);
 
             table.addIndex(ChatMiddlewareDatabaseConstants.CHATS_FIRST_KEY_COLUMN);
 
@@ -185,24 +186,6 @@ public class ChatMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSys
             table.addColumn(ChatMiddlewareDatabaseConstants.IDENTITY_PLATFORM_COMPONENT_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 15, Boolean.FALSE);
 
             table.addIndex(ChatMiddlewareDatabaseConstants.IDENTITY_FIRST_KEY_COLUMN);
-
-            try {
-                //Create the table
-                databaseFactory.createTable(ownerId, table);
-            } catch (CantCreateTableException cantCreateTableException) {
-                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }
-
-            /**
-             * Create Group table.
-             */
-            table = databaseFactory.newTableFactory(ownerId, ChatMiddlewareDatabaseConstants.GROUP_TABLE_NAME);
-
-            table.addColumn(ChatMiddlewareDatabaseConstants.GROUP_ID_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.TRUE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.GROUP_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(ChatMiddlewareDatabaseConstants.GROUP_TYPE_CHAT_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
-
-            table.addIndex(ChatMiddlewareDatabaseConstants.GROUP_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

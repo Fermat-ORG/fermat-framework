@@ -143,7 +143,9 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                 try {
                     //appSession.setData(ChatSession.CONNECTION_DATA, contactConn);
                     //Contact conn = chatSession.getSelectedConnection();
-                    if (chatManager.getContactByLocalPublicKey(contactConn.getRemoteActorPublicKey()) == null) {
+                    //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                    if (true) {
+                    //if (chatManager.getContactByLocalPublicKey(contactConn.getRemoteActorPublicKey()) == null) {
                         ContactImpl newContact = new ContactImpl();
                         newContact.setAlias(contactConn.getAlias());
                         newContact.setRemoteActorType(contactConn.getRemoteActorType());
@@ -153,7 +155,8 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                         newContact.setCreationDate(System.currentTimeMillis());
                         newContact.setContactStatus(contactConn.getContactStatus());
                         newContact.setProfileImage(contactConn.getProfileImage());
-                        chatManager.saveContact(newContact);
+                        //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                        //chatManager.saveContact(newContact);
                         addcontact = true;
                         Toast.makeText(getActivity(), "Contact added", Toast.LENGTH_SHORT).show();
                         //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
@@ -167,8 +170,8 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                     dismiss();
                     mAdapterCallback.onMethodCallbackContacts();//solution to access to update contacts. j
 
-                } catch (CantSaveContactException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                //} catch (CantSaveContactException e) {
+                //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -176,8 +179,9 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                 }else if(AlertType == 2){
                 try {
                     Contact con = chatSession.getSelectedContact();
-                    chatManager.deleteContact(con);
-                    List<Contact> cont=  chatManager.getContacts();
+                    //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                    //chatManager.deleteContact(con);
+                    List<Contact> cont=  null;//chatManager.getContacts();
                     if (cont.size() > 0) {
                         for (int i=0;i<cont.size();i++){
                             contactname.add(cont.get(i).getAlias());
@@ -191,8 +195,8 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                                         moduleManager, errorManager, chatSession, getSession(), null);
                         adaptador.refreshEvents(contactname, contacticon, contactid);
                     }
-                }catch(CantGetContactException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                //}catch(CantGetContactException e) {
+                //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }catch (Exception e){
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }

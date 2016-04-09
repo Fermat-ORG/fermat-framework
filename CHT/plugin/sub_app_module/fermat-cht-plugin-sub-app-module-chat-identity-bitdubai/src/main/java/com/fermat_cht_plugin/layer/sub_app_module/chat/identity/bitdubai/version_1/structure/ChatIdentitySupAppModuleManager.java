@@ -42,10 +42,8 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
     }
 
     @Override
-    public ChatIdentity createNewIdentityChat(String alias, byte[] profileImage) throws CantCreateNewChatIdentityException {
+    public void createNewIdentityChat(String alias, byte[] profileImage) throws CantCreateNewChatIdentityException {
         chatIdentityManager.createNewIdentityChat(alias, profileImage);
-        //TODO:Revisar metodo en Identity BackEnd, para que devuelva una instancia ChatIdentity
-        return null;
     }
 
     /**

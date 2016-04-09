@@ -465,10 +465,11 @@ public class ContactFragment extends AbstractFermatFragment {
         if (item.getItemId() == R.id.menu_edit_contact) {
             try {
                 Contact con = chatSession.getSelectedContact();
-                appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(con.getContactId()));
+                //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                appSession.setData(ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(con.getContactId()));
                 changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
-            }catch(CantGetContactException e) {
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            //}catch(CantGetContactException e) {
+            //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }catch (Exception e){
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }

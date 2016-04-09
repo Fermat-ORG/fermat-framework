@@ -81,9 +81,7 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @since 05/11/2015
  */
-public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implements
-        LogManagerForDevelopers,
-        CryptoBrokerWalletModuleManager {
+public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implements LogManagerForDevelopers, CryptoBrokerWalletModuleManager {
 
     private CryptoBrokerWalletManager walletManager;
 
@@ -313,7 +311,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
     @Override
     public void start() throws CantStartPluginException {
         super.start();
-        //preConfigureWallet();
+        preConfigureWallet();
     }
 
     private void preConfigureWallet() {

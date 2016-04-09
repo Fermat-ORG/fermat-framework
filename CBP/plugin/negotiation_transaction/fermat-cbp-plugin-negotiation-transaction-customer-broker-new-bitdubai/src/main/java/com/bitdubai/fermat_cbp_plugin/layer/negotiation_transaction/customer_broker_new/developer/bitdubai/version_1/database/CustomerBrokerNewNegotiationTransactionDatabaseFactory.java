@@ -84,6 +84,8 @@ public class CustomerBrokerNewNegotiationTransactionDatabaseFactory implements D
             table.addColumn(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
             table.addColumn(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_NEGOTIATION_XML_COLUMN_NAME, DatabaseDataType.STRING, 4000, Boolean.FALSE);
             table.addColumn(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
+            table.addColumn(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_SEND_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_CONFIRM_TRANSACTION_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
 
             table.addIndex(CustomerBrokerNewNegotiationTransactionDatabaseConstants.CUSTOMER_BROKER_NEW_FIRST_KEY_COLUMN);
 

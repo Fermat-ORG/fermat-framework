@@ -64,6 +64,7 @@ public class CreateChatIdentityExecutor {
             Log.i("CHT CREATE IDENTITY",identityName+imageInBytes);
             moduleManager.getChatIdentityManager().createNewIdentityChat(identityName, imageInBytes);
 
+
         } catch (CantCreateNewChatIdentityException e) {
             e.printStackTrace();
         } catch (Exception e) {
