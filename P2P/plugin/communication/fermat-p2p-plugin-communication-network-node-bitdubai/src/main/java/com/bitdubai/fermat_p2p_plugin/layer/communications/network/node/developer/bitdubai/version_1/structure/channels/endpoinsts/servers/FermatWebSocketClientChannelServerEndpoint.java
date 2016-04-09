@@ -14,6 +14,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Head
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.caches.ClientsSessionMemoryCache;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.ClientChannelConfigurator;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.ActorTraceDiscoveryQueryRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInActorRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInClientRequestProcessor;
@@ -38,7 +39,7 @@ import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketClientChannelServerEndpoint</code> this
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.FermatWebSocketClientChannelServerEndpoint</code> this
  * is a especial channel to manage all the communication between the clients and the node
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 12/11/15.
@@ -52,12 +53,12 @@ import javax.websocket.server.ServerEndpoint;
         encoders = {PackageEncoder.class},
         decoders = {PackageDecoder.class}
 )
-public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServerEndpoint {
+public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketChannelEndpoint {
 
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(WebSocketClientChannelServerEndpoint.class.getName());
+    private final Logger LOG = Logger.getLogger(FermatWebSocketClientChannelServerEndpoint.class.getName());
 
     /**
      * Represent the clientsSessionMemoryCache instance
@@ -67,7 +68,7 @@ public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServer
     /**
      * Constructor
      */
-    public WebSocketClientChannelServerEndpoint(){
+    public FermatWebSocketClientChannelServerEndpoint(){
         super();
         this.clientsSessionMemoryCache = ClientsSessionMemoryCache.getInstance();
     }
@@ -75,10 +76,10 @@ public class WebSocketClientChannelServerEndpoint extends WebSocketChannelServer
     /**
      * (non-javadoc)
      *
-     * @see com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketChannelServerEndpoint#initPackageProcessorsRegistration()
+     * @see FermatWebSocketChannelEndpoint#initPackageProcessorsRegistration()
      */
     @Override
-    void initPackageProcessorsRegistration(){
+    protected void initPackageProcessorsRegistration(){
 
         /*
          * Register all messages processor for this
