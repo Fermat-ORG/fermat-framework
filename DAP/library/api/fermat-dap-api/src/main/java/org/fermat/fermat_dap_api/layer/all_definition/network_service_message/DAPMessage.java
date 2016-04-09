@@ -1,5 +1,8 @@
 package org.fermat.fermat_dap_api.layer.all_definition.network_service_message;
 
+
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 
 import org.fermat.fermat_dap_api.layer.dap_actor.DAPActor;
@@ -55,7 +58,7 @@ public class DAPMessage implements Serializable {
 
     public DAPMessage(org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.DAPContentMessage messageContent,
                       DAPActor actorSender,
-                      DAPActor actorReceiver) throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException {
+                      DAPActor actorReceiver) throws CantSetObjectException {
         setMessageContent(messageContent);
         setActorSender(actorSender);
         setActorReceiver(actorReceiver);
@@ -64,7 +67,7 @@ public class DAPMessage implements Serializable {
     public DAPMessage(org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.DAPContentMessage messageContent,
                       DAPActor actorSender,
                       DAPActor actorReceiver,
-                      org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject subject) throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException {
+                      org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject subject) throws CantSetObjectException {
         setMessageContent(messageContent);
         setActorSender(actorSender);
         setActorReceiver(actorReceiver);
@@ -75,7 +78,7 @@ public class DAPMessage implements Serializable {
                       org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.DAPContentMessage messageContent,
                       DAPActor actorSender,
                       DAPActor actorReceiver,
-                      org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject subject) throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException {
+                      org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject subject) throws CantSetObjectException {
         setMessageContent(messageContent);
         setActorSender(actorSender);
         setActorReceiver(actorReceiver);
@@ -109,32 +112,32 @@ public class DAPMessage implements Serializable {
         return messageContent;
     }
 
-    public void setMessageContent(org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.DAPContentMessage messageContent) throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException {
-        this.messageContent = org.fermat.fermat_dap_api.layer.all_definition.util.Validate.verifySetter(messageContent, "messageContent is null");
+    public void setMessageContent(org.fermat.fermat_dap_api.layer.all_definition.network_service_message.content_message.DAPContentMessage messageContent) throws CantSetObjectException {
+        this.messageContent = Validate.verifySetter(messageContent, "messageContent is null");
     }
 
     public DAPActor getActorSender() {
         return actorSender;
     }
 
-    public void setActorSender(DAPActor actorSender) throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException {
-        this.actorSender = org.fermat.fermat_dap_api.layer.all_definition.util.Validate.verifySetter(actorSender, "actorSender is null");
+    public void setActorSender(DAPActor actorSender) throws CantSetObjectException {
+        this.actorSender = Validate.verifySetter(actorSender, "actorSender is null");
     }
 
     public DAPActor getActorReceiver() {
         return actorReceiver;
     }
 
-    public void setActorReceiver(DAPActor actorReceiver) throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException {
-        this.actorReceiver = org.fermat.fermat_dap_api.layer.all_definition.util.Validate.verifySetter(actorReceiver, "actorReceiver is null");
+    public void setActorReceiver(DAPActor actorReceiver) throws CantSetObjectException {
+        this.actorReceiver = Validate.verifySetter(actorReceiver, "actorReceiver is null");
     }
 
     public org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject getSubject() {
         return subject;
     }
 
-    public void setSubject(org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject subject) throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException {
-        this.subject = org.fermat.fermat_dap_api.layer.all_definition.util.Validate.verifySetter(subject, "subject is null");
+    public void setSubject(org.fermat.fermat_dap_api.layer.all_definition.enums.DAPMessageSubject subject) throws CantSetObjectException {
+        this.subject = Validate.verifySetter(subject, "subject is null");
     }
 
     public UUID getIdMessage() {

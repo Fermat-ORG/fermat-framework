@@ -24,7 +24,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.AppropriationStatus;
 import org.fermat.fermat_dap_api.layer.all_definition.enums.EventStatus;
-import com.bitdubai.fermat_pip_api.all_definition.util.Validate;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import org.fermat.fermat_dap_api.layer.dap_transaction.asset_appropriation.exceptions.CantLoadAssetAppropriationTransactionListException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantCreateDigitalAssetFileException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantExecuteAppropriationTransactionException;

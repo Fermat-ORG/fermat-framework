@@ -2,7 +2,9 @@ package org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.crypto_transactions.CryptoTransaction;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -48,9 +50,9 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
      * @param pluginId
      * @throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException
      */
-    public void setPluginId(UUID pluginId) throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException {
+    public void setPluginId(UUID pluginId) throws CantSetObjectException {
         if (pluginId == null) {
-            throw new org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException("pluginId is null");
+            throw new CantSetObjectException("pluginId is null");
         }
         this.pluginId = pluginId;
     }
@@ -61,9 +63,9 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
      * @param pluginFileSystem
      * @throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException
      */
-    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException {
+    public void setPluginFileSystem(PluginFileSystem pluginFileSystem) throws CantSetObjectException {
         if (pluginFileSystem == null) {
-            throw new org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException("pluginFileSystem is null");
+            throw new CantSetObjectException("pluginFileSystem is null");
         }
         this.pluginFileSystem = pluginFileSystem;
     }
@@ -176,16 +178,16 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
         this.digitalAssetFileStoragePath = digitalAssetFileStoragePath;
     }
 
-    public void setAssetIssuerWalletManager(org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager assetIssuerWalletManager) throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException {
+    public void setAssetIssuerWalletManager(org.fermat.fermat_dap_api.layer.dap_wallet.asset_issuer_wallet.interfaces.AssetIssuerWalletManager assetIssuerWalletManager) throws CantSetObjectException {
         if (assetIssuerWalletManager == null) {
-            throw new org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException("assetIssuerWalletManager is null");
+            throw new CantSetObjectException("assetIssuerWalletManager is null");
         }
         this.assetIssuerWalletManager = assetIssuerWalletManager;
     }
 
-    public void setAssetUserWalletManager(org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager assetUserWalletManager) throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException {
+    public void setAssetUserWalletManager(org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletManager assetUserWalletManager) throws CantSetObjectException {
         if (assetUserWalletManager == null) {
-            throw new org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException("assetUserWalletManager is null");
+            throw new CantSetObjectException("assetUserWalletManager is null");
         }
         this.assetUserWalletManager = assetUserWalletManager;
     }
@@ -212,9 +214,9 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
 
     }
 
-    public void setWalletPublicKey(String walletPublicKey) throws org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException {
+    public void setWalletPublicKey(String walletPublicKey) throws CantSetObjectException {
         if (walletPublicKey == null) {
-            throw new org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException("walletPublicKey is null");
+            throw new CantSetObjectException("walletPublicKey is null");
         }
         System.out.println("The wallet public key in vault is " + this.walletPublicKey);
     }
@@ -251,7 +253,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
                 AssetIssuerWalletBalance assetIssuerWalletBalance = issuerWallet.getBalance();
                 mySelf = this.actorAssetIssuerManager.getActorAssetIssuer().getActorPublicKey();
                 Actors mySelfType = Actors.DAP_ASSET_ISSUER;
-                if (org.fermat.fermat_dap_api.layer.all_definition.util.Validate.isObjectNull(externalActorPublicKey)) {
+                if (Validate.isObjectNull(externalActorPublicKey)) {
                     externalActorPublicKey = mySelf;
                     externalActorType = mySelfType;
                 }
@@ -290,7 +292,7 @@ public abstract class AbstractDigitalAssetVault implements DigitalAssetVault {
                 org.fermat.fermat_dap_api.layer.dap_wallet.asset_user_wallet.interfaces.AssetUserWalletBalance assetUserWalletBalance = userWallet.getBalance();
                 mySelf = this.actorAssetUserManager.getActorAssetUser().getActorPublicKey();
                 Actors mySelfType = Actors.DAP_ASSET_USER;
-                if (org.fermat.fermat_dap_api.layer.all_definition.util.Validate.isObjectNull(externalActorPublicKey)) {
+                if (Validate.isObjectNull(externalActorPublicKey)) {
                     externalActorPublicKey = mySelf;
                     externalActorType = mySelfType;
                 }

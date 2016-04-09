@@ -1,9 +1,9 @@
 
-package com.bitdubai.fermat_pip_api.all_definition.util;
+package com.bitdubai.fermat_api.layer.all_definition.util;
 
 
-import com.bitdubai.fermat_pip_api.all_definition.exceptions.CantSetObjectException;
-import com.bitdubai.fermat_pip_api.all_definition.exceptions.ObjectNotSetException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantSetObjectException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.ObjectNotSetException;
 
 import java.util.Calendar;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_pip_api.all_definition.exceptions;
+package com.bitdubai.fermat_api.layer.all_definition.exceptions;
 
 import com.bitdubai.fermat_api.FermatException;
 
