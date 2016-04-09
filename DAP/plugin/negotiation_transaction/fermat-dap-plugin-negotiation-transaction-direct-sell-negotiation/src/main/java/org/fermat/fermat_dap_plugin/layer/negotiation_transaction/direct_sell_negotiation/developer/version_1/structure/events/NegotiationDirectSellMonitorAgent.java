@@ -12,7 +12,7 @@ import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.ExtraUserNo
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.interfaces.ExtraUserManager;
 import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import org.fermat.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_pip_api.all_definition.util.Validate;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 

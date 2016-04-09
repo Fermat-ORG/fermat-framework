@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 
 import org.fermat.fermat_dap_api.layer.all_definition.enums.EventType;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import org.fermat.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_pip_api.all_definition.util.Validate;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.exceptions.CantStartServiceException;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces.AssetTransactionService;
 

@@ -2,7 +2,7 @@ package org.fermat.fermat_dap_plugin.layer.digital_asset_transaction.asset_buyer
 
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import org.fermat.fermat_dap_api.layer.all_definition.exceptions.CantSetObjectException;
-import org.fermat.fermat_dap_api.layer.all_definition.util.Validate;
+import com.bitdubai.fermat_pip_api.all_definition.util.Validate;
 import org.fermat.fermat_dap_api.layer.dap_transaction.common.interfaces.AbstractDigitalAssetVault;
 
 import java.util.UUID;

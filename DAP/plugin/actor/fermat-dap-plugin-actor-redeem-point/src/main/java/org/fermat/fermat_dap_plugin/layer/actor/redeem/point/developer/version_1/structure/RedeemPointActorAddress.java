@@ -2,7 +2,7 @@ package org.fermat.fermat_dap_plugin.layer.actor.redeem.point.developer.version_
 
 import org.fermat.fermat_dap_api.layer.dap_actor.redeem_point.interfaces.Address;
 
-import static org.fermat.fermat_dap_api.layer.all_definition.util.Validate.verifyString;
+import static com.bitdubai.fermat_pip_api.all_definition.util.Validate.verifyString;
 
 /**
  * Implementación básica de la intefaz Address,
