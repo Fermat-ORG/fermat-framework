@@ -15,6 +15,8 @@ import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.TokenlyFanIdentityPluginRoot;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -257,5 +259,26 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
 
     public void setTokenlyID(String tokenlyID) {
         this.tokenlyID = tokenlyID;
+    }
+
+    /**
+     * This method returns a list with the username from the artists connected.
+     * @return
+     */
+    @Override
+    public List<String> getConnectedArtists() {
+        //TODO: to implement and remove this hardcode
+        List<String> hardcodedList=new ArrayList<>();
+        hardcodedList.add("TatianaMoroz");
+        hardcodedList.add("adam");
+        return hardcodedList;
+    }
+
+    /**
+     * This method persist the username in the fan identity.
+     * @param userName
+     */
+    public void addNewArtistConnected(String  userName){
+        //TODO: to implement
     }
 }

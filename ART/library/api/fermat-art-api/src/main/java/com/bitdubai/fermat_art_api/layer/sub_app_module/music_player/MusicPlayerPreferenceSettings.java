@@ -13,14 +13,14 @@ import java.util.UUID;
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 4/6/16.
  */
-public class MusicPlayerSettings implements SubAppSettings {
+public class MusicPlayerPreferenceSettings implements SubAppSettings {
     private String lastSelectedIdentityPublicKey;
     private boolean presentationHelpEnabled;
 
     /**
      * Default constructor.
      */
-    public MusicPlayerSettings() {}
+    public MusicPlayerPreferenceSettings() {}
 
     public String getLastSelectedIdentityPublicKey() {
         return this.lastSelectedIdentityPublicKey;
