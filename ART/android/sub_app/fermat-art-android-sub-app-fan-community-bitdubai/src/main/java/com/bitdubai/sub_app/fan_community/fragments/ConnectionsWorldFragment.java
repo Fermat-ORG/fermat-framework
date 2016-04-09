@@ -139,7 +139,7 @@ public class ConnectionsWorldFragment extends
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         moduleManager.setAppPublicKey(appSession.getAppPublicKey());
         try {
-            rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
+            rootView = inflater.inflate(R.layout.afc_row_connections_world, container, false);
 
             //Set up RecyclerView
             layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
