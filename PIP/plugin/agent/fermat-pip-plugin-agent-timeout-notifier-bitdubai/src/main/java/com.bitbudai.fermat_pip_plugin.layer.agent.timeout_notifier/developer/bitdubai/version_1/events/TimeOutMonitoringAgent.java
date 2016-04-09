@@ -7,6 +7,11 @@ import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bit
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantConfirmTransactionException;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_pip_api.all_definition.event_manager.events.TimeOutReachedEvent;
@@ -15,12 +20,13 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by rodrigo on 3/30/16.
  */
-public class TimeOutMonitoringAgent implements Agent {
+public class TimeOutMonitoringAgent implements Agent, TransactionProtocolManager {
 
     /**
      * class variables
@@ -58,7 +64,7 @@ public class TimeOutMonitoringAgent implements Agent {
         monitoringAgent.setExecutionFlag(true);
 
         if (monitorThread == null)
-            monitorThread = new Thread(monitoringAgent, "TimeOutNotifier");
+            monitorThread = new Thread(monitoringAgent, "TimeOutNotifierThread");
 
         monitorThread.start();
         this.agentStatus = AgentStatus.STARTED;
@@ -125,7 +131,7 @@ public class TimeOutMonitoringAgent implements Agent {
 
         private void doTheMainTask() {
             try {
-                List<TimeOutNotifierAgent> timeOutManagerList =  dao.getTimeOutNotifierAgent(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, AgentStatus.STARTED.code, DatabaseFilterType.EQUAL);
+                List<TimeOutNotifierAgent> timeOutManagerList =  dao.getPendingNotification();
                 for (TimeOutNotifierAgent timeOutNotifierAgent : timeOutManagerList){
                     if (timeOutNotifierAgent.getEpochEndTime() > System.currentTimeMillis()){
                         raiseEvent(timeOutNotifierAgent);
@@ -143,5 +149,15 @@ public class TimeOutMonitoringAgent implements Agent {
             event.setTimeOutAgent(timeOutNotifierAgent);
             eventManager.raiseEvent(event);
         }
+    }
+
+    @Override
+    public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
+
+    }
+
+    @Override
+    public List<Transaction> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
+        return null;
     }
 }

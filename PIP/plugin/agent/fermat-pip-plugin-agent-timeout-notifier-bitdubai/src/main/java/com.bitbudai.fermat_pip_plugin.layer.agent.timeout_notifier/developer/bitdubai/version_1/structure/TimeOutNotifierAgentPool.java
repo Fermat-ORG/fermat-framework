@@ -61,6 +61,14 @@ public class TimeOutNotifierAgentPool {
         runningAgents = new ArrayList<>();
         runningAgents.addAll(loadRunningAgents());
 
+        //If I have things to do, I will start the monitoring agent.
+        if (!runningAgents.isEmpty())
+            try {
+                timeOutMonitoringAgent.start();
+            } catch (CantStartAgentException e) {
+                e.printStackTrace();
+            }
+
     }
 
     private List<TimeOutAgent> loadRunningAgents() {
@@ -165,5 +173,9 @@ public class TimeOutNotifierAgentPool {
         }
 
         runningAgents.add(timeOutAgent);
+    }
+
+    public void markAsRead(TimeOutAgent timeOutAgent) throws CantExecuteQueryException, InconsistentResultObtainedInDatabaseQueryException {
+        dao.markAsRead(timeOutAgent.getUUID());
     }
 }
