@@ -5,6 +5,7 @@ import android.util.Log;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -32,16 +33,22 @@ public class CreateChatIdentityExecutor {
         this.identityName = identityName;
     }
 
-    public CreateChatIdentityExecutor(FermatSession session, String identityName, byte[] imageInBytes) {
+    public CreateChatIdentityExecutor(ChatIdentitySubAppModulePluginRoot moduleManager, ErrorManager errorManager, byte[] imageInBytes, String identityName) {
+        this(imageInBytes, identityName);
+
+        this.moduleManager = moduleManager;
+        this.errorManager = errorManager;
+        identity = null;
+    }
+
+    public CreateChatIdentityExecutor(FermatSession session, String identityName, byte[] imageInBytes) throws CantGetChatIdentityException {
         this(imageInBytes, identityName);
         identity = null;
+
         if (session != null) {
             ChatIdentitySession subAppSession = (ChatIdentitySession) session;
-            Log.i("*****CHT IDENTITY******", "LA SESION tiene valorrrrrr!!!!!!!");
             this.moduleManager = (ChatIdentitySubAppModulePluginRoot) subAppSession.getModuleManager();
             this.errorManager = subAppSession.getErrorManager();
-        }else{
-            Log.i("*****CHT IDENTITY******", "LA SESION ES NULA!!!!!!!");
         }
     }
 
@@ -55,7 +62,7 @@ public class CreateChatIdentityExecutor {
 
         try {
             Log.i("CHT CREATE IDENTITY",identityName+imageInBytes);
-            moduleManager.createIdentity(identityName, "12345678", imageInBytes);
+            moduleManager.getChatIdentityManager().createNewIdentityChat(identityName, imageInBytes);
 
         } catch (CantCreateNewChatIdentityException e) {
             e.printStackTrace();
