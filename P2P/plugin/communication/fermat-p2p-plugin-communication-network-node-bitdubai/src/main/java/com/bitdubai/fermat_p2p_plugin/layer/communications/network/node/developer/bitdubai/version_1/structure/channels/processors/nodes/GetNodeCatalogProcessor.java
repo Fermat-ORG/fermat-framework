@@ -80,8 +80,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
 
                 nodesCatalogList = loadData(messageContent.getOffset(), messageContent.getMax());
 
-                //TODO: CREATE A METHOD COUNT ROW IN DATA BASE
-                Integer count = 0;
+                long count = getDaoFactory().getNodesCatalogDao().getAllCount();
 
                 /*
                  * If all ok, respond whit success message
@@ -106,7 +105,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
                 /*
                  * Respond whit fail message
                  */
-                getNodeCatalogMsjRespond = new GetNodeCatalogMsjRespond(GetNodeCatalogMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), nodesCatalogList, 0);
+                getNodeCatalogMsjRespond = new GetNodeCatalogMsjRespond(GetNodeCatalogMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), nodesCatalogList, new Long(0));
                 Package packageRespond = Package.createInstance(getNodeCatalogMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
@@ -137,8 +136,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
 
         if (offset > 0 && max > 0){
 
-            //TODO: CREATE A METHOD WITH THE PAGINATION
-            nodesCatalogList = getDaoFactory().getNodesCatalogDao().findAll();
+            nodesCatalogList = getDaoFactory().getNodesCatalogDao().findAll(offset, max);
 
         }else {
 

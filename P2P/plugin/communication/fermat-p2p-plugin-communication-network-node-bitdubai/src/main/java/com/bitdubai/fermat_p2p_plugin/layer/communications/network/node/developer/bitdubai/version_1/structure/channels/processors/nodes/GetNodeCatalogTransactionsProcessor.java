@@ -80,8 +80,7 @@ public class GetNodeCatalogTransactionsProcessor extends PackageProcessor {
 
                 nodesCatalogTransactionList = loadData(messageContent.getOffset(), messageContent.getMax());
 
-                //TODO: CREATE A METHOD COUNT ROW IN DATA BASE
-                Integer count = 0;
+                Long count = getDaoFactory().getNodesCatalogTransactionDao().getAllCount();
 
                 /*
                  * If all ok, respond whit success message
@@ -106,7 +105,7 @@ public class GetNodeCatalogTransactionsProcessor extends PackageProcessor {
                 /*
                  * Respond whit fail message
                  */
-                getNodeCatalogTransactionsMsjRespond = new GetNodeCatalogTransactionsMsjRespond(GetNodeCatalogTransactionsMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), nodesCatalogTransactionList, 0);
+                getNodeCatalogTransactionsMsjRespond = new GetNodeCatalogTransactionsMsjRespond(GetNodeCatalogTransactionsMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), nodesCatalogTransactionList, new Long(0));
                 Package packageRespond = Package.createInstance(getNodeCatalogTransactionsMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
@@ -137,8 +136,7 @@ public class GetNodeCatalogTransactionsProcessor extends PackageProcessor {
 
         if (offset > 0 && max > 0){
 
-            //TODO: CREATE A METHOD WITH THE PAGINATION
-            nodesCatalogTransactionList = getDaoFactory().getNodesCatalogTransactionDao().findAll();
+            nodesCatalogTransactionList = getDaoFactory().getNodesCatalogTransactionDao().findAll(offset, max);
 
         }else {
 
