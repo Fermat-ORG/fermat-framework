@@ -7,6 +7,9 @@ import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bit
 import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.TransactionProtocolManager;
@@ -14,8 +17,11 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.exceptions.CantDeliverPendingTransactionsException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
+import com.bitdubai.fermat_pip_api.all_definition.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.all_definition.event_manager.events.MaxTimeOutNotificationReachedEvent;
 import com.bitdubai.fermat_pip_api.all_definition.event_manager.events.TimeOutReachedEvent;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -26,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /**
  * Created by rodrigo on 3/30/16.
  */
-public class TimeOutMonitoringAgent implements Agent, TransactionProtocolManager {
+public class TimeOutMonitoringAgent implements Agent, FermatEventMonitor {
 
     /**
      * class variables
@@ -91,6 +97,7 @@ public class TimeOutMonitoringAgent implements Agent, TransactionProtocolManager
          */
         private final TimeOutNotifierAgentDatabaseDao dao;
         private final int ITERATION_TIME = 1000 * 5; //5 seconds.
+        private final int MAX_TIME_OUT_NOTIFICATIONS = 10;
         private AtomicBoolean executionFlag;
         private AgentStatus agentStatus;
 
@@ -134,8 +141,11 @@ public class TimeOutMonitoringAgent implements Agent, TransactionProtocolManager
                 List<TimeOutNotifierAgent> timeOutManagerList =  dao.getPendingNotification();
                 for (TimeOutNotifierAgent timeOutNotifierAgent : timeOutManagerList){
                     if (timeOutNotifierAgent.getEpochEndTime() > System.currentTimeMillis()){
-                        raiseEvent(timeOutNotifierAgent);
-                        dao.updateMonitorEventData(timeOutNotifierAgent.getUUID());
+                        raiseEvent(EventType.TIMEOUT_REACHED, timeOutNotifierAgent);
+                        int numNotifications = dao.updateMonitorEventData(timeOutNotifierAgent.getUUID());
+
+                        if (numNotifications > MAX_TIME_OUT_NOTIFICATIONS)
+                            raiseEvent(EventType.MAX_TIMEOUT_NOTIFICATION_REACHED, timeOutNotifierAgent);
                         System.out.println("***TimeOutNotifier*** Event Raised for agent " + timeOutNotifierAgent.toString());
                     }
                 }
@@ -144,20 +154,22 @@ public class TimeOutMonitoringAgent implements Agent, TransactionProtocolManager
             }
         }
 
-        private void raiseEvent(TimeOutNotifierAgent timeOutNotifierAgent) {
-            TimeOutReachedEvent event = new TimeOutReachedEvent();
-            event.setTimeOutAgent(timeOutNotifierAgent);
-            eventManager.raiseEvent(event);
+        private void raiseEvent(EventType eventType, TimeOutNotifierAgent timeOutNotifierAgent) {
+            switch (eventType){
+                case TIMEOUT_REACHED:
+                    TimeOutReachedEvent event = new TimeOutReachedEvent(timeOutNotifierAgent);
+                    eventManager.raiseEvent(event);
+                    break;
+                case MAX_TIMEOUT_NOTIFICATION_REACHED:
+                    MaxTimeOutNotificationReachedEvent event1 = new MaxTimeOutNotificationReachedEvent(timeOutNotifierAgent);
+                    eventManager.raiseEvent(event1);
+                    break;
+            }
         }
     }
 
     @Override
-    public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
-
-    }
-
-    @Override
-    public List<Transaction> getPendingTransactions(Specialist specialist) throws CantDeliverPendingTransactionsException {
-        return null;
+    public void handleEventException(Exception exception, FermatEvent fermatEvent) {
+        errorManager.reportUnexpectedPluginException(Plugins.TIMEOUT_NOTIFIER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
     }
 }

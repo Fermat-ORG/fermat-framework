@@ -370,7 +370,7 @@ public class TimeOutNotifierAgentDatabaseDao {
         }
     }
 
-    public void updateMonitorEventData(UUID agentId) throws CantExecuteQueryException {
+    public int updateMonitorEventData(UUID agentId) throws CantExecuteQueryException {
         DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_TABLE_NAME);
         databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_ID_COLUMN_NAME, agentId, DatabaseFilterType.EQUAL);
 
@@ -381,6 +381,8 @@ public class TimeOutNotifierAgentDatabaseDao {
         }
 
         DatabaseTableRecord record;
+        int numNotifications = 0;
+
         if (databaseTable.getRecords().size() == 0){
             record = databaseTable.getEmptyRecord();
             record.setUUIDValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_ID_COLUMN_NAME, agentId);
@@ -397,12 +399,15 @@ public class TimeOutNotifierAgentDatabaseDao {
             record = databaseTable.getRecords().get(0);
             int current = record.getIntegerValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME);
             record.setIntegerValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME, current+1);
+
+            numNotifications = current+1;
             try {
                 databaseTable.updateRecord(record);
             } catch (CantUpdateRecordException e) {
                 throw new CantExecuteQueryException(e, "Error updating record. " + record.toString(), "Database issue");
             }
         }
+        return numNotifications;
     }
 
     public void markAsRead(UUID uuid) throws CantExecuteQueryException, InconsistentResultObtainedInDatabaseQueryException {
