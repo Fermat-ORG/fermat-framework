@@ -325,7 +325,14 @@ public class TimeOutNotifierAgentDatabaseDao {
         DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENTS_TABLE_NAME);
         databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.AGENTS_ID_COLUMN_NAME, timeOutNotifierAgent.getUUID(), DatabaseFilterType.EQUAL);
 
-        DatabaseTableRecord record = getRecordFromTimeOutNotifierAgent(timeOutNotifierAgent);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            thrownCantExecuteQueryException(e, databaseTable.getTableName());
+        }
+
+
+        DatabaseTableRecord record = databaseTable.getRecords().get(0);
         try {
             databaseTable.deleteRecord(record);
         } catch (CantDeleteRecordException e) {

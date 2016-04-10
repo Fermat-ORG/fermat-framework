@@ -74,7 +74,7 @@ public class TimeOutNotifierAgentPool {
     private List<TimeOutAgent> loadRunningAgents() {
         List<TimeOutAgent> timeOutAgentList = new ArrayList<>();
         try {
-            timeOutAgentList.addAll(dao.getTimeOutNotifierAgent(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, AgentStatus.CREATED.getCode(), DatabaseFilterType.NOT_EQUALS));
+            timeOutAgentList.addAll(dao.getTimeOutNotifierAgent(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, AgentStatus.STARTED.getCode(), DatabaseFilterType.EQUAL));
         } catch (CantExecuteQueryException e) {
             return timeOutAgentList;
         }
@@ -139,10 +139,15 @@ public class TimeOutNotifierAgentPool {
         try {
             agent.setStatus(AgentStatus.STOPPED);
             dao.updateTimeOutNotifierAgent(agent);
-            runningAgents.remove(timeOutAgent);
+
+            boolean running = false;
+            for (TimeOutAgent myRunningAgents : runningAgents){
+                if (myRunningAgents.getStatus() == AgentStatus.STARTED)
+                    running = true;
+            }
 
             // stop the monitoring agent if this is the last one
-            if (runningAgents.isEmpty() && timeOutMonitoringAgent.getAgentStatus() == AgentStatus.STARTED)
+            if (!running && timeOutMonitoringAgent.getAgentStatus() == AgentStatus.STARTED)
                 timeOutMonitoringAgent.stop();
 
         } catch (CantExecuteQueryException e) {
