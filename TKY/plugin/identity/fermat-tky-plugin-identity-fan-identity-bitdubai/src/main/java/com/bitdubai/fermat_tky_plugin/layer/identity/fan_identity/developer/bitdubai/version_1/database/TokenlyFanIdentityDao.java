@@ -134,9 +134,9 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
         }
     }
     /**
-     * first i persist private key on a file
-     * second i insert the record in database
-     * third i save the profile image file
+     * first I persist private key on a file
+     * second I insert the record in database
+     * third I save the profile image file
      *
      * @param user
      * @param id
@@ -167,7 +167,7 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
             record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ACCESS_TOKEN_COLUMN_NAME, user.getApiToken());
             record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EMAIL_COLUMN_NAME,user.getEmail());
             record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME, externalPlatform.getCode());
-
+            //We don't persist any artist connected list in this moment, theoretically they don't exist at this point.
 
             table.insertRecord(record);
 
