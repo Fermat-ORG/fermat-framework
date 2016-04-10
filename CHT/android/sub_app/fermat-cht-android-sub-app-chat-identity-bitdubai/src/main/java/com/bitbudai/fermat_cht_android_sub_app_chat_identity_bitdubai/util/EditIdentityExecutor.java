@@ -4,18 +4,18 @@ import android.util.Log;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
-import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantUpdateChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.ChatIdentitySubAppModulePluginRoot;
 
 /**
- * FERMAT-ORG
- * Developed by Lozadaa on 05/04/16.
+ * Created by angel on 20/1/16.
  */
-public class CreateChatIdentityExecutor {
+
+public class EditIdentityExecutor {
     public static final int EXCEPTION_THROWN = 3;
     public static final int SUCCESS = 1;
     public static final int INVALID_ENTRY_DATA = 2;
@@ -27,28 +27,23 @@ public class CreateChatIdentityExecutor {
     private ChatIdentitySubAppModulePluginRoot moduleManager;
     private ErrorManager errorManager;
     private ChatIdentity identity;
-
-    public CreateChatIdentityExecutor(byte[] imageInBytes, String identityName) {
+    private String Publickey;
+    public EditIdentityExecutor(byte[] imageInBytes,String Publickey , String identityName) {
         this.imageInBytes = imageInBytes;
+        this.Publickey = Publickey;
         this.identityName = identityName;
     }
 
-    public CreateChatIdentityExecutor(ChatIdentitySubAppModulePluginRoot moduleManager, ErrorManager errorManager, byte[] imageInBytes, String identityName) {
-        this(imageInBytes, identityName);
-
-        this.moduleManager = moduleManager;
-        this.errorManager = errorManager;
+    public EditIdentityExecutor(FermatSession session,String Publickey , String identityName, byte[] imageInBytes) {
+        this(imageInBytes, Publickey ,identityName);
         identity = null;
-    }
-
-    public CreateChatIdentityExecutor(FermatSession session, String identityName, byte[] imageInBytes) throws CantGetChatIdentityException {
-        this(imageInBytes, identityName);
-        identity = null;
-
         if (session != null) {
             ChatIdentitySession subAppSession = (ChatIdentitySession) session;
+            Log.i("*****CHT IDENTITY******", "LA SESION tiene valorrrrrr!!!!!!!");
             this.moduleManager = (ChatIdentitySubAppModulePluginRoot) subAppSession.getModuleManager();
             this.errorManager = subAppSession.getErrorManager();
+        }else{
+            Log.i("*****CHT IDENTITY******", "LA SESION ES NULA!!!!!!!");
         }
     }
 
@@ -61,9 +56,7 @@ public class CreateChatIdentityExecutor {
             return INVALID_ENTRY_DATA;
 
         try {
-            Log.i("CHT CREATE IDENTITY",identityName+imageInBytes);
-            moduleManager.getChatIdentityManager().createNewIdentityChat(identityName, imageInBytes);
-
+            moduleManager.getChatIdentityManager().updateIdentityChat(Publickey,identityName, imageInBytes);
 
         } catch (CantCreateNewChatIdentityException e) {
             e.printStackTrace();

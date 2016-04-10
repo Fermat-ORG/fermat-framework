@@ -52,16 +52,19 @@ public class ChatIdentityFermatAppConnection extends AppConnections {
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
+        System.out.println("chttttt");
         return null;
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
+        System.out.println("chttttt");
         return null;
     }
 
     @Override
     public FooterViewPainter getFooterViewPainter() {
+        System.out.println("chttttt");
         return null;
     }
 }

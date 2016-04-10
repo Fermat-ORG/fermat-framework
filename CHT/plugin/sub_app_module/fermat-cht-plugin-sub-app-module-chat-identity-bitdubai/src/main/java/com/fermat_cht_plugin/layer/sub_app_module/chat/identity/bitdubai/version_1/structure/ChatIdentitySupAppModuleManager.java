@@ -12,6 +12,7 @@ import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
      * @return a new instance of the settings manager for the specified fermat settings object.
      */
     @Override
-    public SettingsManager<ChatPreferenceSettings> getSettingsManager() {
+    public SettingsManager<ChatIdentityPreferenceSettings> getSettingsManager() {
         return null;
     }
 
