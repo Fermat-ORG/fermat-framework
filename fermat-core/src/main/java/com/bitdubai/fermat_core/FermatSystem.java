@@ -251,8 +251,11 @@ public final class FermatSystem {
 
             final FermatManager moduleManager = fermatPluginManager.startPluginAndReferences(pluginVersionReference);
 
-            if (moduleManager instanceof ModuleManager)
-                return (ModuleManager) moduleManager;
+            if (moduleManager instanceof AbstractModule)
+                return  ((AbstractModule) moduleManager).getModuleManager();
+            else if (moduleManager instanceof  ModuleManager){
+                return (ModuleManager)moduleManager;
+            }
             else
                 throw new CantGetModuleManagerException(pluginVersionReference.toString3(), "The plugin version requested not implements module manager interface.");
 
