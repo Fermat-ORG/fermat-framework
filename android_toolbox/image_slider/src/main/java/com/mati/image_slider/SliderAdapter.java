@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by mati on 2016.02.16..
  */
-public class SliderAdapter extends AbstractViewPagerAdapter<Integer> {
+public class SliderAdapter extends AbstractViewPagerAdapter<Integer,FermatViewHolder> {
 
 
     public SliderAdapter(Context context) {
@@ -19,7 +19,12 @@ public class SliderAdapter extends AbstractViewPagerAdapter<Integer> {
     }
 
     @Override
-    protected FermatViewHolder createHolder(View item_view, int position) {
+    protected int getItemType(Integer item, int position) {
+        return R.layout.slider_image_holder;
+    }
+
+    @Override
+    protected FermatViewHolder createHolder(View item_view, int position, int itemType) {
         return null;
     }
 
@@ -28,13 +33,15 @@ public class SliderAdapter extends AbstractViewPagerAdapter<Integer> {
 
     }
 
+    @Override
+    protected int getItemLayout(Integer item, int position, int itemType) {
+        return 0;
+    }
+
     public SliderAdapter(Context context,List<Integer> list) {
         super(context,list);
     }
 
 
-    @Override
-    protected int getItemLayout(Integer item, int position) {
-        return R.layout.slider_image_holder;
-    }
+
 }
