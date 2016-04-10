@@ -332,19 +332,27 @@ public interface LossProtectedWallet extends Serializable {
 
 
     /**
-     * Throw the method <code>getBalance</code> you can get the balance of the wallet, having i count the type of balance that you need.
+     * Throw the method <code>getBalance</code> you can get the real balance of the wallet, having i count the type of balance that you need.
      *
-     * @param balanceType     type of balance that you need
      * @param walletPublicKey public key of the wallet which you're working with.
      *
      * @return the balance of the wallet in long format.
      *
      * @throws CantGetLossProtectedBalanceException if something goes wrong
      */
-    long getBalance(BalanceType balanceType,
-                    String      walletPublicKey,
+    long getRealBalance(String      walletPublicKey,
                     BlockchainNetworkType blockchainNetworkType) throws CantGetLossProtectedBalanceException;
 
+    /**
+     * Throw the method <code>getBalance</code> you can get the book balance of the wallet, having i count the type of balance that you need.
+     * @param walletPublicKey
+     * @param blockchainNetworkType
+     * @return
+     * @throws CantGetLossProtectedBalanceException
+     */
+
+    long geBookBalance(String      walletPublicKey,
+                        BlockchainNetworkType blockchainNetworkType) throws CantGetLossProtectedBalanceException;
 
     /**
      * Throw the method <code>getBalance</code> you can get the balance of the wallet, having i count the type of balance that you need and actual exange rate.

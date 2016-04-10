@@ -102,7 +102,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
             }
 
             blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
-            System.out.println("Network Type"+blockchainNetworkType);
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -337,16 +337,6 @@ public class AddConnectionFragment extends FermatWalletListFragment<CryptoWallet
                         MAX_USER_SHOW,
                         offset);
             }
-//            if(data.isEmpty()){
-//                if(hnadler!=null) {
-//                    hnadler.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            new ConnectionWithCommunityDialog(getActivity(), referenceWalletSession, null).show();
-//                        }
-//                    });
-//                }
-//            }
         }
         catch(Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();

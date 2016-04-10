@@ -1,7 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
-import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 
 import java.util.ArrayList;
 import java.util.List;

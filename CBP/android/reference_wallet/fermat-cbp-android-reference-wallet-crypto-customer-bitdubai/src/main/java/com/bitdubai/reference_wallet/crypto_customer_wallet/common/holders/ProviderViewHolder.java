@@ -19,7 +19,6 @@ public class ProviderViewHolder extends SingleDeletableItemViewHolder<CurrencyPa
         super(itemView);
 
         title = (FermatTextView) itemView.findViewById(R.id.ccw_title);
-        itemView.findViewById(R.id.ccw_sub_title).setVisibility(View.GONE);
     }
 
     @Override

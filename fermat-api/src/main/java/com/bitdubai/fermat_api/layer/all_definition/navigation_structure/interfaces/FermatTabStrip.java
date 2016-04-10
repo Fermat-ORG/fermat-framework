@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * Created by rodrigo on 2015.07.20..
+ * Update by Miguel Payarez on 2016.04.08
  */
 public interface FermatTabStrip  extends Serializable {
 
@@ -31,6 +32,8 @@ public interface FermatTabStrip  extends Serializable {
     void setTextColor(int color);
 
     int getTextColor();
+
+    void setSelectTabTextColor(String selectTabTextColor);
 
     void setBackgroundResource(int id);
 

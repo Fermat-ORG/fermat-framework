@@ -267,15 +267,6 @@ public class ChatImpl implements Chat {
         this.typeChat = typeChat;
     }
 
-    @Override
-    public Group getGroupAssociated() {
-        return null;
-    }
-
-    @Override
-    public void setGroupAssociated(Group group) {
-
-    }
 
     @Override
     public List<GroupMember> getGroupMembersAssociated() {

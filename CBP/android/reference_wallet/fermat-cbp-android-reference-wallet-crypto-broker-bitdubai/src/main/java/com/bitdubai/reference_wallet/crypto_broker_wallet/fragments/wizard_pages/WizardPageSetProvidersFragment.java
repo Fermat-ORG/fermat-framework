@@ -58,6 +58,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
     private List<Currency> currencies;
 
     // UI
+    boolean hideHelperDialogs = false;
     private RecyclerView recyclerView;
     private FermatTextView emptyView;
 
@@ -87,6 +88,10 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
             //So that they can be reconfigured cleanly
             walletManager.clearCryptoBrokerWalletProviderSetting(appSession.getAppPublicKey());
 
+            //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
+            Object aux = appSession.getData(PresentationDialog.PRESENTATION_SCREEN_ENABLED);
+            if(aux != null && aux instanceof Boolean)
+                hideHelperDialogs = (boolean) aux;
 
         } catch (Exception ex) {
             Log.e(TAG, ex.getMessage(), ex);
@@ -138,16 +143,17 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
             }
         });
 
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBody(R.string.cbw_wizard_providers_dialog_body)
-                .setSubTitle(R.string.cbw_wizard_providers_dialog_sub_title)
-                .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
-                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                .setBannerRes(R.drawable.banner_crypto_broker)
-                .setIconRes(R.drawable.crypto_broker)
-                .build();
-
-        presentationDialog.show();
+        if(!hideHelperDialogs) {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.banner_crypto_broker)
+                    .setIconRes(R.drawable.crypto_broker)
+                    .setSubTitle(R.string.cbw_wizard_providers_dialog_sub_title)
+                    .setBody(R.string.cbw_wizard_providers_dialog_body)
+                    .setCheckboxText(R.string.cbw_wizard_not_show_text)
+                    .build();
+            presentationDialog.show();
+        }
 
         return layout;
     }
