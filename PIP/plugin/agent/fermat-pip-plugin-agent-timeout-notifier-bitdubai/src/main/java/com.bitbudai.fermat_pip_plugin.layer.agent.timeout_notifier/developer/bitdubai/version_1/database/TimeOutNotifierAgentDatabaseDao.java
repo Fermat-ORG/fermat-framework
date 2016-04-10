@@ -125,6 +125,12 @@ public class TimeOutNotifierAgentDatabaseDao {
         // isRead Flag
         timeOutNotifierAgent.setIsRead(Boolean.valueOf(agentRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_READ_COLUMN_NAME)));
 
+        try {
+            timeOutNotifierAgent.setOwner(getOwner(agentRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_OWNER_PUBLICKEY_COLUMN_NAME)));
+        } catch (CantExecuteQueryException e) {
+            e.printStackTrace();
+        }
+
         return timeOutNotifierAgent;
     }
 
@@ -333,7 +339,7 @@ public class TimeOutNotifierAgentDatabaseDao {
 
     private void removeEventMonitorRecord(UUID uuid) throws CantExecuteQueryException {
         DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_TABLE_NAME);
-        databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.AGENTS_ID_COLUMN_NAME, uuid, DatabaseFilterType.EQUAL);
+        databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_ID_COLUMN_NAME, uuid, DatabaseFilterType.EQUAL);
 
         try {
             databaseTable.loadToMemory();

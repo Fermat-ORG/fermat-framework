@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.Agent;
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
@@ -97,7 +98,7 @@ public class TimeOutMonitoringAgent implements Agent, FermatEventMonitor {
          */
         private final TimeOutNotifierAgentDatabaseDao dao;
         private final int ITERATION_TIME = 1000 * 5; //5 seconds.
-        private final int MAX_TIME_OUT_NOTIFICATIONS = 10;
+        private final int MAX_TIME_OUT_NOTIFICATIONS = 5;
         private AtomicBoolean executionFlag;
         private AgentStatus agentStatus;
 
@@ -141,12 +142,17 @@ public class TimeOutMonitoringAgent implements Agent, FermatEventMonitor {
                 List<TimeOutNotifierAgent> timeOutManagerList =  dao.getPendingNotification();
                 for (TimeOutNotifierAgent timeOutNotifierAgent : timeOutManagerList){
                     if (timeOutNotifierAgent.getEpochEndTime() > System.currentTimeMillis()){
-                        raiseEvent(EventType.TIMEOUT_REACHED, timeOutNotifierAgent);
                         int numNotifications = dao.updateMonitorEventData(timeOutNotifierAgent.getUUID());
 
-                        if (numNotifications > MAX_TIME_OUT_NOTIFICATIONS)
-                            raiseEvent(EventType.MAX_TIMEOUT_NOTIFICATION_REACHED, timeOutNotifierAgent);
+                        raiseEvent(EventType.TIMEOUT_REACHED, timeOutNotifierAgent, numNotifications);
                         System.out.println("***TimeOutNotifier*** Event Raised for agent " + timeOutNotifierAgent.toString());
+
+
+                        if (numNotifications > MAX_TIME_OUT_NOTIFICATIONS){
+                            raiseEvent(EventType.MAX_TIMEOUT_NOTIFICATION_REACHED, timeOutNotifierAgent, numNotifications);
+                            System.out.println("***TimeOutNotifier*** Max Event Raised Notification reached");
+                        }
+
                     }
                 }
             } catch (CantExecuteQueryException e) {
@@ -154,16 +160,20 @@ public class TimeOutMonitoringAgent implements Agent, FermatEventMonitor {
             }
         }
 
-        private void raiseEvent(EventType eventType, TimeOutNotifierAgent timeOutNotifierAgent) {
+        private void raiseEvent(EventType eventType, TimeOutNotifierAgent timeOutNotifierAgent, int amountRaises) {
             switch (eventType){
                 case TIMEOUT_REACHED:
                     TimeOutReachedEvent event = new TimeOutReachedEvent();
                     event.setTimeOutAgent(timeOutNotifierAgent);
+                    event.setSource(EventSource.TIMEOUT_NOTIFIER);
+                    event.setAmountRaises(amountRaises);
+
                     eventManager.raiseEvent(event);
                     break;
                 case MAX_TIMEOUT_NOTIFICATION_REACHED:
                     MaxTimeOutNotificationReachedEvent event1 = new MaxTimeOutNotificationReachedEvent();
                     event1.setTimeOutAgent(timeOutNotifierAgent);
+                    event1.setSource(EventSource.TIMEOUT_NOTIFIER);
                     eventManager.raiseEvent(event1);
                     break;
             }

@@ -109,9 +109,10 @@ public class TimeOutNotifierAgentPool {
     }
 
     public void removeRunningAgent(TimeOutAgent timeOutNotifierAgent) throws CantRemoveExistingTimeOutAgentException {
-        runningAgents.remove(timeOutNotifierAgent);
+        if (runningAgents.contains(timeOutNotifierAgent))
+            runningAgents.remove(timeOutNotifierAgent);
+
         try {
-            stopTimeOutAgent(timeOutNotifierAgent);
             dao.removeTimeOutNotifierAgent(timeOutNotifierAgent);
 
         } catch (Exception e) {
@@ -136,8 +137,8 @@ public class TimeOutNotifierAgentPool {
     public void stopTimeOutAgent(TimeOutAgent timeOutAgent) throws CantStopTimeOutAgentException {
         TimeOutNotifierAgent agent = (TimeOutNotifierAgent) timeOutAgent;
         try {
-            dao.updateTimeOutNotifierAgent(agent);
             agent.setStatus(AgentStatus.STOPPED);
+            dao.updateTimeOutNotifierAgent(agent);
             runningAgents.remove(timeOutAgent);
 
             // stop the monitoring agent if this is the last one

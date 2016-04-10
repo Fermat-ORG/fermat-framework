@@ -135,7 +135,7 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
          */
         timeOutNotifierManager = new TimeOutNotifierManager(getDao(), this.errorManager, this.timeOutNotifierAgentPool);
 
-        //testAddNewAgent();
+        testAddNewAgent();
     }
 
 
