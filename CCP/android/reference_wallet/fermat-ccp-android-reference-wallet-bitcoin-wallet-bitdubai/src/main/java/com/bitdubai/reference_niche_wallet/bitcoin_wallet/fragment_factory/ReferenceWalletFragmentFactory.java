@@ -1,5 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory;
 
+import android.os.Bundle;
+
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
@@ -10,13 +12,11 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ContactsFrag
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.ReferenceWalletSettings;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.AddConnectionFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.NoIdentityFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.ReceiveTransactionFragment2;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestFormFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestReceiveHistoryFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.RequestSendHistoryFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendFormFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SendTransactionFragment2;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SettingsFragment2;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SettingsMainNetworkFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.SettingsNotificationsFragment;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments.wallet_final_version.WalletErrorReportFragment;
@@ -39,7 +39,12 @@ public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<Refere
                  * Executing fragments for BITCOIN REQUESTED.
                  */
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
-                    currentFragment = ReceiveTransactionFragment2.newInstance();
+                    currentFragment = new AbstractFermatFragment() {
+                        @Override
+                        public void onCreate(Bundle savedInstanceState) {
+                            super.onCreate(savedInstanceState);
+                        }
+                    } ; //ReceiveTransactionFragment2.newInstance();
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
                     currentFragment =SendTransactionFragment2.newInstance(); //RequestHomePaymentFragment.newInstance();
@@ -106,6 +111,7 @@ public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<Refere
                     break;
                 case CCP_BITCOIN_WALLET_SEND_ERROR_REPORT_FRAGMENT:
                     currentFragment = WalletErrorReportFragment.newInstance();
+                    break;
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.getKey(), "Swith failed");
             }

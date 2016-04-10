@@ -339,6 +339,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      * (non-Javadoc)
      *
      * @see WsCommunicationsCloudClientManager#getCommunicationsCloudClientConnection()
+     * //TODO: acá hay que pasarle algo para devolverle el cloud client del server
      */
     @Override
     public CommunicationsClientConnection getCommunicationsCloudClientConnection() {

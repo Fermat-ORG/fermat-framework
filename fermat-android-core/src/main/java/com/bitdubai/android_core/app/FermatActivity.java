@@ -51,6 +51,7 @@ import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNa
 import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
 import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
 import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
+import com.bitdubai.android_core.app.common.version_1.base_structure.config.FermatActivityConfiguration;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.navigation_view.FermatActionBarDrawerEventListener;
 import com.bitdubai.android_core.app.common.version_1.provisory.FermatInstalledDesktop;
@@ -117,6 +118,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
@@ -204,9 +207,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
     private RuntimeStructureManager runtimeStructureManager;
 
     /**
-     * Service
+     * Executor
      */
-//    boolean mNotificationServiceConnected = false;
+    protected ExecutorService executor;
 
 
     /**
@@ -230,7 +233,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             // need to create any new ones here.
         }
 
-        bindServices();
+        executor = Executors.newFixedThreadPool(FermatActivityConfiguration.POOL_THREADS);
 
         broadcastManager = new BroadcastManager(this);
         AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
@@ -293,15 +296,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //                e.printStackTrace();
 //            }
 //
-//            /**
-//             * Service
-//             */
-//            if (mNotificationServiceConnected) {
-//                unbindService(mServiceConnection);
-//                mNotificationServiceConnected = false;
-//            }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -335,7 +329,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             paintTitleBar(titleBar, activity);
             Log.i("FERMAT ACTIVITY loadUI", " paintTitleBar " + System.currentTimeMillis());
 
-            if(appConnections.getFullyLoadedSession().getModuleManager()!=null && sideMenu!=null) sideMenu.setNotifications(appConnections.getFullyLoadedSession().getModuleManager().getMenuNotifications());
+            //if(appConnections.getFullyLoadedSession().getModuleManager()!=null && sideMenu!=null) sideMenu.setNotifications(appConnections.getFullyLoadedSession().getModuleManager().getMenuNotifications());
             paintSideMenu(activity, sideMenu, appConnections);
             Log.i("FERMAT ACTIVITY loadUI", " paintSideMenu " + System.currentTimeMillis());
             paintFooter(activity.getFooter(), appConnections.getFooterViewPainter());
@@ -1378,14 +1372,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }
 
         /**
-         * Service
-         */
-//        if (mNotificationServiceConnected) {
-//            unbindService(mServiceConnection);
-//            mNotificationServiceConnected = false;
-//        }
-
-        /**
          * stop every service
          */
         //ApplicationSession.getInstance().getServicesHelpers().unbindServices();
@@ -1464,29 +1450,29 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     }
 
-    protected void refreshSideMenu(){
+    protected void refreshSideMenu(AppConnections appConnections){
         //TODO: acá seria bueno un getLastApp
         if(ActivityType.ACTIVITY_TYPE_DESKTOP != activityType) {
-//            final FermatStructure fermatStructure = getAppInUse();
+            final FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
 //            FermatSession fermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
 //            AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,fermatSession);
-//            final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
-//            final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
-//            final List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = getNavigationMenu();
-//            refreshHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    SideMenuBuilder.setAdapter(
-//                            navigation_recycler_view,
-//                            mAdapter,
-//                            viewPainter.addItemDecoration(),
-//                            lstItems,
-//                            getLisItemListenerMenu(),
-//                            //TODO: acá seria bueno un getLastActivity
-//                            fermatStructure.getLastActivity().getActivityType()
-//                    );
-//                }
-//            });
+            final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
+            final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
+            final List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = fermatStructure.getLastActivity().getMainMenu().getMenuItems();
+            refreshHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    SideMenuBuilder.setAdapter(
+                            navigation_recycler_view,
+                            mAdapter,
+                            viewPainter.addItemDecoration(),
+                            lstItems,
+                            getLisItemListenerMenu(),
+                            //TODO: acá seria bueno un getLastActivity
+                            fermatStructure.getLastActivity().getActivityType()
+                    );
+                }
+            });
 
         }
     }
@@ -1667,17 +1653,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-//        if(!mNotificationServiceConnected) {
-//            Intent intent = new Intent(this, NotificationService.class);
-//            intent.putExtra(NotificationService.LOG_TAG, "Activity 1");
-//            startService(intent);
-//            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-//        }
-//        if(!mCommunicationServiceConnected){
-//            //doBindService();
-//        }
-
-
     }
 
     @Override
@@ -1787,21 +1762,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
 
-
-
-
-    /**
-     *
-     */
-    void bindServices(){
-//        if(!mNotificationServiceConnected) {
-//            Intent intent = new Intent(this, NotificationService.class);
-//            intent.putExtra(NotificationService.LOG_TAG, "Activity 1");
-//            startService(intent);
-//            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-//        }
-
-    }
 
 
 }

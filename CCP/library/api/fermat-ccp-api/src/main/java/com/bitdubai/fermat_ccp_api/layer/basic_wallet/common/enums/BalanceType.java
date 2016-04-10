@@ -6,6 +6,7 @@ package com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums;
 public enum BalanceType {
 
     AVAILABLE("AVAILABLE"),
+    REAL("REAL"),
     BOOK("BOOK");
 
     private final String code;
@@ -20,6 +21,7 @@ public enum BalanceType {
 
         switch (code) {
             case "BOOK":      return BOOK;
+            case "REAL":      return REAL;
             case "AVAILABLE": return AVAILABLE;
             default:          return AVAILABLE;
         }

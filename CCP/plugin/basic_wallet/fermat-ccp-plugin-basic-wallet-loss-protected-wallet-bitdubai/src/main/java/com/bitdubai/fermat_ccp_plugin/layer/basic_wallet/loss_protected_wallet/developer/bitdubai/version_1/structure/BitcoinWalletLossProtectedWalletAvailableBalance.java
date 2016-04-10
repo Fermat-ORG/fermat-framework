@@ -71,7 +71,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
 
 
     @Override
-    public long getBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException {
+    public long getRealBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException {
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
             return bitcoinWalletBasicWalletDao.getAvailableBalance(blockchainNetworkType);
@@ -96,6 +96,18 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
         } catch(CantListTransactionsException exception){
             throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception  ), null, null);
 
+        } catch(Exception exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception  ), null, null);
+        }
+    }
+
+    @Override
+    public long getBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException {
+        try {
+            bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
+            return bitcoinWalletBasicWalletDao.getAvailableBalance(blockchainNetworkType);
+        } catch(CantCalculateBalanceException exception){
+            throw exception;
         } catch(Exception exception){
             throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception  ), null, null);
         }
