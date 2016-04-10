@@ -135,6 +135,8 @@ public class TokenlyFanIdentityDeveloperDatabaseFactory implements DealsWithPlug
         ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ACCESS_TOKEN_COLUMN_NAME);
         ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EMAIL_COLUMN_NAME);
         ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
+        ArtistUserColumns.add(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ARTIST_CONNECTED_LIST_COLUMN_NAME);
+
         /**
          * Table Asset User addition.
          */
