@@ -72,6 +72,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     private Wallet wallet;
     private File walletFileName;
     private BlockchainDownloadProgress blockchainDownloadProgress;
+    private final BitcoinCryptoNetworkDatabaseDao dao;
 
 
     final NetworkParameters NETWORK_PARAMETERS;
@@ -82,7 +83,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
     /**
      * Platform variables
      */
-    PluginDatabaseSystem pluginDatabaseSystem;
     UUID pluginId;
     PluginFileSystem pluginFileSystem;
     ErrorManager errorManager;
@@ -91,13 +91,18 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
     /**
      * Constructor
-     * @param pluginDatabaseSystem
      */
-    public BitcoinCryptoNetworkMonitor(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId, Wallet wallet, File walletFilename, PluginFileSystem pluginFileSystem, ErrorManager errorManager, Context context, Broadcaster broadcaster) {
+    public BitcoinCryptoNetworkMonitor(UUID pluginId,
+                                       Wallet wallet,
+                                       File walletFilename,
+                                       PluginFileSystem pluginFileSystem,
+                                       ErrorManager errorManager,
+                                       Context context,
+                                       Broadcaster broadcaster,
+                                       BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao ) {
         /**
          * I initialize the local variables
          */
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.wallet = wallet;
         this.pluginId = pluginId;
         this.walletFileName = walletFilename;
@@ -105,6 +110,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         this.errorManager = errorManager;
         this.context = context;
         this.broadcaster = broadcaster;
+        this.dao = bitcoinCryptoNetworkDatabaseDao;
 
         /**
          * Define the constants
@@ -119,7 +125,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         /**
          * I define the MonitorAgent private class
          */
-        monitorAgent = new MonitorAgent(this.wallet, this.walletFileName, this.pluginId, this.pluginDatabaseSystem, this.pluginFileSystem, this.errorManager, NETWORK_PARAMETERS, BLOCKCHAIN_NETWORKTYPE, this.context, broadcaster);
+        monitorAgent = new MonitorAgent(this.wallet, this.walletFileName, this.pluginId, this.pluginFileSystem, this.errorManager, NETWORK_PARAMETERS, BLOCKCHAIN_NETWORKTYPE, this.context, broadcaster, dao);
 
         // I define the thread name and start it.
         threadName = "CryptoNetworkMonitor_" + BLOCKCHAIN_NETWORKTYPE.getCode();
@@ -169,7 +175,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         File walletFileName;
         BlockChain blockChain;
         BitcoinNetworkEvents events;
-        BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao;
+        final BitcoinCryptoNetworkDatabaseDao dao;
 
         // private class constanst
         final NetworkParameters NETWORK_PARAMETERS;
@@ -183,7 +189,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          */
         UUID pluginId;
         PluginFileSystem pluginFileSystem;
-        PluginDatabaseSystem pluginDatabaseSystem;
         ErrorManager errorManager;
         Broadcaster broadcaster;
 
@@ -193,7 +198,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          * @param wallet
          * @param walletFileName
          * @param pluginId
-         * @param pluginDatabaseSystem
          * @param pluginFileSystem
          * @param errorManager
          * @param networkParameters
@@ -202,24 +206,24 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         public MonitorAgent(Wallet wallet,
                             File walletFileName,
                             UUID pluginId,
-                            PluginDatabaseSystem pluginDatabaseSystem,
                             PluginFileSystem pluginFileSystem,
                             ErrorManager errorManager,
                             NetworkParameters networkParameters,
                             BlockchainNetworkType blockchainNetworkType,
                             Context context,
-                            Broadcaster broadcaster) {
+                            Broadcaster broadcaster,
+                            BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao) {
 
             this.wallet = wallet;
             this.walletFileName = walletFileName;
             this.pluginId = pluginId;
-            this.pluginDatabaseSystem = pluginDatabaseSystem;
             this.pluginFileSystem = pluginFileSystem;
             this.errorManager = errorManager;
             this.NETWORK_PARAMETERS = networkParameters;
             this.BLOCKCHAIN_NETWORKTYPE = blockchainNetworkType;
             this.context = context;
             this.broadcaster = broadcaster;
+            this.dao = bitcoinCryptoNetworkDatabaseDao;
         }
 
         @Override
@@ -255,7 +259,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * add the events
                  */
-                events = new BitcoinNetworkEvents(BLOCKCHAIN_NETWORKTYPE, pluginDatabaseSystem, pluginId, this.walletFileName, this.context, this.broadcaster, wallet);
+                events = new BitcoinNetworkEvents(BLOCKCHAIN_NETWORKTYPE, this.walletFileName, this.context, this.broadcaster, wallet, dao);
                 peerGroup.addEventListener(events);
                 this.wallet.addEventListener(events);
                 blockChain.addListener(events);
@@ -280,7 +284,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * Update stats related active networks
                  */
-                this.getDao().updateActiveNetworks(BLOCKCHAIN_NETWORKTYPE, wallet.getImportedKeys().size());
+                this.dao.updateActiveNetworks(BLOCKCHAIN_NETWORKTYPE, wallet.getImportedKeys().size());
 
                 /**
                  * starts the monitoring
@@ -310,11 +314,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          */
         private void resumeBroadcastOfPendingTransactions(BlockchainNetworkType blockchainNetworkType) {
             try {
-                for (String txId :  getDao().getBroadcastTransactionsByStatus(blockchainNetworkType, Status.BROADCASTING)){
+                for (String txId :  dao.getBroadcastTransactionsByStatus(blockchainNetworkType, Status.BROADCASTING)){
                     try {
                         this.broadcastTransaction(txId);
                     } catch (CantBroadcastTransactionException e) {
-                        getDao().setBroadcastStatus(Status.WITH_ERROR, peerGroup.getConnectedPeers().size(), e, txId);
+                        dao.setBroadcastStatus(Status.WITH_ERROR, peerGroup.getConnectedPeers().size(), e, txId);
                     }
                 }
             } catch (CantExecuteDatabaseOperationException e) {
@@ -369,7 +373,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
               * will update this transaction status to broadcasting.
               */
              try {
-                 getDao().setBroadcastStatus(Status.BROADCASTING, connectedPeers, null, txHash);
+                 dao.setBroadcastStatus(Status.BROADCASTING, connectedPeers, null, txHash);
              } catch (CantExecuteDatabaseOperationException e) {
                  e.printStackTrace();
              }
@@ -402,11 +406,11 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 public void onSuccess(Transaction result) {
 
                     try {
-                        getDao().setBroadcastStatus(Status.BROADCASTED, connectedPeers, null, txHash);
+                        dao.setBroadcastStatus(Status.BROADCASTED, connectedPeers, null, txHash);
                         /**
                          * Store this outgoing transaction in the table
                          */
-                        UUID transactionId = getDao().getBroadcastedTransactionId(BLOCKCHAIN_NETWORKTYPE, txHash);
+                        UUID transactionId = dao.getBroadcastedTransactionId(BLOCKCHAIN_NETWORKTYPE, txHash);
                         storeOutgoingTransaction(wallet, finalTransaction, transactionId);
 
 
@@ -436,7 +440,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                     broadcastProgress(100, txHash, broadcasterId);
 
                     try {
-                        getDao().setBroadcastStatus(Status.WITH_ERROR, connectedPeers, (Exception) t, txHash);
+                        dao.setBroadcastStatus(Status.WITH_ERROR, connectedPeers, (Exception) t, txHash);
                     } catch (CantExecuteDatabaseOperationException e) {
                         e.printStackTrace();
                         errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -490,7 +494,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          */
         private void validateTransactionExistsinDatabase(String txHash) throws CantBroadcastTransactionException{
             try {
-                if (!getDao().transactionExistsInBroadcast(txHash)){
+                if (!dao.transactionExistsInBroadcast(txHash)){
                     throw new CantBroadcastTransactionException(CantBroadcastTransactionException.DEFAULT_MESSAGE, null, "the specified transaction " + txHash + " is not stored in the database.", "CryptoNetwork");
                 }
             } catch (CantExecuteDatabaseOperationException e) {
@@ -532,7 +536,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         private void storeOutgoingTransaction(Wallet wallet, Transaction tx, UUID transactionId) {
             for (CryptoTransaction cryptoTransaction : CryptoTransaction.getCryptoTransactions(BLOCKCHAIN_NETWORKTYPE, wallet, tx)){
                 try {
-                    getDao().saveCryptoTransaction(cryptoTransaction, transactionId);
+                    dao.saveCryptoTransaction(cryptoTransaction, transactionId);
                 } catch (CantExecuteDatabaseOperationException e) {
                     //maybe try saving into disk if cant save it.
                     e.printStackTrace();
@@ -592,7 +596,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 if (downloadPeer != null)
                     peerAddress = downloadPeer.getAddress().toString();
 
-                getDao().storeBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerAddress);
+                dao.storeBitcoinTransaction(BLOCKCHAIN_NETWORKTYPE, tx.getHashAsString(), transactionId, peerGroup.getConnectedPeers().size(), peerAddress);
 
                 if (commit){
                     // commit and save the transaction
@@ -622,7 +626,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                  * If there was an error, then I will make sure that the transaction is not left stored at the database.
                  */
                 try {
-                    getDao().deleteStoredBitcoinTransaction(tx.getHashAsString());
+                    dao.deleteStoredBitcoinTransaction(tx.getHashAsString());
                     deleteTransactionFromFile(tx.getHashAsString());
                 } catch (CantExecuteDatabaseOperationException e1) {
                     /**
@@ -640,7 +644,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
         private void deleteStoredTransaction(String txHash) {
             if (isTransactionStoredInDB(txHash)){
                 try {
-                    this.getDao().deleteStoredBitcoinTransaction(txHash);
+                    this.dao.deleteStoredBitcoinTransaction(txHash);
                 } catch (CantExecuteDatabaseOperationException e) {
                     e.printStackTrace();
                 }
@@ -698,7 +702,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
         private boolean isTransactionStoredInDB(String txHash) {
             try {
-                UUID uuid = getDao().getBroadcastedTransactionId(this.BLOCKCHAIN_NETWORKTYPE, txHash);
+                UUID uuid = dao.getBroadcastedTransactionId(this.BLOCKCHAIN_NETWORKTYPE, txHash);
                 if (uuid == null)
                     return false;
                 else
@@ -738,15 +742,6 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
             }
         }
 
-        /**
-         * returns and instance of the database dao class
-         * @return
-         */
-        private BitcoinCryptoNetworkDatabaseDao getDao() {
-            if (bitcoinCryptoNetworkDatabaseDao == null)
-                bitcoinCryptoNetworkDatabaseDao = new BitcoinCryptoNetworkDatabaseDao(this.pluginId, this.pluginDatabaseSystem);
-            return bitcoinCryptoNetworkDatabaseDao;
-        }
 
         /**
          * invalidates the passed transaction by clearing inputs and outputs.
@@ -760,7 +755,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
                 /**
                  * update Broadcasting table to set it to cancelled.
                  */
-                this.getDao().setBroadcastStatus(Status.CANCELLED, peerGroup.getConnectedPeers().size(), null, txHash);
+                this.dao.setBroadcastStatus(Status.CANCELLED, peerGroup.getConnectedPeers().size(), null, txHash);
 
                 System.out.println("***CryptoNetwork*** Transaction " + txHash + " cancelled.");
             } catch (Exception e) {

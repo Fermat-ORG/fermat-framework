@@ -115,14 +115,8 @@ public class TimeOutNotifierAgentDatabaseDao {
         timeOutNotifierAgent.setEpochStartTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME));
         timeOutNotifierAgent.setEpochEndTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_END_TIME_COLUMN_NAME));
         timeOutNotifierAgent.setDuration(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME));
-        timeOutNotifierAgent.setElapsedTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_ELAPSED_COLUMN_NAME));
         try {
             timeOutNotifierAgent.setStatus(AgentStatus.getByCode(agentRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME)));
-        } catch (InvalidParameterException e) {
-            e.printStackTrace();
-        }
-        try {
-            timeOutNotifierAgent.setProtocolStatus(ProtocolStatus.getByCode(agentRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_PROTOCOL_STATUS_COLUMN_NAME)));
         } catch (InvalidParameterException e) {
             e.printStackTrace();
         }
@@ -150,9 +144,8 @@ public class TimeOutNotifierAgentDatabaseDao {
         record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME, timeOutNotifierAgent.getEpochStartTime());
         record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_END_TIME_COLUMN_NAME, timeOutNotifierAgent.getEpochEndTime());
         record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME, timeOutNotifierAgent.getDuration());
-        record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_ELAPSED_COLUMN_NAME, timeOutNotifierAgent.getElapsedTime());
+
         record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, timeOutNotifierAgent.getStatus().getCode());
-        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_PROTOCOL_STATUS_COLUMN_NAME, timeOutNotifierAgent.getNotificationProtocolStatus().getCode());
         record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_LAST_UPDATE_COLUMN_NAME, getCurrentTime());
 
         return record;
@@ -363,6 +356,41 @@ public class TimeOutNotifierAgentDatabaseDao {
             databaseTable.updateRecord(record);
         } catch (CantUpdateRecordException e) {
             throw new CantExecuteQueryException(e,"Error updating record. " + record.toString(), "Database error");
+        }
+    }
+
+    public void updateMonitorEventData(UUID agentId) throws CantExecuteQueryException {
+        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_TABLE_NAME);
+        databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_ID_COLUMN_NAME, agentId, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            thrownCantExecuteQueryException(e, databaseTable.getTableName());
+        }
+
+        DatabaseTableRecord record;
+        if (databaseTable.getRecords().size() == 0){
+            record = databaseTable.getEmptyRecord();
+            record.setUUIDValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_ID_COLUMN_NAME, agentId);
+            record.setIntegerValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME, 1);
+            record.setLongValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_LAST_UPDATED_COLUMN_NAME, getCurrentTime());
+
+            try {
+                databaseTable.insertRecord(record);
+            } catch (CantInsertRecordException e) {
+                throw new CantExecuteQueryException(e, "Error inserting new record. " + record.toString(), "Database issue");
+            }        }
+        else
+        {
+            record = databaseTable.getRecords().get(0);
+            int current = record.getIntegerValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME);
+            record.setIntegerValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME, current+1);
+            try {
+                databaseTable.updateRecord(record);
+            } catch (CantUpdateRecordException e) {
+                throw new CantExecuteQueryException(e, "Error updating record. " + record.toString(), "Database issue");
+            }
         }
     }
 

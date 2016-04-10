@@ -22,7 +22,6 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.Settings
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
@@ -143,11 +142,11 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
         if(id == R.id.btn_left){
             try {
-                getSession().getModuleManager().getCryptoWallet().createIntraUser("John Doe","Available",convertImage(R.drawable.ic_profile_male));
+                getSession().getModuleManager().createIntraUser("John Doe", "Available", convertImage(R.drawable.ic_profile_male));
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
             } catch (CantCreateNewIntraWalletUserException e) {
                 e.printStackTrace();
-            } catch (CantGetCryptoWalletException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             saveSettings();
@@ -155,7 +154,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         }
         else if(id == R.id.btn_right){
             try {
-                final CryptoWallet cryptoWallet = getSession().getModuleManager().getCryptoWallet();
+                final CryptoWallet cryptoWallet = getSession().getModuleManager();
                 //cryptoWallet.createIntraUser("Jane Doe", "Available", null);
 
                 getSession().setData(SessionConstant.PRESENTATION_IDENTITY_CREATED, Boolean.TRUE);
@@ -168,7 +167,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
                             e.printStackTrace();
                         }
 
-            } catch (CantGetCryptoWalletException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             saveSettings();

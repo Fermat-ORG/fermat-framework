@@ -1,22 +1,22 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <!--
+
     <item
         android:id="@+id/menu_search"
         android:title="@string/menu_search"
         android:icon="@drawable/ic_action_search"
         android:showAsAction="ifRoom|collapseActionView"
         android:actionViewClass="android.support.v7.widget.SearchView"/>
-    -->
+
     <item
         android:id="@+id/menu_add_contact"
         android:title="@string/menu_add_contact"
         android:icon="@drawable/ic_action_add"
         android:showAsAction="ifRoom"/>
-    <item
+    <!--<item
         android:id="@+id/menu_switch_profile"
         android:title="@string/menu_switch_profile"
         android:icon="@drawable/cht_profile_icon"
-        android:showAsAction="ifRoom"/>
+        android:showAsAction="ifRoom"/>-->
     <item
         android:id="@+id/menu_error_report"
         android:title="Error Report"

@@ -2,9 +2,13 @@ package com.bitdubai.fermat_cht_api.layer.middleware.mocks;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactListException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Group;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -141,6 +145,46 @@ public class ChatMock implements Chat {
 
     @Override
     public void setContactAssociated(String chatContacts) throws CantGetContactListException {
+
+    }
+
+    @Override
+    public List<Message> getMessagesAsociated() {
+        return null;
+    }
+
+    @Override
+    public void setMessagesAsociated(List<Message> messages) {
+
+    }
+
+    @Override
+    public TypeChat getTypeChat() {
+        return null;
+    }
+
+    @Override
+    public void setTypeChat(TypeChat typeChat) {
+
+    }
+
+    @Override
+    public List<GroupMember> getGroupMembersAssociated() {
+        return null;
+    }
+
+    @Override
+    public void setGroupMembersAssociated(List<GroupMember> groupMembers) {
+
+    }
+
+    @Override
+    public boolean getScheduledDelivery() {
+        return false;
+    }
+
+    @Override
+    public void setScheduledDelivery(boolean scheduledDelivery) {
 
     }
 }

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection.ChatFermatAppConnection;
+import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.app_connection.ChatIdentityFermatAppConnection;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_dap_android_sub_app_asset_factory_bitdubai.app_connection.AssetFactoryFermatAppConnection;
@@ -29,10 +30,12 @@ import com.bitdubai.sub_app.crypto_broker_identity.app_connection.CryptoBrokerId
 import com.bitdubai.sub_app.crypto_customer_community.app_connection.CryptoCustomerCommunityFermatAppConnection;
 import com.bitdubai.sub_app.crypto_customer_identity.app_connection.CryptoCustomerIdentityFermatAppConnection;
 import com.bitdubai.sub_app.developer.app_connection.DeveloperFermatAppConnection;
+import com.bitdubai.sub_app.fan_community.app_connection.FanCommunityFermatAppConnection;
 import com.bitdubai.sub_app.intra_user_community.app_connection.CryptoWalletUserCommunityFermatAppConnection;
 import com.bitdubai.sub_app.intra_user_identity.app_connection.CryptoWalletUserFermatAppConnection;
 import com.bitdubai.sub_app.wallet_manager.app_connection.DesktopFermatAppConnection;
 import com.bitdubai.sub_app.wallet_store.app_connection.WalletStoreFermatAppConnection;
+import com.bitdubai.sub_app_artist_community.app_connection.ArtistCommunityFermatAppConnection;
 import com.bitdubai.sup_app.tokenly_fan_user_identity.app_connection.TokenlyFanUserFermatAppConnection;
 
 //import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.factory.app_connection.ArtArtistIdentityAppConnection;
@@ -145,23 +148,32 @@ public class FermatAppConnectionManager {
                 break;
 
 
+
             // CHT Sub Apps
             case "public_key_cht_chat":
                 fermatAppConnection = new ChatFermatAppConnection(activity);
+                break;
+
+            case "public_key_cht_identity_chat":
+                fermatAppConnection = new ChatIdentityFermatAppConnection(activity);
                 break;
             //TKY Fan wallet
             case "fan_wallet":
                 fermatAppConnection = new FanWalletFermatAppConnection(activity);
                 break;
-            // Art Sub apps
-            case "sub_app_art_artist_community":
-                //fermatAppConnection = new ChatFermatAppConnection(activity);
-                break;
+            //TKY Sub apps
             case "public_key_tky_artist_identity":
                 fermatAppConnection = new TkyArtistIdentityAppConnection(activity);
                 break;
             case "sub_app_tky_fan_create_identity":
                 fermatAppConnection = new TokenlyFanUserFermatAppConnection(activity);
+                break;
+            // Art Sub apps
+            case "sub_app_art_artist_community":
+                fermatAppConnection = new ArtistCommunityFermatAppConnection(activity);
+                break;
+            case "public_key_art_fan_community":
+                fermatAppConnection = new FanCommunityFermatAppConnection(activity);
                 break;
 
         }

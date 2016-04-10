@@ -113,6 +113,8 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_CREATION_DATE_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST);
+        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT);
+        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY);
         /**
          * Table Chats addition.
          */
@@ -206,6 +208,23 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
          */
         DeveloperDatabaseTable identitiesTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME, identitiesColumns);
         tables.add(identitiesTable);
+
+        /**
+         * Table Group Member columns.
+         */
+        List<String> groupMemberColumns = new ArrayList<String>();
+
+        groupMemberColumns.add(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_ID_COLUMN_NAME);
+        groupMemberColumns.add(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_GROUP_ID_COLUMN_NAME);
+        groupMemberColumns.add(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME);
+        groupMemberColumns.add(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_ALIAS_COLUMN_NAME);
+
+
+        /**
+         * Table Group Member addition.
+         */
+        DeveloperDatabaseTable groupMemberTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_TABLE_NAME, groupMemberColumns);
+        tables.add(groupMemberTable);
 
         return tables;
     }

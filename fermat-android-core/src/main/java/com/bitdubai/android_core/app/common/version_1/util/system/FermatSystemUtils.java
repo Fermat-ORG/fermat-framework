@@ -3,7 +3,6 @@ package com.bitdubai.android_core.app.common.version_1.util.system;
 import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.provisory.P2PAppsRuntimeManager;
 import com.bitdubai.android_core.app.common.version_1.provisory.SubAppManagerProvisory;
-import com.bitdubai.fermat_android_api.engine.FermatAppsManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetErrorManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetResourcesManagerException;
@@ -59,15 +58,15 @@ import java.util.UUID;
  */
 public class FermatSystemUtils {
 
-    /**
-     * Get the application manager
-     *
-     * @return
-     */
-
-    public static FermatAppsManager getFermatAppManager(){
-        return ApplicationSession.getInstance().getFermatAppsManager();
-    }
+//    /**
+//     * Get the application manager
+//     *
+//     * @return
+//     */
+//
+//    public static FermatAppsManager getFermatAppManager(){
+//        return ApplicationSession.getInstance().getFermatAppsManager();
+//    }
 
 
 

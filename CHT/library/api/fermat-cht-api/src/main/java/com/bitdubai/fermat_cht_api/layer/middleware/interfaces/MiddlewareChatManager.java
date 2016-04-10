@@ -7,14 +7,19 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatExcep
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteGroupException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetGroupException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOwnIdentitiesException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
@@ -22,10 +27,13 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatExcepti
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendNotificationNewIncomingMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +55,10 @@ public interface MiddlewareChatManager extends FermatManager{
     void saveChat(Chat chat) throws CantSaveChatException;
 
     void deleteChat(Chat chat) throws CantDeleteChatException;
+
+    void deleteChats() throws CantDeleteChatException;
+
+    void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException;
 
     List<Message> getMessages() throws CantGetMessageException;
 
@@ -70,18 +82,6 @@ public interface MiddlewareChatManager extends FermatManager{
 
     void sendDeliveredMessageNotification(Message message) throws SendStatusUpdateMessageNotificationException;
 
-    List<Contact> getContacts() throws CantGetContactException;
-
-    Contact getContactByContactId(UUID contactId) throws CantGetContactException;
-
-    Contact newEmptyInstanceContact() throws CantNewEmptyContactException;
-
-    void saveContact(Contact contact) throws CantSaveContactException;
-
-    void deleteContact(Contact contact) throws CantDeleteContactException;
-
-    List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException;
-
     void notificationNewIncomingMessage(
             String publicKey,
             String tittle,
@@ -89,40 +89,7 @@ public interface MiddlewareChatManager extends FermatManager{
 
     String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
 
-    /**
-     * This method return a HashMap with the possible self identities.
-     * The HashMap contains a Key-value like PlatformComponentType-ActorPublicKey.
-     * If there no identities created in any platform, this hashMaps contains the public chat Network
-     * Service.
-     * @return
-     */
-    HashMap<PlatformComponentType, Object> getSelfIdentities() throws CantGetOwnIdentitiesException;
-
-    /**
-     * This method returns the contact id by local public key.
-     * @param localPublicKey
-     * @return
-     * @throws CantGetContactException
-     */
-    Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException;
-
-    void saveChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantSaveChatUserIdentityException;
-
-    void deleteChatUserIdentity(ChatUserIdentity chatUserIdentity) throws CantDeleteChatUserIdentityException;
-
-    List<ChatUserIdentity> getChatUserIdentities() throws CantGetChatUserIdentityException;
-
-    ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException;
-
-    void saveContactConnection(ContactConnection contactConnection) throws CantSaveContactConnectionException;
-
-    void deleteContactConnection(ContactConnection chatUserIdentity) throws CantDeleteContactConnectionException;
-
-    List<ContactConnection> getContactConnections() throws CantGetContactConnectionException;
-
-    ContactConnection getContactConnection(UUID contactId) throws CantGetContactConnectionException;
-
-    void createSelfIdentities() throws CantCreateSelfIdentityException;
+    List<ChatActorConnection> getChatActorConnections(String localPublicKey);
 
     /**
      * This method sends the message through the Chat Network Service
@@ -131,4 +98,9 @@ public interface MiddlewareChatManager extends FermatManager{
      */
     void sendMessage(Message createdMessage) throws CantSendChatMessageException;
 
+    void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException;
+
+    void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException;
+
+    List<GroupMember> getGroupMembersByGroupId(UUID groupId) throws CantListGroupMemberException;
 }

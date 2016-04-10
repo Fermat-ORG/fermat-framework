@@ -5,27 +5,39 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdent
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteGroupException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetGroupException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOwnIdentitiesException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
+import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Group;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -42,10 +54,12 @@ import java.util.UUID;
 public class ChatSupAppModuleManager implements ChatManager {
 
     private final MiddlewareChatManager middlewareChatManager;
+    private final ChatIdentityManager chatIdentityManager;
 
-    public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager)
+    public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager, ChatIdentityManager chatIdentityManager)
     {
         this.middlewareChatManager = middlewareChatManager;
+        this.chatIdentityManager   = chatIdentityManager;
     }
 
     @Override
@@ -71,6 +85,16 @@ public class ChatSupAppModuleManager implements ChatManager {
     @Override
     public void deleteChat(Chat chat) throws CantDeleteChatException {
         middlewareChatManager.deleteChat(chat);
+    }
+
+    @Override
+    public void deleteChats() throws CantDeleteChatException {
+        middlewareChatManager.deleteChats();
+    }
+
+    @Override
+    public void deleteMessagesByChatId(UUID chatId) throws CantDeleteMessageException {
+        middlewareChatManager.deleteMessagesByChatId(chatId);
     }
 
     @Override
@@ -124,59 +148,6 @@ public class ChatSupAppModuleManager implements ChatManager {
         middlewareChatManager.sendReadMessageNotification(message);
     }
 
-    @Override
-    public List<Contact> getContacts() throws CantGetContactException {
-        return middlewareChatManager.getContacts();
-    }
-
-    @Override
-    public Contact getContactByContactId(UUID contactId) throws CantGetContactException {
-        return middlewareChatManager.getContactByContactId(contactId);
-    }
-
-    @Override
-    public Contact newEmptyInstanceContact() throws CantNewEmptyContactException {
-        return newEmptyInstanceContact();
-    }
-
-    @Override
-    public void saveContact(Contact contact) throws CantSaveContactException {
-        middlewareChatManager.saveContact(contact);
-    }
-
-    @Override
-    public void deleteContact(Contact contact) throws CantDeleteContactException {
-        middlewareChatManager.deleteContact(contact);
-    }
-
-    @Override
-    public List<ContactConnection> discoverActorsRegistered() throws CantGetContactConnectionException {
-        try
-        {
-            List<ContactConnection> contactConnections = middlewareChatManager.getContactConnections();
-
-            for (ContactConnection contactConnection : contactConnections)
-            {
-                middlewareChatManager.deleteContactConnection(contactConnection);
-            }
-
-        } catch (CantGetContactConnectionException e) {
-            throw new CantGetContactConnectionException(
-                    e,
-                    "delete contact connections",
-                    "Cannot get the contact connection"
-            );
-        } catch (CantDeleteContactConnectionException e) {
-            throw new CantGetContactConnectionException(
-                    e,
-                    "delete contact connections",
-                    "Cannot delete contact connections"
-            );
-        }
-
-        return middlewareChatManager.discoverActorsRegistered();
-    }
-
 
     /**
      * This method returns the Network Service public key
@@ -188,71 +159,17 @@ public class ChatSupAppModuleManager implements ChatManager {
         return middlewareChatManager.getNetworkServicePublicKey();
     }
 
-    /**
-     * This method return a HashMap with the possible self identities.
-     * The HashMap contains a Key-value like PlatformComponentType-ActorPublicKey.
-     * If there no identities created in any platform, this hashMaps contains the public chat Network
-     * Service.
-     * @return
-     */
-    @Override
-    public HashMap<PlatformComponentType, Object> getSelfIdentities()
-            throws CantGetOwnIdentitiesException {
-        return middlewareChatManager.getSelfIdentities();
-    }
-
-    /**
-     * This method returns the contact id by local public key.
-     *
-     * @param localPublicKey
-     * @return
-     * @throws CantGetContactException
-     */
-    @Override
-    public Contact getContactByLocalPublicKey(String localPublicKey) throws CantGetContactException {
-        return middlewareChatManager.getContactByLocalPublicKey(localPublicKey);
-    }
 
     @Override
-    public void createSelfIdentities() throws CantCreateSelfIdentityException {
-        middlewareChatManager.createSelfIdentities();
-    }
-
-    @Override
-    public boolean isIdentityDevice() throws CantGetChatUserIdentityException {
-        if(middlewareChatManager.getChatUserIdentities().isEmpty())
+    public boolean isIdentityDevice() throws  CantListChatIdentityException {
+        if(chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser().isEmpty())
             return false;
         else return true;
     }
 
     @Override
-    public List<ChatUserIdentity> getChatUserIdentities() throws CantGetChatUserIdentityException {
-        return middlewareChatManager.getChatUserIdentities();
-    }
-
-    @Override
-    public ChatUserIdentity getChatUserIdentity(String publicKey) throws CantGetChatUserIdentityException {
-        return middlewareChatManager.getChatUserIdentity(publicKey);
-    }
-
-    @Override
-    public void saveContactConnection(ContactConnection contactConnection) throws CantSaveContactConnectionException {
-        middlewareChatManager.saveContactConnection(contactConnection);
-    }
-
-    @Override
-    public void deleteContactConnection(ContactConnection chatUserIdentity) throws CantDeleteContactConnectionException {
-        middlewareChatManager.deleteContactConnection(chatUserIdentity);
-    }
-
-    @Override
-    public List<ContactConnection> getContactConnections() throws CantGetContactConnectionException {
-        return middlewareChatManager.getContactConnections();
-    }
-
-    @Override
-    public ContactConnection getContactConnectionByContactId(UUID contactId) throws CantGetContactConnectionException {
-        return middlewareChatManager.getContactConnection(contactId);
+    public List<ChatIdentity> getIdentityChatUsersFromCurrentDeviceUser() throws CantListChatIdentityException {
+        return chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
     }
 
     /**
@@ -264,5 +181,31 @@ public class ChatSupAppModuleManager implements ChatManager {
     @Override
     public void sendMessage(Message createdMessage) throws CantSendChatMessageException {
         middlewareChatManager.sendMessage(createdMessage);
+    }
+
+    @Override
+    public void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException {
+        middlewareChatManager.saveGroupMember(groupMember);
+    }
+
+    @Override
+    public void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException {
+        middlewareChatManager.deleteGroupMember(groupMember);
+    }
+
+
+    @Override
+    public List<GroupMember> getGroupMembersByGroupId(UUID groupId) throws CantListGroupMemberException {
+        return getGroupMembersByGroupId(groupId);
+    }
+
+    @Override
+    public void clearChatMessageByChatId(UUID chatId) throws CantDeleteMessageException, CantGetMessageException {
+        List<Message> messages = middlewareChatManager.getMessagesByChatId(chatId);
+
+        for (Message message : messages)
+        {
+            middlewareChatManager.deleteMessage(message);
+        }
     }
 }

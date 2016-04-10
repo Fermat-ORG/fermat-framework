@@ -67,6 +67,13 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
     }
 
     /*IMPLEMENTATION CustomerBrokerNewManager*/
+
+    /**
+     * Create an Customer Broker New  Negotiation Transaction for the customer
+     *
+     * @param customerBrokerPurchaseNegotiation the updated negotiation
+     * @throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException
+     */
     @Override
     public void createCustomerBrokerNewPurchaseNegotiationTransaction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException {
         try {
@@ -93,6 +100,13 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
         }
     }
 
+    /**
+     * Get negotiation transaction Customer Broker New for the transactionId indicate
+     *
+     * @param transactionId the id negotiation transaction
+     * @return the Negotiation Transaction data
+     * @throws CantGetCustomerBrokerNewNegotiationTransactionException
+     */
     @Override
     public CustomerBrokerNew getCustomerBrokerNewNegotiationTransaction(UUID transactionId) throws CantGetCustomerBrokerNewNegotiationTransactionException{
 
@@ -110,6 +124,12 @@ public class CustomerBrokerNewManagerImpl implements CustomerBrokerNewManager {
 
     }
 
+    /**
+     * List negotiation transaction Customer Broker New
+     *
+     * @return the list Negotiation Transaction data
+     * @throws CantGetListCustomerBrokerNewNegotiationTransactionException
+     */
     @Override
     public List<CustomerBrokerNew> getAllCustomerBrokerNewNegotiationTransaction() throws CantGetListCustomerBrokerNewNegotiationTransactionException{
 

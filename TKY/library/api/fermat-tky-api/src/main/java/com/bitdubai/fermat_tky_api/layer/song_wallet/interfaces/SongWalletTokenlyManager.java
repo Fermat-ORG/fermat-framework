@@ -107,4 +107,9 @@ public interface SongWalletTokenlyManager extends FermatManager{
      * @throws CantGetSongException
      */
     WalletSong getSongWithBytes(UUID songId) throws CantGetSongException;
+
+    /**
+     * This method reports to wallet manager that the ser wants to download a song
+     */
+    void cancelDownload();
 }

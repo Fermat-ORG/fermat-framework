@@ -29,6 +29,8 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String CHATS_CREATION_DATE_COLUMN_NAME = "creation_date";
     public static final String CHATS_LAST_MESSAGE_DATE_COLUMN_NAME = "last_message_date";
     public static final String CHATS_CONTACT_ASSOCIATED_LIST = "contact_associated_list";
+    public static final String CHATS_TYPE_CHAT = "type_chat";
+    public static final String CHATS_SCHEDULED_DELIVERY = "scheduled_delivery";
 
     public static final String CHATS_FIRST_KEY_COLUMN = "id_chat";
 
@@ -103,6 +105,31 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String IDENTITY_PLATFORM_COMPONENT_TYPE_COLUMN_NAME = "platform_component_type";
 
     public static final String IDENTITY_FIRST_KEY_COLUMN = "identity_public_key";
+
+
+    //TODO:Eliminar
+//    /**
+//     * Chat Actor GROUP REGISTERED database table definition.
+//     */
+//    public static final String GROUP_TABLE_NAME = "group_contact";
+//
+//    public static final String GROUP_ID_COLUMN_NAME = "group_id";
+//    public static final String GROUP_NAME_COLUMN_NAME = "group_name";
+//    public static final String GROUP_TYPE_CHAT_COLUMN_NAME = "type_chat";
+//
+//    public static final String GROUP_FIRST_KEY_COLUMN = GROUP_ID_COLUMN_NAME;
+
+    /**
+     * Chat Actor GROUP MEMBER REGISTERED database table definition.
+     */
+    public static final String GROUP_MEMBER_TABLE_NAME = "group_member";
+
+    public static final String GROUP_MEMBER_ID_COLUMN_NAME = "group_id_member";
+    public static final String GROUP_MEMBER_GROUP_ID_COLUMN_NAME = "group_id";
+    public static final String GROUP_MEMBER_USER_REGISTERED_PUBLIC_KEY_COLUMN_NAME = "publicKey";
+    public static final String GROUP_MEMBER_ALIAS_COLUMN_NAME = "alias";
+
+    public static final String GROUP_MEMBER_FIRST_KEY_COLUMN = GROUP_MEMBER_ID_COLUMN_NAME;
 
 
 }
