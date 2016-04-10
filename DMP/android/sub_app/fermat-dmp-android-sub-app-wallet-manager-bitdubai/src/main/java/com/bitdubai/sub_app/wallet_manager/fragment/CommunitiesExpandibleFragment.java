@@ -278,6 +278,8 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
         installedSubApp.setBanner(R.drawable.customer_community);
         installedApps.add(installedSubApp);
 
+        adapter.expandAllParents();
+
         /*installedSubApp = new InstalledSubApp(
                 SubApps.ART_FAN_COMMUNITY,
                 null,

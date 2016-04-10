@@ -329,7 +329,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             paintTitleBar(titleBar, activity);
             Log.i("FERMAT ACTIVITY loadUI", " paintTitleBar " + System.currentTimeMillis());
 
-            //if(appConnections.getFullyLoadedSession().getModuleManager()!=null && sideMenu!=null) sideMenu.setNotifications(appConnections.getFullyLoadedSession().getModuleManager().getMenuNotifications());
+            if(appConnections.getFullyLoadedSession().getModuleManager()!=null && sideMenu!=null) sideMenu.setNotifications(appConnections.getFullyLoadedSession().getModuleManager().getMenuNotifications());
             paintSideMenu(activity, sideMenu, appConnections);
             Log.i("FERMAT ACTIVITY loadUI", " paintSideMenu " + System.currentTimeMillis());
             paintFooter(activity.getFooter(), appConnections.getFooterViewPainter());

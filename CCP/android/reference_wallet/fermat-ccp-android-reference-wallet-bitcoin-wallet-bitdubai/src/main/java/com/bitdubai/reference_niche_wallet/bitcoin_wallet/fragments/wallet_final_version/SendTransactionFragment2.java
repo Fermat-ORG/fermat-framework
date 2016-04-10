@@ -218,6 +218,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             referenceWalletSession = appSession;
             moduleManager = referenceWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
+            final Handler handlerTimer = new Handler();
 
 //            if(lst==null){
 //                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),appSession, walletSettings, walletResourcesProviderManager, null);
@@ -260,7 +261,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         final BitcoinWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
 
 
-                        Handler handlerTimer = new Handler();
+
                         handlerTimer.postDelayed(new Runnable() {
                             public void run() {
                                 if (bitcoinWalletSettingsTemp.isPresentationHelpEnabled()) {

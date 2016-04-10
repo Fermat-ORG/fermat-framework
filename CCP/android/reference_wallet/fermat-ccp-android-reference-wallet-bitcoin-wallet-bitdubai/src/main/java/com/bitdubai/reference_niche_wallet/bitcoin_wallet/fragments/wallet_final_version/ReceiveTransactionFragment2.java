@@ -114,7 +114,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         mHandler = new Handler();
         BitcoinWalletSettings bitcoinWalletSettings = null;
         try {
-            referenceWalletSession = (ReferenceWalletSession) appSession;
+            referenceWalletSession = appSession;
             moduleManager = referenceWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
@@ -335,6 +335,10 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 openNegotiationList = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(openNegotiationList);
+            }else {
+
+                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+
             }
         }
     }
