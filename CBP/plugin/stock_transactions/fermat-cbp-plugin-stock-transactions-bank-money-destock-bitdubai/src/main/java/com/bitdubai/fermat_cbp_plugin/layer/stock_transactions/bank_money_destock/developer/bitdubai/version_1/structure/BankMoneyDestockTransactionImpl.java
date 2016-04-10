@@ -201,7 +201,7 @@ public class BankMoneyDestockTransactionImpl implements BankMoneyTransaction {
      */
     @Override
     public String getOriginTransactionId() {
-        return null;
+        return originTransactionId;
     }
 
     @Override

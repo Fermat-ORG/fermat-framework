@@ -127,7 +127,7 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
         bankMoneyDestockTransaction.setTransactionStatus(TransactionStatusRestockDestock.getByCode(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TRANSACTION_STATUS_COLUMN_NAME)));
         bankMoneyDestockTransaction.setPriceReference(new BigDecimal(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_PRICE_REFERENCE_COLUMN_NAME)));
         bankMoneyDestockTransaction.setOriginTransaction(OriginTransaction.getByCode(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_ORIGIN_TRANSACTION_COLUMN_NAME)));
-        bankMoneyDestockTransaction.setOriginTransactionId(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TRANSACTION_ID_COLUMN_NAME));
+        bankMoneyDestockTransaction.setOriginTransactionId(bankMoneyRestockTransactionRecord.getStringValue(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_ORIGIN_TRANSACTION_ID_COLUMN_NAME));
 
         return bankMoneyDestockTransaction;
     }
@@ -139,24 +139,18 @@ public class BusinessTransactionBankMoneyDestockDatabaseDao {
             database = openDatabase();
             DatabaseTransaction transaction = database.newTransaction();
 
-            //TODO: Solo para prueba ya que priceReference viene null desde android revisar con Nelson
-            bankMoneyTransaction.setPriceReference(new BigDecimal(0));
-
-            /*//TODO:Revisar con guillermo que el accountNumber viene null
-            bankMoneyTransaction.setBankAccount("123456");
-            */
             DatabaseTable table = getDatabaseTable(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TABLE_NAME);
-            DatabaseTableRecord bankMoneyRestockRecord = getBankMoneyDestockRecord(bankMoneyTransaction);
+            DatabaseTableRecord bankMoneyDestockRecord = getBankMoneyDestockRecord(bankMoneyTransaction);
             DatabaseTableFilter filter = table.getEmptyTableFilter();
             filter.setType(DatabaseFilterType.EQUAL);
             filter.setValue(bankMoneyTransaction.getTransactionId().toString());
             filter.setColumn(BussinessTransactionBankMoneyDestockDatabaseConstants.BANK_MONEY_DESTOCK_TRANSACTION_ID_COLUMN_NAME);
 
             if (isNewRecord(table, filter))
-                transaction.addRecordToInsert(table, bankMoneyRestockRecord);
+                transaction.addRecordToInsert(table, bankMoneyDestockRecord);
             else {
                 table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
-                transaction.addRecordToUpdate(table, bankMoneyRestockRecord);
+                transaction.addRecordToUpdate(table, bankMoneyDestockRecord);
             }
 
             //I execute the transaction and persist the database side of the asset.
