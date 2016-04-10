@@ -29,4 +29,16 @@ public interface Fan extends Identity {
      */
     void addNewArtistConnected(String  userName) throws ObjectNotSetException;
 
+    /**
+     * This method returns the XML String representation from the Artist Connected List.
+     * @return
+     */
+    public String getArtistsConnectedStringList();
+
+    /**
+     * This method sets the artist connected list from a XML String.
+     * @param xmlStringList
+     */
+    void addArtistConnectedList(String xmlStringList);
+
 }
