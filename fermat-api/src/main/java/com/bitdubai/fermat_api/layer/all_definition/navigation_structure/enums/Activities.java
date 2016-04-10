@@ -341,6 +341,12 @@ public enum Activities implements FermatEnum {
     ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD("ASAFCCW"),
     ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE("ASAFCCOP"),
 
+    ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST("ASAACCFL"),
+    ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS("ASAACCN"),
+    ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD("ASAACCW"),
+    ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE("ASAACCOP"),
+
+
     //TKY
     TKY_ARTIST_IDENTITY("TAI"),
     TKY_ARTIST_IDENTITY_CREATE_PROFILE("TAICP"),
@@ -899,6 +905,14 @@ public enum Activities implements FermatEnum {
                 return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST;
             case "ASAFCCN":
                 return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS;
+            case "ASAACCFL":
+                return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST;
+            case "ASAACCN":
+                return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS;
+            case "ASAACCW":
+                return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD;
+            case "ASAACCOP":
+                return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

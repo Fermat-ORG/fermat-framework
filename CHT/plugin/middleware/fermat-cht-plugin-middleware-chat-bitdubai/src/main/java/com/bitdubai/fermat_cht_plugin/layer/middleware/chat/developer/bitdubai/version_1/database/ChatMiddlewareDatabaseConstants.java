@@ -30,6 +30,7 @@ public class ChatMiddlewareDatabaseConstants {
     public static final String CHATS_LAST_MESSAGE_DATE_COLUMN_NAME = "last_message_date";
     public static final String CHATS_CONTACT_ASSOCIATED_LIST = "contact_associated_list";
     public static final String CHATS_TYPE_CHAT = "type_chat";
+    public static final String CHATS_SCHEDULED_DELIVERY = "scheduled_delivery";
 
     public static final String CHATS_FIRST_KEY_COLUMN = "id_chat";
 

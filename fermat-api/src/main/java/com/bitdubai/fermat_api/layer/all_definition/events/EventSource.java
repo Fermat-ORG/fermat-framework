@@ -17,6 +17,7 @@ public enum EventSource implements FermatEnum {
     ACTOR_ASSET_USER                        ("AAU"),
     ACTOR_ASSET_ISSUER                      ("AAI"),
     ACTOR_ASSET_REDEEM_POINT                ("AAR"),
+    ACTOR_NETWORK_SERVICE_CHAT              ("AC"),
     ACTOR_NETWORK_SERVICE_CRYPTO_BROKER     ("ACB"),
     ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER   ("ACC"),
     ACTOR_NETWORK_SERVICE_ARTIST            ("ANSA"),
@@ -95,6 +96,7 @@ public enum EventSource implements FermatEnum {
             case "AAU":    return ACTOR_ASSET_USER;
             case "AAI":    return ACTOR_ASSET_ISSUER;
             case "AAR":    return ACTOR_ASSET_REDEEM_POINT;
+            case "AC":    return ACTOR_NETWORK_SERVICE_CHAT;
             case "ACB":    return ACTOR_NETWORK_SERVICE_CRYPTO_BROKER;
             case "ACC":    return ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER;
             case "ANSA":   return ACTOR_NETWORK_SERVICE_ARTIST;

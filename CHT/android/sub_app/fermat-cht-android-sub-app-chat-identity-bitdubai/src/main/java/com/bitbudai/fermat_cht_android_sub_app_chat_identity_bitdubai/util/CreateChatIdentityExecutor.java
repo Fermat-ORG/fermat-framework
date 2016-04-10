@@ -58,7 +58,7 @@ public class CreateChatIdentityExecutor {
             return INVALID_ENTRY_DATA;
 
         try {
-            identity = moduleManager.createNewIdentityChat(identityName, imageInBytes);
+            moduleManager.createNewIdentityChat(identityName, imageInBytes);
 
         } catch (CantCreateNewChatIdentityException e) {
             e.printStackTrace();

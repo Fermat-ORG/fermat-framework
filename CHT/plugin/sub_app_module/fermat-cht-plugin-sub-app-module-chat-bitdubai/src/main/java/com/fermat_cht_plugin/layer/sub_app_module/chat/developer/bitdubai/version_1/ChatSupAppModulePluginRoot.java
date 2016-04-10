@@ -20,6 +20,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
@@ -64,6 +65,9 @@ public class ChatSupAppModulePluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.MIDDLEWARE, plugin = Plugins.CHAT_MIDDLEWARE)
     private MiddlewareChatManager chatMiddlewareManager;
 
+    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CHAT_IDENTITY)
+    private ChatIdentityManager chatIdentityManager;
+
     @Override
     public List<String> getClassesFullPath() {
         return null;
@@ -78,7 +82,7 @@ public class ChatSupAppModulePluginRoot extends AbstractPlugin implements
     public ChatManager getChatManager() throws CHTException {
         try {
             if (chatManager == null) {
-                chatManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.structure.ChatSupAppModuleManager(chatMiddlewareManager);
+                chatManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.structure.ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager);
             }
             return chatManager;
         }catch (final Exception e) {
@@ -152,7 +156,7 @@ public class ChatSupAppModulePluginRoot extends AbstractPlugin implements
         /**
          * Init the plugin manager
          */
-        chatManager=new ChatSupAppModuleManager(chatMiddlewareManager);
+        chatManager=new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager);
         //TODO: This method is only for testing, please, comment it when the test is finish, thanks.
         //testMethod();
 
