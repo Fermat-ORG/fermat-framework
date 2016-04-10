@@ -196,9 +196,9 @@
     <string name="cbw_wizard_merchandise_dialog_footer">To begin, choose an avatar below. You may change it later with your picture and alias</string>
     <string name="cbw_wizard_not_show_text">Don\'t show any help dialogs</string>
     <string name="cbw_wizard_stock_merchandise_title">Select Stock Wallets</string>
-    <string name="cbw_wizard_stock_merchandise_description">Associate at least two of your wallets from which you can withdraw funds to use as stock</string>
-    <string name="cbw_select_stock_merchandise">Your wallets</string>
-    <string name="cbw_associated_wallets">Associated wallets</string>
+    <string name="cbw_wizard_stock_merchandise_description">Associate at least <b>two</b> of your wallets, from which you can withdraw funds to use as stock</string>
+    <string name="cbw_select_stock_merchandise">YOUR WALLETS</string>
+    <string name="cbw_associated_wallets">ASSOCIATED WALLETS</string>
 
     <!-- Earnings Wizard and Settings pages-->
     <string name="cbw_wizard_earnings_dialog_sub_title">Configure your earnings!</string>
