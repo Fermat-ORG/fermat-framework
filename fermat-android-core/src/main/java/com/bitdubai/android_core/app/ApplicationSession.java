@@ -7,6 +7,7 @@ import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerService;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.android_core.app.common.version_1.util.services_helpers.ServicesHelpers;
 import com.bitdubai.fermat.R;
@@ -131,8 +132,15 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
             }
         });
 
-        servicesHelpers = new ServicesHelpers(this);
-        servicesHelpers.bindServices();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                servicesHelpers = new ServicesHelpers(getInstance().getApplicationContext());
+                servicesHelpers.bindServices();
+            }
+        }).start();
+
+
 
         super.onCreate();
     }
@@ -154,6 +162,10 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
 
     public NotificationService getNotificationService(){
         return getServicesHelpers().getNotificationService();
+    }
+
+    public ClientSystemBrokerService getClientSideBrokerService(){
+        return getServicesHelpers().getClientSideBrokerService();
     }
 
     public ServicesHelpers getServicesHelpers() {
