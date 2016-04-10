@@ -168,6 +168,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 if (adapter != null) {
                     adapter.changeDataSet(grouperList);
                     adapter.expandAllParents();
+                    adapter.expandParent(0);
                 }
             }
         }
@@ -278,7 +279,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
         installedSubApp.setBanner(R.drawable.customer_community);
         installedApps.add(installedSubApp);
 
-        adapter.expandAllParents();
+
 
         /*installedSubApp = new InstalledSubApp(
                 SubApps.ART_FAN_COMMUNITY,
