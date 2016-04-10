@@ -4922,6 +4922,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#073487");
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#073487");
         runtimeActivity.setBackgroundColor("#ffffff");
@@ -4933,11 +4934,14 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTabStrip = new TabStrip();
 
-        runtimeTabStrip.setTabsColor("#06356f");
+        runtimeTabStrip.setTabsColor("#0F5DA7");
 
-        runtimeTabStrip.setTabsTextColor("#b9bfcd");
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
 
-        runtimeTabStrip.setTabsIndicateColor("#12aca1");
+        //runtimeTabStrip.setTabsIndicateColor("#12aca1");
+
+        runtimeTabStrip.setTabsIndicateColor("#DC5A0F");
+
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Sent");
@@ -4949,7 +4953,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTab.setFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_RECEIVED_HISTORY);
         runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeTabStrip.setDividerColor(0x72af9c);
+        runtimeTabStrip.setDividerColor(0xff073487);
         //runtimeTabStrip.setBackgroundColor("#72af9c");
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
