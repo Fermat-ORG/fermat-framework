@@ -22,7 +22,7 @@
             android:textColor="@color/black"
             android:textSize="14sp"
             tools:text="CASH"
-            android:layout_weight="2"
+            android:layout_weight="3"
             />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
