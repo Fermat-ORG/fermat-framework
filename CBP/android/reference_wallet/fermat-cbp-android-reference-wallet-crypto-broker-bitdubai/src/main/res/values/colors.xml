@@ -58,6 +58,7 @@
     <color name="cbw_setting_item_color">#dbdbdb</color>
 
     <color name="cbw_wizard_color">#1270A6</color>
+    <color name="cbw_wizard_color_2">#12aca0</color>
     <color name="cbw_wizard_border_color">#455077</color>
     <color name="light_grey">#EEE</color>
 
