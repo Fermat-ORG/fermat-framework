@@ -137,6 +137,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private FermatTextView txt_balance_amount_type;
     private int progress1=1;
     private  Map<Long, Long> runningDailyBalance;
+    final Handler handler = new Handler();
 
     public static SendTransactionFragment2 newInstance() {
         return new SendTransactionFragment2();
@@ -260,8 +261,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                         final BitcoinWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
 
 
-                        Handler handlerTimer = new Handler();
-                        handlerTimer.postDelayed(new Runnable() {
+
+                        handler.postDelayed(new Runnable() {
                             public void run() {
                                 if (bitcoinWalletSettingsTemp.isPresentationHelpEnabled()) {
                                     setUpPresentation(false);
@@ -386,7 +387,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
 
         container_header_balance.setBackgroundColor(Color.parseColor("#06356f"));
-        final Handler handler = new Handler();
+
         Runnable runnable = new Runnable() {
             @Override
             public void run() {

@@ -5,7 +5,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,7 +25,6 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -71,16 +69,16 @@ public class ClientSystemBrokerService extends Service {
         poolExecutor = Executors.newFixedThreadPool(THREADS_NUM);
         PackageManager packageManager = getPackageManager();
         Intent serviceIntent = new Intent("org.fermat.alpha.COMM_SERVICE");
-        List<ResolveInfo> services = packageManager.queryIntentServices(serviceIntent, 0);
-        if (services.size() > 0) {
-            ResolveInfo service = services.get(0);
-            Intent intent = new Intent();
-            intent.setClassName(service.serviceInfo.packageName, service.serviceInfo.name);
-            intent.setAction("org.fermat.alpha.COMM_SERVICE");
-            //ComponentName cn = startService(intent);
-            startService(intent);
-            doBindService(intent);
-        }
+//        List<ResolveInfo> services = packageManager.queryIntentServices(serviceIntent, 0);
+//        if (services.size() > 0) {
+//            ResolveInfo service = services.get(0);
+//            Intent intent = new Intent();
+//            intent.setClassName(service.serviceInfo.packageName, service.serviceInfo.name);
+//            intent.setAction("org.fermat.alpha.COMM_SERVICE");
+//            //ComponentName cn = startService(intent);
+//            startService(intent);
+//            doBindService(intent);
+//        }
     }
 
 
@@ -134,9 +132,9 @@ public class ClientSystemBrokerService extends Service {
 
     @Override
     public void onDestroy() {
-        if(mIsBound){
-            doUnbindService();
-        }
+//        if(mIsBound){
+//            doUnbindService();
+//        }
         super.onDestroy();
     }
 
