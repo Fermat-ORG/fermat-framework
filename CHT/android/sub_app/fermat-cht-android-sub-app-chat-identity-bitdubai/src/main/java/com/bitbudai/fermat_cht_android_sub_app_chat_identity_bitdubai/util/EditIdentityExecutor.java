@@ -4,12 +4,10 @@ import android.util.Log;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
-import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantUpdateChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.ChatIdentitySubAppModulePluginRoot;
 
 /**
  * Created by angel on 20/1/16.
@@ -24,7 +22,8 @@ public class EditIdentityExecutor {
     private byte[] imageInBytes;
     private String identityName;
 
-    private ChatIdentitySubAppModulePluginRoot moduleManager;
+    //private ChatIdentitySubAppModulePluginRoot moduleManager;
+    private ChatIdentityModuleManager moduleManager;
     private ErrorManager errorManager;
     private ChatIdentity identity;
     private String Publickey;
@@ -40,7 +39,7 @@ public class EditIdentityExecutor {
         if (session != null) {
             ChatIdentitySession subAppSession = (ChatIdentitySession) session;
             Log.i("*****CHT IDENTITY******", "LA SESION tiene valorrrrrr!!!!!!!");
-            this.moduleManager = (ChatIdentitySubAppModulePluginRoot) subAppSession.getModuleManager();
+            this.moduleManager = subAppSession.getModuleManager();
             this.errorManager = subAppSession.getErrorManager();
         }else{
             Log.i("*****CHT IDENTITY******", "LA SESION ES NULA!!!!!!!");
@@ -56,9 +55,9 @@ public class EditIdentityExecutor {
             return INVALID_ENTRY_DATA;
 
         try {
-            moduleManager.getChatIdentityManager().updateIdentityChat(Publickey,identityName, imageInBytes);
+            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes);
 
-        } catch (CantCreateNewChatIdentityException e) {
+        } catch (CantUpdateChatIdentityException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();

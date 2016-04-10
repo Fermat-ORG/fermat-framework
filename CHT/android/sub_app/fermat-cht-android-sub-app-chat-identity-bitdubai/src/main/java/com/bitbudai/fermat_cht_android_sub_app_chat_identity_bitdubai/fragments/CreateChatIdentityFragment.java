@@ -42,6 +42,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.ChatIdentitySubAppModulePluginRoot;
@@ -63,7 +64,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     private Bitmap cryptoBrokerBitmap;
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
-    ChatIdentitySubAppModulePluginRoot moduleManager;
+    ChatIdentityModuleManager moduleManager;
     private EditText mBrokerName;
     private ImageView mBrokerImage;
     ErrorManager errorManager;
@@ -82,7 +83,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
         try {
              Session = (ChatIdentitySession) appSession;
-            moduleManager = (ChatIdentitySubAppModulePluginRoot) Session.getModuleManager();
+            moduleManager =  Session.getModuleManager();
              errorManager = Session.getErrorManager();
             setHasOptionsMenu(false);
           settingsManager = Session.getModuleManager().getSettingsManager();
@@ -145,13 +146,13 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
                 ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
             }else{
-                bitmap = BitmapFactory.decodeByteArray(moduleManager.getChatIdentityManager().getIdentityChatUser().getImage(), 0, moduleManager.getChatIdentityManager().getIdentityChatUser().getImage().length);
+                bitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
 //              cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
                 fanImageByteArray = toByteArray(bitmap);
                 mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
-                textViewChtTitle.setText(moduleManager.getChatIdentityManager().getIdentityChatUser().getAlias().toString());
-                mBrokerName.setText(moduleManager.getChatIdentityManager().getIdentityChatUser().getAlias().toString());
+                textViewChtTitle.setText(moduleManager.getIdentityChatUser().getAlias().toString());
+                mBrokerName.setText(moduleManager.getIdentityChatUser().getAlias().toString());
                 mBrokerName.requestFocus();
                 mBrokerName.performClick();
                 mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -300,7 +301,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
                 EditIdentityExecutor executor = null;
                 try {
-                    executor = new EditIdentityExecutor(appSession,moduleManager.getChatIdentityManager().getIdentityChatUser().getPublicKey(),brokerNameText, imgInBytes);
+                    executor = new EditIdentityExecutor(appSession,moduleManager.getIdentityChatUser().getPublicKey(),brokerNameText, imgInBytes);
 
                 int resultKey = executor.execute();
                 switch (resultKey) {
@@ -348,9 +349,10 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     }
     public boolean ExistIdentity() throws CHTException {
         try {
-            if (moduleManager.getChatIdentityManager().getIdentityChatUser().getAlias().length() > 0)
+            //TODO:Richard que pasa si esto es null porque no hay idenitdad creada te va a tirar null pointer exception?
+            if (moduleManager.getIdentityChatUser().getAlias().length() > 0)
                 return true;
-            if (moduleManager.getChatIdentityManager().getIdentityChatUser().getImage().length > 0)
+            if (moduleManager.getIdentityChatUser().getImage().length > 0)
                 return true;
             Log.i("CHT EXIST IDENTITY", "TRUE");
         }
