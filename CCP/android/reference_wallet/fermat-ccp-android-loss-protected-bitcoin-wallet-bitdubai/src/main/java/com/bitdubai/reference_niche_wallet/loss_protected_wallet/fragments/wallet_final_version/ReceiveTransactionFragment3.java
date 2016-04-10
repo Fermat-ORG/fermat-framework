@@ -93,6 +93,7 @@ public class ReceiveTransactionFragment3 extends FermatWalletListFragment<LossPr
 
         lst = new ArrayList<LossProtectedWalletTransaction>();
 
+        lst = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
         getExecutor().execute(new Runnable() {
             @Override
             public void run() {
