@@ -91,6 +91,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         if (blocksLeft % 1000 == 0)
             System.out.println("***CryptoNetwork*** Block downloaded on " + NETWORK_TYPE.getCode() + ". Pending blocks: " + blocksLeft);
 
+
         /**
          * sets the blockchainDownloader data
          */
@@ -280,6 +281,7 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
         return true;
     }
 
+
     /**
      * returns the blockchain download progress class.
      * @return
@@ -287,5 +289,6 @@ public class BitcoinNetworkEvents implements WalletEventListener, PeerEventListe
     public BlockchainDownloadProgress getBlockchainDownloadProgress(){
         return blockchainDownloadProgress;
     }
+
 }
 
