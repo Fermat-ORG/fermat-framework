@@ -1454,32 +1454,32 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void refreshSideMenu(AppConnections appConnections){
         try {
             //TODO: acá seria bueno un getLastApp
-            if (ActivityType.ACTIVITY_TYPE_DESKTOP != activityType) {
-                final FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
-//            FermatSession fermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
-//            AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,fermatSession);
-                final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
-                final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
-                MainMenu mainMenu = fermatStructure.getLastActivity().getMainMenu();
-                List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = null;
-                if(mainMenu!=null) lstItems = mainMenu.getMenuItems();
-                final List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> finalLstItems = (lstItems!=null)?lstItems:new ArrayList<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>();
-                refreshHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        SideMenuBuilder.setAdapter(
-                                navigation_recycler_view,
-                                mAdapter,
-                                viewPainter.addItemDecoration(),
-                                finalLstItems,
-                                getLisItemListenerMenu(),
-                                //TODO: acá seria bueno un getLastActivity
-                                fermatStructure.getLastActivity().getActivityType()
-                        );
-                    }
-                });
-
-            }
+//            if (ActivityType.ACTIVITY_TYPE_DESKTOP != activityType) {
+//                final FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
+////            FermatSession fermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
+////            AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,fermatSession);
+//                final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
+//                final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
+//                MainMenu mainMenu = fermatStructure.getLastActivity().getMainMenu();
+//                List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = null;
+//                if(mainMenu!=null) lstItems = mainMenu.getMenuItems();
+//                final List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> finalLstItems = (lstItems!=null)?lstItems:new ArrayList<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>();
+//                refreshHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        SideMenuBuilder.setAdapter(
+//                                navigation_recycler_view,
+//                                mAdapter,
+//                                viewPainter.addItemDecoration(),
+//                                finalLstItems,
+//                                getLisItemListenerMenu(),
+//                                //TODO: acá seria bueno un getLastActivity
+//                                fermatStructure.getLastActivity().getActivityType()
+//                        );
+//                    }
+//                });
+//
+//            }
         }catch (Exception e){
             e.printStackTrace();
         }

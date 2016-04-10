@@ -35,7 +35,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantR
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartAddonException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSystemException;
 import com.bitdubai.fermat_csh_core.CSHPlatform;
-import com.bitdubai.fermat_dap_core.DAPPlatform;
+import org.fermat.fermat_dap_core.DAPPlatform;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
