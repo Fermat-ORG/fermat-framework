@@ -124,13 +124,13 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         YourOwnSender yourSender = new YourOwnSender(getApplicationContext());
         ACRA.getErrorReporter().setReportSender(yourSender);
 
-//        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-//            @Override
-//            public void uncaughtException(Thread thread, Throwable e) {
-//                e.printStackTrace();
-//                handleUncaughtException(thread, e);
-//            }
-//        });
+        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
+            @Override
+            public void uncaughtException(Thread thread, Throwable e) {
+                e.printStackTrace();
+                handleUncaughtException(thread, e);
+            }
+        });
 
         new Thread(new Runnable() {
             @Override
