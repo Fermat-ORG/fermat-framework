@@ -37,7 +37,7 @@ public class ArtistCommunityPluginRoot extends AbstractModule<ArtistCommunitySet
     @NeededPluginReference(platform = Platforms.ART_PLATFORM,           layer = Layers.ACTOR_CONNECTION,        plugin = Plugins.ARTIST_ACTOR_CONNECTION)
     private ArtistActorConnectionManager artistActorConnectionManager;
 
-    @NeededPluginReference(platform = Platforms.ART_PLATFORM,           layer = Layers.ACTOR_NETWORK_SERVICE,   plugin = Plugins.ARTIST_ACTOR_CONNECTION   )
+    @NeededPluginReference(platform = Platforms.ART_PLATFORM,           layer = Layers.ACTOR_NETWORK_SERVICE,   plugin = Plugins.ARTIST   )
     private ArtistManager artistNetworkServiceManager;
 
     @NeededPluginReference(platform = Platforms.ART_PLATFORM,           layer = Layers.IDENTITY,                plugin = Plugins.FANATIC_IDENTITY   )
