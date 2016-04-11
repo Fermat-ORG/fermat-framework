@@ -34,6 +34,18 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:text="@string/ccw_wizard_set_bank_accounts_description"
+            android:textColor="#777777"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp"
+            />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

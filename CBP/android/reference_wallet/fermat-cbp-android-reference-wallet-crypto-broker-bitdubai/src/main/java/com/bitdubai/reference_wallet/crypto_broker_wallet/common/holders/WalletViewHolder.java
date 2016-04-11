@@ -29,7 +29,7 @@ public class WalletViewHolder extends SingleDeletableItemViewHolder<InstalledWal
     @Override
     public void bind(InstalledWallet data) {
         subTitle.setText(data.getWalletName());
-        title.setText(getPlatformTitle(data.getPlatform()));
+        title.setText(getPlatformTitle(data.getPlatform()).toUpperCase());
     }
 
     @Override
