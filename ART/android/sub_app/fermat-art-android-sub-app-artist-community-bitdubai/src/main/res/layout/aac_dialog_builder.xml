@@ -14,7 +14,7 @@
         android:padding="16dp">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/afc_title"
+            android:id="@+id/aac_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
@@ -34,7 +34,7 @@
         android:orientation="vertical">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/afc_description"
+            android:id="@+id/aac_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -49,7 +49,7 @@
             tools:ignore="HardcodedText" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/afc_user_name"
+            android:id="@+id/aac_user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -63,7 +63,7 @@
             tools:ignore="HardcodedText" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/afc_second_description"
+            android:id="@+id/aac_second_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"

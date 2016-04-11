@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#010c12"
     android:orientation="vertical">
 
     <View
@@ -17,24 +18,22 @@
 
 
         <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/afc_swipeRefresh"
+            android:id="@+id/aac_swipe_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/afc_recycler_view"
+                android:id="@+id/aac_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="vertical"
-                tools:listitem="@layout/afc_row_connection_notification" />
+                tools:listitem="@layout/aac_row_connection_list" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <!--Empty view-->
         <LinearLayout
-            android:id="@+id/afc_empty_view"
+            android:id="@+id/aac_empty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#010c12"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
@@ -50,16 +49,18 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="You don't have "
-                android:textColor="#ffffff"
-                android:textSize="16sp" />
+                android:text="You don't have any"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                tools:ignore="HardcodedText" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="any notifications yet"
-                android:textColor="#ffffff"
-                android:textSize="16sp" />
+                android:text="connections yet"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                tools:ignore="HardcodedText" />
 
         </LinearLayout>
 
