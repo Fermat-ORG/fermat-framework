@@ -237,34 +237,34 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
     }
 
     @Test
-    public void onManySaleCreditsAndOneSaleDebit_returnOneItem()
+    public void onManySaleCreditsAndManySaleDebit_noOriginTransactionID_returnEmptyList()
             throws CantLoadTableToMemoryException, CantGetTransactionCryptoBrokerWalletMatchingException {
 
-        addManySaleCredits();
-        addOneSaleDebit();
+        addManySaleCreditsNoTransactionOriginID();
+        addManySaleDebitsNoTransactionOriginID();
 
         Mockito.doReturn(creditRecords).when(cryptoBrokerWalletDatabaseDaoSpy).getAvailableSaleRecordsFromTable(TransactionType.CREDIT);
         Mockito.doReturn(debitRecords).when(cryptoBrokerWalletDatabaseDaoSpy).getAvailableSaleRecordsFromTable(TransactionType.DEBIT);
 
         List<CurrencyMatching> currencyMatchings = cryptoBrokerWalletDatabaseDaoSpy.getCryptoBrokerTransactionCurrencyMatchings();
-        assertThat(currencyMatchings).isNotEmpty();
-        assertThat(currencyMatchings).hasSize(1);
+        assertThat(currencyMatchings).isEmpty();
 
+        addManySaleCredits();
+        addManySaleDebitsNoTransactionOriginID();
 
-        CurrencyMatching currencyMatching = currencyMatchings.get(0);
-        assertThat(currencyMatching.getOriginTransactionId()).isEqualTo(ORIGIN_TRANSACTION_ID_1);
+        currencyMatchings = cryptoBrokerWalletDatabaseDaoSpy.getCryptoBrokerTransactionCurrencyMatchings();
+        assertThat(currencyMatchings).isEmpty();
 
-        assertThat(currencyMatching.getCurrencyGiving()).isNotNull();
-        assertThat(currencyMatching.getCurrencyGiving()).isEqualTo(CryptoCurrency.BITCOIN);
-        assertThat(currencyMatching.getAmountGiving()).isEqualTo(1);
+        addManySaleCreditsNoTransactionOriginID();
+        addManySaleDebits();
 
-        assertThat(currencyMatching.getCurrencyReceiving()).isNotNull();
-        assertThat(currencyMatching.getCurrencyReceiving()).isEqualTo(FiatCurrency.VENEZUELAN_BOLIVAR);
-        assertThat(currencyMatching.getAmountReceiving()).isEqualTo(1150.0f);
+        currencyMatchings = cryptoBrokerWalletDatabaseDaoSpy.getCryptoBrokerTransactionCurrencyMatchings();
+        assertThat(currencyMatchings).isEmpty();
     }
 
-
     private void addOneSaleDebit() {
+        debitRecords.clear();
+
         debitRecords.add(constructStockWalletTransactionRecord(
                 new CryptoBrokerStockTransactionRecordMock(
                         UUID.randomUUID(),
@@ -284,6 +284,8 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
     }
 
     private void addOneSaleCredit() {
+        creditRecords.clear();
+
         creditRecords.add(constructStockWalletTransactionRecord(
                 new CryptoBrokerStockTransactionRecordMock(
                         UUID.randomUUID(),
@@ -303,6 +305,7 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
     }
 
     private void addManySaleDebits() {
+        debitRecords.clear();
 
         debitRecords.add(constructStockWalletTransactionRecord(
                 new CryptoBrokerStockTransactionRecordMock(
@@ -340,6 +343,7 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
     }
 
     private void addManySaleCredits() {
+        creditRecords.clear();
 
         creditRecords.add(constructStockWalletTransactionRecord(
                 new CryptoBrokerStockTransactionRecordMock(
@@ -373,6 +377,82 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
                         new BigDecimal(5.0),
                         OriginTransaction.SALE,
                         ORIGIN_TRANSACTION_ID_2,
+                        false), 10, 10));
+    }
+
+    private void addManySaleDebitsNoTransactionOriginID() {
+        debitRecords.clear();
+
+        debitRecords.add(constructStockWalletTransactionRecord(
+                new CryptoBrokerStockTransactionRecordMock(
+                        UUID.randomUUID(),
+                        CryptoCurrency.BITCOIN,
+                        BalanceType.AVAILABLE,
+                        TransactionType.DEBIT,
+                        MoneyType.CRYPTO,
+                        BROKER_WALLET_PUBLIC_KEY,
+                        BROKER_PUBLIC_KEY,
+                        new BigDecimal(1.0),
+                        System.currentTimeMillis(),
+                        "test memo debit 1",
+                        new BigDecimal(5.0),
+                        OriginTransaction.SALE,
+                        null,
+                        false), 10, 10));
+
+        debitRecords.add(constructStockWalletTransactionRecord(
+                new CryptoBrokerStockTransactionRecordMock(
+                        UUID.randomUUID(),
+                        FiatCurrency.US_DOLLAR,
+                        BalanceType.AVAILABLE,
+                        TransactionType.DEBIT,
+                        MoneyType.CASH_ON_HAND,
+                        BROKER_WALLET_PUBLIC_KEY,
+                        BROKER_PUBLIC_KEY,
+                        new BigDecimal(1.0),
+                        System.currentTimeMillis(),
+                        "test memo debit 2",
+                        new BigDecimal(5.0),
+                        OriginTransaction.SALE,
+                        null,
+                        false), 10, 10));
+    }
+
+    private void addManySaleCreditsNoTransactionOriginID() {
+        creditRecords.clear();
+
+        creditRecords.add(constructStockWalletTransactionRecord(
+                new CryptoBrokerStockTransactionRecordMock(
+                        UUID.randomUUID(),
+                        FiatCurrency.VENEZUELAN_BOLIVAR,
+                        BalanceType.AVAILABLE,
+                        TransactionType.CREDIT,
+                        MoneyType.CASH_ON_HAND,
+                        BROKER_WALLET_PUBLIC_KEY,
+                        BROKER_PUBLIC_KEY,
+                        new BigDecimal(1150.0),
+                        System.currentTimeMillis(),
+                        "test memo credit 1",
+                        new BigDecimal(5.0),
+                        OriginTransaction.SALE,
+                        null,
+                        false), 10, 10));
+
+        creditRecords.add(constructStockWalletTransactionRecord(
+                new CryptoBrokerStockTransactionRecordMock(
+                        UUID.randomUUID(),
+                        FiatCurrency.ARGENTINE_PESO,
+                        BalanceType.AVAILABLE,
+                        TransactionType.CREDIT,
+                        MoneyType.CASH_ON_HAND,
+                        BROKER_WALLET_PUBLIC_KEY,
+                        BROKER_PUBLIC_KEY,
+                        new BigDecimal(15.4),
+                        System.currentTimeMillis(),
+                        "test memo credit 2",
+                        new BigDecimal(5.0),
+                        OriginTransaction.SALE,
+                        null,
                         false), 10, 10));
     }
 
