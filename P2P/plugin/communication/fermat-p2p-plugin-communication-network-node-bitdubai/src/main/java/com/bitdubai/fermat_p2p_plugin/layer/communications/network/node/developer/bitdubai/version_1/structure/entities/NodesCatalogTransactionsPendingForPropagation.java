@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.Objects;
 
 
 /**

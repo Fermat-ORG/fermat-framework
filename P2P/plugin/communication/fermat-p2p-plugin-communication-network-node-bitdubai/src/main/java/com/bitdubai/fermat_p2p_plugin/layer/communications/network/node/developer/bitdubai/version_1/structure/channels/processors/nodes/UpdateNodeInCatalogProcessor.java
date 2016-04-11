@@ -27,9 +27,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 
 import org.jboss.logging.Logger;
 
-import java.io.IOException;
-
-import javax.websocket.EncodeException;
 import javax.websocket.Session;
 
 /**
