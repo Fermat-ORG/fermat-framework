@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.reference_wallet.artist_community.R;
+import com.bitdubai.sub_app.artist_community.R;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -27,7 +27,7 @@ public class FragmentsCommons {
         RelativeLayout relativeLayout = new RelativeLayout(activity);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 180);
         relativeLayout.setLayoutParams(layoutParams);
-        View view = inflater.inflate(R.layout.row_navigation_drawer_community_header, relativeLayout, true);
+        View view = inflater.inflate(R.layout.aac_row_navigation_drawer_community_header, relativeLayout, true);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
         if (identity != null) {
             if (identity.getImage() != null) {

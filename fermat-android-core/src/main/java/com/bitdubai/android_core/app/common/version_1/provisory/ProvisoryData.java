@@ -176,11 +176,11 @@ public class ProvisoryData {
         lstIdentities.add(item2);
 
 
+
         /**
          * Chat identity added by Lozadaa
          */
 
-        lstIdentities.add(item2);
         installedSubApp = new InstalledSubApp(
                 SubApps.CHT_CHAT_IDENTITY,
                 null,
@@ -194,9 +194,8 @@ public class ProvisoryData {
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.chat_subapp);
-        item2.setPosition(6);
+        item2.setPosition(8);
         lstIdentities.add(item2);
-
 
 
 
