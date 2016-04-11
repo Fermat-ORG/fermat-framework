@@ -751,7 +751,6 @@ public class SendTransactionFragment2 extends AbstractFermatFragment<LossProtect
             protected Object doInBackground() throws Exception {
 
                 ExchangeRate rate =  moduleManager.getCurrencyExchange(exchangeProviderId);
-                lossProtectedWalletSession.setActualExchangeRate(rate);
                 return rate;
             }
         };
@@ -766,7 +765,8 @@ public class SendTransactionFragment2 extends AbstractFermatFragment<LossProtect
                     txt_exchange_rate.setText("1 BTC - " + String.valueOf(rate.getPurchasePrice()) +" USD" );
 
                     //get available balance to actual exchange rate
-                    exchangeRate = (long)rate.getPurchasePrice();
+
+                    lossProtectedWalletSession.setActualExchangeRate(rate.getPurchasePrice());
                     updateBalances();
 
                 }
