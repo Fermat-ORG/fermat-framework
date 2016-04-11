@@ -580,6 +580,8 @@ public class CustomerOnlinePaymentMonitorAgent implements
 
                             BusinessTransactionRecord record1=customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(contractHash);
                             record1.setContractTransactionStatus(businessTransactionMetadata.getContractTransactionStatus());
+                            //TODO:fix this with the incomingintraactor.
+                            record1.setCryptoStatus(CryptoStatus.IRREVERSIBLE);
                             customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(record1);
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());

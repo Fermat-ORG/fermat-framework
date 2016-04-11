@@ -251,7 +251,7 @@ public class BrokerAckOnlinePaymentPluginRoot extends AbstractPlugin implements
                             eventManager,
                             errorManager);
 
-            //brokerAckOnlinePaymentRecorderService.start();
+            brokerAckOnlinePaymentRecorderService.start();
 
             /**
              * Initialize plugin manager
