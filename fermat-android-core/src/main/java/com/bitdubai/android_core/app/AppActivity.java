@@ -236,15 +236,15 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     protected void loadUI(final FermatSession fermatSession) {
         try {
             if(fermatSession!=null) {
-                Log.i("APP ACTIVITY loadUI", "INICIA " + System.currentTimeMillis());
+               // Log.i("APP ACTIVITY loadUI", "INICIA " + System.currentTimeMillis());
                 FermatStructure appStructure = ApplicationSession.getInstance().getAppManager().getAppStructure(fermatSession.getAppPublicKey());
-                Log.i("APP ACTIVITY loadUI", "Get App Structure " + System.currentTimeMillis());
+              //  Log.i("APP ACTIVITY loadUI", "Get App Structure " + System.currentTimeMillis());
                 final AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, fermatSession);
-                Log.i("APP ACTIVITY loadUI", "getFermatAppConnection " + System.currentTimeMillis());
+              //  Log.i("APP ACTIVITY loadUI", "getFermatAppConnection " + System.currentTimeMillis());
                 FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
-                Log.i("APP ACTIVITY loadUI", "getFragmentFactory " + System.currentTimeMillis());
+              //  Log.i("APP ACTIVITY loadUI", "getFragmentFactory " + System.currentTimeMillis());
                 Activity activity = appStructure.getLastActivity();
-                Log.i("APP ACTIVITY loadUI", "getLastActivity " + System.currentTimeMillis());
+               // Log.i("APP ACTIVITY loadUI", "getLastActivity " + System.currentTimeMillis());
 //                executor.submit(new Runnable() {
 //                    @Override
 //                    public void run() {
@@ -259,33 +259,33 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 } catch (ActorIdentityNotSelectedException e) {
                     e.printStackTrace();
                 }
-                Log.i("APP ACTIVITY loadUI", "getSelectedActorIdentity " + System.currentTimeMillis());
+               // Log.i("APP ACTIVITY loadUI", "getSelectedActorIdentity " + System.currentTimeMillis());
                 loadBasicUI(activity, fermatAppConnection);
-                Log.i("APP ACTIVITY loadUI", "loadBasicUI " + System.currentTimeMillis());
+               // Log.i("APP ACTIVITY loadUI", "loadBasicUI " + System.currentTimeMillis());
                 hideBottonIcons();
-                Log.i("APP ACTIVITY loadUI", "hideBottonIcons " + System.currentTimeMillis());
+                //Log.i("APP ACTIVITY loadUI", "hideBottonIcons " + System.currentTimeMillis());
                 paintScreen(activity);
-                Log.i("APP ACTIVITY loadUI", "paintScreen " + System.currentTimeMillis());
+               // Log.i("APP ACTIVITY loadUI", "paintScreen " + System.currentTimeMillis());
                 if (activity.getTabStrip() == null && activity.getFragments().size() > 1) {
                     initialisePaging();
-                    Log.i("APP ACTIVITY loadUI", "initialisePaging " + System.currentTimeMillis());
+                   // Log.i("APP ACTIVITY loadUI", "initialisePaging " + System.currentTimeMillis());
                 }
                 if (activity.getTabStrip() != null) {
                     setPagerTabs(activity.getTabStrip(), fermatSession, fermatFragmentFactory);
-                    Log.i("APP ACTIVITY loadUI", "setPagerTabs " + System.currentTimeMillis());
+                   // Log.i("APP ACTIVITY loadUI", "setPagerTabs " + System.currentTimeMillis());
                 }
                 if (activity.getFragments().size() == 1) {
                     setOneFragmentInScreen(fermatFragmentFactory, fermatSession, appStructure);
-                    Log.i("APP ACTIVITY loadUI", "setOneFragmentInScreen " + System.currentTimeMillis());
+                   // Log.i("APP ACTIVITY loadUI", "setOneFragmentInScreen " + System.currentTimeMillis());
                 }
-                Log.i("APP ACTIVITY loadUI", " TERMINA " + System.currentTimeMillis());
+               // Log.i("APP ACTIVITY loadUI", " TERMINA " + System.currentTimeMillis());
             }else{
-                Log.i("APP ACTIVITY loadUI", " SESSION NULL");
+                //Log.i("APP ACTIVITY loadUI", " SESSION NULL");
                 Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
                 handleExceptionAndRestart();
             }
         } catch (Exception e) {
-            Log.i("APP ACTIVITY loadUI", " ERROR " + e.getMessage());
+            //Log.i("APP ACTIVITY loadUI", " ERROR " + e.getMessage());
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
                     Toast.LENGTH_LONG).show();
