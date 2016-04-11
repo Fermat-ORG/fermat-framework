@@ -6,7 +6,11 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.clients;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.ClientNodeChannelConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
@@ -16,14 +20,17 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
+import java.net.URI;
 
 import javax.websocket.ClientEndpoint;
 import javax.websocket.CloseReason;
+import javax.websocket.ContainerProvider;
 import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
 import javax.websocket.OnOpen;
 import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.FermatWebSocketClientNodeChannel.FermatWebSocketClientNodeChannel</code>
@@ -47,12 +54,31 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
     private Session clientConnection;
 
     /**
+     * Constructor with parameter
+     *
+     * @param endpointURI
+     */
+    public FermatWebSocketClientNodeChannel(URI endpointURI){
+
+        try {
+
+            WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
+            clientConnection = webSocketContainer.connectToServer(this, endpointURI);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    /**
      * (non-javadoc)
      *
      * @see FermatWebSocketChannelEndpoint#initPackageProcessorsRegistration()
      */
     @Override
     protected void initPackageProcessorsRegistration() {
+
         /*
          * Register all messages processor for this
          * channel
@@ -75,8 +101,6 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
         System.out.println(" Starting method onOpen");
         System.out.println(" id = "+session.getId());
         System.out.println(" url = "+session.getRequestURI());
-
-        this.clientConnection = session;
     }
 
     /**
@@ -135,6 +159,23 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
         }
 
         return Boolean.FALSE;
+    }
+
+    /**
+     * Send message
+     * @param message
+     */
+    public void sendMessage(PackageContent message) {
+
+        String channelIdentityPrivateKey = getChannelIdentity().getPrivateKey();
+        String destinationIdentityPublicKey = (String) clientConnection.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
+        Package packageRespond = Package.createInstance(message, NetworkServiceType.UNDEFINED, PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+
+
+        if (isConnected()){
+            this.clientConnection.getAsyncRemote().sendObject(packageRespond);
+        }
+
     }
 
 }
