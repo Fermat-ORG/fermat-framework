@@ -10,7 +10,7 @@ import java.util.UUID;
  */
 public interface ChatActorCommunityInformation {
 
-    String getPublickey();
+    String getPublicKey();
 
     String getAlias();
 
