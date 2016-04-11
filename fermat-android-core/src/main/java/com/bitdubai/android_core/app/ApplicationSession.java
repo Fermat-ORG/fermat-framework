@@ -13,6 +13,7 @@ import com.bitdubai.android_core.app.common.version_1.util.services_helpers.Serv
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.engine.FermatApplicationSession;
 import com.bitdubai.fermat_core.FermatSystem;
+import com.github.anrwatchdog.ANRWatchDog;
 
 import org.acra.ACRA;
 import org.acra.ReportField;
@@ -137,10 +138,12 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
             public void run() {
                 servicesHelpers = new ServicesHelpers(getInstance().getApplicationContext());
                 servicesHelpers.bindServices();
+
+
             }
         }).start();
 
-
+        new ANRWatchDog().start();
 
         super.onCreate();
     }
