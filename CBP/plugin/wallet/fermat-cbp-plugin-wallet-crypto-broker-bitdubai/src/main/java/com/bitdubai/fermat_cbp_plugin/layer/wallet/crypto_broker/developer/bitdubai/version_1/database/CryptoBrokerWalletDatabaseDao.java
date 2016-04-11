@@ -119,6 +119,9 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                     String debitOriginTransactionId = debitRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.
                             CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
 
+                    if(originTransactionId == null || debitOriginTransactionId == null)
+                        continue;
+
                     if (originTransactionId.equals(debitOriginTransactionId)) {
                         String currencyCode, moneyTypeCode;
 
