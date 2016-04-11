@@ -11,7 +11,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
-import com.bitdubai.reference_wallet.artist_community.R;
+import com.bitdubai.sub_app.artist_community.R;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class AppSelectableIdentitiesListAdapter extends
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.afc_row_connection_list;
+        return R.layout.aac_row_connection_list;
     }
 
     @Override
@@ -91,9 +91,9 @@ public class AppSelectableIdentitiesListAdapter extends
             super(itemView);
 
             friendName = (FermatTextView) itemView.findViewById(
-                    R.id.afc_selectable_identity_username);
+                    R.id.aac_selectable_identity_username);
             friendAvatar = (ImageView) itemView.findViewById(
-                    R.id.afc_selectable_identity_user_avatar);
+                    R.id.aac_selectable_identity_user_avatar);
         }
     }
 

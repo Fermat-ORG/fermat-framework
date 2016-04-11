@@ -134,9 +134,9 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
         }
     }
     /**
-     * first i persist private key on a file
-     * second i insert the record in database
-     * third i save the profile image file
+     * first I persist private key on a file
+     * second I insert the record in database
+     * third I save the profile image file
      *
      * @param user
      * @param id
@@ -167,7 +167,7 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
             record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ACCESS_TOKEN_COLUMN_NAME, user.getApiToken());
             record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EMAIL_COLUMN_NAME,user.getEmail());
             record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME, externalPlatform.getCode());
-
+            //We don't persist any artist connected list in this moment, theoretically they don't exist at this point.
 
             table.insertRecord(record);
 
@@ -189,49 +189,158 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
         }
     }
 
-    public void updateIdentityFanUser(User user,String password,UUID id, String publickey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+    /**
+     * This method updates the Fan Identity in database.
+     * @param fan
+     * @throws CantUpdateFanIdentityException
+     */
+    public void updateIdentityFanUser(Fan fan) throws CantUpdateFanIdentityException {
+        User user = fan.getMusicUser();
+        String password = fan.getUserPassword();
+        UUID id = fan.getId();
+        String publicKey = fan.getPublicKey();
+        byte[] profileImage = fan.getProfileImage();
+        ExternalPlatform externalPlatform = fan.getExternalPlatform();
+        String xmlStringList = fan.getArtistsConnectedStringList();
+        //Update the Fan identity
+        updateIdentityFanUser(
+                user,
+                password,
+                id,
+                publicKey,
+                profileImage,
+                externalPlatform,
+                xmlStringList);
+
+    }
+
+    /**
+     * This method updates the Fan Identity in database.
+     * @param user
+     * @param password
+     * @param id
+     * @param publicKey
+     * @param profileImage
+     * @param externalPlatform
+     * @throws CantUpdateFanIdentityException
+     */
+    public void updateIdentityFanUser(
+            User user,
+            String password,
+            UUID id,
+            String publicKey,
+            byte[] profileImage,
+            ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+        /**
+         * In this method we don't need to update the artist connected list.
+         */
+        updateIdentityFanUser(
+                user,
+                password,
+                id,
+                publicKey,
+                profileImage,
+                externalPlatform, "");
+    }
+
+    /**
+     * This method updates the Fan Identity in database.
+     * @param user
+     * @param password
+     * @param id
+     * @param publicKey
+     * @param profileImage
+     * @param externalPlatform
+     * @param xmlStringList
+     * @throws CantUpdateFanIdentityException
+     */
+    private void updateIdentityFanUser(
+            User user,
+            String password,
+            UUID id,
+            String publicKey,
+            byte[] profileImage,
+            ExternalPlatform externalPlatform,
+            String xmlStringList) throws CantUpdateFanIdentityException {
         try {
             /**
              * 1) Get the table.
              */
-            DatabaseTable table = this.database.getTable(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_TABLE_NAME);
+            DatabaseTable table = this.database.getTable(
+                    TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_TABLE_NAME);
 
             if (table == null) {
                 /**
                  * Table not found.
                  */
-                throw new CantGetUserDeveloperIdentitiesException("Cant get Redeem Point Identity list, table not found.");
+                throw new CantGetUserDeveloperIdentitiesException(
+                        "Cant get Fan Point Identity list, table not found.");
             }
 
-            // 2) Find the Intra users.
-            table.addUUIDFilter(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            // 2) Find the Fan users.
+            table.addUUIDFilter(
+                    TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME,
+                    id,
+                    DatabaseFilterType.EQUAL);
             table.loadToMemory();
 
-
-            // 3) Get Intra users.
+            // 3) Get Fan users.
             for (DatabaseTableRecord record : table.getRecords()) {
                 //set new values
-                record.setUUIDValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME, id);
-                record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ID_COLUMN_NAME, user.getTokenlyId());
-                record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publickey);
-                record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_SECRET_KEY_COLUMN_NAME, user.getApiSecretKey());
-                record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PASSWORD_COLUMN_NAME, CryptoHasher.performSha256(password));
-                record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_USER_NAME_COLUMN_NAME, user.getUsername());
-                record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ACCESS_TOKEN_COLUMN_NAME, user.getApiToken());
-                record.setStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME, externalPlatform.getCode());
+                record.setUUIDValue(
+                        TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME,
+                        id);
+                record.setStringValue(
+                        TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_ID_COLUMN_NAME,
+                        user.getTokenlyId());
+                record.setStringValue(
+                        TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                        publicKey);
+                record.setStringValue(
+                        TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_SECRET_KEY_COLUMN_NAME,
+                        user.getApiSecretKey());
+                record.setStringValue(
+                        TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_PASSWORD_COLUMN_NAME,
+                        CryptoHasher.performSha256(password));
+                record.setStringValue(
+                        TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_USER_NAME_COLUMN_NAME,
+                        user.getUsername());
+                record.setStringValue(
+                        TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ACCESS_TOKEN_COLUMN_NAME,
+                        user.getApiToken());
+                record.setStringValue(
+                        TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
+                        externalPlatform.getCode());
+                //Set the artist connected list
+                if(!(xmlStringList==null || xmlStringList.isEmpty())){
+                    //This is to avoid remove the artist connected list from database if we get an empty string.
+                    record.setStringValue(
+                            TokenlyFanIdentityDatabaseConstants.
+                                    TOKENLY_FAN_IDENTITY_ARTIST_CONNECTED_LIST_COLUMN_NAME,
+                            xmlStringList);
+                }
 
                 table.updateRecord(record);
             }
-
             if (profileImage != null)
-                persistNewUserProfileImage(publickey, profileImage);
-
+                persistNewUserProfileImage(publicKey, profileImage);
         } catch (CantUpdateRecordException e) {
-            throw new CantUpdateFanIdentityException(e.getMessage(), e, "Redeem Point Identity", "Cant update Redeem Point Identity, database problems.");
+            throw new CantUpdateFanIdentityException(
+                    e.getMessage(), e,
+                    "Fan Identity",
+                    "Cant update Fan Identity, database problems.");
         } catch (CantPersistProfileImageException e) {
-            throw new CantUpdateFanIdentityException(e.getMessage(), e, "Redeem Point Identity", "Cant update Redeem Point Identity, persist image error.");
+            throw new CantUpdateFanIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Fan Identity",
+                    "Cant update Fan Identity, persist image error.");
         } catch (Exception e) {
-            throw new CantUpdateFanIdentityException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Identity", "Cant update Redeem Point Identity, unknown failure.");
+            throw new CantUpdateFanIdentityException(
+                    e.getMessage(),
+                    FermatException.wrapException(e),
+                    "Fan Identity",
+                    "Cant update Fan Identity, unknown failure.");
         }
     }
 
@@ -301,7 +410,7 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
         Fan fan = null;
         DatabaseTable table; // Intra User table.
 
-        // Get Asset Issuers identities list.
+        // Get Fan identities list.
         try {
 
             /**
@@ -342,6 +451,11 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
                         record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EMAIL_COLUMN_NAME),
                         pluginFileSystem,
                         pluginId);
+                //Include in Fan identity the artist connected from database
+                fan.addArtistConnectedList(
+                        record.getStringValue(
+                                TokenlyFanIdentityDatabaseConstants.
+                                        TOKENLY_FAN_IDENTITY_ARTIST_CONNECTED_LIST_COLUMN_NAME));
 
             }
         } catch (CantLoadTableToMemoryException e) {
@@ -400,6 +514,11 @@ public class TokenlyFanIdentityDao implements DealsWithPluginDatabaseSystem {
                         record.getStringValue(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EMAIL_COLUMN_NAME),
                         pluginFileSystem,
                         pluginId);
+                //Include in Fan identity the artist connected from database
+                fan.addArtistConnectedList(
+                        record.getStringValue(
+                                TokenlyFanIdentityDatabaseConstants.
+                                        TOKENLY_FAN_IDENTITY_ARTIST_CONNECTED_LIST_COLUMN_NAME));
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetFanIdentityException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_TABLE_NAME + " table in memory.");

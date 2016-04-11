@@ -24,12 +24,10 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.exceptions.CantListCryptoBrokersException;
-import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community.interfaces.CryptoBrokerCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.reference_wallet.artist_community.R;
+import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.adapters.AppNotificationAdapter;
 import com.bitdubai.sub_app_artist_community.commons.popups.AcceptDialog;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
@@ -92,9 +90,9 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Arti
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
-            rootView = inflater.inflate(R.layout.fragment_connections_notificactions, container, false);
+            rootView = inflater.inflate(R.layout.aac_fragment_connections_notificactions, container, false);
             setUpScreen(inflater);
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.afc_recycler_view);
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.aac_recycler_view);
             layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
@@ -107,7 +105,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Arti
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
-            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
+            emptyView = (LinearLayout) rootView.findViewById(R.id.aac_empty_view);
 
             onRefresh();
 
