@@ -80,13 +80,14 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
      */
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        try {
-            List<ChatIdentity> identities = chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
-            return (identities == null || identities.isEmpty()) ? null : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser().get(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+//        try {
+//            List<ChatIdentity> identities = chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
+//            return (identities == null || identities.isEmpty()) ? null : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser().get(0);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+        return null;
     }
 
     /**
