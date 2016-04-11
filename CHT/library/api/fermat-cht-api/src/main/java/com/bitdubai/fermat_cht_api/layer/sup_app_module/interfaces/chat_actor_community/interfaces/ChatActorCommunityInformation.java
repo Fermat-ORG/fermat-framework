@@ -10,17 +10,17 @@ import java.util.UUID;
  */
 public interface ChatActorCommunityInformation {
 
-    String getActorPublickey();
+    String getPublickey();
 
-    String getActorAlias();
+    String getAlias();
 
-    byte[] getActorImage();
+    byte[] getImage();
 
-    List listActorAlias();
+    List listAlias();
 
-    ConnectionState getActorConnectionState();
+    ConnectionState getConnectionState();
 
-    UUID getActorConnectionId();
+    UUID getConnectionId();
 
 
 
