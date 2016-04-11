@@ -112,7 +112,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
      * @throws CantCreateNewChatIdentityException if something goes wrong.
      */
     @Override
-    public ChatIdentity createNewIdentityChat(String alias, byte[] profileImage) throws CantCreateNewChatIdentityException {
+    public void createNewIdentityChat(String alias, byte[] profileImage) throws CantCreateNewChatIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = AsymmetricCryptography.generateECCKeyPair();
@@ -122,7 +122,6 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
         } catch (CantGetLoggedInDeviceUserException e) {
             e.printStackTrace();
         }
-        return null;
     }
 
     /**

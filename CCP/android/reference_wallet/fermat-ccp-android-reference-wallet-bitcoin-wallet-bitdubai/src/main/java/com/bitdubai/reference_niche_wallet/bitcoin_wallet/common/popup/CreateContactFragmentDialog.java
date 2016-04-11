@@ -228,7 +228,7 @@ public class CreateContactFragmentDialog extends Dialog implements
     private void saveContact() {
         try {
 
-            CryptoWallet cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
+            CryptoWallet cryptoWallet = referenceWalletSession.getModuleManager();
 
             CryptoAddress validAddress = validateAddress(txt_address.getText().toString(), cryptoWallet);
 
@@ -300,7 +300,7 @@ public class CreateContactFragmentDialog extends Dialog implements
                 mPasteItem.setEnabled(true);
                 ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
                 EditText editText = (EditText) findViewById(R.id.txt_address);
-                CryptoAddress validAddress = validateAddress(item.getText().toString(), referenceWalletSession.getModuleManager().getCryptoWallet());
+                CryptoAddress validAddress = validateAddress(item.getText().toString(), referenceWalletSession.getModuleManager());
                 if (validAddress != null) {
                     editText.setText(validAddress.getAddress());
                 } else {

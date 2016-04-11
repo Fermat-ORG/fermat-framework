@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.events.exceptions.Unexpected
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
-import com.bitdubai.fermat_cht_api.layer.actor_connection.events.ChatConnectionRequestNewEvent;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.events.ChatConnectionRequestNewEvent;
 import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.ChatActorConnectionPluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.exceptions.ChatActorConnectionNotStartedException;
 import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.structure.ActorConnectionEventActions;
@@ -19,10 +19,10 @@ public class ChatConnectionRequestNewsEventHandler implements FermatEventHandler
     private final ChatActorConnectionPluginRoot chatActorConnectionPluginRoot;
 
     public ChatConnectionRequestNewsEventHandler(final ActorConnectionEventActions actorConnectionEventActions,
-                                                 final ChatActorConnectionPluginRoot cryptoBrokerActorConnectionPluginRoot) {
+                                                 final ChatActorConnectionPluginRoot chatActorConnectionPluginRoot) {
 
         this.actorConnectionEventActions = actorConnectionEventActions;
-        this.chatActorConnectionPluginRoot = cryptoBrokerActorConnectionPluginRoot;
+        this.chatActorConnectionPluginRoot = chatActorConnectionPluginRoot;
     }
 
     /**
@@ -41,7 +41,7 @@ public class ChatConnectionRequestNewsEventHandler implements FermatEventHandler
                 actorConnectionEventActions.handleNewsEvent();
 
             } else {
-                EventType eventExpected = EventType.CHAT_ACTOR_CONNECTION_NEW_CONNECTION;
+                EventType eventExpected = EventType.CHAT_ACTOR_CONNECTION_REQUEST_NEW;
                 String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode() + "\n" +
                         "Event expected: " + eventExpected.toString() + " - " + eventExpected.getCode();
                 throw new UnexpectedEventException(context);

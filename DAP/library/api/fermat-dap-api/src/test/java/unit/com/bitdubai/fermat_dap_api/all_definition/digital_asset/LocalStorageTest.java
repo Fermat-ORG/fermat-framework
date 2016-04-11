@@ -9,17 +9,16 @@ import com.bitdubai.fermat_api.layer.all_definition.resources_structure.Resource
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceDensity;
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ResourceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
-import com.bitdubai.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
-import com.bitdubai.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.DAPConnectionState;
-import com.bitdubai.fermat_dap_api.layer.all_definition.enums.State;
-import com.bitdubai.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
-import com.bitdubai.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
+
+import org.fermat.fermat_dap_api.layer.all_definition.contracts.ContractProperty;
+import org.fermat.fermat_dap_api.layer.all_definition.contracts.exceptions.CantDefineContractPropertyException;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAsset;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContract;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetContractPropertiesConstants;
+import org.fermat.fermat_dap_api.layer.all_definition.digital_asset.DigitalAssetMetadata;
+import org.fermat.fermat_dap_api.layer.all_definition.enums.State;
+import org.fermat.fermat_dap_api.layer.dap_actor.asset_user.interfaces.ActorAssetUser;
+import org.fermat.fermat_dap_api.layer.dap_identity.asset_issuer.interfaces.IdentityAssetIssuer;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;

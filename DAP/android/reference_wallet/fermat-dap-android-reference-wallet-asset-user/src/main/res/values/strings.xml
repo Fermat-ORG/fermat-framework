@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">fermat-dap-android-wallet-asset-user-bitdubai</string>
+    <string name="action_redeem">Redeem</string>
+    <string name="action_appropriate">Appropriate</string>
+    <string name="dap_identity_alias_default_text">Asset User</string>
+
+    <!-- toolbar -->
+    <string name="help">Help</string>
+    <string name="dap_user_wallet_search">Search</string>
+    <string name="dap_user_wallet_search_hint">Asset name</string>
+    <string name="dap_user_wallet_action_redeem">Redeem</string>
+    <string name="dap_user_wallet_action_appropriate">Appropriate</string>
+    <string name="dap_user_wallet_action_transfer">Transfer</string>
+    <string name="dap_user_wallet_action_sell">Sell</string>
+    <string name="dap_user_wallet_action_redeem_title">Redeem Asset</string>
+    <!-- -->
+
+    <!-- empty list views -->
+    <string name="no_assets_issuer">No Assets?</string>
+    <string name="no_assets_issuer_message">Don\'t worry, as an Asset Issuer you are able to create them using the Asset Factory. All the assets you published there, will be stored at this wallet.</string>
+    <string name="no_assets_user">No Assets?</string>
+    <string name="no_assets_user_message">Don\'t worry, as an Asset User you are able to receive assets from many Asset Owners. You are already eligible to receive them and store them at this wallet.</string>
+    <string name="no_assets_redeem_point">No Assets?</string>
+    <string name="no_assets_redeem_point_message">Don\'t worry, as a redeem point you need to connect your device to other Assets Issuers using the Asset Issuer Community application. Once you are connected, you will be eligible to redeem assets from any user!</string>
+    <string name="no_redeempoints">No Redeem Points</string>
+    <string name="no_transactions">No Transactions</string>
+    <string name="no_users">No Users</string>
+    <string name="select_user_to_transfer">Select an User</string>
+    <string name="select_redeem_to_redeem">Select a Redeem Point</string>
+    <!-- -->
+
+    <!-- error messages -->
+    <string name="dap_user_wallet_system_error">Asset User system error</string>
+    <string name="dap_user_wallet_exception">Fermat Has detected an exception</string>
+    <string name="dap_user_wallet_exception_retry">Fermat Has detected an exception. Please retry again.</string>
+    <string name="dap_user_wallet_opps_system_error">Oooops! recovering from system error</string>
+    <!-- -->
+
+    <!-- validation messages -->
+    <string name="dap_user_wallet_validate_assets_to_redeem">Must be enter the number of assets to redeem</string>
+    <string name="dap_user_wallet_validate_assets_to_redeem_greater">Value can\'t be greater than </string>
+    <string name="dap_user_wallet_validate_no_available_assets">There is not assets to redeem</string>
+    <string name="dap_user_wallet_validate_no_rp">No redeem point selected</string>
+    <string name="dap_user_wallet_validate_no_redeem_points">No redeem points selected</string>
+    <string name="dap_user_wallet_validate_no_users">No users selected</string>
+    <string name="dap_user_wallet_validate_no_user">No user selected</string>
+    <string name="dap_user_wallet_validate_not_enought_assets">There is not enought assets to redeem</string>
+    <string name="dap_user_wallet_identity">Identity must be created</string>
+    <string name="dap_user_wallet_validate_sell_quantity_zero">Must be enter number of assets to sell</string>
+    <string name="dap_user_wallet_validate_sell_quantity">Value can\'t be greater than assets remaining</string>
+    <string name="dap_user_wallet_validate_sell_total_zero">Must be enter a total value</string>
+    <string name="dap_user_wallet_validate_sell_user">Must be select an user</string>
+    <string name="dap_user_wallet_validate_buy_quantity_zero">Must be entered a number of assets to buy</string>
+    <string name="dap_user_wallet_validate_buy_quantity">Assets to buy can\'t be greater than assets remaining</string>
+    <string name="dap_user_wallet_validate_buy_available">Not enought available balance in bitcoin wallet</string>
+
+    <!-- -->
+
+    <!-- confirm messages -->
+    <string name="dap_user_wallet_confirm_title">Confirm</string>
+    <string name="dap_user_wallet_confirm_entered_info">Are you sure that the entered information is correct? This action is irreversible</string>
+    <string name="dap_user_wallet_confirm_asset_sell">Are you sure do you want to sell this asset? This action is irreversible</string>
+    <string name="dap_user_wallet_confirm_asset_buy">Are you sure do you want to buy this asset? This action is irreversible</string>
+    <string name="dap_user_wallet_confirm_transfer">Are you sure do you want to transfer this asset? This action is irreversible</string>
+    <string name="dap_user_wallet_confirm_appropriate">Are you sure do you want to appropriate this asset? This action is irreversible</string>
+    <string name="dap_user_wallet_confirm_redeem">Are you sure do you want to redeem this asset? This action is irreversible</string>
+    <string name="dap_user_wallet_confirm_sure">Are you sure do you want to do this? This action is irreversible</string>
+    <!-- -->
+
+    <!-- app messages -->
+    <string name="dap_user_wallet_redeem_ok">Redemption of the asset has successfully started.\n\nThe process will take some minutes and if not accepted at the destination, it will be rollback.</string>
+    <string name="dap_user_wallet_transfer_ok">Transfer of the asset has successfully started.\n\nThe process will take some minutes and if not accepted at the destination, it will be rollback.</string>
+    <string name="dap_user_wallet_wait">Please wait...</string>
+    <string name="dap_user_wallet_remaining_assets">Assets Remaining</string>
+    <string name="dap_user_wallet_appropriation_ok">Appropriation of the asset has started successfully. The process will be completed in a couple of minutes.</string>
+    <string name="dap_user_wallet_sell_ok">Sell of the asset has started successfully. The process will be completed in a couple of minutes.</string>
+    <string name="dap_user_wallet_sell_cancel">The Asset has been rejected.</string>
+    <string name="dap_user_wallet_sell_select_user">Select user</string>
+    <string name="dap_user_wallet_sell_assets_to_sell">Assets to Sell</string>
+    <string name="dap_user_wallet_sell_asset_value">Asset Value</string>
+    <string name="dap_user_wallet_sell_asset_price">Asset Price</string>
+    <string name="dap_user_wallet_sell_total_value">Total Value</string>
+    <string name="dap_user_wallet_sell_to">User to sell</string>
+    <string name="dap_user_wallet_sell_button">Sell</string>
+    <string name="dap_user_wallet_buy_no_available">No Available</string>
+    <string name="dap_user_wallet_to">To: </string>
+    <string name="dap_user_wallet_x_button">X</string>
+    <!-- -->
+
+    <!-- app strings -->
+    <string name="dap_user_wallet_confirmed">CONFIRMED</string>
+    <string name="dap_user_wallet_pending">PENDING</string>
+    <!-- -->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_wallet_welcome_subTitle">Welcome to the Asset User Wallet.</string>
+    <string name="dap_user_wallet_welcome_body">From this wallet you will be able to redeem your assets or even get the monetary value associated with them.</string>
+    <string name="dap_user_wallet_welcome_Footer">We will be creating an avatar for you in order to identify you in the system as an Asset User. You will be able to edit this information at the Asset User Identity application.</string>
+    <string name="dap_user_wallet_welcome_name_left">Asset User</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_wallet_detail_subTitle">Asset detail section.</string>
+    <string name="dap_user_wallet_detail_body">You can review detailed information about the selected asset.\n\nYou can also decide to redeem your asset in a connected Redeem Point. If you are not connected to any Redeem Point, use the Redeem Point Community application to search for Redeem Points.\n\nYou can also appropriate the asset in order to get the Bitcoins associated with it. They will be sent to your Bitcoin wallet.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_wallet_redeem_subTitle">Asset Redemption.</string>
+    <string name="dap_user_wallet_redeem_body">You can decide how many assets to redeem at your connected Redeem Points. In order to connect to Redeem Points, search them at the Redeem Point Community application.\n\nThe selected Redeem Point will receive and confirm your asset so you can exchange it for what the asset represents.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_wallet_transfer_subTitle">Asset Transfer.</string>
+    <string name="dap_user_wallet_transfer_body">You can decide how many assets to transfer at your connected Users. In order to connect to Users, search them at the User Community application.\n\nThe selected User will receive and confirm your asset so you can exchange it for what the asset represents.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_wallet_redeem_select_subTitle">Redeem Point Selection.</string>
+    <string name="dap_user_wallet_redeem_select_body">In order to redeem an asset, you must be connected to at least a redeem point. You can connect to Redeem Points at the Redeem Point Community application.\n\nYour assets may not be redeemable at any redeem point.</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_wallet_user_select_subTitle">User Selection.</string>
+    <string name="dap_user_wallet_user_select_body">In order to transfer an asset, you must be connected to at least a user. You can connect to Users at the User Community application.\n\n</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_wallet_sell_subTitle">Asset Sell.</string>
+    <string name="dap_user_wallet_sell_body">[add something here]</string>
+    <!--Dialog Help - End-->
+
+    <!--Dialog Help - Init-->
+    <string name="dap_user_wallet_sell_select_subTitle">User Selection.</string>
+    <string name="dap_user_wallet_sell_select_body">[add something here]</string>
+    <!--Dialog Help - End-->
+
+    <!-- v2 -->
+    <string name="dap_user_wallet_v2_home_issuer_item_num_assets">assets</string>
+    <string name="dap_user_wallet_v2_detail_received">Received by</string>
+    <string name="dap_user_wallet_v2_confirm_title">Do this Redeem Point?</string>
+    <string name="dap_user_wallet_v2_confirm_body">Let Asset Issuer Wallet know if you ... Let Asset Issuer Wallet know if you ... Let Asset Issuer Wallet know if you ...</string>
+    <string name="dap_user_wallet_v2_confirm_button_agree">AGREE</string>
+    <string name="dap_user_wallet_v2_confirm_button_disagree">DISAGREE</string>
+    <!-- -->
+
+    <!-- v3 -->
+    <string name="card_confirmed">Confirmed</string>
+    <string name="card_pending">Pending</string>
+    <string name="card_locked">Locked</string>
+    <!-- -->
+</resources>

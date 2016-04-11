@@ -78,10 +78,21 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
             return bitcoinWalletBasicWalletDao.getBookBalance(blockchainNetworkType);
         } catch(CantCalculateBalanceException exception){
-            database.closeDatabase();
+           throw exception;
+        } catch(Exception exception){
+           throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
+    public long getRealBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException {
+        try {
+            bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
+            return bitcoinWalletBasicWalletDao.getBookBalance(blockchainNetworkType);
+        } catch(CantCalculateBalanceException exception){
             throw exception;
         } catch(Exception exception){
-            database.closeDatabase();
+
             throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }

@@ -8,7 +8,6 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.Ne
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DatabaseManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -37,6 +36,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetCompatiblesA
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSetObjectException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantStartServiceException;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.mocks.ChatMock;
@@ -92,6 +92,9 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
 
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.NETWORK_SERVICE, plugin = Plugins.CHAT_NETWORK_SERVICE)
     private NetworkServiceChatManager networkServiceChatManager;
+
+    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_CONNECTION, plugin = Plugins.CHAT_ACTOR_CONNECTION)
+    private ChatActorConnectionManager chatActorConnectionManager;
 
     //TODO:Eliminar
     //@NeededPluginReference(platform = Platforms.DIGITAL_ASSET_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ASSET_USER)
@@ -357,7 +360,8 @@ public class ChatMiddlewarePluginRoot extends AbstractPlugin implements
                     this.errorManager,
                     this.deviceUserManager,
                     this.networkServiceChatManager,
-                    this.broadcaster
+                    this.broadcaster,
+                    chatActorConnectionManager
             );
 
             /**

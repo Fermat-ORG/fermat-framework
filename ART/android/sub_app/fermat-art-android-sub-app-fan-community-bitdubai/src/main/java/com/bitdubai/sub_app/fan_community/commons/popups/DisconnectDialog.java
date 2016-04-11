@@ -89,7 +89,7 @@ public class DisconnectDialog extends
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_builder;
+        return R.layout.afc_dialog_builder;
     }
 
     @Override

@@ -31,7 +31,7 @@ public class FragmentsCommons {
                 ViewGroup.LayoutParams.MATCH_PARENT, 180);
         relativeLayout.setLayoutParams(layoutParams);
         View view = inflater.inflate(
-                R.layout.row_navigation_drawer_community_header,
+                R.layout.afc_row_navigation_drawer_community_header,
                 relativeLayout,
                 true);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
