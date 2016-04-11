@@ -7,17 +7,22 @@ import java.math.BigDecimal;
  */
 public class BitcoinConverter {
     public enum Currency {
-        BITCOIN(1),
-        MBTC(1000),
-        BIT(1000000),
-        SATOSHI(100000000);
+        BITCOIN(1, "BTC"),
+        MBTC(1000, "MBTC"),
+        BIT(1000000, "BIT"),
+        SATOSHI(100000000, "SATOSHI");
 
         private long rate;
-        Currency(long rate) {
+        private String name;
+        Currency(long rate, String name) {
             this.rate = rate;
+            this.name = name;
         }
         long getRate() {
             return rate;
+        }
+        public String getName() {
+            return name;
         }
     }
 

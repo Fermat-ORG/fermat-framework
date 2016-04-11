@@ -11,7 +11,9 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,9 +28,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
+import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
+import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.FanWalletPreferenceSettings;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModuleManager;
 import com.bitdubai.reference_wallet.fan_wallet.R;
@@ -59,8 +67,9 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     private FollowingAdapter adapter;
     private RecyclerView.LayoutManager lManager;
     List<FollowingItems> items=new ArrayList<>();
-
-
+    List<Fan> fanList=new ArrayList<>();
+    Bot artistBot;
+    final Handler searchArttisList = new Handler();
     public static FollowingFragment newInstance(){
         return new FollowingFragment();
     }
@@ -127,12 +136,37 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     }
 
     void loaditems(){
-
-        /*items.add(new FollowingItems(R.drawable.ta, "http://www.tatianamoroz.com", "Tatiana Moroz"));
-        items.add(new FollowingItems(R.drawable.ma, "http://www.metallica.com", "Metallica"));
-        items.add(new FollowingItems(R.drawable.da, "http://www.dreamtheater.com.ve", "Dreamtheater"));*/
+        searchArttisList.post(myRunnable);
 
     }
+
+    final Runnable myRunnable = new Runnable() {
+
+        public void run() {
+            try {
+                fanList=fanwalletmoduleManager.getFanWalletModule().listIdentitiesFromCurrentDeviceUser();
+                for(Fan artistUsername:fanList){
+                    //artistBot=fanwalletmoduleManager.getFanWalletModule().getBotBySwapbotUsername(artistusername.getUsername());
+                    //System.out.println("tky_artistBot:"+artistBot.getLogoImageDetails().originalUrl() +"  +  "+artistBot.getAddress()+"  +  "+artistBot.getName());
+                    //items.add(new FollowingItems(artistBot.getLogoImageDetails().originalUrl(),artistBot.getAddress(), artistBot.getName()));
+                    //TODO: Payarez, I Fix a bomb in the previous line, please, check this.
+                    List<String> connectedArtistTKYUsername = artistUsername.getConnectedArtists();
+                    for(String botUsername : connectedArtistTKYUsername){
+                        //TODO: implement the next line in background
+                        new BotRequester(botUsername).execute();
+
+                    }
+                    //END OF TODO
+                }
+            } catch (CantListFanIdentitiesException e) {
+                System.out.println("tky_loaditem_fanidentity_exception:"+e);
+                e.printStackTrace();
+            } /*catch (CantGetBotException e) {
+                System.out.println("tky_loaditem_Bot_exception:"+e);
+                e.printStackTrace();
+            }*/
+        }
+    };
 
 
     @Nullable
@@ -311,6 +345,32 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         }
         return filteredModelList;
     }
-    
+
+    private class BotRequester extends AsyncTask {
+
+        String username;
+        public BotRequester(String username){
+            this.username = username;
+        }
+
+        @Override
+        protected Object doInBackground(Object[] objects) {
+            try {
+                artistBot=fanwalletmoduleManager.getFanWalletModule().
+                        getBotBySwapbotUsername(this.username);
+                System.out.println(
+                        "tky_artistBot:"+artistBot.getLogoImageDetails().originalUrl()
+                                +"  +  "+artistBot.getAddress()+"  +  "+artistBot.getName());
+                items.add(new FollowingItems(artistBot.getLogoImageDetails().originalUrl(),
+                        artistBot.getAddress(), artistBot.getName()));
+            } catch (CantGetBotException e) {
+                errorManager.reportUnexpectedUIException(
+                        UISource.VIEW,
+                        UnexpectedUIExceptionSeverity.UNSTABLE,
+                        e);
+            }
+            return null;
+        }
+    }
 
 }

@@ -55,7 +55,8 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int i) {
-        holder.imagen.setImageResource(item.get(i).getImagen());
+
+        holder.imagen.setImageBitmap(item.get(i).getImagen());
         holder.artistname.setText(item.get(i).getArtist_name());
         holder.artisturl.setText(item.get(i).getArtist_url());
     }

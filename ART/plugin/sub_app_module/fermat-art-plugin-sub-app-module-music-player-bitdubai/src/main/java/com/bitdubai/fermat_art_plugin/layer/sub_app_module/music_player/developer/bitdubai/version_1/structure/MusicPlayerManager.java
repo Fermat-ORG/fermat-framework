@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelected
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerModuleManager;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerSettings;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
@@ -34,7 +34,7 @@ public class MusicPlayerManager implements MusicPlayerModuleManager {
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
 
-    private SettingsManager<MusicPlayerSettings> settingsManager;
+    private SettingsManager<MusicPlayerPreferenceSettings> settingsManager;
 
 
     public MusicPlayerManager(ErrorManager errorManager,
@@ -95,7 +95,7 @@ public class MusicPlayerManager implements MusicPlayerModuleManager {
 
 
     @Override
-    public SettingsManager<MusicPlayerSettings> getSettingsManager() {
+    public SettingsManager<MusicPlayerPreferenceSettings> getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;
 

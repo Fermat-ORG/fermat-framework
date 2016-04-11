@@ -329,7 +329,7 @@ public class ActorConnectionEventActions {
             }
 
             //TODO: REALIZAR EVENTO PARA AGREGAR CONTACTO
-//            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CHAT_ACTOR_CONNECTION_NEW_CONNECTION);
+//            FermatEvent eventToRaise = eventManager.getNewEvent(EventType.CHAT_ACTOR_CONNECTION_REQUEST_NEW);
 //            eventToRaise.setSource(EventSource.CHAT_ACTOR_CONNECTION);
 //            eventManager.raiseEvent(eventToRaise);
 

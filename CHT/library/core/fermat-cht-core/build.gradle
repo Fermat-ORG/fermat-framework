@@ -32,7 +32,9 @@ dependencies {
     //Network Service
     compile project(':fermat-cht-plugin-network-service-chat-bitdubai')
     //Actor Connection
-    compile project(':fermat-cht-plugin-actor-connection-chat-bitdunai')
+    compile project(':fermat-cht-plugin-actor-connection-chat-bitdubai')
+    //Actor Network Service
+    compile project(':fermat-cht-plugin-actor-network-service-chat-bitdubai')
 }
 
 pmd {
