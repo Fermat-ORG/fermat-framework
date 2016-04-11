@@ -243,23 +243,24 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
                         .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
                         .setIconRes(R.drawable.cbp_crypto_customer)
-                        .setBody(R.string.cbw_wizard_providers_dialog_body)
-                        .setSubTitle(R.string.cbw_wizard_providers_dialog_sub_title)
-                        .setTextFooter(R.string.cbw_wizard_providers_dialog_footer)
+                        .setSubTitle(R.string.ccw_wizard_providers_dialog_sub_title)
+                        .setBody(R.string.ccw_wizard_providers_dialog_body)
+                        .setTextFooter(R.string.ccw_wizard_providers_dialog_footer)
+                        .setCheckboxText(R.string.ccw_wizard_not_show_text)
                         .build();
                 presentationDialog.setOnDismissListener(this);
-                presentationDialog.show();                              //ALWAYS SHOW THIS, there are NO identities!!
+                presentationDialog.show();
 
             } else {
                 selectedIdentity = walletManager.getListOfIdentities().get(0);
 
                 presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                         .setBannerRes(R.drawable.cbp_banner_crypto_customer_wallet)
                         .setIconRes(R.drawable.cbp_crypto_customer)
-                        .setBody(R.string.cbw_wizard_providers_dialog_body)
-                        .setSubTitle(R.string.cbw_wizard_providers_dialog_sub_title)
-                        .setTextFooter(R.string.cbw_wizard_providers_dialog_footer)
-                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                        .setSubTitle(R.string.ccw_wizard_providers_dialog_sub_title)
+                        .setBody(R.string.ccw_wizard_providers_dialog_body)
+                        .setCheckboxText(R.string.ccw_wizard_not_show_text)
                         .build();
                 presentationDialog.setOnDismissListener(this);
 
