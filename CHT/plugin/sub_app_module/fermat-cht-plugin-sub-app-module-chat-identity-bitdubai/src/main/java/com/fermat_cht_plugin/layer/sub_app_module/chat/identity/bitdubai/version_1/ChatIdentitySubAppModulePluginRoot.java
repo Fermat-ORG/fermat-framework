@@ -2,6 +2,7 @@ package com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.versio
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -33,7 +34,7 @@ import java.util.List;
  */
 
 
-public class ChatIdentitySubAppModulePluginRoot extends AbstractPlugin implements ChatIdentitySupAppModuleManager {
+public class ChatIdentitySubAppModulePluginRoot extends AbstractPlugin  {
 
     private ChatIdentityModuleManager chatIdentityModuleManager;
 
@@ -50,6 +51,10 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractPlugin implement
         super(new PluginVersionReference(new Version()));
     }
 
+    @Override
+    public FermatManager getManager() {
+        return chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager);
+    }
 
     /**
      *
@@ -68,22 +73,22 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractPlugin implement
 
     }
 
-    @Override
-    public ChatIdentityModuleManager getChatIdentityManager() throws CHTException {
-        try {
-            if (chatIdentityModuleManager == null) {
-                chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager);            }
-            return chatIdentityModuleManager;
-        }catch (final Exception e) {
-            //throw new CHTException(FermatException.wrapException(e));
-            errorManager.reportUnexpectedPluginException(
-                    Plugins.CHAT_IDENTITY_SUP_APP_MODULE,
-                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-                    e);
-            throw new CantInitializeChatIdentitySupAppModuleManagerException(
-                    "Trying to instance ChatIdentityModuleManager - Please, check the cause",e);
-        }
-    }
+//    @Override
+//    public ChatIdentityModuleManager getChatIdentityManager() throws CHTException {
+//        try {
+//            if (chatIdentityModuleManager == null) {
+//                chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager);            }
+//            return chatIdentityModuleManager;
+//        }catch (final Exception e) {
+//            //throw new CHTException(FermatException.wrapException(e));
+//            errorManager.reportUnexpectedPluginException(
+//                    Plugins.CHAT_IDENTITY_SUP_APP_MODULE,
+//                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
+//                    e);
+//            throw new CantInitializeChatIdentitySupAppModuleManagerException(
+//                    "Trying to instance ChatIdentityModuleManager - Please, check the cause",e);
+//        }
+//    }
 
     private void testMethod(String alias, byte[] profileImage)
     {
