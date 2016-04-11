@@ -3,7 +3,7 @@ package com.bitdubai.sub_app_artist_community.commons.utils;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
-import com.bitdubai.reference_wallet.artist_community.R;
+import com.bitdubai.sub_app.artist_community.R;
 
 import java.util.List;
 

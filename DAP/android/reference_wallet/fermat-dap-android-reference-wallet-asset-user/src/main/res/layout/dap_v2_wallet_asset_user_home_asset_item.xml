@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:background="@color/dap_user_wallet_home_asset_item_background">
+
+    <ImageView
+        android:id="@+id/homeAssetImageView"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
+        android:src="@drawable/img_asset_without_image"
+        android:layout_centerVertical="true"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/homeAssetImageView">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/homeAssetStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="CONFIRMED"
+            android:textColor="@color/dap_user_wallet_black_text"
+            android:textSize="10dp"
+            android:layout_alignParentRight="true"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/homeAssetName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Prueba de Asset"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:textColor="@color/dap_user_wallet_black_text"
+            android:textSize="16sp"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/homeAssetDesc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Esta es una descripcion de Prueba de Asset"
+            android:textColor="@color/dap_user_wallet_black_text"
+            android:textSize="12sp"
+            android:layout_below="@+id/homeAssetName"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="3dp"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/homeAssetAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.000001 BTC"
+            android:textColor="@color/dap_user_wallet__home_issuer_principal"
+            android:textSize="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_above="@+id/homeAssetExpDate"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/homeAssetExpDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Feb 26, 2016"
+            android:textColor="@color/dap_user_wallet_black_text"
+            android:textSize="12dp"
+            android:layout_marginBottom="10dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

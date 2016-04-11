@@ -14,7 +14,7 @@ import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentViewHolder;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
 import com.squareup.picasso.Picasso;
@@ -72,7 +72,7 @@ public class GrouperViewHolder extends ParentViewHolder {
      * Set the data to the views
      *
      */
-    public void bind(int childCount,CryptoWalletTransaction cryptoWalletTransaction) {
+    public void bind(int childCount,LossProtectedWalletTransaction cryptoWalletTransaction) {
 
         byte[] photo = null;
         String contactName = "Uninformed";
