@@ -3,45 +3,42 @@ package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by rodrigo on 1/10/16.
  */
 public class BlockchainConnectionStatus {
-    private int connectedNodesCount;
-    private ConnectedBitcoinNode downloadNode;
     private List<ConnectedBitcoinNode> connectedNodes;
     private BlockchainNetworkType blockchainNetworkType;
-
+    private int numConnectedNodes;
 
     /**
-     * Constructor
-     * @param connectedNodesCount
-     * @param downloadNode
+     * constructor
      * @param connectedNodes
      * @param blockchainNetworkType
      */
-    public BlockchainConnectionStatus(int connectedNodesCount, ConnectedBitcoinNode downloadNode, List<ConnectedBitcoinNode> connectedNodes, BlockchainNetworkType blockchainNetworkType) {
-        this.connectedNodesCount = connectedNodesCount;
-        this.downloadNode = downloadNode;
+    public BlockchainConnectionStatus(List<ConnectedBitcoinNode> connectedNodes, BlockchainNetworkType blockchainNetworkType) {
         this.connectedNodes = connectedNodes;
         this.blockchainNetworkType = blockchainNetworkType;
+
+        this.numConnectedNodes = connectedNodes.size();
     }
 
-    public int getConnectedNodesCount() {
-        return connectedNodesCount;
-    }
-
-    public ConnectedBitcoinNode getDownloadNode() {
-        return downloadNode;
-    }
-
-    public List<ConnectedBitcoinNode> getConnectedNodes() {
-        return connectedNodes;
-    }
-
+    /**
+     * the network type of this status.
+     * @return
+     */
     public BlockchainNetworkType getBlockchainNetworkType() {
         return blockchainNetworkType;
+    }
+
+    /**
+     * the amount of nodes we are connected to.
+     * @return
+     */
+    public int getNumConnectedNodes() {
+        return numConnectedNodes;
     }
 }
 
