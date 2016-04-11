@@ -55,4 +55,14 @@ public class MsgRespond extends PackageContent {
     public STATUS getStatus() {
         return status;
     }
+
+    /**
+     * Get the Details value
+     *
+     * @return details
+     */
+    public String getDetails() {
+        return details;
+    }
+
 }

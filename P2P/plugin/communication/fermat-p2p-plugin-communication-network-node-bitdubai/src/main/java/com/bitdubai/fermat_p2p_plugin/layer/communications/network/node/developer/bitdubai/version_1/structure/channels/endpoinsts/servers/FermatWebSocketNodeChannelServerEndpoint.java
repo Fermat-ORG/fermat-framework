@@ -76,7 +76,7 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
      * @see FermatWebSocketChannelEndpoint#initPackageProcessorsRegistration()
      */
     @Override
-    void initPackageProcessorsRegistration(){
+    protected void initPackageProcessorsRegistration(){
 
         /*
          * Register all messages processor for this
@@ -90,7 +90,6 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
         registerMessageProcessor(new UpdateNodeInCatalogProcessor(this));
 
     }
-
 
     /**
      *  Method called to handle a new connection
@@ -128,6 +127,11 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
         nodeConnectionHistory.setStatus(ClientsConnectionHistory.STATUS_SUCCESS);
     }
 
+    /**
+     *  Method called to handle all packet received
+     * @param packageReceived
+     * @param session
+     */
     @OnMessage
     public void newPackageReceived(Package packageReceived, Session session)  {
 
@@ -146,6 +150,12 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
         }
     }
 
+    /**
+     * Method called to handle a connection close
+     *
+     * @param closeReason message
+     * @param session closed
+     */
     @OnClose
     public void onClose(CloseReason closeReason, Session session) {
 

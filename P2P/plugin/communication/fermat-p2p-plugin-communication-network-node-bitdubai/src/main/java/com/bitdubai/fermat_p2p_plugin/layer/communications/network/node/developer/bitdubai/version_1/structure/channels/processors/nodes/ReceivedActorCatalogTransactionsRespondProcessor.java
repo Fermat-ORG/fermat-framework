@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
@@ -16,11 +17,14 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.GetNodeCatalogMsjRespond;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.ReceiveActorCatalogTransactionsMsjRespond;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.ReceivedNodeCatalogTransactionsMsjRespond;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConstantAttNames;
 
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
 
+import javax.websocket.CloseReason;
 import javax.websocket.EncodeException;
 import javax.websocket.Session;
 
@@ -64,56 +68,46 @@ public class ReceivedActorCatalogTransactionsRespondProcessor extends PackagePro
 
         try {
 
-            ReceiveActorCatalogTransactionsMsjRequest messageContent = (ReceiveActorCatalogTransactionsMsjRequest)  packageReceived.getContent();
-
-            /*
-             * Create the method call history
-             */
-            methodCallsHistory(getGson().toJson(messageContent.getActorsCatalogTransactions()), destinationIdentityPublicKey);
+            ReceiveActorCatalogTransactionsMsjRespond messageContent = (ReceiveActorCatalogTransactionsMsjRespond)  packageReceived.getContent();
 
             /*
              * Validate if content type is the correct
              */
             if (messageContent.getMessageContentType() == MessageContentType.OBJECT){
 
+                if (messageContent.getStatus() == MsgRespond.STATUS.SUCCESS){
 
-                /*
-                 * If all ok, respond whit success message
-                 */
-                receiveActorCatalogTransactionsMsjRespond = new ReceiveActorCatalogTransactionsMsjRespond(ReceivedNodeCatalogTransactionsMsjRespond.STATUS.SUCCESS, GetNodeCatalogMsjRespond.STATUS.SUCCESS.toString(), lateNotificationsCounter);
-                Package packageRespond = Package.createInstance(receiveActorCatalogTransactionsMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.RECEIVE_ACTOR_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                    LOG.info("MsgRespond status "+MsgRespond.STATUS.SUCCESS);
 
-                /*
-                 * Send the respond
-                 */
-                session.getBasicRemote().sendObject(packageRespond);
+                    if (messageContent.getLateNotificationsCounter() > 0) {
+
+                        LOG.info("(messageContent.getLateNotificationsCounter() = "+messageContent.getLateNotificationsCounter());
+
+                        NodesCatalog remoteNodesCatalog = (NodesCatalog) session.getUserProperties().get(ConstantAttNames.REMOTE_NODE_CATALOG_PROFILE);
+                        remoteNodesCatalog.setLateNotificationsCounter(remoteNodesCatalog.getLateNotificationsCounter() + messageContent.getLateNotificationsCounter());
+                        getDaoFactory().getNodesCatalogDao().update(remoteNodesCatalog);
+                    }
+
+                }else {
+
+                    LOG.info("MsgRespond status "+MsgRespond.STATUS.FAIL);
+                    LOG.info("MsgRespond status "+messageContent.getDetails());
+                }
+
+                session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Finish propagation actor catalog to this node"));
 
             }
-
 
         } catch (Exception exception){
 
             try {
 
                 LOG.error(exception.getMessage());
-
-                /*
-                 * Respond whit fail message
-                 */
-                receiveActorCatalogTransactionsMsjRespond = new ReceiveActorCatalogTransactionsMsjRespond(ReceivedNodeCatalogTransactionsMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), lateNotificationsCounter);
-                Package packageRespond = Package.createInstance(receiveActorCatalogTransactionsMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.RECEIVE_ACTOR_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
-
-                /*
-                 * Send the respond
-                 */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Can't process respond: "+ exception.getMessage()));
 
             } catch (IOException iOException) {
                 LOG.error(iOException.getMessage());
-            } catch (EncodeException encodeException) {
-                LOG.error(encodeException.getMessage());
             }
-
         }
     }
 

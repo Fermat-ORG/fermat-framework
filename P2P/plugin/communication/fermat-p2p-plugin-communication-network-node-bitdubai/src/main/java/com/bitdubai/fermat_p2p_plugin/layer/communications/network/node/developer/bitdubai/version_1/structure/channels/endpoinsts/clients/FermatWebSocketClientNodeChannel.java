@@ -80,7 +80,7 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
     }
 
     /**
-     * Method called to handle a new message received
+     * Method called to handle a new packet received
      *
      * @param packageReceived new
      * @param session sender
@@ -115,6 +115,26 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
 
         LOG.info("Closed session : " + session.getId() + " Code: (" + closeReason.getCloseCode() + ") - reason: "+ closeReason.getReasonPhrase());
 
+    }
+
+    /**
+     * Return if the client connection are connected
+     *
+     * @return boolean
+     */
+    public boolean isConnected(){
+
+        try {
+
+            if (clientConnection != null){
+                return clientConnection.isOpen();
+            }
+
+        }catch (Exception e){
+            return Boolean.FALSE;
+        }
+
+        return Boolean.FALSE;
     }
 
 }
