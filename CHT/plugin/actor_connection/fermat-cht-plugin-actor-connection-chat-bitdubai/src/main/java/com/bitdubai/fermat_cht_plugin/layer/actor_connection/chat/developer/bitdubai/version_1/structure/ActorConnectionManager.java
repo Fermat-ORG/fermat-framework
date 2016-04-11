@@ -67,7 +67,7 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
         try {
 
             /**
-             * If the actor type of the receiving actor is different of CBP_CRYPTO_BROKER i can't send the request.
+             * If the actor type of the receiving actor is different of CHAT i can't send the request.
              */
             if (actorReceiving.getActorType() != Actors.CHAT)
                 throw new UnsupportedActorTypeException("actorSending: " + actorSending + " - actorReceiving: " + actorReceiving, "Unsupported actor type exception.");

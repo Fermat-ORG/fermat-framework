@@ -453,6 +453,16 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
             }
 
             @Override
+            public String getArtistsConnectedStringList() {
+                return null;
+            }
+
+            @Override
+            public void addArtistConnectedList(String xmlStringList) {
+
+            }
+
+            @Override
             public String getTokenlyId() {
                 return null;
             }

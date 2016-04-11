@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <item
+        android:id="@+id/userSelectorTitleSection"
+        android:height="80dp">
+        <shape>
+            <solid android:color="@color/card_toolbar" />
+            <corners android:topLeftRadius="10dp" android:topRightRadius="10dp"/>
+        </shape>
+    </item>
+    <item
+        android:id="@+id/userSelectorEditTextSection"
+        android:top="40dp"
+        android:height="40dp">
+        <shape>
+            <solid android:color="@color/dap_user_wallet_user_selector_edit_text" />
+        </shape>
+    </item>
+    <item
+        android:id="@+id/userSelectorUsersSection"
+        android:top="80dp"
+        >
+        <shape>
+            <solid android:color="@color/color_white" />
+            <corners android:bottomLeftRadius="10dp"
+                android:bottomRightRadius="10dp"/>
+        </shape>
+    </item>
+</layer-list>

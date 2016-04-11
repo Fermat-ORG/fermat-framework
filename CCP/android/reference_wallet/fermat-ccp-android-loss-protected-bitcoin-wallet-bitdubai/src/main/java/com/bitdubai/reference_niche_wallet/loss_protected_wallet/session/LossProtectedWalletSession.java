@@ -13,6 +13,8 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
+import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.interfaces.WalletSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
@@ -58,20 +60,22 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
 
     private LossProtectedWalletContact lastContactSelected;
 
+    private LossProtectedWalletTransaction lossProtectedWalletTransaction;
+
     private LossProtectedPaymentRequest paymentRequest;
     private String communityConnection;
 
-
+    private double actualExchangeRate;
     public LossProtectedWalletSession() {
     }
-
-
 
 
     public LossProtectedWalletSession(String publicKey, InstalledWallet fermatApp, ErrorManager errorManager, LossProtectedWalletManager moduleManager, WalletResourcesProviderManager resourceProviderManager) {
         super(publicKey, fermatApp, errorManager, moduleManager, resourceProviderManager);
     }
 
+    public double setActualExchangeRate(ExchangeRate rate){return actualExchangeRate;}
+    public double getActualExchangeRate(){return actualExchangeRate;}
 
     public String getAccountName(){
         return accountName;

@@ -2,6 +2,7 @@ package com.bitdubai.android_core.app.common.version_1.communication;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
@@ -37,6 +38,7 @@ public class CommunicationService extends Service{
 
     private static final String TAG = "CommService";
 
+    public int processingQueue = 0;
     /**
      * Clients connected
      */
@@ -59,8 +61,9 @@ public class CommunicationService extends Service{
      */
     class IncomingHandler extends Handler {
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(final Message msg) {
             Log.d(TAG, "Received from service: " + msg.arg1);
+            final Bundle data = msg.getData();
             try {
                 switch (msg.what) {
                     case CommunicationMessages.MSG_REGISTER_CLIENT:
@@ -70,18 +73,29 @@ public class CommunicationService extends Service{
                         unRegisterClient(msg.getData().getString(CommunicationDataKeys.DATA_PUBLIC_KEY));
                         break;
                     case CommunicationMessages.MSG_REQUEST_DATA_MESSAGE:
-                        send(msg.getData().getString(CommunicationDataKeys.DATA_PUBLIC_KEY),
-                                moduleDataRequest(
-                                        (PluginVersionReference) msg.getData().getSerializable(CommunicationDataKeys.DATA_PLUGIN_VERSION_REFERENCE),
-                                        msg.getData().getString(CommunicationDataKeys.DATA_METHOD_TO_EXECUTE),
-                                        (Serializable) msg.getData().getSerializable(CommunicationDataKeys.DATA_PARAMS_TO_EXECUTE_METHOD))
-                        );
+                        processingQueue++;
+                        Log.i(TAG,"Processiong request queue:"+processingQueue);
+                            executorService.submit(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        moduleDataRequest2(
+                                                data.getString(CommunicationDataKeys.DATA_REQUEST_ID),
+                                                data.getString(CommunicationDataKeys.DATA_PUBLIC_KEY),
+                                                (PluginVersionReference) data.getSerializable(CommunicationDataKeys.DATA_PLUGIN_VERSION_REFERENCE),
+                                                data.getString(CommunicationDataKeys.DATA_METHOD_TO_EXECUTE),
+                                                data.getSerializable(CommunicationDataKeys.DATA_PARAMS_TO_EXECUTE_METHOD));
+
+                                    } catch (Exception e){
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+
                         break;
                     default:
                         super.handleMessage(msg);
                 }
-            }catch (RemoteException e){
-                e.printStackTrace();
             } catch (Exception e){
                 e.printStackTrace();
             }
@@ -97,6 +111,11 @@ public class CommunicationService extends Service{
     private void unRegisterClient(String key){
         clients.remove(key);
     }
+
+    private void moduleDataRequest2(final String requestId,final String requestKey,final PluginVersionReference pluginVersionReference,final String method, final Serializable parameters){
+        new ModuleAsyncTask(this,fermatSystem,requestId,requestKey,pluginVersionReference,method,parameters).execute();
+    }
+
 
     private Object moduleDataRequest(final PluginVersionReference pluginVersionReference,final String method, final Serializable parameters){
         Log.i(TAG,"Invoque method called");
@@ -141,7 +160,12 @@ public class CommunicationService extends Service{
                         Log.i(TAG,"Method return type: "+ m.getReturnType());
                         s =  m.invoke(moduleManager,params);
                     }
-                    Log.i(TAG,"Method return: "+ s.toString());
+                    if(s!=null){
+                        Log.i(TAG,"Method return: "+ s.toString());
+                    }else{
+                        Log.i(TAG,"Method return: null, check this");
+                    }
+
                 } catch (NoSuchMethodException e) {
                     e.printStackTrace();
                 } catch (InvocationTargetException e) {
@@ -165,8 +189,11 @@ public class CommunicationService extends Service{
             e.printStackTrace();
         }
 
-        Log.i(TAG,"Data to send: "+ s != null ? s.toString() : null);
-
+        if(s!=null) {
+            Log.i(TAG, "Data to send: "+ s.toString());
+        }else{
+            Log.i(TAG, "Data to send: null, check this");
+        }
         final Object finalS = s;
 //        Future<String> gsonFuture = executorService.submit(new Callable<String>() {
 //            @Override
@@ -184,28 +211,44 @@ public class CommunicationService extends Service{
 //        } catch (ExecutionException e) {
 //            e.printStackTrace();
 //        }
-        Log.i(TAG, s != null ? s.toString() : null);
+        if(s!=null){
+            Log.i(TAG,"Method return: "+ s.toString());
+        }else{
+            Log.i(TAG,"Method return: null, check this");
+        }
 
 //        return json;
         return finalS;
     }
 
 
-    private void send(String key,Object object) throws RemoteException {
+    public void send(String id, String key, Object object) throws RemoteException {
         Log.i(TAG,"Sending data to:"+ clients.get(key));
         Log.i(TAG,"Sending data: "+ object);
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Method method : object.getClass().getDeclaredMethods()) {
-            stringBuilder.append(method.getName()).append("\n");
+        if(object!=null) {
+            StringBuilder stringBuilder = new StringBuilder();
+            for (Method method : object.getClass().getDeclaredMethods()) {
+                stringBuilder.append(method.getName()).append("\n");
+            }
+
+            Log.i(TAG, "Data methods: " + stringBuilder.toString());
+
+            Log.i(TAG, "Data name: " + object.getClass().getCanonicalName());
         }
-        Log.i(TAG, "Data methods: " + stringBuilder.toString());
-        Log.i(TAG, "Data name: " + object.getClass().getCanonicalName());
         Message msg = Message.obtain(null, CommunicationMessages.MSG_REQUEST_DATA_MESSAGE);
         if(object instanceof Serializable){
             msg.getData().putSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE, (Serializable) object);
+            msg.getData().putString(CommunicationDataKeys.DATA_REQUEST_ID, id);
+        }else{
+            msg.getData().putSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE, null);
+            msg.getData().putString(CommunicationDataKeys.DATA_REQUEST_ID, id);
+            Log.i(TAG, "Data is not serializable");
+        }
+        Messenger messenger = clients.get(key);
+        if(messenger!=null){
             clients.get(key).send(msg);
         }else{
-            Log.i(TAG, "Data is not serializable");
+            Log.i(TAG, "Client is nos in map");
         }
 
     }
@@ -214,14 +257,9 @@ public class CommunicationService extends Service{
     public void onCreate() {
         super.onCreate();
         fermatSystem = FermatSystem.getInstance();
-        executorService = Executors.newSingleThreadExecutor();
+        executorService = Executors.newFixedThreadPool(5);
         clients = new HashMap<>();
 
-        Log.i("Communication service","Package name:"+getPackageName());
-        Log.i("Communication service","Class cannonical:"+getClass().getCanonicalName());
-        Log.i("Communication service","Class simple name:"+getClass().getSimpleName());
-        Log.i("Communication service","Class name:"+getClass().getName());
-        Log.i("Communication service","Class package:"+getClass().getPackage().toString());
     }
 
     /**

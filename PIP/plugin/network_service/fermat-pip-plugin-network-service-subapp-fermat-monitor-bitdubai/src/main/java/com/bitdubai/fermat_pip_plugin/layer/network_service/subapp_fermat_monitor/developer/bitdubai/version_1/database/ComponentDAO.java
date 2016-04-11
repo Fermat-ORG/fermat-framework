@@ -153,7 +153,7 @@ public class ComponentDAO {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable connectionTable = getDatabaseTable();
-            connectionTable.addStringFilter(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_SYSTEM_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            connectionTable.addStringFilter(SystemMonitorNetworkServiceDatabaseConstants.COMPONENT_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             connectionTable.loadToMemory();
 
             /*
@@ -179,7 +179,7 @@ public class ComponentDAO {
             contextBuffer.append("Database Name: " + SystemMonitorNetworkServiceDatabaseConstants.DATABASE_NAME);
 
             String context = contextBuffer.toString();
-            String possibleCause = "Not found";
+            String possibleCause = "Not found " + cantLoadTableToMemory.getMessage();
             throw new DatabaseTransactionFailedException(DatabaseTransactionFailedException.DEFAULT_MESSAGE, cantLoadTableToMemory, context, possibleCause);
         } catch (InvalidParameterException e) {
             e.printStackTrace();
@@ -264,7 +264,7 @@ public class ComponentDAO {
 
         try {
             DatabaseTable metadataTable = getDatabaseTable();
-            metadataTable.addStringFilter(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_SYSTEM_ID_COLUMN_NAME, entity.getId().toString(), DatabaseFilterType.EQUAL);
+            metadataTable.addStringFilter(SystemMonitorNetworkServiceDatabaseConstants.COMPONENT_ID_COLUMN_NAME, entity.getId().toString(), DatabaseFilterType.EQUAL);
             metadataTable.loadToMemory();
 
             if (metadataTable.getRecords().isEmpty()) throw new RecordsNotFoundException();

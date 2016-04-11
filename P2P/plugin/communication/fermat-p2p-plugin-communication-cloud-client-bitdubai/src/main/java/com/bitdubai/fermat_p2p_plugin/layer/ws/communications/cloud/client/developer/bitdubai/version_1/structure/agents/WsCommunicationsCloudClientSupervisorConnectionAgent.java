@@ -48,7 +48,7 @@ public class WsCommunicationsCloudClientSupervisorConnectionAgent extends Thread
             System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Connection is Open = "+getConnection().isOpen());
 
             try {
-
+                //TODO: acá va un lindo for each por cada instancia
                 if (getConnection().isOpen()){
                     getWsCommunicationsTyrusCloudClientChannel().sendPing();
                 }

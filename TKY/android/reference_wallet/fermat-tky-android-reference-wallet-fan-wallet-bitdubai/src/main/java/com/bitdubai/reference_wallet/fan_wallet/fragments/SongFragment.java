@@ -299,7 +299,7 @@ public class SongFragment extends AbstractFermatFragment {
                 if(!listComposerAndSongNameOnView.contains(databaseInfo)){
                     listComposerAndSongNameOnView.add("TKY_WALLET songs" + walletitems.getComposers() + "@#@#" + walletitems.getName());
                     //System.out.println("TKY_NOT in view" + walletitems.getComposers() + "@#@#" + walletitems.getName());
-                    items.add(new SongItems(R.drawable.tky_tokenly_album, walletitems.getName(), walletitems.getComposers(), walletitems.getSongStatus().toString(), walletitems.getSongId(), 0, false));
+                    items.add(new SongItems(R.drawable.tky_tokenly_album, walletitems.getName(), walletitems.getComposers(), walletitems.getSongStatus().getFriendlyName(), walletitems.getSongId(), 0, false));
                     adapter.setFilter(items);
                 }
             }
@@ -736,6 +736,16 @@ public class SongFragment extends AbstractFermatFragment {
 
             @Override
             public void addNewArtistConnected(String userName) {
+
+            }
+
+            @Override
+            public String getArtistsConnectedStringList() {
+                return null;
+            }
+
+            @Override
+            public void addArtistConnectedList(String xmlStringList) {
 
             }
 

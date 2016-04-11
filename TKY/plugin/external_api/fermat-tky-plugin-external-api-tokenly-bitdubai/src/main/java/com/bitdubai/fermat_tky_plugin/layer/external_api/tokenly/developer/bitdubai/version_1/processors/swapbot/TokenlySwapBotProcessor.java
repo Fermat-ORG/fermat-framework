@@ -11,6 +11,7 @@ import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdu
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlyConfiguration;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.music.TokenlySwapJSonAttNames;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.*;
+import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.swapbot.ImageDetailsRecord;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.records.swapbot.SwapBotRecord;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -23,6 +24,7 @@ import java.sql.Date;
 public class TokenlySwapBotProcessor extends AbstractTokenlyProcessor {
 
     private static String swabotTokenlyURL= TokenlyConfiguration.URL_TOKENLY_SWAPBOT_API;
+    private static String defaultURLLogo = "https://redeem.tokenly.com/images/tokenly-logo.png";
 
     /**
      * This method returns a bot from tokenly API by a request URL.
@@ -93,17 +95,52 @@ public class TokenlySwapBotProcessor extends AbstractTokenlyProcessor {
         //Bot description HTML
         String descriptionHtml = getStringFromJsonObject(jSonObject, TokenlyBotJSonAttNames.DESCRIPTION_HTML);
         //Bot Background image details
-        ImageDetails backgroundImageDetails =
-                TokenlyImageDetailsProcessor.getImageDetailsFromJsonObject(
-                        jSonObject.getAsJsonObject(TokenlyBotJSonAttNames.BACKGROUND_DETAILS));
+        ImageDetails backgroundImageDetails;
+        try{
+            backgroundImageDetails =
+                    TokenlyImageDetailsProcessor.getImageDetailsFromJsonObject(
+                            jSonObject.getAsJsonObject(TokenlyBotJSonAttNames.BACKGROUND_DETAILS));
+        } catch(ClassCastException e){
+            //Empty ImageDetails
+            backgroundImageDetails = new ImageDetailsRecord(
+                    "emptyId",
+                    defaultURLLogo,
+                    defaultURLLogo,
+                    defaultURLLogo,
+                    defaultURLLogo,
+                    "",
+                    10,
+                    "TokenlyLogo",
+                    null);
+        }
         //Bot logo image details
-        ImageDetails logoImageDetails =
-                TokenlyImageDetailsProcessor.getImageDetailsFromJsonObject(
-                        jSonObject.getAsJsonObject(TokenlyBotJSonAttNames.LOGO_DETAILS));
+        ImageDetails logoImageDetails;
+        try{
+            logoImageDetails =
+                    TokenlyImageDetailsProcessor.getImageDetailsFromJsonObject(
+                            jSonObject.getAsJsonObject(TokenlyBotJSonAttNames.LOGO_DETAILS));
+        } catch(ClassCastException e){
+            //Empty ImageDetails
+            logoImageDetails = new ImageDetailsRecord(
+                    "emptyId",
+                    defaultURLLogo,
+                    defaultURLLogo,
+                    defaultURLLogo,
+                    defaultURLLogo,
+                    "",
+                    10,
+                    "TokenlyLogo",
+                    null);
+        }
         //Bot background overlay setting
-        String[] backgroudOverlaySettings = getArrayStringFromJsonObject(
-                jSonObject,
-                TokenlyBotJSonAttNames.BACKGROUND_OVERLAY_SETTINGS);
+        String[] backgroudOverlaySettings;
+        try{
+            backgroudOverlaySettings = getArrayStringFromJsonObject(
+                    jSonObject,
+                    TokenlyBotJSonAttNames.BACKGROUND_OVERLAY_SETTINGS);
+        } catch(Exception e){
+            backgroudOverlaySettings = new String[]{""};
+        }
         //Bot swaps
         Swap[] swaps = TokenlySwapProcessor.getSwapArrayFromJsonObject(jSonObject);
         //Bot balances

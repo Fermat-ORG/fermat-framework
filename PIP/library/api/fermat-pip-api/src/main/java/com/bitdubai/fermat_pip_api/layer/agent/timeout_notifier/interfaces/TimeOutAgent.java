@@ -73,10 +73,9 @@ public interface TimeOutAgent {
      */
     long getDuration();
 
-
     /**
-     * Marks the notification of an event as Read. After a notification has been acknowledge, we don't raise it
-     * anymore.
+     * if this agent event has already been accepted and read by the owner or not.
+     * @return
      */
-    void markEventNotificationAsRead();
+    boolean isRead();
 }
