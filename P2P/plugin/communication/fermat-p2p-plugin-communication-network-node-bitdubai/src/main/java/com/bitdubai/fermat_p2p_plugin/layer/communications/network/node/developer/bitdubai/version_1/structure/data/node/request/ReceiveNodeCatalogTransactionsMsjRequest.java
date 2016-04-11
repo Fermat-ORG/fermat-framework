@@ -19,7 +19,7 @@ import java.util.List;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ReceivedNodeCatalogTransactionsMsjRequest extends PackageContent {
+public class ReceiveNodeCatalogTransactionsMsjRequest extends PackageContent {
 
     /**
      * Represent the list of transactions
@@ -30,7 +30,7 @@ public class ReceivedNodeCatalogTransactionsMsjRequest extends PackageContent {
      * Constructor with parameters
      * @param nodesCatalogTransactions
      */
-    public ReceivedNodeCatalogTransactionsMsjRequest(List<NodesCatalogTransaction> nodesCatalogTransactions) {
+    public ReceiveNodeCatalogTransactionsMsjRequest(List<NodesCatalogTransaction> nodesCatalogTransactions) {
         super();
         this.nodesCatalogTransactions = nodesCatalogTransactions;
     }

@@ -29,7 +29,7 @@ public class GetNodeCatalogTransactionsMsjRespond extends MsgRespond {
     /**
      * Represent the count
      */
-    private Integer count;
+    private Long count;
 
     /**
      * Constructor with parameters
@@ -37,7 +37,7 @@ public class GetNodeCatalogTransactionsMsjRespond extends MsgRespond {
      * @param status
      * @param details
      */
-    public GetNodeCatalogTransactionsMsjRespond(STATUS status, String details, List<NodesCatalogTransaction> nodesCatalogTransactions, Integer count) {
+    public GetNodeCatalogTransactionsMsjRespond(STATUS status, String details, List<NodesCatalogTransaction> nodesCatalogTransactions, Long count) {
         super(status, details);
         this.nodesCatalogTransactions = nodesCatalogTransactions;
         this.count = count;
@@ -53,9 +53,9 @@ public class GetNodeCatalogTransactionsMsjRespond extends MsgRespond {
 
     /**
      * Get the Count
-     * @return Integer
+     * @return Long
      */
-    public Integer getCount() {
+    public Long getCount() {
         return count;
     }
 }

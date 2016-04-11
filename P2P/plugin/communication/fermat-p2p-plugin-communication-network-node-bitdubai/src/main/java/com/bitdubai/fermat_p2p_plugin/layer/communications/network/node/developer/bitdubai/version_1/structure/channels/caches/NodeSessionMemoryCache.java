@@ -14,7 +14,7 @@ import javax.websocket.Session;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.caches.NodeSessionMemoryCache</code>
- * is responsible the manage the cache of the node session connected with the <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketNodeChannelServerEndpoint</code><p/>
+ * is responsible the manage the cache of the node session connected with the <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.FermatWebSocketNodeChannelServerEndpoint</code><p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 04/04/16.
  *
  * @version 1.0

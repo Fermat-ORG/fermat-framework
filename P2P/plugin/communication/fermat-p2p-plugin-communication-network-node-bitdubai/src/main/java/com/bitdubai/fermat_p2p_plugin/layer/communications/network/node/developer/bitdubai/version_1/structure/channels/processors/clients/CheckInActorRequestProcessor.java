@@ -14,7 +14,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketChannelServerEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedActorsHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
@@ -45,10 +45,10 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
     /**
      * Constructor whit parameter
      *
-     * @param webSocketChannelServerEndpoint register
+     * @param fermatWebSocketChannelEndpoint register
      */
-    public CheckInActorRequestProcessor(WebSocketChannelServerEndpoint webSocketChannelServerEndpoint) {
-        super(webSocketChannelServerEndpoint, PackageType.CHECK_IN_ACTOR_REQUEST);
+    public CheckInActorRequestProcessor(FermatWebSocketChannelEndpoint fermatWebSocketChannelEndpoint) {
+        super(fermatWebSocketChannelEndpoint, PackageType.CHECK_IN_ACTOR_REQUEST);
     }
 
 

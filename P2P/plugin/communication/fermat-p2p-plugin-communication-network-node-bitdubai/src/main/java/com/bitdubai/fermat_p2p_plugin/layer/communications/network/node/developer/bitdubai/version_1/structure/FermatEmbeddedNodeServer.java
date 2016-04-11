@@ -6,8 +6,8 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketClientChannelServerEndpoint;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketNodeChannelServerEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.FermatWebSocketClientChannelServerEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.FermatWebSocketNodeChannelServerEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest.JaxRsActivator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.servlets.HomeServlet;
 
@@ -128,8 +128,8 @@ public class FermatEmbeddedNodeServer {
          */
         WebSocketDeploymentInfo appWebSocketDeploymentInfo = new WebSocketDeploymentInfo();
         appWebSocketDeploymentInfo.setBuffers(new XnioByteBufferPool(new ByteBufferSlicePool(BufferAllocator.BYTE_BUFFER_ALLOCATOR, 17000, 17000 * 16)));
-        appWebSocketDeploymentInfo.addEndpoint(WebSocketNodeChannelServerEndpoint.class);
-        appWebSocketDeploymentInfo.addEndpoint(WebSocketClientChannelServerEndpoint.class);
+        appWebSocketDeploymentInfo.addEndpoint(FermatWebSocketNodeChannelServerEndpoint.class);
+        appWebSocketDeploymentInfo.addEndpoint(FermatWebSocketClientChannelServerEndpoint.class);
 
          /*
          * Create the App DeploymentInfo and configure
