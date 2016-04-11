@@ -16,7 +16,14 @@
         android:icon="@drawable/ic_actionbar_send"
         android:showAsAction="always"/>
 
-
+    <item
+        android:id="@+id/menu_error_report"
+        android:title="Error Report"
+        android:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_export_key"
+        android:title="Export Private Key"
+        android:showAsAction="ifRoom"/>
 
 
 </menu>

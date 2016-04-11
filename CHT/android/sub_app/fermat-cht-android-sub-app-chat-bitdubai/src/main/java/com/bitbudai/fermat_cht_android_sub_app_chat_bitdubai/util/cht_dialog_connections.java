@@ -1,8 +1,6 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -12,36 +10,27 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ConnectionListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
+
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.DialogConnectionListAdapter;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactsListFragment;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.*;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactConnectionException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
@@ -59,7 +48,6 @@ import java.util.ArrayList;
 import java.util.List;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 
-import java.util.Locale;
 import java.util.UUID;
 
 
@@ -75,8 +63,8 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
     private ChatManager chatManager;
     private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
-    private SettingsManager<ChatSettings> settingsManager;
-    private ChatSession chatSession;
+    private SettingsManager<com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings> settingsManager;
+    private com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession chatSession;
     public List<ContactConnection> contacts;
     ArrayList<String> contactname=new ArrayList<String>();
     ArrayList<Bitmap> contacticon=new ArrayList<>();
@@ -89,7 +77,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
     TextView text;
     FermatButton btn_yes,btn_no;
     Button btn_add, btn_cancel;
-    DialogConnectionListAdapter adapter;
+    com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.DialogConnectionListAdapter adapter;
     public cht_dialog_connections(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources,
                                   ChatManager chatManager, AdapterCallbackContacts mAdapterCallback) {
         super(activity, fermatSession, null);
@@ -99,14 +87,14 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
 
     }
 
-    public static interface AdapterCallbackContacts extends cht_dialog_yes_no.AdapterCallbackContacts {
+    public static interface AdapterCallbackContacts extends com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no.AdapterCallbackContacts {
         void onMethodCallbackContacts();
     }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try{
-            chatSession=((ChatSession) getSession());
+            chatSession=((com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession) getSession());
             moduleManager= chatSession.getModuleManager();
             chatManager=moduleManager.getChatManager();
             errorManager=getSession().getErrorManager();
@@ -161,7 +149,7 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                                 }
                             }
 
-                            adapter = new DialogConnectionListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
+                            adapter = new com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.DialogConnectionListAdapter(getActivity(), contactname, contacticon, contactid, errorManager);
                             list.setAdapter(adapter);
                             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                 @Override
@@ -171,40 +159,47 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                                         if (contactexist != null) {
                                             if (contactexist.getRemoteActorPublicKey().equals("CONTACTTOUPDATE_DATA")) {
                                                 UUID contactidnew = contactexist.getContactId();
-                                                contactexist = chatManager.getContactByContactId(contactid.get(position));
+                                                //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                                                contactexist = null;//chatManager.getContactByContactId(contactid.get(position));
                                                 Chat chat = chatManager.getChatByChatId((UUID) getSession().getData("chatid"));
                                                 chat.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
                                                 chatManager.saveChat(chat);
                                                 Contact contactnew = new ContactImpl();
-                                                contactnew = chatManager.getContactByContactId(contactidnew);
+
+                                                //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                                                contactnew = null;//chatManager.getContactByContactId(contactidnew);
                                                 contactnew.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
                                                 contactnew.setAlias(contactexist.getAlias());
                                                 contactnew.setRemoteName(contactexist.getRemoteName());
                                                 contactnew.setRemoteActorType(contactexist.getRemoteActorType());
-                                                chatManager.saveContact(contactnew);
+                                                //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                                                //chatManager.saveContact(contactnew);
                                                 Contact deleteContact;
-                                                for (int i = 0; i < chatManager.getContacts().size(); i++) {
-                                                    deleteContact = chatManager.getContacts().get(i);
-                                                    if (deleteContact.getRemoteName().equals("Not registered contact")) {
-                                                        if (deleteContact.getContactId().equals(contactidnew)) {
-                                                            chatManager.deleteContact(deleteContact);
-                                                        }
-                                                    }
-                                                }
-                                                chatManager.deleteContact(contactexist);
-                                                getSession().setData(ChatSession.CONTACTTOUPDATE_DATA, null);
+                                                //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+//                                                for (int i = 0; i < chatManager.getContacts().size(); i++) {
+//                                                    deleteContact = chatManager.getContacts().get(i);
+//                                                    if (deleteContact.getRemoteName().equals("Not registered contact")) {
+//                                                        if (deleteContact.getContactId().equals(contactidnew)) {
+//                                                            chatManager.deleteContact(deleteContact);
+//                                                        }
+//                                                    }
+//                                                }
+                                                //chatManager.deleteContact(contactexist);
+                                                getSession().setData(com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession.CONTACTTOUPDATE_DATA, null);
                                                 getSession().setData("whocallme", "contact");
-                                                getSession().setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
+                                                //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                                                getSession().setData(com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(contactidnew));
                                                 Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();
                                                 //changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, getSession().getAppPublicKey());
                                                 dismiss();
                                             }
                                         } else {
                                             final int pos = position;
-                                            final ContactConnection contactConn = chatManager.getContactConnectionByContactId(contactid.get(pos));
+                                            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                                            final ContactConnection contactConn = null;//chatManager.getContactConnectionByContactId(contactid.get(pos));
 
                                             if (contactConn.getRemoteName() != null) {
-                                                final cht_dialog_yes_no customAlert = new cht_dialog_yes_no(getActivity(), getSession(), null, contactConn, mAdapterCallback);
+                                                final com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no customAlert = new com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no(getActivity(), getSession(), null, contactConn, mAdapterCallback);
                                                 customAlert.setTextBody("Do you want to add " + contactConn.getRemoteName() + " to your Contact List?");
                                                 customAlert.setTextTitle("Add connections");
                                                 customAlert.setType("add-connections");
@@ -226,12 +221,12 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
                                         }
                                     } catch (CantSaveChatException e) {
                                         errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                    } catch (CantDeleteContactException e) {
-                                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                    } catch (CantSaveContactException e) {
-                                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                    } catch (CantGetContactException e) {
-                                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                    //} catch (CantDeleteContactException e) {
+                                    //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                    //} catch (CantSaveContactException e) {
+                                    //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                                    //} catch (CantGetContactException e) {
+                                    //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                     } catch (Exception e) {
                                         errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                                     }
@@ -313,7 +308,8 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
         List<ContactConnection> dataSet = new ArrayList<>();
 
         try {
-            List<ContactConnection> result = chatManager.discoverActorsRegistered();//moduleManager.listWorldCryptoBrokers(moduleManager.getSelectedActorIdentity(), MAX, offset);
+            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+            List<ContactConnection> result = null;//chatManager.discoverActorsRegistered();//moduleManager.listWorldCryptoBrokers(moduleManager.getSelectedActorIdentity(), MAX, offset);
             dataSet.addAll(result);
             //offset = dataSet.size();
         }catch (Exception e) {

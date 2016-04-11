@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <color name="background_tab_pressed">#6633B5E5</color>
+    <color name="black_overlay">#66000000</color>
+    <color name="black_overlay_2">#59000000</color>
+    <color name="wallet_factory_orange">#ff9900</color>
+    <color name="black">#000</color>
+    <color name="gray">#797979</color>
+
+    <color name="color_black">#000000</color>
+    <color name="color_white">#FFFFFF</color>
+    <color name="color_gray_light1">#aadbfaC8</color>
+    <color name="color_gray_light">#ed9f9f9f</color>
+    <color name="color_gray_light_light">#d9efefef</color>
+    <color name="color_black_light">#99000000</color>
+    <color name="navigation_view_menu_item_overlay">#48ffffff</color>
+
+    <color name="secondary_text">#727272</color>
+    <color name="primary_text">#212121</color>
+
+    <color name="dap_user_view_color">#1371A7</color>
+
+    <color name="dap_wallet_asset_user_gradient_start_color">#1371A7</color>
+    <color name="dap_wallet_asset_user_gradient_end_color">#1371A7</color>
+
+    <!-- dap asset user wallet colors -->
+    <color name="dap_user_wallet_principal">#381a5e</color>
+    <color name="dap_user_wallet_blue_text">#00aeef</color>
+    <color name="dap_user_wallet_black_text">#37474f</color>
+    <color name="dap_user_wallet_user_selector_title_text">#1B365E</color>
+    <color name="dap_user_wallet_new">#381a5e</color>
+    <color name="dap_user_wallet_user_selector_edit_text">#d1d3d3</color>
+    <color name="dap_user_wallet_user_sell_buttom">#381a5e</color>
+    <color name="dap_user_wallet_user_transparent">#00FFFFFF</color>
+    <!-- -->
+
+    <!-- asset user wallet v2 -->
+    <color name="dap_user_wallet__home_issuer_principal">#0097A7</color>
+    <color name="dap_user_wallet__home_issuer_item">#26A69A</color>
+    <color name="dap_user_wallet_home_asset_item_background">#F1F2F2</color>
+    <color name="dap_user_wallet_home_issuer_font">#37474f</color>
+    <color name="dap_user_wallet_home_issuer_line">#636372</color>
+    <color name="dap_user_wallet_detail_background">#000000</color>
+    <color name="dap_user_wallet_detail_header">#0097A7</color>
+    <color name="dap_user_wallet_toolbar">#09274C</color>
+    <color name="dap_user_wallet_dialog_body">#78909C</color>
+    <color name="dap_user_wallet_dialog_text">#ECEFF1</color>
+    <color name="dap_user_wallet_dialog_bar">#263238</color>
+    <!-- -->
+
+    <!-- v3 -->
+    <color name="card_toolbar">#1371A7</color>
+    <color name="card_toolbar_trans">#aa1371a7</color>
+    <color name="bg_circular_redeem_color">#CC1371A7</color>
+    <color name="card_top">#0C6089</color>
+    <color name="card_text_top_primary">#ffffff</color>
+    <color name="card_text_top_secondary">#BDBDBD</color>
+    <color name="card_text_highlight">#0C6089</color>
+    <color name="card_text">#353535</color>
+    <color name="card_background">#ffffff</color>
+    <color name="card_background_back">#ECECEC</color>
+    <color name="card_line">#BDBDBD</color>
+    <!-- -->
+</resources>
