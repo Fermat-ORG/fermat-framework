@@ -321,7 +321,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     long timeStampToday = new Date().getTime();
                     Negotiation negotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
                     Collection<Clause> negotiationClause = negotiation.getClauses();
-                    String clauseValue = getNegotiationClauseValue(negotiationClause, ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
+                    String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClause, ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
 
                     if (clauseValue != null)
                         timeToDelivery = Long.parseLong(clauseValue);
@@ -503,7 +503,7 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     long timeStampToday = new Date().getTime();
                     Negotiation negotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
                     Collection<Clause> negotiationClause = negotiation.getClauses();
-                    String clauseValue = getNegotiationClauseValue(negotiationClause, ClauseType.BROKER_DATE_TIME_TO_DELIVER);
+                    String clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(negotiationClause, ClauseType.BROKER_DATE_TIME_TO_DELIVER);
 
                     if (clauseValue != null)
                         timeToDelivery = Long.parseLong(clauseValue);
@@ -659,19 +659,19 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
         String clauseValue;
 
-        clauseValue = getNegotiationClauseValue(saleNegotiationClauses, ClauseType.EXCHANGE_RATE);
+        clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.EXCHANGE_RATE);
         final BigDecimal priceReference = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
 
-        clauseValue = getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_CURRENCY_QUANTITY);
+        clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_CURRENCY_QUANTITY);
         final BigDecimal amount = new BigDecimal(numberFormat.parse(clauseValue).doubleValue());
 
-        clauseValue = getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_BANK_ACCOUNT);
+        clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_BANK_ACCOUNT);
         final String bankAccount = NegotiationClauseHelper.getAccountNumberFromString(clauseValue);
 
-        clauseValue = getNegotiationClauseValue(saleNegotiationClauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
+        clauseValue = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.CUSTOMER_PAYMENT_METHOD);
         final MoneyType paymentMethod = MoneyType.getByCode(clauseValue);
 
-        final String currencyCode = getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_CURRENCY);
+        final String currencyCode = NegotiationClauseHelper.getNegotiationClauseValue(saleNegotiationClauses, ClauseType.BROKER_CURRENCY);
 
         //Ejecuto el restock dependiendo del tipo de transferencia a realizar
         switch (paymentMethod) {
@@ -840,19 +840,4 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
 
         throw new CantGetExchangeRateException();
     }
-
-    /**
-     * Get Value of Clause
-     *
-     * @param negotiationClause
-     * @param clauseType
-     */
-    private String getNegotiationClauseValue(Collection<Clause> negotiationClause, ClauseType clauseType) {
-
-        for (Clause clause : negotiationClause)
-            if (clause.getType().getCode().equals(clauseType.getCode())) return clause.getValue();
-        return null;
-
-    }
-
 }
