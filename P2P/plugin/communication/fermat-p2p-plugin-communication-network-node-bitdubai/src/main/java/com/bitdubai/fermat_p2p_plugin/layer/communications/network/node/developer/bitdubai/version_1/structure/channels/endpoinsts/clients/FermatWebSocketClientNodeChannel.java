@@ -16,6 +16,9 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.ReceivedActorCatalogTransactionsRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.ReceivedNodeCatalogTransactionsRespondProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConstantAttNames;
+import com.sun.jndi.toolkit.url.Uri;
 
 import org.jboss.logging.Logger;
 
@@ -56,14 +59,16 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
     /**
      * Constructor with parameter
      *
-     * @param endpointURI
+     * @param remoteNodeCatalogProfile
      */
-    public FermatWebSocketClientNodeChannel(URI endpointURI){
+    public FermatWebSocketClientNodeChannel(NodesCatalog remoteNodeCatalogProfile){
 
         try {
 
+            URI endpointURI = new URI("ws://"+remoteNodeCatalogProfile.getIp()+":"+remoteNodeCatalogProfile.getDefaultPort());
             WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
             clientConnection = webSocketContainer.connectToServer(this, endpointURI);
+            clientConnection.getUserProperties().put(ConstantAttNames.REMOTE_NODE_CATALOG_PROFILE, remoteNodeCatalogProfile);
 
         } catch (Exception e) {
             throw new RuntimeException(e);

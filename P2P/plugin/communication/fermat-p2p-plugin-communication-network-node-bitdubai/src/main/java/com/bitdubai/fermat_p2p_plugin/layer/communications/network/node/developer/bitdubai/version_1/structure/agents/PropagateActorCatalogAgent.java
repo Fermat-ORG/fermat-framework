@@ -12,16 +12,25 @@ import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.clients.FermatWebSocketClientNodeChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.ReceiveActorCatalogTransactionsMsjRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.ActorsCatalogTransactionsPendingForPropagationDao;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.NodesCatalogDao;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransactionsPendingForPropagation;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 
 import org.jboss.logging.Logger;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -53,6 +62,11 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
     private List<ScheduledFuture> scheduledFutures;
 
     /**
+     * Represent the nodesCatalogDao
+     */
+    private NodesCatalogDao nodesCatalogDao;
+
+    /**
      * Represent the actorsCatalogTransactionsPendingForPropagationDao
      */
     private ActorsCatalogTransactionsPendingForPropagationDao actorsCatalogTransactionsPendingForPropagationDao;
@@ -63,22 +77,8 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
     public  PropagateActorCatalogAgent(){
         this.scheduledThreadPool = Executors.newScheduledThreadPool(1);
         this.scheduledFutures    = new ArrayList<>();
+        this.nodesCatalogDao     = ((DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY)).getNodesCatalogDao();
         this.actorsCatalogTransactionsPendingForPropagationDao = ((DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY)).getActorsCatalogTransactionsPendingForPropagationDao();
-    }
-
-    /**
-     * Propagation logic implementation
-     */
-    private void propagateCatalog() throws CantReadRecordDataBaseException {
-
-       List<ActorsCatalogTransactionsPendingForPropagation> transactionsPendingForPropagations = actorsCatalogTransactionsPendingForPropagationDao.findAll();
-
-       if (transactionsPendingForPropagations != null && !transactionsPendingForPropagations.isEmpty()){
-
-
-
-       }
-
     }
 
     /**
@@ -174,5 +174,74 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
 
             throw new CantStopAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
         }
+    }
+
+    /**
+     * Propagation logic implementation
+     */
+    private void propagateCatalog() throws CantReadRecordDataBaseException, CantUpdateRecordDataBaseException, RecordNotFoundException {
+
+        List<NodesCatalog> nodesCatalogsList = getCatalogueListToShare();
+        List<ActorsCatalogTransaction> transactionList = getActorsCatalogTransactionPendingForPropagationBlock();
+
+        if ((nodesCatalogsList != null && !nodesCatalogsList.isEmpty()) &&
+                (transactionList != null && !transactionList.isEmpty())){
+
+            for (NodesCatalog remoteNodesCatalog: nodesCatalogsList) {
+
+                try {
+
+                    FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(remoteNodesCatalog);
+                    ReceiveActorCatalogTransactionsMsjRequest receiveActorCatalogTransactionsMsjRequest = new ReceiveActorCatalogTransactionsMsjRequest(transactionList);
+                    fermatWebSocketClientNodeChannel.sendMessage(receiveActorCatalogTransactionsMsjRequest);
+
+                }catch (Exception e){
+
+                    remoteNodesCatalog.setOfflineCounter(remoteNodesCatalog.getOfflineCounter()+1);
+                    nodesCatalogDao.update(remoteNodesCatalog);
+                }
+            }
+
+        }
+
+    }
+
+
+    /**
+     * Return a list of nodes catalog
+     *
+     * @return List<NodesCatalog>
+     */
+    private List<NodesCatalog> getCatalogueListToShare() throws CantReadRecordDataBaseException {
+
+        //TODO: Complete the condition filter
+        Map<String, Object> filters = new HashMap<>();
+        //filters.put();
+        //filters.put();
+
+        return nodesCatalogDao.findAll(filters);
+
+    }
+
+    /**
+     * Return a list of Actor Catalog Transactions Pending For Propagation
+     *
+     * @return List<ActorsCatalogTransaction>
+     */
+    private List<ActorsCatalogTransaction> getActorsCatalogTransactionPendingForPropagationBlock() throws CantReadRecordDataBaseException {
+
+        List<ActorsCatalogTransactionsPendingForPropagation> transactionsPendingForPropagation = actorsCatalogTransactionsPendingForPropagationDao.findAll();
+        List<ActorsCatalogTransaction> transactionList = new ArrayList<>();
+
+        if (transactionsPendingForPropagation != null && !transactionsPendingForPropagation.isEmpty()){
+
+            for (ActorsCatalogTransactionsPendingForPropagation actorsCatalogTransactionsPendingForPropagation : transactionsPendingForPropagation) {
+                transactionList.add(actorsCatalogTransactionsPendingForPropagation.getActorsCatalogTransaction());
+            }
+
+        }
+
+        return  transactionList;
+
     }
 }
