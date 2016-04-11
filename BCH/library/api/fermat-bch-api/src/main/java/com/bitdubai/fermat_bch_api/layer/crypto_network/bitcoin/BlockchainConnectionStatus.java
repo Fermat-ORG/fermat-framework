@@ -2,20 +2,29 @@ package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
+import java.util.List;
+
 /**
  * Created by rodrigo on 1/10/16.
  */
 public class BlockchainConnectionStatus {
-    int connectedNodesCount;
-    String downloadNodeIp;
-    long  downloadNodePing;
-    BlockchainNetworkType blockchainNetworkType;
+    private int connectedNodesCount;
+    private ConnectedBitcoinNode downloadNode;
+    private List<ConnectedBitcoinNode> connectedNodes;
+    private BlockchainNetworkType blockchainNetworkType;
 
 
-    public BlockchainConnectionStatus(int connectedNodesCount, String downloadNodeIp, Long downloadNodePing, BlockchainNetworkType blockchainNetworkType) {
+    /**
+     * Constructor
+     * @param connectedNodesCount
+     * @param downloadNode
+     * @param connectedNodes
+     * @param blockchainNetworkType
+     */
+    public BlockchainConnectionStatus(int connectedNodesCount, ConnectedBitcoinNode downloadNode, List<ConnectedBitcoinNode> connectedNodes, BlockchainNetworkType blockchainNetworkType) {
         this.connectedNodesCount = connectedNodesCount;
-        this.downloadNodeIp = downloadNodeIp;
-        this.downloadNodePing = downloadNodePing;
+        this.downloadNode = downloadNode;
+        this.connectedNodes = connectedNodes;
         this.blockchainNetworkType = blockchainNetworkType;
     }
 
@@ -23,19 +32,16 @@ public class BlockchainConnectionStatus {
         return connectedNodesCount;
     }
 
-    public String getDownloadNodeIp() {
-        return downloadNodeIp;
+    public ConnectedBitcoinNode getDownloadNode() {
+        return downloadNode;
     }
 
-    public long getDownloadNodePing() {
-        return downloadNodePing;
+    public List<ConnectedBitcoinNode> getConnectedNodes() {
+        return connectedNodes;
     }
 
     public BlockchainNetworkType getBlockchainNetworkType() {
         return blockchainNetworkType;
     }
-
-    public Boolean IsConnected() {
-        return connectedNodesCount != 0;
-    }
 }
+
