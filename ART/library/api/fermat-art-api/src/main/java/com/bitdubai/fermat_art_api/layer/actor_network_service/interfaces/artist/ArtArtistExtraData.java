@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +26,7 @@ public interface ArtArtistExtraData <T extends ArtArtistInfo> {
      * This method returns the requester actor type.
      * @return
      */
-    Actors getRequesterActorType();
+    PlatformComponentType getRequesterActorType();
 
     /**
      * This method returns the artist public key.
