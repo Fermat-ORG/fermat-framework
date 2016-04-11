@@ -27,7 +27,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfa
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.reference_wallet.artist_community.R;
+import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.commons.popups.ConnectDialog;
 import com.bitdubai.sub_app_artist_community.commons.popups.DisconnectDialog;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
@@ -75,15 +75,15 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.afc_fragment_connections_other_profile, container, false);
-        userProfileAvatar = (ImageView) rootView.findViewById(R.id.afc_img_user_avatar);
-        userName = (FermatTextView) rootView.findViewById(R.id.afc_user_name);
-        externalPlatform = (FermatTextView) rootView.findViewById(R.id.afc_external_platform);
-        connect = (Button) rootView.findViewById(R.id.afc_btn_connect);
+        rootView = inflater.inflate(R.layout.aac_fragment_connections_other_profile, container, false);
+        userProfileAvatar = (ImageView) rootView.findViewById(R.id.aac_img_user_avatar);
+        userName = (FermatTextView) rootView.findViewById(R.id.aac_user_name);
+        externalPlatform = (FermatTextView) rootView.findViewById(R.id.aac_external_platform);
+        connect = (Button) rootView.findViewById(R.id.aac_btn_connect);
         connect.setOnClickListener(this);
-        disconnect = (Button) rootView.findViewById(R.id.afc_btn_disconnect);
+        disconnect = (Button) rootView.findViewById(R.id.aac_btn_disconnect);
         disconnect.setOnClickListener(this);
-        cancel = (Button) rootView.findViewById(R.id.afc_btn_cancel);
+        cancel = (Button) rootView.findViewById(R.id.aac_btn_cancel);
         cancel.setOnClickListener(this);
 
         //Show connect or disconnect button depending on actor's connection
@@ -134,7 +134,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
     public void onClick(View v) {
         int i = v.getId();
 
-        if(i == R.id.afc_btn_connect) {
+        if(i == R.id.aac_btn_connect) {
             try {
                 ConnectDialog connectDialog = new ConnectDialog(getActivity(), appSession, null,
                         artistCommunityInformation, moduleManager.getSelectedActorIdentity());
@@ -148,7 +148,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
                 errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
             }
-        } else if(i == R.id.afc_btn_disconnect) {
+        } else if(i == R.id.aac_btn_disconnect) {
             try {
                 DisconnectDialog disconnectDialog = new DisconnectDialog(getActivity(), appSession, null,
                         artistCommunityInformation, moduleManager.getSelectedActorIdentity());
@@ -161,7 +161,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
                 errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 Toast.makeText(getContext(), "There has been an error, please try again", Toast.LENGTH_SHORT).show();
             }
-        } else if(i == R.id.afc_btn_cancel) {
+        } else if(i == R.id.aac_btn_cancel) {
 
             //TODO: verificar el getModuleManager().cancelCryptoBroker(artistCommunityInformation.getConnectionId());
             //TODO: antes de habilitar esto.
