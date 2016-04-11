@@ -126,7 +126,7 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
             }
 
@@ -146,12 +146,10 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
-            } catch (IOException iOException) {
-                LOG.error(iOException.getMessage());
-            } catch (EncodeException encodeException) {
-                LOG.error(encodeException.getMessage());
+            } catch (Exception e) {
+                LOG.error(e.getMessage());
             }
 
         }
