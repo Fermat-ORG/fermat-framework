@@ -371,6 +371,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             contractHash,
                             ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT
                     );
+                    raiseIncomingMoneyNotificationEvent();
                 }
 
 
@@ -503,6 +504,13 @@ public class CustomerOnlinePaymentMonitorAgent implements
             CustomerOnlinePaymentConfirmed customerOnlinePaymentConfirmed = (CustomerOnlinePaymentConfirmed) fermatEvent;
             customerOnlinePaymentConfirmed.setSource(EventSource.CUSTOMER_ONLINE_PAYMENT);
             eventManager.raiseEvent(customerOnlinePaymentConfirmed);
+        }
+        private void raiseIncomingMoneyNotificationEvent(){
+            FermatEvent fermatEvent = eventManager.getNewEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_MONEY_NOTIFICATION);
+            com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent event = (com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent) fermatEvent;
+            event.setSource(EventSource.CUSTOMER_ONLINE_PAYMENT);
+            event.setActorType(Actors.CBP_CRYPTO_BROKER);
+            eventManager.raiseEvent(event);
         }
 
         //TODO: raise an event only in broker side, notifying the incoming online payment. Create the event.
