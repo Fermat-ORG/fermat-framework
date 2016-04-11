@@ -1,6 +1,5 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -34,7 +33,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.Los
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
@@ -42,7 +40,6 @@ import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.ChunckValuesHistoryAdapter;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
@@ -58,7 +55,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by mati on 2015.09.30..
  */
-public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossProtectedWalletTransaction> implements FermatListItemListeners<LossProtectedWalletTransaction>,onRefreshList {
+public class ChunckValuesHistoryDetailFragment extends FermatWalletListFragment<LossProtectedWalletTransaction> implements FermatListItemListeners<LossProtectedWalletTransaction>,onRefreshList {
 
     /**
      * Session
@@ -101,8 +98,8 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
      *
      * @return InstalledFragment instance object
      */
-    public static ChunckValuesHistoryFragment newInstance() {
-        return new ChunckValuesHistoryFragment();
+    public static ChunckValuesHistoryDetailFragment newInstance() {
+        return new ChunckValuesHistoryDetailFragment();
     }
 
     @Override
