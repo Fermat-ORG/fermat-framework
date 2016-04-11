@@ -58,5 +58,11 @@ public interface Contract {
      * @return a Boolean with NearExpirationDatetime
      */
     Boolean getNearExpirationDatetime();
+
+    /**
+     *
+     * @return a String with cancelReason
+     */
+    String getCancelReason();
 }
 

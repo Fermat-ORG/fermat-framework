@@ -49,4 +49,9 @@ public class CustomerBrokerContractSaleManagerMock implements CustomerBrokerCont
     public void updateContractNearExpirationDatetime(String contractId, Boolean status) throws CantUpdateCustomerBrokerContractSaleException {
 
     }
+
+    @Override
+    public void cancelContract(String contractId, String reason) throws CantUpdateCustomerBrokerContractSaleException{
+
+    }
 }
