@@ -2,11 +2,7 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.develope
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
-import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
-
-import java.util.UUID;
 
 /**
  * The class <code>com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.structure.IntraUserIdentityModule</code>
@@ -15,7 +11,7 @@ import java.util.UUID;
  *
  * Created by natalia on 05/01/16.
  */
-public class IntraUserIdentityModule implements IntraUserModuleIdentity {
+public class IntraUserIdentity implements IntraUserModuleIdentity {
 
     private String alias;
     private String phrase;
@@ -26,7 +22,7 @@ public class IntraUserIdentityModule implements IntraUserModuleIdentity {
     /**
      * Constructor
      */
-    public IntraUserIdentityModule(String alias, String phrase,String publicKey, byte[] image,Actors actorType) {
+    public IntraUserIdentity(String alias, String phrase,String publicKey, byte[] image,Actors actorType) {
         this.alias = alias;
         this.phrase = phrase;
         this.publicKey = publicKey;
