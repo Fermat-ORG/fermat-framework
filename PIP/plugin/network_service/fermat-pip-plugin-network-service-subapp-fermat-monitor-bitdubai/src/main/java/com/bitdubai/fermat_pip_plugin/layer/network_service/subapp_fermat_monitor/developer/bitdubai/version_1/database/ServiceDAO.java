@@ -194,7 +194,7 @@ public class ServiceDAO {
 
     /**
      * Method that list the all entities on the data base. The valid value of
-     * the column name are the att of the <code>SystemMonitorNetworkServiceDatabaseConstants</code>
+     * the column name are the att of the <code>SystemMonitorNetworkServiceDeveloperDatabaseConstants</code>
      *
      * @return All Service.
      * @throws DatabaseTransactionFailedException
@@ -272,7 +272,7 @@ public class ServiceDAO {
 
     /**
      * Method that list the all entities on the data base. The valid value of
-     * the key are the att of the <code>SystemMonitorNetworkServiceDatabaseConstants</code>
+     * the key are the att of the <code>SystemMonitorNetworkServiceDeveloperDatabaseConstants</code>
      *
      * @param filters
      * @return List<Service>

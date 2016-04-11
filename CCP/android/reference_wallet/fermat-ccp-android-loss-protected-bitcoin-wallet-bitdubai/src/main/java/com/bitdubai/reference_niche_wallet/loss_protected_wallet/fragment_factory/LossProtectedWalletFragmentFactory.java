@@ -8,14 +8,17 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.Conta
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.ContactsFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.LossProtectedSettingsFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.AddConnectionFragment;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.ChunckValuesHistoryFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.NoIdentityFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.ReceiveTransactionFragment2;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.ReceiveTransactionFragment3;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.RequestFormFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.RequestReceiveHistoryFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.RequestSendHistoryFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendFormFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendFormWalletFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendTransactionFragment2;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SendTransactionFragment3;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SettingsMainNetworkFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.SettingsNotificationsFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
@@ -68,8 +71,10 @@ public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<Lo
                     currentFragment = RequestSendHistoryFragment.newInstance();
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_RECEIVED_HISTORY:
+                    currentFragment = ReceiveTransactionFragment3.newInstance();
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_SENT_HISTORY:
+                    currentFragment = SendTransactionFragment3.newInstance();
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_RECEIVED_HISTORY:
                     currentFragment = RequestReceiveHistoryFragment.newInstance();
@@ -100,6 +105,13 @@ public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<Lo
                     break;
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_SEND_WALLET_FORM_FRAGMENT:
                     currentFragment = SendFormWalletFragment.newInstance();
+                    break;
+                case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_CHUNCK_VALUES:
+                    currentFragment = ChunckValuesHistoryFragment.newInstance();
+                    break;
+
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUES_DETAIL_FRAGMENT:
+
                     break;
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.getKey(), "Swith failed");

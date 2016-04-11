@@ -13,15 +13,19 @@ public enum SongStatus implements FermatEnum {
     /**
      * Please for doing the code more readable, keep the elements of the enum ordered.
      */
-    AVAILABLE       ("AVA"),
-    DELETED         ("DEL"),
-    DOWNLOADED      ("DED"),
-    DOWNLOADING     ("DNG"),
-    NOT_AVAILABLE   ("NAV");
+    AVAILABLE       ("AVA", "AVAILABLE"),
+    DELETED         ("DEL", "DELETED"),
+    DOWNLOADED      ("DED", "DOWNLOADED"),
+    DOWNLOADING     ("DNG", "DOWNLOADING"),
+    NOT_AVAILABLE   ("NAV", "NOT_AVAILABLE"),
+    ;
 
     String code;
-    SongStatus(String code){
-        this.code=code;
+    String friendlyName;
+
+    SongStatus(String code, String friendlyName){
+        this.code = code;
+        this.friendlyName = friendlyName;
     }
 
     //PUBLIC METHODS
@@ -46,6 +50,14 @@ public enum SongStatus implements FermatEnum {
     @Override
     public String getCode() {
         return code;
+    }
+
+    /**
+     * This method returns the Platform friendly name.
+     * @return
+     */
+    public String getFriendlyName() {
+        return this.friendlyName;
     }
 
 }

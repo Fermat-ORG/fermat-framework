@@ -35,6 +35,7 @@ public class ChatImpl implements Chat {
     private Timestamp                   lastMessageDate;
     private List<Contact>               contactAssociated;
     private TypeChat                    typeChat;
+    private boolean                     scheduledDelivery;
 
     /**
      * Constructor without arguments
@@ -66,7 +67,8 @@ public class ChatImpl implements Chat {
                     ChatStatus status,
                     Timestamp date,
                     Timestamp lastMessageDate,
-                    TypeChat typeChat
+                    TypeChat typeChat,
+                    boolean scheduledDelivery
     )
     {
         this.chatId               = chatId;
@@ -80,6 +82,7 @@ public class ChatImpl implements Chat {
         this.date                 = date;
         this.lastMessageDate      = lastMessageDate;
         this.typeChat             = typeChat;
+        this.scheduledDelivery = scheduledDelivery;
     }
 
     @Override
@@ -267,15 +270,6 @@ public class ChatImpl implements Chat {
         this.typeChat = typeChat;
     }
 
-    @Override
-    public Group getGroupAssociated() {
-        return null;
-    }
-
-    @Override
-    public void setGroupAssociated(Group group) {
-
-    }
 
     @Override
     public List<GroupMember> getGroupMembersAssociated() {
@@ -285,6 +279,16 @@ public class ChatImpl implements Chat {
     @Override
     public void setGroupMembersAssociated(List<GroupMember> groupMembers) {
 
+    }
+
+    @Override
+    public boolean getScheduledDelivery() {
+        return scheduledDelivery;
+    }
+
+    @Override
+    public void setScheduledDelivery(boolean scheduledDelivery) {
+        this.scheduledDelivery = scheduledDelivery;
     }
 
     @Override

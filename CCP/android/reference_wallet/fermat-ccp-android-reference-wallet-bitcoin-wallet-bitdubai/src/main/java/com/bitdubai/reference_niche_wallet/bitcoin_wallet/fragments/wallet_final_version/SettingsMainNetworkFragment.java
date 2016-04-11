@@ -58,10 +58,10 @@ public class SettingsMainNetworkFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         referenceWalletSession = (ReferenceWalletSession) appSession;
         try {
-            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
+            cryptoWallet = referenceWalletSession.getModuleManager();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
-        } catch (CantGetCryptoWalletException e) {
+        } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
         }

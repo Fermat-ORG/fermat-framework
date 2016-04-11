@@ -13,6 +13,7 @@ import com.bitdubai.reference_wallet.fan_wallet.common.models.SongItems;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Miguel Payarez on 16/03/16.
@@ -27,6 +28,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
         TextView songname;
         TextView status;
         ProgressBar progressBar;
+        UUID song_id;
         public ViewHolder(View v){
             super(v);
             imagen=(ImageView)v.findViewById(R.id.imagen);
@@ -67,6 +69,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
         holder.songname.setText(items.get(i).getSong_name());
         holder.artistname.setText(items.get(i).getArtist_name());
         holder.status.setText(items.get(i).getStatus());
+        holder.song_id=items.get(i).getSong_id();
         holder.progressBar.setProgress(items.get(i).getProgress());
         if(items.get(i).isProgressbarvissible()){
             holder.progressBar.setVisibility(View.VISIBLE);

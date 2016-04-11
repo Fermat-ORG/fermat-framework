@@ -104,7 +104,8 @@ public class BitcoinBasicWalletTransactionExecutor implements com.bitdubai.ferma
             CryptoAddressBookRecord cryptoAddressBookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoTransaction.getAddressTo());
 
 
-            long timestamp = transaction.getTimestamp();
+            //long timestamp = transaction.getTimestamp();
+            long timestamp = System.currentTimeMillis();
             com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.util.TransactionWrapper bitcoinWalletTransactionRecord = new com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_extra_actor.developer.bitdubai.version_1.util.TransactionWrapper();
 
             bitcoinWalletTransactionRecord.setIdTransaction(transaction.getTransactionID());

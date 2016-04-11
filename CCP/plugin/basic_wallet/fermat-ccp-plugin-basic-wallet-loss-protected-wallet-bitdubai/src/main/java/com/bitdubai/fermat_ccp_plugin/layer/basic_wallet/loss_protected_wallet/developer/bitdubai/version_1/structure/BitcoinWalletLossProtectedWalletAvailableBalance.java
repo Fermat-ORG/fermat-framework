@@ -71,7 +71,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
 
 
     @Override
-    public long getBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException {
+    public long getRealBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException {
         try {
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
             return bitcoinWalletBasicWalletDao.getAvailableBalance(blockchainNetworkType);
@@ -101,6 +101,18 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
         }
     }
 
+    @Override
+    public long getBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException {
+        try {
+            bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
+            return bitcoinWalletBasicWalletDao.getAvailableBalance(blockchainNetworkType);
+        } catch(CantCalculateBalanceException exception){
+            throw exception;
+        } catch(Exception exception){
+            throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception  ), null, null);
+        }
+    }
+
     /*d
         * NOTA:
         *  El debit y el credit debería mirar primero si la transacción que
@@ -116,7 +128,7 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
             double purchasePrice = 0;
 
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.AVAILABLE, purchasePrice);
+            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.AVAILABLE, String.valueOf(purchasePrice));
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
             //get exchange rate on background
@@ -137,7 +149,9 @@ public class BitcoinWalletLossProtectedWalletAvailableBalance implements Bitcoin
             double purchasePrice = 0;
 
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.AVAILABLE,purchasePrice);
+            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.AVAILABLE,String.valueOf(purchasePrice));
+
+            //calculate value blocks to spend and inserted into the table
 
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());

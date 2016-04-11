@@ -40,10 +40,9 @@ public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
     private FermatActor owner;
     private long epochStartTime;
     private long duration;
-    private long elapsedTime;
     private long epochEndTime;
     private AgentStatus status;
-    private ProtocolStatus protocolStatus;
+    private boolean isRead;
 
 
     /**
@@ -102,14 +101,10 @@ public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
     }
 
     @Override
-    public ProtocolStatus getNotificationProtocolStatus() {
-        return protocolStatus;
+    public boolean isRead() {
+        return this.isRead;
     }
 
-    @Override
-    public void markEventNotificationAsRead() {
-
-    }
 
     @Override
     public long getEpochStartTime() {
@@ -119,11 +114,6 @@ public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
     @Override
     public long getEpochEndTime() {
         return epochEndTime;
-    }
-
-    @Override
-    public long getElapsedTime() {
-        return elapsedTime;
     }
 
     /**
@@ -158,16 +148,12 @@ public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
         this.duration = timeOutDuration;
     }
 
-    public void setElapsedTime(long elapsedTime) {
-        this.elapsedTime = elapsedTime;
-    }
-
     public void setStatus(AgentStatus status) {
         this.status = status;
     }
 
-    public void setProtocolStatus(ProtocolStatus protocolStatus) {
-        this.protocolStatus = protocolStatus;
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;
     }
 
     @Override
@@ -180,9 +166,7 @@ public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
                 ", startTime=" + epochStartTime +
                 ", endTime=" + epochEndTime +
                 ", timeOutDuration=" + duration +
-                ", elapsedTime=" + elapsedTime +
                 ", status=" + status +
-                ", protocolStatus=" + protocolStatus +
                 '}';
     }
 }
