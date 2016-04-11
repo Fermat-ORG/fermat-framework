@@ -315,7 +315,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
     public void persistContractInDatabase(
             CustomerBrokerContractSale customerBrokerContractSale,
             String walletPublicKey,
-            long amount,
+            double amount,
             String cbpWalletPublicKey,
             BigDecimal referencePrice,
             FiatCurrency fiatCurrency,
@@ -366,7 +366,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
             DatabaseTableRecord record,
             CustomerBrokerContractSale customerBrokerContractSale,
             String walletPublicKey,
-            long amount,
+            double amount,
             String cbpWalletPublicKey,
             BigDecimal referencePrice,
             FiatCurrency merchandiseType,
@@ -392,7 +392,7 @@ public class BrokerSubmitOfflineMerchandiseBusinessTransactionDao {
         record.setStringValue(
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_WALLET_PUBLIC_KEY_COLUMN_NAME,
                 walletPublicKey);
-        record.setLongValue(
+        record.setDoubleValue(
                 BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_OFFLINE_MERCHANDISE_AMOUNT_COLUMN_NAME,
                 amount);
         record.setStringValue(
