@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -22,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -33,7 +35,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.exceptions.CantInitializeCBPAg
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_cbp_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.all_definition.util.NegotiationClauseHelper;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.events.BrokerSubmitMerchandiseConfirmed;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CannotSendContractHashException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantGetContractListException;
@@ -63,6 +64,12 @@ import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.i
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.exceptions.CantCreateCashMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.interfaces.CashMoneyDestockManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.exceptions.CantCreateCryptoMoneyDestockException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.BrokerSubmitOfflineMerchandisePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants;
@@ -106,6 +113,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
     CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
     CashMoneyDestockManager cashMoneyDestockManager;
     BankMoneyDestockManager bankMoneyDestockManager;
+    CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
     public BrokerSubmitOfflineMerchandiseMonitorAgent(
             PluginDatabaseSystem pluginDatabaseSystem,
@@ -118,7 +126,8 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
             CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
             CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
             CashMoneyDestockManager cashMoneyDestockManager,
-            BankMoneyDestockManager bankMoneyDestockManager) {
+            BankMoneyDestockManager bankMoneyDestockManager,
+            CryptoBrokerWalletManager cryptoBrokerWalletManager) {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -130,6 +139,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
         this.customerBrokerSaleNegotiationManager = customerBrokerSaleNegotiationManager;
         this.bankMoneyDestockManager = bankMoneyDestockManager;
         this.cashMoneyDestockManager = cashMoneyDestockManager;
+        this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
     }
 
     @Override
@@ -413,36 +423,36 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                 CantUpdateRecordException,
                 UnexpectedResultReturnedFromDatabaseException {
 
-            final BankMoneyDeStockRecord bankMoneyDeStockRecord = new BankMoneyDeStockRecord(pendingToDeStockTransaction);
+            final BankMoneyDeStockRecord destockRecord = new BankMoneyDeStockRecord(pendingToDeStockTransaction);
 
             final BigDecimal amount = getAmount(pendingToDeStockTransaction.getContractHash());
-            bankMoneyDeStockRecord.setAmount(amount);
+            destockRecord.setAmount(amount);
 
-            final String accountNumber = getAccountNumber(pendingToDeStockTransaction.getContractHash());
-            bankMoneyDeStockRecord.setBankAccount(accountNumber);
+            final String accountNumber = getAccountNumber(destockRecord.getCbpWalletPublicKey(), destockRecord.getFiatCurrency());
+            destockRecord.setBankAccount(accountNumber);
 
             System.out.println("TEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeBankDeStock():" +
-                    "\n - bankMoneyDeStockRecord.getPublicKeyActor(): " + bankMoneyDeStockRecord.getPublicKeyActor() +
-                    "\n - bankMoneyDeStockRecord.getFiatCurrency(): " + bankMoneyDeStockRecord.getFiatCurrency() +
-                    "\n - bankMoneyDeStockRecord.getCbpWalletPublicKey(): " + bankMoneyDeStockRecord.getCbpWalletPublicKey() +
-                    "\n - bankMoneyDeStockRecord.getBankWalletPublicKey(): " + bankMoneyDeStockRecord.getBankWalletPublicKey() +
-                    "\n - bankMoneyDeStockRecord.getBankAccount(): " + bankMoneyDeStockRecord.getBankAccount() +
-                    "\n - bankMoneyDeStockRecord.getAmount(): " + bankMoneyDeStockRecord.getAmount() +
-                    "\n - bankMoneyDeStockRecord.getMemo(): " + bankMoneyDeStockRecord.getMemo() +
-                    "\n - bankMoneyDeStockRecord.getPriceReference(): " + bankMoneyDeStockRecord.getPriceReference() +
-                    "\n - bankMoneyDeStockRecord.getOriginTransaction(): " + bankMoneyDeStockRecord.getOriginTransaction() +
+                    "\n - deStockRecord.getPublicKeyActor(): " + destockRecord.getPublicKeyActor() +
+                    "\n - deStockRecord.getFiatCurrency(): " + destockRecord.getFiatCurrency() +
+                    "\n - deStockRecord.getCbpWalletPublicKey(): " + destockRecord.getCbpWalletPublicKey() +
+                    "\n - deStockRecord.getBankWalletPublicKey(): " + destockRecord.getBankWalletPublicKey() +
+                    "\n - deStockRecord.getBankAccount(): " + destockRecord.getBankAccount() +
+                    "\n - deStockRecord.getAmount(): " + destockRecord.getAmount() +
+                    "\n - deStockRecord.getMemo(): " + destockRecord.getMemo() +
+                    "\n - deStockRecord.getPriceReference(): " + destockRecord.getPriceReference() +
+                    "\n - deStockRecord.getOriginTransaction(): " + destockRecord.getOriginTransaction() +
                     "\n - pendingToDeStockTransaction.getContractHash(): " + pendingToDeStockTransaction.getContractHash());
 
             bankMoneyDestockManager.createTransactionDestock(
-                    bankMoneyDeStockRecord.getPublicKeyActor(),
-                    bankMoneyDeStockRecord.getFiatCurrency(),
-                    bankMoneyDeStockRecord.getCbpWalletPublicKey(),
-                    bankMoneyDeStockRecord.getBankWalletPublicKey(),
-                    bankMoneyDeStockRecord.getBankAccount(),
-                    bankMoneyDeStockRecord.getAmount(),
-                    bankMoneyDeStockRecord.getMemo(),
-                    bankMoneyDeStockRecord.getPriceReference(),
-                    bankMoneyDeStockRecord.getOriginTransaction(),
+                    destockRecord.getPublicKeyActor(),
+                    destockRecord.getFiatCurrency(),
+                    destockRecord.getCbpWalletPublicKey(),
+                    destockRecord.getBankWalletPublicKey(),
+                    destockRecord.getBankAccount(),
+                    destockRecord.getAmount(),
+                    destockRecord.getMemo(),
+                    destockRecord.getPriceReference(),
+                    destockRecord.getOriginTransaction(),
                     pendingToDeStockTransaction.getContractHash());
 
             pendingToDeStockTransaction.setContractTransactionStatus(ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION);
@@ -451,76 +461,65 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
         }
 
         private void executeCashDeStock(BusinessTransactionRecord pendingToDeStockTransaction)
-                throws CantCreateBankMoneyDestockException,
-                CantUpdateRecordException,
-                UnexpectedResultReturnedFromDatabaseException, CantCreateCashMoneyDestockException {
+                throws CantUpdateRecordException,
+                UnexpectedResultReturnedFromDatabaseException,
+                CantCreateCashMoneyDestockException {
 
-            CashMoneyDeStockRecord cashMoneyDeStockRecord = new CashMoneyDeStockRecord(pendingToDeStockTransaction);
+            CashMoneyDeStockRecord destockRecord = new CashMoneyDeStockRecord(pendingToDeStockTransaction);
 
             final BigDecimal amount = getAmount(pendingToDeStockTransaction.getContractHash());
-            cashMoneyDeStockRecord.setAmount(amount);
+            destockRecord.setAmount(amount);
 
             System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeCashDeStock():" +
-                    "\n - cashMoneyDeStockRecord.getPublicKeyActor(): " + cashMoneyDeStockRecord.getPublicKeyActor() +
-                    "\n - cashMoneyDeStockRecord.getFiatCurrency(): " + cashMoneyDeStockRecord.getFiatCurrency() +
-                    "\n - cashMoneyDeStockRecord.getCbpWalletPublicKey(): " + cashMoneyDeStockRecord.getCbpWalletPublicKey() +
-                    "\n - cashMoneyDeStockRecord.getBankWalletPublicKey(): " + cashMoneyDeStockRecord.getCshWalletPublicKey() +
-                    "\n - cashMoneyDeStockRecord.getCashReference(): " + cashMoneyDeStockRecord.getCashReference() +
-                    "\n - cashMoneyDeStockRecord.getAmount(): " + cashMoneyDeStockRecord.getAmount() +
-                    "\n - cashMoneyDeStockRecord.getMemo(): " + cashMoneyDeStockRecord.getMemo() +
-                    "\n - cashMoneyDeStockRecord.getPriceReference(): " + cashMoneyDeStockRecord.getPriceReference() +
-                    "\n - cashMoneyDeStockRecord.getOriginTransaction(): " + cashMoneyDeStockRecord.getOriginTransaction() +
+                    "\n - destockRecord.getPublicKeyActor(): " + destockRecord.getPublicKeyActor() +
+                    "\n - destockRecord.getFiatCurrency(): " + destockRecord.getFiatCurrency() +
+                    "\n - destockRecord.getCbpWalletPublicKey(): " + destockRecord.getCbpWalletPublicKey() +
+                    "\n - destockRecord.getBankWalletPublicKey(): " + destockRecord.getCshWalletPublicKey() +
+                    "\n - destockRecord.getCashReference(): " + destockRecord.getCashReference() +
+                    "\n - destockRecord.getAmount(): " + destockRecord.getAmount() +
+                    "\n - destockRecord.getMemo(): " + destockRecord.getMemo() +
+                    "\n - destockRecord.getPriceReference(): " + destockRecord.getPriceReference() +
+                    "\n - destockRecord.getOriginTransaction(): " + destockRecord.getOriginTransaction() +
                     "\n - pendingToDeStockTransaction.getContractHash(): " + pendingToDeStockTransaction.getContractHash());
 
             cashMoneyDestockManager.createTransactionDestock(
-                    cashMoneyDeStockRecord.getPublicKeyActor(),
-                    cashMoneyDeStockRecord.getFiatCurrency(),
-                    cashMoneyDeStockRecord.getCbpWalletPublicKey(),
-                    cashMoneyDeStockRecord.getCshWalletPublicKey(),
-                    cashMoneyDeStockRecord.getCashReference(),
-                    cashMoneyDeStockRecord.getAmount(),
-                    cashMoneyDeStockRecord.getMemo(),
-                    cashMoneyDeStockRecord.getPriceReference(),
-                    cashMoneyDeStockRecord.getOriginTransaction(),
+                    destockRecord.getPublicKeyActor(),
+                    destockRecord.getFiatCurrency(),
+                    destockRecord.getCbpWalletPublicKey(),
+                    destockRecord.getCshWalletPublicKey(),
+                    destockRecord.getCashReference(),
+                    destockRecord.getAmount(),
+                    destockRecord.getMemo(),
+                    destockRecord.getPriceReference(),
+                    destockRecord.getOriginTransaction(),
                     pendingToDeStockTransaction.getContractHash());
 
             pendingToDeStockTransaction.setContractTransactionStatus(ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION);
             brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(pendingToDeStockTransaction);
         }
 
-        private String getAccountNumber(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
+        private String getAccountNumber(String cbpWalletPublicKey, Currency merchandiseCurrency) throws UnexpectedResultReturnedFromDatabaseException {
             try {
 
-                final CustomerBrokerContractSale customerBrokerContractSale = customerBrokerContractSaleManager.
-                        getCustomerBrokerContractSaleForContractId(contractHash);
-                ObjectChecker.checkArgument(customerBrokerContractSale, "The customerBrokerContractSale is null");
+                final CryptoBrokerWallet cryptoBrokerWallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(cbpWalletPublicKey);
+                final CryptoBrokerWalletSetting cryptoBrokerWalletSetting = cryptoBrokerWallet.getCryptoWalletSetting();
+                List<CryptoBrokerWalletAssociatedSetting> associatedWallets = cryptoBrokerWalletSetting.getCryptoBrokerWalletAssociatedSettings();
 
-                final String negotiationId = customerBrokerContractSale.getNegotiatiotId();
-                CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = customerBrokerSaleNegotiationManager.
-                        getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-                ObjectChecker.checkArgument(customerBrokerSaleNegotiation, "The customerBrokerSaleNegotiation by Id " + negotiationId + " is null");
+                for(CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets){
+                    Platforms platform = associatedWallet.getPlatform();
+                    Currency currency = associatedWallet.getMerchandise();
 
-                final Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
-                for (Clause clause : clauses) {
-                    if (clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY) {
-                        return NegotiationClauseHelper.getAccountNumberFromClause(clause);
-                    }
+                    if(platform == Platforms.BANKING_PLATFORM && currency == merchandiseCurrency)
+                        return associatedWallet.getBankAccount();
                 }
 
                 return "";
 
-            } catch (CantGetListCustomerBrokerContractSaleException e) {
-                throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the amount merchandise", "Cant Get ContractHash");
-            } catch (CantGetListSaleNegotiationsException e) {
-                throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the amount merchandise", "Cant Get Negotiation");
-            } catch (CantGetListClauseException e) {
-                throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the amount merchandise", "Cant Get Clause");
-            } catch (ObjectNotSetException e) {
-                throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the amount merchandise", "Cant Get ObjectChecker");
-            } catch (Exception e) {
-                throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the amount merchandise", "N/A");
+            } catch (CantGetCryptoBrokerWalletSettingException e) {
+                throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the bank account", "Cant Get the associated wallets");
+            } catch (CryptoBrokerWalletNotFoundException e) {
+                throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the bank account", "Cant Get the broker wallet settings");
             }
-
         }
 
         private BigDecimal getAmount(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
