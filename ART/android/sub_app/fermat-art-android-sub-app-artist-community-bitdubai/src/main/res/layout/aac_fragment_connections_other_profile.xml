@@ -20,7 +20,7 @@
         android:gravity="center">
 
         <ImageView
-            android:id="@+id/afc_img_user_avatar"
+            android:id="@+id/aac_img_user_avatar"
             android:layout_width="110dp"
             android:layout_height="110dp"
             android:layout_centerHorizontal="true"
@@ -38,7 +38,7 @@
 
 
         <Button
-            android:id="@+id/afc_btn_connect"
+            android:id="@+id/aac_btn_connect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_shape_blue"
@@ -53,7 +53,7 @@
             tools:ignore="HardcodedText" />
 
         <Button
-            android:id="@+id/afc_btn_disconnect"
+            android:id="@+id/aac_btn_disconnect"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_shape_white"
@@ -67,7 +67,7 @@
             tools:ignore="HardcodedText" />
 
         <Button
-            android:id="@+id/afc_btn_cancel"
+            android:id="@+id/aac_btn_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/bg_shape_white"
@@ -102,7 +102,7 @@
             tools:ignore="HardcodedText" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/afc_username"
+            android:id="@+id/aac_username"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="6dp"
@@ -121,7 +121,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/afc_email"
+        android:id="@+id/aac_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -142,7 +142,7 @@
             tools:ignore="HardcodedText" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/afc_external_platform"
+            android:id="@+id/aac_external_platform"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="6dp"

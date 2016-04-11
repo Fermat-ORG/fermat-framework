@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#010c12"
-    android:gravity="center"
     android:orientation="vertical">
 
     <View
@@ -17,26 +15,23 @@
         android:layout_height="match_parent"
         tools:ignore="UselessParent">
 
+
         <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/afc_swipe"
+            android:id="@+id/afc_swipeRefresh"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="2dp"
-            android:paddingEnd="1dp"
-            android:paddingLeft="1dp"
-            android:paddingRight="1dp"
-            android:paddingStart="1dp">
+            android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/afc_gridView"
+                android:id="@+id/aac_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="0.5dp"
-                tools:listitem="@layout/afc_row_connections_world" />
+                android:scrollbars="vertical"
+                tools:listitem="@layout/aac_row_connection_notification" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
+        <!--Empty view-->
         <LinearLayout
-            android:id="@+id/afc_empty_view"
+            android:id="@+id/aac_empty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#010c12"
@@ -48,29 +43,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:src="@drawable/img_home_empty"
+                android:background="@drawable/img_home_empty"
                 tools:ignore="ContentDescription" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="There are no users"
+                android:text="You don't have "
                 android:textColor="#ffffff"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
+                android:textSize="16sp" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="available"
+                android:text="any notifications yet"
                 android:textColor="#ffffff"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
     </RelativeLayout>
-
 
 </LinearLayout>

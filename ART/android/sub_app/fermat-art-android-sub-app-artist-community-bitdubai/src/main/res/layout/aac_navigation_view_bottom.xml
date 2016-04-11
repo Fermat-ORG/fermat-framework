@@ -9,7 +9,7 @@
     >
 
     <ImageView
-        android:id="@+id/afc_wallet_logo"
+        android:id="@+id/aac_wallet_logo"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_centerHorizontal="true"
@@ -34,7 +34,7 @@
             android:textSize="16sp"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/afc_navigation_view_bitcoin_balance"
+            android:id="@+id/aac_navigation_view_bitcoin_balance"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

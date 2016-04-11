@@ -27,7 +27,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
+import com.bitdubai.fermat_tky_api.all_definitions.util.ObjectChecker;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetUserException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
@@ -177,6 +179,25 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
         }
         if(user != null)
             identityFanManager.updateIdentityFan(user,password, id, publicKey, profileImage,externalPlatform);
+    }
+
+    /**
+     * This method updates a Fan identity in database.
+     * This method can be used to update the plugin database when the Fan identity object include a
+     * new artist connected to be persisted.
+     * @param fan
+     * @throws CantUpdateFanIdentityException
+     */
+    public void updateFanIdentity(Fan fan) throws CantUpdateFanIdentityException{
+        try{
+            ObjectChecker.checkArgument(fan, "The Fan identity is null");
+            identityFanManager.updateIdentityFan(fan);
+        } catch (ObjectNotSetException e){
+            throw new CantUpdateFanIdentityException(
+                    e,
+                    "Cannot update the fan identity",
+                    "The fan identity is probably null");
+        }
     }
 
     @Override
