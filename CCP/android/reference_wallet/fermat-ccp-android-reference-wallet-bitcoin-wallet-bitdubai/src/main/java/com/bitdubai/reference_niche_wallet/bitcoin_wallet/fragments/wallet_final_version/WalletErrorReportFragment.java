@@ -14,12 +14,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
@@ -32,8 +32,6 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalle
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 
 /**
  * Created by natalia on 05/04/16.
@@ -62,7 +60,7 @@ public class WalletErrorReportFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         try {
             referenceWalletSession = (ReferenceWalletSession) appSession;
-            moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
+            moduleManager = referenceWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             errorManager = appSession.getErrorManager();

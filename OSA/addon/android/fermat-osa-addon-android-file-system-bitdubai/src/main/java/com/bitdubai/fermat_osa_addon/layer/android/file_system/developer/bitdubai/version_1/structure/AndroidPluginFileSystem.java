@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoad
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_osa_addon.layer.android.file_system.developer.bitdubai.version_1.exceptions.CantHashFileNameException;
 
+import java.io.Serializable;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
 import java.util.UUID;
@@ -27,7 +28,7 @@ import java.util.UUID;
  *
  */
 
-public class AndroidPluginFileSystem implements PluginFileSystem {
+public class AndroidPluginFileSystem implements PluginFileSystem,Serializable{
 
     private static final String CHARSET_NAME = "UTF-8";
     private static final String DIGEST_ALGORITHM = "SHA-256";

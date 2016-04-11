@@ -90,7 +90,7 @@ public class RequestReceiveHistoryFragment extends FermatWalletListFragment<Paym
 
         lstPaymentRequest = new ArrayList<PaymentRequest>();
         try {
-            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
+            cryptoWallet = referenceWalletSession.getModuleManager();
 
             //lstPaymentRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 

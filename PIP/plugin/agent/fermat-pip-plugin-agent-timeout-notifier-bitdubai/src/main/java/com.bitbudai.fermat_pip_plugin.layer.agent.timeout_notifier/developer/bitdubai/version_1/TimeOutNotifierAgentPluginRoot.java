@@ -2,6 +2,7 @@ package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bi
 
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOutNotifierAgentDatabaseDao;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOutNotifierAgentDeveloperDatabaseFactory;
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.events.MaxTimeOutNotificationRaisedEventHandler;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.events.TimeOutMonitoringAgent;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.exceptions.CantInitializeTimeOutNotifierAgentDatabaseException;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierAgent;
@@ -24,13 +25,20 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.events.common.GenericEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
+import com.bitdubai.fermat_pip_api.all_definition.event_manager.enums.EventType;
+import com.bitdubai.fermat_pip_api.all_definition.event_manager.listeners.MaxTimeOutNotificationReachedEventListener;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeOutAgent;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.List;
 import java.util.UUID;
 
@@ -58,6 +66,8 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
     private TimeOutNotifierManager timeOutNotifierManager;
     private TimeOutNotifierAgentDatabaseDao dao;
     private TimeOutMonitoringAgent monitoringAgent;
+
+    private List<FermatEventListener> myEventListeners;
 
     /**
      * constructor
@@ -107,6 +117,22 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
          */
         monitoringAgent = new TimeOutMonitoringAgent(getDao(), errorManager, eventManager);
         timeOutNotifierAgentPool = new TimeOutNotifierAgentPool(getDao(), this.errorManager, this.monitoringAgent);
+
+        /**
+         * Prepare the handler for the Max_TimeOut_Notification_Reached event
+         */
+        myEventListeners = new ArrayList<>();
+
+        FermatEventListener fermatEventListener = eventManager.getNewListener(EventType.MAX_TIMEOUT_NOTIFICATION_REACHED);
+        FermatEventHandler fermatEventHandler = new MaxTimeOutNotificationRaisedEventHandler(timeOutNotifierAgentPool);
+        fermatEventListener.setEventHandler(fermatEventHandler);
+        eventManager.addListener(fermatEventListener);
+
+        myEventListeners.add(fermatEventListener);
+
+        /**
+         * instantiate the manager
+         */
         timeOutNotifierManager = new TimeOutNotifierManager(getDao(), this.errorManager, this.timeOutNotifierAgentPool);
 
         //testAddNewAgent();
@@ -115,7 +141,10 @@ public class TimeOutNotifierAgentPluginRoot extends AbstractPlugin implements Da
 
     @Override
     public void stop() {
-
+        //I remove any added listener
+        for (FermatEventListener eventListener : myEventListeners){
+            eventManager.removeListener(eventListener);
+        }
     }
 
     private void testAddNewAgent(){

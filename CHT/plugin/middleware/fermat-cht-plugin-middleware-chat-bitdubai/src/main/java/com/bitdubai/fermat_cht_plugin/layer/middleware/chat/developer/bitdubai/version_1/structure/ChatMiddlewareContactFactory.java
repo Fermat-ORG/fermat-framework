@@ -23,8 +23,6 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.ContactStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetCompatiblesActorNetworkServiceListException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOwnIdentitiesException;
-import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactConnectionImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
