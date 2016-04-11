@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerSettings;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerPreferenceSettings;
 import com.bitdubai.fermat_art_plugin.layer.sub_app_module.music_player.developer.bitdubai.version_1.structure.MusicPlayerManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -25,7 +25,7 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.SongWalletTokenl
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 29/03/16.
  */
-public class MusicPlayerPluginRoot extends AbstractModule<MusicPlayerSettings, ActiveActorIdentityInformation> {
+public class MusicPlayerPluginRoot extends AbstractModule<MusicPlayerPreferenceSettings, ActiveActorIdentityInformation> {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
@@ -78,7 +78,7 @@ public class MusicPlayerPluginRoot extends AbstractModule<MusicPlayerSettings, A
     }
 
     @Override
-    public ModuleManager<MusicPlayerSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public ModuleManager<MusicPlayerPreferenceSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         if(musicPlayerManager == null){
             initPluginManager();
         }
