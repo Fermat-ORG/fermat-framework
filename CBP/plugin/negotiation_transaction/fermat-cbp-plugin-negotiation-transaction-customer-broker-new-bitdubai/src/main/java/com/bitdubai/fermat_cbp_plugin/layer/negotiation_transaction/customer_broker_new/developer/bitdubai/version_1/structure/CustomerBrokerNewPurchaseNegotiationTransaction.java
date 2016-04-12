@@ -51,7 +51,6 @@ public class    CustomerBrokerNewPurchaseNegotiationTransaction {
      * @param customerBrokerPurchaseNegotiation
      * @throws CantNewPurchaseNegotiationTransactionException
      */
-    //PROCESS THE UPDATE PURCHASE NEGOTIATION TRANSACTION
     public void sendPurchaseNegotiationTranasction(CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws CantNewPurchaseNegotiationTransactionException {
 
         try {
