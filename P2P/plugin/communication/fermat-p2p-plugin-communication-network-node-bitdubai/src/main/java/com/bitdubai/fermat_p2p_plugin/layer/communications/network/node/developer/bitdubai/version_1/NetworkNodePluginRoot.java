@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -28,7 +29,12 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.exceptions.CantAcquireLocationException;
+import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.exceptions.CantGetCurrentIPAddressException;
+import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.utils.IPAddressHelper;
+import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.utils.LocationProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.NetworkNodeManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.FermatEmbeddedNodeServer;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.agents.PropagateActorCatalogAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.agents.PropagateNodeCatalogAgent;
@@ -39,11 +45,16 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInitializeCommunicationsNetworkNodeP2PDatabaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import org.apache.commons.configuration.ConfigurationException;
 import org.jboss.logging.Logger;
+import org.w3c.dom.Node;
+
+import java.io.IOException;
 
 
 /**
@@ -61,6 +72,16 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      * Represent the LOG
      */
     private static final Logger LOG = Logger.getLogger(NetworkNodePluginRoot.class.getName());
+
+    /**
+     * Represent the IDENTITY_FILE_DIRECTORY
+     */
+    private static final String IDENTITY_FILE_DIRECTORY = "private";
+
+    /**
+     * Represent the IDENTITY_FILE_NAME
+     */
+    private static final String IDENTITY_FILE_NAME      = "nodeIdentity";
 
     /**
      * ErrorManager references definition.
@@ -122,6 +143,16 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     private FermatEmbeddedNodeServer fermatEmbeddedNodeServer;
 
     /**
+     * Represent the nodeProfile
+     */
+    private NodeProfile nodeProfile;
+
+    /**
+     * Represent the server ip
+     */
+    private String serverIp;
+
+    /**
      * Constructor
      */
     public NetworkNodePluginRoot() {
@@ -157,8 +188,23 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              * Initialize the Data Base of the node
              */
             initializeDb();
-
             CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp developerDatabaseFactory = new CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp(pluginDatabaseSystem, pluginId);
+
+            /*
+             * Get the server ip
+             */
+            serverIp = IPAddressHelper.getCurrentIPAddress();
+            LOG.info("Server ip "+serverIp);
+
+            /*
+             * Initialize the configuration file
+             */
+            initializeConfigurationFile();
+
+            /*
+             *  Generate the profile of the node
+             */
+            generateNodeProfile();
 
             /*
              * Create and start the internal server
@@ -186,6 +232,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              */
             propagateNodeCatalogAgent.start();
             propagateActorCatalogAgent.start();
+
 
         } catch (CantInitializeCommunicationsNetworkNodeP2PDatabaseException exception) {
 
@@ -224,6 +271,44 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     }
 
     /**
+     * Generate the node profile of this
+     * node
+     */
+    private void generateNodeProfile() throws CantGetCurrentIPAddressException, CantAcquireLocationException {
+
+        LOG.info("Generating Node Profile");
+
+        nodeProfile = new NodeProfile();
+        nodeProfile.setIp(serverIp);
+        nodeProfile.setDefaultPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
+        nodeProfile.setIdentityPublicKey(identity.getPublicKey());
+        nodeProfile.setLocation(LocationProvider.acquireLocationThroughIP());
+
+        LOG.info(nodeProfile);
+
+    }
+
+    /**
+     * Initialize the configuration file
+     */
+    private void initializeConfigurationFile() throws ConfigurationException, IOException {
+
+        LOG.info("Starting initializeConfigurationFile()");
+
+        if(ConfigurationManager.isExist()){
+
+            ConfigurationManager.load();
+
+        }else {
+
+            LOG.info("Configuration file don't exit");
+            ConfigurationManager.create(identity.getPublicKey());
+            ConfigurationManager.load();
+        }
+
+    }
+
+    /**
      * This method validate is all required resource are injected into
      * the plugin root by the platform
      *
@@ -234,9 +319,10 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
          /*
          * If all resources are inject
          */
-        if (pluginDatabaseSystem == null ||
-                errorManager == null ||
-                eventManager == null) {
+        if (pluginDatabaseSystem == null         ||
+                errorManager == null             ||
+                    eventManager == null         ||
+                        pluginFileSystem == null ) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -245,7 +331,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("errorManager: " + errorManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
+            contextBuffer.append("pluginFileSystem: " + pluginFileSystem);
 
             String context = contextBuffer.toString();
             String possibleCause = "No all required resource are injected";
@@ -257,9 +343,6 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
         }
 
     }
-
-    private static final String IDENTITY_FILE_DIRECTORY = "private";
-    private static final String IDENTITY_FILE_NAME      = "nodeIdentity";
 
     /**
      * Initialize the identity of this plugin
