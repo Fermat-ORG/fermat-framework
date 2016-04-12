@@ -144,7 +144,7 @@ public class ProvisoryData {
         item2.setPosition(5);
         lstIdentities.add(item2);
 
-        /*installedSubApp = new InstalledSubApp(
+        installedSubApp = new InstalledSubApp(
                 SubApps.TKY_FAN_IDENTITY_SUB_APP,
                 null,
                 null,
