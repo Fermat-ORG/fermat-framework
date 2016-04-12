@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -94,7 +96,6 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     private int offset = 0;
     private View rootView;
     private LinearLayout empty;
-    private LinearLayout chunck_header_container;
     private TextView chunk_balance_TextView;
     private  TextView exchange_rate;
 
@@ -197,13 +198,11 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
             container_header_balance.setVisibility(View.VISIBLE);
 
-            chunck_header_container = (LinearLayout) chunk_balance_header.findViewById(R.id.chunck_header_container);
-
             final String realBalance = WalletUtils.formatBalanceStringNotDecimal(cryptoWallet.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType), ShowMoneyType.BITCOIN.getCode());
 
             final double actualExchangeRate = lossProtectedWalletSession.getActualExchangeRate();
 
-            chunk_balance_TextView = (TextView) chunk_balance_header.findViewById(R.id.txt_amount);
+            chunk_balance_TextView = (TextView) chunk_balance_header.findViewById(R.id.txt_balance_amount);
             exchange_rate = (TextView) chunk_balance_header.findViewById(R.id.txt_exchange_rate);
 
             chunk_balance_TextView.setText(realBalance);

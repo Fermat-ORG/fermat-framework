@@ -99,6 +99,8 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
             holder.getTxt_amount().setTextColor(Color.parseColor("#7FBA00"));
         }
 
+        referenceWalletSession.setTransactionDetailId(data.getTransactionId());
+
         holder.getTxt_exchange_rate().setText("Exchange Rate: 1 BTC = "+ data.getExchangeRate());
 
      /*   if(data.getContact() != null)
