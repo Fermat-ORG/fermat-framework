@@ -29,6 +29,8 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveGroupMember
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSendChatMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
+import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
@@ -84,7 +86,9 @@ public interface ChatManager {
 
     String getNetworkServicePublicKey() throws CantGetNetworkServicePublicKeyException;
 
-    boolean isIdentityDevice() throws CantGetChatUserIdentityException;
+    boolean isIdentityDevice() throws  CantListChatIdentityException;
+
+    List<ChatIdentity> getIdentityChatUsersFromCurrentDeviceUser() throws CantListChatIdentityException;
 
 
     /**
@@ -94,14 +98,6 @@ public interface ChatManager {
      */
     void sendMessage(Message createdMessage) throws CantSendChatMessageException;
 
-    //TODO:Eliminar
-//    void saveGroup(Group group) throws CantSaveGroupException;
-//
-//    void deleteGroup(Group group) throws CantDeleteGroupException;
-//
-//    List<Group> getGroups() throws CantListGroupException;
-//    Group getGroup(UUID groupId) throws CantGetGroupException;
-//
     void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException;
 
     void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException;

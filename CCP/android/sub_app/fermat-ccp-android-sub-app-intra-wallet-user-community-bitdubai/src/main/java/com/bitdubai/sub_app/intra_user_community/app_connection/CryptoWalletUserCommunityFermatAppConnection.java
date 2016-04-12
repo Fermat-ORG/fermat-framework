@@ -70,7 +70,7 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
             this.intraUserSubAppSession = (IntraUserSubAppSession)this.getSession();
             if(intraUserSubAppSession!=  null)
                moduleManager = intraUserSubAppSession.getModuleManager();
-            return CryptoWalletUserCommunityBuildNotification.getNotification(moduleManager,code);
+            return CryptoWalletUserCommunityBuildNotification.getNotification(moduleManager,code,intraUserSubAppSession.getAppPublicKey());
         }
         catch(Exception e)
         {

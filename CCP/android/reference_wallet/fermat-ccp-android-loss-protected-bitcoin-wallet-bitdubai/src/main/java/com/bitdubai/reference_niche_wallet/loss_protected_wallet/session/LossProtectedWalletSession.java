@@ -74,7 +74,7 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
         super(publicKey, fermatApp, errorManager, moduleManager, resourceProviderManager);
     }
 
-    public double setActualExchangeRate(ExchangeRate rate){return actualExchangeRate;}
+    public void setActualExchangeRate(double rate){this.actualExchangeRate = rate; }
     public double getActualExchangeRate(){return actualExchangeRate;}
 
     public String getAccountName(){

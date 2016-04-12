@@ -76,23 +76,25 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
      try
         {
             SettingsManager<LossProtectedWalletSettings> settingsManager = null;
+            String walletPublicKey = referenceWalletSession.getAppPublicKey();
             boolean enabledNotification = true;
             this.referenceWalletSession = (LossProtectedWalletSession)this.getFullyLoadedSession();
             if(referenceWalletSession!=  null) {
+
                 if (referenceWalletSession.getModuleManager() != null) {
                     moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
 
                     //get enabled notification settings
 
                     settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
-                    enabledNotification = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getNotificationEnabled();
+                    enabledNotification = settingsManager.loadAndGetSettings(walletPublicKey).getNotificationEnabled();
                 }
 
 
                 if (enabledNotification)
                     return LossProtectedWalletBuildNotificationPainter.getNotification(moduleManager, code, referenceWalletSession.getAppPublicKey());
                 else
-                    return new LossProtectedWalletNotificationPainter("", "", "", "", false);
+                    return new LossProtectedWalletNotificationPainter("", "", "", "", false,walletPublicKey);
 
             }
             else

@@ -54,9 +54,11 @@ public class SideMenuBuilder {
         while(!flag &&  counter<lstItems.size()){
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem = lstItems.get(counter);
             Activities navActivity = menuItem.getLinkToActivity();
-            if(navActivity.getCode().equals(activityType)){
-                menuItem.setSelected(true);
-                flag=true;
+            if(navActivity!=null) {
+                if (navActivity.getCode().equals(activityType)) {
+                    menuItem.setSelected(true);
+                    flag = true;
+                }
             }
             counter++;
         }

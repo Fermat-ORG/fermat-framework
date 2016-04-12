@@ -6,7 +6,9 @@ import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEven
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventMonitor;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_pip_api.all_definition.event_manager.events.MaxTimeOutNotificationReachedEvent;
 import com.bitdubai.fermat_pip_api.all_definition.event_manager.events.TimeOutReachedEvent;
+import com.bitdubai.fermat_pip_api.all_definition.event_manager.listeners.MaxTimeOutNotificationReachedEventListener;
 import com.bitdubai.fermat_pip_api.all_definition.event_manager.listeners.TimeOutReachedEventListener;
 
 /**
@@ -23,7 +25,17 @@ public enum EventType implements FermatEventEnum {
         public FermatEvent getNewEvent() {
             return new TimeOutReachedEvent();
         }
-    };
+    },
+
+    MAX_TIMEOUT_NOTIFICATION_REACHED("MTNR") {
+        public FermatEventListener getNewListener(FermatEventMonitor fermatEventMonitor) {
+            return new MaxTimeOutNotificationReachedEventListener(fermatEventMonitor);
+        }
+
+    public FermatEvent getNewEvent() {
+        return new MaxTimeOutNotificationReachedEvent();
+    }
+};
 
 
     private final String code;

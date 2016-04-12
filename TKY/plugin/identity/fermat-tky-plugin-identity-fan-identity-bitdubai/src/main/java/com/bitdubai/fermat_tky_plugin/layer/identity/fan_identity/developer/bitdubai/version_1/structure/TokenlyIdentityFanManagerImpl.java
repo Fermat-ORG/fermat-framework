@@ -167,12 +167,43 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
 
     public void updateIdentityFan(User user,String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
         try {
-            getFantIdentityDao().updateIdentityFanUser(user,password,id, publicKey, profileImage,externalPlatform);
+            getFantIdentityDao().updateIdentityFanUser(user, password, id, publicKey, profileImage, externalPlatform);
 
         } catch (CantInitializeTokenlyFanIdentityDatabaseException e) {
-            e.printStackTrace();
+            throw new CantUpdateFanIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Can't update the fan identity",
+                    "Cannot initialize database");
         } catch (CantUpdateFanIdentityException e) {
-            e.printStackTrace();
+            throw new CantUpdateFanIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Can't update the fan identity",
+                    "Unexpected error in database");
+        }
+    }
+
+    /**
+     * This method updates a Fan Identity.
+     * @param fan
+     * @throws CantUpdateFanIdentityException
+     */
+    public void updateIdentityFan(Fan fan) throws CantUpdateFanIdentityException{
+        try{
+            getFantIdentityDao().updateIdentityFanUser(fan);
+        } catch (CantInitializeTokenlyFanIdentityDatabaseException e) {
+            throw new CantUpdateFanIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Can't update the fan identity",
+                    "Cannot initialize database");
+        } catch (CantUpdateFanIdentityException e) {
+            throw new CantUpdateFanIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Can't update the fan identity",
+                    "Unexpected error in database");
         }
     }
 
