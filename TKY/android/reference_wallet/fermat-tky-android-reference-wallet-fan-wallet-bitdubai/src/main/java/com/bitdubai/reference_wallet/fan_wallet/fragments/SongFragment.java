@@ -42,7 +42,6 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongSt
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.FanWalletPreferenceSettings;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModule;
-import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModuleManager;
 import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.common.adapters.SongAdapter;
 import com.bitdubai.reference_wallet.fan_wallet.common.models.SongItems;
@@ -59,7 +58,6 @@ import java.util.UUID;
 public class SongFragment extends AbstractFermatFragment {
     //FermatManager
     private FanWalletSession fanwalletSession;
-    private FanWalletModuleManager fanwalletmoduleManager;
     private FanWalletPreferenceSettings fanWalletSettings;
     private ErrorManager errorManager;
     private FanWalletModule fanWalletModule;
@@ -99,12 +97,11 @@ public class SongFragment extends AbstractFermatFragment {
         try {
 
             fanwalletSession = ((FanWalletSession) appSession);
-            fanwalletmoduleManager = fanwalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START SONG");
 
             try {
-                fanWalletSettings =  fanwalletmoduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                fanWalletSettings =  fanwalletSession.getModuleManager().getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 fanWalletSettings = null;
             }
@@ -113,7 +110,7 @@ public class SongFragment extends AbstractFermatFragment {
                 fanWalletSettings = new FanWalletPreferenceSettings();
                 fanWalletSettings.setIsPresentationHelpEnabled(true);
                 try {
-                    fanwalletmoduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
+                    fanwalletSession.getModuleManager().getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -128,7 +125,7 @@ public class SongFragment extends AbstractFermatFragment {
     }
 
     void initvalues(){
-        fanWalletModule=fanwalletmoduleManager.getFanWalletModule();
+        fanWalletModule=fanwalletSession.getModuleManager();
         compareViewAndDatabase();
         syncTokenlyAndUpdateThreads(true);
 
@@ -478,7 +475,7 @@ public class SongFragment extends AbstractFermatFragment {
     final Runnable myRunnablecancel = new Runnable() {
 
         public void run() {
-            fanwalletmoduleManager.getFanWalletModule().cancelDownload();
+            fanwalletSession.getModuleManager().cancelDownload();
         }
     };
 
@@ -595,7 +592,7 @@ public class SongFragment extends AbstractFermatFragment {
                        break;
                     }
                     try {
-                        fanwalletmoduleManager.getFanWalletModule().downloadSong(songId,testfan.getMusicUser());
+                        fanwalletSession.getModuleManager().downloadSong(songId,testfan.getMusicUser());
                     } catch (CantDownloadSongException e) {
                         e.printStackTrace();
                     } catch (CantUpdateSongStatusException e) {
@@ -632,7 +629,7 @@ public class SongFragment extends AbstractFermatFragment {
          */
         @Override
         protected void onCancelled() {
-            fanwalletmoduleManager.getFanWalletModule().cancelDownload();
+            fanwalletSession.getModuleManager().cancelDownload();
         }
 
     }
@@ -671,10 +668,10 @@ public class SongFragment extends AbstractFermatFragment {
                 Fan testfan=getTestFanIdentity();
                 if(autosync) {
                     System.out.println("TKY_AutoSync ok");
-                    fanwalletmoduleManager.getFanWalletModule().synchronizeSongs(testfan);
+                    fanwalletSession.getModuleManager().synchronizeSongs(testfan);
                 }else{
                     System.out.println("TKY_ManualSync ok");
-                    fanwalletmoduleManager.getFanWalletModule().synchronizeSongsByUser(testfan);
+                    fanwalletSession.getModuleManager().synchronizeSongsByUser(testfan);
                 }
             }catch (Exception e ){
                 System.out.println("TKY_Error manual sync:" + e);
