@@ -9,6 +9,7 @@ import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.mati.fermat_preference_settings.R;
 import com.mati.fermat_preference_settings.drawer.dialog.SettingsDialog;
 import com.mati.fermat_preference_settings.drawer.holders.SettingEditTextViewHolder;
+import com.mati.fermat_preference_settings.drawer.holders.SettingLinkTextViewHolder;
 import com.mati.fermat_preference_settings.drawer.holders.SettingSwitchViewHolder;
 import com.mati.fermat_preference_settings.drawer.holders.SettingTextOpenDialogViewHolder;
 import com.mati.fermat_preference_settings.drawer.holders.SettingsTextPlusRadioHolder;
@@ -16,6 +17,7 @@ import com.mati.fermat_preference_settings.drawer.interfaces.DialogCallback;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
 import com.mati.fermat_preference_settings.drawer.listeners.OnClickListenerSettings;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsEditText;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsLinkText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsOpenDialogText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwithItem;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
@@ -35,6 +37,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
     final int OPEN_DIALOG_TEXT_TYPE = 2;
     final int EDIT_TEXT_TYPE = 3;
     static final int TEXT_PLUS_RADIO_TYPE = 4;
+    static final int TEXT_PLUS_LINK_TYPE = 5;
 
     WeakReference<FermatPreferenceFragment> fragmentWeakReference;
 
@@ -64,6 +67,9 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
             case TEXT_PLUS_RADIO_TYPE:
                 fermatViewHolder = new SettingsTextPlusRadioHolder(itemView,type);
                 break;
+            case TEXT_PLUS_LINK_TYPE:
+                fermatViewHolder = new SettingLinkTextViewHolder(itemView,type);
+                break;
         }
         return fermatViewHolder;
     }
@@ -80,6 +86,9 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 break;
             case EDIT_TEXT_TYPE:
                 ret = R.layout.preference_settings_edit_text_row;
+                break;
+            case TEXT_PLUS_LINK_TYPE:
+                ret = R.layout.preference_settings_link_text_row;
                 break;
         }
         return ret;
@@ -150,6 +159,22 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 settingsTextPlusRadioHolder.getRadio().setChecked(preferenceSettingsTextPlusRadioItem.isRadioTouched());
                 settingsTextPlusRadioHolder.getRadio().setText(preferenceSettingsTextPlusRadioItem.getText());
                 break;
+
+            case TEXT_PLUS_LINK_TYPE:
+                SettingLinkTextViewHolder settingLinkTextViewHolder = (SettingLinkTextViewHolder) holder;
+                final PreferenceSettingsLinkText preferenceSettingsLinkText = (PreferenceSettingsLinkText) data;
+                settingLinkTextViewHolder.getTextView().setText(preferenceSettingsLinkText.getTitleText());
+               //settingLinkTextViewHolder.getSettingsEditText().setText(preferenceSettingsLinkText.getTitleText());
+
+                settingLinkTextViewHolder.getTextView().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getCallback().optionSelected(preferenceSettingsLinkText, position);
+                    }
+                });
+
+
+                break;
         }
 
     }
@@ -166,6 +191,8 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
             return EDIT_TEXT_TYPE;
         } else if (item instanceof PreferenceSettingsTextPlusRadioItem){
             return TEXT_PLUS_RADIO_TYPE;
+        } else if (item instanceof PreferenceSettingsLinkText){
+            return TEXT_PLUS_LINK_TYPE;
         }
         return -1;
     }
