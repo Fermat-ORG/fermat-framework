@@ -30,6 +30,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetActiveBlockchainNetworkTypeException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
@@ -158,6 +159,32 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     }
 
     /**
+     * test method
+     */
+    private void testBlockChainConnectionStatus() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000 * 10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    for (BlockchainNetworkType networkType : getActivesBlockchainNetworkTypes()){
+                        System.out.println("***CryptoNetwork***Test " + getBlockchainConnectionStatus(networkType).toString());
+                    }
+                } catch (CantGetActiveBlockchainNetworkTypeException e) {
+                    e.printStackTrace();
+                } catch (CantGetBlockchainConnectionStatusException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+    }
+
+    /**
      * Pass the Keys to the bitcoin network to monitor the network
      * @param cryptoVault
      * @param blockchainNetworkTypes
@@ -274,6 +301,16 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
     }
 
     /**
+     * Gets the active networks running on the Crypto Network
+     * @return the list of active networks {MainNet, TestNet and RegTest}
+     * @throws CantGetActiveBlockchainNetworkTypeException
+     */
+    @Override
+    public List<BlockchainNetworkType> getActivesBlockchainNetworkTypes() throws CantGetActiveBlockchainNetworkTypeException {
+       return  bitcoinCryptoNetworkManager.getActivesBlockchainNetworkTypes();
+    }
+
+    /**
      * Get the bitcoin transactions stored by the CryptoNetwork
      * @param blockchainNetworkType the network type
      * @return the bitcoin transaction
@@ -329,7 +366,7 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
      */
     @Override
     public BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress {
-        return new BlockchainDownloadProgress(blockchainNetworkType, 0,0,0,0);
+        return bitcoinCryptoNetworkManager.getBlockchainDownloadProgress(blockchainNetworkType);
     }
 
     /**

@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">Artist Identity</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_settings">Settings</string>
+    <string name="create">CREATE</string>
+    <string name="broker_name">Broker name</string>
+    <string name="identity_img">identity_image</string>
+
+    <string name="help">Help</string>
+
+    <!--Dialog Help - Init-->
+    <string name="dap_redeem_identity_welcome_subTitle">Welcome to the Redeem Point Identity.</string>
+    <string name="dap_redeem_identity_welcome_body">From here you will be able to create a Redeem Point type identity.\n\nThis Identity will identify you in the system as a redeem point, and give you access to all tasks and applications you need.\n\nOther Asset Users will be able to request connection to you by finding you with the information you provide here.</string>
+    <!--Dialog Help - End-->
+</resources>
