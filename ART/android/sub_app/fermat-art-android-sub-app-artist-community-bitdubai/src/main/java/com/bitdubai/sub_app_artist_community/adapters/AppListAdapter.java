@@ -8,7 +8,7 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
-import com.bitdubai.reference_wallet.artist_community.R;
+import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.holders.AppWorldHolder;
 import com.squareup.picasso.Picasso;
 
@@ -35,7 +35,7 @@ public class AppListAdapter extends FermatAdapter<ArtistCommunityInformation, Ap
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.afc_row_connections_world;
+        return R.layout.aac_row_connections_world;
     }
 
     @Override

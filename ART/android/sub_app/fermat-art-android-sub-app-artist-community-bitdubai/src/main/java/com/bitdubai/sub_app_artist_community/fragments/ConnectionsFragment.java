@@ -35,7 +35,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.reference_wallet.artist_community.R;
+import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app_artist_community.commons.popups.ConnectDialog;
 import com.bitdubai.sub_app_artist_community.commons.utils.FermatAnimationUtils;
@@ -133,8 +133,8 @@ public class ConnectionsFragment extends AbstractFermatFragment<ArtistSubAppSess
 
         try {
 
-            rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.afc_gridView);
+            rootView = inflater.inflate(R.layout.aac_fragment_connections_world, container, false);
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.aac_gridView);
             recyclerView.setHasFixedSize(true);
             layoutManager = new GridLayoutManager(getActivity(),3,GridLayoutManager.VERTICAL,false);
             recyclerView.setLayoutManager(layoutManager);
@@ -142,13 +142,13 @@ public class ConnectionsFragment extends AbstractFermatFragment<ArtistSubAppSess
             recyclerView.setAdapter(adapter);
             adapter.setFermatListEventListener(this);
 
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.afc_swipe);
+            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.aac_swipe);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
 
-            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
+            emptyView = (LinearLayout) rootView.findViewById(R.id.aac_empty_view);
             showEmpty(true, rootView);
             //onRefresh();
 

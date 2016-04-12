@@ -18,7 +18,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfa
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.reference_wallet.artist_community.R;
+import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
 
 /**
@@ -63,9 +63,9 @@ public class ConnectDialog extends FermatDialog<ArtistSubAppSession, SubAppResou
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mDescription = (FermatTextView) findViewById(R.id.afc_description);
-        mUsername = (FermatTextView) findViewById(R.id.afc_user_name);
-        mSecondDescription = (FermatTextView) findViewById(R.id.afc_second_description);
+        mDescription = (FermatTextView) findViewById(R.id.aac_description);
+        mUsername = (FermatTextView) findViewById(R.id.aac_user_name);
+        mSecondDescription = (FermatTextView) findViewById(R.id.aac_second_description);
         mTitle = (FermatTextView) findViewById(R.id.title);
         positiveBtn = (FermatButton) findViewById(R.id.afc_positive_button);
         negativeBtn = (FermatButton) findViewById(R.id.afc_negative_button);
@@ -98,7 +98,7 @@ public class ConnectDialog extends FermatDialog<ArtistSubAppSession, SubAppResou
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_builder;
+        return R.layout.aac_dialog_builder;
     }
 
     @Override
