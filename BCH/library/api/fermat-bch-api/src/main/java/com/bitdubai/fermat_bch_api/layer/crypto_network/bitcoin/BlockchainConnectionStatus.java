@@ -2,40 +2,56 @@ package com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by rodrigo on 1/10/16.
  */
 public class BlockchainConnectionStatus {
-    int connectedNodesCount;
-    String downloadNodeIp;
-    long  downloadNodePing;
-    BlockchainNetworkType blockchainNetworkType;
+    private List<ConnectedBitcoinNode> connectedNodes;
+    private BlockchainNetworkType blockchainNetworkType;
 
-
-    public BlockchainConnectionStatus(int connectedNodesCount, String downloadNodeIp, Long downloadNodePing, BlockchainNetworkType blockchainNetworkType) {
-        this.connectedNodesCount = connectedNodesCount;
-        this.downloadNodeIp = downloadNodeIp;
-        this.downloadNodePing = downloadNodePing;
+    /**
+     * constructor
+     * @param connectedNodes
+     * @param blockchainNetworkType
+     */
+    public BlockchainConnectionStatus(List<ConnectedBitcoinNode> connectedNodes, BlockchainNetworkType blockchainNetworkType) {
+        this.connectedNodes = connectedNodes;
         this.blockchainNetworkType = blockchainNetworkType;
     }
 
-    public int getConnectedNodesCount() {
-        return connectedNodesCount;
-    }
-
-    public String getDownloadNodeIp() {
-        return downloadNodeIp;
-    }
-
-    public long getDownloadNodePing() {
-        return downloadNodePing;
-    }
-
+    /**
+     * the network type of this status.
+     * @return
+     */
     public BlockchainNetworkType getBlockchainNetworkType() {
         return blockchainNetworkType;
     }
 
-    public Boolean IsConnected() {
-        return connectedNodesCount != 0;
+    /**
+     * the amount of nodes we are connected to.
+     * @return
+     */
+    public int getNumConnectedNodes() {
+        return connectedNodes.size();
+    }
+
+    /**
+     * gets the connection status for the network.
+     * @return
+     */
+    public boolean isConnected(){
+        return connectedNodes.size() > 0;
+    }
+
+    @Override
+    public String toString() {
+        return "BlockchainConnectionStatus{" +
+                "connectedNodes=" + connectedNodes +
+                ", blockchainNetworkType=" + blockchainNetworkType +
+                '}';
     }
 }
+
