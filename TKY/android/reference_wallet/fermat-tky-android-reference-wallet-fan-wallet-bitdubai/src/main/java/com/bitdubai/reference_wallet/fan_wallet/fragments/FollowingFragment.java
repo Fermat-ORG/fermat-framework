@@ -41,7 +41,7 @@ import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.FanWalletPreferenceSettings;
-import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModuleManager;
+import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModule;
 import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.common.adapters.FollowingAdapter;
 import com.bitdubai.reference_wallet.fan_wallet.common.models.FollowingItems;
@@ -62,7 +62,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
     //FermatManager
     private FanWalletSession fanwalletSession;
-    private FanWalletModuleManager fanwalletmoduleManager;
+    private FanWalletModule fanwalletmoduleManager;
     private FanWalletPreferenceSettings fanWalletSettings;
     private ErrorManager errorManager;
 
@@ -89,7 +89,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         super.onCreate(savedInstanceState);
         try {
             fanwalletSession = ((FanWalletSession) appSession);
-            fanwalletmoduleManager = fanwalletSession.getModuleManager();
+            fanwalletmoduleManager =  fanwalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START FOLLOWING");
 
@@ -362,15 +362,14 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         protected Boolean doInBackground(Void... variableNoUsada) {
             try {
                 try {
-                    fanList=fanwalletmoduleManager.getFanWalletModule().listIdentitiesFromCurrentDeviceUser();
+                    fanList=fanwalletmoduleManager.listIdentitiesFromCurrentDeviceUser();
                     if(fanList.size()==0){
                         nofollowing=true;
                     }
                     for(Fan artistUsername:fanList){
                         List<String> connectedArtistTKYUsername = artistUsername.getConnectedArtists();
                         for(String botUsername : connectedArtistTKYUsername){
-                            artistBot=fanwalletmoduleManager.getFanWalletModule().
-                                    getBotBySwapbotUsername(botUsername);
+                            artistBot=fanwalletmoduleManager.getBotBySwapbotUsername(botUsername);
                             System.out.println(
                                     "tky_artistBot:" + artistBot);
                             items.add(new FollowingItems(convertUrlTobmp(artistBot.getLogoImageDetails().originalUrl()),
