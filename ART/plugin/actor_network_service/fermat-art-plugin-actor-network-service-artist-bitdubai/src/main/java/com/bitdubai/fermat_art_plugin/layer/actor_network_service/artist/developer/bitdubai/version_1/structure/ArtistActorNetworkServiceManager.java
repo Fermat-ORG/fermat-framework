@@ -492,7 +492,6 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
                             state,
                             type
                     );
-
             sendMessage(
                     informationRequest.toJson(),
                     informationRequest.getRequesterPublicKey(),
@@ -500,9 +499,7 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
                     informationRequest.getArtistPublicKey(),
                     PlatformComponentType.ART_ARTIST
             );
-
             return informationRequest;
-
         } catch (final CantRequestExternalPlatformInformationException e){
             errorManager.reportUnexpectedPluginException(
                     this.pluginVersionReference,
@@ -530,7 +527,27 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
     @Override
     public List<ArtArtistExtraData<ArtistExternalPlatformInformation>> listPendingInformationRequests(
             RequestType requestType) throws CantListPendingInformationRequestsException {
-        return null;
+        try {
+
+            return artistActorNetworkServiceDao.listPendingInformationRequests(
+                    ProtocolState.PENDING_LOCAL_ACTION,
+                    requestType);
+        } catch (final CantListPendingInformationRequestsException e){
+            errorManager.reportUnexpectedPluginException(
+                    this.pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw e;
+        } catch (final Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    this.pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantListPendingInformationRequestsException(
+                    e,
+                    null,
+                    "Unhandled Exception.");
+        }
     }
 
     private void sendMessage(final String jsonMessage      ,
