@@ -126,6 +126,8 @@ public abstract class FermatPreferenceFragment<S extends FermatSession,RE extend
 
     public abstract void onSettingsTouched(PreferenceSettingsItem preferenceSettingsItem, int position);
 
+    public abstract void onSettingsTouched(String item, int position);
+
     public abstract void onSettingsChanged(PreferenceSettingsItem preferenceSettingsItem, int position,boolean isChecked);
 
     public abstract int getBackgroundColor();
