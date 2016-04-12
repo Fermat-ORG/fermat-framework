@@ -30,7 +30,7 @@ public enum Platforms implements FermatEnum {
     PLUG_INS_PLATFORM                   ("PIP","Tools"),
     WALLET_PRODUCTION_AND_DISTRIBUTION  ("WPD","Wallets"),
     TOKENLY                             ("TKY","Tokenly"),
-    ;
+    CHAT_ACTOR_PLATFORM("CHT","ACTOR");
 
     private final String code;
     private final String textForm;

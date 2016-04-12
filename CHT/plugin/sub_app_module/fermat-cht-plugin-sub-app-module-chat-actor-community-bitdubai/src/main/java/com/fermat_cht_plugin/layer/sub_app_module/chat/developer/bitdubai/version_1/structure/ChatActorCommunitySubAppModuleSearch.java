@@ -39,8 +39,8 @@ public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunityS
 
             final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
 
-            for(ChatExposingData cced : chatExposingDataList)
-                chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cced));
+            for(ChatExposingData ced : chatExposingDataList)
+                chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(ced));
 
             return chatActorLocalCommunityInformationList;
 
@@ -48,5 +48,15 @@ public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunityS
 
             throw new CantGetChtActorSearchResult("", exception, "", "Unhandled Error.");
         }
+    }
+
+    @Override
+    public String getAlias() {
+        return null;
+    }
+
+    @Override
+    public String getPublicKey() {
+        return null;
     }
 }

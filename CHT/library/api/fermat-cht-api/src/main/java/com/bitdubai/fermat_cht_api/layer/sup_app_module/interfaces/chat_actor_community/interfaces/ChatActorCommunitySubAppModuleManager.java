@@ -1,16 +1,21 @@
 package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorChatConnectionAlreadyRequestesException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorChatTypeNotSupportedException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantAcceptChatRequestException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantGetSelectedActorException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatIdentitiesToSelectException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantRequestActorConnectionException;
@@ -30,13 +35,17 @@ import java.util.UUID;
 public interface ChatActorCommunitySubAppModuleManager extends ModuleManager <ChatActorCommunitySettings, ChatActorCommunitySelectableIdentity> {
 
 
-    List<ChatActorCommunityInformation> listWorldChatActor(ChatActorCommunitySelectableIdentity selectedIdentity, final int max, final int offset) throws CantListChatActorException;
+
+
+    List<ChatActorCommunityInformation> listWorldChatActor(ChatActorCommunitySelectableIdentity selectableIdentity, int max, int offset) throws CantListChatActorException;
 
     List<ChatActorCommunitySelectableIdentity> listSelectableIdentities() throws CantListChatIdentitiesToSelectException;
 
     void setSelectedActorIdentity(ChatActorCommunitySelectableIdentity identity);
 
     ChatActorCommunitySearch getChatActorSearch();
+
+    ChatActorCommunitySearch searchConnectedChatActor(ChatActorCommunitySelectableIdentity selectedIdentity);
 
     void requestConnectionToChatActor(ChatActorCommunitySelectableIdentity selectedIdentity     ,
                                          ChatActorCommunityInformation chatActorLocalToContact) throws CantRequestActorConnectionException,
@@ -47,11 +56,11 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager <Ch
 
     void denyChatConnection(UUID requestId) throws ChatActorConnectionDenialFailedException, ActorConnectionRequestNotFoundException;
 
-    void disconnectChatActor(UUID requestId) throws ChatActorDisconnectingFailedException, ActorConnectionRequestNotFoundException;
+    void disconnectChatActor(UUID requestId) throws ChatActorDisconnectingFailedException, ActorConnectionRequestNotFoundException, ConnectionRequestNotFoundException, CantDisconnectFromActorException, UnexpectedConnectionStateException, ActorConnectionNotFoundException;
 
-    void cancelChatActor(UUID requestId) throws ChatActorCancellingFailedException, ActorConnectionRequestNotFoundException;
+    void cancelChatActor(UUID requestId) throws ChatActorCancellingFailedException, ActorConnectionRequestNotFoundException, ConnectionRequestNotFoundException;
 
-    List<ChatActorCommunityInformation> listAllConnectedCryptoBrokers(final ChatActorCommunitySelectableIdentity selectedIdentity,
+    List<ChatActorCommunityInformation> listAllConnectedChatActor(final ChatActorCommunitySelectableIdentity selectedIdentity,
                                                                          final int                                     max             ,
                                                                          final int                                     offset          ) throws CantListChatActorException;
 
@@ -59,7 +68,7 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager <Ch
                                                                                final int max,
                                                                                final int offset) throws CantListChatActorException;
 
-    List<ChatActorCommunityInformation> listCryptoBrokersPendingRemoteAction(final ChatActorCommunitySelectableIdentity selectedIdentity,
+    List<ChatActorCommunityInformation> listChatActorPendingRemoteAction(final ChatActorCommunitySelectableIdentity selectedIdentity,
                                                                                 final int max,
                                                                                 final int offset) throws CantListChatActorException;
 

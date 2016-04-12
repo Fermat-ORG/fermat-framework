@@ -13,4 +13,7 @@ public interface ChatActorCommunitySearch {
 
     List<ChatActorCommunityInformation> getResult() throws CantGetChtActorSearchResult;
 
+    String getAlias();
+
+    String getPublicKey();
 }
