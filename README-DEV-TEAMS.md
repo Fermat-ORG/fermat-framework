@@ -204,7 +204,7 @@ We are in charge of Android-core, Fermat-Core, Android framework development and
 
 <br>
 
-### Disruptor Team:
+### Disruptors Team:
 -----------------------------------
 <br>
 ### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/2b7f511ca8ba2f796df1178ecc065e884fc7ca69/Logotype/FermatTeams/Logo_disruptors_team.jpg "Logo Disruptors Team")
