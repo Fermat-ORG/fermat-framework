@@ -145,12 +145,12 @@ public interface ArtistManager extends FermatManager{
      * This method request the ArtArtistExtraData managed by the Artist.
      * @param requesterPublicKey
      * @param requesterActorType
-     * @param cryptoBrokerPublicKey
+     * @param artistPublicKey
      * @return
      * @throws CantRequestExternalPlatformInformationException
      */
     ArtArtistExtraData<ArtistExternalPlatformInformation> requestExternalPlatformInformation(
             String requesterPublicKey,
             PlatformComponentType requesterActorType,
-            String cryptoBrokerPublicKey) throws CantRequestExternalPlatformInformationException;
+            String artistPublicKey) throws CantRequestExternalPlatformInformationException;
 }

@@ -466,7 +466,7 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
      * This method request the ArtArtistExtraData managed by the Artist.
      * @param requesterPublicKey
      * @param requesterActorType
-     * @param cryptoBrokerPublicKey
+     * @param artistPublicKey
      * @return
      * @throws CantRequestExternalPlatformInformationException
      */
@@ -474,7 +474,7 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
     public ArtArtistExtraData<ArtistExternalPlatformInformation> requestExternalPlatformInformation(
             String requesterPublicKey,
             PlatformComponentType requesterActorType,
-            String cryptoBrokerPublicKey) throws CantRequestExternalPlatformInformationException {
+            String artistPublicKey) throws CantRequestExternalPlatformInformationException {
         try {
 
             final UUID newId = UUID.randomUUID();
@@ -487,7 +487,7 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
                             newId,
                             requesterPublicKey,
                             requesterActorType,
-                            cryptoBrokerPublicKey,
+                            artistPublicKey,
                             state,
                             type
                     );
