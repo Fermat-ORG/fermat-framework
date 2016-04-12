@@ -58,16 +58,4 @@ public interface ChatIdentityModuleManager extends ModuleManager<ChatIdentityPre
      * @throws CantUpdateChatIdentityException
      */
     void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateChatIdentityException;
-
-    /**
-     * The method <code>publishIdentity</code> is used to publish a Chat identity.
-     * @param publicKey
-     *
-     * @throws CantPublishIdentityException
-     * @throws IdentityNotFoundException
-     */
-    void publishIdentity(String publicKey) throws
-            CantPublishIdentityException,
-            IdentityNotFoundException;
-
 }

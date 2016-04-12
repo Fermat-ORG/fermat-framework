@@ -62,18 +62,6 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
     }
 
     /**
-     * The method <code>publishIdentity</code> is used to publish a Chat identity.
-     *
-     * @param publicKey
-     * @throws CantPublishIdentityException
-     * @throws IdentityNotFoundException
-     */
-    @Override
-    public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
-        chatIdentityManager.registerIdentitiesANS(publicKey);
-    }
-
-    /**
      * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified
      * settings class parametrized.
      *

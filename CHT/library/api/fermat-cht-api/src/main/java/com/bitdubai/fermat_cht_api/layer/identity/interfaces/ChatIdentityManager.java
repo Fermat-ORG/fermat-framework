@@ -54,12 +54,12 @@ public interface ChatIdentityManager extends FermatManager {
 
 
     /**
-     * The method <code>registerIdentitiesANS</code> is used to publish a Chat identity.
+     * The method <code>publishIdentity</code> is used to publish a Chat identity.
      *
      * @param publicKey
      * @throws CantPublishIdentityException
      * @throws IdentityNotFoundException
      */
-    public void registerIdentitiesANS(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException;
+    public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException;
 
 }

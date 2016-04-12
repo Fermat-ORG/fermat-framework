@@ -161,22 +161,34 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
     }
 
     /**
-     * The method <code>registerIdentitiesANS</code> is used to publish a Chat identity.
+     * The method <code>publishIdentity</code> is used to publish a Chat identity.
      *
      * @param publicKey
      * @throws CantPublishIdentityException
      * @throws IdentityNotFoundException
      */
     @Override
-    public void registerIdentitiesANS(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
+    public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
+        registerIdentitiesANS(publicKey);
+    }
+
+    private void registerIdentitiesANS(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
         try {
             ChatIdentity chatIdentity = chatIdentityDao().getChatIdentity();
-            ChatExposingData chatExposingData = new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage());
-            chatManager.exposeIdentity(chatExposingData);
+            final ChatExposingData chatExposingData = new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage());
             chatIdentityDao().changeExposureLevel(chatIdentity.getPublicKey(), ExposureLevel.PUBLISH);
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        chatManager.exposeIdentity(chatExposingData);
+                    } catch (CantExposeIdentityException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+
         } catch (CantGetChatUserIdentityException e) {
-            e.printStackTrace();
-        } catch (CantExposeIdentityException e) {
             e.printStackTrace();
         } catch (com.bitdubai.fermat_cht_api.all_definition.exceptions.CantUpdateChatIdentityException e) {
             e.printStackTrace();
