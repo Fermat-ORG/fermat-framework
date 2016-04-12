@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -59,6 +61,17 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
         chatIdentityManager.updateIdentityChat(identityPublicKey, identityAlias, profileImage);
     }
 
+    /**
+     * The method <code>publishIdentity</code> is used to publish a Chat identity.
+     *
+     * @param publicKey
+     * @throws CantPublishIdentityException
+     * @throws IdentityNotFoundException
+     */
+    @Override
+    public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
+        chatIdentityManager.registerIdentitiesANS(publicKey);
+    }
 
     /**
      * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified
