@@ -656,7 +656,28 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                                 blockchainNetworkType);
                                         confirm_dialog.show();
                                     }else{
-                                        Toast.makeText(getActivity(), "Action not allowed,You will lose money,Restricted by LossProtectedWallet " + msg, Toast.LENGTH_LONG).show();
+                                        try {
+                                            cryptoWallet.send(
+                                                    operator.longValueExact(),
+                                                    validAddress,
+                                                    notes,
+                                                    appSession.getAppPublicKey(),
+                                                    cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
+                                                    Actors.INTRA_USER,
+                                                    cryptoWalletWalletContact.getActorPublicKey(),
+                                                    cryptoWalletWalletContact.getActorType(),
+                                                    ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                                    blockchainNetworkType
+
+                                                    // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
+                                            );
+                                            Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
+                                            onBack(null);
+
+                                        } catch (LossProtectedInsufficientFundsException e) {
+                                        e.printStackTrace();
+                                            Toast.makeText(getActivity(), "Action not allowed,You will lose money,Restricted by LossProtectedWallet " + msg, Toast.LENGTH_LONG).show();
+                                        }
                                     }
                                 } else {
                                     Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + msg, Toast.LENGTH_LONG).show();
