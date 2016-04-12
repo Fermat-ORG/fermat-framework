@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.factory.fragments;
+package com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.fragments;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 
