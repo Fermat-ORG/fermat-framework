@@ -3,33 +3,26 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.WindowManager;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.mnemonic.MnemonicFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.mnemonic.MnemonicSendDialog;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceFragmentsEnumType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
-import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsEditText;
-import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsLinkText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsOpenDialogText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwithItem;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,10 +50,10 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
         super.onCreate(savedInstanceState);
         referenceWalletSession = appSession;
         try {
-            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
+            cryptoWallet = referenceWalletSession.getModuleManager();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
-        } catch (CantGetCryptoWalletException e) {
+        } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
         }
@@ -92,9 +85,9 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
 
         list.add(new PreferenceSettingsOpenDialogText(5,"Select Network",strings));
 
+        list.add(new PreferenceSettingsLinkText(9,"Send Error Report",""));
 
-
-       // list.add(new PreferenceSettingsEditText(9,"Export Private key","Click Here"));
+        list.add(new PreferenceSettingsLinkText(10,"Export Private key ",""));
 
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
@@ -127,58 +120,62 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
             }
             bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
 
-
-
             if (preferenceSettingsItem.getId() == 9) {
-                //export key show fragment
 
-                changeActivity(Activities.CCP_BITCOIN_WALLET_MNEMONIC_ACTIVITY,referenceWalletSession.getAppPublicKey());
-
-               // MnemonicSendDialog MnemonicDialog = new MnemonicSendDialog(getActivity());
-               // MnemonicDialog.show();
-
+                changeActivity(Activities.CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());
             }
             else {
-                PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
-                BlockchainNetworkType blockchainNetworkType = null;
 
-                switch (preferenceSettingsTextPlusRadioItem.getText()) {
+                if (preferenceSettingsItem.getId() == 10) {
 
-                    case "MainNet":
-                        blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
-
-                        break;
-
-                    case "TestNet":
-                        blockchainNetworkType = BlockchainNetworkType.TEST_NET;
-                        break;
-
-                    case "RegTest":
-                        blockchainNetworkType = BlockchainNetworkType.REG_TEST;
-                        break;
-
-                    default:
-                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-                        break;
+                    changeActivity(Activities.CCP_BITCOIN_WALLET_MNEMONIC_ACTIVITY,referenceWalletSession.getAppPublicKey());
 
                 }
+                else {
+                    PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
+                    BlockchainNetworkType blockchainNetworkType = null;
 
-                preferenceSettingsTextPlusRadioItem.setIsRadioTouched(true);
+                    switch (preferenceSettingsTextPlusRadioItem.getText()) {
 
-                System.out.println("SETTING SELECTED IS " + preferenceSettingsTextPlusRadioItem.getText());
-                System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
+                        case "MainNet":
+                            blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
 
-                if (blockchainNetworkType == null) {
-                    if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
-                        blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-                    } else {
-                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                            break;
+
+                        case "TestNet":
+                            blockchainNetworkType = BlockchainNetworkType.TEST_NET;
+                            break;
+
+                        case "RegTest":
+                            blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+                            break;
+
+                        default:
+                            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                            break;
+
                     }
-                }
 
-                bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+                    preferenceSettingsTextPlusRadioItem.setIsRadioTouched(true);
+
+                    System.out.println("SETTING SELECTED IS " + preferenceSettingsTextPlusRadioItem.getText());
+                    System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
+
+                    if (blockchainNetworkType == null) {
+                        if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
+                            blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                        } else {
+                            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                        }
+                    }
+
+                    bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+
+                }
 
             }
+
+
 
             try {
                 settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);

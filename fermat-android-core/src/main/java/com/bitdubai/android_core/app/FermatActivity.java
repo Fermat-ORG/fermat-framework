@@ -51,6 +51,7 @@ import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNa
 import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
 import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
 import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
+import com.bitdubai.android_core.app.common.version_1.base_structure.config.FermatActivityConfiguration;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.navigation_view.FermatActionBarDrawerEventListener;
 import com.bitdubai.android_core.app.common.version_1.provisory.FermatInstalledDesktop;
@@ -117,6 +118,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.LENGTH_SHORT;
@@ -204,9 +207,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
     private RuntimeStructureManager runtimeStructureManager;
 
     /**
-     * Service
+     * Executor
      */
-//    boolean mNotificationServiceConnected = false;
+    protected ExecutorService executor;
 
 
     /**
@@ -230,7 +233,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             // need to create any new ones here.
         }
 
-        bindServices();
+        executor = Executors.newFixedThreadPool(FermatActivityConfiguration.POOL_THREADS);
 
         broadcastManager = new BroadcastManager(this);
         AndroidCoreUtils.getInstance().setContextAndResume(broadcastManager);
@@ -293,15 +296,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
 //                e.printStackTrace();
 //            }
 //
-//            /**
-//             * Service
-//             */
-//            if (mNotificationServiceConnected) {
-//                unbindService(mServiceConnection);
-//                mNotificationServiceConnected = false;
-//            }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -313,7 +307,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void loadBasicUI(Activity activity,AppConnections appConnections) {
         // rendering UI components
         try {
-            Log.i("FERMAT ACTIVITY loadUI", "INICIA " + System.currentTimeMillis());
+           // Log.i("FERMAT ACTIVITY loadUI", "INICIA " + System.currentTimeMillis());
             TabStrip tabs = activity.getTabStrip();
             TitleBar titleBar = activity.getTitleBar();
             MainMenu mainMenu = activity.getMainMenu();
@@ -321,42 +315,42 @@ public abstract class FermatActivity extends AppCompatActivity implements
             SideMenu sideMenu = activity.getSideMenu();
 
             setMainLayout(sideMenu, activity.getHeader());
-            Log.i("FERMAT ACTIVITY loadUI", "setMainLayout " + System.currentTimeMillis());
+           // Log.i("FERMAT ACTIVITY loadUI", "setMainLayout " + System.currentTimeMillis());
 
             setMainMenu(mainMenu);
-            Log.i("FERMAT ACTIVITY loadUI", "setMainMenu " + System.currentTimeMillis());
+           // Log.i("FERMAT ACTIVITY loadUI", "setMainMenu " + System.currentTimeMillis());
 
             paintTabs(tabs, activity);
-            Log.i("FERMAT ACTIVITY loadUI", " paintTabs " + System.currentTimeMillis());
+            //Log.i("FERMAT ACTIVITY loadUI", " paintTabs " + System.currentTimeMillis());
 
             paintStatusBar(activity.getStatusBar());
-            Log.i("FERMAT ACTIVITY loadUI", " paintStatusBar " + System.currentTimeMillis());
+           // Log.i("FERMAT ACTIVITY loadUI", " paintStatusBar " + System.currentTimeMillis());
 
             paintTitleBar(titleBar, activity);
-            Log.i("FERMAT ACTIVITY loadUI", " paintTitleBar " + System.currentTimeMillis());
+            //Log.i("FERMAT ACTIVITY loadUI", " paintTitleBar " + System.currentTimeMillis());
 
             if(appConnections.getFullyLoadedSession().getModuleManager()!=null && sideMenu!=null) sideMenu.setNotifications(appConnections.getFullyLoadedSession().getModuleManager().getMenuNotifications());
             paintSideMenu(activity, sideMenu, appConnections);
-            Log.i("FERMAT ACTIVITY loadUI", " paintSideMenu " + System.currentTimeMillis());
+            //Log.i("FERMAT ACTIVITY loadUI", " paintSideMenu " + System.currentTimeMillis());
             paintFooter(activity.getFooter(), appConnections.getFooterViewPainter());
 
-            Log.i("FERMAT ACTIVITY loadUI", " paintFooter " + System.currentTimeMillis());
+           // Log.i("FERMAT ACTIVITY loadUI", " paintFooter " + System.currentTimeMillis());
 
             pantHeader(activity.getHeader(), appConnections.getHeaderViewPainter());
 
-            Log.i("FERMAT ACTIVITY loadUI", " pantHeader " + System.currentTimeMillis());
+            //Log.i("FERMAT ACTIVITY loadUI", " pantHeader " + System.currentTimeMillis());
             setScreen(activity);
 
-            Log.i("FERMAT ACTIVITY loadUI", " setScreen " + System.currentTimeMillis());
+           // Log.i("FERMAT ACTIVITY loadUI", " setScreen " + System.currentTimeMillis());
             // rendering wizards components
             if (tabs != null && tabs.getWizards() != null)
                 setWizards(tabs.getWizards());
             if (activity.getWizards() != null)
                 setWizards(activity.getWizards());
 
-            Log.i("FERMAT ACTIVITY loadUI", " setWizards " + System.currentTimeMillis());
+           // Log.i("FERMAT ACTIVITY loadUI", " setWizards " + System.currentTimeMillis());
 
-            Log.i("FERMAT ACTIVITY loadUI", "FIN " + System.currentTimeMillis());
+           // Log.i("FERMAT ACTIVITY loadUI", "FIN " + System.currentTimeMillis());
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getApplicationContext(), "Oooops! recovering from system error",
@@ -456,6 +450,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             }
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+            e.printStackTrace();
         }
     }
 
@@ -1378,14 +1373,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
         }
 
         /**
-         * Service
-         */
-//        if (mNotificationServiceConnected) {
-//            unbindService(mServiceConnection);
-//            mNotificationServiceConnected = false;
-//        }
-
-        /**
          * stop every service
          */
         //ApplicationSession.getInstance().getServicesHelpers().unbindServices();
@@ -1464,30 +1451,37 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     }
 
-    protected void refreshSideMenu(){
-        //TODO: acá seria bueno un getLastApp
-        if(ActivityType.ACTIVITY_TYPE_DESKTOP != activityType) {
-//            final FermatStructure fermatStructure = getAppInUse();
-//            FermatSession fermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
-//            AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,fermatSession);
-//            final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
-//            final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
-//            final List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = getNavigationMenu();
-//            refreshHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    SideMenuBuilder.setAdapter(
-//                            navigation_recycler_view,
-//                            mAdapter,
-//                            viewPainter.addItemDecoration(),
-//                            lstItems,
-//                            getLisItemListenerMenu(),
-//                            //TODO: acá seria bueno un getLastActivity
-//                            fermatStructure.getLastActivity().getActivityType()
-//                    );
-//                }
-//            });
-
+    protected void refreshSideMenu(AppConnections appConnections){
+        try {
+            //TODO: acá seria bueno un getLastApp
+//            if (ActivityType.ACTIVITY_TYPE_DESKTOP != activityType) {
+//                final FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
+////            FermatSession fermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
+////            AppConnections appConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), this,fermatSession);
+//                final NavigationViewPainter viewPainter = appConnections.getNavigationViewPainter();
+//                final FermatAdapter mAdapter = viewPainter.addNavigationViewAdapter();
+//                MainMenu mainMenu = fermatStructure.getLastActivity().getMainMenu();
+//                List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> lstItems = null;
+//                if(mainMenu!=null) lstItems = mainMenu.getMenuItems();
+//                final List<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem> finalLstItems = (lstItems!=null)?lstItems:new ArrayList<com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem>();
+//                refreshHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        SideMenuBuilder.setAdapter(
+//                                navigation_recycler_view,
+//                                mAdapter,
+//                                viewPainter.addItemDecoration(),
+//                                finalLstItems,
+//                                getLisItemListenerMenu(),
+//                                //TODO: acá seria bueno un getLastActivity
+//                                fermatStructure.getLastActivity().getActivityType()
+//                        );
+//                    }
+//                });
+//
+//            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -1667,17 +1661,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
     @Override
     protected void onStart() {
         super.onStart();
-//        if(!mNotificationServiceConnected) {
-//            Intent intent = new Intent(this, NotificationService.class);
-//            intent.putExtra(NotificationService.LOG_TAG, "Activity 1");
-//            startService(intent);
-//            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-//        }
-//        if(!mCommunicationServiceConnected){
-//            //doBindService();
-//        }
-
-
     }
 
     @Override
@@ -1706,9 +1689,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.i("APP", "requestCode" + String.valueOf(requestCode));
-        Log.i("APP", "resultcode" + String.valueOf(resultCode));
-        Log.i("APP", "data" + String.valueOf(data));
+      //  Log.i("APP", "requestCode" + String.valueOf(requestCode));
+      //  Log.i("APP", "resultcode" + String.valueOf(resultCode));
+       // Log.i("APP", "data" + String.valueOf(data));
         switch(requestCode) {
             case (TASK_MANAGER_STACK) : {
                 if (resultCode == android.app.Activity.RESULT_OK) {
@@ -1787,21 +1770,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
 
-
-
-
-    /**
-     *
-     */
-    void bindServices(){
-//        if(!mNotificationServiceConnected) {
-//            Intent intent = new Intent(this, NotificationService.class);
-//            intent.putExtra(NotificationService.LOG_TAG, "Activity 1");
-//            startService(intent);
-//            bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
-//        }
-
-    }
 
 
 }

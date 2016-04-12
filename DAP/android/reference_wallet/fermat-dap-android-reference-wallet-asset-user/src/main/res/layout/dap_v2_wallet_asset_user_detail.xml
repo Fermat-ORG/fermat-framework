@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dap_user_wallet_detail_background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/dap_user_wallet_detail_header">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/detailAssetName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Asset Name"
+            android:textColor="@color/fab_material_white"
+            android:textSize="18dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"/>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/detailAssetImage"
+        android:layout_width="match_parent"
+        android:layout_height="210dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/img_asset_without_image"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="@color/dap_user_wallet_detail_header">
+
+        <RelativeLayout
+            android:id="@+id/detailActorImageLayout"
+            android:layout_width="67dp"
+            android:layout_height="67dp"
+            android:background="@drawable/bg_circular_home_issuer"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="5dp">
+
+            <ImageView
+                android:id="@+id/homeIssuerImage"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_centerInParent="true"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                tools:ignore="ContentDescription" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/detailActorImageLayout"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/detailAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Received by"
+                android:textColor="@color/fab_material_white"
+                android:textSize="12sp"
+                android:layout_marginBottom="5dp"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/detailActorName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Frank ISSUER"
+                android:textColor="@color/fab_material_white"
+                android:textSize="16sp"
+                android:layout_below="@id/detailAction"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:background="@color/fab_material_white">
+
+        <RelativeLayout
+            android:id="@+id/detailNotesLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp">
+
+            <RelativeLayout
+                android:id="@+id/detailNoteLayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp">
+
+                <ImageView
+                    android:id="@+id/detailCheck1"
+                    android:src="@drawable/detail_check"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/detailNote1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="You can sell this asset"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/detailCheck1"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/dap_user_wallet_black_text"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/detailNoteLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/detailNoteLayout1"
+                android:layout_marginBottom="5dp">
+
+                <ImageView
+                    android:id="@+id/detailCheck2"
+                    android:src="@drawable/detail_check"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/detailNote2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="You transfer this asset"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/detailCheck2"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/dap_user_wallet_black_text"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/detailNoteLayout3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/detailNoteLayout2"
+                android:layout_marginBottom="5dp">
+
+                <ImageView
+                    android:id="@+id/detailCheck3"
+                    android:src="@drawable/detail_check"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/detailNote3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="You can redeem this asset"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/detailCheck3"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/dap_user_wallet_black_text"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/detailNoteLayout4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/detailNoteLayout3">
+
+                <ImageView
+                    android:id="@+id/detailCheck4"
+                    android:src="@drawable/detail_uncheck"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_centerVertical="true"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/detailNote4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="You can appropriate this asset"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@+id/detailCheck4"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="12sp"
+                    android:textColor="@color/dap_user_wallet_black_text"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/detailDataLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@+id/detailNotesLayout"
+            android:layout_marginLeft="15dp">
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/detailDataAssetMemo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Asset Delivered"
+                android:layout_marginTop="10dp"
+                android:textSize="14sp"
+                android:textColor="@color/dap_user_wallet_detail_header"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/detailDataAssetQuantity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1 Asset"
+                android:layout_below="@+id/detailDataAssetMemo"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:textSize="16sp"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/dap_user_wallet_black_text"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/detailDataAssetAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.000001 BTC"
+                android:layout_below="@+id/detailDataAssetQuantity"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:textColor="@color/dap_user_wallet_black_text"/>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/detailDataAssetExpDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mar 1, 2016"
+                android:textSize="12sp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginRight="10dp"
+                android:textColor="@color/dap_user_wallet_detail_header"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

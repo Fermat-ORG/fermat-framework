@@ -92,7 +92,7 @@ public class ConnectionNotificationsFragment extends
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
-            rootView = inflater.inflate(R.layout.fragment_connections_notificactions, container, false);
+            rootView = inflater.inflate(R.layout.afc_fragment_connections_notificactions, container, false);
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.afc_recycler_view);
             layoutManager = new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false);

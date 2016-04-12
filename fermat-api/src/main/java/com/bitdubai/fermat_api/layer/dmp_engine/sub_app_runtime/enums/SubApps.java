@@ -30,9 +30,11 @@ public enum SubApps {
     DAP_ASSETS_REDEEM_POINT_IDENTITY("DAPRPI"),
 
     //ART sub apps
+    ART_MUSIC_PLAYER("AMP"),
     ART_ARTIST_COMMUNITY("AACA"),
-    ART_FAN_COMMUNITY("AFC"),
     ART_ARTIST_IDENTITY("AAIA"),
+    ART_FAN_COMMUNITY("AFC"),
+    ART_FAN_IDENTITY("AFI"),
 
     //TKY sub apps
     TKY_ARTIST_IDENTITY("TAI"),
@@ -115,6 +117,8 @@ public enum SubApps {
                 return TKY_FAN_IDENTITY_SUB_APP;
             case "AFC":
                 return ART_FAN_COMMUNITY;
+            case "AMP":
+                return ART_MUSIC_PLAYER;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the SubApps enum");
 
