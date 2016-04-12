@@ -107,6 +107,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootLayout = inflater.inflate(R.layout.fragment_cht_identity_create, container, false);
         initViews(rootLayout);
+        getActivity().getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         return rootLayout;
     }
     private byte[] toByteArray(Bitmap bitmap) {
@@ -176,12 +177,11 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             }else{
                 bitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
 //              cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
-                bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 170, 170,true);
                 fanImageByteArray = toByteArray(bitmap);
                 mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
                 textViewChtTitle.setText(moduleManager.getIdentityChatUser().getAlias().toString());
                 mBrokerName.setText(moduleManager.getIdentityChatUser().getAlias().toString());
-                mBrokerName.requestFocus();
                 mBrokerName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
                 mBrokerName.performClick();
                 botonG.setVisibility(View.GONE);
@@ -253,30 +253,12 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
         try {
             if(ExistIdentity() == false) {
-                menu.add(1, MENU_HELP_ACTION, 1, "help").setIcon(R.drawable.ic_menu_help_cht)
+                menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                final MenuItem action_help = menu.findItem(R.id.action_identity_issuer_help);
-                menu.findItem(R.id.action_identity_issuer_help).setVisible(true);
-                action_help.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        menu.findItem(R.id.action_identity_issuer_help).setVisible(false);
-                        return false;
-                    }
-                });
-            }else {
-                menu.add(1, MENU_ADD_ACTION, 1, "help").setIcon(R.drawable.ic_action_add)
-                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-                final MenuItem action_help = menu.findItem(R.id.action_identity_issuer_help);
-                menu.findItem(R.id.action_identity_issuer_help).setVisible(true);
-                action_help.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        menu.findItem(R.id.action_identity_issuer_help).setVisible(false);
-                        return false;
-                    }
-                });
 
+            }else {
+                menu.add(0, MENU_ADD_ACTION, 0, "help").setIcon(R.drawable.ic_action_add)
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
             }
         } catch (CHTException e) {
@@ -300,7 +282,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         .setBody(R.string.cht_chat_identity_body)
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                         .setIconRes(R.drawable.chat_subapp)
-                        .setBannerRes(R.drawable.cht_banner)
+                        .setBannerRes(R.drawable.banner_identity_chat)
                         .setTextFooter(R.string.cht_chat_footer).build();
                 pd.show();
                 break;
