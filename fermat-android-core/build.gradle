@@ -94,8 +94,8 @@ dependencies {
     compile project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
     /*
-                                                                    Sub APPs on the pipeline
-                                                                    */
+                                                                        Sub APPs on the pipeline
+                                                                        */
     compile project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai')
     // PIP Projects (Sub APPs)
     compile project(':fermat-pip-android-sub-app-developer-bitdubai')
@@ -163,4 +163,5 @@ dependencies {
     //  compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
     compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
     compile project(':fermat-art-android-sub-app-artist-community-bitdubai')
+    compile project(':fermat-art-android-sub-app-artist-identity-bitdubai')
 }
