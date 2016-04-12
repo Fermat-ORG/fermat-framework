@@ -135,7 +135,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         createNewIdentityInBackDevice("onClick");
                     }
                 });
-
+                setUpDialog();
                 mBrokerName.requestFocus();
                 mBrokerName.performClick();
                 mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -176,8 +176,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
             }else{
                 bitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
-//              cryptoBrokerBitmap = Bitmap.createScaledBitmap(cryptoBrokerBitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(), true);
-                bitmap = Bitmap.createScaledBitmap(bitmap, 170, 170,true);
+                 bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(),true);
                 fanImageByteArray = toByteArray(bitmap);
                 mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
                 textViewChtTitle.setText(moduleManager.getIdentityChatUser().getAlias().toString());
@@ -269,7 +268,16 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
     }
 
-
+    public void setUpDialog(){
+        PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
+                .setSubTitle(R.string.cht_chat_identity_subtitle)
+                .setBody(R.string.cht_chat_identity_body)
+                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                .setIconRes(R.drawable.chat_subapp)
+                .setBannerRes(R.drawable.banner_identity_chat)
+                .setTextFooter(R.string.cht_chat_footer).build();
+        pd.show();
+    }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         try {
@@ -277,14 +285,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
            switch (id){
                case MENU_HELP_ACTION:
-                PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setSubTitle(R.string.cht_chat_identity_subtitle)
-                        .setBody(R.string.cht_chat_identity_body)
-                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                        .setIconRes(R.drawable.chat_subapp)
-                        .setBannerRes(R.drawable.banner_identity_chat)
-                        .setTextFooter(R.string.cht_chat_footer).build();
-                pd.show();
+                setUpDialog();
                 break;
 
                case MENU_ADD_ACTION:
