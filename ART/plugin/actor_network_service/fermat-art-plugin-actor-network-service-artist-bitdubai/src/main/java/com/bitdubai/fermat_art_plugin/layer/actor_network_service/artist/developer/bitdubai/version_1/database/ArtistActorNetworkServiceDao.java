@@ -40,10 +40,12 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantConfirmInformationRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantFindRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantGetProfileImageException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.InformationRequestNotFoundException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure.ArtistActorNetworkServiceExternalPlatformInformationRequest;
 
 import java.util.ArrayList;
@@ -968,7 +970,63 @@ public final class ArtistActorNetworkServiceDao {
             throw new CantRequestExternalPlatformInformationException(
                     e,
                     "",
-                    "Exception not handled by the plugin, there is a problem in database and I cannot insert all the records.");
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and I cannot insert all the records.");
+        }
+    }
+
+    /**
+     * This method confirms the information request.
+     * @param requestId
+     * @throws CantConfirmInformationRequestException
+     * @throws InformationRequestNotFoundException
+     */
+    public void confirmInformationRequest(final UUID requestId) throws
+            CantConfirmInformationRequestException,
+            InformationRequestNotFoundException {
+        if (requestId == null) {
+            throw new CantConfirmInformationRequestException(
+                    null,
+                    "",
+                    "The requestId is required, can not be null");
+        }
+        try {
+            ProtocolState state  = ProtocolState.DONE;
+            DatabaseTable actorConnectionRequestTable =
+                    database.getTable(
+                            ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_TABLE_NAME);
+            actorConnectionRequestTable.addUUIDFilter(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_REQUEST_ID_COLUMN_NAME,
+                    requestId,
+                    DatabaseFilterType.EQUAL);
+            actorConnectionRequestTable.loadToMemory();
+            List<DatabaseTableRecord> records = actorConnectionRequestTable.getRecords();
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+                record.setFermatEnum(
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_REQUEST_STATE_COLUMN_NAME,
+                        state);
+                actorConnectionRequestTable.updateRecord(record);
+            } else
+                throw new InformationRequestNotFoundException(
+                        null,
+                        "requestId: "+requestId,
+                        "Cannot find a information request with that requestId.");
+        } catch (CantUpdateRecordException e) {
+            throw new CantConfirmInformationRequestException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and I cannot update the record.");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantConfirmInformationRequestException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and i cannot load the table.");
         }
     }
 

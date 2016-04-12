@@ -12,11 +12,13 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantEx
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestExternalPlatformInformationException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
 
 import java.util.Collection;
 import java.util.List;
@@ -137,4 +139,18 @@ public interface ArtistManager extends FermatManager{
     List<ArtistConnectionRequest> listPendingConnectionUpdates() throws CantListPendingConnectionRequestsException;
     
     void confirm(final UUID requestId) throws CantConfirmException, ConnectionRequestNotFoundException;
+
+    //Request external platform information methods
+    /**
+     * This method request the ArtArtistExtraData managed by the Artist.
+     * @param requesterPublicKey
+     * @param requesterActorType
+     * @param cryptoBrokerPublicKey
+     * @return
+     * @throws CantRequestExternalPlatformInformationException
+     */
+    ArtArtistExtraData<ArtistExternalPlatformInformation> requestExternalPlatformInformation(
+            String requesterPublicKey,
+            PlatformComponentType requesterActorType,
+            String cryptoBrokerPublicKey) throws CantRequestExternalPlatformInformationException;
 }
