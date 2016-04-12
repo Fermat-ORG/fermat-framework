@@ -30,6 +30,8 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.NetworkNodeManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.FermatEmbeddedNodeServer;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.agents.PropagateActorCatalogAgent;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.agents.PropagateNodeCatalogAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
@@ -100,6 +102,16 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     private Database dataBase;
 
     /**
+     * Represent the propagateNodeCatalogAgent
+     */
+    private PropagateNodeCatalogAgent propagateNodeCatalogAgent;
+
+    /**
+     * Represent the propagateActorCatalogAgent
+     */
+    private PropagateActorCatalogAgent propagateActorCatalogAgent;
+
+    /**
      * Represent the communicationsNetworkNodeP2PDatabaseFactory of the node
      */
     private CommunicationsNetworkNodeP2PDatabaseFactory communicationsNetworkNodeP2PDatabaseFactory;
@@ -114,6 +126,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     public NetworkNodePluginRoot() {
         super(new PluginVersionReference(new Version()));
+        this.propagateNodeCatalogAgent = new PropagateNodeCatalogAgent();
+        this.propagateActorCatalogAgent =  new PropagateActorCatalogAgent();
     }
 
     /**
@@ -164,6 +178,14 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             NodeContext.add(NodeContextItem.FERMAT_EMBEDDED_NODE_SERVER, fermatEmbeddedNodeServer);
             NodeContext.add(NodeContextItem.PLUGIN_DATABASE_SYSTEM     , pluginDatabaseSystem    );
             NodeContext.add(NodeContextItem.PLUGIN_FILE_SYSTEM         , pluginFileSystem        );
+
+
+            LOG.info("Initialize propagate catalog agents ...");
+            /*
+             * Initialize propagate catalog agents
+             */
+            propagateNodeCatalogAgent.start();
+            propagateActorCatalogAgent.start();
 
         } catch (CantInitializeCommunicationsNetworkNodeP2PDatabaseException exception) {
 
