@@ -364,7 +364,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
             try {
                 incomingMoneyEventWrapper = brokerAckOnlinePaymentBusinessTransactionDao.getIncomingMoneyEventWrapper(eventId);
                 senderPublicKey = incomingMoneyEventWrapper.getSenderPublicKey();
-                //TODO: look a way to get the sender public key
+
                 businessTransactionRecord = brokerAckOnlinePaymentBusinessTransactionDao.getBusinessTransactionRecordByCustomerPublicKey(senderPublicKey);
 
                 if (businessTransactionRecord == null)
@@ -373,7 +373,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                 contractHash = businessTransactionRecord.getContractHash();
                 incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
                 contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
-
+                //TODO: VER como obtener los montos del contrato y de lo que llega.
                 if (incomingCryptoAmount != contractCryptoAmount) {
                     throw new IncomingOnlinePaymentException("The incoming crypto amount received is " + incomingCryptoAmount +
                             "\nThe amount excepted in contract " + contractHash + "\nis " + contractCryptoAmount);

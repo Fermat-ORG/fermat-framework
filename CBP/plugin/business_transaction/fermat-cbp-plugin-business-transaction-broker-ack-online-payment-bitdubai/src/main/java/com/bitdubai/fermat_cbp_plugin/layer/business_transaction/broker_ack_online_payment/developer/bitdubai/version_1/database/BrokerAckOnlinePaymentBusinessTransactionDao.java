@@ -1372,9 +1372,9 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_CRYPTO_CURRENCY_COLUMN_NAME,
                 incomingMoneyEventWrapper.getCryptoCurrency().getCode()
         );
-        /*record.setStringValue(
+        record.setStringValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_SENDER_PUBLIC_KEY_COLUMN_NAME,
-                incomingMoneyEventWrapper.getSenderPublicKey());*/
+                incomingMoneyEventWrapper.getSenderPublicKey());
         record.setStringValue(
                 BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.ACK_ONLINE_PAYMENT_INCOMING_MONEY_STATUS_COLUMN_NAME,
                 EventStatus.PENDING.getCode());
