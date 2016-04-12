@@ -55,6 +55,10 @@ public class FermatNetworkSettings<S extends DesktopSession,RE extends ResourceP
 
     }
 
+    @Override
+    public void onSettingsTouched(String item, int position) {
+
+    }
 
     @Override
     public void onBackPressed() {
@@ -78,6 +82,4 @@ public class FermatNetworkSettings<S extends DesktopSession,RE extends ResourceP
 
         return new String[]{ip,port};
     }
-
-
 }
