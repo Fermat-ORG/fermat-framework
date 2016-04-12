@@ -152,9 +152,6 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "Cant start BitcoinCryptoNetworkEventsAgent agent.", null);
         }
 
-        //test
-        testBlockChainConnectionStatus();
-
         /**
          * nothing left to do.
          */
