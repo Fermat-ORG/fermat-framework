@@ -21,8 +21,6 @@ dependencies {
     compile project(':fermat-dap-plugin-actor-network-service-asset-user')
     compile project(':fermat-dap-plugin-actor-network-service-redeem-point')
 
-    compile project(':fermat-dap-plugin-business-transaction-asset-direct-sell')
-
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-appropriation')
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-distribution')
     compile project(':fermat-dap-plugin-digital-asset-transaction-asset-transfer')
@@ -41,8 +39,6 @@ dependencies {
     compile project(':fermat-dap-plugin-identity-redeem-point')
 
     compile project(':fermat-dap-plugin-middleware-asset-factory')
-
-    compile project(':fermat-dap-plugin-negotiation-transaction-direct-sell-negotiation')
 
     compile project(':fermat-dap-plugin-network-service-asset-transmission')
 
