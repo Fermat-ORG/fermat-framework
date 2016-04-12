@@ -100,6 +100,7 @@
     <!-- send_form_base.xml -->
     <string name="enter_name_here_text">Enter name here</string>
     <string name="bits_text">[bits]</string>
+    <string name="btc_text">[btc]</string>
     <string name="balance_amount_0_text">0</string>
     <string name="amount_text">Amount</string>
     <!-- setting_base.xml -->
