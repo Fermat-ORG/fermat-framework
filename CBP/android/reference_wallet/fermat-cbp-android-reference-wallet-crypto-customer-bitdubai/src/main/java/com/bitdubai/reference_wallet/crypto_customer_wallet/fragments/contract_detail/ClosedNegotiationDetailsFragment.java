@@ -68,7 +68,7 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Cry
             
             negotiationInfo = walletManager.getNegotiationInformation(appSession.getNegotiationId());
 
-            //negotiationInfo = TestData.getOpenNegotiations(NegotiationStatus.WAITING_FOR_BROKER).get(0);
+            // negotiationInfo = TestData.getOpenNegotiations(NegotiationStatus.WAITING_FOR_BROKER).get(0);
             
         } catch (Exception ex) {
             // TODO: Just for test purposes
@@ -85,7 +85,7 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Cry
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         configureToolbar();
     
-        final View rootView = inflater.inflate(R.layout.ccw_fragment_open_negotiation_details_activity, container, false);
+        final View rootView = inflater.inflate(R.layout.ccw_fragment_close_negotiation_details_activity, container, false);
 
         rootView.findViewById(R.id.ccw_expiration_date).setVisibility(View.GONE);
 
