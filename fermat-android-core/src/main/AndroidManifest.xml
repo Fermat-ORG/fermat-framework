@@ -97,7 +97,7 @@
 
         </activity>
 
-        <service android:name="com.bitdubai.android_core.app.NotificationService"/>
+        <service android:name="com.bitdubai.android_core.app.common.version_1.notifications.NotificationService"/>
 
 
         <activity
