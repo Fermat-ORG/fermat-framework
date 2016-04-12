@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
@@ -49,6 +51,7 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.SKIN_ID;
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.WALLET_VERSION;
 
+
 /**
  * Fragment que luce como un Activity donde se muestra la lista de Wallets disponibles en el catalogo de la Wallet Store
  *
@@ -79,6 +82,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
      * UI
      */
     private ProgressDialog dialog;
+    private PresentationDialog presentationDialog;
 
     /**
      * Create a new instance of this fragment
@@ -103,8 +107,35 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     }
 
     @Override
-    protected boolean hasMenu() {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.app_store_main_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.app_store_menu_action_help){
+            presentationDialog.show();
+            return true;
+        }
+
         return false;
+    }
+
+    @Override
+    protected boolean hasMenu() {
+        return true;
+    }
+
+    @Override
+    protected void initViews(View layout) {
+        super.initViews(layout);
+        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession).
+                setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES).
+                setTitle("Welcome").
+                setBannerRes(R.drawable.banner_identity). // TODO: cambiar este bane por el que me va a pasar arlando
+                setBody(R.string.presentation_dialog_body_app_store_list).
+                build();
+
     }
 
     @Override
@@ -133,7 +164,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         if (adapter == null) {
             WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
             adapter = new WalletStoreCatalogueAdapter(getActivity(), catalogueItemList, listener);
-            adapter.setFermatListEventListener(this); // setting up event listeners
+            // TODO ejecutar este metodo despues: adapter.setFermatListEventListener(this); // setting up event listeners
         }
         return adapter;
     }
