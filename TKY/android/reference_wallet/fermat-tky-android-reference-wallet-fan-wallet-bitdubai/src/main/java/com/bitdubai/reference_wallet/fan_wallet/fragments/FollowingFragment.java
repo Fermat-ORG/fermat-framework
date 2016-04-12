@@ -12,6 +12,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -20,12 +21,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
@@ -45,8 +48,12 @@ import com.bitdubai.reference_wallet.fan_wallet.common.models.FollowingItems;
 import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
 import com.bitdubai.reference_wallet.fan_wallet.util.ManageRecyclerviewClick;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 
 /**
  * Created by Miguel Payarez on 16/03/16.
@@ -69,7 +76,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     List<FollowingItems> items=new ArrayList<>();
     List<Fan> fanList=new ArrayList<>();
     Bot artistBot;
-    final Handler searchArttisList = new Handler();
+    final Handler myHandler = new Handler();
     public static FollowingFragment newInstance(){
         return new FollowingFragment();
     }
@@ -136,37 +143,21 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     }
 
     void loaditems(){
-        searchArttisList.post(myRunnable);
+
+        if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) // Above Api Level 13
+        {
+            new BotRequester(view).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//            syncthread.execute();
+        }
+        else // Below Api Level 13
+        {
+            new BotRequester(view).execute();
+        }
+
 
     }
 
-    final Runnable myRunnable = new Runnable() {
 
-        public void run() {
-            try {
-                fanList=fanwalletmoduleManager.getFanWalletModule().listIdentitiesFromCurrentDeviceUser();
-                for(Fan artistUsername:fanList){
-                    //artistBot=fanwalletmoduleManager.getFanWalletModule().getBotBySwapbotUsername(artistusername.getUsername());
-                    //System.out.println("tky_artistBot:"+artistBot.getLogoImageDetails().originalUrl() +"  +  "+artistBot.getAddress()+"  +  "+artistBot.getName());
-                    //items.add(new FollowingItems(artistBot.getLogoImageDetails().originalUrl(),artistBot.getAddress(), artistBot.getName()));
-                    //TODO: Payarez, I Fix a bomb in the previous line, please, check this.
-                    List<String> connectedArtistTKYUsername = artistUsername.getConnectedArtists();
-                    for(String botUsername : connectedArtistTKYUsername){
-                        //TODO: implement the next line in background
-                        new BotRequester(botUsername).execute();
-
-                    }
-                    //END OF TODO
-                }
-            } catch (CantListFanIdentitiesException e) {
-                System.out.println("tky_loaditem_fanidentity_exception:"+e);
-                e.printStackTrace();
-            } /*catch (CantGetBotException e) {
-                System.out.println("tky_loaditem_Bot_exception:"+e);
-                e.printStackTrace();
-            }*/
-        }
-    };
 
 
     @Nullable
@@ -208,6 +199,14 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         List<FollowingItems> data=new ArrayList<>();
         data.addAll(items);
         return data;
+    }
+
+    void refreshadapter(boolean nofollowing){
+        if(nofollowing){
+            Toast.makeText(view.getContext(),"Your are not following artist",Toast.LENGTH_LONG).show();
+        }else {
+            adapter.setFilter(items);
+        }
     }
 
 
@@ -274,21 +273,22 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
                     if(dX > 0){
                         p.setColor(Color.parseColor("#D32F2F"));
-                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
-                        c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_trash);
-                        RectF icon_dest = new RectF((float) itemView.getRight() - 1.75f*width ,(float) itemView.getTop() + 0.75f*width,(float) itemView.getRight() - width/4,(float)itemView.getBottom() - 0.75f*width);
-                        c.drawBitmap(icon,null,icon_dest,p);
-
-                    } else {
-
-                        p.setColor(Color.parseColor("#388E3C"));
                         RectF background = new RectF((float) itemView.getLeft(), (float) itemView.getTop(), dX,(float) itemView.getBottom());
                         c.drawRect(background,p);
-                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_chat);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_trash);
                         //Start draw left-top to right-bottom     RectF (left,top,right,bottom)
                         RectF icon_dest = new RectF((float) itemView.getLeft() + (width/4) ,(float) itemView.getTop() + 0.75f*width,(float) itemView.getLeft()+ 2f*width,(float)itemView.getBottom() -0.75f*width);
                         c.drawBitmap(icon,null,icon_dest,p);
+
+
+                    } else {
+                        p.setColor(Color.parseColor("#D32F2F"));
+                        RectF background = new RectF((float) itemView.getRight() + dX, (float) itemView.getTop(),(float) itemView.getRight(), (float) itemView.getBottom());
+                        c.drawRect(background,p);
+                        icon = BitmapFactory.decodeResource(getResources(), R.drawable.tky_chat);
+                        RectF icon_dest = new RectF((float) itemView.getRight() - 1.75f*width ,(float) itemView.getTop() + 0.75f*width,(float) itemView.getRight() - width/4,(float)itemView.getBottom() - 0.75f*width);
+                        c.drawBitmap(icon,null,icon_dest,p);
+
                     }
                 }
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
@@ -346,30 +346,88 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         return filteredModelList;
     }
 
-    private class BotRequester extends AsyncTask {
+    private class BotRequester extends AsyncTask <Void, Void, Boolean> {
 
-        String username;
-        public BotRequester(String username){
-            this.username = username;
+        View view;
+        boolean nofollowing=false;
+        public BotRequester(View view){
+            this.view = view;
+        }
+        @Override
+        protected void onPreExecute() {
+
         }
 
         @Override
-        protected Object doInBackground(Object[] objects) {
+        protected Boolean doInBackground(Void... variableNoUsada) {
             try {
-                artistBot=fanwalletmoduleManager.getFanWalletModule().
-                        getBotBySwapbotUsername(this.username);
-                System.out.println(
-                        "tky_artistBot:"+artistBot.getLogoImageDetails().originalUrl()
-                                +"  +  "+artistBot.getAddress()+"  +  "+artistBot.getName());
-                items.add(new FollowingItems(artistBot.getLogoImageDetails().originalUrl(),
-                        artistBot.getAddress(), artistBot.getName()));
-            } catch (CantGetBotException e) {
-                errorManager.reportUnexpectedUIException(
-                        UISource.VIEW,
-                        UnexpectedUIExceptionSeverity.UNSTABLE,
-                        e);
-            }
+                try {
+                    fanList=fanwalletmoduleManager.getFanWalletModule().listIdentitiesFromCurrentDeviceUser();
+                    if(fanList.size()==0){
+                        nofollowing=true;
+                    }
+                    for(Fan artistUsername:fanList){
+                        List<String> connectedArtistTKYUsername = artistUsername.getConnectedArtists();
+                        for(String botUsername : connectedArtistTKYUsername){
+                            artistBot=fanwalletmoduleManager.getFanWalletModule().
+                                    getBotBySwapbotUsername(botUsername);
+                            System.out.println(
+                                    "tky_artistBot:" + artistBot);
+                            items.add(new FollowingItems(convertUrlTobmp(artistBot.getLogoImageDetails().originalUrl()),
+                                   extractLinks(artistBot.getDescription())[0], artistBot.getUserName()));
+
+                        }
+                    }
+
+                    } catch (CantGetBotException e) {
+                    errorManager.reportUnexpectedUIException(
+                            UISource.VIEW,
+                            UnexpectedUIExceptionSeverity.UNSTABLE,
+                            e);
+                }
+
+            } catch (CantListFanIdentitiesException e) {
+                    System.out.println("tky_loaditem_fanidentity_exception:"+e);
+                    e.printStackTrace();
+                }
+
             return null;
+        }
+
+
+
+
+        public  String[] extractLinks(String text) {
+            List<String> links = new ArrayList<String>();
+            Matcher m = Patterns.WEB_URL.matcher(text);
+            while (m.find()) {
+                String url = m.group();
+             //   Log.d("TKY_", "URL extracted: " + url);
+                links.add(url);
+            }
+
+            return links.toArray(new String[links.size()]);
+        }
+
+        Bitmap convertUrlTobmp(String imageUrl){
+            URL url;
+            Bitmap bmp=null;
+            try {
+                url = new URL(imageUrl);
+                bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return bmp;
+        }
+
+        protected void onPostExecute(Boolean ready) {
+
+                refreshadapter(nofollowing);
+
+
         }
     }
 
