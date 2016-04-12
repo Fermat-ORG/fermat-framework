@@ -80,8 +80,8 @@ public class ReceiveTransactionFragment3 extends FermatWalletListFragment<LossPr
      *
      * @return InstalledFragment instance object
      */
-    public static RequestSendHistoryFragment newInstance() {
-        return new RequestSendHistoryFragment();
+    public static ReceiveTransactionFragment3 newInstance() {
+        return new ReceiveTransactionFragment3();
     }
 
     @Override
