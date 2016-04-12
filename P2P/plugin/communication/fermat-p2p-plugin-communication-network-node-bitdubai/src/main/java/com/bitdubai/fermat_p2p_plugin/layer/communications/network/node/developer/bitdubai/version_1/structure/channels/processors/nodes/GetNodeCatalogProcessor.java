@@ -11,7 +11,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketChannelServerEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.GetNodeCatalogMsjRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.GetNodeCatalogMsjRespond;
@@ -19,10 +19,8 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 
 import org.jboss.logging.Logger;
 
-import java.io.IOException;
 import java.util.List;
 
-import javax.websocket.EncodeException;
 import javax.websocket.Session;
 
 /**
@@ -45,7 +43,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
      *
      * @param channel
      * */
-    public GetNodeCatalogProcessor(WebSocketChannelServerEndpoint channel) {
+    public GetNodeCatalogProcessor(FermatWebSocketChannelEndpoint channel) {
         super(channel, PackageType.GET_NODE_CATALOG_REQUEST);
     }
 
@@ -80,8 +78,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
 
                 nodesCatalogList = loadData(messageContent.getOffset(), messageContent.getMax());
 
-                //TODO: CREATE A METHOD COUNT ROW IN DATA BASE
-                Integer count = 0;
+                long count = getDaoFactory().getNodesCatalogDao().getAllCount();
 
                 /*
                  * If all ok, respond whit success message
@@ -92,7 +89,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
             }
 
@@ -106,18 +103,16 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
                 /*
                  * Respond whit fail message
                  */
-                getNodeCatalogMsjRespond = new GetNodeCatalogMsjRespond(GetNodeCatalogMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), nodesCatalogList, 0);
+                getNodeCatalogMsjRespond = new GetNodeCatalogMsjRespond(GetNodeCatalogMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), nodesCatalogList, new Long(0));
                 Package packageRespond = Package.createInstance(getNodeCatalogMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
-            } catch (IOException iOException) {
-                LOG.error(iOException.getMessage());
-            } catch (EncodeException encodeException) {
-                LOG.error(encodeException.getMessage());
+            } catch (Exception e) {
+                LOG.error(e.getMessage());
             }
 
         }
@@ -137,8 +132,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
 
         if (offset > 0 && max > 0){
 
-            //TODO: CREATE A METHOD WITH THE PAGINATION
-            nodesCatalogList = getDaoFactory().getNodesCatalogDao().findAll();
+            nodesCatalogList = getDaoFactory().getNodesCatalogDao().findAll(offset, max);
 
         }else {
 

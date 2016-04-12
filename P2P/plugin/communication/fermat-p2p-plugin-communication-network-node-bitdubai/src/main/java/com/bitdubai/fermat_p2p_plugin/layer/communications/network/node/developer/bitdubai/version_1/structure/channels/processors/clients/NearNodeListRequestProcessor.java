@@ -17,7 +17,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ut
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketChannelServerEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 
@@ -51,10 +51,10 @@ public class NearNodeListRequestProcessor extends PackageProcessor {
     /**
      * Constructor whit parameter
      *
-     * @param webSocketChannelServerEndpoint register
+     * @param fermatWebSocketChannelEndpoint register
      */
-    public NearNodeListRequestProcessor(WebSocketChannelServerEndpoint webSocketChannelServerEndpoint) {
-        super(webSocketChannelServerEndpoint, PackageType.NEAR_NODE_LIST_REQUEST);
+    public NearNodeListRequestProcessor(FermatWebSocketChannelEndpoint fermatWebSocketChannelEndpoint) {
+        super(fermatWebSocketChannelEndpoint, PackageType.NEAR_NODE_LIST_REQUEST);
     }
 
     /**

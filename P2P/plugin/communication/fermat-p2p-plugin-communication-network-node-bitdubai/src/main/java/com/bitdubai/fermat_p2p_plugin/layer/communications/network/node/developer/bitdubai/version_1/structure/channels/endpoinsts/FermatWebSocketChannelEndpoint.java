@@ -1,10 +1,10 @@
 /*
- * @#WebSocketChannelServerEndpoint.java - 2015
+ * @#WebSocketChannelEndpoint.java - 2015
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
  */
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
@@ -23,14 +23,14 @@ import java.util.Map;
 import javax.websocket.Session;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketChannelServerEndpoint</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 06/12/15.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class WebSocketChannelServerEndpoint {
+public abstract class FermatWebSocketChannelEndpoint {
 
     /**
      * Represent the list of package processors
@@ -50,7 +50,7 @@ public abstract class WebSocketChannelServerEndpoint {
     /**
      * Constructor
      */
-    public WebSocketChannelServerEndpoint(){
+    public FermatWebSocketChannelEndpoint(){
         super();
         this.packageProcessors = new HashMap<>();
         this.daoFactory  = (DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY);
@@ -105,7 +105,7 @@ public abstract class WebSocketChannelServerEndpoint {
      *
      * @param channelIdentity to set
      */
-    void setChannelIdentity(ECCKeyPair channelIdentity) {
+    protected void setChannelIdentity(ECCKeyPair channelIdentity) {
         this.channelIdentity = channelIdentity;
     }
 
@@ -162,6 +162,6 @@ public abstract class WebSocketChannelServerEndpoint {
      * Initialize the all package processors for this
      * channel
      */
-    abstract void initPackageProcessorsRegistration();
+    protected abstract void initPackageProcessorsRegistration();
 
 }

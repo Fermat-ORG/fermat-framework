@@ -16,7 +16,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketChannelServerEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.AddNodeToCatalogMsgRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.AddNodeToCatalogMsjRespond;
@@ -27,9 +27,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 
 import org.jboss.logging.Logger;
 
-import java.io.IOException;
-
-import javax.websocket.EncodeException;
 import javax.websocket.Session;
 
 /**
@@ -52,7 +49,7 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
      *
      * @param channel
      * */
-    public UpdateNodeInCatalogProcessor(WebSocketChannelServerEndpoint channel) {
+    public UpdateNodeInCatalogProcessor(FermatWebSocketChannelEndpoint channel) {
         super(channel, PackageType.UPDATE_NODE_IN_CATALOG_REQUEST);
     }
 
@@ -126,7 +123,7 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
             }
 
@@ -146,12 +143,10 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
                 /*
                  * Send the respond
                  */
-                session.getBasicRemote().sendObject(packageRespond);
+                session.getAsyncRemote().sendObject(packageRespond);
 
-            } catch (IOException iOException) {
-                LOG.error(iOException.getMessage());
-            } catch (EncodeException encodeException) {
-                LOG.error(encodeException.getMessage());
+            } catch (Exception e) {
+                LOG.error(e.getMessage());
             }
 
         }

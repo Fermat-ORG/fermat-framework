@@ -18,7 +18,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ut
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketChannelServerEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalog;
@@ -54,10 +54,10 @@ public class ActorTraceDiscoveryQueryRequestProcessor extends PackageProcessor {
     /**
      * Constructor whit parameter
      *
-     * @param webSocketChannelServerEndpoint register
+     * @param fermatWebSocketChannelEndpoint register
      */
-    public ActorTraceDiscoveryQueryRequestProcessor(WebSocketChannelServerEndpoint webSocketChannelServerEndpoint) {
-        super(webSocketChannelServerEndpoint, PackageType.ACTOR_TRACE_DISCOVERY_QUERY_REQUEST);
+    public ActorTraceDiscoveryQueryRequestProcessor(FermatWebSocketChannelEndpoint fermatWebSocketChannelEndpoint) {
+        super(fermatWebSocketChannelEndpoint, PackageType.ACTOR_TRACE_DISCOVERY_QUERY_REQUEST);
     }
 
     /**
