@@ -89,6 +89,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         try {
@@ -107,7 +108,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootLayout = inflater.inflate(R.layout.fragment_cht_identity_create, container, false);
         initViews(rootLayout);
-        getActivity().getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         return rootLayout;
     }
     private byte[] toByteArray(Bitmap bitmap) {
