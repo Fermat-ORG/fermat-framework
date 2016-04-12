@@ -586,11 +586,11 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash,ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION);
                             raisePaymentConfirmationEvent();
 
-                            BusinessTransactionRecord record1=customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(contractHash);
+                            /*BusinessTransactionRecord record1=customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(contractHash);
                             record1.setContractTransactionStatus(businessTransactionMetadata.getContractTransactionStatus());
                             //TODO:fix this with the incomingintraactor.
                             record1.setCryptoStatus(CryptoStatus.IRREVERSIBLE);
-                            customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(record1);
+                            customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(record1);*/
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }
