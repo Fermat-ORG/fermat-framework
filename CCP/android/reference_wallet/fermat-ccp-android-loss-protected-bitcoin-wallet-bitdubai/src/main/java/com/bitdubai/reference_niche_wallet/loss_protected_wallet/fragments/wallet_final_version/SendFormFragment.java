@@ -601,7 +601,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     }
 
 
-    //TODO: VER QUE PASA  SI EL CONTACTO NO TIENE UNA WALLET ADDRESS
+    //TODO: Verificar la configuracion de proteger o no de la perdida de btc
     private void sendCrypto() {
         try {
             if (cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
