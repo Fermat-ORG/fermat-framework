@@ -16,6 +16,7 @@ import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ConfigurationManager</code> implements
@@ -47,6 +48,11 @@ public class ConfigurationManager {
      * Represent the value of IDENTITY_PUBLIC_KEY
      */
     public static final String IDENTITY_PUBLIC_KEY = "ipk";
+
+    /**
+     * Represent the value of NODE_NAME
+     */
+    public static final String NODE_NAME = "node_name";
 
     /**
      * Represent the value of IP
@@ -144,6 +150,9 @@ public class ConfigurationManager {
 
         newConfigurationFile.getLayout().setComment(IDENTITY_PUBLIC_KEY, "\n# * SERVER IDENTITY PUBLIC KEY");
         newConfigurationFile.addProperty(IDENTITY_PUBLIC_KEY, identityPublicKey);
+
+        newConfigurationFile.getLayout().setComment(NODE_NAME, "\n# * NODE NAME");
+        newConfigurationFile.addProperty(NODE_NAME, "Fermat Node ("+ InetAddress.getLocalHost().getHostName() +")");
 
         newConfigurationFile.getLayout().setComment(IP, "\n# * SERVER IP (Configure 0.0.0.0 to server listen to all network interfaces)");
         newConfigurationFile.addProperty(IP, FermatEmbeddedNodeServer.DEFAULT_IP);
