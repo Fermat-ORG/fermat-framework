@@ -26,7 +26,11 @@ import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHideIdentityExc
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
@@ -109,7 +113,7 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
                     this.artistManager);
 
             System.out.println("############\n ART IDENTITY ARTIST STARTED\n");
-           // testCreateArtist();
+            //testCreateArtist();
             //testAskForConnection();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
@@ -146,13 +150,18 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
             Artist artist = null;
             if(externalIdentityID != null){
                 artist = createArtistIdentity(alias,image,externalIdentityID);
+                artistManager.exposeIdentity(new ArtistExposingData(artist.getPublicKey(),"El gabo",artist.getProfileImage()));
+                ActorSearch<ArtistExposingData> artistExposingDataActorSearch = artistManager.getSearch();
+                List<ArtistExposingData> artistExposingDatas = artistExposingDataActorSearch.getResult();
+                for (ArtistExposingData artistExposingData :
+                        artistExposingDatas) {
+                    System.out.println("artistExposingData = " + artistExposingData.toString());
+                }
                 ArtIdentity artIdentity = getLinkedIdentity(artist.getPublicKey());
                 System.out.println("artIdentity = " + artIdentity.toString());
             }else{
                 System.out.println("###############\nNo funciona.");
             }
-
-
         } catch (com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException e) {
             e.printStackTrace();
         } catch (com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException e) {
@@ -162,6 +171,10 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
         } catch (ArtistIdentityAlreadyExistsException e) {
             e.printStackTrace();
         } catch (CantListArtistIdentitiesException e) {
+            e.printStackTrace();
+        } catch (CantExposeIdentityException e) {
+            e.printStackTrace();
+        } catch (CantListArtistsException e) {
             e.printStackTrace();
         }
     }

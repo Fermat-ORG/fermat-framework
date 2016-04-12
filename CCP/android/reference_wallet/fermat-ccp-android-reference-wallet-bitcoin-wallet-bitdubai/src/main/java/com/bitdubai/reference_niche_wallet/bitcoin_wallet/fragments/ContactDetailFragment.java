@@ -32,7 +32,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWall
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -80,7 +79,6 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceWalle
      */
     private CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
-    private CryptoWalletManager cryptoWalletManager;
     private WalletSettingsManager walletSettingsManager;
 
     /**
@@ -125,9 +123,8 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceWalle
                 onBack(null);
             }
             //typeface = Typeface.createFromAsset(getActivity().getAssets(), "fonts/CaviarDreams.ttf");
-            cryptoWalletManager = referenceWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            cryptoWallet = cryptoWalletManager.getCryptoWallet();
+            cryptoWallet = appSession.getModuleManager();
             settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
 
             BitcoinWalletSettings bitcoinWalletSettings = null;
@@ -146,12 +143,9 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceWalle
             blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
             System.out.println("Network Type"+blockchainNetworkType);
 
-        } catch (CantGetCryptoWalletException e) {
+        } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             makeText(getActivity(), "Oooops! recovering from system error",Toast.LENGTH_SHORT).show();
-        } catch (Exception e) {
-            makeText(getActivity(), "Oooops! recovering from system error",Toast.LENGTH_SHORT).show();
-            referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
 //        /* Load Wallet Contact */
 //        walletContact = CollectionUtils.find(getWalletContactList(), new Predicate<WalletContact>() {
@@ -255,7 +249,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceWalle
                     try {
                         if(!addressIsTouch) {
                             addressIsTouch=true;
-                            referenceWalletSession.getModuleManager().getCryptoWallet().sendAddressExchangeRequest(
+                            cryptoWallet.sendAddressExchangeRequest(
                                     cryptoWalletWalletContact.getActorName(),
                                     Actors.INTRA_USER,
                                     cryptoWalletWalletContact.getActorPublicKey(),
@@ -315,7 +309,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceWalle
                            if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress()== null){
 
 
-                           referenceWalletSession.getModuleManager().getCryptoWallet().sendAddressExchangeRequest(
+                           cryptoWallet.sendAddressExchangeRequest(
                                    cryptoWalletWalletContact.getActorName(),
                                    Actors.INTRA_USER,
                                    cryptoWalletWalletContact.getActorPublicKey(),
@@ -348,7 +342,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceWalle
                        } catch (NullPointerException e) {
 
                            try {
-                               referenceWalletSession.getModuleManager().getCryptoWallet().sendAddressExchangeRequest(
+                               cryptoWallet.sendAddressExchangeRequest(
                                        cryptoWalletWalletContact.getActorName(),
                                        Actors.INTRA_USER,
                                        cryptoWalletWalletContact.getActorPublicKey(),
@@ -411,9 +405,7 @@ public class ContactDetailFragment extends AbstractFermatFragment<ReferenceWalle
       try
         {
             //update contact address
-            cryptoWalletManager = referenceWalletSession.getModuleManager();
-
-            cryptoWalletWalletContact = cryptoWalletManager.getCryptoWallet().findWalletContactById(UUID.fromString(code), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
+            cryptoWalletWalletContact = cryptoWallet.findWalletContactById(UUID.fromString(code), referenceWalletSession.getIntraUserModuleManager().getPublicKey());
 
 
             if(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)

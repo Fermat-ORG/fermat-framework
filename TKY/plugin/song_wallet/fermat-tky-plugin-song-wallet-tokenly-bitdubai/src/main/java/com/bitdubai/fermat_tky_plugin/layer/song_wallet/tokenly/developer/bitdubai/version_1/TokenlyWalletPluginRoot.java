@@ -443,6 +443,26 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
     private Fan getTestFanIdentity(){
         Fan fanIdentity = new Fan() {
             @Override
+            public List<String> getConnectedArtists() {
+                return null;
+            }
+
+            @Override
+            public void addNewArtistConnected(String userName) {
+
+            }
+
+            @Override
+            public String getArtistsConnectedStringList() {
+                return null;
+            }
+
+            @Override
+            public void addArtistConnectedList(String xmlStringList) {
+
+            }
+
+            @Override
             public String getTokenlyId() {
                 return null;
             }

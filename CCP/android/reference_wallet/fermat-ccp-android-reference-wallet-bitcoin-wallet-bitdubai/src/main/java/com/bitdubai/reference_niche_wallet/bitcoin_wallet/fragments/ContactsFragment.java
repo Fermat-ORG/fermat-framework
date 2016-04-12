@@ -45,9 +45,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.Settings
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetAllWalletContactsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -136,7 +134,6 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     /**
      * DealsWithWalletModuleCryptoWallet Interface member variables.
      */
-    private CryptoWalletManager cryptoWalletManager;
     private CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
     private Bitmap contactImageBitmap;
@@ -161,15 +158,12 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         setHasOptionsMenu(true);
         tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/roboto.ttf");
         errorManager = appSession.getErrorManager();
-        cryptoWalletManager = referenceWalletSession.getModuleManager();
-        settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
         try {
-            cryptoWallet = cryptoWalletManager.getCryptoWallet();
-        } catch (CantGetCryptoWalletException e) {
+        cryptoWallet = (CryptoWallet) appSession.getModuleManager();
+        settingsManager = cryptoWallet.getSettingsManager();
+        } catch (Exception e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "Unexpected error get Contact list - " + e.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 

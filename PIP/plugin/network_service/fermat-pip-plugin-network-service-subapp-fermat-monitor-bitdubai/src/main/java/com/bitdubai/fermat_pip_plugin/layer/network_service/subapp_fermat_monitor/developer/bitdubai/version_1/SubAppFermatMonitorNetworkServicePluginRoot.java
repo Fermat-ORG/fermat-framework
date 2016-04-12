@@ -116,6 +116,12 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
 
             subappFermatMonitorComponentDAO = new ComponentDAO(dataBaseCommunication, this.pluginFileSystem, this.pluginId);
 
+            //clean old data
+            try {
+                subappFermatMonitorComponentDAO.deleteComponentEvent();
+            } catch (CantDeleteRecordDataBaseException e) {
+                e.printStackTrace();
+            }
 
 
         /*
@@ -245,11 +251,9 @@ public class SubAppFermatMonitorNetworkServicePluginRoot extends AbstractNetwork
                                             platformComponentProfile.getNetworkServiceType().getCode());
 
             try {
-                subappFermatMonitorComponentDAO.deleteComponentEvent();
+
                 subappFermatMonitorComponentDAO.create(componentProfileInfo);
             } catch (DatabaseTransactionFailedException e) {
-                e.printStackTrace();
-            } catch (CantDeleteRecordDataBaseException e) {
                 e.printStackTrace();
             }
 
