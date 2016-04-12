@@ -25,8 +25,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantExposeActorIdentitiesException;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.database.ChatIdentityDatabaseConstants;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.database.ChatIdentityDatabaseFactory;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.database.ChatIdentityDeveloperFactory;
@@ -37,6 +42,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -80,6 +86,8 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
             System.out.println("******* Init Chat Identity ******");
             //super.start();
             this.serviceStatus = ServiceStatus.STARTED;
+            //Expose all identities the device
+            exposeIdentities();
             //chatIdentityManager.createNewIdentityChat("Franklin Marcano", new byte[0]);
         } catch (CantOpenDatabaseException | DatabaseNotFoundException e) {
             try {
@@ -94,9 +102,16 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
                 errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
                 throw new CantStartPluginException("Unhandled Exception.", FermatException.wrapException(exception), null, null);
             }
-//        } catch (CantCreateNewChatIdentityException e) {
-//           // e.printStackTrace();
-          }
+          } catch (CantExposeActorIdentitiesException e) {
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException("Cant expose Actor Identities.", FermatException.wrapException(e), null, null);
+        } catch (CantListChatIdentityException e) {
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException("Cant List Chat Identity.", FermatException.wrapException(e), null, null);
+        } catch (CantExposeIdentitiesException e) {
+            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            throw new CantStartPluginException("Cant Expose Identity.", FermatException.wrapException(e), null, null);
+        }
     }
 
     @Override
@@ -128,5 +143,16 @@ public class ChatIdentityPluginRoot extends AbstractPlugin implements
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
         return developerDatabaseTableRecordList;
+    }
+
+    private void exposeIdentities() throws CantExposeActorIdentitiesException, CantListChatIdentityException, CantExposeIdentitiesException {
+        List<ChatExposingData> chatExposingDatas = new ArrayList<>();
+
+        for (ChatIdentity chatIdentity : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser())
+        {
+            chatExposingDatas.add(new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage()));
+        }
+
+        chatManager.exposeIdentities(chatExposingDatas);
     }
 }
