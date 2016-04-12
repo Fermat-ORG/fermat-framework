@@ -131,17 +131,21 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
+        BasicWalletSettings preferenceSettings = getPreferenceSettings();
+
         presentationDialog = new PresentationDialog.Builder(getActivity(), appSession).
                 setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES).
-                setTitle("Welcome").
                 setBannerRes(R.drawable.banner_identity). // TODO: cambiar este bane por el que me va a pasar arlando
+                setSubTitle(R.string.presentation_dialog_subtitle_app_store_list).
                 setBody(R.string.presentation_dialog_body_app_store_list).
                 build();
 
-        settingUpSettings();
+        if(preferenceSettings != null && preferenceSettings.isHomeTutorialDialogEnabled()){
+            presentationDialog.show();
+        }
     }
 
-    private void settingUpSettings() {
+    private BasicWalletSettings getPreferenceSettings() {
         BasicWalletSettings preferenceSettings;
 
         try {
@@ -157,9 +161,12 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
             try {
                 final SettingsManager<BasicWalletSettings> settingsManager = moduleManager.getSettingsManager();
                 settingsManager.persistSettings(appSession.getAppPublicKey(), preferenceSettings);
-            } catch (Exception ignore) {
+            } catch (Exception e) {
+                preferenceSettings = null;
             }
         }
+
+        return preferenceSettings;
     }
 
     @Override
