@@ -123,10 +123,9 @@ public class ActorConnectionEventActions {
                     request.getSentTime()
             );
             dao.registerActorConnection(actorConnection);
-            //TODO: I'll use ART_ARTIST_IDENTITY until the Art community is ready
             broadcaster.publish(
                     BroadcasterType.NOTIFICATION_SERVICE,
-                    SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
+                    SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
                     FanActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
             artistNetworkService.confirm(request.getRequestId());
         } catch (final ActorConnectionAlreadyExistsException actorConnectionAlreadyExistsException){
