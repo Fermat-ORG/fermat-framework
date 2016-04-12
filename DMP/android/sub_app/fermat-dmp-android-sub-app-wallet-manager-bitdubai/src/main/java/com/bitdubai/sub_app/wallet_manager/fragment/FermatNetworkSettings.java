@@ -44,6 +44,16 @@ public class FermatNetworkSettings<S extends DesktopSession,RE extends ResourceP
         return list;
     }
 
+    @Override
+    public void dialogOptionSelected(String item, int position) {
+
+    }
+
+    @Override
+    public void optionSelected(PreferenceSettingsItem preferenceSettingsItem, int position) {
+
+    }
+
 
     @Override
     public void onSettingsTouched(PreferenceSettingsItem preferenceSettingsItem, int position) {

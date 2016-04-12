@@ -122,6 +122,16 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
         return list;
     }
 
+    @Override
+    public void dialogOptionSelected(String item, int position) {
+
+    }
+
+    @Override
+    public void optionSelected(PreferenceSettingsItem preferenceSettingsItem, int position) {
+
+    }
+
     /**
      * Cuando se elige algun settings va a pasar por acá
      *

@@ -938,6 +938,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }
 
             if(bitcoinWalletSettings == null){
+                bitcoinWalletSettings = new BitcoinWalletSettings();
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
                 runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey(),blockchainNetworkType));

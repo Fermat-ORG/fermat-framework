@@ -232,7 +232,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
 
     @Override
     public void dialogOptionSelected(String item, int position) {
-        fragmentWeakReference.get().onSettingsTouched(item, position);
+        fragmentWeakReference.get().dialogOptionSelected(item, position);
     }
 
     @Override
