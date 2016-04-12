@@ -152,10 +152,39 @@ public class BitcoinCryptoNetworkPluginRoot extends AbstractPlugin implements
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, e, "Cant start BitcoinCryptoNetworkEventsAgent agent.", null);
         }
 
+        //test
+        testBlockChainConnectionStatus();
+
         /**
          * nothing left to do.
          */
         this.serviceStatus = ServiceStatus.STARTED;
+    }
+
+    /**
+     * test method
+     */
+    private void testBlockChainConnectionStatus() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000 * 10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    for (BlockchainNetworkType networkType : getActivesBlockchainNetworkTypes()){
+                        System.out.println("***CryptoNetwork***Test " + getBlockchainConnectionStatus(networkType).toString());
+                    }
+                } catch (CantGetActiveBlockchainNetworkTypeException e) {
+                    e.printStackTrace();
+                } catch (CantGetBlockchainConnectionStatusException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
     }
 
     /**

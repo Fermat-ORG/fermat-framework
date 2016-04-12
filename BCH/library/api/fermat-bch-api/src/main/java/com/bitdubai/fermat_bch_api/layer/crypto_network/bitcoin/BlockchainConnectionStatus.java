@@ -11,7 +11,6 @@ import java.util.Map;
 public class BlockchainConnectionStatus {
     private List<ConnectedBitcoinNode> connectedNodes;
     private BlockchainNetworkType blockchainNetworkType;
-    private int numConnectedNodes;
 
     /**
      * constructor
@@ -21,8 +20,6 @@ public class BlockchainConnectionStatus {
     public BlockchainConnectionStatus(List<ConnectedBitcoinNode> connectedNodes, BlockchainNetworkType blockchainNetworkType) {
         this.connectedNodes = connectedNodes;
         this.blockchainNetworkType = blockchainNetworkType;
-
-        this.numConnectedNodes = connectedNodes.size();
     }
 
     /**
@@ -38,7 +35,23 @@ public class BlockchainConnectionStatus {
      * @return
      */
     public int getNumConnectedNodes() {
-        return numConnectedNodes;
+        return connectedNodes.size();
+    }
+
+    /**
+     * gets the connection status for the network.
+     * @return
+     */
+    public boolean isConnected(){
+        return connectedNodes.size() > 0;
+    }
+
+    @Override
+    public String toString() {
+        return "BlockchainConnectionStatus{" +
+                "connectedNodes=" + connectedNodes +
+                ", blockchainNetworkType=" + blockchainNetworkType +
+                '}';
     }
 }
 

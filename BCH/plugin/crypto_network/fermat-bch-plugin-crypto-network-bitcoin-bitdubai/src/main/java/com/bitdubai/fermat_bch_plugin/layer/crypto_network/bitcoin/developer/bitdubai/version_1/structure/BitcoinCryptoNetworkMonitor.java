@@ -786,7 +786,7 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
 
                     // If create the ConnectedBitcoinNode object
                     ConnectedBitcoinNode connectedBitcoinNode = new ConnectedBitcoinNode(peer.getAddress().toString(),
-                            peer.getPeerVersionMessage().toString(),
+                            peer.getPeerVersionMessage().subVer,
                             isDownload,
                             peer.getPingTime());
 

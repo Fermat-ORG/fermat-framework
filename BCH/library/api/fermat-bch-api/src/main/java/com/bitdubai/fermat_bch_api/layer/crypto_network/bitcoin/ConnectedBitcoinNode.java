@@ -27,8 +27,12 @@ public class ConnectedBitcoinNode {
 
     @Override
     public String toString() {
-        return "address='" + address + '\'' +
-                ", version='" + version + '\'';
+        return "ConnectedBitcoinNode{" +
+                "address='" + address + '\'' +
+                ", version='" + version + '\'' +
+                ", isDownloader=" + isDownloader +
+                ", pingTime=" + pingTime +
+                '}';
     }
 
     /**
