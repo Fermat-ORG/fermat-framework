@@ -341,16 +341,19 @@ public class ChatMiddlewareMonitorAgent implements
 
                     if (tsTime1 >= tsTime2)
                     {
-                        if (chat.getScheduledDelivery()) {
-                            //Enviar el mensaje pasando como argumento el objeto chat con todos los datos
-                            //Buscar el mensaje creado de ese chat guardado cuando se creo la redifusion
-                            List<Message> messages = chatMiddlewareDatabaseDao.getMessagesByChatId(chat.getChatId());
-                            chat.setMessagesAsociated(messages);
-                            //Buscar los miembros de ese chat en group member para asociarlo al objeto chat leido
-                            List<GroupMember> groupMembers = chatMiddlewareDatabaseDao.getGroupsMemberByGroupId(chat.getChatId());
-                            chat.setGroupMembersAssociated(groupMembers);
-                            //Enviar el mensaje
-                        }
+                        //if (chat.getScheduledDelivery()) {
+                        //Enviar el mensaje pasando como argumento el objeto chat con todos los datos
+                        //Buscar el mensaje creado de ese chat guardado cuando se creo la redifusion
+                        List<Message> messages = chatMiddlewareDatabaseDao.getMessagesByChatId(chat.getChatId());
+                        chat.setMessagesAsociated(messages);
+                        //Buscar los miembros de ese chat en group member para asociarlo al objeto chat leido
+                        List<GroupMember> groupMembers = chatMiddlewareDatabaseDao.getGroupsMemberByGroupId(chat.getChatId());
+                        for(GroupMember groupMember :  groupMembers)
+                        chat.setGroupMembersAssociated(groupMembers);
+
+                        //Enviar el mensaje
+                        chatNetworkServiceManager.sendMessageChatBroadcast(chat);
+                        //}
                     }
                 }
             }
@@ -359,6 +362,8 @@ public class ChatMiddlewareMonitorAgent implements
         } catch (CantGetChatException e) {
             e.printStackTrace();
         } catch (CantGetMessageException e) {
+            e.printStackTrace();
+        } catch (CantSendChatMessageMetadataException e) {
             e.printStackTrace();
         }
     }
