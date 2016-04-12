@@ -161,6 +161,44 @@ public final class ArtistActorNetworkServiceDeveloperDatabaseFactory {
 
                 break;
 
+            case ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_TABLE_NAME:
+                /**
+                 * Table information request columns.
+                 */
+                List<String> informationRequestColumns = new ArrayList<>();
+
+                informationRequestColumns.add(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_REQUEST_ID_COLUMN_NAME);
+                informationRequestColumns.add(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_REQUESTER_PUBLIC_KEY_COLUMN_NAME);
+                informationRequestColumns.add(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_REQUESTER_ACTOR_TYPE_COLUMN_NAME);
+                informationRequestColumns.add(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_ARTIST_PUBLIC_KEY_COLUMN_NAME);
+                informationRequestColumns.add(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_UPDATE_TIME_COLUMN_NAME);
+                informationRequestColumns.add(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_TYPE_COLUMN_NAME);
+                informationRequestColumns.add(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_STATE_COLUMN_NAME);
+                /**
+                 * Table information request addition.
+                 */
+                DeveloperDatabaseTable informationRequestTable = developerObjectFactory.getNewDeveloperDatabaseTable(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_TABLE_NAME, informationRequestColumns);
+                tables.add(informationRequestTable);
+
+                break;
+
+            case ArtistActorNetworkServiceDatabaseConstants.INFORMATION_TABLE_NAME:
+                /**
+                 * Table information columns.
+                 */
+                List<String> informationColumns = new ArrayList<>();
+
+                informationColumns.add(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_ID_COLUMN_NAME);
+                informationColumns.add(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_EXTERNAL_PLATFORM_COLUMN_NAME);
+                informationColumns.add(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_EXTERNAL_USERNAME_COLUMN_NAME);
+                /**
+                 * Table information request addition.
+                 */
+                DeveloperDatabaseTable informationTable = developerObjectFactory.getNewDeveloperDatabaseTable(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_TABLE_NAME, informationColumns);
+                tables.add(informationTable);
+
+                break;
+
             case CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME:
 
                 /**
