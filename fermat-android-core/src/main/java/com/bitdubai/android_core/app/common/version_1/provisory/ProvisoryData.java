@@ -197,7 +197,7 @@ public class ProvisoryData {
         item2.setPosition(8);
         lstIdentities.add(item2);
 
-/*
+
         installedSubApp = new InstalledSubApp(
                 SubApps.ART_ARTIST_IDENTITY,
                 null,
@@ -207,14 +207,14 @@ public class ProvisoryData {
                 SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
                 "sub_app_art_artist_identity",
                 new Version(1, 0, 0),
-                Platforms.TOKENLY);
+                Platforms.ART_PLATFORM);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.icon_bitcoin_network_active);
         item2.setPosition(9);
         lstIdentities.add(item2);
 
-*/
+
 
         FermatFolder fermatFolder = new FermatFolder("Identities",lstIdentities,2);
         Item identityFolder = new Item(fermatFolder);
