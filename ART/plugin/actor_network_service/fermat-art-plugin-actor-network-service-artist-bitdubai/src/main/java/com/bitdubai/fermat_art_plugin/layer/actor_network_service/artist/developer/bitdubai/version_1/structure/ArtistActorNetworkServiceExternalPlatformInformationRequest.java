@@ -130,6 +130,22 @@ public class ArtistActorNetworkServiceExternalPlatformInformationRequest
         return this.informationList;
     }
 
+    /**
+     * This method returns the request type
+     * @return
+     */
+    public RequestType getType() {
+        return type;
+    }
+
+    /**
+     * This method returns the protocol state
+     * @return
+     */
+    public ProtocolState getState() {
+        return state;
+    }
+
     @Override
     public String toString() {
         return "ArtistActorNetworkServiceExternalPlatformInformationRequest{" +
