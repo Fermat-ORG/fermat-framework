@@ -82,6 +82,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
             adapter = new CommunitiesExpandableAdapter(getActivity(), grouperList, getResources());
             // setting up event listeners
             adapter.setChildItemFermatEventListeners(this);
+            adapter.expandAllParents();
         }
         return adapter;
     }
@@ -164,8 +165,11 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
             swipeRefreshLayout.setRefreshing(false);
             if (result != null && result.length > 0) {
                 grouperList = (ArrayList) result[0];
-                if (adapter != null)
+                if (adapter != null) {
                     adapter.changeDataSet(grouperList);
+                    adapter.expandAllParents();
+                    adapter.expandParent(0);
+                }
             }
         }
     }
@@ -197,7 +201,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 Platforms.CRYPTO_CURRENCY_PLATFORM);
 
         installedSubApp.setIconResource(R.drawable.cryptou_community);
-        installedSubApp.setBanner(R.drawable.crypto_wallet_user_community);
+        installedSubApp.setBanner(R.drawable.wallet_user_community);
         installedApps.add(installedSubApp);
 
         installedSubApp = new InstalledSubApp(
@@ -242,7 +246,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 Platforms.DIGITAL_ASSET_PLATFORM);
 
         installedSubApp.setIconResource(R.drawable.reddem_point_community);
-        installedSubApp.setBanner(R.drawable.r_point_comuunity);
+        installedSubApp.setBanner(R.drawable.redeem_community);
         installedApps.add(installedSubApp);
 
         installedSubApp = new InstalledSubApp(
@@ -257,7 +261,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 ,Platforms.CRYPTO_BROKER_PLATFORM);
 
         installedSubApp.setIconResource(R.drawable.crypto_broker_community_final);
-        installedSubApp.setBanner(R.drawable.crypto_broker_community_final);
+        installedSubApp.setBanner(R.drawable.broker_community);
         installedApps.add(installedSubApp);
 
         installedSubApp = new InstalledSubApp(
@@ -272,8 +276,38 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 Platforms.CRYPTO_BROKER_PLATFORM);
 
         installedSubApp.setIconResource(R.drawable.crypto_customer_community_final);
+        installedSubApp.setBanner(R.drawable.customer_community);
+        installedApps.add(installedSubApp);
+
+        installedSubApp = new InstalledSubApp(
+                SubApps.ART_ARTIST_COMMUNITY,
+                null,
+                null,
+                "sub_app_artist_community",
+                "Artist",
+                SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode(),
+                "sub_app_artist_community",
+                new Version(1, 0, 0),
+                Platforms.ART_PLATFORM);
+
+        installedSubApp.setIconResource(R.drawable.crypto_customer_community_final);
         installedSubApp.setBanner(R.drawable.crypto_customer_community_final);
         installedApps.add(installedSubApp);
+
+        /*installedSubApp = new InstalledSubApp(
+                SubApps.ART_FAN_COMMUNITY,
+                null,
+                null,
+                "sub_app_art_fan_community",
+                "Fans",
+                SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
+                "sub_app_art_fan_community",
+                new Version(1, 0, 0),
+                Platforms.ART_PLATFORM);
+
+        installedSubApp.setIconResource(R.drawable.communities_icon);
+        installedSubApp.setBanner(R.drawable.communities_bar);
+        installedApps.add(installedSubApp);*/
 
     }
 }

@@ -176,11 +176,11 @@ public class ProvisoryData {
         lstIdentities.add(item2);
 
 
+
         /**
          * Chat identity added by Lozadaa
          */
 
-        lstIdentities.add(item2);
         installedSubApp = new InstalledSubApp(
                 SubApps.CHT_CHAT_IDENTITY,
                 null,
@@ -196,8 +196,24 @@ public class ProvisoryData {
         item2.setPosition(8);
         lstIdentities.add(item2);
 
+/*
+        installedSubApp = new InstalledSubApp(
+                SubApps.ART_ARTIST_IDENTITY,
+                null,
+                null,
+                "sub_app_art_artist_identity",
+                "Artist Identity",
+                SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
+                "sub_app_art_artist_identity",
+                new Version(1, 0, 0),
+                Platforms.TOKENLY);
 
+        item2 = new Item(installedSubApp);
+        item2.setIconResource(R.drawable.icon_bitcoin_network_active);
+        item2.setPosition(9);
+        lstIdentities.add(item2);
 
+*/
 
         FermatFolder fermatFolder = new FermatFolder("Identities",lstIdentities,2);
         Item identityFolder = new Item(fermatFolder);
@@ -301,6 +317,23 @@ public class ProvisoryData {
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.crypto_customer_community_final);
         item1.setPosition(5);
+        lstCommunities.add(item1);
+
+        //ART communities
+        installedSubApp = new InstalledSubApp(
+                SubApps.ART_FAN_COMMUNITY,
+                null,
+                null,
+                "sub_app_art_fan_community",
+                "Fans",
+                SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
+                "sub_app_art_fan_community",
+                new Version(1, 0, 0),
+                Platforms.ART_PLATFORM);
+
+        item1 = new Item(installedSubApp);
+        item1.setIconResource(R.drawable.communities_bar);
+        item1.setPosition(6);
         lstCommunities.add(item1);
 
 //        installedSubApp = new InstalledSubApp(

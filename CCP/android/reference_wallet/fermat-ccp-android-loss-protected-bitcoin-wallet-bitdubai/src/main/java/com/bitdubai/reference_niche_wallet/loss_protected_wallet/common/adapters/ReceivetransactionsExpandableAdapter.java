@@ -8,7 +8,8 @@ import android.view.ViewGroup;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
+
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.GrouperViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.TransactionViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.models.GrouperItem;
@@ -17,7 +18,7 @@ import java.util.List;
 
 
 public class ReceivetransactionsExpandableAdapter
-        extends ExpandableRecyclerAdapter<GrouperViewHolder, TransactionViewHolder, GrouperItem, CryptoWalletTransaction> {
+        extends ExpandableRecyclerAdapter<GrouperViewHolder, TransactionViewHolder, GrouperItem, LossProtectedWalletTransaction> {
 
     private LayoutInflater mInflater;
 
@@ -74,7 +75,7 @@ public class ReceivetransactionsExpandableAdapter
      */
     @Override
     public void onBindParentViewHolder(GrouperViewHolder parentViewHolder, int position, GrouperItem parentListItem) {
-        parentViewHolder.bind(parentListItem.getChildCount(),(CryptoWalletTransaction) parentListItem.getCryptoWalletTransaction());
+        parentViewHolder.bind(parentListItem.getChildCount(),(LossProtectedWalletTransaction) parentListItem.getCryptoWalletTransaction());
     }
 
     /**
@@ -85,7 +86,7 @@ public class ReceivetransactionsExpandableAdapter
      * @param position        the position in the RecyclerView of the item
      */
     @Override
-    public void onBindChildViewHolder(TransactionViewHolder childViewHolder, int position, CryptoWalletTransaction childListItem) {
+    public void onBindChildViewHolder(TransactionViewHolder childViewHolder, int position, LossProtectedWalletTransaction childListItem) {
         childViewHolder.bind(childListItem);
     }
 }

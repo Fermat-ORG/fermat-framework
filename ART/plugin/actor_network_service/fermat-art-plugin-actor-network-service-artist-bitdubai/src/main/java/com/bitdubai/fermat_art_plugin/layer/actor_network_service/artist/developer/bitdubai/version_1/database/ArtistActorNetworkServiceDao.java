@@ -33,15 +33,20 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDe
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDisconnectException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingConnectionRequestsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestExternalPlatformInformationException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantConfirmInformationRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantFindRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantGetProfileImageException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.InformationRequestNotFoundException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure.ArtistActorNetworkServiceExternalPlatformInformationRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -741,8 +746,8 @@ public final class ArtistActorNetworkServiceDao {
             record.setFermatEnum(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_ACTOR_TYPE_COLUMN_NAME, connectionNew.getDestinationActorType())     ;
             record.setFermatEnum (ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          , connectionNew.getRequestType())         ;
             record.setFermatEnum (ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         , connectionNew.getProtocolState())       ;
-            record.setFermatEnum (ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        , connectionNew.getRequestAction())       ;
-            record.setLongValue  (ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             , connectionNew.getSentTime())            ;
+            record.setFermatEnum(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, connectionNew.getRequestAction())       ;
+            record.setLongValue(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME, connectionNew.getSentTime())            ;
 
             if (connectionNew.getSenderImage() != null && connectionNew.getSenderImage().length > 0)
                 persistNewUserProfileImage(connectionNew.getSenderPublicKey(), connectionNew.getSenderImage());
@@ -889,6 +894,140 @@ public final class ArtistActorNetworkServiceDao {
 
     private String buildProfileImageFileName(final String publicKey) {
         return PROFILE_IMAGE_FILE_NAME_PREFIX + "_" + publicKey;
+    }
+
+    /**
+     * This method returns an ArtistActorNetworkServiceExternalPlatformInformationRequest from database.
+     * @param requestId
+     * @param requesterPublicKey
+     * @param requesterActorType
+     * @param artistPublicKey
+     * @param state
+     * @param type
+     * @return
+     * @throws CantRequestExternalPlatformInformationException
+     */
+    public final ArtistActorNetworkServiceExternalPlatformInformationRequest createExternalPlatformInformationRequest(
+            final UUID requestId,
+            final String requesterPublicKey,
+            final PlatformComponentType requesterActorType,
+            final String artistPublicKey,
+            final ProtocolState state,
+            final RequestType type) throws CantRequestExternalPlatformInformationException {
+        try {
+            final DatabaseTable quotesRequestTable = database.getTable(
+                    ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_TABLE_NAME);
+
+            final DatabaseTableRecord emptyRecord = quotesRequestTable.getEmptyRecord();
+
+            final ArtistActorNetworkServiceExternalPlatformInformationRequest informationRequest = new
+                    ArtistActorNetworkServiceExternalPlatformInformationRequest(
+                    requestId,
+                    requesterPublicKey,
+                    requesterActorType,
+                    artistPublicKey,
+                    0,
+                    type,
+                    state,
+                    new ArrayList<ArtistExternalPlatformInformation>()
+            );
+
+            emptyRecord.setUUIDValue(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_REQUEST_ID_COLUMN_NAME,
+                    informationRequest.getRequestId());
+            emptyRecord.setStringValue(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_REQUESTER_PUBLIC_KEY_COLUMN_NAME,
+                    informationRequest.getRequesterPublicKey());
+            emptyRecord.setFermatEnum(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_REQUESTER_ACTOR_TYPE_COLUMN_NAME,
+                    informationRequest.getRequesterActorType());
+            emptyRecord.setStringValue(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_ARTIST_PUBLIC_KEY_COLUMN_NAME,
+                    informationRequest.getArtistPublicKey());
+            emptyRecord.setLongValue(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_UPDATE_TIME_COLUMN_NAME,
+                    informationRequest.getUpdateTime());
+            emptyRecord.setFermatEnum(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_TYPE_COLUMN_NAME,
+                    informationRequest.getType());
+            emptyRecord.setFermatEnum(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_STATE_COLUMN_NAME,
+                    informationRequest.getState());
+
+            quotesRequestTable.insertRecord(emptyRecord);
+
+            return informationRequest;
+
+        } catch (final CantInsertRecordException e) {
+
+            throw new CantRequestExternalPlatformInformationException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and I cannot insert all the records.");
+        }
+    }
+
+    /**
+     * This method confirms the information request.
+     * @param requestId
+     * @throws CantConfirmInformationRequestException
+     * @throws InformationRequestNotFoundException
+     */
+    public void confirmInformationRequest(final UUID requestId) throws
+            CantConfirmInformationRequestException,
+            InformationRequestNotFoundException {
+        if (requestId == null) {
+            throw new CantConfirmInformationRequestException(
+                    null,
+                    "",
+                    "The requestId is required, can not be null");
+        }
+        try {
+            ProtocolState state  = ProtocolState.DONE;
+            DatabaseTable actorConnectionRequestTable =
+                    database.getTable(
+                            ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_TABLE_NAME);
+            actorConnectionRequestTable.addUUIDFilter(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_REQUEST_ID_COLUMN_NAME,
+                    requestId,
+                    DatabaseFilterType.EQUAL);
+            actorConnectionRequestTable.loadToMemory();
+            List<DatabaseTableRecord> records = actorConnectionRequestTable.getRecords();
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+                record.setFermatEnum(
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_REQUEST_STATE_COLUMN_NAME,
+                        state);
+                actorConnectionRequestTable.updateRecord(record);
+            } else
+                throw new InformationRequestNotFoundException(
+                        null,
+                        "requestId: "+requestId,
+                        "Cannot find a information request with that requestId.");
+        } catch (CantUpdateRecordException e) {
+            throw new CantConfirmInformationRequestException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and I cannot update the record.");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantConfirmInformationRequestException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and i cannot load the table.");
+        }
     }
 
 }

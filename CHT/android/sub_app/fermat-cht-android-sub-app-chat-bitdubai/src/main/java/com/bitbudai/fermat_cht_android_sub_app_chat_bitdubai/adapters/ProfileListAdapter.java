@@ -93,10 +93,11 @@ public class ProfileListAdapter extends ArrayAdapter<String> {//public class Cha
                 @Override
                 public void onClick(View v) {
                     try {
-                            appSession.setData(ChatSession.PROFILE_DATA, chatManager.getChatUserIdentity(profileid.get(pos)));
+                        //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                            appSession.setData(ChatSession.PROFILE_DATA, null);//chatManager.getChatUserIdentity(profileid.get(pos)));
                             mAdapterCallback.onMethodCallback();//solution to access to changeactivity. j
-                        } catch (CantGetChatUserIdentityException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        //} catch (CantGetChatUserIdentityException e) {
+                        //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }

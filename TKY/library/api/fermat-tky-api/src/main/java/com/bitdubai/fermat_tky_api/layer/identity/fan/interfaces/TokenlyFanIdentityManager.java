@@ -65,5 +65,15 @@ public interface TokenlyFanIdentityManager extends FermatManager {
             CantGetFanIdentityException,
             IdentityNotFoundException;
 
+    /**
+     * This method updates a Fan identity in database.
+     * This method can be used to update the plugin database when the Fan identity object include a
+     * new artist connected to be persisted.
+     * @param fan
+     * @throws CantUpdateFanIdentityException
+     */
+    void updateFanIdentity(Fan fan) throws
+            CantUpdateFanIdentityException;
+
 
 }

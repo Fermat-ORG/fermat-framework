@@ -39,8 +39,11 @@ public enum SubAppsPublicKeys implements FermatEnum {
     //TODO PIP Platform
     PIP_DEVELOPER               ("public_key_pip_developer_sub_app"),
     SETTINGS                    ("public_key_settings"),
-    //TODO ART PLATAFORM
-    ART_ARTIST_IDENTITY          ("public_key_art_artist_identity"),
+    //TODO ART PLATFORM
+    ART_ARTIST_IDENTITY         ("public_key_art_artist_identity"),
+    ART_FAN_COMMUNITY           ("public_key_art_fan_community"),
+    ART_ARTIST_COMMUNITY        ("sub_app_art_artist_community"),
+
     //TODO TKY PLATFORM
     TKY_ARTIST_IDENTITY         ("public_key_tky_artist_identity"),
     TKY_FAN_IDENTITY            ("sub_app_tky_fan_create_identity"),
@@ -90,6 +93,7 @@ public enum SubAppsPublicKeys implements FermatEnum {
             case "public_key_settings":                     return SETTINGS                 ;
             //TODO ART PLATAFORM
             case "public_key_art_artist_identity":        return ART_ARTIST_IDENTITY        ;
+            case "sub_app_art_artist_community":            return ART_ARTIST_COMMUNITY;
 
             //TODO TKY PLATAFORM
             case "public_key_tky_artist_identity":        return TKY_ARTIST_IDENTITY        ;

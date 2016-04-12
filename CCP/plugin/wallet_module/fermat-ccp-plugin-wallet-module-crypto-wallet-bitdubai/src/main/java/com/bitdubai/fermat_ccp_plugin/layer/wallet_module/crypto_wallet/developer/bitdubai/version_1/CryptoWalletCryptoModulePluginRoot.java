@@ -136,8 +136,8 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
                     intraWalletUserIdentityManager,
                     outgoingExtraUserManager      ,
                     outgoingIntraActorManager     ,
-                    walletContactsManager
-            );
+                    walletContactsManager,
+                    pluginId, pluginFileSystem);
 
             walletModuleCryptoWallet.initialize();
 
@@ -259,28 +259,35 @@ public class CryptoWalletCryptoModulePluginRoot extends AbstractModule<BitcoinWa
         return notifications;
     }
 
+    //TODO: ordenar esto please
+    CryptoWalletWalletModuleManager walletModuleCryptoWallet = null;
+
     @Override
     public ModuleManager<BitcoinWalletSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException{
         try {
 
             logManager.log(CryptoWalletCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation started...", null, null);
 
-            CryptoWalletWalletModuleManager walletModuleCryptoWallet = new CryptoWalletWalletModuleManager(
-                    bitcoinWalletManager          ,
-                    cryptoAddressBookManager      ,
-                    cryptoAddressesNSManager      ,
-                    cryptoPaymentManager          ,
-                    cryptoVaultManager            ,
-                    errorManager                  ,
-                    extraUserManager              ,
-                    intraWalletUserActorManager   ,
-                    intraWalletUserIdentityManager,
-                    outgoingExtraUserManager      ,
-                    outgoingIntraActorManager     ,
-                    walletContactsManager
-            );
+            if(walletModuleCryptoWallet == null) {
+                walletModuleCryptoWallet = new CryptoWalletWalletModuleManager(
+                        bitcoinWalletManager,
+                        cryptoAddressBookManager,
+                        cryptoAddressesNSManager,
+                        cryptoPaymentManager,
+                        cryptoVaultManager,
+                        errorManager,
+                        extraUserManager,
+                        intraWalletUserActorManager,
+                        intraWalletUserIdentityManager,
+                        outgoingExtraUserManager,
+                        outgoingIntraActorManager,
+                        walletContactsManager,
+                        pluginId,
+                        pluginFileSystem
+                );
 
-            walletModuleCryptoWallet.initialize();
+                walletModuleCryptoWallet.initialize();
+            }
 
             logManager.log(CryptoWalletCryptoModulePluginRoot.getLogLevelByClass(this.getClass().getName()), "CryptoWallet instantiation finished successfully.", null, null);
 

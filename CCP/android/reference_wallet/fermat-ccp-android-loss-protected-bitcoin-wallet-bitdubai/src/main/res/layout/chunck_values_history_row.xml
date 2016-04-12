@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="#fff"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="20dp"
+        android:id="@+id/linearLayout_event_button">
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_amount"
+                tools:text="1.4 BTC"
+                android:textSize="16sp"
+                android:textColor="#7FBA00"
+                android:fontFamily="roboto"
+                />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/txt_exchange_rate"
+                tools:text="Exchange rate: 1 BTC = 422 US$"
+                android:textSize="16sp"
+                android:textColor="#666666"
+
+                android:fontFamily="roboto medium"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="12dp"
+            android:paddingLeft="20dp"
+            android:orientation="vertical">
+
+            <ImageView android:id="@+id/btn_caret_event"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/chevronright_icon"
+                android:layout_gravity="end"
+                />
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

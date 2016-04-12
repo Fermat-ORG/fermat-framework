@@ -22,8 +22,8 @@ project(':fermat-dap-api').projectDir = new File('../../DAP/library/api/fermat-d
 // DAP Projects
 
 // identity
-include ':fermat-dap-plugin-identity-asset-issuer-bitdubai'
-project(':fermat-dap-plugin-identity-asset-issuer-bitdubai').projectDir = new File('../../DAP/plugin/identity/fermat-dap-plugin-identity-asset-issuer-bitdubai')
+include ':fermat-dap-plugin-identity-asset-issuer'
+project(':fermat-dap-plugin-identity-asset-issuer').projectDir = new File('../../DAP/plugin/identity/fermat-dap-plugin-identity-asset-issuer')
 
-include ':fermat-dap-plugin-identity-asset-user-bitdubai'
-project(':fermat-dap-plugin-identity-asset-user-bitdubai').projectDir = new File('../../DAP/plugin/identity/fermat-dap-plugin-identity-asset-user-bitdubai')
+include ':fermat-dap-plugin-identity-asset-user'
+project(':fermat-dap-plugin-identity-asset-user').projectDir = new File('../../DAP/plugin/identity/fermat-dap-plugin-identity-asset-user')

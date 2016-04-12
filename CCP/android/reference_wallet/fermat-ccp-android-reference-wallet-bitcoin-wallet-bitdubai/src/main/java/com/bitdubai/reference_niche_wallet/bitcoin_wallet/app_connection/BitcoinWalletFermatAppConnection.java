@@ -1,10 +1,14 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.app_connection;
 
 import android.content.Context;
-import com.bitdubai.fermat_android_api.engine.*;
+
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
+import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
+import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
+import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
@@ -79,7 +83,7 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
             this.referenceWalletSession = (ReferenceWalletSession)this.getFullyLoadedSession();
             if(referenceWalletSession!=  null) {
                 if (referenceWalletSession.getModuleManager() != null) {
-                    moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
+                    moduleManager = referenceWalletSession.getModuleManager();
 
                     //get enabled notification settings
 

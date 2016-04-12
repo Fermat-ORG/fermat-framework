@@ -1,6 +1,7 @@
 package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure;
 
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.database.TimeOutNotifierAgentDatabaseDao;
+import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.exceptions.InconsistentResultObtainedInDatabaseQueryException;
 import com.bitdubai.fermat_api.layer.actor.FermatActor;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
@@ -8,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_pro
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantExecuteQueryException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantAddNewTimeOutAgentException;
+import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantMarkAgentAsReadException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantRemoveExistingTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantResetTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantStartTimeOutAgentException;
@@ -121,5 +123,14 @@ public class TimeOutNotifierManager  implements TimeOutManager{
         return timeOutAgentList;
     }
 
-
+    @Override
+    public void markAsRead(TimeOutAgent timeOutAgent) throws CantMarkAgentAsReadException {
+        try {
+            timeOutNotifierAgentPool.markAsRead(timeOutAgent);
+        } catch (CantExecuteQueryException | InconsistentResultObtainedInDatabaseQueryException e) {
+            CantMarkAgentAsReadException exception = new CantMarkAgentAsReadException(e, "Error marking agent as Read. "+ timeOutAgent.toString(), "Database Issue");
+            errorManager.reportUnexpectedPluginException(Plugins.TIMEOUT_NOTIFIER, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            throw exception;
+        }
+    }
 }

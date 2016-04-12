@@ -8,6 +8,7 @@ import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces.TimeO
  */
 public class TimeOutReachedEvent extends AbstractFermatPipEvent {
     private TimeOutAgent timeOutAgent;
+    private int amountRaises;
 
     public TimeOutReachedEvent() {
         super(EventType.TIMEOUT_REACHED);
@@ -19,5 +20,13 @@ public class TimeOutReachedEvent extends AbstractFermatPipEvent {
 
     public void setTimeOutAgent(TimeOutAgent timeOutAgent) {
         this.timeOutAgent = timeOutAgent;
+    }
+
+    public int getAmountRaises() {
+        return amountRaises;
+    }
+
+    public void setAmountRaises(int amountRaises) {
+        this.amountRaises = amountRaises;
     }
 }

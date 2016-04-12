@@ -23,7 +23,6 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.support.v7.widget.Toolbar;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
@@ -48,9 +47,11 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 
 import java.io.ByteArrayInputStream;
 import java.sql.Timestamp;
@@ -60,9 +61,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -424,8 +422,9 @@ public class ChatAdapterView extends LinearLayout {
                          * LocalActorType as is defined in database
                          */
                         //chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-                        Contact newContact = chatManager.getContactByContactId(
-                                contactId);
+                        //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                        Contact newContact = null;//chatManager.getContactByContactId(
+                                //contactId);
                         PlatformComponentType remoteActorType = newContact.getRemoteActorType();
                         remotePublicKey = newContact.getRemoteActorPublicKey();
                         chat.setRemoteActorType(remoteActorType);

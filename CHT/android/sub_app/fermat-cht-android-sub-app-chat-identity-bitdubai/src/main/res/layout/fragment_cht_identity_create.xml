@@ -23,27 +23,6 @@
             android:layout_centerInParent="true"
             android:layout_centerVertical="true"
             tools:ignore="ContentDescription" />
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="50dp"
-            android:id="@+id/camara"
-            android:src="@drawable/pic_with_cam"
-            android:scaleType="fitXY"
-            android:adjustViewBounds="false"
-            android:background="#32ffffff"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true" />
-
-        <ImageView
-            android:layout_width="70dp"
-            android:layout_height="50dp"
-            android:id="@+id/galeria"
-            android:src="@drawable/pic_on_mcard"
-            android:scaleType="fitXY"
-            android:background="#32ffffff"
-            android:layout_above="@+id/camara"
-            android:layout_alignParentEnd="true"
-            android:layout_marginBottom="2dp" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -82,7 +61,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:text="Your name"
-        android:id="@+id/textView"
+        android:id="@+id/textViewChtTitle"
         android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
         android:textColor="#7d7d7d" />
