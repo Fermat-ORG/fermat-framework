@@ -7,13 +7,13 @@ import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
 /**
  * Created by mati on 2015.12.15..
  */
-public class BitcoinWalletHeaderPainter implements HeaderViewPainter {
+public class LossProtectedWalletHeaderPainter implements HeaderViewPainter {
 
 
 
 
     @Override
     public void addExpandableHeader(ViewGroup viewGroup) {
-        BitcoinWalletHeaderFactory.constructHeader(viewGroup);
+        LossProtectedWalletHeaderFactory.constructHeader(viewGroup);
     }
 }
