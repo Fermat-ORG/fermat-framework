@@ -140,16 +140,17 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
                 setBody(R.string.presentation_dialog_body_app_store_list).
                 build();
 
-        if(preferenceSettings != null && preferenceSettings.isHomeTutorialDialogEnabled()){
+        if (preferenceSettings != null && preferenceSettings.isHomeTutorialDialogEnabled()) {
             presentationDialog.show();
         }
     }
 
     private BasicWalletSettings getPreferenceSettings() {
-        BasicWalletSettings preferenceSettings;
+        final SettingsManager<BasicWalletSettings> settingsManager = moduleManager.getSettingsManager();
 
+        BasicWalletSettings preferenceSettings;
         try {
-            preferenceSettings = this.moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            preferenceSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
         } catch (Exception e) {
             preferenceSettings = null;
         }
@@ -159,7 +160,6 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
             preferenceSettings.setIsPresentationHelpEnabled(true);
 
             try {
-                final SettingsManager<BasicWalletSettings> settingsManager = moduleManager.getSettingsManager();
                 settingsManager.persistSettings(appSession.getAppPublicKey(), preferenceSettings);
             } catch (Exception e) {
                 preferenceSettings = null;
@@ -192,12 +192,14 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     @Override
     @SuppressWarnings("unchecked")
     public FermatAdapter getAdapter() {
-        if (adapter == null) {
-            WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new WalletStoreCatalogueAdapter(getActivity(), catalogueItemList, listener);
-            // TODO ejecutar este metodo despues: adapter.setFermatListEventListener(this); // setting up event listeners
-        }
-        return adapter;
+        if (adapter != null)
+            return adapter;
+
+        WalletStoreCatalogueAdapter catalogueAdapter = new WalletStoreCatalogueAdapter(getActivity(), catalogueItemList);
+        // TODO - mantener esto comentado por ahora: catalogueAdapter.setMenuClickListener(getWalletStoreItemPopupMenuListener());
+        // TODO - mantener esto comentado por ahora: catalogueAdapter.setFermatListEventListener(this);
+
+        return catalogueAdapter;
     }
 
     @Override
