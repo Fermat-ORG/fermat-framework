@@ -145,7 +145,7 @@ public class ConfigurationManager {
         newConfigurationFile.getLayout().setComment(IDENTITY_PUBLIC_KEY, "\n# * SERVER IDENTITY PUBLIC KEY");
         newConfigurationFile.addProperty(IDENTITY_PUBLIC_KEY, identityPublicKey);
 
-        newConfigurationFile.getLayout().setComment(IP, "\n# * SERVER IP");
+        newConfigurationFile.getLayout().setComment(IP, "\n# * SERVER IP (Configure 0.0.0.0 to server listen to all network interfaces)");
         newConfigurationFile.addProperty(IP, FermatEmbeddedNodeServer.DEFAULT_IP);
 
         newConfigurationFile.getLayout().setComment(PORT, "\n# * SERVER PORT");
