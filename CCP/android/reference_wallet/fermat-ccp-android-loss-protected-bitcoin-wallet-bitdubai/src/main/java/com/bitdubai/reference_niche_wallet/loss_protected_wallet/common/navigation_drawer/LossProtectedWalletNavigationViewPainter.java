@@ -18,12 +18,12 @@ import java.lang.ref.WeakReference;
 /**
  * Created by Matias Furszyfer on 2015.11.24..
  */
-public class BitcoinWalletNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
+public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fermat_android_api.engine.NavigationViewPainter {
 
     private final ActiveActorIdentityInformation intraUserLoginIdentity;
     private WeakReference<Context> activity;
 
-    public BitcoinWalletNavigationViewPainter(Context activity, ActiveActorIdentityInformation intraUserLoginIdentity) {
+    public LossProtectedWalletNavigationViewPainter(Context activity, ActiveActorIdentityInformation intraUserLoginIdentity) {
         this.activity = new WeakReference<Context>(activity);
         this.intraUserLoginIdentity = intraUserLoginIdentity;
     }
