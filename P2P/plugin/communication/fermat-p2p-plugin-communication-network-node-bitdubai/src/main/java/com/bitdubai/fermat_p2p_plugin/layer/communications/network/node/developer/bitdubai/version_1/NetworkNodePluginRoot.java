@@ -282,6 +282,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
         nodeProfile.setIp(serverIp);
         nodeProfile.setDefaultPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
         nodeProfile.setIdentityPublicKey(identity.getPublicKey());
+        nodeProfile.setName(ConfigurationManager.getValue(ConfigurationManager.NODE_NAME));
         nodeProfile.setLocation(LocationProvider.acquireLocationThroughIP());
 
         LOG.info(nodeProfile);
