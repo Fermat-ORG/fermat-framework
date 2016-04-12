@@ -12,5 +12,6 @@
     <color name="wallet_name_black">#66000000</color>
     <color name="wallet_store_activities_background">#f4f4f4</color>
     <color name="whats_new_background">#e39affab</color>
+    <color name="grey">#7b7b7b</color>
 
 </resources>
