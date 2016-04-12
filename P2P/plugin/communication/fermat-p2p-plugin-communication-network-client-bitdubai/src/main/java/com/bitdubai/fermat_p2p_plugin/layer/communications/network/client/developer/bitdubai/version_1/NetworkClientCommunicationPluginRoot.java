@@ -117,7 +117,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
              */
             initializeDb();
 
-            URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT+"/client-channel");
+            URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT+"/fermat/ws/client-channel");
 
             networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
                     uri            ,
