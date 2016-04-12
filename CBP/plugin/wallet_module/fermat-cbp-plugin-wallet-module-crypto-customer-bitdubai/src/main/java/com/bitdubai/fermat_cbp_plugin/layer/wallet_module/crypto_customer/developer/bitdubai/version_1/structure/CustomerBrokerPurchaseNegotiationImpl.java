@@ -191,25 +191,18 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
 
         dataHasChanged = dataHasChanged || !Objects.equals(cancelReason, negotiationInfo.getCancelReason());
         cancelReason = negotiationInfo.getCancelReason();
-//        hasChange = hasChange + "\ndataHasChanged: "+Boolean.toString(dataHasChanged)+" - CancelReason: "+negotiationInfo.getCancelReason();
 
         dataHasChanged = dataHasChanged || !Objects.equals(memo, negotiationInfo.getMemo());
         memo = negotiationInfo.getMemo();
-//        hasChange = hasChange + "\ndataHasChanged: "+Boolean.toString(dataHasChanged)+" - Memo: "+negotiationInfo.getCancelReason();
 
         Collection<ClauseInformation> values = negotiationInfo.getClauses().values();
 //        dataHasChanged = dataHasChanged || (clauses.size() != values.size());
-//        hasChange = hasChange + "\ndataHasChanged: "+Boolean.toString(dataHasChanged)+" - ClauseSize: clauses.size()["+clauses.size()+"] != values.size()["+values.size()+"]";
 
         clauses = new ArrayList<>();
         for (final ClauseInformation value : values) {
             dataHasChanged = dataHasChanged || (value.getStatus() == ClauseStatus.CHANGED);
             clauses.add(new CryptoCustomerWalletModuleClausesImpl(value, customerPublicKey));
-//            changeClause = changeClause +"\n  - Clause "+value.getType()+" Status = "+value.getStatus();
         }
-//        hasChange = hasChange + "\ndataHasChanged: "+Boolean.toString(dataHasChanged)+" - Clasuse Change: "+changeClause;
-
-//        System.out.println("\n**** 1.1) MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION - changeInfo() ****\n" +hasChange);
 
         this.status = NegotiationStatus.SENT_TO_BROKER;
     }
