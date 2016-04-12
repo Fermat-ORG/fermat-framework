@@ -226,8 +226,8 @@ public class SongFragment extends AbstractFermatFragment {
         syncthread=new SyncThreadClass(autosync); // Firstthread
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) // Above Api Level 13
         {
-            // syncthread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            syncthread.execute();
+            syncthread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//            syncthread.execute();
         }
         else // Below Api Level 13
         {
@@ -269,7 +269,7 @@ public class SongFragment extends AbstractFermatFragment {
         songInfo=songOfBroadcast.getComposers()+"@#@#"+songOfBroadcast.getName();
         if(!listComposerAndSongNameOnView.contains(songInfo)){
             items.add(new SongItems(R.drawable.tky_tokenly_album, songOfBroadcast.getName(), songOfBroadcast.getComposers(), SongStatus.DOWNLOADING.getFriendlyName(),song_Id, 0, false));
-            adapter.setFilter(items);
+            adapter.setFilter(items,false,0);
 
         }
 
@@ -300,7 +300,7 @@ public class SongFragment extends AbstractFermatFragment {
                     listComposerAndSongNameOnView.add("TKY_WALLET songs" + walletitems.getComposers() + "@#@#" + walletitems.getName());
                     //System.out.println("TKY_NOT in view" + walletitems.getComposers() + "@#@#" + walletitems.getName());
                     items.add(new SongItems(R.drawable.tky_tokenly_album, walletitems.getName(), walletitems.getComposers(), walletitems.getSongStatus().getFriendlyName(), walletitems.getSongId(), 0, false));
-                    adapter.setFilter(items);
+                    adapter.setFilter(items,false,0);
                 }
             }
 
@@ -332,10 +332,14 @@ public class SongFragment extends AbstractFermatFragment {
                 int position=viewHolder.getAdapterPosition();
                 final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
                 final int swipeFlags = ItemTouchHelper.END;       // delete one in case you want just one direction
-                if(items.get(position).getStatus()==SongStatus.DOWNLOADING.getFriendlyName() ||items.get(position).getStatus()==SongStatus.NOT_AVAILABLE.getFriendlyName()){
-                    return 0;
+                if(position>=0) {
+                    if (items.get(position).getStatus() == SongStatus.DOWNLOADING.getFriendlyName() || items.get(position).getStatus() == SongStatus.NOT_AVAILABLE.getFriendlyName()) {
+                        return 0;
+                    } else {
+                        return makeMovementFlags(dragFlags, swipeFlags);
+                    }
                 }else{
-                    return makeMovementFlags(dragFlags, swipeFlags);
+                    return 0;
                 }
 
              //   return  items.get(position).getStatus()=="Downloading"? 0:makeMovementFlags(dragFlags, swipeFlags);
@@ -394,7 +398,7 @@ public class SongFragment extends AbstractFermatFragment {
                 });
                 dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogo1, int id) {
-                        adapter.setFilter(original);
+                        adapter.setFilter(original,false,0);
                     }
                 });
                 dialogo1.show();
@@ -444,7 +448,7 @@ public class SongFragment extends AbstractFermatFragment {
             fanWalletModule.deleteSong(items.get(position).getSong_id());
             items.get(position).setStatus(SongStatus.DELETED.getFriendlyName());
             items.get(position).setProgress(0);
-            adapter.setFilter(items);
+            adapter.setFilter(items,false,0);
         } catch (CantDeleteSongException e) {
             errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         } catch (CantUpdateSongStatusException e) {
@@ -530,16 +534,15 @@ public class SongFragment extends AbstractFermatFragment {
         if(progress.equals("100")){
             items.get(position).setProgressbarvissible(false);
             items.get(position).setStatus(SongStatus.DOWNLOADED.getFriendlyName());
-          //  items.get(position).setSong_id();  //TODO
         }
-        adapter.setFilter(items);
+        adapter.setFilter(items,true,position);
     }
 
     void cancelnotification(int position){
         items.get(position).setProgressbarvissible(false);
         items.get(position).setProgress(Integer.valueOf(0));
         items.get(position).setStatus(SongStatus.AVAILABLE.getFriendlyName());
-        adapter.setFilter(items);
+        adapter.setFilter(items,false,0);
     }
     // TODO: 04/04/16 what happen here?
     void downloadproblem(int position){
@@ -578,7 +581,7 @@ public class SongFragment extends AbstractFermatFragment {
             items.get(position).setProgressbarvissible(true);
             songId=items.get(position).getSong_id();
             Log.v(TAG, "Before start download");
-            adapter.setFilter(items);
+            adapter.setFilter(items,true,position);
 
         }
 
