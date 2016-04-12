@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
+import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.google.gson.Gson;
 
 /**
@@ -114,5 +115,12 @@ public class NodeProfile extends Profile {
         return gson.fromJson(jsonString, this.getClass());
     }
 
-
+    @Override
+    public String toString() {
+        return "NodeProfile{" +
+                "defaultPort=" + defaultPort +
+                ", ip='" + ip + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }
