@@ -461,8 +461,8 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
             lstItemsWithIcon.add(item);
 
 
-            //
-            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+            //TKY Fan Wallet
+            /*installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
                     WalletType.REFERENCE,
                     new ArrayList<InstalledSkin>(),
                     new ArrayList<InstalledLanguage>(),
@@ -476,7 +476,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.banner_tky);
             item.setPosition(9);
-            lstItemsWithIcon.add(item);
+            lstItemsWithIcon.add(item);*/
 
 
 
