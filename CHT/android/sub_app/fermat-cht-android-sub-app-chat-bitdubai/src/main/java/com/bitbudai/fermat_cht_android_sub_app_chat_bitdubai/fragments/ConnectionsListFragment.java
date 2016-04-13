@@ -1,7 +1,5 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -125,7 +123,8 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
 //            cadded.setRemoteName("No hay nadie conectado");
 //            chatManager.saveContact(cadded);
 //            //Fin Comentar
-            List<ContactConnection> con = chatManager.getContactConnections();
+            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+            List<ContactConnection> con = null;//chatManager.getContactConnections();
             int size = con.size();
             if (size > 0) {
                 for (int i = 0; i < size; i++) {
@@ -165,37 +164,44 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                     if(contactexist!=null) {
                         if (contactexist.getRemoteActorPublicKey().equals("CONTACTTOUPDATE_DATA")){
                             UUID contactidnew = contactexist.getContactId();
-                            contactexist=chatManager.getContactByContactId(contactid.get(position));
+                            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                            contactexist=null;//chatManager.getContactByContactId(contactid.get(position));
                             Chat chat=chatManager.getChatByChatId((UUID)appSession.getData("chatid"));
                             chat.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
                             chatManager.saveChat(chat);
                             Contact contactnew = new ContactImpl();
-                            contactnew=chatManager.getContactByContactId(contactidnew);
+                            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                            contactnew= null;//chatManager.getContactByContactId(contactidnew);
                             contactnew.setRemoteActorPublicKey(contactexist.getRemoteActorPublicKey());
                             contactnew.setAlias(contactexist.getAlias());
                             contactnew.setRemoteName(contactexist.getRemoteName());
                             contactnew.setRemoteActorType(contactexist.getRemoteActorType());
-                            chatManager.saveContact(contactnew);
+                            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                            //chatManager.saveContact(contactnew);
                             Contact deleteContact;
-                            for (int i = 0; i < chatManager.getContacts().size(); i++) {
-                                deleteContact=chatManager.getContacts().get(i);
-                                if(deleteContact.getRemoteName().equals("Not registered contact")){
-                                    if(deleteContact.getContactId().equals(contactidnew)) {
-                                        chatManager.deleteContact(deleteContact);
-                                    }
-                                }
-
-                            }
-                            chatManager.deleteContact(contactexist);
+                            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+//                            for (int i = 0; i < chatManager.getContacts().size(); i++) {
+//                                deleteContact=chatManager.getContacts().get(i);
+//                                if(deleteContact.getRemoteName().equals("Not registered contact")){
+//                                    if(deleteContact.getContactId().equals(contactidnew)) {
+//                                        chatManager.deleteContact(deleteContact);
+//                                    }
+//                                }
+//
+//                            }
+                            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                            //chatManager.deleteContact(contactexist);
                             appSession.setData(ChatSession.CONTACTTOUPDATE_DATA, null);
                             appSession.setData("whocallme", "contact");
-                            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactidnew));
+                            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                            appSession.setData(ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(contactidnew));
                             Toast.makeText(getActivity(), "Connection added as Contact", Toast.LENGTH_SHORT).show();
                             changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                         }
                     }else {
                         final int pos=position;
-                        final ContactConnection contactConn = chatManager.getContactConnectionByContactId(contactid.get(pos));
+                        //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                        final ContactConnection contactConn = null;//chatManager.getContactConnectionByContactId(contactid.get(pos));
                        
                         if (contactConn.getRemoteName()!=null) {
                             cht_dialog_yes_no customAlert = new cht_dialog_yes_no(getActivity(),appSession,null,contactConn, null);
@@ -209,11 +215,11 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                     }
                 }catch(CantSaveChatException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }catch(CantDeleteContactException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }catch(CantSaveContactException e) {
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }catch(CantGetContactException e) {
+                //}catch(CantDeleteContactException e) {
+                //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                //}catch(CantSaveContactException e) {
+                //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                //}catch(CantGetContactException e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }catch (Exception e){
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -229,7 +235,8 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                     public void run() {
                         Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
                         try {
-                            List <ContactConnection> con=  chatManager.getContactConnections();
+                            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                            List <ContactConnection> con=  null;//chatManager.getContactConnections();
                             if (con.size() > 0) {
                                 contactname.clear();
                                 contactid.clear();
@@ -249,8 +256,8 @@ public class ConnectionsListFragment extends AbstractFermatFragment {
                             }else{
                                 Toast.makeText(getActivity(), "No Connections", Toast.LENGTH_SHORT).show();
                             }
-                        } catch (CantGetContactConnectionException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        //} catch (CantGetContactConnectionException e) {
+                        //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }

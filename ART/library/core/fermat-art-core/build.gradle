@@ -20,7 +20,7 @@ dependencies {
     compile project(':fermat-art-plugin-actor-network-service-fan-bitdubai')
     //Identity
     compile project(':fermat-art-plugin-identity-artist-bitdubai')
-
+    compile project(':fermat-art-plugin-identity-fan-bitdubai')
     //SUB APP MODULE
     compile project(':fermat-art-plugin-sub-app-module-artist-community-bitdubai')
     compile project(':fermat-art-plugin-sub-app-module-artist-identity-bitdubai')

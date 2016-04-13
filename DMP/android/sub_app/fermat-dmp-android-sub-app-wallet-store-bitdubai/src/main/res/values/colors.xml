@@ -4,13 +4,19 @@
     <color name="background_tab_pressed">#6633B5E5</color>
     <color name="black_overlay">#66000000</color>
     <color name="wallet_factory_orange">#ff9900</color>
-    <color name="wallet_store_link">#69b07f</color>
+    <color name="wallet_store_link">#78BA43</color>
     <color name="wallet_install_background_button">#69b07f</color>
     <color name="wallet_install_text_button">#ffffff</color>
     <color name="wallet_uninstall_background_button">#89c3c1ce</color>
     <color name="wallet_uninstall_text_button">#181818</color>
     <color name="wallet_name_black">#66000000</color>
-    <color name="wallet_store_activities_background">#f4f4f4</color>
     <color name="whats_new_background">#e39affab</color>
+    <color name="grey">#6D6E71</color>
+    <color name="app_store_divider_icon_color">#a6a6a6</color>
+    <color name="app_store_main_activity_background">#FAFAFA</color>
+    <color name="app_store_more_details_activity_background">#FFFFFF</color>
+    <color name="app_store_details_activity_background">#FFFFFF</color>
+    <color name="app_store_action_bar_start_color">#6ABCEC</color>
+    <color name="app_store_action_bar_end_color">#489BD1</color>
 
 </resources>

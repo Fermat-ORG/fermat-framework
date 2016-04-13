@@ -88,6 +88,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor;
     final String WALLET_PATH;
+    private final BitcoinCryptoNetworkDatabaseDao dao;
 
     /**
      * List of running agents per network
@@ -98,8 +99,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * Platform variables
      */
     EventManager eventManager;
-    PluginDatabaseSystem pluginDatabaseSystem;
-    BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao;
     UUID pluginId;
     PluginFileSystem pluginFileSystem;
     ErrorManager errorManager;
@@ -107,18 +106,26 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
 
     /**
      * Constructor
-     *
      * @param eventManager
-     * @param pluginDatabaseSystem
+     * @param pluginFileSystem
+     * @param pluginId
+     * @param errorManager
+     * @param broadcaster
+     * @param bitcoinCryptoNetworkDatabaseDao
      */
-    public BitcoinCryptoNetworkManager(EventManager eventManager, PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId, ErrorManager errorManager, Broadcaster broadcaster) {
+    public BitcoinCryptoNetworkManager(EventManager eventManager,
+                                       PluginFileSystem pluginFileSystem,
+                                       UUID pluginId,
+                                       ErrorManager errorManager,
+                                       Broadcaster broadcaster,
+                                       BitcoinCryptoNetworkDatabaseDao bitcoinCryptoNetworkDatabaseDao) {
         this.eventManager = eventManager;
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.errorManager = errorManager;
         this.WALLET_PATH = pluginFileSystem.getAppPath();
         this.broadcaster = broadcaster;
+        this.dao = bitcoinCryptoNetworkDatabaseDao;
 
         runningAgents = new HashMap<>();
 
@@ -136,7 +143,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
          * This method will be called from agents from the Vaults. New keys may be added on each call or not.
          */
         try {
-            getDao().updateCryptoVaultsStatistics(cryptoVault, keyList.size());
+            dao.updateCryptoVaultsStatistics(cryptoVault, keyList.size());
         } catch (CantExecuteDatabaseOperationException e) {
             //If stats where not updated, I will just continue.
             e.printStackTrace();
@@ -231,7 +238,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                      * once the agent is stopped, I will restart it with the new wallet.
                      */
                     File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context, broadcaster);
+                    bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context, broadcaster, dao);;
                     runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                     bitcoinCryptoNetworkMonitor.start();
@@ -241,7 +248,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                  * If the agent for the network is not running, I will start a new one.
                  */
                 File walletFilename = new File(WALLET_PATH, blockchainNetworkType.getCode());
-                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(this.pluginDatabaseSystem, pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context, broadcaster);
+                BitcoinCryptoNetworkMonitor bitcoinCryptoNetworkMonitor = new BitcoinCryptoNetworkMonitor(pluginId, wallet, walletFilename, pluginFileSystem, errorManager, context, broadcaster, dao);
                 runningAgents.put(blockchainNetworkType, bitcoinCryptoNetworkMonitor);
 
                 System.out.println("***CryptoNetwork*** starting new agent with " + keyList.size() + " keys for " + cryptoVault.getCode() + " vault...");
@@ -289,8 +296,8 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     private void updateDetailedCryptoStats(CryptoVaults cryptoVault, BlockchainNetworkType blockchainNetworkType, List<ECKey> keyList) {
         try {
-            getDao().deleteDetailedCryptoStats(cryptoVault, blockchainNetworkType);
-            getDao().updateDetailedCryptoStats(cryptoVault, blockchainNetworkType, keyList);
+            dao.deleteDetailedCryptoStats(cryptoVault, blockchainNetworkType);
+            dao.updateDetailedCryptoStats(cryptoVault, blockchainNetworkType, keyList);
         } catch (CantExecuteDatabaseOperationException e) {
             /**
              * if the stats are not updated, I can continue anyway.
@@ -377,16 +384,6 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         return runningAgents.get(blockchainNetworkType) != null;
     }
 
-    /**
-     * instantiate if needed the dao object to access the database
-     *
-     * @return
-     */
-    private BitcoinCryptoNetworkDatabaseDao getDao() {
-        if (bitcoinCryptoNetworkDatabaseDao == null)
-            bitcoinCryptoNetworkDatabaseDao = new BitcoinCryptoNetworkDatabaseDao(this.pluginId, this.pluginDatabaseSystem);
-        return bitcoinCryptoNetworkDatabaseDao;
-    }
 
     /**
      * TransactionProtocolManager interface implementations
@@ -402,7 +399,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
     @Override
     public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
         try {
-            getDao().confirmReception(transactionID);
+            dao.confirmReception(transactionID);
         } catch (CantExecuteDatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantConfirmTransactionException(CantConfirmTransactionException.DEFAULT_MESSAGE, e, "Crypto Network issue confirming transaction.", "database issue");
@@ -445,7 +442,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
                 /**
                  * Will set the Protocol Status of this transaction to Sending Notified.
                  */
-                getDao().setTransactionProtocolStatus(transaction.getTransactionID(), ProtocolStatus.SENDING_NOTIFIED);
+                dao.setTransactionProtocolStatus(transaction.getTransactionID(), ProtocolStatus.SENDING_NOTIFIED);
             }
         } catch (CantExecuteDatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
@@ -461,7 +458,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      * @return
      */
     private List<TransactionProtocolData> getPendingTransactionProtocolData() throws CantExecuteDatabaseOperationException {
-        return getDao().getPendingTransactionProtocolData();
+        return dao.getPendingTransactionProtocolData();
     }
 
     /**
@@ -473,7 +470,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     public List<CryptoTransaction> getGenesisTransaction(String txHash) throws CantGetCryptoTransactionException {
         try {
-            return getDao().getCryptoTransactions(txHash,null,null);
+            return dao.getCryptoTransactions(txHash,null,null);
         } catch (CantExecuteDatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database operation issue.", "database error");
@@ -493,7 +490,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
          */
         BlockchainNetworkType blockchainNetworkType;
         try {
-            blockchainNetworkType = getDao().getBlockchainNetworkTypeFromBroadcast(txHash);
+            blockchainNetworkType = dao.getBlockchainNetworkTypeFromBroadcast(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
             blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         }
@@ -647,7 +644,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     public CryptoStatus getCryptoStatus(String txHash) throws CantGetTransactionCryptoStatusException {
         try {
-            return getDao().getTransactionCryptoStatus(txHash);
+            return dao.getTransactionCryptoStatus(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetTransactionCryptoStatusException(CantGetTransactionCryptoStatusException.DEFAULT_MESSAGE, e, "Database error getting CryptoStatus for transaction: " + txHash, "database issue");
@@ -664,7 +661,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         List<TransactionProtocolData> transactions = null;
 
         try {
-            transactions = getDao().getAllTransactionProtocolData();
+            transactions = dao.getAllTransactionProtocolData();
         } catch (CantExecuteDatabaseOperationException e) {
             throw new CantFixTransactionInconsistenciesException(CantFixTransactionInconsistenciesException.DEFAULT_MESSAGE, e, "Database error.", "Database error.");
         }
@@ -738,7 +735,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     public BroadcastStatus getBroadcastStatus(String txHash) throws CantGetBroadcastStatusException {
         try {
-            return getDao().getBroadcastStatus(txHash);
+            return dao.getBroadcastStatus(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetBroadcastStatusException(CantGetBroadcastStatusException.DEFAULT_MESSAGE, e, "There was a database error getting the status", "database issue");
@@ -757,7 +754,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
          */
         BlockchainNetworkType blockchainNetworkType;
         try {
-            blockchainNetworkType = getDao().getBlockchainNetworkTypeFromBroadcast(txHash);
+            blockchainNetworkType = dao.getBlockchainNetworkTypeFromBroadcast(txHash);
         } catch (CantExecuteDatabaseOperationException e) {
             blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
         }
@@ -772,7 +769,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
          * marks the transaction as cancelled in the database
          */
         try {
-            getDao().setBroadcastStatus(Status.CANCELLED, 0, null, txHash);
+            dao.setBroadcastStatus(Status.CANCELLED, 0, null, txHash);
         } catch (CantExecuteDatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantCancellBroadcastTransactionException(CantCancellBroadcastTransactionException.DEFAULT_MESSAGE, e, "Database error while cancelling transaction.", "database issue");
@@ -805,7 +802,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
 
         CryptoTransaction cryptoTransaction = null;
         try {
-            cryptoTransaction = getDao().getCryptoTransaction(txHash, cryptoTransactionType, toAddress);
+            cryptoTransaction = dao.getCryptoTransaction(txHash, cryptoTransactionType, toAddress);
         } catch (CantExecuteDatabaseOperationException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database error getting the last crypto transaction.", "database error");
@@ -814,7 +811,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
         // If I didn't got it in the right transactionType, will try getting them all
         if (cryptoTransaction == null){
             try {
-                cryptoTransaction = getDao().getCryptoTransaction(txHash, null, toAddress);
+                cryptoTransaction = dao.getCryptoTransaction(txHash, null, toAddress);
             } catch (CantExecuteDatabaseOperationException e) {
                 errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_BITCOIN_CRYPTO_NETWORK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
                 throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "database error getting the last crypto transaction.", "database error");
@@ -1044,7 +1041,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
          * I will get all the stored transactions on all active networks
          */
         try {
-            for (BlockchainNetworkType blockchainNetworkType : this.getDao().getActiveBlockchainNetworkTypes()){
+            for (BlockchainNetworkType blockchainNetworkType : this.dao.getActiveBlockchainNetworkTypes()){
                 for (Transaction transaction : this.getBitcoinTransactions(blockchainNetworkType)){
                     /**
                      * for each transaction I will search in the input the outpoint that matches the passed transactionHash
@@ -1072,7 +1069,7 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     public List<CryptoTransaction> getCryptoTransactions(BlockchainNetworkType blockchainNetworkType, CryptoAddress addressTo, @Nullable CryptoTransactionType cryptoTransactionType) throws CantGetCryptoTransactionException {
         try{
-            return this.getDao().getCryptoTransactions(blockchainNetworkType, addressTo, cryptoTransactionType);
+            return this.dao.getCryptoTransactions(blockchainNetworkType, addressTo, cryptoTransactionType);
         } catch (Exception e){
             throw new CantGetCryptoTransactionException(CantGetCryptoTransactionException.DEFAULT_MESSAGE, e, "There was an error getting the list of stored cryptoTransactions", "Database issue");
         }

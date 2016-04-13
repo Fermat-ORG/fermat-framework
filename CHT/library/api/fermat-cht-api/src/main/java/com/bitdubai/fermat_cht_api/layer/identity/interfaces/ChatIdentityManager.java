@@ -37,7 +37,7 @@ public interface ChatIdentityManager extends FermatManager {
      * @return the intra user created
      * @throws CantCreateNewChatIdentityException if something goes wrong.
      */
-    ChatIdentity createNewIdentityChat(String alias,
+    void createNewIdentityChat(String alias,
                                                  byte[] profileImage) throws CantCreateNewChatIdentityException;
 
     /**

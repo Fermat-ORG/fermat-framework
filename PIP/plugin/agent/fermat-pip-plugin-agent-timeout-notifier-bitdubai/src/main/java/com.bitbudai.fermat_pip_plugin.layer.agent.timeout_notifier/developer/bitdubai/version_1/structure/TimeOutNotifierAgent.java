@@ -42,6 +42,7 @@ public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
     private long duration;
     private long epochEndTime;
     private AgentStatus status;
+    private boolean isRead;
 
 
     /**
@@ -100,9 +101,10 @@ public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
     }
 
     @Override
-    public void markEventNotificationAsRead() {
-
+    public boolean isRead() {
+        return this.isRead;
     }
+
 
     @Override
     public long getEpochStartTime() {
@@ -148,6 +150,10 @@ public class TimeOutNotifierAgent implements TimeOutAgent, Runnable {
 
     public void setStatus(AgentStatus status) {
         this.status = status;
+    }
+
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;
     }
 
     @Override

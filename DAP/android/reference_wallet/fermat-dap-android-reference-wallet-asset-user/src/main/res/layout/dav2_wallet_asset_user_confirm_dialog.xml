@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/dap_user_wallet_dialog_body">
+
+    <TextView
+        android:id="@+id/confirmDialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dap_user_wallet_v2_confirm_title"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:layout_margin="20dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/dap_user_wallet_v2_confirm_body"
+        android:layout_below="@+id/confirmDialogTitle"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textSize="18sp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:background="@color/dap_user_wallet_dialog_bar"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/agreeButton"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:text="@string/dap_user_wallet_v2_confirm_button_agree"
+            android:background="@color/dap_user_wallet_dialog_bar"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/fab_material_white"
+            android:textSize="18sp"/>
+
+        <View
+            android:id="@+id/separator"
+            android:layout_width="1dip"
+            android:layout_height="fill_parent"
+            android:background="@color/fab_material_white"
+            android:layout_toLeftOf="@+id/agreeButton"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"/>
+
+        <Button
+            android:id="@+id/disagreeButton"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_centerVertical="true"
+            android:text="@string/dap_user_wallet_v2_confirm_button_disagree"
+            android:background="@color/dap_user_wallet_dialog_bar"
+            android:layout_toLeftOf="@+id/separator"
+            android:textColor="@color/fab_material_white"
+            android:textSize="18sp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

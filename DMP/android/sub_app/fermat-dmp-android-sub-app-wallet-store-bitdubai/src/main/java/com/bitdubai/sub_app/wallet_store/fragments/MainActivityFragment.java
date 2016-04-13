@@ -2,10 +2,14 @@ package com.bitdubai.sub_app.wallet_store.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,16 +18,19 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_settings.basic_classes.BasicWalletSettings;
 import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_store.enums.InstallationStatus;
 import com.bitdubai.fermat_wpd_api.layer.wpd_sub_app_module.wallet_store.interfaces.WalletStoreModuleManager;
 import com.bitdubai.sub_app.wallet_store.common.adapters.WalletStoreCatalogueAdapter;
@@ -48,6 +55,7 @@ import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.PREVIEW_IMGS;
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.SKIN_ID;
 import static com.bitdubai.sub_app.wallet_store.session.WalletStoreSubAppSession.WALLET_VERSION;
+
 
 /**
  * Fragment que luce como un Activity donde se muestra la lista de Wallets disponibles en el catalogo de la Wallet Store
@@ -79,6 +87,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
      * UI
      */
     private ProgressDialog dialog;
+    private PresentationDialog presentationDialog;
 
     /**
      * Create a new instance of this fragment
@@ -103,8 +112,42 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     }
 
     @Override
-    protected boolean hasMenu() {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.app_store_main_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.app_store_menu_action_help) {
+            presentationDialog.show();
+            return true;
+        }
+
         return false;
+    }
+
+    @Override
+    protected boolean hasMenu() {
+        return true;
+    }
+
+    @Override
+    protected void initViews(View layout) {
+        super.initViews(layout);
+
+        configureToolbar();
+        BasicWalletSettings preferenceSettings = getPreferenceSettings();
+
+        presentationDialog = new PresentationDialog.Builder(getActivity(), appSession).
+                setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES).
+                setBannerRes(R.drawable.app_store_banner).
+                setSubTitle(R.string.presentation_dialog_subtitle_app_store_list).
+                setBody(R.string.presentation_dialog_body_app_store_list).
+                build();
+
+        if (preferenceSettings != null && preferenceSettings.isHomeTutorialDialogEnabled()) {
+            presentationDialog.show();
+        }
     }
 
     @Override
@@ -130,12 +173,14 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     @Override
     @SuppressWarnings("unchecked")
     public FermatAdapter getAdapter() {
-        if (adapter == null) {
-            WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
-            adapter = new WalletStoreCatalogueAdapter(getActivity(), catalogueItemList, listener);
-            adapter.setFermatListEventListener(this); // setting up event listeners
-        }
-        return adapter;
+        if (adapter != null)
+            return adapter;
+
+        WalletStoreCatalogueAdapter catalogueAdapter = new WalletStoreCatalogueAdapter(getActivity(), catalogueItemList);
+        // TODO - mantener esto comentado por ahora: catalogueAdapter.setMenuClickListener(getWalletStoreItemPopupMenuListener());
+        // TODO - mantener esto comentado por ahora: catalogueAdapter.setFermatListEventListener(this);
+
+        return catalogueAdapter;
     }
 
     @Override
@@ -236,6 +281,37 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         return false;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        WalletStoreListItem.started = false;
+    }
+
+    @NonNull
+    private WalletStoreItemPopupMenuListener getWalletStoreItemPopupMenuListener() {
+        return new WalletStoreItemPopupMenuListener() {
+            @Override
+            public void onMenuItemClickListener(View menuView, WalletStoreListItem item, int position) {
+                selectedItem = item;
+
+                PopupMenu popupMenu = new PopupMenu(getActivity(), menuView);
+                MenuInflater menuInflater = popupMenu.getMenuInflater();
+
+                InstallationStatus installationStatus = item.getInstallationStatus();
+                int resId = UtilsFuncs.INSTANCE.getInstallationStatusStringResource(installationStatus);
+
+                if (resId == R.string.wallet_status_install) {
+                    menuInflater.inflate(R.menu.menu_wallet_store, popupMenu.getMenu());
+                } else {
+                    menuInflater.inflate(R.menu.menu_wallet_store_installed, popupMenu.getMenu());
+                }
+
+                popupMenu.setOnMenuItemClickListener(MainActivityFragment.this);
+                popupMenu.show();
+            }
+        };
+    }
+
     private void installSelectedWallet(WalletStoreListItem item) {
 
         final Activity activity = getActivity();
@@ -263,12 +339,6 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
 
         final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, (SubAppsSession) appSession, item, activity, callBack);
         worker.execute();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        WalletStoreListItem.started = false;
     }
 
     private void showDetailsActivityFragment(WalletStoreListItem item) {
@@ -313,28 +383,39 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         }
     }
 
-    @NonNull
-    private WalletStoreItemPopupMenuListener getWalletStoreItemPopupMenuListener() {
-        return new WalletStoreItemPopupMenuListener() {
-            @Override
-            public void onMenuItemClickListener(View menuView, WalletStoreListItem item, int position) {
-                selectedItem = item;
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
 
-                PopupMenu popupMenu = new PopupMenu(getActivity(), menuView);
-                MenuInflater menuInflater = popupMenu.getMenuInflater();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.app_store_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.app_store_action_bar_gradient_colors));
 
-                InstallationStatus installationStatus = item.getInstallationStatus();
-                int resId = UtilsFuncs.INSTANCE.getInstallationStatusStringResource(installationStatus);
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
+    }
 
-                if (resId == R.string.wallet_status_install) {
-                    menuInflater.inflate(R.menu.menu_wallet_store, popupMenu.getMenu());
-                } else {
-                    menuInflater.inflate(R.menu.menu_wallet_store_installed, popupMenu.getMenu());
-                }
+    private BasicWalletSettings getPreferenceSettings() {
+        final SettingsManager<BasicWalletSettings> settingsManager = moduleManager.getSettingsManager();
 
-                popupMenu.setOnMenuItemClickListener(MainActivityFragment.this);
-                popupMenu.show();
+        BasicWalletSettings preferenceSettings;
+        try {
+            preferenceSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            preferenceSettings = null;
+        }
+
+        if (preferenceSettings == null) {
+            preferenceSettings = new BasicWalletSettings();
+            preferenceSettings.setIsPresentationHelpEnabled(true);
+
+            try {
+                settingsManager.persistSettings(appSession.getAppPublicKey(), preferenceSettings);
+            } catch (Exception e) {
+                preferenceSettings = null;
             }
-        };
+        }
+
+        return preferenceSettings;
     }
 }

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/rouded_corners_dialog"
+    >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4.5dp"
+        android:background="@drawable/round_corner_line_dialog"
+        android:fitsSystemWindows="true"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/pager_container"
+        android:paddingBottom="16dp">
+
+
+        <android.support.v4.view.ViewPager
+            android:layout_width="match_parent"
+            android:layout_height="400dp"
+            android:id="@+id/dialog_pager"/>
+
+        <RadioGroup
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:id="@+id/radio_group"
+            android:gravity="center"
+            android:layout_marginBottom="12dp"
+            android:orientation="horizontal">
+
+
+        </RadioGroup>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
+            android:paddingBottom="12dp"
+            >
+
+            <CheckBox
+                android:id="@+id/checkbox_not_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:buttonTint="@color/black_overlay" />
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="32dp"
+                android:gravity="center_vertical"
+                android:text="@string/no_id_dont_show_this_again_text"
+                android:textColor="#7c7c7c"
+                android:textSize="12sp" />
+        </RelativeLayout>
+
+        <Button
+            android:layout_width="121dp"
+            android:layout_height="33dp"
+            android:textColor="#fff"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="Got it"
+            android:textAlignment="center"
+            android:background="@drawable/btn_got_it"
+            android:id="@+id/btc_got_it"
+            />
+
+
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

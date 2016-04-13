@@ -100,7 +100,7 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<Payment
             }
         });
         try {
-            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
+            cryptoWallet = referenceWalletSession.getModuleManager();
 
             settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
 

@@ -16,7 +16,7 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsEx
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
@@ -71,6 +71,7 @@ import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.exceptions.Crypt
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPayment;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentManager;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.interfaces.CryptoPaymentRegistry;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantApproveRequestPaymentException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantCreateWalletContactException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantDeleteWalletContactException;
@@ -137,7 +138,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 @PluginInfo(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.CRYPTO_WALLET)
-public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleManager,Serializable {
+public class CryptoWalletWalletModuleManager implements CryptoWallet,Serializable {
 
     private final BitcoinWalletManager           bitcoinWalletManager          ;
     private final CryptoAddressBookManager       cryptoAddressBookManager      ;
@@ -151,20 +152,22 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleMana
     private final OutgoingExtraUserManager       outgoingExtraUserManager      ;
     private final OutgoingIntraActorManager      outgoingIntraActorManager     ;
     private final WalletContactsManager          walletContactsManager         ;
+    private final UUID pluginId;
+    private final PluginFileSystem pluginFileSystem;
 
 
-    public CryptoWalletWalletModuleManager(final BitcoinWalletManager           bitcoinWalletManager          ,
-                                           final CryptoAddressBookManager       cryptoAddressBookManager      ,
-                                           final CryptoAddressesManager         cryptoAddressesNSManager      ,
-                                           final CryptoPaymentManager           cryptoPaymentManager          ,
-                                           final CryptoVaultManager cryptoVaultManager            ,
-                                           final ErrorManager                   errorManager                  ,
-                                           final ExtraUserManager               extraUserManager              ,
-                                           final IntraWalletUserActorManager    intraUserManager              ,
+    public CryptoWalletWalletModuleManager(final BitcoinWalletManager bitcoinWalletManager,
+                                           final CryptoAddressBookManager cryptoAddressBookManager,
+                                           final CryptoAddressesManager cryptoAddressesNSManager,
+                                           final CryptoPaymentManager cryptoPaymentManager,
+                                           final CryptoVaultManager cryptoVaultManager,
+                                           final ErrorManager errorManager,
+                                           final ExtraUserManager extraUserManager,
+                                           final IntraWalletUserActorManager intraUserManager,
                                            final IntraWalletUserIdentityManager intraWalletUserIdentityManager,
-                                           final OutgoingExtraUserManager       outgoingExtraUserManager      ,
-                                           final OutgoingIntraActorManager      outgoingIntraActorManager     ,
-                                           final WalletContactsManager          walletContactsManager        ) {
+                                           final OutgoingExtraUserManager outgoingExtraUserManager,
+                                           final OutgoingIntraActorManager outgoingIntraActorManager,
+                                           final WalletContactsManager walletContactsManager, UUID pluginId, PluginFileSystem pluginFileSystem) {
 
         this.bitcoinWalletManager           = bitcoinWalletManager          ;
         this.cryptoAddressBookManager       = cryptoAddressBookManager      ;
@@ -178,6 +181,8 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleMana
         this.outgoingExtraUserManager       = outgoingExtraUserManager      ;
         this.outgoingIntraActorManager      = outgoingIntraActorManager     ;
         this.walletContactsManager          = walletContactsManager         ;
+        this.pluginId = pluginId;
+        this.pluginFileSystem = pluginFileSystem;
 
     }
 
@@ -1480,19 +1485,38 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet, ModuleMana
         return sdf.format(date);
     }
 
+    private SettingsManager<BitcoinWalletSettings> settingsManager;
     @Override
-    public SettingsManager getSettingsManager() {
-        return null;
+    public SettingsManager<BitcoinWalletSettings> getSettingsManager() {
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return null;
+        try {
+            List<IntraWalletUserIdentity> lst = getActiveIdentities();
+            if(lst.isEmpty()){
+                return null;
+            }else{
+                return lst.get(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-
+        createIntraUser(name, phrase, profile_img);
     }
 
     @Override
