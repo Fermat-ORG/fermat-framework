@@ -168,14 +168,17 @@ public class TokenlyIdentityArtistManagerImpl implements DealsWithErrors, DealsW
         }
     }
 
-    public void updateIdentityArtist(User user,String password, UUID id,String publicKey, byte[] profileImage,ExternalPlatform externalPlatform,
-                                     ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
+    public Artist updateIdentityArtist(User user, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform,
+                                       ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
         try {
             getArtistIdentityDao().updateIdentityArtistUser(user, password,id,publicKey,profileImage,externalPlatform, exposureLevel, artistAcceptConnectionsType);
-
+            return getArtistIdentityDao().getIdentityArtist(id);
         } catch (CantInitializeTokenlyArtistIdentityDatabaseException e) {
             e.printStackTrace();
+        } catch (CantGetArtistIdentityException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
 }

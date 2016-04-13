@@ -17,7 +17,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
@@ -41,7 +40,6 @@ import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.TokenlyArtistIdentityManager;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.database.TokenlyArtistIdentityDeveloperDatabaseFactory;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.exceptions.CantInitializeTokenlyArtistIdentityDatabaseException;
-import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.structure.TokenlyArtistIdentityImp;
 import com.bitdubai.fermat_tky_plugin.layer.identity.artist_identity.developer.bitdubai.version_1.structure.TokenlyIdentityArtistManagerImpl;
 
 import java.util.ArrayList;
@@ -178,8 +176,8 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
 
 
     @Override
-    public void updateArtistIdentity(String username,String password, UUID id,String publicKey, byte[] profileImage, ExternalPlatform externalPlatform,
-                                      ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
+    public Artist updateArtistIdentity(String username, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform,
+                                       ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
         User user=null;
         try{
             if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
@@ -188,7 +186,8 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
             e.printStackTrace();
         }
         if(user != null)
-            identityArtistManager.updateIdentityArtist(user, password, id, publicKey, profileImage, externalPlatform,exposureLevel,artistAcceptConnectionsType);
+            return identityArtistManager.updateIdentityArtist(user, password, id, publicKey, profileImage, externalPlatform,exposureLevel,artistAcceptConnectionsType);
+        return null;
     }
 
     @Override

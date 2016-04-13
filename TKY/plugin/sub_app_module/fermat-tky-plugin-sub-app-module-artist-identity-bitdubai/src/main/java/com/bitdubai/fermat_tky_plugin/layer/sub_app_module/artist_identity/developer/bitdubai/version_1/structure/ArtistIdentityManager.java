@@ -54,8 +54,8 @@ public class ArtistIdentityManager implements TokenlyArtistIdentityManagerModule
     }
 
     @Override
-    public void updateArtistIdentity(String username,String password, UUID id,String publicKey, byte[] profileImage, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
-        tokenlyArtistIdentityManager.updateArtistIdentity(
+    public Artist updateArtistIdentity(String username, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
+        return tokenlyArtistIdentityManager.updateArtistIdentity(
                 username,
                 password,
                 id,
