@@ -404,9 +404,9 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
                 providerSetting.setCurrencyTo(FiatCurrency.US_DOLLAR.getCode());
                 walletManager.saveCryptoBrokerWalletProviderSetting(providerSetting, brokerWalletPublicKey);
 
-                // PROVIDERS -> BTC/VEF
+                // PROVIDERS -> BTC/ARG
                 providers.clear();
-                providers.addAll(walletManager.getProviderReferencesFromCurrencyPair(CryptoCurrency.BITCOIN, FiatCurrency.VENEZUELAN_BOLIVAR));
+                providers.addAll(walletManager.getProviderReferencesFromCurrencyPair(CryptoCurrency.BITCOIN, FiatCurrency.ARGENTINE_PESO));
                 provider = providers.get(0);
 
                 providerSetting = new CryptoBrokerWalletProviderSettingImpl();
@@ -415,18 +415,13 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
                 providerSetting.setId(provider.getProviderId());
                 providerSetting.setPlugin(provider.getProviderId());
                 providerSetting.setCurrencyFrom(CryptoCurrency.BITCOIN.getCode());
-                providerSetting.setCurrencyTo(FiatCurrency.VENEZUELAN_BOLIVAR.getCode());
+                providerSetting.setCurrencyTo(FiatCurrency.ARGENTINE_PESO.getCode());
                 walletManager.saveCryptoBrokerWalletProviderSetting(providerSetting, brokerWalletPublicKey);
 
-                // PROVIDERS -> USD/VEF
+                // PROVIDERS -> USD/ARG
                 providers.clear();
-                providers.addAll(walletManager.getProviderReferencesFromCurrencyPair(FiatCurrency.US_DOLLAR, FiatCurrency.VENEZUELAN_BOLIVAR));
-                for (CurrencyExchangeRateProviderManager providerManager : providers) {
-                    if (providerManager.getProviderName().equals("DolarToday")) {
-                        provider = providerManager;
-                        break;
-                    }
-                }
+                providers.addAll(walletManager.getProviderReferencesFromCurrencyPair(FiatCurrency.US_DOLLAR, FiatCurrency.ARGENTINE_PESO));
+                provider = providers.get(0);
 
                 providerSetting = new CryptoBrokerWalletProviderSettingImpl();
                 providerSetting.setBrokerPublicKey(brokerWalletPublicKey);
@@ -434,7 +429,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
                 providerSetting.setId(provider.getProviderId());
                 providerSetting.setPlugin(provider.getProviderId());
                 providerSetting.setCurrencyFrom(FiatCurrency.US_DOLLAR.getCode());
-                providerSetting.setCurrencyTo(FiatCurrency.VENEZUELAN_BOLIVAR.getCode());
+                providerSetting.setCurrencyTo(FiatCurrency.ARGENTINE_PESO.getCode());
                 walletManager.saveCryptoBrokerWalletProviderSetting(providerSetting, brokerWalletPublicKey);
 
                 // OTHER SETTINGS -> Spread and Automatic Restock
