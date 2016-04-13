@@ -30,7 +30,7 @@ public class ArtFanUserFermatAppConnection extends AppConnections {
     @Override
     public PluginVersionReference getPluginVersionReference() {
         return  new PluginVersionReference(
-                Platforms.ART_PLATFORM,
+                Platforms.PLATFORM_ART,
                 Layers.SUB_APP_MODULE,
                 Plugins.ART_FAN_SUB_APP_MODULE,
                 Developers.BITDUBAI,

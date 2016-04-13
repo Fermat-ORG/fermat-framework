@@ -25,12 +25,15 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDi
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestExternalPlatformInformationException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.ArtistActorNetworkServiceDao;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.database.ArtistActorNetworkServiceDeveloperDatabaseFactory;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantFindRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantHandleNewMessagesException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.messages.InformationMessage;
@@ -215,24 +218,95 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
                     getCommunicationNetworkServiceConnectionManager().closeConnection(requestMessage.getSenderPublicKey());
                     break;
 
+                case INFORMATION_REQUEST:
+                    ArtistActorNetworkServiceExternalPlatformInformationRequest
+                            informationRequestMessage =
+                            ArtistActorNetworkServiceExternalPlatformInformationRequest.fromJson(
+                                    jsonMessage);
+                    System.out.println("********************* Content:  " + informationRequestMessage);
+                    receiveQuotesRequest(informationRequestMessage);
+
+                    getCommunicationNetworkServiceConnectionManager().
+                            closeConnection(informationRequestMessage.getRequesterPublicKey());
+                    break;
                 default:
                     throw new CantHandleNewMessagesException(
                             "message type: " +networkServiceMessage.getMessageType().name(),
                             "Message type not handled."
                     );
             }
-
         } catch (Exception e) {
             System.out.println(e.toString());
-            errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(
+                    this.getPluginVersionReference(),
+                    UnexpectedPluginExceptionSeverity.
+                            DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
         }
-
         try {
             getCommunicationNetworkServiceConnectionManager().getIncomingMessageDao().markAsRead(fermatMessage);
         } catch (com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantUpdateRecordDataBaseException e) {
             e.printStackTrace();
         }
     }
+
+    private void receiveQuotesRequest(
+            final ArtistActorNetworkServiceExternalPlatformInformationRequest informationRequest)
+            throws CantHandleNewMessagesException {
+        try {
+            ArtistConnectionRequest informationRequestInDatabase =
+                    artistActorNetworkServiceDao.getConnectionRequest(
+                            informationRequest.getRequestId());
+            if (informationRequestInDatabase.getRequestType() == RequestType.SENT) {
+                artistActorNetworkServiceDao.answerInformationRequest(
+                        informationRequest.getRequestId(),
+                        informationRequest.getUpdateTime(),
+                        informationRequest.listInformation(),
+                        ProtocolState.PENDING_LOCAL_ACTION
+                );
+                FermatEvent eventToRaise = eventManager.getNewEvent(
+                        EventType.ARTIST_CONNECTION_REQUEST_UPDATES);
+                eventToRaise.setSource(eventSource);
+                eventManager.raiseEvent(eventToRaise);
+            }
+        } catch (CantFindRequestException quotesRequestNotFoundException) {
+
+            try {
+                final ProtocolState state = ProtocolState.PENDING_LOCAL_ACTION;
+                final RequestType type = RequestType.RECEIVED;
+
+                artistActorNetworkServiceDao.createExternalPlatformInformationRequest(
+                        informationRequest.getRequestId(),
+                        informationRequest.getRequesterPublicKey(),
+                        informationRequest.getRequesterActorType(),
+                        informationRequest.getArtistPublicKey(),
+                        state,
+                        type
+                );
+
+                FermatEvent eventToRaise = eventManager.getNewEvent(
+                        EventType.ARTIST_CONNECTION_REQUEST_UPDATES);
+                eventToRaise.setSource(eventSource);
+                eventManager.raiseEvent(eventToRaise);
+            } catch (CantRequestExternalPlatformInformationException e) {
+                errorManager.reportUnexpectedPluginException(
+                        this.getPluginVersionReference(),
+                        UnexpectedPluginExceptionSeverity.
+                                DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+                throw new CantHandleNewMessagesException(e, "", "Error in Crypto Broker ANS Dao.");
+            }
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(
+                    this.getPluginVersionReference(),
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantHandleNewMessagesException(
+                    e,
+                    "",
+                    "Unhandled Exception.");
+        }
+    }
+
     /**
      * I indicate to the Agent the action that it must take:
      * - Protocol State: PROCESSING_RECEIVE.    .

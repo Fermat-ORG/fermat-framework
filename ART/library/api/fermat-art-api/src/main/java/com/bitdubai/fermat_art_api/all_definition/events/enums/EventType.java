@@ -54,7 +54,7 @@ public enum EventType implements FermatEventEnum {
 
     @Override
     public final Platforms getPlatform() {
-        return Platforms.ART_PLATFORM;
+        return Platforms.PLATFORM_ART;
     }
 
 }
