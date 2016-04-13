@@ -53,7 +53,7 @@ public class ArtistActorConnectionPluginRoot extends AbstractPlugin implements D
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_BROADCASTER_SYSTEM)
     private Broadcaster broadcaster;
 
-    @NeededPluginReference(platform = Platforms.ART_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin =  Plugins.ARTIST)
+    @NeededPluginReference(platform = Platforms.PLATFORM_ART, layer = Layers.ACTOR_NETWORK_SERVICE, plugin =  Plugins.ARTIST)
     private ArtistManager artistActorNetworkServiceManager;
 
     /**

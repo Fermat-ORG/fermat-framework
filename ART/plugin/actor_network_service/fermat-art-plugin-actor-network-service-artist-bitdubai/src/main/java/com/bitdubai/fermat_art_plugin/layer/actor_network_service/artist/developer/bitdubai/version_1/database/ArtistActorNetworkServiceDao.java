@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -41,6 +43,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantAnswerInformationRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantConfirmInformationRequestException;
@@ -1161,6 +1164,90 @@ public final class ArtistActorNetworkServiceDao {
                     "",
                     "Exception reading records of the table Cannot recognize the codes of the " +
                             "External platform enum.");
+        }
+    }
+
+    /**
+     * This method must be used to answer information requests.
+     * @param requestId
+     * @param updateTime
+     * @param informationList
+     * @param state
+     * @throws CantAnswerInformationRequestException
+     * @throws CantFindRequestException
+     */
+    public final void answerInformationRequest(
+            final UUID requestId,
+            final long updateTime,
+            final List<ArtistExternalPlatformInformation> informationList,
+            final ProtocolState state) throws
+            CantAnswerInformationRequestException,
+            CantFindRequestException {
+
+        try {
+            final DatabaseTable quotesRequestTable = database.
+                    getTable(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_TABLE_NAME);
+            quotesRequestTable.addUUIDFilter(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_ID_COLUMN_NAME,
+                    requestId,
+                    DatabaseFilterType.EQUAL);
+            quotesRequestTable.loadToMemory();
+            final List<DatabaseTableRecord> records = quotesRequestTable.getRecords();
+            DatabaseTableRecord quotesRequestRecord;
+            if (!records.isEmpty()) {
+                quotesRequestRecord = records.get(0);
+                quotesRequestRecord.setFermatEnum(
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_REQUEST_STATE_COLUMN_NAME,
+                        state);
+                quotesRequestRecord.setLongValue(
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_REQUEST_UPDATE_TIME_COLUMN_NAME,
+                        updateTime);
+            } else
+                throw new CantFindRequestException(
+                        null,
+                        "",
+                        "Cannot find a quotes request with that id.");
+            DatabaseTransaction databaseTransaction = database.newTransaction();
+            databaseTransaction.addRecordToUpdate(quotesRequestTable, quotesRequestRecord);
+            String username;
+            for (final ArtistExternalPlatformInformation information : informationList) {
+                final DatabaseTable quotesTable = database.getTable(
+                        ArtistActorNetworkServiceDatabaseConstants.INFORMATION_TABLE_NAME);
+                final DatabaseTableRecord quotesRecord = quotesTable.getEmptyRecord();
+                quotesRecord.setUUIDValue (
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_REQUEST_ID_COLUMN_NAME,
+                        requestId);
+                HashMap<ArtExternalPlatform,String> artExternalPlatformStringHashMap = information.getExternalPlatformInformationMap();
+                //TODO: For this version we got only TKY as External platform
+                username = artExternalPlatformStringHashMap.get(
+                        ArtExternalPlatform.TOKENLY);
+                quotesRecord.setFermatEnum(
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_EXTERNAL_PLATFORM_COLUMN_NAME,
+                        ArtExternalPlatform.TOKENLY);
+                quotesRecord.setStringValue(
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_EXTERNAL_USERNAME_COLUMN_NAME,
+                        username);
+                databaseTransaction.addRecordToInsert(quotesTable, quotesRecord);
+            }
+            database.executeTransaction(databaseTransaction);
+        } catch (final CantLoadTableToMemoryException e) {
+            throw new CantAnswerInformationRequestException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and I cannot load the table.");
+        } catch (final DatabaseTransactionFailedException e) {
+            throw new CantAnswerInformationRequestException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and I cannot insert all the records.");
         }
     }
 
