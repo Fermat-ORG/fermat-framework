@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces;
 
+import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 
@@ -35,7 +36,7 @@ public abstract class ChatSearch {
      *
      * @throws CantListChatException  if something goes wrong.
      */
-    public abstract List<ChatExposingData> getResult() throws CantListChatException;
+    public abstract List<ChatActorConnection> getResult() throws CantListChatException;
 
     /**
      * Through the method <code>getResult</code> we can get the results of the search,
