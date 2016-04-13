@@ -144,7 +144,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
             }
         }).start();
 
-        new ANRWatchDog().start();
+//        new ANRWatchDog().start();
 
         super.onCreate();
     }
