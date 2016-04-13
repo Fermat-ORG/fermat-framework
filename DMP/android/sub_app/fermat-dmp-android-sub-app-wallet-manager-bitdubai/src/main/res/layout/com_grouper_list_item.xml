@@ -27,6 +27,7 @@
         android:layout_height="match_parent"
         android:id="@+id/arrow"
         android:src="@drawable/white_row_hdpi"
+        android:paddingTop="3dp"
         android:layout_weight="4"
         android:layout_marginRight="20dp"/>
 
