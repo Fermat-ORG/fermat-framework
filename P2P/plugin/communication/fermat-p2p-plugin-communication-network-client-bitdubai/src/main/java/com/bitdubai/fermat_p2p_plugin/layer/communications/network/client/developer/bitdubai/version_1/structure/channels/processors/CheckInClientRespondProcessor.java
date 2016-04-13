@@ -39,7 +39,7 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
     public void processingPackage(Session session, Package packageReceived) {
 
         System.out.println("Processing new package received");
-        CheckInProfileMsjRespond checkInProfileMsjRespond = (CheckInProfileMsjRespond) packageReceived.getContent();
+        CheckInProfileMsjRespond checkInProfileMsjRespond = CheckInProfileMsjRespond.parseContent(packageReceived.getContent());
 
         if(checkInProfileMsjRespond.getStatus() == CheckInProfileMsjRespond.STATUS.SUCCESS){
             //raise event

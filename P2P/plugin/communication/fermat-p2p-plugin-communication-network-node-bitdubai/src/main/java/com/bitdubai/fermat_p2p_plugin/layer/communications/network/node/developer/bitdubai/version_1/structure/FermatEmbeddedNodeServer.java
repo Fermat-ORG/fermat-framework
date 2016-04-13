@@ -66,7 +66,7 @@ public class FermatEmbeddedNodeServer {
     /**
      * Represent the DEFAULT_IP number
      */
-    public static final String DEFAULT_IP = "0.0.0.0";
+    public static final String DEFAULT_IP = "192.168.1.22";
 
     /**
      * Represent the serverBuilder instance

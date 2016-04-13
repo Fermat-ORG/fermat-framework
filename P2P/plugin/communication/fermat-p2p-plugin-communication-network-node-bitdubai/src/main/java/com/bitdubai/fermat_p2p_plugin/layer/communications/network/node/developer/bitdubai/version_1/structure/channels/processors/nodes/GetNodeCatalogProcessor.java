@@ -1,9 +1,3 @@
-/*
- * @#GetNodeCatalogProcessor.java - 2016
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
@@ -63,7 +57,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
 
         try {
 
-            GetNodeCatalogMsjRequest messageContent = (GetNodeCatalogMsjRequest)  packageReceived.getContent();
+            GetNodeCatalogMsjRequest messageContent = GetNodeCatalogMsjRequest.parseContent(packageReceived.getContent());
 
             /*
              * Create the method call history
@@ -84,7 +78,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 getNodeCatalogMsjRespond = new GetNodeCatalogMsjRespond(GetNodeCatalogMsjRespond.STATUS.SUCCESS, GetNodeCatalogMsjRespond.STATUS.SUCCESS.toString(), nodesCatalogList, count);
-                Package packageRespond = Package.createInstance(getNodeCatalogMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(getNodeCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -104,7 +98,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
                  * Respond whit fail message
                  */
                 getNodeCatalogMsjRespond = new GetNodeCatalogMsjRespond(GetNodeCatalogMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), nodesCatalogList, new Long(0));
-                Package packageRespond = Package.createInstance(getNodeCatalogMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(getNodeCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond

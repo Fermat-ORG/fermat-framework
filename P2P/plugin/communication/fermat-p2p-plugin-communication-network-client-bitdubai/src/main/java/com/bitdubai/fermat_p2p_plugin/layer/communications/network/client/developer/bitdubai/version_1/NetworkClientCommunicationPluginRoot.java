@@ -117,7 +117,14 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
              */
             initializeDb();
 
-            URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT+"/client-channel");
+            /*
+             * Add references to the node context
+             */
+            ClientContext.add(ClientContextItem.CLIENT_IDENTITY, identity    );
+            ClientContext.add(ClientContextItem.ERROR_MANAGER, errorManager);
+            ClientContext.add(ClientContextItem.EVENT_MANAGER, eventManager);
+
+            URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT+"/fermat/ws/client-channel");
 
             networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
                     uri            ,
@@ -127,13 +134,6 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
                     identity
             );
             networkClientCommunicationConnection.start();
-
-            /*
-             * Add references to the node context
-             */
-            ClientContext.add(ClientContextItem.CLIENT_IDENTITY, identity    );
-            ClientContext.add(ClientContextItem.ERROR_MANAGER  , errorManager);
-            ClientContext.add(ClientContextItem.EVENT_MANAGER  , eventManager);
 
         } catch (Exception exception){
 
