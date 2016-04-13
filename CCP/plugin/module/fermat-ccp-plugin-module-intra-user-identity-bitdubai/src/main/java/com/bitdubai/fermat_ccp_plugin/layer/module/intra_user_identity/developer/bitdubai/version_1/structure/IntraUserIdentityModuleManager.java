@@ -165,12 +165,18 @@ public class IntraUserIdentityModuleManager implements com.bitdubai.fermat_ccp_a
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return null;
+        ActiveActorIdentityInformation activeActorIdentityInformation = null;
+        try {
+            activeActorIdentityInformation = getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+        } catch (CantListIntraUsersIdentityException e) {
+            e.printStackTrace();
+        }
+        return activeActorIdentityInformation;
     }
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-
+        createNewIntraWalletUser(name,phrase,profile_img);
     }
 
     @Override
