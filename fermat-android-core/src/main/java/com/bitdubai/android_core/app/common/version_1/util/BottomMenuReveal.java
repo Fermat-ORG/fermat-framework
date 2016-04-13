@@ -8,6 +8,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
 
 import com.bitdubai.android_core.app.FermatActivity;
+import com.bitdubai.android_core.app.common.version_1.dialogs.WelcomeScrennDialog;
 import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsCallback;
 import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsItem;
 import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsSlider;
@@ -21,7 +22,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.callback.AppStatusCallbackChanges;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 
 import java.lang.ref.WeakReference;
 
@@ -47,6 +47,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem>,AppStatu
     private WeakReference<FermatActivity> fermatActivity;
     private View.OnClickListener onClickListener;
     private SettingsSlider settingsSlider;
+    private WelcomeScrennDialog welcomeScreenDialog;
 
     public BottomMenuReveal(final ViewGroup mRevealView, final FermatActivity activity) {
         this.hidden = false;
@@ -199,7 +200,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem>,AppStatu
                 new AppStatusDialog(fermatActivity.get(), FermatSystemUtils.getAndroidCoreModule(), this).show();
                 break;
             case FERMAT_NETWORK:
-                fermatActivity.get().changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(), "main_desktop");
+                //fermatActivity.get().changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(), "main_desktop");
                 break;
             case BITCOIN_NETWORK:
                 break;
@@ -207,6 +208,12 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem>,AppStatu
                 break;
             case RECENTS:
                 fermatActivity.get().openRecentsScreen();
+                break;
+            case HELP:
+                if(welcomeScreenDialog == null){
+                    welcomeScreenDialog = new WelcomeScrennDialog(fermatActivity.get(),null,null);
+                }
+                welcomeScreenDialog.show();
                 break;
         }
     }

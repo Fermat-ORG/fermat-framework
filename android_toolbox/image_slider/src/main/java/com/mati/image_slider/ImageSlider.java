@@ -21,7 +21,7 @@ import java.util.List;
 public class ImageSlider<I> extends RelativeLayout {
 
     ViewPager viewPager;
-    AbstractViewPagerAdapter<I> sliderAdapter;
+    AbstractViewPagerAdapter<I,FermatViewHolder> sliderAdapter;
     private ViewGroup parent;
 
     public ImageSlider(Context context,AbstractViewPagerAdapter sliderAdapter) {
@@ -57,7 +57,7 @@ public class ImageSlider<I> extends RelativeLayout {
         this.parent = parent;
     }
 
-    public void setSliderAdapter(AbstractViewPagerAdapter<I> sliderAdapter) {
+    public void setSliderAdapter(AbstractViewPagerAdapter<I,FermatViewHolder> sliderAdapter) {
         this.sliderAdapter = sliderAdapter;
     }
 

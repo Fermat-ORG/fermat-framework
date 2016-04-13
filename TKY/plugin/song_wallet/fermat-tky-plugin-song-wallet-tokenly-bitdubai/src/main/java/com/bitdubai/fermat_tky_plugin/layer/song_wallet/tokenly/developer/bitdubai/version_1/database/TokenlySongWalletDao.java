@@ -468,13 +468,15 @@ public class TokenlySongWalletDao {
      * @param songPath
      * @param username
      * @param songStatus
+     * @param songId
      * @throws CantPersistSongException
      */
     public void saveSong(
             Song song,
             String songPath,
             String username,
-            SongStatus songStatus) throws
+            SongStatus songStatus,
+            UUID songId) throws
             CantPersistSongException {
         try{
             openDatabase();
@@ -482,7 +484,7 @@ public class TokenlySongWalletDao {
             WalletSong walletSong = new WalletSongRecord(
                     song,
                     SongStatus.AVAILABLE,
-                    UUID.randomUUID());
+                    songId);
             //Build record
             DatabaseTable databaseTable = getDatabaseTable(
                     TokenlySongWalletDatabaseConstants.SONG_TABLE_NAME);
