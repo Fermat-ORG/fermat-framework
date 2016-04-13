@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.ConfigurationManager</code> implements
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager</code> implements
  * <p/>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 24/02/16.

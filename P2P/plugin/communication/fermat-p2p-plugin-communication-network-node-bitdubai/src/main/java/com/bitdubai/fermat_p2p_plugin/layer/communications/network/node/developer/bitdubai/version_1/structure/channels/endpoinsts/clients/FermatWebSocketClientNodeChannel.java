@@ -76,6 +76,26 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
     }
 
     /**
+     * Constructor with parameters
+     *
+     * @param ip
+     * @param port
+     */
+    public FermatWebSocketClientNodeChannel(String ip, Integer port){
+
+        try {
+
+            URI endpointURI = new URI("ws://"+ip+":"+port);
+            WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
+            clientConnection = webSocketContainer.connectToServer(this, endpointURI);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    /**
      * (non-javadoc)
      *
      * @see FermatWebSocketChannelEndpoint#initPackageProcessorsRegistration()

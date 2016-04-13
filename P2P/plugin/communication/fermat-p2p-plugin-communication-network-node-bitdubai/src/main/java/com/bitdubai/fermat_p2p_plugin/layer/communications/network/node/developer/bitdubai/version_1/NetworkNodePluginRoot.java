@@ -16,7 +16,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
@@ -38,21 +37,24 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.FermatEmbeddedNodeServer;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.agents.PropagateActorCatalogAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.agents.PropagateNodeCatalogAgent;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.clients.FermatWebSocketClientNodeChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.AddNodeToCatalogMsgRequest;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.UpdateNodeInCatalogMsgRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInitializeCommunicationsNetworkNodeP2PDatabaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.SeedServerConf;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.jboss.logging.Logger;
-import org.w3c.dom.Node;
 
 import java.io.IOException;
 
@@ -141,6 +143,11 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      * Represent the fermatEmbeddedNodeServer instance
      */
     private FermatEmbeddedNodeServer fermatEmbeddedNodeServer;
+
+    /**
+     * Represent the fermatWebSocketClientNodeChannel instance
+     */
+    private FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel;
 
     /**
      * Represent the nodeProfile
@@ -232,6 +239,23 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              */
             propagateNodeCatalogAgent.start();
             propagateActorCatalogAgent.start();
+
+            /*
+             * Validate if the node are the seed server
+             */
+            if (!iAmSeedServer()){
+
+                fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
+
+                /*
+                 * Validate if the node server profile register has change
+                 */
+                if (validateNodeProfileRegisterChange()){
+                    requestUpdateProfileInTheNodeCatalog();
+                }else {
+                    requestRegisterProfileInTheNodeCatalog();
+                }
+            }
 
 
         } catch (CantInitializeCommunicationsNetworkNodeP2PDatabaseException exception) {
@@ -474,6 +498,52 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             this.daoFactory = new DaoFactory(dataBase);
 
         }
+
+    }
+
+    /**
+     * Validate if the node is the seed server
+     *
+     * @return boolean
+     */
+    private boolean iAmSeedServer(){
+
+        if (serverIp.equals(SeedServerConf.DEFAULT_IP)){
+            return Boolean.TRUE;
+        }
+
+        return Boolean.FALSE;
+    }
+
+    /**
+     * Method that validate if the node profile register change
+     * from the registration
+     */
+    private boolean validateNodeProfileRegisterChange(){
+
+        //TODO: VALIDATION LOGIC
+        return Boolean.FALSE;
+    }
+
+    /**
+     * Method that request to the seed server to register
+     * the profile of this node
+     */
+    private void requestRegisterProfileInTheNodeCatalog(){
+
+        AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
+        fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest);
+
+    }
+
+    /**
+     * Method that request to the seed server to update
+     * the profile of this node
+     */
+    private void requestUpdateProfileInTheNodeCatalog(){
+
+        UpdateNodeInCatalogMsgRequest updateNodeInCatalogMsgRequest = new UpdateNodeInCatalogMsgRequest(nodeProfile);
+        fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest);
 
     }
 

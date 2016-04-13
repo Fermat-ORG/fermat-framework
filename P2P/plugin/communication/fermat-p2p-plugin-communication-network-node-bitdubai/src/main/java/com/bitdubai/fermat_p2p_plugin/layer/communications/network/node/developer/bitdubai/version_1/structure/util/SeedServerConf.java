@@ -24,5 +24,5 @@ public class SeedServerConf {
     /**
      * Represent the DEFAULT_PORT
      */
-    public static final int DEFAULT_PORT = 8080;
+    public static final Integer DEFAULT_PORT = new Integer(8080);
 }
