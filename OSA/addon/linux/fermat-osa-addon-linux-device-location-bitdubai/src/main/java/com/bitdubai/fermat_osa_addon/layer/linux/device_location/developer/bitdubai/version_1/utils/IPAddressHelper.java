@@ -20,7 +20,7 @@ import java.net.URL;
  */
 public final class IPAddressHelper {
 
-    private static final String PUBLIC_ADDRESS_URL = "http://ifconfig.me/ip";
+    private static final String PUBLIC_ADDRESS_URL = "http://ipinfo.io/ip";
 
     public static String getCurrentIPAddress() throws CantGetCurrentIPAddressException {
 
