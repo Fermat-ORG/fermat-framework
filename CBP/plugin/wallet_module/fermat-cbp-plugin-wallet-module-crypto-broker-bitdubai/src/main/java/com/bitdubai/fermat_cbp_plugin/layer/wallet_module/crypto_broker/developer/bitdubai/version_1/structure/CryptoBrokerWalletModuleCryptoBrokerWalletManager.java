@@ -1205,7 +1205,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = this.customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
             /*//TODO: remove this mock
             customerBrokerSaleNegotiation = new SaleNegotiationOnlineMock();*/
-            ContractClauseType contractClauseType = getContractClauseType(customerBrokerSaleNegotiation);
+            ContractClauseType contractClauseType = getContractClauseType(customerBrokerSaleNegotiation,ClauseType.BROKER_PAYMENT_METHOD);
 
             // Case: sending crypto merchandise.
             if (contractClauseType.getCode() == ContractClauseType.CRYPTO_TRANSFER.getCode()) {
@@ -1247,8 +1247,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             CustomerBrokerSaleNegotiation customerBrokerPurchaseNegotiation = this.customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
             /*//TODO: remove this mock
             customerBrokerPurchaseNegotiation = new SaleNegotiationOfflineMock();*/
-            ContractClauseType contractClauseType = getContractClauseType(
-                    customerBrokerPurchaseNegotiation);
+            ContractClauseType contractClauseType = getContractClauseType(customerBrokerPurchaseNegotiation, ClauseType.CUSTOMER_PAYMENT_METHOD);
 
             // Case: ack crypto merchandise.
             if (contractClauseType == ContractClauseType.CRYPTO_TRANSFER) {
@@ -1358,7 +1357,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         return earningsSettings.listEarningPairs();
     }
 
-    private ContractClauseType getContractClauseType(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation) throws CantGetListClauseException {
+    private ContractClauseType getContractClauseType(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,ClauseType paramClauseType) throws CantGetListClauseException {
         try {
             //I will check if customerBrokerSaleNegotiation is null
             ObjectChecker.checkArgument(customerBrokerSaleNegotiation, "The customerBrokerSaleNegotiation is null");
@@ -1366,7 +1365,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             ClauseType clauseType;
             for (Clause clause : clauses) {
                 clauseType = clause.getType();
-                if (clauseType.getCode().equals(ClauseType.CUSTOMER_PAYMENT_METHOD.getCode())) {
+                if (clauseType.getCode().equals(paramClauseType.getCode())) {
                     return ContractClauseType.getByCode(clause.getValue());
                 }
             }

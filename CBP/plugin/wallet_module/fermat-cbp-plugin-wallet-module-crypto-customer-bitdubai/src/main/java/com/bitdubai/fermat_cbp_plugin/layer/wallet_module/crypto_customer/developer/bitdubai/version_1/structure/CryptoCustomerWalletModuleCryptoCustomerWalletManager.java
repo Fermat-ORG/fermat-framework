@@ -1221,7 +1221,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             //I need to discover the payment type (online or offline)
             String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
             CustomerBrokerPurchaseNegotiation negotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-            ContractClauseType contractClauseType = getContractClauseType(negotiation);
+            ContractClauseType contractClauseType = getContractClauseType(negotiation,ClauseType.CUSTOMER_PAYMENT_METHOD);
 
             if (contractClauseType.equals(ContractClauseType.CRYPTO_TRANSFER)) { //Case: sending online payment
                 //TODO: here we need to get the CCP Wallet public key to send BTC to the customer, when the settings are finished, please, implement how to get the CCP Wallet public key here. Thanks.
@@ -1252,7 +1252,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
      * @throws CantGetListClauseException
      */
     private ContractClauseType getContractClauseType(
-            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws
+            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,ClauseType paramClauseType ) throws
             CantGetListClauseException {
         try {
             //I will check if customerBrokerPurchaseNegotiation is null
@@ -1263,7 +1263,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             ClauseType clauseType;
             for (Clause clause : clauses) {
                 clauseType = clause.getType();
-                if (clauseType.equals(ClauseType.CUSTOMER_PAYMENT_METHOD)) {
+                if (clauseType.equals(paramClauseType)) {
                     return ContractClauseType.getByCode(clause.getValue());
                 }
             }
@@ -1307,7 +1307,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             /*//TODO: remove this mock
             customerBrokerPurchaseNegotiation = new PurchaseNegotiationOfflineMock();*/
             ContractClauseType contractClauseType = getContractClauseType(
-                    customerBrokerPurchaseNegotiation);
+                    customerBrokerPurchaseNegotiation,ClauseType.BROKER_PAYMENT_METHOD);
             /**
              * Case: ack crypto merchandise.
              */
