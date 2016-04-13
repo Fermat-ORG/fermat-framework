@@ -9,6 +9,7 @@ public class SettingsItem {
     private int imgRes;
     private String text;
     private String subText;
+    private boolean isBlock;
 
     public SettingsItem(SettingsType settingsType,int imgRes, String text, String subText) {
         this.imgRes = imgRes;
@@ -35,5 +36,13 @@ public class SettingsItem {
 
     public void setImageRes(int imageRes) {
         this.imgRes = imageRes;
+    }
+
+    public boolean isBlock() {
+        return isBlock;
+    }
+
+    public void setIsBlock(boolean isBlock) {
+        this.isBlock = isBlock;
     }
 }
