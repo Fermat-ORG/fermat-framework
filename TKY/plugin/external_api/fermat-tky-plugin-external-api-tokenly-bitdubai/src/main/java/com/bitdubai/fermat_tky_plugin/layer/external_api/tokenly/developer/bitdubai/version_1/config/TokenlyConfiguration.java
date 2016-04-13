@@ -33,6 +33,8 @@ public class TokenlyConfiguration {
      */
     public static final String URL_TOKENLY_MUSIC_API_ONE_SONG_BY_AUTHENTICATED_USER = "https://music-stage.tokenly.com/api/v1/music/song/download/";
 
+    public static final int TOKENLY_WRONG_CREDENTIALS_HTTP_RESPONSE_CODE = 403;
+
     /**
      * This method returns a hashMap with the parameters required by the protected Tokenly API to
      * authenticate a Tokenly user.
