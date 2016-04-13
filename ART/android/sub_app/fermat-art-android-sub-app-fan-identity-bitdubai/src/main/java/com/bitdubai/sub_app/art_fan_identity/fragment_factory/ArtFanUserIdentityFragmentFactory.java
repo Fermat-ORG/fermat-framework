@@ -1,12 +1,12 @@
-package fragment_factory;
+package com.bitdubai.sub_app.art_fan_identity.fragment_factory;
 
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
-import fragments.CreateArtFanUserIdentityFragment;
-import sessions.ArtFanUserIdentitySubAppSession;
+import com.bitdubai.sub_app.art_fan_identity.fragments.CreateArtFanUserIdentityFragment;
+import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSession;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/04/16.
