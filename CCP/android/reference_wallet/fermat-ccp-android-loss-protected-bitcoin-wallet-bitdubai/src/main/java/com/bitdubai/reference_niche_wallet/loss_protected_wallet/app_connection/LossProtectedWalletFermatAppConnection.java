@@ -14,9 +14,8 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletModuleSettings;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.header.BitcoinWalletHeaderPainter;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.navigation_drawer.BitcoinWalletNavigationViewPainter;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.navigation_drawer.LossProtectedWalletNavigationViewPainter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragment_factory.LossProtectedWalletFragmentFactory;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 
@@ -58,8 +57,8 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
     public NavigationViewPainter getNavigationViewPainter() {
 
 
-       // return new BitcoinWalletNavigationView(getActivity(),getActiveIdentity()); -- navigation tool
-        return new BitcoinWalletNavigationViewPainter(getContext(),getActiveIdentity());
+       // return new LossProtectedWalletNavigationView(getActivity(),getActiveIdentity()); -- navigation tool
+        return new LossProtectedWalletNavigationViewPainter(getContext(),getActiveIdentity());
     }
 
     @Override

@@ -945,6 +945,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }
 
             if(bitcoinWalletSettings == null){
+                bitcoinWalletSettings = new BitcoinWalletSettings();
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
                 runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey(),blockchainNetworkType));
                 bitcoinWalletSettings.setRunningDailyBalance(runningDailyBalance);
@@ -952,11 +954,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }
             else {
 
+                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+
                 if (bitcoinWalletSettings.getRunningDailyBalance() == null){
+
                     runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey(),blockchainNetworkType));
                 }
                 else
                 {
+
                     runningDailyBalance = bitcoinWalletSettings.getRunningDailyBalance();
 
 
