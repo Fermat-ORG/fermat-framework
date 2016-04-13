@@ -158,12 +158,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             @Override
                             public void onClick(View v) {
                                 dispatchTakePictureIntent();
+                                dialog.dismiss();
                             }
                         });
                         dialog.findViewById(R.id.img_gallery).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 loadImageFromGallery();
+                                dialog.dismiss();
                             }
                         });
                         dialog.show();
