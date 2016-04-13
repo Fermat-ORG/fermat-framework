@@ -1,4 +1,4 @@
-package popup;
+package com.bitdubai.sub_app.art_fan_identity.popup;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -15,9 +15,9 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.FanIdentityManagerModule;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.FanIdentitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.sub_app.fan_identity.R;
+import com.bitdubai.sub_app.art_fan_identity.R;
 
-import sessions.ArtFanUserIdentitySubAppSession;
+import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSession;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/04/16.

@@ -1,4 +1,4 @@
-package app_connection;
+package com.bitdubai.sub_app.art_fan_identity.app_connection;
 
 import android.content.Context;
 
@@ -15,8 +15,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 
-import fragment_factory.ArtFanUserIdentityFragmentFactory;
-import sessions.ArtFanUserIdentitySubAppSession;
+import com.bitdubai.sub_app.art_fan_identity.fragment_factory.ArtFanUserIdentityFragmentFactory;
+import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSession;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/04/16.
