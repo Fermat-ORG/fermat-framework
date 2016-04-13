@@ -1,4 +1,4 @@
-package com.fermat_cht_plugin.layer.sub_app_module.chat_actor_local_community.developer.bitdubai;
+package com.fermat_cht_plugin.layer.sub_app_module.chat_actor_community.developer.bitdubai;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
@@ -19,9 +19,9 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
     public void start() throws CantStartPluginDeveloperException {
         try {
 
-            this.registerVersion(new CryptoBrokerIdentitySubAppModulePluginRoot());
+            this.registerVersion(new ChatSupAppModulePluginRoot());
 
-        } catch (CantRegisterVersionException e) {
+        } catch (Exception e) {
 
             throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
         }
@@ -40,12 +40,11 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
 
     @Override
     public String getAddress() {
-        return "19qRypu7wrndwW4FRCxU1JPr5hvMmcQ3eh";
+        return "19qRypu7wrndwW4FRCxU1JPr5we134Q3eh";
     }
 
     @Override
     public TimeFrequency getTimePeriod() {
         return TimeFrequency.MONTHLY;
     }
-
 }
