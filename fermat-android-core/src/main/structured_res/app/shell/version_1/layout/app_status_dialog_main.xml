@@ -28,6 +28,7 @@
                 android:paddingLeft="16dp"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp"
+                android:id="@+id/txt_title_app_status"
                 />
 
             <View
