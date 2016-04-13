@@ -11,15 +11,17 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButto
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
+//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
+//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.LinkedChatActorIdentity;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
-import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.R;
+import com.bitdubai.sub_app.chat_community.session.SessionConstants;
 
 /**
  * AcceptDialog
@@ -28,13 +30,14 @@ import com.bitdubai.sub_app.intra_user_community.session.SessionConstants;
  * @version 1.0
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class AcceptDialog extends FermatDialog<IntraUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class AcceptDialog extends FermatDialog<ChatUserSubAppSession,
+        SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
      */
-    private final IntraUserInformation   intraUserInformation;
-    private final IntraUserLoginIdentity identity            ;
+    private final ChatActorCommunityInformation chatUserInformation;
+    private final LinkedChatActorIdentity identity            ;
 
     private FermatTextView title      ;
     private FermatTextView description;
@@ -43,15 +46,15 @@ public class AcceptDialog extends FermatDialog<IntraUserSubAppSession, SubAppRes
     private FermatButton   negativeBtn;
 
     public AcceptDialog(final Activity                       activity              ,
-                        final IntraUserSubAppSession         intraUserSubAppSession,
+                        final ChatUserSubAppSession          chatUserSubAppSession,
                         final SubAppResourcesProviderManager subAppResources       ,
-                        final IntraUserInformation           intraUserInformation  ,
-                        final IntraUserLoginIdentity         identity              ) {
+                        final ChatActorCommunityInformation  chatUserInformation  ,
+                        final LinkedChatActorIdentity        identity              ) {
 
-        super(activity, intraUserSubAppSession, subAppResources);
+        super(activity, chatUserSubAppSession, subAppResources);
 
-        this.intraUserInformation = intraUserInformation;
-        this.identity             = identity            ;
+        this.chatUserInformation = chatUserInformation;
+        this.identity            = identity;
     }
 
 
@@ -71,7 +74,7 @@ public class AcceptDialog extends FermatDialog<IntraUserSubAppSession, SubAppRes
 
         title.setText("Connect");
         description.setText("Do you want to accept");
-        userName.setText(intraUserInformation.getName());
+        userName.setText(chatUserInformation.getActorAlias());
 
     }
 
@@ -93,16 +96,20 @@ public class AcceptDialog extends FermatDialog<IntraUserSubAppSession, SubAppRes
         if (i == R.id.positive_button) {
 
             try {
-                if (intraUserInformation != null && identity != null) {
-                    getSession().getModuleManager().acceptIntraUser(identity.getPublicKey(), intraUserInformation.getName(), intraUserInformation.getPublicKey(), intraUserInformation.getProfileImage());
+                if (chatUserInformation != null && identity != null) {
+                    getSession().getModuleManager().acceptIntraUser(identity.getPublicKey(),
+                            chatUserInformation.getName(),
+                            chatUserInformation.getPublicKey(),
+                            chatUserInformation.getProfileImage());
                     getSession().setData(SessionConstants.NOTIFICATION_ACCEPTED,Boolean.TRUE);
-                    Toast.makeText(getContext(), intraUserInformation.getName() + " Accepted connection request", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(),
+                            chatUserInformation.getName() + " Accepted connection request",
+                            Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();
                 }
                 dismiss();
             } catch (final CantAcceptRequestException e) {
-
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 super.toastDefaultError();
             }
@@ -110,7 +117,7 @@ public class AcceptDialog extends FermatDialog<IntraUserSubAppSession, SubAppRes
 
         } else if (i == R.id.negative_button) {
             try {
-                if (intraUserInformation != null && identity != null)
+                if (chatUserInformation != null && identity != null)
                     getSession().getModuleManager().denyConnection(identity.getPublicKey(), intraUserInformation.getPublicKey());
                 else {
                     super.toastDefaultError();

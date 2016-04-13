@@ -4,11 +4,13 @@ import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.sub_app.chat_community.fragments.ContactsListFragment;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionNotificationsFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionOtherProfileFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.intra_user_community.fragments.ConnectionsWorldFragment;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+
 
 /**
  * ChatCommunityFragmentFactory
@@ -17,7 +19,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
  * @version 1.0
  */
 
-public class ChatCommunityFragmentFactory extends FermatFragmentFactory<IntraUserSubAppSession,SubAppResourcesProviderManager,ChatCommunityFragmentsEnumType> {
+public class ChatCommunityFragmentFactory extends FermatFragmentFactory<ChatUserSubAppSession,SubAppResourcesProviderManager,ChatCommunityFragmentsEnumType> {
 
 
     @Override

@@ -9,9 +9,10 @@ import android.view.Window;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.interfaces.ErrorConnectingFermatNetwork;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.R;
+import com.bitdubai.sub_app.chat_community.interfaces.ErrorConnectingFermatNetwork;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
 
 /**
  * ErrorConnectingFermatNetworkDialog
@@ -20,7 +21,8 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
  * @version 1.0
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ErrorConnectingFermatNetworkDialog extends FermatDialog<IntraUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ChatUserSubAppSession,
+        SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * Interfaces
@@ -43,10 +45,10 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<IntraUserSu
     private CharSequence description;
 
     public ErrorConnectingFermatNetworkDialog(final Activity a,
-                                              final IntraUserSubAppSession intraUserSubAppSession,
+                                              final ChatUserSubAppSession chatUserSubAppSession,
                                               final SubAppResourcesProviderManager subAppResources) {
 
-        super(a, intraUserSubAppSession, subAppResources);
+        super(a, chatUserSubAppSession, subAppResources);
 
     }
 
@@ -69,7 +71,7 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<IntraUserSu
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_error_conecting_fermat_network;
+        return R.layout.cht_comm_dialog_error_connect_network;
     }
 
     @Override

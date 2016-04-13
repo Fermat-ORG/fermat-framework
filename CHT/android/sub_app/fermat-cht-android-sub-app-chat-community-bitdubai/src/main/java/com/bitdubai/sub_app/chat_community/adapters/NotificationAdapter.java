@@ -17,7 +17,8 @@ import java.util.List;
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 13/04/16.
  * @version 1.0
  */
-public class NotificationAdapter extends FermatAdapter<IntraUserInformation, NotificationHolder> {
+public class NotificationAdapter
+        extends FermatAdapter<IntraUserInformation, NotificationHolder> {
 
     public NotificationAdapter(Context context, List<IntraUserInformation> lst) {
         super(context, lst);

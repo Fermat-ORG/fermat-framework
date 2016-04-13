@@ -7,6 +7,7 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.ui.Views.BadgeDrawable;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
+import com.bitdubai.sub_app.chat_community.holders.NavigationHolder;
 
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class NavigationAdapter extends FermatAdapter<MenuItem, NavigationHolder>
      */
     @Override
     protected int getCardViewResource() {
-        return R.layout.row_navigation_drawer_community_content;
+        return R.layout.cht_comm_navigation_drawer_content_item;
     }
 
     /**
@@ -60,7 +61,7 @@ public class NavigationAdapter extends FermatAdapter<MenuItem, NavigationHolder>
      * @param position position to render
      */
     @Override
-    protected void bindHolder(AppNavigationHolder holder, MenuItem data, int position) {
+    protected void bindHolder(NavigationHolder holder, MenuItem data, int position) {
 
         try {
             holder.getLabel().setText(data.getLabel());

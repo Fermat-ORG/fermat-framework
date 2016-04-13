@@ -8,7 +8,8 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.sub_app.chat_community.holders.CommunityWorldHolder;
 
 import java.util.List;
 
@@ -20,31 +21,30 @@ import java.util.List;
  */
 
 @SuppressWarnings("unused")
-public class CommunityListAdapter extends FermatAdapter<IntraUserInformation, CommunityHolder> {
-
+public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInformation, CommunityWorldHolder> {
 
     public CommunityListAdapter(Context context) {
         super(context);
     }
 
-    public CommunityListAdapter(Context context, List<IntraUserInformation> dataSet) {
+    public CommunityListAdapter(Context context, List<ChatActorCommunityInformation> dataSet) {
         super(context, dataSet);
     }
 
     @Override
-    protected CommunityHolder createHolder(View itemView, int type) {
-        return new CommunityHolder(itemView);
+    protected CommunityWorldHolder createHolder(View itemView, int type) {
+        return new CommunityWorldHolder(itemView);
     }
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.row_connections_world;
+        return R.layout.cht_comm_world_item;
     }
 
     @Override
-    protected void bindHolder(CommunityHolder holder, IntraUserInformation data, int position) {
+    protected void bindHolder(CommunityWorldHolder holder, ChatActorCommunityInformation data, int position) {
         holder.connectionState.setVisibility(View.GONE);
-        ConnectionState connectionState = data.getConnectionState();
+        ConnectionState connectionState = data.getActorConnectionState();
         switch (connectionState) {
             case CONNECTED:
                 if (holder.connectionState.getVisibility() == View.GONE)
@@ -93,13 +93,13 @@ public class CommunityListAdapter extends FermatAdapter<IntraUserInformation, Co
                     holder.connectionState.setVisibility(View.GONE);
                 break;
         }
-        holder.row_connection_state.setText(data.getState());
-        if(data.getState().equals("Offline"))
+        holder.row_connection_state.setText(data.getActorConnectionState().toString());//data.getState()
+        if(data.getActorConnectionState().toString().equals("Offline"))
             holder.row_connection_state.setTextColor(Color.RED);
         else
             holder.row_connection_state.setTextColor(Color.WHITE);
-        holder.name.setText(data.getName());
-        byte[] profileImage = data.getProfileImage();
+        holder.name.setText(data.getActorAlias());
+        byte[] profileImage = data.getActorImage();
         if (profileImage != null && profileImage.length > 0) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
             bitmap = Bitmap.createScaledBitmap(bitmap, 480, 480, true);
