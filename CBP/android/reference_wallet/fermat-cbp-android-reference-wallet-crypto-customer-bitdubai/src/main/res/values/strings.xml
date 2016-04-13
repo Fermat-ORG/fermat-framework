@@ -104,7 +104,7 @@
     <string name="ccw_wizard_earning_merchandise_description">You must select a Wallet or Wallets that will work as Merchandise</string>
     <string name="ccw_wizard_earning_merchandise_title">Choose Earning Merchandises</string>
     <string name="ccw_wizard_exchange_rate_providers_title">Bitcoin Wallet and Providers</string>
-    <string name="ccw_wizard_exchange_rate_providers_description">Select a <b>Bitcoin Wallet</b> and at least one <b>Exchange Provider</b> to be used in your Customer Wallet.</string>
+    <string name="ccw_wizard_exchange_rate_providers_description">Select a <b>Bitcoin Wallet</b> and at least one <b>Exchange Provider</b> for your Wallet.</string>
     <string name="ccw_wizard_locations_description">Add at least one <b>location</b>, where transactions <b>made in person by you</b> might take place.</string>
     <string name="ccw_wizard_set_bank_accounts_description">Add at least one <b>bank account</b>, where <b>deposits from Crypto Brokers</b> will be made.</string>
     <string name="ccw_wizard_stock_merchandise_title">Choose Stock Merchandises</string>
