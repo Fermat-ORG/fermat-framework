@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -77,6 +78,7 @@ public class SongFragment extends AbstractFermatFragment {
     private RecyclerView.LayoutManager lManager;
     String code;
     FermatBundle bundle;
+    PresentationDialog presentationDialog;
 
 
     List<SongItems> items=new ArrayList();
@@ -211,9 +213,32 @@ public class SongFragment extends AbstractFermatFragment {
             }
         });
 
+        if (fanWalletSettings.isHomeTutorialDialogEnabled() == true)
+        {
+            setUpHelpfanwallet(false);
+        }
+
 
 
         return view;
+    }
+
+    private void setUpHelpfanwallet(boolean checkButton) {
+        try {
+            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.bannerfanwallet)
+                    .setIconRes(R.drawable.banner_tky)
+                    .setSubTitle(R.string.fan_wallet_dialog_subtitle)
+                    .setBody(R.string.fan_wallet_dialog_body)
+                    .setTextFooter(R.string.fan_wallet_footer)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
     }
 
 
