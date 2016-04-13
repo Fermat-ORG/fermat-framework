@@ -50,8 +50,8 @@ public interface TokenlyFanIdentityManager extends FermatManager {
      * @param externalPlatform
      * @throws CantUpdateFanIdentityException
      */
-    void updateFanIdentity(
-            String userName,String password, UUID id,String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws
+    Fan updateFanIdentity(
+            String userName, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws
             CantUpdateFanIdentityException;
 
     /**

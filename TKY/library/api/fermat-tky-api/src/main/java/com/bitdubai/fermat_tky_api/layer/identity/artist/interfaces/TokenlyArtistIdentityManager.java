@@ -48,17 +48,17 @@ public interface TokenlyArtistIdentityManager extends FermatManager{
     /**
      *
      * @param username
+     * @param password
      * @param id
      * @param publicKey
      * @param profileImage
-     * @param password
      * @param externalPlatform
      * @param exposureLevel
      * @param artistAcceptConnectionsType
      * @throws CantUpdateArtistIdentityException
      */
-    void updateArtistIdentity(
-            String username,String password, UUID id,String publicKey, byte[] profileImage, ExternalPlatform externalPlatform,
+    Artist updateArtistIdentity(
+            String username, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform,
             ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws
             CantUpdateArtistIdentityException;
 

@@ -290,8 +290,8 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 new Version(1, 0, 0),
                 Platforms.PLATFORM_ART);
 
-        installedSubApp.setIconResource(R.drawable.crypto_customer_community_final);
-        installedSubApp.setBanner(R.drawable.crypto_customer_community_final);
+        installedSubApp.setIconResource(R.drawable.artist_banner);
+        installedSubApp.setBanner(R.drawable.artist_banner);
         installedApps.add(installedSubApp);
 
         /*installedSubApp = new InstalledSubApp(

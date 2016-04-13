@@ -152,7 +152,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
 
     @Override
     public Fan createFanIdentity(String userName, byte[] profileImage, String externalPassword, ExternalPlatform externalPlatform) throws  CantCreateFanIdentityException {
-        //TODO: Fix this Gabo. Manuel
+
         User user=null;
         try{
             if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
@@ -169,7 +169,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
 
 
     @Override
-    public void updateFanIdentity(String userName,String password, UUID id,String publicKey, byte[] profileImage,ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+    public Fan updateFanIdentity(String userName, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
         User user=null;
         try{
             if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
@@ -178,7 +178,8 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
             e.printStackTrace();
         }
         if(user != null)
-            identityFanManager.updateIdentityFan(user,password, id, publicKey, profileImage,externalPlatform);
+            return identityFanManager.updateIdentityFan(user,password, id, publicKey, profileImage,externalPlatform);
+        return null;
     }
 
     /**

@@ -65,7 +65,7 @@ public interface TokenlyArtistIdentityManagerModule extends ModuleManager<Tokenl
      * @param artistAcceptConnectionsType
      * @throws CantUpdateArtistIdentityException
      */
-    void updateArtistIdentity(
+    Artist updateArtistIdentity(
             String username,
             String password,
             UUID id,

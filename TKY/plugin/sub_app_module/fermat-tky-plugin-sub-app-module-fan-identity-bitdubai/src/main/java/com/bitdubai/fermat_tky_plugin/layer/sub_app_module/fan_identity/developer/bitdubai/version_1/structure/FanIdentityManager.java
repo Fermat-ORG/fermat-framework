@@ -48,8 +48,8 @@ public class FanIdentityManager implements TokenlyFanIdentityManagerModule,Seria
     }
 
     @Override
-    public void updateFanIdentity(String userName,String password, UUID id,String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
-        tokenlyFanIdentityManager.updateFanIdentity(
+    public Fan updateFanIdentity(String userName, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+        return tokenlyFanIdentityManager.updateFanIdentity(
                 userName,
                 password,
                 id,
