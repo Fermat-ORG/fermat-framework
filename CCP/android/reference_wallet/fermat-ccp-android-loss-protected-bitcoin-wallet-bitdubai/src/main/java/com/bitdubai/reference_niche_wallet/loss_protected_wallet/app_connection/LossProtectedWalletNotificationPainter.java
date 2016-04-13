@@ -18,11 +18,12 @@ public class LossProtectedWalletNotificationPainter implements NotificationPaint
 
     //constructor
 
-    public LossProtectedWalletNotificationPainter(String title, String textBody, String image, String viewCode, boolean showNotification){
+    public LossProtectedWalletNotificationPainter(String title, String textBody, String image, String viewCode, boolean showNotification,String activityCodeToOpen){
         this.title    = title;
         this.textBody = textBody;
         this.image    = image;
         this.showNotification = showNotification;
+        this.activityCodeToOpen = activityCodeToOpen;
 
     }
 
@@ -53,7 +54,7 @@ public class LossProtectedWalletNotificationPainter implements NotificationPaint
 
     @Override
     public String getActivityCodeResult() {
-        return null;
+        return this.activityCodeToOpen;
     }
 
     @Override

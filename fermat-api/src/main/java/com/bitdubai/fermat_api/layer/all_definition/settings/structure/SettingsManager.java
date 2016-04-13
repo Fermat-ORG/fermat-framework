@@ -165,4 +165,10 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> implements S
         return SETTINGS_FILE_NAME_PREFIX + "_" + publicKey;
     }
 
+    @Override
+    public String toString() {
+        return "SettingsManager{" +
+                "pluginId=" + pluginId +
+                '}';
+    }
 }
