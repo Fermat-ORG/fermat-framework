@@ -106,6 +106,8 @@
     <string name="ccw_wizard_exchange_rate_providers_title">Bitcoin Wallet and Providers</string>
     <string name="ccw_wizard_exchange_rate_providers_description">Select a <b>Bitcoin Wallet</b> and at least one <b>Exchange Provider</b> for your Wallet.</string>
     <string name="ccw_wizard_locations_description">Add at least one <b>location</b>, where transactions <b>made in person by you</b> might take place.</string>
+    <string name="ccw_select_your_bank_account">Your Bank Accounts</string>
+    <string name="ccw_select_your_bank_account_text">Add <b>bank accounts</b> where Crypto Brokers will deposit your purchased money.</string>
     <string name="ccw_wizard_set_bank_accounts_description">Add at least one <b>bank account</b>, where <b>deposits from Crypto Brokers</b> will be made.</string>
     <string name="ccw_wizard_stock_merchandise_title">Choose Stock Merchandises</string>
     <string name="ccw_wizard_stock_merchandise_description">You must select a Wallet that work as Merchandise and the spread applied to them</string>

@@ -107,9 +107,9 @@
     <string name="cbw_delete_wallet_dialog_msg">"Do you want to delete this wallet?"</string>
     <string name="cbw_no_selected_providers">No Selected Providers</string>
     <string name="cbw_finish">Finish</string>
-    <string name="cbw_select_your_bank_account">Select Your Bank Accounts</string>
+    <string name="cbw_select_your_bank_account">Your Bank Accounts</string>
     <string name="cbw_no_selected_bank_account">No Selected Bank Accounts</string>
-    <string name="cbw_select_your_bank_account_text">You can select accounts from your banking wallet to make restock or destock transactions</string>
+    <string name="cbw_select_your_bank_account_text">Add <b>bank accounts</b> to your Broker Wallet from which you can <b>restock</b> or <b>destock</b> funds.</string>
     <string name="cbw_wizard_bank_account_description">You must select the Bank Account from the Bank Wallet you selected as Earning</string>
     <string name="cbw_wizard_bank_account_title">Bank Accounts</string>
     <string name="cbw_wizard_locations_description">Add at least one <b>location</b>, where transactions <b>made in person by you</b> might take place.</string>
