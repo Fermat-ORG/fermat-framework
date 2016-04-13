@@ -49,7 +49,7 @@ public class AppStatusListener implements AppStatusCallbackChanges {
                 btn_fermat_apps_status.get().setBackgroundResource(R.drawable.filter_develop_hdpi);
                 break;
             default:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.beta_filter_hdpi);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.alpha_filter_hdpi);
                 break;
         }
 
