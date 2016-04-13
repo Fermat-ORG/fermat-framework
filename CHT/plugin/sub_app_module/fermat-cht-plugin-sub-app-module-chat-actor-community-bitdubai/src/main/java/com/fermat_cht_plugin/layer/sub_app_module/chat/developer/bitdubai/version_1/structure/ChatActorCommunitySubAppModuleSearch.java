@@ -1,5 +1,6 @@
 package com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
@@ -9,6 +10,11 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 
 import java.util.ArrayList;
 import java.util.List;
+
+/**
+ * Created by Eleazar (eorono@protonmail.com) on 9/4/2016.
+ */
+
 
 public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunitySearch {
 
@@ -35,12 +41,12 @@ public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunityS
 
             ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
 
-            final List<ChatExposingData> chatExposingDataList = chatActorSearch.getResult();
+            final List<ChatActorConnection> chatActorConnections = chatActorSearch.getResult();
 
             final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
 
-            for(ChatExposingData ced : chatExposingDataList)
-                chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(ced));
+            for(ChatActorConnection cac : chatActorConnections)
+                chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
 
             return chatActorLocalCommunityInformationList;
 

@@ -391,7 +391,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                 {
                     for(ChatIdentity i : IdentitiesInDevice) {
                         if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                            selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CBP_CRYPTO_BROKER, i.getAlias(), i.getProfileImage());
+                            selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CHT_CHAT_ACTOR, i.getAlias(), i.getImage());
                     }
                 }
                if(selectedIdentity == null)
