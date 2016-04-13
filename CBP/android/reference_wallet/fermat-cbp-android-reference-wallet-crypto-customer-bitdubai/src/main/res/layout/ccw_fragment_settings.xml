@@ -159,7 +159,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Providers"
+                android:text="Bitcoin Wallet and Providers"
                 android:textSize="20sp"
                 android:textColor="#949494"/>
 

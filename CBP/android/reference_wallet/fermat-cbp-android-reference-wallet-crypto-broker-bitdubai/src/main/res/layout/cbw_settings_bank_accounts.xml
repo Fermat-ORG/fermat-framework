@@ -32,7 +32,8 @@
             android:layout_height="wrap_content"
             android:text="@string/cbw_select_your_bank_account"
             android:textColor="@color/cbw_wizard_color"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:textAllCaps="true"/>
 
         <View
             android:layout_width="match_parent"

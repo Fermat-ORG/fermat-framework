@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:text="@string/ccw_wizard_locations_description"
+            android:text="@string/ccw_select_your_bank_account_text"
             android:textColor="#777777"
             android:textSize="16sp"
             android:layout_marginBottom="12dp"
@@ -61,7 +61,8 @@
             android:layout_height="wrap_content"
             android:text="@string/ccw_select_your_bank_account"
             android:textColor="@color/ccw_wizard_color"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:textAllCaps="true"/>
 
         <View
             android:layout_width="match_parent"
