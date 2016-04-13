@@ -36,7 +36,7 @@ public abstract class ChatSearch {
      *
      * @throws CantListChatException  if something goes wrong.
      */
-    public abstract List<ChatActorConnection> getResult() throws CantListChatException;
+    public abstract List<ChatExposingData> getResult() throws CantListChatException;
 
     /**
      * Through the method <code>getResult</code> we can get the results of the search,

@@ -37,7 +37,7 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
     }
 
     @Override
-    public List<ChatActorConnection> getResult() throws CantListChatException {
+    public List<ChatExposingData> getResult() throws CantListChatException {
 
         try {
 

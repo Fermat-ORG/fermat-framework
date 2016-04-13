@@ -41,12 +41,12 @@ public class ChatActorCommunitySubAppModuleSearch implements ChatActorCommunityS
 
             ChatSearch chatActorSearch = chatActorNetworkServiceManager.getSearch();
 
-            final List<ChatActorConnection> chatActorConnections = chatActorSearch.getResult();
+            final List<ChatExposingData> chatActorConnections = chatActorSearch.getResult();
 
             final List<ChatActorCommunityInformation> chatActorLocalCommunityInformationList = new ArrayList<>();
 
-            for(ChatActorConnection cac : chatActorConnections)
-                chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
+            for(ChatExposingData ced : chatActorConnections)
+                chatActorLocalCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(ced));
 
             return chatActorLocalCommunityInformationList;
 

@@ -26,4 +26,6 @@ public interface ChatIdentity  extends ActiveActorIdentityInformation {
      * @return the boolena
      */
     boolean getIsPaymetForChat();
+
+
 }
