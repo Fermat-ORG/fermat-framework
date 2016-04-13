@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -58,7 +60,6 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
     public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateChatIdentityException {
         chatIdentityManager.updateIdentityChat(identityPublicKey, identityAlias, profileImage);
     }
-
 
     /**
      * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified

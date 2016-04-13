@@ -176,8 +176,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_IMPLICIT_ONLY);
             }else{
                 bitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
-                 bitmap = Bitmap.createScaledBitmap(bitmap, mBrokerImage.getWidth(), mBrokerImage.getHeight(),true);
-                fanImageByteArray = toByteArray(bitmap);
+                 bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+
                 mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
                 textViewChtTitle.setText(moduleManager.getIdentityChatUser().getAlias().toString());
                 mBrokerName.setText(moduleManager.getIdentityChatUser().getAlias().toString());

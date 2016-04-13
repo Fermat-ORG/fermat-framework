@@ -73,23 +73,6 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractPlugin  {
 
     }
 
-//    @Override
-//    public ChatIdentityModuleManager getChatIdentityManager() throws CHTException {
-//        try {
-//            if (chatIdentityModuleManager == null) {
-//                chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager);            }
-//            return chatIdentityModuleManager;
-//        }catch (final Exception e) {
-//            //throw new CHTException(FermatException.wrapException(e));
-//            errorManager.reportUnexpectedPluginException(
-//                    Plugins.CHAT_IDENTITY_SUP_APP_MODULE,
-//                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
-//                    e);
-//            throw new CantInitializeChatIdentitySupAppModuleManagerException(
-//                    "Trying to instance ChatIdentityModuleManager - Please, check the cause",e);
-//        }
-//    }
-
     private void testMethod(String alias, byte[] profileImage)
     {
         try {

@@ -36,6 +36,7 @@ import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.develop
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.messages.NetworkServiceMessage;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.messages.RequestMessage;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure.ArtistActorNetworkServiceExternalPlatformInformationRequest;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure.ArtistActorNetworkServiceManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.base.AbstractNetworkServiceBase;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
@@ -155,6 +156,14 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
                     RequestMessage requestMessage = RequestMessage.fromJson(jsonMessage);
 
                     artistActorNetworkServiceDao.confirmActorConnectionRequest(requestMessage.getRequestId());
+                    break;
+                case INFORMATION_REQUEST:
+
+                    ArtistActorNetworkServiceExternalPlatformInformationRequest quotesRequestMessage
+                            = ArtistActorNetworkServiceExternalPlatformInformationRequest.fromJson(
+                            jsonMessage);
+                    artistActorNetworkServiceDao.confirmInformationRequest(
+                            quotesRequestMessage.getRequestId());
                     break;
                 default:
                     throw new CantHandleNewMessagesException(
