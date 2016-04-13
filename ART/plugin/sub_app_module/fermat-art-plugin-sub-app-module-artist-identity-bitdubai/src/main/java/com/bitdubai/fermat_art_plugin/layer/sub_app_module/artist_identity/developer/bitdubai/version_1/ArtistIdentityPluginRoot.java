@@ -2,7 +2,6 @@ package com.bitdubai.fermat_art_plugin.layer.sub_app_module.artist_identity.deve
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
@@ -29,7 +28,7 @@ public class ArtistIdentityPluginRoot extends AbstractModule<ArtistIdentitySetti
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM,           layer = Layers.PLATFORM_SERVICE,    addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
-    @NeededPluginReference(platform = Platforms.ART_PLATFORM,               layer = Layers.IDENTITY,            plugin = Plugins.ARTIST_IDENTITY)
+    @NeededPluginReference(platform = Platforms.PLATFORM_ART,               layer = Layers.IDENTITY,            plugin = Plugins.ARTIST_IDENTITY)
     private ArtistIdentityManager artistIdentityManager;
 
     @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API,       layer = Layers.SYSTEM,              addon  = Addons.PLUGIN_FILE_SYSTEM)

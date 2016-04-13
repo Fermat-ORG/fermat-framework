@@ -330,7 +330,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
                 "sub_app_art_fan_community",
                 new Version(1, 0, 0),
-                Platforms.ART_PLATFORM);
+                Platforms.PLATFORM_ART);
 
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.communities_bar);

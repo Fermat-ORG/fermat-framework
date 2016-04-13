@@ -31,7 +31,7 @@ public class ArtistCommunityFermatAppConnection extends AppConnections<ArtistSub
     @Override
     public PluginVersionReference getPluginVersionReference() {
         return  new PluginVersionReference(
-                Platforms.ART_PLATFORM,
+                Platforms.PLATFORM_ART,
                 Layers.SUB_APP_MODULE,
                 Plugins.ARTIST_COMMUNITY_SUB_APP_MODULE,
                 Developers.BITDUBAI,
