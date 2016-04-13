@@ -329,32 +329,32 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
 //                    lstItemsWithIcon.add(item);
 //                }
 //            }
-            InstalledApp installedApp = new InstalledApp("Dating","tinder_public_key",new Version(),R.drawable.ic_002,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
+            InstalledApp installedApp = new InstalledApp("Dating","tinder_public_key",new Version(),R.drawable.datting,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
 
             lstInstalledApps.add(installedApp);
             Item item = new Item(installedApp);
-            item.setIconResource(R.drawable.ic_002);
+            item.setIconResource(R.drawable.datting);
             item.setPosition(0);
             lstItemsWithIcon.add(item);
 
-            installedApp = new InstalledApp("Lodging","Airbnb_public_key",new Version(),R.drawable.ic_002,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
+            installedApp = new InstalledApp("Jobs","Airbnb_public_key",new Version(),R.drawable.jobs,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
             lstInstalledApps.add(installedApp);
             item = new Item(installedApp);
-            item.setIconResource(R.drawable.ic_002);
+            item.setIconResource(R.drawable.jobs);
             item.setPosition(1);
             lstItemsWithIcon.add(item);
 
-            installedApp = new InstalledApp("Market Place","eBay_public_key",new Version(),R.drawable.icon_ebay,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
+            installedApp = new InstalledApp("Market Place","eBay_public_key",new Version(),R.drawable.market_place_icon,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
             lstInstalledApps.add(installedApp);
             item = new Item(installedApp);
-            item.setIconResource(R.drawable.ic_002);
+            item.setIconResource(R.drawable.market_place_icon);
             item.setPosition(2);
             lstItemsWithIcon.add(item);
 
-            installedApp = new InstalledApp("Transportation","mercado_libre_public_key",new Version(),R.drawable.ic_002,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
+            installedApp = new InstalledApp("Household","mercado_libre_public_key",new Version(),R.drawable.house_hold,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
             lstInstalledApps.add(installedApp);
             item = new Item(installedApp);
-            item.setIconResource(R.drawable.ic_002);
+            item.setIconResource(R.drawable.house_hold);
             item.setPosition(3);
             lstItemsWithIcon.add(item);
 
