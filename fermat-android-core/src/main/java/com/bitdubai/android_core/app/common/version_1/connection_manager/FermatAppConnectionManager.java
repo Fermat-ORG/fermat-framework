@@ -38,9 +38,11 @@ import com.bitdubai.sub_app.wallet_store.app_connection.WalletStoreFermatAppConn
 import com.bitdubai.sub_app_artist_community.app_connection.ArtistCommunityFermatAppConnection;
 import com.bitdubai.sup_app.tokenly_fan_user_identity.app_connection.TokenlyFanUserFermatAppConnection;
 
-//import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.factory.app_connection.ArtArtistIdentityAppConnection;
+import com.bitdubai.sub_app.art_fan_identity.app_connection.ArtFanUserFermatAppConnection;
 
-//import com.bitdubai.reference_wallet.bank_money_wallet.app_connection.BankMoneyWalletFermatAppConnection;
+//import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.factory.com.bitdubai.sub_app.art_fan_identity.app_connection.ArtArtistIdentityAppConnection;
+
+//import com.bitdubai.reference_wallet.bank_money_wallet.com.bitdubai.sub_app.art_fan_identity.app_connection.BankMoneyWalletFermatAppConnection;
 
 /**
  * Created by Matias Furszyfer on 2015.12.09..
@@ -174,6 +176,9 @@ public class FermatAppConnectionManager {
                 break;
             case "public_key_art_fan_community":
                 fermatAppConnection = new FanCommunityFermatAppConnection(activity);
+                break;
+            case "public_key_art_fan_identity":
+                fermatAppConnection = new ArtFanUserFermatAppConnection(activity);
                 break;
 
         }
