@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.callback.AppStatusCallbackChanges;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
@@ -75,6 +77,8 @@ public class AppStatusDialog extends Dialog{
                 }
             }
         });
+
+
 
         RadioButton radioButton1 =(RadioButton)findViewById(R.id.radio_beta);
         radioButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -177,6 +181,15 @@ public class AppStatusDialog extends Dialog{
         findViewById(R.id.txt_beta).setOnClickListener(onClickListener);
         findViewById(R.id.txt_alpha).setOnClickListener(onClickListener);
         findViewById(R.id.txt_dev).setOnClickListener(onClickListener);
+
+
+        ((FermatTextView)findViewById(R.id.txt_release)).setFont(FontType.CAVIAR_DREAMS);
+        ((FermatTextView)findViewById(R.id.txt_beta)).setFont(FontType.CAVIAR_DREAMS);
+        ((FermatTextView)findViewById(R.id.txt_alpha)).setFont(FontType.CAVIAR_DREAMS);
+        ((FermatTextView)findViewById(R.id.txt_dev)).setFont(FontType.CAVIAR_DREAMS);
+        ((FermatTextView)findViewById(R.id.txt_title_app_status)).setFont(FontType.CAVIAR_DREAMS_BOLD);
+
+
 
 
     }

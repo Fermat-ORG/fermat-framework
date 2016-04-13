@@ -22,7 +22,7 @@
 
         <ImageView
             android:layout_width="350dp"
-            android:layout_height="150dp"
+            android:layout_height="172dp"
             android:id="@+id/imgBanner"
             android:scaleType="fitXY"
             android:padding="12dp"
