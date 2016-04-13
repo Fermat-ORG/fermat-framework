@@ -75,7 +75,7 @@ public class ListIdentitiesDialog extends
 
         adapter.changeDataSet(artistCommunitySelectableIdentities);
 
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.accrecycler_view);
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(
                 getActivity(),
