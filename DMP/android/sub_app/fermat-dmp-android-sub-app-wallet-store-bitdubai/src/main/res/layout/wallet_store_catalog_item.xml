@@ -9,6 +9,7 @@
     android:layout_marginTop="8dp"
     app:cardCornerRadius="3dp"
     app:cardElevation="3dp"
+    app:cardUseCompatPadding="true"
     >
 
     <LinearLayout
@@ -20,7 +21,7 @@
 
         <FrameLayout
             android:layout_width="84dp"
-            android:layout_height="79dp">
+            android:layout_height="match_parent">
 
             <View
                 android:layout_width="1dp"
@@ -42,7 +43,7 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:paddingBottom="6dp"
             android:paddingEnd="8dp"
             android:paddingStart="8dp"
