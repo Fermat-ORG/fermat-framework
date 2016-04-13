@@ -11,7 +11,6 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -126,7 +125,7 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
         return this.paymentRequest;
     }
 
-    public CryptoWalletIntraUserIdentity getIntraUserModuleManager() throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoWalletException {
+    public ActiveActorIdentityInformation getIntraUserModuleManager() throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoWalletException {
         ActiveActorIdentityInformation cryptoWalletIntraUserIdentity = null;
         try {
             cryptoWalletIntraUserIdentity = getModuleManager().getSelectedActorIdentity();
@@ -135,7 +134,7 @@ public class ReferenceWalletSession extends AbstractFermatSession<InstalledWalle
         } catch (ActorIdentityNotSelectedException e) {
             e.printStackTrace();
         }
-        return (CryptoWalletIntraUserIdentity) cryptoWalletIntraUserIdentity;
+        return cryptoWalletIntraUserIdentity;
     }
 
     public String getCommunityConnection() {
