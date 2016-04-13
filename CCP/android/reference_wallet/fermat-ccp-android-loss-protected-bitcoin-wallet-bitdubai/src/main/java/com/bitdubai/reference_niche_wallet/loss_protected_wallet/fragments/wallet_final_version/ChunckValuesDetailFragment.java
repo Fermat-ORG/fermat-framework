@@ -284,27 +284,18 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
     public List<BitcoinLossProtectedWalletSpend> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) throws CantListCryptoWalletIntraUserIdentityException, CantGetCryptoLossProtectedWalletException, CantListLossProtectedTransactionsException {
         try {
 
-
             LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = null;
             intraUserLoginIdentity = lossProtectedWalletSession.getIntraUserModuleManager();
             String intraUserPk = null;
             if (intraUserLoginIdentity != null) {
                 intraUserPk = intraUserLoginIdentity.getPublicKey();
             }
-
             //when refresh offset set 0
             if (refreshType.equals(FermatRefreshTypes.NEW))
                 offset = 0;
 
-           /* listBitcoinLossProtectedWalletSpend = lossProtectedWallet.listLastActorTransactionsByTransactionType(
-                    BalanceType.AVAILABLE,
-                    TransactionType.CREDIT,
-                    lossProtectedWalletSession.getAppPublicKey(),
-                    intraUserPk,
-                    blockchainNetworkType,
-                    20,0);
+            listBitcoinLossProtectedWalletSpend = lossProtectedWallet.listSpendingBlocksValue(lossProtectedWalletSession.getAppPublicKey(),lossProtectedWalletSession.getTransactionDetailId());
 
-*/
         } catch (Exception e) {
             lossProtectedWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

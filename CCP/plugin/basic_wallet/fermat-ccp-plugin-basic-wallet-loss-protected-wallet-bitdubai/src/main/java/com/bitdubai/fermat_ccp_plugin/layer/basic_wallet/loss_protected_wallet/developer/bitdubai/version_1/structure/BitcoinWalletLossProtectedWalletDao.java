@@ -212,13 +212,15 @@ public class BitcoinWalletLossProtectedWalletDao {
 
             for(DatabaseTableRecord record : bitcoinSpentTable.getRecords())
             {
+
                 UUID spendId               = record.getUUIDValue(  BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_ID_COLUMN_NAME);
                 long amount                = record.getLongValue(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_BTC_SPENT_COLUMN_NAME);
                 long timeStamp             = record.getLongValue(  BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_TIME_STAMP_COLUMN_NAME);
                 double exchangeRate        = record.getDoubleValue(  BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_EXCHANGE_RATE_COLUMN_NAME);
-                spendings.add(new BitcoinWalletLossProtectedWalletSpend(spendId,transactionId,amount,timeStamp,exchangeRate));
-            }
 
+                spendings.add(new BitcoinWalletLossProtectedWalletSpend(spendId,transactionId,amount,timeStamp,exchangeRate));
+
+            }
 
             return spendings;
 

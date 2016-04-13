@@ -4,11 +4,13 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_ccp_api.layer.request.crypto_payment.enums.CryptoPaymentState;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
@@ -99,9 +101,18 @@ public class ChunckValuesHistoryAdapter extends FermatAdapter<LossProtectedWalle
             holder.getTxt_amount().setTextColor(Color.parseColor("#7FBA00"));
         }
 
-        referenceWalletSession.setTransactionDetailId(data.getTransactionId());
 
-        holder.getTxt_exchange_rate().setText("Exchange Rate: 1 BTC = "+ data.getExchangeRate());
+
+       holder.getTxt_exchange_rate().setText("Exchange Rate: 1 BTC = " + data.getExchangeRate());
+
+     /* holder.getBtn_image_event().setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               referenceWalletSession.setTransactionDetailId(data.getTransactionId());
+
+              // changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUE_DETAIL_ACTIVITY, referenceWalletSession.getAppPublicKey());
+           }
+       });*/
 
      /*   if(data.getContact() != null)
             holder.getTxt_contactName().setText(data.getContact().getActorName());
