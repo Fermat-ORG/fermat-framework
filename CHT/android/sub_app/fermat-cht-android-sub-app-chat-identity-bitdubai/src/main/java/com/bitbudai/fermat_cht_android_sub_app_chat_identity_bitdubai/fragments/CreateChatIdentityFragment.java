@@ -158,12 +158,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             @Override
                             public void onClick(View v) {
                                 dispatchTakePictureIntent();
+                                dialog.dismiss();
                             }
                         });
                         dialog.findViewById(R.id.img_gallery).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 loadImageFromGallery();
+                                dialog.dismiss();
                             }
                         });
                         dialog.show();
@@ -221,12 +223,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             @Override
                             public void onClick(View v) {
                                 dispatchTakePictureIntent();
+                                dialog.dismiss();
                             }
                         });
                         dialog.findViewById(R.id.img_gallery).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 loadImageFromGallery();
+                                dialog.dismiss();
                             }
                         });
                         dialog.show();
@@ -335,7 +339,30 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         String brokerNameText = mBrokerName.getText().toString();
         if (brokerNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
-        } else {
+        }
+        if (cryptoBrokerBitmap == null) {
+           // Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            cryptoBrokerBitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
+            byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
+            EditIdentityExecutor executor = null;
+            try {
+                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, moduleManager.getIdentityChatUser().getImage());
+
+                int resultKey = executor.execute();
+                switch (resultKey) {
+                    case SUCCESS:
+                        if (donde.equalsIgnoreCase("onClick")) {
+                            textViewChtTitle.setText(mBrokerName.getText());
+                            Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
+                            changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+                        }
+                        break;
+                }
+            } catch (CHTException e) {
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+
+            }
+        }else {
             byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
             EditIdentityExecutor executor = null;
             try {
