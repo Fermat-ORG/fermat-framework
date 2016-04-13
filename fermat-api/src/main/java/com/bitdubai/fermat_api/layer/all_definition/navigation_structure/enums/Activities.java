@@ -320,9 +320,7 @@ public enum Activities implements FermatEnum {
     //CONNECTIONS ACTIVITY
     BITCOIN_WALLET_CALL_INTRA_USER_COMMUNITY("BWCIUC"),
 
-    /**
-     * Chat
-     */
+    //CHT
     CHT_CHAT_OPEN_CHATLIST("CHTOCHL"),
     CHT_CHAT_CREATE_IDENTITY("CHTCI"),
     CHT_CHAT_OPEN_CONTACTLIST("CHTOCONTL"),
@@ -333,6 +331,7 @@ public enum Activities implements FermatEnum {
     CHT_CHAT_OPEN_PROFILELIST("CHTOPRL"),
     CHT_CHAT_OPEN_PROFILE_DETAIL("CHTOPOD"),
     CHT_CHAT_OPEN_SEND_ERROR_REPORT("CHTOSER"),
+    CHT_SUB_APP_CHAT_COMMUNITY_CONNECTIONS("CHTSACC"),
 
     //ART
     ART_ARTIST_IDENTITY_CREATE_PROFILE("AAICP"),
@@ -786,6 +785,8 @@ public enum Activities implements FermatEnum {
                 return Activities.CHT_CHAT_OPEN_PROFILE_DETAIL;
             case "CHTOSER":
                 return Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT;
+            case "CHTSACC":
+                return Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTIONS;
 
             case "BNKBMWAA":
                 return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;
