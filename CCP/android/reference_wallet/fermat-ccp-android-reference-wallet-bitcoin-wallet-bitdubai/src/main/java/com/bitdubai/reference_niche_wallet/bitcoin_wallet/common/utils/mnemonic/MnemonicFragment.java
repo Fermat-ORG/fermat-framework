@@ -7,18 +7,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
-
+import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantGetMnemonicTextException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 
@@ -33,7 +28,6 @@ public class MnemonicFragment extends AbstractFermatFragment {
      */
     private CryptoWallet cryptoWallet;
     private ErrorManager errorManager;
-    private CryptoWalletManager cryptoWalletManager;
     private ReferenceWalletSession referenceWalletSession;
 
     //constuctor
@@ -48,13 +42,9 @@ public class MnemonicFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         try {
             referenceWalletSession = (ReferenceWalletSession) appSession;
-            cryptoWalletManager = referenceWalletSession.getModuleManager();
+            cryptoWallet = referenceWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-            cryptoWallet = cryptoWalletManager.getCryptoWallet();
 
-        } catch (CantGetCryptoWalletException e) {
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            Toast.makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -76,14 +66,14 @@ public class MnemonicFragment extends AbstractFermatFragment {
         try {
             //get mnemonic text from Crypto Wallet Module
             String MnemonicText = "";
-            for(int x=0;x<cryptoWalletManager.getCryptoWallet().getMnemonicText().size();x++) {
-                MnemonicText += cryptoWalletManager.getCryptoWallet().getMnemonicText().get(x)+" ";
+            for(int x=0;x<cryptoWallet.getMnemonicText().size();x++) {
+                MnemonicText += cryptoWallet.getMnemonicText().get(x)+" ";
             }
             txt_mnemonic.setText(MnemonicText);
 
         } catch (CantGetMnemonicTextException e) {
             Toast.makeText(getActivity(), "Error Getting Mnemonic Text", Toast.LENGTH_SHORT).show();
-        } catch (CantGetCryptoWalletException e) {
+        } catch (Exception e) {
             Toast.makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
         }
 

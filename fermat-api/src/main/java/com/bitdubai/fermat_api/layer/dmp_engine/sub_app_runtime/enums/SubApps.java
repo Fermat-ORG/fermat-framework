@@ -29,17 +29,21 @@ public enum SubApps {
     DAP_ASSETS_IDENTITY_USER("DAPAIU"),
     DAP_ASSETS_REDEEM_POINT_IDENTITY("DAPRPI"),
 
+    //ART sub apps
+    ART_MUSIC_PLAYER("AMP"),
+    ART_ARTIST_COMMUNITY("AACA"),
+    ART_ARTIST_IDENTITY("AAIA"),
+    ART_FAN_COMMUNITY("AFC"),
+    ART_FAN_IDENTITY("AFI"),
 
-    ART_ASSETS_COMMUNITY_ARTIST("AACA"),
-    ART_ASSETS_IDENTITY_ARTIST("AAIA"),
-
-
+    //TKY sub apps
     TKY_ARTIST_IDENTITY("TAI"),
     TKY_FAN_IDENTITY_SUB_APP("TFISP"),
     TKY_ARTIST_IDENTITY_SUB_APP("TAISA"),
 
 
     CHT_CHAT("CHTCHAT"),
+    CHT_CHAT_IDENTITY("CHTCHATI"),
     Scanner("S"),
     SETTINGS("SET");
 
@@ -53,12 +57,14 @@ public enum SubApps {
     public static SubApps getByCode(String code) throws InvalidParameterException {
 
         switch (code) {
+            case "CHTCHATI":
+                return SubApps.CHT_CHAT_IDENTITY;
             case "TAISA":
                 return SubApps.TKY_ARTIST_IDENTITY_SUB_APP;
             case "AAIA":
-                return SubApps.ART_ASSETS_IDENTITY_ARTIST;
+                return SubApps.ART_ARTIST_IDENTITY;
             case "AACA":
-                return SubApps.ART_ASSETS_COMMUNITY_ARTIST;
+                return SubApps.ART_ARTIST_COMMUNITY;
             case "CBPCBC":
                 return SubApps.CBP_CRYPTO_BROKER_COMMUNITY;
             case "CBPCBI":
@@ -109,6 +115,10 @@ public enum SubApps {
                 return SETTINGS;
             case "TFISP":
                 return TKY_FAN_IDENTITY_SUB_APP;
+            case "AFC":
+                return ART_FAN_COMMUNITY;
+            case "AMP":
+                return ART_MUSIC_PLAYER;
             default:
                 throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the SubApps enum");
 

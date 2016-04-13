@@ -14,23 +14,18 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactsListFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ProfileListFragment;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * Profile List Adapter
@@ -98,10 +93,11 @@ public class ProfileListAdapter extends ArrayAdapter<String> {//public class Cha
                 @Override
                 public void onClick(View v) {
                     try {
-                            appSession.setData(ChatSession.PROFILE_DATA, chatManager.getChatUserIdentity(profileid.get(pos)));
+                        //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                            appSession.setData(ChatSession.PROFILE_DATA, null);//chatManager.getChatUserIdentity(profileid.get(pos)));
                             mAdapterCallback.onMethodCallback();//solution to access to changeactivity. j
-                        } catch (CantGetChatUserIdentityException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        //} catch (CantGetChatUserIdentityException e) {
+                        //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }

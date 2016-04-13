@@ -1,29 +1,18 @@
 package com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.events;
 
 import com.bitdubai.fermat_api.CantStartAgentException;
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankTransactionStatus;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.exceptions.CantGetUnholdTransactionException;
-import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.exceptions.CantMakeUnholdTransactionException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_bank_money_transaction.unhold.interfaces.UnholdManager;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BankMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddDebitCryptoBrokerWalletException;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantCalculateBalanceException;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
-import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
-import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
-import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.exceptions.MissingBankMoneyDestockDataException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.StockTransactionBankMoneyDestockFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.StockTransactionBankMoneyDestockManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.utils.BankTransactionParametersWrapper;
@@ -32,6 +21,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -174,8 +164,8 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
     private void doTheMainTask() {
         try {
             // I define the filter to null for all
-            DatabaseTableFilter filter = null;
-            for (BankMoneyTransaction bankMoneyTransaction : stockTransactionBankMoneyDestockFactory.getBankMoneyTransactionList(filter)) {
+            final List<BankMoneyTransaction> bankMoneyTransactionList = stockTransactionBankMoneyDestockFactory.getBankMoneyTransactionList(null);
+            for (BankMoneyTransaction bankMoneyTransaction : bankMoneyTransactionList) {
                 switch (bankMoneyTransaction.getTransactionStatus()) {
                     case INIT_TRANSACTION:
                         //Llamar al metodo de la interfaz public del manager de Bank Hold
@@ -218,8 +208,8 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                                 bankMoneyTransaction.getOriginTransaction(),
                                 bankMoneyTransaction.getOriginTransactionId(),
                                 false);
-                        //TODO:Solo para testear
-                        bankMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
+
+                        bankMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");  //TODO:Solo para testear
                         cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecordBook, BalanceType.BOOK);
                         cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
                         bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
@@ -249,11 +239,11 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                         break;
                     case IN_EJECUTION:
                         BankTransactionStatus bankTransactionStatus = unHoldManager.getUnholdTransactionsStatus(bankMoneyTransaction.getTransactionId());
-                        if (BankTransactionStatus.CONFIRMED.getCode() == bankTransactionStatus.getCode()) {
+                        if (bankTransactionStatus == BankTransactionStatus.CONFIRMED) {
                             bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
                             stockTransactionBankMoneyDestockFactory.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
                         }
-                        if (BankTransactionStatus.REJECTED.getCode() == bankTransactionStatus.getCode()) {
+                        if (bankTransactionStatus == BankTransactionStatus.REJECTED) {
                             bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.REJECTED);
                             stockTransactionBankMoneyDestockFactory.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
                         }
@@ -300,22 +290,6 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                     }
                 }
             }
-        } catch (CryptoBrokerWalletNotFoundException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CantGetStockCryptoBrokerWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CantAddDebitCryptoBrokerWalletException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (DatabaseOperationException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (InvalidParameterException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (MissingBankMoneyDestockDataException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CantGetUnholdTransactionException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-        } catch (CantMakeUnholdTransactionException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.BANK_MONEY_DESTOCK, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }

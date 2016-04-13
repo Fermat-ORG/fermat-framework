@@ -4,6 +4,7 @@ package com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.interfaces;
 import com.bitdubai.fermat_api.layer.actor.FermatActor;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantAddNewTimeOutAgentException;
+import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantMarkAgentAsReadException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantRemoveExistingTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantResetTimeOutAgentException;
 import com.bitdubai.fermat_pip_api.layer.agent.timeout_notifier.exceptions.CantStartTimeOutAgentException;
@@ -89,5 +90,14 @@ public interface TimeOutManager {
      * @return the agents matching the passed status. Empty list if none matched the criteria.
      */
     List<TimeOutAgent> getTimeOutAgents(AgentStatus status);
+
+
+    /**
+     * Marks an agent as read by the consumer. The owner marks the agent as read once it receives the notification of time out
+     * If the agent is not marked as read, it will continue triggering the event until the max allowed is reached.
+     * @param timeOutAgent the agent to mark as read
+     * @throws CantMarkAgentAsReadException
+     */
+    void markAsRead(TimeOutAgent timeOutAgent) throws CantMarkAgentAsReadException;
 
 }

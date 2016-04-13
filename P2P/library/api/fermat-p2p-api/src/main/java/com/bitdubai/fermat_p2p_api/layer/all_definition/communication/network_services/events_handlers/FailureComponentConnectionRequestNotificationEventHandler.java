@@ -50,7 +50,19 @@ public class FailureComponentConnectionRequestNotificationEventHandler implement
     public void handleEvent(FailureComponentConnectionRequestNotificationEvent failureComponentConnectionRequestNotificationEvent) throws FermatException {
 
         if (this.networkService.getStatus() == ServiceStatus.STARTED) {
-            if (failureComponentConnectionRequestNotificationEvent.getNetworkServiceApplicant().getPlatformComponentType()  == networkService.getNetworkServiceProfile().getPlatformComponentType() &&
+
+            if(networkService.getNetworkServiceProfile() == null ||
+                    failureComponentConnectionRequestNotificationEvent.getNetworkServiceApplicant() == null) {
+
+                if (networkService.getNetworkServiceProfile() == null)
+                    System.out.println("********************************************************** \n\n plugin " + this.networkService.eventSource + " networkService.getNetworkServiceProfile() == null \n\n\n **********************************************************");
+
+                if (failureComponentConnectionRequestNotificationEvent.getNetworkServiceApplicant() == null)
+                    System.out.println("********************************************************** \n\n plugin " + this.networkService.eventSource + " failureComponentConnectionRequestNotificationEvent.getNetworkServiceApplicant() == null \n\n\n **********************************************************");
+
+
+
+            }else if (failureComponentConnectionRequestNotificationEvent.getNetworkServiceApplicant().getPlatformComponentType()  == networkService.getNetworkServiceProfile().getPlatformComponentType() &&
                     failureComponentConnectionRequestNotificationEvent.getNetworkServiceApplicant().getNetworkServiceType() == networkService.getNetworkServiceProfile().getNetworkServiceType()){
 
                 this.networkService.handleFailureComponentConnectionRequest(failureComponentConnectionRequestNotificationEvent);

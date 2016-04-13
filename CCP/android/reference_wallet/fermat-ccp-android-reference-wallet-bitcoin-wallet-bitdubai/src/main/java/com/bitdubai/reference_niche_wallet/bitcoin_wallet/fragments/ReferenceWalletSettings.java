@@ -3,33 +3,25 @@ package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.WindowManager;
 
-import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Fragments;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantGetCryptoWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.mnemonic.MnemonicFragment;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.mnemonic.MnemonicSendDialog;
-import com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory.ReferenceFragmentsEnumType;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
-import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsEditText;
-import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsOpenDialogText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwithItem;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,10 +49,10 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
         super.onCreate(savedInstanceState);
         referenceWalletSession = appSession;
         try {
-            cryptoWallet = referenceWalletSession.getModuleManager().getCryptoWallet();
+            cryptoWallet = referenceWalletSession.getModuleManager();
             getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
             settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
-        } catch (CantGetCryptoWalletException e) {
+        } catch (Exception e) {
             referenceWalletSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
         }

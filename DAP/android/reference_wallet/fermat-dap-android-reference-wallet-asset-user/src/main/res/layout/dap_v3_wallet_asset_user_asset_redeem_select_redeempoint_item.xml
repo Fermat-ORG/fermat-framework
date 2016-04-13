@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="5dp">
+
+    <ImageView
+        android:id="@+id/imageView_redeem_redeempoint_avatar"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_gravity="center"
+        android:scaleType="centerCrop"
+        tools:ignore="ContentDescription" />
+
+    <RelativeLayout
+        android:id="@+id/selectedRedeemEffect"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/bg_circular_redeempoint_list"
+        android:visibility="invisible">
+    </RelativeLayout>
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/redeemPointItemName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/selectedRedeemEffect"
+        android:paddingRight="16dp"
+        android:text="Penelope Quintero"
+        android:textColor="#0C6089"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        tools:ignore="HardcodedText,RtlSymmetry" />
+    <!--android:paddingTop="10dp"-->
+    <!--android:layout_alignTop="@+id/imageView_redeem_redeempoint_avatar"-->
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/selectedRedeemPointAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/redeemPointItemName"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/imageView_redeem_redeempoint_avatar"
+        android:paddingRight="16dp"
+        android:text="Address"
+        tools:ignore="HardcodedText,RtlSymmetry" />
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:id="@+id/selectedRedeemPointCity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/selectedRedeemPointAddress"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/imageView_redeem_redeempoint_avatar"
+        android:paddingRight="16dp"
+        android:text="City"
+        tools:ignore="HardcodedText,RtlSymmetry" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="16dp"
+        android:layout_toRightOf="@+id/imageView_redeem_redeempoint_avatar"
+        android:background="#e1e1e1"
+        android:paddingRight="16dp" />
+</RelativeLayout>

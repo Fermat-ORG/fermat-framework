@@ -17,6 +17,7 @@ public enum EventSource implements FermatEnum {
     ACTOR_ASSET_USER                        ("AAU"),
     ACTOR_ASSET_ISSUER                      ("AAI"),
     ACTOR_ASSET_REDEEM_POINT                ("AAR"),
+    ACTOR_NETWORK_SERVICE_CHAT              ("AC"),
     ACTOR_NETWORK_SERVICE_CRYPTO_BROKER     ("ACB"),
     ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER   ("ACC"),
     ACTOR_NETWORK_SERVICE_ARTIST            ("ANSA"),
@@ -28,6 +29,7 @@ public enum EventSource implements FermatEnum {
     BROKER_SUBMIT_ONLINE_MERCHANDISE        ("BSOM"),
     BUSINESS_TRANSACTION_CLOSE_CONTRACT     ("BTCC"),
     BUSINESS_TRANSACTION_OPEN_CONTRACT      ("BTOC"),
+    CHAT_ACTOR_CONNECTION                   ("CAC"),
     CUSTOMER_ACK_OFFLINE_MERCHANDISE        ("CAOM"),
     CUSTOMER_ACK_ONLINE_MERCHANDISE         ("CAOM"),
     COMMUNICATION_CLOUD_PLUGIN              ("CCL"),
@@ -76,6 +78,7 @@ public enum EventSource implements FermatEnum {
     WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN    ("WSCCLCL"),
     USER_LEVEL_CUSTOMER_BROKER_PURCHASE_MANAGER ("ULCBPM"),
     USER_LEVEL_CUSTOMER_BROKER_SALE_MANAGER ("ULCBSM"),
+    TIMEOUT_NOTIFIER("TON"),
     CCP_OUTGOING_DRAFT_TRANSACTION("CCPODT");
 
     private final String code;
@@ -93,6 +96,7 @@ public enum EventSource implements FermatEnum {
             case "AAU":    return ACTOR_ASSET_USER;
             case "AAI":    return ACTOR_ASSET_ISSUER;
             case "AAR":    return ACTOR_ASSET_REDEEM_POINT;
+            case "AC":    return ACTOR_NETWORK_SERVICE_CHAT;
             case "ACB":    return ACTOR_NETWORK_SERVICE_CRYPTO_BROKER;
             case "ACC":    return ACTOR_NETWORK_SERVICE_CRYPTO_CUSTOMER;
             case "ANSA":   return ACTOR_NETWORK_SERVICE_ARTIST;
@@ -107,6 +111,7 @@ public enum EventSource implements FermatEnum {
             case "NTNW":   return NEGOTIATION_TRANSACTION_NEW;
             case "NTUP":   return NEGOTIATION_TRANSACTION_UPDATE;
             case "NTCL":   return NEGOTIATION_TRANSACTION_CLOSE;
+            case "CAC":    return CHAT_ACTOR_CONNECTION;
             case "CCL":    return COMMUNICATION_CLOUD_PLUGIN;
             case "CAB":    return CRYPTO_ADDRESS_BOOK;
             case "CBAC":   return CRYPTO_BROKER_ACTOR_CONNECTION;
@@ -147,6 +152,7 @@ public enum EventSource implements FermatEnum {
             case "WSCCC" : return WS_COMMUNICATION_CLOUD_CLIENT_PLUGIN;
             case "ULCBPM" : return USER_LEVEL_CUSTOMER_BROKER_PURCHASE_MANAGER;
             case "ULCBSM" : return USER_LEVEL_CUSTOMER_BROKER_SALE_MANAGER;
+            case "TON"  :   return TIMEOUT_NOTIFIER;
             case "CCPODT": return CCP_OUTGOING_DRAFT_TRANSACTION;
 
             default: throw new InvalidParameterException(

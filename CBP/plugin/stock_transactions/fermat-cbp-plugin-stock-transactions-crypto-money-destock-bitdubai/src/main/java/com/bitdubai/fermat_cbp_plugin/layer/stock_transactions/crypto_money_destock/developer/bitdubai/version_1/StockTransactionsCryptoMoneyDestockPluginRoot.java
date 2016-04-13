@@ -72,7 +72,7 @@ public class StockTransactionsCryptoMoneyDestockPluginRoot extends AbstractPlugi
 
     @Override
     public void start() throws CantStartPluginException {
-        stockTransactionCryptoMoneyDestockManager = new StockTransactionCryptoMoneyDestockManager(pluginDatabaseSystem, pluginId);
+        stockTransactionCryptoMoneyDestockManager = new StockTransactionCryptoMoneyDestockManager(pluginDatabaseSystem, pluginId, errorManager);
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCrpytoMoneyDestockDatabaseConstants.CRYPTO_MONEY_DESTOCK_DATABASE_NAME);
 

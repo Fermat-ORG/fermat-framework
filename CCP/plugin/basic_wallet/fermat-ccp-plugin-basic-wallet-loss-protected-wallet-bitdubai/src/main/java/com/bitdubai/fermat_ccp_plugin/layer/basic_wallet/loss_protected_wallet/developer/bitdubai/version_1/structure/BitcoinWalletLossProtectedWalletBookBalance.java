@@ -78,10 +78,21 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
             return bitcoinWalletBasicWalletDao.getBookBalance(blockchainNetworkType);
         } catch(CantCalculateBalanceException exception){
-            database.closeDatabase();
+           throw exception;
+        } catch(Exception exception){
+           throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
+        }
+    }
+
+    @Override
+    public long getRealBalance(BlockchainNetworkType blockchainNetworkType) throws CantCalculateBalanceException {
+        try {
+            bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
+            return bitcoinWalletBasicWalletDao.getBookBalance(blockchainNetworkType);
+        } catch(CantCalculateBalanceException exception){
             throw exception;
         } catch(Exception exception){
-            database.closeDatabase();
+
             throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, null);
         }
     }
@@ -102,10 +113,10 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
 
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
 
-            return bitcoinWalletBasicWalletDao.getAvailableBalance(blockchainNetworkType, exchangeRate);
+            return bitcoinWalletBasicWalletDao.getBookBalance(blockchainNetworkType);
 
 
-        } catch(CantListTransactionsException exception){
+        } catch(CantCalculateBalanceException exception){
             throw new CantCalculateBalanceException(CantCalculateBalanceException.DEFAULT_MESSAGE, FermatException.wrapException(exception  ), null, null);
 
         } catch(Exception exception){
@@ -127,7 +138,7 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
             double purchasePrice = 0;
 
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
-            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.BOOK, purchasePrice);
+            bitcoinWalletBasicWalletDao.addDebit(cryptoTransaction, BalanceType.BOOK, String.valueOf(purchasePrice));
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
             //get exchange rate on background
@@ -145,7 +156,7 @@ public class BitcoinWalletLossProtectedWalletBookBalance implements BitcoinLossP
             double purchasePrice = 0;
             bitcoinWalletBasicWalletDao = new BitcoinWalletLossProtectedWalletDao(this.database);
 
-            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.BOOK, purchasePrice);
+            bitcoinWalletBasicWalletDao.addCredit(cryptoTransaction, BalanceType.BOOK, String.valueOf(purchasePrice));
             //broadcaster balance amount
             broadcaster.publish(BroadcasterType.UPDATE_VIEW, cryptoTransaction.getTransactionHash());
             //get exchange rate on background

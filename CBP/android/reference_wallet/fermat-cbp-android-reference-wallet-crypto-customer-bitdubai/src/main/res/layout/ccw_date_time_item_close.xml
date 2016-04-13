@@ -21,7 +21,7 @@
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_gravity="top|end"
-            android:layout_margin="16dp"
+            android:layout_margin="9dp"
             android:scaleType="fitXY"
             android:src="@drawable/bg_detail_number_01"
             tools:ignore="contentDescription"/>
@@ -42,12 +42,15 @@
                 android:textSize="18sp"
                 tools:text="Negotiation Expiration Date"/>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#1271A7"/>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="25dp"
-                android:layout_marginBottom="20dp">
+                android:layout_margin="16dp">
 
                 <TextView
                     android:id="@+id/ccw_date_time_description_text"
