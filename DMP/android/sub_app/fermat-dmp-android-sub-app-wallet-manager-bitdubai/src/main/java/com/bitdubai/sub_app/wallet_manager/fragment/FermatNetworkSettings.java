@@ -44,6 +44,16 @@ public class FermatNetworkSettings<S extends DesktopSession,RE extends ResourceP
         return list;
     }
 
+    @Override
+    public void dialogOptionSelected(String item, int position) {
+
+    }
+
+    @Override
+    public void optionSelected(PreferenceSettingsItem preferenceSettingsItem, int position) {
+
+    }
+
 
     @Override
     public void onSettingsTouched(PreferenceSettingsItem preferenceSettingsItem, int position) {
@@ -55,6 +65,10 @@ public class FermatNetworkSettings<S extends DesktopSession,RE extends ResourceP
 
     }
 
+    @Override
+    public void onSettingsTouched(String item, int position) {
+
+    }
 
     @Override
     public void onBackPressed() {
@@ -78,6 +92,4 @@ public class FermatNetworkSettings<S extends DesktopSession,RE extends ResourceP
 
         return new String[]{ip,port};
     }
-
-
 }

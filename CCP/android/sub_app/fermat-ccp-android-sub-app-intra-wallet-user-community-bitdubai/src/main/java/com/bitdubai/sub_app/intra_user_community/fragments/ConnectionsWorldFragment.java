@@ -525,14 +525,20 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
          try {
             //verifico la cache para mostrar los que tenia antes y los nuevos
+             List<IntraUserInformation> userCacheList = new ArrayList<>();
+             try {
+                     userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
+             } catch (CantGetIntraUsersListException e) {
+                 e.printStackTrace();
+             }
 
-            List<IntraUserInformation> userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
              //dataSet.addAll(userList);
 
             if(userCacheList.size() == 0)
             {
                 dataSet.addAll(userList);
+                moduleManager.saveCacheIntraUsersSuggestions(userList);
             }
             else
             {
@@ -560,7 +566,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 }
             }
 
-            offset = dataSet.size();
+            //offset = dataSet.size();
 
         } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();
@@ -660,8 +666,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             getActivity().onBackPressed();
         }else{
             invalidate();
-        }
-        if (dataSet.isEmpty()) {
+        }if (dataSet.isEmpty()) {
             showEmpty(true, emptyView);
             swipeRefresh.post(new Runnable() {
                 @Override

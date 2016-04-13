@@ -354,7 +354,7 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
         try{
             String testURL="https://www.dropbox.com/s/l8df6ixyiweq8yt/appSessionFragmenContract?dl=0";
             String testName="testFileName";
-            this.tokenlyWalletSongVault.downloadFile(testURL, testName);
+            this.tokenlyWalletSongVault.downloadFile(testURL, testName, UUID.randomUUID(),null);
         } catch (Exception e){
             System.out.println("TKY: Test Download exception");
             e.printStackTrace();
@@ -442,6 +442,26 @@ public class TokenlyWalletPluginRoot extends AbstractPlugin implements
 
     private Fan getTestFanIdentity(){
         Fan fanIdentity = new Fan() {
+            @Override
+            public List<String> getConnectedArtists() {
+                return null;
+            }
+
+            @Override
+            public void addNewArtistConnected(String userName) {
+
+            }
+
+            @Override
+            public String getArtistsConnectedStringList() {
+                return null;
+            }
+
+            @Override
+            public void addArtistConnectedList(String xmlStringList) {
+
+            }
+
             @Override
             public String getTokenlyId() {
                 return null;

@@ -37,7 +37,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.BitcoinWalletConstants;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.LossProtectedWalletConstants;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.AddConnectionsAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.AddConnectionCallback;
@@ -278,7 +278,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
         super.onCreateOptionsMenu(menu, inflater);
         this.menu = menu;
         if(isMenuVisible){
-            menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
+            menu.add(0, LossProtectedWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
@@ -291,7 +291,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
 
             int id = item.getItemId();
 
-            if(id == BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION){
+            if(id == LossProtectedWalletConstants.IC_ACTION_ADD_CONNECTION){
                 for(LossProtectedWalletIntraUserActor cryptoWalletIntraUserActor : intraUserInformationList){
                     try {
                         if (cryptoWalletIntraUserActor.isSelected()) {
@@ -396,7 +396,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
         connectionPickCounter++;
         if(!isMenuVisible){
             isMenuVisible = true;
-            menu.add(0, BitcoinWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
+            menu.add(0, LossProtectedWalletConstants.IC_ACTION_ADD_CONNECTION, 0, "ADD")
                     .setIcon(R.drawable.button_add_connection)
                     .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }

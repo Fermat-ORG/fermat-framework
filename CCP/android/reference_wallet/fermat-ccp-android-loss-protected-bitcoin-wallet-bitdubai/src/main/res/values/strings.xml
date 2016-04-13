@@ -2,6 +2,7 @@
 <resources>
     <!-- balance_header.xml -->
     <string name="available_balance_text">Available balance</string>
+    <string name="real_balance_text">Real balance</string>
     <string name="touch_to_change_text">Touch to change</string>
     <!-- ccp_grouper_list_item.xml -->
     <string name="txt_total_balance_15_btc_text">15 BTC</string>
@@ -51,6 +52,8 @@
     <string name="give_me_an_address_address_text">Give me an Address!</string>
     <!-- fragment_transaction_main_receive.xml -->
     <string name="you_dont_have_transactions_received_text">You don\'t have\n any received transactions</string>
+    <!-- chunck_values_fragment_transaction_main.xml -->
+    <string name="you_dont_have_chunck_values">You don\'t have\n any Chunck Values yet</string>
     <!-- fragment_transaction_main_send.xml -->
     <string name="you_dont_have_transactions_sent_text">You don\'t have\n any transaction sent</string>
     <string name="balance_amount_0_bits_text">0 bits</string>
@@ -97,6 +100,7 @@
     <!-- send_form_base.xml -->
     <string name="enter_name_here_text">Enter name here</string>
     <string name="bits_text">[bits]</string>
+    <string name="btc_text">[btc]</string>
     <string name="balance_amount_0_text">0</string>
     <string name="amount_text">Amount</string>
     <!-- setting_base.xml -->
@@ -220,6 +224,7 @@
     <!-- TAB BALANCE STRINGS -->
     <string name="available_balance">available balance</string>
     <string name="book_balance">book balance</string>
+    <string name="real_balance">real balance</string>
     <string name="search_hint">Contact name</string>
     <string name="empty_list_msg">No contacts</string>
     <!-- TAB TRANSACTIONS -->
@@ -235,6 +240,9 @@
     <string name="fragment_send_amount_hint">Amount (bits) (*)</string>
     <string name="fragment_send_notes_hint">Notes (optional)</string>
     <string name="clear_text_button">Clear</string>
+    <string name="accept_btn">Accept</string>
+    <string name="cancel_btn">Cancel</string>
+    <string name="confirm_text">Do you really want to continue?</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="see_your_balance_text">* Checking your balance.\n* Sending/receiving bitcoins.\n* Requesting bitcoins.\n* Browsing your transaction history.</string>

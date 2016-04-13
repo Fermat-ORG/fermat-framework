@@ -79,12 +79,9 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     // Data
     private ArrayList openNegotiationList;
-    private TextView txt_type_balance;
-    private TextView txt_balance_amount;
-    private long balanceAvailable;
+
     private View rootView;
     private List<CryptoWalletTransaction> lstCryptoWalletTransactionsAvailable;
-    private List<CryptoWalletTransaction> lstCryptoWalletTransactionsBook;
     private int available_offset=0;
     private int book_offset=0;
     private Handler mHandler;
@@ -111,12 +108,12 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
         lstCryptoWalletTransactionsAvailable = new ArrayList<>();
 
-        lstCryptoWalletTransactionsBook = new ArrayList<>();
+
         mHandler = new Handler();
         BitcoinWalletSettings bitcoinWalletSettings = null;
         try {
-            referenceWalletSession = (ReferenceWalletSession) appSession;
-            moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
+            referenceWalletSession = appSession;
+            moduleManager = referenceWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
             bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
@@ -285,36 +282,23 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
                 BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode( settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType().getCode());
 
-                List<CryptoWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(),intraUserPk, blockchainNetworkType,  MAX_TRANSACTIONS, available_offset);
+                List<CryptoWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(),intraUserPk, blockchainNetworkType,  MAX_TRANSACTIONS, 0);
 
                 lstCryptoWalletTransactionsAvailable.addAll(list);
 
-                available_offset = lstCryptoWalletTransactionsAvailable.size();
-
-              //  lstCryptoWalletTransactionsBook.addAll(moduleManager.listLastActorTransactionsByTransactionType(BalanceType.BOOK, TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), intraUserPk, MAX_TRANSACTIONS, book_offset));
-
-               // book_offset = lstCryptoWalletTransactionsBook.size();
+               // available_offset = lstCryptoWalletTransactionsAvailable.size();
 
                 //get transactions from actor public key to send me btc
+
                 for (CryptoWalletTransaction cryptoWalletTransaction : lstCryptoWalletTransactionsAvailable) {
-                    List<CryptoWalletTransaction> lst = new ArrayList<>();
-                    lst = moduleManager.listTransactionsByActorAndType(BalanceType.getByCode(referenceWalletSession.getBalanceTypeSelected()), TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorToPublicKey(), intraUserPk,blockchainNetworkType,MAX_TRANSACTIONS, 0);
-                    long total = 0;
-                    for(CryptoWalletTransaction cwt : lst){
-                        total+= cwt.getAmount();
-                    }
+                    List<CryptoWalletTransaction> lst = moduleManager.listTransactionsByActorAndType(BalanceType.AVAILABLE, TransactionType.CREDIT, referenceWalletSession.getAppPublicKey(), cryptoWalletTransaction.getActorFromPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
 
                     GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction> grouperItem = new GrouperItem<CryptoWalletTransaction, CryptoWalletTransaction>(lst, false, cryptoWalletTransaction);
                     data.add(grouperItem);
                 }
-                if(!data.isEmpty()){
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            FermatAnimationsUtils.showEmpty(getActivity(),false,emptyListViewsContainer);
-                        }
-                    });
 
+                if(!data.isEmpty()){
+                    FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
                 }
 
             }
@@ -349,6 +333,10 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 openNegotiationList = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(openNegotiationList);
+            }else {
+
+                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+
             }
         }
     }
@@ -362,58 +350,10 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         }
     }
 
-    private void changeAmountType(TextView txt_balance_amount){
-        //referenceWalletSession.setTypeAmount((referenceWalletSession.getTypeAmount()== ShowMoneyType.BITCOIN.getCode()) ? ShowMoneyType.BITS : ShowMoneyType.BITCOIN);
-        updateBalances();
-    }
 
 
 
-    /**
-     * Method to change the balance type
-     */
-    private void changeBalanceType(TextView txt_type_balance,TextView txt_balance_amount) {
 
-        try {
-            if (((ReferenceWalletSession)appSession).getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
-                balanceAvailable = loadBalance(BalanceType.AVAILABLE);
-                //txt_balance_amount.setText(formatBalanceString(bookBalance, referenceWalletSession.getTypeAmount()));
-                txt_type_balance.setText(R.string.book_balance);
-               // referenceWalletSession.setBalanceTypeSelected(BalanceType.BOOK);
-            //} else if (referenceWalletSession.getBalanceTypeSelected().equals(BalanceType.BOOK.getCode())) {
-                //bookBalance = loadBalance(BalanceType.BOOK);
-            //    txt_balance_amount.setText(formatBalanceString(balanceAvailable, referenceWalletSession.getTypeAmount()));
-           //     txt_type_balance.setText(R.string.available_balance);
-               // referenceWalletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
-            }
-        } catch (Exception e) {
-           // referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    private long loadBalance(BalanceType balanceType){
-        long balance = 0;
-//        try {
-//            balance = cryptoWallet.getBalance(balanceType,referenceWalletSession.getWalletSessionType().getWalletPublicKey());
-//        } catch (CantGetBalanceException e) {
-//            e.printStackTrace();
-//        }
-        return balance;
-    }
-
-
-    private void updateBalances(){
-        //bookBalance = loadBalance(BalanceType.BOOK);
-        balanceAvailable = loadBalance(BalanceType.AVAILABLE);
-//        txt_balance_amount.setText(
-//                WalletUtils.formatBalanceString(
-//                        (referenceWalletSession.getBalanceTypeSelected() == BalanceType.AVAILABLE.getCode())
-//                                ? balanceAvailable : bookBalance,
-//                        referenceWalletSession.getTypeAmount())
-//        );
-    }
 
     @Override
     public void startCollapseAnimation(int verticalOffset) {

@@ -108,10 +108,12 @@ public class ContactListAdapter extends ArrayAdapter<String> {//public class Cha
                 @Override
                 public void onClick(View v) {
                     try {
-                            appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactid.get(pos)));
+
+                            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                            appSession.setData(ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(contactid.get(pos)));
                             mAdapterCallback.onMethodCallback();//solution to access to changeactivity. j
-                        } catch (CantGetContactException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        //} catch (CantGetContactException e) {
+                        //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         } catch (Exception e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }
