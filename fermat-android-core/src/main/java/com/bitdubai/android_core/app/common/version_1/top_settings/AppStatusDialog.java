@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.fermat.R;
@@ -66,10 +67,11 @@ public class AppStatusDialog extends Dialog{
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
-                    androidCoreSettings.setAppsStatus(AppsStatus.RELEASE);
-                    uncheckAllExcept();
-                    buttonView.setChecked(isChecked);
-                    appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.RELEASE);
+                    Toast.makeText(getContext(), "No apps in Release for now", Toast.LENGTH_SHORT).show();
+//                    androidCoreSettings.setAppsStatus(AppsStatus.RELEASE);
+//                    uncheckAllExcept();
+//                    buttonView.setChecked(isChecked);
+//                    appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.RELEASE);
                 }
             }
         });
@@ -79,10 +81,11 @@ public class AppStatusDialog extends Dialog{
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
-                    androidCoreSettings.setAppsStatus(AppsStatus.BETA);
-                    uncheckAllExcept();
-                    buttonView.setChecked(isChecked);
-                    appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.BETA);
+                    Toast.makeText(getContext(), "No apps in Beta for now", Toast.LENGTH_SHORT).show();
+//                    androidCoreSettings.setAppsStatus(AppsStatus.BETA);
+//                    uncheckAllExcept();
+//                    buttonView.setChecked(isChecked);
+//                    appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.BETA);
                 }
 
             }
@@ -138,11 +141,13 @@ public class AppStatusDialog extends Dialog{
                 switch (v.getId()){
                     case R.id.txt_release:
                     case R.id.linear_relese:
-                        androidCoreSettings.setAppsStatus(AppsStatus.RELEASE);
+                        Toast.makeText(getContext(), "No apps in Release for now", Toast.LENGTH_SHORT).show();
+                        //androidCoreSettings.setAppsStatus(AppsStatus.RELEASE);
                         break;
                     case R.id.txt_beta:
                     case R.id.linear_beta:
-                        androidCoreSettings.setAppsStatus(AppsStatus.BETA);
+                        Toast.makeText(getContext(), "No apps in Beta for now", Toast.LENGTH_SHORT).show();
+                        //androidCoreSettings.setAppsStatus(AppsStatus.BETA);
                         break;
                     case R.id.txt_alpha:
                     case R.id.linear_alpha:
