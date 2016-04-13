@@ -117,7 +117,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             }
         });
         getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background);
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         adapter=new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
                 .addModuleManager(moduleManager)

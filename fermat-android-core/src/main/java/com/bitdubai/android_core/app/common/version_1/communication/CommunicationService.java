@@ -57,6 +57,11 @@ public class CommunicationService extends Service{
     private ExecutorService executorService;
 
     /**
+     * Target we publish for clients to send messages to IncomingHandler.
+     */
+    final Messenger mMessenger = new Messenger(new IncomingHandler());
+
+    /**
      * Handler of incoming messages from service.
      */
     class IncomingHandler extends Handler {
@@ -80,6 +85,7 @@ public class CommunicationService extends Service{
                                 public void run() {
                                     try {
                                         moduleDataRequest2(
+                                                msg.replyTo,
                                                 data.getString(CommunicationDataKeys.DATA_REQUEST_ID),
                                                 data.getString(CommunicationDataKeys.DATA_PUBLIC_KEY),
                                                 (PluginVersionReference) data.getSerializable(CommunicationDataKeys.DATA_PLUGIN_VERSION_REFERENCE),
@@ -112,8 +118,8 @@ public class CommunicationService extends Service{
         clients.remove(key);
     }
 
-    private void moduleDataRequest2(final String requestId,final String requestKey,final PluginVersionReference pluginVersionReference,final String method, final Serializable parameters){
-        new ModuleAsyncTask(this,fermatSystem,requestId,requestKey,pluginVersionReference,method,parameters).execute();
+    private void moduleDataRequest2(Messenger replyTo, final String requestId, final String requestKey, final PluginVersionReference pluginVersionReference, final String method, final Serializable parameters){
+        new ModuleAsyncTask(this,fermatSystem,replyTo,requestId,requestKey,pluginVersionReference,method,parameters).execute();
     }
 
 
@@ -125,7 +131,7 @@ public class CommunicationService extends Service{
                 Log.i(TAG,"Method to execute: "+ method);
                 Log.i(TAG,"PluginVersionReference: "+ pluginVersionReference.toString());
                 Log.i(TAG,"Parameters: "+parameters);
-                FermatManager fermatManager = fermatSystem.getPlugin(pluginVersionReference);
+                FermatManager fermatManager = fermatSystem.startAndGetPluginVersion(pluginVersionReference);
                 ModuleManager moduleManager = null;
                 Class clazz = null;
                 if(fermatManager instanceof AbstractModule){
@@ -222,19 +228,19 @@ public class CommunicationService extends Service{
     }
 
 
-    public void send(String id, String key, Object object) throws RemoteException {
+    public void send(Messenger replyTo,String id, String key, Object object) throws RemoteException {
         Log.i(TAG,"Sending data to:"+ clients.get(key));
         Log.i(TAG,"Sending data: "+ object);
-        if(object!=null) {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (Method method : object.getClass().getDeclaredMethods()) {
-                stringBuilder.append(method.getName()).append("\n");
-            }
-
-            Log.i(TAG, "Data methods: " + stringBuilder.toString());
-
-            Log.i(TAG, "Data name: " + object.getClass().getCanonicalName());
-        }
+//        if(object!=null) {
+//            StringBuilder stringBuilder = new StringBuilder();
+//            for (Method method : object.getClass().getDeclaredMethods()) {
+//                stringBuilder.append(method.getName()).append("\n");
+//            }
+//
+//            Log.i(TAG, "Data methods: " + stringBuilder.toString());
+//
+//            Log.i(TAG, "Data name: " + object.getClass().getCanonicalName());
+//        }
         Message msg = Message.obtain(null, CommunicationMessages.MSG_REQUEST_DATA_MESSAGE);
         if(object instanceof Serializable){
             msg.getData().putSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE, (Serializable) object);
@@ -244,29 +250,40 @@ public class CommunicationService extends Service{
             msg.getData().putString(CommunicationDataKeys.DATA_REQUEST_ID, id);
             Log.i(TAG, "Data is not serializable");
         }
-        Messenger messenger = clients.get(key);
-        if(messenger!=null){
-            clients.get(key).send(msg);
+
+
+        if(replyTo!=null){
+            replyTo.send(msg);
         }else{
-            Log.i(TAG, "Client is nos in map");
+            Log.i(TAG, "ReplyTo is null, CHECK THIS.");
+            Messenger messenger = clients.get(key);
+            if(messenger!=null){
+                clients.get(key).send(msg);
+            }else{
+                Log.i(TAG, "Client is not in map");
+            }
+
         }
 
     }
 
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d(TAG, "onStartCommand");
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG, "onCreate");
         fermatSystem = FermatSystem.getInstance();
-        executorService = Executors.newFixedThreadPool(5);
+        executorService = Executors.newFixedThreadPool(10);
         clients = new HashMap<>();
 
     }
 
-    /**
-     * Target we publish for clients to send messages to IncomingHandler.
-     */
-    final Messenger mMessenger = new Messenger(new IncomingHandler());
-    boolean mBound;
+
 
     @Nullable
     @Override
@@ -278,6 +295,7 @@ public class CommunicationService extends Service{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d(TAG, "onDestroy");
         executorService.shutdownNow();
     }
 }

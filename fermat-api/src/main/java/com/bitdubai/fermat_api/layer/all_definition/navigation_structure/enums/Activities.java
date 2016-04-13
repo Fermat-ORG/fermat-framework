@@ -335,7 +335,7 @@ public enum Activities implements FermatEnum {
     CHT_CHAT_OPEN_SEND_ERROR_REPORT("CHTOSER"),
 
     //ART
-    ART_ARTIST_IDENTITY_HOME("AACACP"),
+    ART_ARTIST_IDENTITY_CREATE_PROFILE("AAICP"),
     ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST("ASAFCCFL"),
     ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS("ASAFCCN"),
     ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD("ASAFCCW"),
@@ -372,6 +372,8 @@ public enum Activities implements FermatEnum {
         //    }
         //}
         switch (code) {
+            case "AAICP":
+                return Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE;
             case "TAICP":
                 return Activities.TKY_ARTIST_IDENTITY_CREATE_PROFILE;
             case "DAPSARPI":

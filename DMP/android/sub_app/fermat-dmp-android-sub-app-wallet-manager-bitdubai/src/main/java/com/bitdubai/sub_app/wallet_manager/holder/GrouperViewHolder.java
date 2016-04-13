@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ParentViewHolder;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
@@ -52,7 +53,8 @@ public class GrouperViewHolder extends ParentViewHolder {
      */
     public void bind(int childCount,Platforms platforms) {
         txt_grouper.setText(platforms.getTextForm());
-        txt_grouper.setTextColor(Color.BLACK);
+        txt_grouper.setFont(FontType.CAVIAR_DREAMS_BOLD);
+        txt_grouper.setTextColor(Color.WHITE);
     }
 
 

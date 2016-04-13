@@ -34,6 +34,8 @@ public class CommunitiesExpandableAdapter
         super(parentItemList);
         mInflater = LayoutInflater.from(context);
         this.res = res;
+        for (int i=0;i<parentItemList.size();i++)
+            onParentListItemExpanded(i);
     }
 
 
@@ -89,4 +91,5 @@ public class CommunitiesExpandableAdapter
     public void onBindChildViewHolder(CommunityViewHolder childViewHolder, int position, InstalledApp childListItem) {
         childViewHolder.bind(childListItem);
     }
+
 }

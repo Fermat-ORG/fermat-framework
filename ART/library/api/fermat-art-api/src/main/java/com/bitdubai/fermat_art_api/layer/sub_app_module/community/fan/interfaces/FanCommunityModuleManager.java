@@ -28,10 +28,10 @@ public interface FanCommunityModuleManager extends
                 ActiveActorIdentityInformation> {
 
     /**
-     * The method <code>listWorldCryptoCustomers</code> returns the list of all fans in the world,
+     * The method <code>listWorldFanatics</code> returns the list of all fans in the world,
      * setting their status (CONNECTED, for example) with respect to the selectedIdentity parameter
      * logged in artist
-     * @return a list of all crypto customers in the world
+     * @return a list of all fanatics in the world
      * @throws CantListFansException if something goes wrong.
      */
     List<FanCommunityInformation> listWorldFan(
@@ -85,7 +85,7 @@ public interface FanCommunityModuleManager extends
     void acceptFan(UUID connectionId) throws CantAcceptRequestException;
 
     /**
-     * The method <code>denyConnection</code> denies a connection request from other crypto Customer
+     * The method <code>denyConnection</code> denies a connection request from other fanatic
      *
      * @param connectionId the connection id of the user to deny its connection request
      * @throws CantDenyActorConnectionRequestException
@@ -95,7 +95,7 @@ public interface FanCommunityModuleManager extends
     /**
      * The method <code>listFanAvailablesToContact</code> searches for fan that the logged in
      * fan could be interested to add.     *
-     * @return a list with information of crypto customer
+     * @return a list with information of fanatic
      * @throws CantGetFanListException
      */
     List<FanCommunityInformation> getSuggestionsToContact(
@@ -103,20 +103,20 @@ public interface FanCommunityModuleManager extends
             int offset) throws CantGetFanListException;
 
     /**
-     * The method <code>searchCryptoCustomer</code> gives us an interface to manage a search for a particular
-     * crypto customer
+     * The method <code>searchFanatic</code> gives us an interface to manage a search for a particular
+     * fanatic
      *
      * @return a searching interface
      */
-    FanCommunitySearch getCryptoCustomerSearch();
+    FanCommunitySearch getFanaticSearch();
 
     /**
      * The method <code>askFanForAcceptance</code> initialize the request of contact between
-     * a crypto Customer and a other fan.
+     * a fanatic and a other fan.
      *
-     * @param fanToAddName      The name of the crypto customer to add
-     * @param fanToAddPublicKey The public key of the crypto customer to add
-     * @param profileImage            The profile image that the crypto customer has
+     * @param fanToAddName      The name of the fanatic to add
+     * @param fanToAddPublicKey The public key of the fanatic to add
+     * @param profileImage            The profile image that the fanatic has
      * @throws CantStartRequestException
      */
     void askFanForAcceptance(
@@ -143,15 +143,15 @@ public interface FanCommunityModuleManager extends
      * The method <code>getAllFans</code> returns the list of all fan registered by the
      * logged in fan
      *
-     * @return the list of fan connected to the logged in broker
+     * @return the list of fan connected to the logged in artist
      * @throws FanCancellingFailedException
      */
-    List<FanCommunityInformation> getAllCryptoCustomers(
+    List<FanCommunityInformation> getAllFanatics(
             int max,
             int offset) throws CantGetFanListException;
 
     /**
-     * The method <code>getFanWaitingYourAcceptance</code> returns the list of crypto Customer
+     * The method <code>getFanWaitingYourAcceptance</code> returns the list of fanatic
      * waiting to be accepted
      * or rejected by the logged in Fan
      * @return the list of fan waiting to be accepted or rejected by the  logged in Fan
@@ -162,7 +162,7 @@ public interface FanCommunityModuleManager extends
             int offset) throws CantGetFanListException;
 
     /**
-     * The method <code>getFansWaitingTheirAcceptance</code> list the crypto fan that haven't
+     * The method <code>getFansWaitingTheirAcceptance</code> list the fanatic that haven't
      * answered to a sent connection request by the current logged in fan.
      * @return the list of fan that haven't answered to a sent connection request by the current
      * logged in fan.
@@ -175,7 +175,7 @@ public interface FanCommunityModuleManager extends
 
     /**
      * The method <code>login</code> let an fan log in     *
-     * @param fanPublicKey the public key of the crypto Customer to log in
+     * @param fanPublicKey the public key of the fanatic to log in
      */
     void login(String fanPublicKey) throws CantLoginFanException;
 
@@ -190,6 +190,9 @@ public interface FanCommunityModuleManager extends
 
     @Override
     void createIdentity(String name, String phrase, byte[] profile_img) throws Exception;
+
+    void createFanaticIdentity(String name, String phrase, byte[] profile_img,UUID externalIdentityID) throws Exception;
+
 
     @Override
     void setAppPublicKey(String publicKey);

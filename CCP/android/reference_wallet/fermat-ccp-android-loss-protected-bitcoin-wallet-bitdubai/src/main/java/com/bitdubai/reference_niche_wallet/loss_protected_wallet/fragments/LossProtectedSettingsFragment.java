@@ -122,6 +122,16 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
         return list;
     }
 
+    @Override
+    public void dialogOptionSelected(String item, int position) {
+
+    }
+
+    @Override
+    public void optionSelected(PreferenceSettingsItem preferenceSettingsItem, int position) {
+
+    }
+
     /**
      * Cuando se elige algun settings va a pasar por acá
      *
@@ -211,10 +221,11 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
     }
 
     @Override
+    public void onSettingsTouched(String item, int position) {}
+
+    @Override
     public void onSettingsChanged(PreferenceSettingsItem preferenceSettingsItem, int position, boolean isChecked) {
-
         try {
-
             try {
                 bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
             } catch (CantGetSettingsException e) {
@@ -244,7 +255,6 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
     }
 
-
     @Override
     public int getBackgroundColor() {
         return Color.WHITE;
@@ -254,6 +264,4 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
     public int getBackgroundAlpha() {
         return 95;
     }
-
-
 }
