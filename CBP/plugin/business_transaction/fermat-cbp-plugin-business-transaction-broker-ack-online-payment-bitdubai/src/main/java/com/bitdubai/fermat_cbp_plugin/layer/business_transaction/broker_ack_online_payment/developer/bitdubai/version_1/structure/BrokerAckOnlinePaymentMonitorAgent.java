@@ -352,7 +352,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
         }
 
         private void checkPendingMoneyEvents(String eventId) throws IncomingOnlinePaymentException, CantUpdateRecordException {
-            String senderPublicKey;
+            String customerPublickey;
             IncomingMoneyEventWrapper incomingMoneyEventWrapper;
             BusinessTransactionRecord businessTransactionRecord;
             long contractCryptoAmount;
@@ -363,9 +363,9 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
 
             try {
                 incomingMoneyEventWrapper = brokerAckOnlinePaymentBusinessTransactionDao.getIncomingMoneyEventWrapper(eventId);
-                senderPublicKey = incomingMoneyEventWrapper.getSenderPublicKey();
+                customerPublickey = incomingMoneyEventWrapper.getReceiverPublicKey();
 
-                businessTransactionRecord = brokerAckOnlinePaymentBusinessTransactionDao.getBusinessTransactionRecordByCustomerPublicKey(senderPublicKey);
+                businessTransactionRecord = brokerAckOnlinePaymentBusinessTransactionDao.getBusinessTransactionRecordByCustomerPublicKey(customerPublickey);
 
                 if (businessTransactionRecord == null)
                     return; //Case: the contract event is not processed or the incoming money is not link to a contract.

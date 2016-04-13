@@ -824,7 +824,7 @@ public class BrokerAckOnlinePaymentBusinessTransactionDao {
             return getBusinessTransactionRecord(
                     contractHash,
                     BrokerAckOnlinePaymentBusinessTransactionDatabaseConstants.
-                            ACK_ONLINE_PAYMENT_BROKER_PUBLIC_KEY_COLUMN_NAME);
+                            ACK_ONLINE_PAYMENT_CONTRACT_HASH_COLUMN_NAME);
         }catch (Exception exception){
             errorManager.reportUnexpectedPluginException(
                     Plugins.BROKER_ACK_ONLINE_PAYMENT,
