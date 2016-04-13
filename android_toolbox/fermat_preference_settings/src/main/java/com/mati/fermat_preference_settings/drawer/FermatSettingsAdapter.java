@@ -1,12 +1,18 @@
 package com.mati.fermat_preference_settings.drawer;
 
 import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CompoundButton;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity;
 import com.mati.fermat_preference_settings.R;
+import com.mati.fermat_preference_settings.drawer.dialog.CustomDialogFragment;
 import com.mati.fermat_preference_settings.drawer.dialog.SettingsDialog;
 import com.mati.fermat_preference_settings.drawer.holders.SettingEditTextViewHolder;
 import com.mati.fermat_preference_settings.drawer.holders.SettingLinkTextViewHolder;
@@ -31,8 +37,6 @@ import java.util.List;
  */
 public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSettingsItem, FermatViewHolder> implements DialogCallback {
 
-
-
     final int SWITH_TYPE = 1;
     final int OPEN_DIALOG_TEXT_TYPE = 2;
     final int EDIT_TEXT_TYPE = 3;
@@ -41,6 +45,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
 
     WeakReference<FermatPreferenceFragment> fragmentWeakReference;
 
+    private String previousSelectedItem;
 
     protected FermatSettingsAdapter(Activity context) {
         super(context);
@@ -48,7 +53,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
 
     protected FermatSettingsAdapter(Activity context,FermatPreferenceFragment fermatPreferenceFragment ,List<PreferenceSettingsItem> dataSet) {
         super(context, dataSet);
-        this.fragmentWeakReference = new WeakReference<FermatPreferenceFragment>(fermatPreferenceFragment);
+        this.fragmentWeakReference = new WeakReference<>(fermatPreferenceFragment);
     }
 
     @Override
@@ -104,14 +109,11 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 settingSwitchViewHolder.getSettings_switch().setChecked(preferenceSettingsSwithItem.getSwitchChecked());
                 settingSwitchViewHolder.getTextView().setText(preferenceSettingsSwithItem.getText());
                // settingSwitchViewHolder.getSettings_switch().setOnClickListener(new OnClickListenerSettings(this, preferenceSettingsSwithItem, position));
-
                 settingSwitchViewHolder.getSettings_switch().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView,
-                                             boolean isChecked) {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     getCallback().optionChanged(preferenceSettingsSwithItem, position, isChecked);
-
                 }
             });
                 break;
@@ -120,11 +122,34 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 final PreferenceSettingsOpenDialogText preferenceSettingsOpenDialogText = (PreferenceSettingsOpenDialogText) data;
                 settingTextOpenDialogViewHolder.getTextView().setText(preferenceSettingsOpenDialogText.getText());
                 settingTextOpenDialogViewHolder.getTextView();
-//                context.registerForContextMenu(lblMensaje);
+                // context.registerForContextMenu(lblMensaje);
+
+                final FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
+                final CustomDialogFragment dialog = CustomDialogFragment.newInstance(context, preferenceSettingsOpenDialogText.getDialogData());
+                CustomDialogFragment.CustomDialogListener listener = new CustomDialogFragment.CustomDialogListener();
+                listener.setListener(new CustomDialogFragment.DialogListener() {
+                    @Override
+                    public void onDialogPositiveClick(DialogFragment dialog) {
+                        System.out.println(getClass().getSimpleName() + "------------------------------ OK button pressed");
+                        CustomDialogFragment customDialogFragment = (CustomDialogFragment) dialog;
+                        previousSelectedItem = customDialogFragment.getPreviousSelectedItem();
+                        getCallback().dialogOptionSelected(previousSelectedItem, 0);
+
+                        System.out.println(getClass().getSimpleName() + "------------------------------ " + previousSelectedItem);
+                    }
+
+                    @Override
+                    public void onDialogNegativeClick(DialogFragment dialog) {
+                        System.out.println(getClass().getSimpleName() + "------------------------------ CANCEL button pressed");
+                    }
+                });
+
                 settingTextOpenDialogViewHolder.getTextView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new SettingsDialog(context, getCallback(), preferenceSettingsOpenDialogText.getOptionList()).show();
+                        System.out.println(getClass().getSimpleName() + "------------------------------ onClick");
+                        //new SettingsDialog(context, getCallback(), preferenceSettingsOpenDialogText.getOptionList()).show();
+                        dialog.show(fragmentManager, "CustomFragmentDialog");
                     }
                 });
                 break;
@@ -176,7 +201,6 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
 
                 break;
         }
-
     }
 
 
@@ -207,6 +231,11 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
     }
 
     @Override
+    public void dialogOptionSelected(String item, int position) {
+        fragmentWeakReference.get().dialogOptionSelected(item, position);
+    }
+
+    @Override
     public void optionChanged(PreferenceSettingsItem preferenceSettingsItem, int position, boolean isChecked) {
         fragmentWeakReference.get().onSettingsChanged(preferenceSettingsItem, position, isChecked);
     }
@@ -214,6 +243,4 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
     public void clear(){
         fragmentWeakReference.clear();
     }
-
-
 }
