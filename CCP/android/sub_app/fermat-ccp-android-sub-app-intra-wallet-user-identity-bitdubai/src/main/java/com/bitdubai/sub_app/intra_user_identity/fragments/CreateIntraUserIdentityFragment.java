@@ -167,14 +167,14 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(intraUserIdentitySettings!=null) {
+                if (intraUserIdentitySettings != null) {
                     if (intraUserIdentitySettings.isPresentationHelpEnabled()) {
                         PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(), intraUserIdentitySubAppSession, null, moduleManager);
                         presentationIntraUserCommunityDialog.show();
                     }
                 }
             }
-        },5000);
+        }, 5000);
 
 
         return rootLayout;
@@ -214,7 +214,16 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
 
 
-                int resultKey = createNewIdentity();
+                createNewIdentity();
+
+            }
+        });
+    }
+
+    private void publishResult(final int resultKey){
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
 //                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
@@ -223,6 +232,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                         } else {
                             Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
                         }
+                        getActivity().onBackPressed();
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
                         Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
@@ -236,6 +246,13 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                 }
             }
         });
+
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        executorService.shutdown();
     }
 
     private void setUpIdentity() {
@@ -406,6 +423,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                             public void run() {
                                 try {
                                     moduleManager.createNewIntraWalletUser(brokerNameText, finalBrokerPhraseText, (brokerImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : brokerImageByteArray);
+                                    publishResult(CREATE_IDENTITY_SUCCESS);
                                 } catch (CantCreateNewIntraUserIdentityException e) {
                                     e.printStackTrace();
                                 }
@@ -422,6 +440,7 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment {
                                         moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, brokerImageByteArray);
                                     else
                                         moduleManager.updateIntraUserIdentity(identitySelected.getPublicKey(), brokerNameText, finalBrokerPhraseText1, identitySelected.getImage());
+                                    publishResult(CREATE_IDENTITY_SUCCESS);
                                 }catch (Exception e){
                                     e.printStackTrace();
                                 }
