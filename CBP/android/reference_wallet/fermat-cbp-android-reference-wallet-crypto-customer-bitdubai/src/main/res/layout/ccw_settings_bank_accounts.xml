@@ -44,6 +44,32 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:text="@string/ccw_select_your_bank_account_text"
+            android:textColor="#777777"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp"
+            />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ccw_select_your_bank_account"
+            android:textColor="@color/ccw_wizard_color"
+            android:textSize="16sp"
+            android:textAllCaps="true"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="#aeaeae"/>
+
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
             android:id="@+id/ccw_add_bank_account_button"
             android:layout_width="wrap_content"
@@ -56,12 +82,6 @@
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textAllCaps="false"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="#aeaeae"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -117,7 +137,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/flecha"
+            android:src="@drawable/ccw_right_hand_arrow"
             tools:ignore="contentDescription"
             android:visibility="gone"/>
     </LinearLayout>
