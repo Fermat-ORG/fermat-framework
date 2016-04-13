@@ -2,10 +2,13 @@ package com.bitdubai.sub_app.wallet_store.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -131,6 +134,8 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
     @Override
     protected void initViews(View layout) {
         super.initViews(layout);
+
+        configureToolbar();
         BasicWalletSettings preferenceSettings = getPreferenceSettings();
 
         presentationDialog = new PresentationDialog.Builder(getActivity(), appSession).
@@ -143,30 +148,6 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         if (preferenceSettings != null && preferenceSettings.isHomeTutorialDialogEnabled()) {
             presentationDialog.show();
         }
-    }
-
-    private BasicWalletSettings getPreferenceSettings() {
-        final SettingsManager<BasicWalletSettings> settingsManager = moduleManager.getSettingsManager();
-
-        BasicWalletSettings preferenceSettings;
-        try {
-            preferenceSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
-        } catch (Exception e) {
-            preferenceSettings = null;
-        }
-
-        if (preferenceSettings == null) {
-            preferenceSettings = new BasicWalletSettings();
-            preferenceSettings.setIsPresentationHelpEnabled(true);
-
-            try {
-                settingsManager.persistSettings(appSession.getAppPublicKey(), preferenceSettings);
-            } catch (Exception e) {
-                preferenceSettings = null;
-            }
-        }
-
-        return preferenceSettings;
     }
 
     @Override
@@ -300,6 +281,37 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         return false;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        WalletStoreListItem.started = false;
+    }
+
+    @NonNull
+    private WalletStoreItemPopupMenuListener getWalletStoreItemPopupMenuListener() {
+        return new WalletStoreItemPopupMenuListener() {
+            @Override
+            public void onMenuItemClickListener(View menuView, WalletStoreListItem item, int position) {
+                selectedItem = item;
+
+                PopupMenu popupMenu = new PopupMenu(getActivity(), menuView);
+                MenuInflater menuInflater = popupMenu.getMenuInflater();
+
+                InstallationStatus installationStatus = item.getInstallationStatus();
+                int resId = UtilsFuncs.INSTANCE.getInstallationStatusStringResource(installationStatus);
+
+                if (resId == R.string.wallet_status_install) {
+                    menuInflater.inflate(R.menu.menu_wallet_store, popupMenu.getMenu());
+                } else {
+                    menuInflater.inflate(R.menu.menu_wallet_store_installed, popupMenu.getMenu());
+                }
+
+                popupMenu.setOnMenuItemClickListener(MainActivityFragment.this);
+                popupMenu.show();
+            }
+        };
+    }
+
     private void installSelectedWallet(WalletStoreListItem item) {
 
         final Activity activity = getActivity();
@@ -327,12 +339,6 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
 
         final DetailedCatalogItemWorker worker = new DetailedCatalogItemWorker(moduleManager, (SubAppsSession) appSession, item, activity, callBack);
         worker.execute();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        WalletStoreListItem.started = false;
     }
 
     private void showDetailsActivityFragment(WalletStoreListItem item) {
@@ -377,28 +383,39 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
         }
     }
 
-    @NonNull
-    private WalletStoreItemPopupMenuListener getWalletStoreItemPopupMenuListener() {
-        return new WalletStoreItemPopupMenuListener() {
-            @Override
-            public void onMenuItemClickListener(View menuView, WalletStoreListItem item, int position) {
-                selectedItem = item;
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
 
-                PopupMenu popupMenu = new PopupMenu(getActivity(), menuView);
-                MenuInflater menuInflater = popupMenu.getMenuInflater();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.app_store_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.app_store_action_bar_gradient_colors));
 
-                InstallationStatus installationStatus = item.getInstallationStatus();
-                int resId = UtilsFuncs.INSTANCE.getInstallationStatusStringResource(installationStatus);
+        toolbar.setTitleTextColor(Color.WHITE);
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
+    }
 
-                if (resId == R.string.wallet_status_install) {
-                    menuInflater.inflate(R.menu.menu_wallet_store, popupMenu.getMenu());
-                } else {
-                    menuInflater.inflate(R.menu.menu_wallet_store_installed, popupMenu.getMenu());
-                }
+    private BasicWalletSettings getPreferenceSettings() {
+        final SettingsManager<BasicWalletSettings> settingsManager = moduleManager.getSettingsManager();
 
-                popupMenu.setOnMenuItemClickListener(MainActivityFragment.this);
-                popupMenu.show();
+        BasicWalletSettings preferenceSettings;
+        try {
+            preferenceSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            preferenceSettings = null;
+        }
+
+        if (preferenceSettings == null) {
+            preferenceSettings = new BasicWalletSettings();
+            preferenceSettings.setIsPresentationHelpEnabled(true);
+
+            try {
+                settingsManager.persistSettings(appSession.getAppPublicKey(), preferenceSettings);
+            } catch (Exception e) {
+                preferenceSettings = null;
             }
-        };
+        }
+
+        return preferenceSettings;
     }
 }
