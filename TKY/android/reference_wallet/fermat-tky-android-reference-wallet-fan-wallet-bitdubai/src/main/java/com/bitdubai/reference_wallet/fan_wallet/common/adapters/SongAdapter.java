@@ -79,10 +79,17 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
     }
 
-    public void setFilter(List<SongItems> newitems) {
-        items.clear();
-        items.addAll(newitems);
-        notifyDataSetChanged();
+    public void setFilter(List<SongItems> newitems,boolean progress,int position) {
+        if(progress) {
+            items.set(position,newitems.get(position));
+            notifyDataSetChanged();
+        }else{
+            items.clear();
+            items.addAll(newitems);
+            notifyDataSetChanged();
+        }
+
+
     }
 
 

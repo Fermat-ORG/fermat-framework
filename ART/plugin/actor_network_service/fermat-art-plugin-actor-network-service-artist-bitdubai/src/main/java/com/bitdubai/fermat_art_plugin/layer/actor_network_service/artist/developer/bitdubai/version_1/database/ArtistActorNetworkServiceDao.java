@@ -10,6 +10,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilterGroup;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTransaction;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
@@ -17,6 +18,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseTransactionFailedException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginBinaryFile;
@@ -25,6 +27,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ProtocolState;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.RequestType;
@@ -32,18 +35,27 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantAc
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDisconnectException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingConnectionRequestsException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingInformationRequestsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestExternalPlatformInformationException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtArtistExtraData;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantAnswerInformationRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantConfirmInformationRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantFindRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantGetProfileImageException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantPersistProfileImageException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.InformationRequestNotFoundException;
+import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure.ArtistActorNetworkServiceExternalPlatformInformationRequest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -741,8 +753,8 @@ public final class ArtistActorNetworkServiceDao {
             record.setFermatEnum(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_DESTINATION_ACTOR_TYPE_COLUMN_NAME, connectionNew.getDestinationActorType())     ;
             record.setFermatEnum (ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME          , connectionNew.getRequestType())         ;
             record.setFermatEnum (ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME         , connectionNew.getProtocolState())       ;
-            record.setFermatEnum (ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        , connectionNew.getRequestAction())       ;
-            record.setLongValue  (ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             , connectionNew.getSentTime())            ;
+            record.setFermatEnum(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME, connectionNew.getRequestAction())       ;
+            record.setLongValue(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME, connectionNew.getSentTime())            ;
 
             if (connectionNew.getSenderImage() != null && connectionNew.getSenderImage().length > 0)
                 persistNewUserProfileImage(connectionNew.getSenderPublicKey(), connectionNew.getSenderImage());
@@ -889,6 +901,354 @@ public final class ArtistActorNetworkServiceDao {
 
     private String buildProfileImageFileName(final String publicKey) {
         return PROFILE_IMAGE_FILE_NAME_PREFIX + "_" + publicKey;
+    }
+
+    /**
+     * This method returns an ArtistActorNetworkServiceExternalPlatformInformationRequest from database.
+     * @param requestId
+     * @param requesterPublicKey
+     * @param requesterActorType
+     * @param artistPublicKey
+     * @param state
+     * @param type
+     * @return
+     * @throws CantRequestExternalPlatformInformationException
+     */
+    public final ArtistActorNetworkServiceExternalPlatformInformationRequest createExternalPlatformInformationRequest(
+            final UUID requestId,
+            final String requesterPublicKey,
+            final PlatformComponentType requesterActorType,
+            final String artistPublicKey,
+            final ProtocolState state,
+            final RequestType type) throws CantRequestExternalPlatformInformationException {
+        try {
+            final DatabaseTable quotesRequestTable = database.getTable(
+                    ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_TABLE_NAME);
+
+            final DatabaseTableRecord emptyRecord = quotesRequestTable.getEmptyRecord();
+
+            final ArtistActorNetworkServiceExternalPlatformInformationRequest informationRequest = new
+                    ArtistActorNetworkServiceExternalPlatformInformationRequest(
+                    requestId,
+                    requesterPublicKey,
+                    requesterActorType,
+                    artistPublicKey,
+                    0,
+                    type,
+                    state,
+                    new ArrayList<ArtistExternalPlatformInformation>()
+            );
+
+            emptyRecord.setUUIDValue(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_REQUEST_ID_COLUMN_NAME,
+                    informationRequest.getRequestId());
+            emptyRecord.setStringValue(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_REQUESTER_PUBLIC_KEY_COLUMN_NAME,
+                    informationRequest.getRequesterPublicKey());
+            emptyRecord.setFermatEnum(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_REQUESTER_ACTOR_TYPE_COLUMN_NAME,
+                    informationRequest.getRequesterActorType());
+            emptyRecord.setStringValue(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_ARTIST_PUBLIC_KEY_COLUMN_NAME,
+                    informationRequest.getArtistPublicKey());
+            emptyRecord.setLongValue(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_UPDATE_TIME_COLUMN_NAME,
+                    informationRequest.getUpdateTime());
+            emptyRecord.setFermatEnum(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_TYPE_COLUMN_NAME,
+                    informationRequest.getType());
+            emptyRecord.setFermatEnum(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_STATE_COLUMN_NAME,
+                    informationRequest.getState());
+
+            quotesRequestTable.insertRecord(emptyRecord);
+
+            return informationRequest;
+
+        } catch (final CantInsertRecordException e) {
+
+            throw new CantRequestExternalPlatformInformationException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and I cannot insert all the records.");
+        }
+    }
+
+    /**
+     * This method confirms the information request.
+     * @param requestId
+     * @throws CantConfirmInformationRequestException
+     * @throws InformationRequestNotFoundException
+     */
+    public void confirmInformationRequest(final UUID requestId) throws
+            CantConfirmInformationRequestException,
+            InformationRequestNotFoundException {
+        if (requestId == null) {
+            throw new CantConfirmInformationRequestException(
+                    null,
+                    "",
+                    "The requestId is required, can not be null");
+        }
+        try {
+            ProtocolState state  = ProtocolState.DONE;
+            DatabaseTable actorConnectionRequestTable =
+                    database.getTable(
+                            ArtistActorNetworkServiceDatabaseConstants.
+                                    INFORMATION_REQUEST_TABLE_NAME);
+            actorConnectionRequestTable.addUUIDFilter(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_REQUEST_ID_COLUMN_NAME,
+                    requestId,
+                    DatabaseFilterType.EQUAL);
+            actorConnectionRequestTable.loadToMemory();
+            List<DatabaseTableRecord> records = actorConnectionRequestTable.getRecords();
+            if (!records.isEmpty()) {
+                DatabaseTableRecord record = records.get(0);
+                record.setFermatEnum(
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_REQUEST_STATE_COLUMN_NAME,
+                        state);
+                actorConnectionRequestTable.updateRecord(record);
+            } else
+                throw new InformationRequestNotFoundException(
+                        null,
+                        "requestId: "+requestId,
+                        "Cannot find a information request with that requestId.");
+        } catch (CantUpdateRecordException e) {
+            throw new CantConfirmInformationRequestException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and I cannot update the record.");
+        } catch (CantLoadTableToMemoryException e) {
+            throw new CantConfirmInformationRequestException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and i cannot load the table.");
+        }
+    }
+
+    public final List<ArtArtistExtraData<ArtistExternalPlatformInformation>>
+    listPendingInformationRequests(
+            final ProtocolState protocolState,
+            final RequestType requestType) throws CantListPendingInformationRequestsException {
+
+        try {
+
+            final DatabaseTable connectionNewsTable = database.getTable(
+                    ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_TABLE_NAME);
+            connectionNewsTable.addFermatEnumFilter(
+                    ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_TYPE_COLUMN_NAME,
+                    requestType,
+                    DatabaseFilterType.EQUAL);
+            connectionNewsTable.addFermatEnumFilter(
+                    ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_STATE_COLUMN_NAME,
+                    protocolState,
+                    DatabaseFilterType.EQUAL);
+            connectionNewsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = connectionNewsTable.getRecords();
+            final List<ArtArtistExtraData<ArtistExternalPlatformInformation>> quotesRequestsList =
+                    new ArrayList<>();
+            for (final DatabaseTableRecord record : records)
+                quotesRequestsList.add(buildInformationRequestObject(record));
+
+            return quotesRequestsList;
+
+        } catch (final CantLoadTableToMemoryException e) {
+            throw new CantListPendingInformationRequestsException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and I cannot load the table.");
+        } catch (final InvalidParameterException e) {
+            throw new CantListPendingInformationRequestsException(
+                    e,
+                    "",
+                    "Exception reading records of the table Cannot recognize the codes of the enums.");
+        }
+    }
+
+    private ArtistActorNetworkServiceExternalPlatformInformationRequest buildInformationRequestObject(
+            final DatabaseTableRecord record) throws
+            CantListPendingInformationRequestsException,
+            InvalidParameterException {
+        UUID requestId = record.getUUIDValue(
+                ArtistActorNetworkServiceDatabaseConstants.
+                        INFORMATION_REQUEST_REQUEST_ID_COLUMN_NAME);
+        String requesterPublicKey = record.getStringValue(
+                ArtistActorNetworkServiceDatabaseConstants.
+                        INFORMATION_REQUEST_REQUESTER_PUBLIC_KEY_COLUMN_NAME);
+        String requesterActorTypeString = record.getStringValue(
+                ArtistActorNetworkServiceDatabaseConstants.
+                        INFORMATION_REQUEST_REQUESTER_ACTOR_TYPE_COLUMN_NAME);
+        String artistPublicKey = record.getStringValue(
+                ArtistActorNetworkServiceDatabaseConstants.
+                        INFORMATION_REQUEST_ARTIST_PUBLIC_KEY_COLUMN_NAME);
+        Long updateTime = record.getLongValue(
+                ArtistActorNetworkServiceDatabaseConstants.
+                        INFORMATION_REQUEST_UPDATE_TIME_COLUMN_NAME);
+        String typeString = record.getStringValue(
+                ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_TYPE_COLUMN_NAME);
+        String stateString = record.getStringValue(
+                ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_STATE_COLUMN_NAME);
+
+        PlatformComponentType requesterActorType = PlatformComponentType.getByCode(
+                requesterActorTypeString);
+        RequestType type = RequestType.getByCode(typeString);
+        ProtocolState state = ProtocolState.getByCode(stateString);
+
+        return new ArtistActorNetworkServiceExternalPlatformInformationRequest(
+                requestId,
+                requesterPublicKey,
+                requesterActorType,
+                artistPublicKey,
+                updateTime,
+                type,
+                state,
+                listInformation(requestId)
+        );
+    }
+
+    private ArrayList<ArtistExternalPlatformInformation> listInformation(
+            UUID requestId) throws
+            CantListPendingInformationRequestsException {
+
+        try {
+            final DatabaseTable informationTable = database.getTable(
+                    ArtistActorNetworkServiceDatabaseConstants.INFORMATION_TABLE_NAME);
+            informationTable.addUUIDFilter(
+                    ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_ID_COLUMN_NAME,
+                    requestId,
+                    DatabaseFilterType.EQUAL);
+            informationTable.loadToMemory();
+            final List<DatabaseTableRecord> records = informationTable.getRecords();
+            ArrayList<ArtistExternalPlatformInformation> informationList = new ArrayList<>();
+            HashMap<ArtExternalPlatform,String> externalPlatformInformationMap = new HashMap<>();
+            for(DatabaseTableRecord record : records) {
+                String externalPlatformsString = record.getStringValue(
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_EXTERNAL_PLATFORM_COLUMN_NAME);
+                String externalUsername = record.getStringValue(
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_EXTERNAL_USERNAME_COLUMN_NAME);
+                ArtExternalPlatform externalPlatform = ArtExternalPlatform.getByCode(
+                        externalPlatformsString);
+                externalPlatformInformationMap.put(externalPlatform,externalUsername);
+            }
+            informationList.add(
+                    new ArtistExternalPlatformInformation(
+                            externalPlatformInformationMap
+                    )
+            );
+            return informationList;
+
+        } catch (final CantLoadTableToMemoryException e) {
+            throw new CantListPendingInformationRequestsException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and I cannot load the table.");
+        }  catch (final InvalidParameterException e) {
+            throw new CantListPendingInformationRequestsException(
+                    e,
+                    "",
+                    "Exception reading records of the table Cannot recognize the codes of the " +
+                            "External platform enum.");
+        }
+    }
+
+    /**
+     * This method must be used to answer information requests.
+     * @param requestId
+     * @param updateTime
+     * @param informationList
+     * @param state
+     * @throws CantAnswerInformationRequestException
+     * @throws CantFindRequestException
+     */
+    public final void answerInformationRequest(
+            final UUID requestId,
+            final long updateTime,
+            final List<ArtistExternalPlatformInformation> informationList,
+            final ProtocolState state) throws
+            CantAnswerInformationRequestException,
+            CantFindRequestException {
+
+        try {
+            final DatabaseTable quotesRequestTable = database.
+                    getTable(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_TABLE_NAME);
+            quotesRequestTable.addUUIDFilter(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            INFORMATION_REQUEST_ID_COLUMN_NAME,
+                    requestId,
+                    DatabaseFilterType.EQUAL);
+            quotesRequestTable.loadToMemory();
+            final List<DatabaseTableRecord> records = quotesRequestTable.getRecords();
+            DatabaseTableRecord quotesRequestRecord;
+            if (!records.isEmpty()) {
+                quotesRequestRecord = records.get(0);
+                quotesRequestRecord.setFermatEnum(
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_REQUEST_STATE_COLUMN_NAME,
+                        state);
+                quotesRequestRecord.setLongValue(
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_REQUEST_UPDATE_TIME_COLUMN_NAME,
+                        updateTime);
+            } else
+                throw new CantFindRequestException(
+                        null,
+                        "",
+                        "Cannot find a quotes request with that id.");
+            DatabaseTransaction databaseTransaction = database.newTransaction();
+            databaseTransaction.addRecordToUpdate(quotesRequestTable, quotesRequestRecord);
+            String username;
+            for (final ArtistExternalPlatformInformation information : informationList) {
+                final DatabaseTable quotesTable = database.getTable(
+                        ArtistActorNetworkServiceDatabaseConstants.INFORMATION_TABLE_NAME);
+                final DatabaseTableRecord quotesRecord = quotesTable.getEmptyRecord();
+                quotesRecord.setUUIDValue (
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_REQUEST_ID_COLUMN_NAME,
+                        requestId);
+                HashMap<ArtExternalPlatform,String> artExternalPlatformStringHashMap = information.getExternalPlatformInformationMap();
+                //TODO: For this version we got only TKY as External platform
+                username = artExternalPlatformStringHashMap.get(
+                        ArtExternalPlatform.TOKENLY);
+                quotesRecord.setFermatEnum(
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_EXTERNAL_PLATFORM_COLUMN_NAME,
+                        ArtExternalPlatform.TOKENLY);
+                quotesRecord.setStringValue(
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_EXTERNAL_USERNAME_COLUMN_NAME,
+                        username);
+                databaseTransaction.addRecordToInsert(quotesTable, quotesRecord);
+            }
+            database.executeTransaction(databaseTransaction);
+        } catch (final CantLoadTableToMemoryException e) {
+            throw new CantAnswerInformationRequestException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and I cannot load the table.");
+        } catch (final DatabaseTransactionFailedException e) {
+            throw new CantAnswerInformationRequestException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and I cannot insert all the records.");
+        }
     }
 
 }
