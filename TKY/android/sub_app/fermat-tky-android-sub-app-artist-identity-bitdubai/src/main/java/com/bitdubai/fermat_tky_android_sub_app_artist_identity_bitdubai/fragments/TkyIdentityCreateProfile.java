@@ -32,6 +32,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -45,6 +46,7 @@ import com.bitdubai.fermat_tky_android_sub_app_artist_identity_bitdubai.util.Com
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
@@ -95,7 +97,7 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
     private TokenlyArtistPreferenceSettings tokenlyArtistPreferenceSettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
-
+    private boolean authenticationSuccessful = false;
 
     private Handler handler;
 
@@ -234,7 +236,7 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
                     case CREATE_IDENTITY_SUCCESS:
 //                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
                         if (!isUpdate) {
-                            Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
                         }
@@ -468,6 +470,25 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
             this.identityAction = identityAction;
             this.exposureLevel = exposureLevel;
             this.artistAcceptConnectionsType = artistAcceptConnectionsType;
+            authenticationSuccessful = true;
+        }
+
+        @Override
+        protected void onPostExecute(Object result) {
+
+            if(!authenticationSuccessful){
+                //I'll launch a toast
+                Toast.makeText(
+                        getActivity(),
+                        "Authentication credentials are invalid.",
+                        Toast.LENGTH_SHORT).show();
+            }
+            if(isUpdate){
+                Toast.makeText(getActivity(), "Identity updated", Toast.LENGTH_SHORT).show();
+            }else{
+                Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+            }
+
         }
 
         @Override
@@ -475,15 +496,28 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
             try{
                 switch (identityAction){
                     case CREATE_IDENTITY:
-                       createIdentity(fanExternalName,fanPassword,externalPlatform,exposureLevel,artistAcceptConnectionsType);
-
-
+                       createIdentity(
+                               fanExternalName,
+                               fanPassword,
+                               externalPlatform,
+                               exposureLevel,
+                               artistAcceptConnectionsType);
                         break;
                     case UPDATE_IDENTITY:
-                        updateIdentity(fanExternalName,fanPassword,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+                        updateIdentity(
+                                fanExternalName,
+                                fanPassword,
+                                externalPlatform,
+                                exposureLevel,
+                                artistAcceptConnectionsType);
                         break;
                     case UPDATE_IMAGE_IDENTITY:
-                        updateIdentityImage(fanExternalName,fanPassword,externalPlatform,exposureLevel,artistAcceptConnectionsType);
+                        updateIdentityImage(
+                                fanExternalName,
+                                fanPassword,
+                                externalPlatform,
+                                exposureLevel,
+                                artistAcceptConnectionsType);
                         break;
                 }
 
@@ -502,6 +536,11 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
                         UISource.VIEW,
                         UnexpectedUIExceptionSeverity.UNSTABLE,
                         e);
+            } catch (WrongTokenlyUserCredentialsException e) {
+                //We are not going to report this exception
+                authenticationSuccessful=false;
+                //System.out.println("TKY WTUCE:" + e);
+
             }
             return null;
         }
@@ -513,8 +552,9 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
             ExternalPlatform externalPlatform,
             ExposureLevel exposureLevel,
             ArtistAcceptConnectionsType artistAcceptConnectionsType) throws
-
-            CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
+            CantCreateArtistIdentityException,
+            ArtistIdentityAlreadyExistsException,
+            WrongTokenlyUserCredentialsException {
         moduleManager.createArtistIdentity(
                 fanExternalName,
                 (ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : ArtistImageByteArray,
@@ -527,7 +567,11 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
     private void updateIdentity(
             String fanExternalName,
             String fanPassword,
-            ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
+            ExternalPlatform externalPlatform,
+            ExposureLevel exposureLevel,
+            ArtistAcceptConnectionsType artistAcceptConnectionsType) throws
+            CantUpdateArtistIdentityException,
+            WrongTokenlyUserCredentialsException {
         moduleManager.updateArtistIdentity(
                 fanExternalName,
                 fanPassword, identitySelected.getId(),
@@ -541,7 +585,11 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
     private void updateIdentityImage(
             String fanExternalName,
             String fanPassword,
-            ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
+            ExternalPlatform externalPlatform,
+            ExposureLevel exposureLevel,
+            ArtistAcceptConnectionsType artistAcceptConnectionsType) throws
+            CantUpdateArtistIdentityException,
+            WrongTokenlyUserCredentialsException {
         moduleManager.updateArtistIdentity(
                 fanExternalName,
                 fanPassword,

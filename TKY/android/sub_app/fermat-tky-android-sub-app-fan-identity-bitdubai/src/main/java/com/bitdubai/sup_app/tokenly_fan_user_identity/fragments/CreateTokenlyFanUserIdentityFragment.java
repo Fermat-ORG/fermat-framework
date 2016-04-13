@@ -37,6 +37,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
@@ -88,6 +89,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private TokenlyFanPreferenceSettings tokenlyFanPreferenceSettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
+    private boolean authenticationSuccessful = false;
 
 
     private Handler handler;
@@ -495,10 +497,18 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             this.fanPassword = fanPassword;
             this.externalPlatform = externalPlatform;
             this.identityAction = identityAction;
+            authenticationSuccessful = true;
         }
         @Override
         protected void onPostExecute(Object result) {
 
+            if(!authenticationSuccessful){
+                //I'll launch a toast
+                Toast.makeText(
+                        getActivity(),
+                        "Authentication credentials are invalid.",
+                        Toast.LENGTH_SHORT).show();
+            }
             if(Validate.isObjectNull(fan)){
                 Toast.makeText(getActivity(), "The tokenly authentication failed.", Toast.LENGTH_SHORT).show();
             }else{
@@ -540,6 +550,11 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                         UISource.VIEW,
                         UnexpectedUIExceptionSeverity.UNSTABLE,
                         e);
+            } catch (WrongTokenlyUserCredentialsException e) {
+                //We are not going to report this exception
+                authenticationSuccessful=false;
+                //System.out.println("TKY WTUCE:" + e);
+
             }
             return null;
         }
@@ -549,7 +564,9 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             String fanExternalName,
             String fanPassword,
             ExternalPlatform externalPlatform) throws
-            CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
+            CantCreateFanIdentityException,
+            FanIdentityAlreadyExistsException,
+            WrongTokenlyUserCredentialsException {
         return moduleManager.createFanIdentity(
                 fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,
                 fanPassword,
@@ -559,7 +576,9 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private Fan updateIdentity(
             String fanExternalName,
             String fanPassword,
-            ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+            ExternalPlatform externalPlatform) throws
+            CantUpdateFanIdentityException,
+            WrongTokenlyUserCredentialsException {
         return moduleManager.updateFanIdentity(
                 fanExternalName,
                 fanPassword, identitySelected.getId(),
@@ -571,7 +590,9 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private Fan updateIdentityImage(
             String fanExternalName,
             String fanPassword,
-            ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+            ExternalPlatform externalPlatform) throws
+            CantUpdateFanIdentityException,
+            WrongTokenlyUserCredentialsException {
         return moduleManager.updateFanIdentity(
                 fanExternalName,
                 fanPassword,

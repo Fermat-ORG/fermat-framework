@@ -159,14 +159,13 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
 
     @Override
     public Artist createArtistIdentity(String userName, byte[] profileImage, String password,ExternalPlatform externalPlatform,
-                                       ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
+                                       ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException, WrongTokenlyUserCredentialsException {
         //TODO: Fix this Gabo. Manuel
         User user=null;
         try{
             if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
                 user = tokenlyApiManager.validateTokenlyUser(userName, password);
-        } catch (CantGetUserException | InterruptedException | ExecutionException |
-                WrongTokenlyUserCredentialsException e) {
+        } catch (CantGetUserException | InterruptedException | ExecutionException  e) {
             e.printStackTrace();
         }
         if(user!=null){
@@ -179,13 +178,12 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
 
     @Override
     public Artist updateArtistIdentity(String username, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform,
-                                       ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
+                                       ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException, WrongTokenlyUserCredentialsException {
         User user=null;
         try{
             if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
                 user = tokenlyApiManager.validateTokenlyUser(username, password);
-        } catch (CantGetUserException |InterruptedException | ExecutionException|
-                WrongTokenlyUserCredentialsException e) {
+        } catch (CantGetUserException |InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
         if(user != null)
