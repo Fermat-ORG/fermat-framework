@@ -99,8 +99,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/communities_recycler_view"
-            android:paddingRight="7dp"
-            android:paddingLeft="7dp"
             tools:listitem="@layout/communities_row"
             android:layout_weight="50"/>
 
