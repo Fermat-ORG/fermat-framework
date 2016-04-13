@@ -52,7 +52,7 @@ public class GrouperViewHolder extends ParentViewHolder {
      */
     public void bind(int childCount,Platforms platforms) {
         txt_grouper.setText(platforms.getTextForm());
-        txt_grouper.setTextColor(Color.BLACK);
+        txt_grouper.setTextColor(Color.WHITE);
     }
 
 
