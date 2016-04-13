@@ -1,9 +1,3 @@
-/*
- * @#ReceivedNodeCatalogTransactionsProcessor.java - 2016
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantDeleteRecordDataBaseException;
@@ -65,12 +59,12 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
 
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
-        ReceivedNodeCatalogTransactionsMsjRespond receivedNodeCatalogTransactionsMsjRespond = null;
-        Integer lateNotificationsCounter = new Integer(0);
+        ReceivedNodeCatalogTransactionsMsjRespond receivedNodeCatalogTransactionsMsjRespond;
+        Integer lateNotificationsCounter = 0;
 
         try {
 
-            ReceiveNodeCatalogTransactionsMsjRequest messageContent = (ReceiveNodeCatalogTransactionsMsjRequest)  packageReceived.getContent();
+            ReceiveNodeCatalogTransactionsMsjRequest messageContent = ReceiveNodeCatalogTransactionsMsjRequest.parseContent(packageReceived.getContent());
 
             /*
              * Create the method call history
@@ -99,7 +93,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 receivedNodeCatalogTransactionsMsjRespond = new ReceivedNodeCatalogTransactionsMsjRespond(ReceivedNodeCatalogTransactionsMsjRespond.STATUS.SUCCESS, GetNodeCatalogMsjRespond.STATUS.SUCCESS.toString(), lateNotificationsCounter);
-                Package packageRespond = Package.createInstance(receivedNodeCatalogTransactionsMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.RECEIVE_NODE_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(receivedNodeCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.RECEIVE_NODE_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -119,7 +113,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
                  * Respond whit fail message
                  */
                 receivedNodeCatalogTransactionsMsjRespond = new ReceivedNodeCatalogTransactionsMsjRespond(ReceivedNodeCatalogTransactionsMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), lateNotificationsCounter);
-                Package packageRespond = Package.createInstance(receivedNodeCatalogTransactionsMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.RECEIVE_NODE_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(receivedNodeCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.RECEIVE_NODE_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond

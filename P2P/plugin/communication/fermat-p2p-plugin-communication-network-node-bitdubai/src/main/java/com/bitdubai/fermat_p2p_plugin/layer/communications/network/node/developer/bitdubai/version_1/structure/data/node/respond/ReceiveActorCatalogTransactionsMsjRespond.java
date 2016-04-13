@@ -1,12 +1,7 @@
-/*
- * @#ActorCatalogTransactionsMsjRespond.java - 2016
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
+import com.google.gson.Gson;
 
 
 /**
@@ -42,6 +37,11 @@ public class ReceiveActorCatalogTransactionsMsjRespond extends MsgRespond {
      */
     public Integer getLateNotificationsCounter() {
         return lateNotificationsCounter;
+    }
+
+    public static ReceiveActorCatalogTransactionsMsjRespond parseContent(String content) {
+
+        return new Gson().fromJson(content, ReceiveActorCatalogTransactionsMsjRespond.class);
     }
 
 }

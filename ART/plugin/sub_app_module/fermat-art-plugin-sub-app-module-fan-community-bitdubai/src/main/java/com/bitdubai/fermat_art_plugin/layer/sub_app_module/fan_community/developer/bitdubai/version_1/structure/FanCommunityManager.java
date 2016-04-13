@@ -40,6 +40,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.settings.F
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -47,7 +48,7 @@ import java.util.UUID;
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/23/16.
  */
-public class FanCommunityManager implements FanCommunityModuleManager {
+public class FanCommunityManager implements FanCommunityModuleManager,Serializable {
     private final ArtistIdentityManager                artistIdentityManager                    ;
     private final FanActorConnectionManager            fanActorConnectionManager                ;
     private final FanManager                           fanActorNetworkServiceManager            ;
@@ -82,14 +83,14 @@ public class FanCommunityManager implements FanCommunityModuleManager {
 
     @Override
     public List<FanCommunityInformation> listWorldFan(FanCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListFansException {
-        List<FanCommunityInformation> worldCustomerList;
+        List<FanCommunityInformation> worldfanaticList;
         List<FanActorConnection> actorConnections;
 
         try{
-            worldCustomerList = getCryptoCustomerSearch().getResult();
+            worldfanaticList = getFanaticSearch().getResult();
         } catch (CantGetFanSearchResult e) {
             this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantListFansException(e, "", "Error in listWorldFan trying to list world customers");
+            throw new CantListFansException(e, "", "Error in listWorldFan trying to list world Fanatics");
         }
 
 
@@ -107,18 +108,18 @@ public class FanCommunityManager implements FanCommunityModuleManager {
         }
 
 
-        FanCommunityInformation worldCustomer;
-        for(int i = 0; i < worldCustomerList.size(); i++)
+        FanCommunityInformation worldFanatic;
+        for(int i = 0; i < worldfanaticList.size(); i++)
         {
-            worldCustomer = worldCustomerList.get(i);
+            worldFanatic = worldfanaticList.get(i);
             for(FanActorConnection connectedFan : actorConnections)
             {
-                if(worldCustomer.getPublicKey().equals(connectedFan.getPublicKey()))
-                    worldCustomerList.set(i, new FanCommunityInformationImpl(worldCustomer.getPublicKey(), worldCustomer.getAlias(), worldCustomer.getImage(), connectedFan.getConnectionState(), connectedFan.getConnectionId()));
+                if(worldFanatic.getPublicKey().equals(connectedFan.getPublicKey()))
+                    worldfanaticList.set(i, new FanCommunityInformationImpl(worldFanatic.getPublicKey(), worldFanatic.getAlias(), worldFanatic.getImage(), connectedFan.getConnectionState(), connectedFan.getConnectionId()));
             }
         }
 
-        return worldCustomerList;    }
+        return worldfanaticList;    }
 
     @Override
     public List<FanCommunitySelectableIdentity> listSelectableIdentities() throws CantListIdentitiesToSelectException {
@@ -176,12 +177,12 @@ public class FanCommunityManager implements FanCommunityModuleManager {
 
             final List<FanActorConnection> actorConnections = search.getResult(max, offset);
 
-            final List<LinkedFanIdentity> linkedCryptoCustomerIdentityList = new ArrayList<>();
+            final List<LinkedFanIdentity> linkedFanaticIdentityList = new ArrayList<>();
 
             for (FanActorConnection fac : actorConnections)
-                linkedCryptoCustomerIdentityList.add(new LinkedFanIdentityImpl(fac));
+                linkedFanaticIdentityList.add(new LinkedFanIdentityImpl(fac));
 
-            return linkedCryptoCustomerIdentityList;
+            return linkedFanaticIdentityList;
 
         } catch (final CantListActorConnectionsException e) {
 
@@ -208,12 +209,12 @@ public class FanCommunityManager implements FanCommunityModuleManager {
 
             final List<FanActorConnection> actorConnections = search.getResult(max, offset);
 
-            final List<FanCommunityInformation> cryptoCustomerCommunityInformationList = new ArrayList<>();
+            final List<FanCommunityInformation> fanaticCommunityInformationList = new ArrayList<>();
 
             for (FanActorConnection fac : actorConnections)
-                cryptoCustomerCommunityInformationList.add(new FanCommunityInformationImpl(fac));
+                fanaticCommunityInformationList.add(new FanCommunityInformationImpl(fac));
 
-            return cryptoCustomerCommunityInformationList;
+            return fanaticCommunityInformationList;
 
         } catch (final CantListActorConnectionsException e) {
 
@@ -252,7 +253,7 @@ public class FanCommunityManager implements FanCommunityModuleManager {
     }
 
     @Override
-    public FanCommunitySearch getCryptoCustomerSearch() {
+    public FanCommunitySearch getFanaticSearch() {
         return new FanCommunitySearchImpl(fanActorNetworkServiceManager);
     }
 
@@ -287,7 +288,7 @@ public class FanCommunityManager implements FanCommunityModuleManager {
     }
 
     @Override
-    public List<FanCommunityInformation> getAllCryptoCustomers(int max, int offset) throws CantGetFanListException {
+    public List<FanCommunityInformation> getAllFanatics(int max, int offset) throws CantGetFanListException {
         return null;
     }
 
@@ -327,6 +328,48 @@ public class FanCommunityManager implements FanCommunityModuleManager {
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
 
+    }
+
+    @Override
+    public void createFanaticIdentity(String name, String phrase, byte[] profile_img, UUID externalIdentityID) throws Exception {
+        String createdPublicKey = null;
+
+        try{
+            final Artist createdIdentity = artistIdentityManager.createArtistIdentity(name, profile_img, externalIdentityID);
+            createdPublicKey = createdIdentity.getPublicKey();
+
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        artistIdentityManager.publishIdentity(createdIdentity.getPublicKey());
+                    } catch(Exception e) {
+                        errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+                    }
+                }
+            }.start();
+        }catch(Exception e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+            return;
+        }
+
+
+        //Try to get appSettings
+        FanCommunitySettings appSettings = null;
+        try {
+            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+        }catch (Exception e){ appSettings = null; }
+
+
+        //If appSettings exist
+        if(appSettings != null){
+            appSettings.setLastSelectedIdentityPublicKey(createdPublicKey);
+            try {
+                this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+            }catch (CantPersistSettingsException e){
+                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            }
+        }
     }
 
     @Override

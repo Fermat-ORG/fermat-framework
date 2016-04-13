@@ -16,13 +16,19 @@ project(':fermat-cht-core').projectDir = new File('CHT/library/core/fermat-cht-c
 //subapp
 include ':fermat-cht-android-sub-app-chat-bitdubai'
 project(':fermat-cht-android-sub-app-chat-bitdubai').projectDir = new File('CHT/android/sub_app/fermat-cht-android-sub-app-chat-bitdubai')
+include ':fermat-cht-android-sub-app-chat-identity-bitdubai'
+project(':fermat-cht-android-sub-app-chat-identity-bitdubai').projectDir = new File('CHT/android/sub_app/fermat-cht-android-sub-app-chat-identity-bitdubai')
 
 
 //PLUGINS
 
 //Actor Connection
-include ':fermat-cht-plugin-actor-connection-chat-bitdunai'
-project(':fermat-cht-plugin-actor-connection-chat-bitdunai').projectDir = new File('CHT/plugin/actor_connection/fermat-cht-plugin-actor-connection-chat-bitdubai')
+include ':fermat-cht-plugin-actor-connection-chat-bitdubai'
+project(':fermat-cht-plugin-actor-connection-chat-bitdubai').projectDir = new File('CHT/plugin/actor_connection/fermat-cht-plugin-actor-connection-chat-bitdubai')
+
+//Actor Network Service
+include ':fermat-cht-plugin-actor-network-service-chat-bitdubai'
+project(':fermat-cht-plugin-actor-network-service-chat-bitdubai').projectDir = new File('CHT/plugin/actor_network_service/fermat-cht-plugin-actor-network-service-chat-bitdubai')
 
 //Middleware
 include ':fermat-cht-plugin-middleware-chat-bitdubai'

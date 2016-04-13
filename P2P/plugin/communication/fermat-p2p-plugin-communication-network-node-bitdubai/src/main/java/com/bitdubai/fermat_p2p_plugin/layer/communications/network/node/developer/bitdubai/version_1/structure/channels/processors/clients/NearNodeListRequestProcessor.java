@@ -1,11 +1,4 @@
-/*
- * @#NearNodeListRequestProcessor.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
-
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
@@ -71,7 +64,7 @@ public class NearNodeListRequestProcessor extends PackageProcessor {
 
         try {
 
-            NearNodeListMsgRequest messageContent = (NearNodeListMsgRequest) packageReceived.getContent();
+            NearNodeListMsgRequest messageContent = NearNodeListMsgRequest.parseContent(packageReceived.getContent());
 
             /*
              * Create the method call history
@@ -119,7 +112,7 @@ public class NearNodeListRequestProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 NearNodeListMsgRespond respondNearNodeListMsg = new NearNodeListMsgRespond(NearNodeListMsgRespond.STATUS.SUCCESS, NearNodeListMsgRespond.STATUS.SUCCESS.toString(),nodesProfileList);
-                Package packageRespond = Package.createInstance(respondNearNodeListMsg, packageReceived.getNetworkServiceTypeSource(), PackageType.NEAR_NODE_LIST_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondNearNodeListMsg.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.NEAR_NODE_LIST_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -138,7 +131,7 @@ public class NearNodeListRequestProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 NearNodeListMsgRespond respondNearNodeListMsg = new NearNodeListMsgRespond(NearNodeListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage(), null);
-                Package packageRespond = Package.createInstance(respondNearNodeListMsg, packageReceived.getNetworkServiceTypeSource(), PackageType.NEAR_NODE_LIST_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondNearNodeListMsg.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.NEAR_NODE_LIST_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond

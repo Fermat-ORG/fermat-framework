@@ -124,7 +124,13 @@ public abstract class FermatPreferenceFragment<S extends FermatSession,RE extend
         return (FermatViewHolder) recyclerView.findViewHolderForAdapterPosition(position);
     }
 
+    public abstract void dialogOptionSelected(String item, int position);
+
+    public abstract void optionSelected(PreferenceSettingsItem preferenceSettingsItem, int position);
+
     public abstract void onSettingsTouched(PreferenceSettingsItem preferenceSettingsItem, int position);
+
+    public abstract void onSettingsTouched(String item, int position);
 
     public abstract void onSettingsChanged(PreferenceSettingsItem preferenceSettingsItem, int position,boolean isChecked);
 

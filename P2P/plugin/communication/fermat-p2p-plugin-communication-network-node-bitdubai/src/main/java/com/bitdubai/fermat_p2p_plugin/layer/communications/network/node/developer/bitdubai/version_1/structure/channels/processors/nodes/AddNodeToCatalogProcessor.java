@@ -1,9 +1,3 @@
-/*
- * @#AddNodeToCatalogProcessor.java - 2016
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
@@ -67,7 +61,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
 
         try {
 
-            AddNodeToCatalogMsgRequest messageContent = (AddNodeToCatalogMsgRequest)  packageReceived.getContent();
+            AddNodeToCatalogMsgRequest messageContent = AddNodeToCatalogMsgRequest.parseContent(packageReceived.getContent());
 
             /*
              * Create the method call history
@@ -116,7 +110,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
 
                 }
 
-                Package packageRespond = Package.createInstance(addNodeToCatalogMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(addNodeToCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -136,7 +130,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
                  * Respond whit fail message
                  */
                 addNodeToCatalogMsjRespond = new AddNodeToCatalogMsjRespond(AddNodeToCatalogMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), nodeProfile.getIdentityPublicKey());
-                Package packageRespond = Package.createInstance(addNodeToCatalogMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(addNodeToCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond

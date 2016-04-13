@@ -9,6 +9,8 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.conf.ClientChannelConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.processors.CheckInClientRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContext;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.context.ClientContextItem;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
@@ -56,13 +58,11 @@ public class CommunicationsNetworkClientChannel {
     private ErrorManager errorManager  ;
     private EventManager eventManager  ;
 
-    public CommunicationsNetworkClientChannel(final ECCKeyPair clientIdentity,
-                                              final ErrorManager errorManager,
-                                              final EventManager eventManager){
+    public CommunicationsNetworkClientChannel(){
 
-        this.clientIdentity            = clientIdentity;
-        this.errorManager              = errorManager  ;
-        this.eventManager              = eventManager  ;
+        this.clientIdentity            = (ECCKeyPair)   ClientContext.get(ClientContextItem.CLIENT_IDENTITY);
+        this.errorManager              = (ErrorManager) ClientContext.get(ClientContextItem.ERROR_MANAGER  );
+        this.eventManager              = (EventManager) ClientContext.get(ClientContextItem.EVENT_MANAGER  );
 
         this.packageProcessors         = new HashMap<>();
         this.isRegister                = Boolean.FALSE;

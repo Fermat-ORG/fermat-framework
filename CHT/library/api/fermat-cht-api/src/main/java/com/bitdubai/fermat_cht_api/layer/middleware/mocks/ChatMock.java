@@ -177,4 +177,14 @@ public class ChatMock implements Chat {
     public void setGroupMembersAssociated(List<GroupMember> groupMembers) {
 
     }
+
+    @Override
+    public boolean getScheduledDelivery() {
+        return false;
+    }
+
+    @Override
+    public void setScheduledDelivery(boolean scheduledDelivery) {
+
+    }
 }

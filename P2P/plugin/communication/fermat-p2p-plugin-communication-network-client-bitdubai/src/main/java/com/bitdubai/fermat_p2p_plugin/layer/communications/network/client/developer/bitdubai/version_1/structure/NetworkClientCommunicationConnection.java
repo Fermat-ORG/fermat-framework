@@ -73,13 +73,13 @@ public class NetworkClientCommunicationConnection extends Thread {
         try{
 
             container = ContainerProvider.getWebSocketContainer();
-            this.communicationsNetworkClientChannel = new CommunicationsNetworkClientChannel(
+            /*this.communicationsNetworkClientChannel = new CommunicationsNetworkClientChannel(
                     clientIdentity,
                     errorManager  ,
                     eventManager
-            );
+            );*/
 
-            session   = container.connectToServer(communicationsNetworkClientChannel, uri);
+            session   = container.connectToServer(CommunicationsNetworkClientChannel.class, uri);
 
             //validate if is connected
             if(session.isOpen()){
@@ -103,6 +103,8 @@ public class NetworkClientCommunicationConnection extends Thread {
 
     private void setCheckInClientRequestProcessor(){
 
+        System.out.println("I'm the client and I'm checking me in.");
+
         ClientProfile clientProfile = new ClientProfile();
         clientProfile.setIdentityPublicKey(clientIdentity.getPublicKey());
         clientProfile.setDeviceType("");
@@ -119,10 +121,13 @@ public class NetworkClientCommunicationConnection extends Thread {
         profileCheckInMsgRequest.setMessageContentType(MessageContentType.JSON);
 
         try {
-            session.getBasicRemote().sendObject(Package.createInstance(profileCheckInMsgRequest, NetworkServiceType.UNDEFINED, PackageType.CHECK_IN_CLIENT_REQUEST, clientIdentity.getPrivateKey(), serverIdentity));
+            session.getBasicRemote().sendObject(Package.createInstance(profileCheckInMsgRequest.toJson(), NetworkServiceType.UNDEFINED, PackageType.CHECK_IN_CLIENT_REQUEST, clientIdentity.getPrivateKey(), serverIdentity));
         }catch (Exception e){
             e.printStackTrace();
+            System.out.println("I'm the client and I had a big error trying to check me in.");
         }
+
+        System.out.println("I'm the client and I finally the process of checking me in.");
     }
 
 }

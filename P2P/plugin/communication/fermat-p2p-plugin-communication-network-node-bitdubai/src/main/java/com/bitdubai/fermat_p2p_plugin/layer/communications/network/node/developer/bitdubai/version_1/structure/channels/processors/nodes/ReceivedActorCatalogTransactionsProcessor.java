@@ -1,9 +1,3 @@
-/*
- * @#ReceivedActorCatalogTransactionsProcessor.java - 2016
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantDeleteRecordDataBaseException;
@@ -71,7 +65,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
 
         try {
 
-            ReceiveActorCatalogTransactionsMsjRequest messageContent = (ReceiveActorCatalogTransactionsMsjRequest)  packageReceived.getContent();
+            ReceiveActorCatalogTransactionsMsjRequest messageContent = ReceiveActorCatalogTransactionsMsjRequest.parseContent(packageReceived.getContent());
 
             /*
              * Create the method call history
@@ -100,7 +94,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
                  * If all ok, respond whit success message
                  */
                 receiveActorCatalogTransactionsMsjRespond = new ReceiveActorCatalogTransactionsMsjRespond(ReceivedNodeCatalogTransactionsMsjRespond.STATUS.SUCCESS, GetNodeCatalogMsjRespond.STATUS.SUCCESS.toString(), lateNotificationsCounter);
-                Package packageRespond = Package.createInstance(receiveActorCatalogTransactionsMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.RECEIVE_ACTOR_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(receiveActorCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.RECEIVE_ACTOR_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -120,7 +114,7 @@ public class ReceivedActorCatalogTransactionsProcessor extends PackageProcessor 
                  * Respond whit fail message
                  */
                 receiveActorCatalogTransactionsMsjRespond = new ReceiveActorCatalogTransactionsMsjRespond(ReceivedNodeCatalogTransactionsMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), lateNotificationsCounter);
-                Package packageRespond = Package.createInstance(receiveActorCatalogTransactionsMsjRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.RECEIVE_ACTOR_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(receiveActorCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.RECEIVE_ACTOR_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond

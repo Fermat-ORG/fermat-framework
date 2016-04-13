@@ -792,33 +792,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
 
             createChatSubAppNavigationStructure();
-            runtimeSubApp = new RuntimeSubApp();
-            runtimeSubApp.setType(SubApps.CHT_CHAT_IDENTITY);
-            String ChatIdentityPublicKey = SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode();
-            runtimeSubApp.setPublicKey(ChatIdentityPublicKey);
-            // Activity: Create New Identity
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CHT_CHAT_CREATE_IDENTITY);
-            runtimeActivity.setActivityType(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
-            //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.addPosibleStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY);
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Chat Identity");
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             /**
              * CCP INTRA USER IDENTITY
@@ -828,6 +801,44 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             *ART ARTIST IDENTITY
             */
             //createArtArtistIdentitySubAppNavigationStructure();
+
+
+
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.ART_ARTIST_IDENTITY);
+            String artArtistUserIdentityPublicKey = SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode();
+            runtimeSubApp.setPublicKey(artArtistUserIdentityPublicKey);
+            // Activity: Create New Identity
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE);
+            runtimeActivity.setActivityType(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE.getCode());
+            //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeSubApp.addPosibleStartActivity(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE);
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Artist Identity");
+            runtimeTitleBar.setColor("#1189a4");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setLabelSize(18);
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            statusBar = new StatusBar();
+            statusBar.setColor("#1189a4");
+            runtimeActivity.setStatusBar(statusBar);
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
+            runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+
+
+
+
+
+
+
+
 
             /*
              *TKY ARTIST IDENTITY
@@ -841,6 +852,13 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              * ART FAN COMMUNITY
              */
             createFanCommunitySubAppNavigationStructure();
+
+            /**
+             * ART ARTIST COMMUNITY
+             */
+
+            createArtistCommunitySubAppNavigationStructure();
+
             /**
              * End ART
              */
@@ -873,7 +891,42 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setStartFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
+            /**
+              * CHAT IDENTITY
+              */
 
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.CHT_CHAT_IDENTITY);
+            String chatIdentityPublicKey = SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode();
+            runtimeSubApp.setPublicKey(chatIdentityPublicKey);
+
+            // Activity: Create New Identity
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CHT_CHAT_CREATE_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
+
+            runtimeActivity.setColor("#47BF73");
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeSubApp.addPosibleStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Chat Identity");
+            runtimeTitleBar.setColor("#47BF73");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setLabelSize(18);
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#47BF73");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
+
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
 
 
@@ -2305,7 +2358,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         artArtistIdentity = new RuntimeSubApp();
         artArtistIdentity.setType(SubApps.ART_ARTIST_IDENTITY);
         artArtistIdentity.setPublicKey(IdentityArtistPublicKey);
-        artArtistIdentity.addPosibleStartActivity(Activities.ART_ARTIST_IDENTITY_HOME);
+        artArtistIdentity.addPosibleStartActivity(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE);
 
         runtimeActivity = new Activity();
         statusBar = new StatusBar();
@@ -2321,10 +2374,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setColor("#0072bb");
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setStartFragment(Fragments.ART_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
+        runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
-        runtimeActivity.addFragment(Fragments.ART_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
+        runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey(), runtimeFragment);
 
 /*
         runtimeSideMenu = new SideMenu();
@@ -3796,5 +3849,172 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         listSubApp.put(subAppCustomerCommunity.getPublicKey(), subAppCustomerCommunity);
     }
+
+    private void createArtistCommunitySubAppNavigationStructure() {
+        TitleBar runtimeTitleBar;
+        SideMenu runtimeSideMenu;
+        MenuItem runtimeMenuItem;
+        StatusBar statusBar;
+        Activity runtimeActivity;
+        Fragment runtimeFragment;
+
+        RuntimeSubApp subAppArtistCommunity = new RuntimeSubApp();
+        subAppArtistCommunity.setType(SubApps.ART_ARTIST_COMMUNITY);
+        String communityPublicKey = SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode();
+        subAppArtistCommunity.setPublicKey(communityPublicKey);
+
+        //Side Menu definition
+        runtimeSideMenu = new SideMenu();
+        runtimeSideMenu.setBackgroundColor("#0072bb");
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Artist Users");
+        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+        runtimeMenuItem.setLinkToActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Connections");
+        runtimeMenuItem.setLinkToActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST);
+        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Notifications");
+        runtimeMenuItem.setLinkToActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS);
+        runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
+
+        //Activity: CONNECTION_WORLD
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD);
+        runtimeActivity.setActivityType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD.getCode());
+        subAppArtistCommunity.addPosibleStartActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Artist Users");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD.getKey());
+        runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD.getKey());
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        subAppArtistCommunity.addActivity(runtimeActivity);
+
+
+        // Activity: CONNECTION_FRIEND_LIST
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST);
+        runtimeActivity.setActivityType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST.getCode());
+        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST);
+        runtimeActivity.setBackPublicKey(communityPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Connections");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
+        runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST.getKey());
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        subAppArtistCommunity.addActivity(runtimeActivity);
+
+
+        // Activity: CONNECTION_NOTIFICATIONS
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS);
+        runtimeActivity.setActivityType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
+        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS);
+        runtimeActivity.setBackPublicKey(communityPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Notifications");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
+        runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS.getKey());
+
+        runtimeActivity.setSideMenu(runtimeSideMenu);
+        subAppArtistCommunity.addActivity(runtimeActivity);
+
+
+        // Activity: CONNECTION_OTHER_PROFILE
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE);
+        runtimeActivity.setActivityType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
+        runtimeActivity.setBackActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE);
+        runtimeActivity.setBackPublicKey(communityPublicKey);
+        runtimeActivity.setColor("#FF0B46F0");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Profile");
+        runtimeTitleBar.setIconName("Back");
+        runtimeTitleBar.setTitleColor("#ffffff");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#0072bb");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#0072bb");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
+        runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE.getKey());
+
+        subAppArtistCommunity.addActivity(runtimeActivity);
+
+
+        listSubApp.put(subAppArtistCommunity.getPublicKey(), subAppArtistCommunity);
+    }
+
 
 }

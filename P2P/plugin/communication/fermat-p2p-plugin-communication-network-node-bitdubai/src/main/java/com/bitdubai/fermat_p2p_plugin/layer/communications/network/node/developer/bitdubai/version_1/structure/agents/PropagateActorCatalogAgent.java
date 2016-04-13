@@ -198,7 +198,7 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
 
                     FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(remoteNodesCatalog);
                     ReceiveActorCatalogTransactionsMsjRequest receiveActorCatalogTransactionsMsjRequest = new ReceiveActorCatalogTransactionsMsjRequest(transactionList);
-                    fermatWebSocketClientNodeChannel.sendMessage(receiveActorCatalogTransactionsMsjRequest);
+                    fermatWebSocketClientNodeChannel.sendMessage(receiveActorCatalogTransactionsMsjRequest.toJson());
 
                 }catch (Exception e){
 
