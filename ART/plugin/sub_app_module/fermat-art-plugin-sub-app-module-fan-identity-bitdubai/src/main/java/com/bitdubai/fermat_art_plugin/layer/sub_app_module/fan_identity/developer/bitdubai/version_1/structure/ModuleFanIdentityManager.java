@@ -19,6 +19,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.FanIdentitySett
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -26,7 +27,7 @@ import java.util.UUID;
 /**
  * Created by alexander on 3/15/16.
  */
-public class ModuleFanIdentityManager implements FanIdentityManagerModule {
+public class ModuleFanIdentityManager implements FanIdentityManagerModule,Serializable {
     private final ErrorManager errorManager;
     private final FanaticIdentityManager fanaticIdentityManager;
 
