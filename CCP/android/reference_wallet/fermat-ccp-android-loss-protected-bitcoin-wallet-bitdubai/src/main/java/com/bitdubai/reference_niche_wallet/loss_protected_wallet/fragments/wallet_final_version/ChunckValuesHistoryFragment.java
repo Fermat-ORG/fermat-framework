@@ -76,14 +76,12 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     String walletPublicKey = "loss_protected_wallet";
     /**
      * MANAGERS
-    @Override
-    protected void bindHolder(ChunckValuesHistoryItemViewHolder holder, LossProtectedWalletTransaction data, int position) {
-
-    }
-
+     @Override
+     protected void bindHolder(ChunckValuesHistoryItemViewHolder holder, LossProtectedWalletTransaction data, int position) {
+     }
      */
     private LossProtectedWallet cryptoWallet;
-     /**
+    /**
      * DATA
      */
     private List<LossProtectedWalletTransaction> lstTransaction;
@@ -97,7 +95,6 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     private int offset = 0;
     private View rootView;
     private LinearLayout empty;
-    private LinearLayout chunck_header_container;
     private TextView chunk_balance_TextView;
     private  TextView exchange_rate;
 
@@ -200,13 +197,11 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
             container_header_balance.setVisibility(View.VISIBLE);
 
-            chunck_header_container = (LinearLayout) chunk_balance_header.findViewById(R.id.chunck_header_container);
-
             final String realBalance = WalletUtils.formatBalanceStringNotDecimal(cryptoWallet.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType), ShowMoneyType.BITCOIN.getCode());
 
             final double actualExchangeRate = lossProtectedWalletSession.getActualExchangeRate();
 
-            chunk_balance_TextView = (TextView) chunk_balance_header.findViewById(R.id.txt_amount);
+            chunk_balance_TextView = (TextView) chunk_balance_header.findViewById(R.id.txt_balance_amount);
             exchange_rate = (TextView) chunk_balance_header.findViewById(R.id.txt_exchange_rate);
 
             chunk_balance_TextView.setText(realBalance);
@@ -304,8 +299,8 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         } catch (Exception e) {
             lossProtectedWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-           e.printStackTrace();
-       }
+            e.printStackTrace();
+        }
 
         return lstTransaction;
     }
