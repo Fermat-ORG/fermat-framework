@@ -1,4 +1,4 @@
-package fragments;
+package com.bitdubai.sub_app.art_fan_identity.fragments;
 
 import android.app.Activity;
 import android.content.ContentResolver;
@@ -42,17 +42,17 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.FanIdentitySett
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.sub_app.fan_identity.R;
+import com.bitdubai.sub_app.art_fan_identity.R;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 import java.util.UUID;
 
-import popup.PresentationArtFanUserIdentityDialog;
-import sessions.ArtFanUserIdentitySubAppSession;
-import sessions.SessionConstants;
-import util.CommonLogger;
+import com.bitdubai.sub_app.art_fan_identity.popup.PresentationArtFanUserIdentityDialog;
+import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSession;
+import com.bitdubai.sub_app.art_fan_identity.sessions.SessionConstants;
+import com.bitdubai.sub_app.art_fan_identity.util.CommonLogger;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;

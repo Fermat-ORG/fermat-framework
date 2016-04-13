@@ -1,4 +1,4 @@
-package util;
+package com.bitdubai.sub_app.art_fan_identity.util;
 
 import android.util.Log;
 

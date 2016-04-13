@@ -1,4 +1,4 @@
-package fragment_factory;
+package com.bitdubai.sub_app.art_fan_identity.fragment_factory;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragmentsEnumType;
 
