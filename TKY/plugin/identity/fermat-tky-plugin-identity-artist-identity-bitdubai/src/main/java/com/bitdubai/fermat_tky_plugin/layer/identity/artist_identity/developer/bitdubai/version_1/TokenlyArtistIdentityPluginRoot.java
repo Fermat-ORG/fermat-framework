@@ -28,6 +28,7 @@ import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnections
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetUserException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.TokenlyApiManager;
@@ -164,7 +165,8 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
         try{
             if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
                 user = tokenlyApiManager.validateTokenlyUser(userName, password);
-        } catch (CantGetUserException | InterruptedException | ExecutionException e) {
+        } catch (CantGetUserException | InterruptedException | ExecutionException |
+                WrongTokenlyUserCredentialsException e) {
             e.printStackTrace();
         }
         if(user!=null){
@@ -182,7 +184,8 @@ public class TokenlyArtistIdentityPluginRoot extends AbstractPlugin implements
         try{
             if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
                 user = tokenlyApiManager.validateTokenlyUser(username, password);
-        } catch (CantGetUserException |InterruptedException | ExecutionException  e) {
+        } catch (CantGetUserException |InterruptedException | ExecutionException|
+                WrongTokenlyUserCredentialsException e) {
             e.printStackTrace();
         }
         if(user != null)
