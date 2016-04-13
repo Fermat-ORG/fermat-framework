@@ -15,18 +15,20 @@ public class ChatNotificationPainter  implements NotificationPainter{
         private String textBody;
         private String image;
         private RemoteViews remoteViews;
-        private int icon;
+
 
         //constructor
 
 
 
-    public ChatNotificationPainter(String title, String textBody, String image, String viewCode, int icon) {
+    public ChatNotificationPainter(String title, String textBody, String image, String viewCode) {
         this.title    = title;
         this.textBody = textBody;
         this.image    = image;
-        this.icon     = icon;
+
     }
+
+
 
     @Override
         public RemoteViews getNotificationView(String code) {
