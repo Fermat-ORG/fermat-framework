@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.app_connection;
 
 import android.content.Context;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.factory.ChatFragmentFactory;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.notifications.ChatNotificationPainterBuilder;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
@@ -74,7 +75,9 @@ public class ChatFermatAppConnection extends AppConnections {
     @Override
     public NotificationPainter getNotificationPainter(String code){
 
-        NotificationPainter notification = null;
+        NotificationPainter notification = ChatNotificationPainterBuilder.getNotification(
+                code
+        );
         try
         {
 
