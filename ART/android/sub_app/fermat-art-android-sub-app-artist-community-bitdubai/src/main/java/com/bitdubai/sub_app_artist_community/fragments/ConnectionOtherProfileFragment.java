@@ -77,7 +77,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.aac_fragment_connections_other_profile, container, false);
         userProfileAvatar = (ImageView) rootView.findViewById(R.id.aac_img_user_avatar);
-        userName = (FermatTextView) rootView.findViewById(R.id.aac_user_name);
+        userName = (FermatTextView) rootView.findViewById(R.id.aac_username);
         externalPlatform = (FermatTextView) rootView.findViewById(R.id.aac_external_platform);
         connect = (Button) rootView.findViewById(R.id.aac_btn_connect);
         connect.setOnClickListener(this);
