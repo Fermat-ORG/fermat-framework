@@ -17,7 +17,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfa
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.reference_wallet.artist_community.R;
+import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
 
 /**
@@ -61,8 +61,8 @@ public class DisconnectDialog extends FermatDialog<ArtistSubAppSession, SubAppRe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mDescription = (FermatTextView) findViewById(R.id.afc_description);
-        mUsername = (FermatTextView) findViewById(R.id.afc_user_name);
+        mDescription = (FermatTextView) findViewById(R.id.aac_description);
+        mUsername = (FermatTextView) findViewById(R.id.aac_user_name);
         mTitle = (FermatTextView)findViewById(R.id.title);
         positiveBtn = (FermatButton) findViewById(R.id.afc_positive_button);
         negativeBtn = (FermatButton) findViewById(R.id.afc_negative_button);
@@ -90,7 +90,7 @@ public class DisconnectDialog extends FermatDialog<ArtistSubAppSession, SubAppRe
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_builder;
+        return R.layout.aac_dialog_builder;
     }
 
     @Override

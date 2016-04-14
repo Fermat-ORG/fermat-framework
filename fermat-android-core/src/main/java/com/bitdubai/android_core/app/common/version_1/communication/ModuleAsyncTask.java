@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app.common.version_1.communication;
 
 import android.os.AsyncTask;
+import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
@@ -25,23 +26,17 @@ public class ModuleAsyncTask extends AsyncTask<Object,Integer,Object> {
 
     private static final String TAG = "AsyncTask";
 
-    final PluginVersionReference pluginVersionReference;
-    final String method;
-    final Serializable parameters;
-    final FermatSystem fermatSystem;
-    WeakReference<CommunicationService> communicationServiceWeakReference;
-    String requestId;
-    String requestKey;
+    private final PluginVersionReference pluginVersionReference;
+    private final String method;
+    private final Serializable parameters;
+    private final FermatSystem fermatSystem;
+    private WeakReference<CommunicationService> communicationServiceWeakReference;
+    private String requestId;
+    private String requestKey;
+    private final Messenger replyTo;
 
-    public ModuleAsyncTask(FermatSystem fermatSystem,PluginVersionReference pluginVersionReference1, String method1, Serializable parameters1) {
-        this.pluginVersionReference = pluginVersionReference1;
-        this.method = method1;
-        this.parameters = parameters1;
-        this.fermatSystem = fermatSystem;
 
-    }
-
-    public ModuleAsyncTask(CommunicationService communicationService, FermatSystem fermatSystem, String requestId, String requestKey, PluginVersionReference pluginVersionReference, String method, Serializable parameters) {
+    public ModuleAsyncTask(CommunicationService communicationService, FermatSystem fermatSystem,Messenger replyTo, String requestId, String requestKey, PluginVersionReference pluginVersionReference, String method, Serializable parameters) {
         this.pluginVersionReference = pluginVersionReference;
         this.method = method;
         this.parameters = parameters;
@@ -49,6 +44,7 @@ public class ModuleAsyncTask extends AsyncTask<Object,Integer,Object> {
         communicationServiceWeakReference = new WeakReference<CommunicationService>(communicationService);
         this.requestId = requestId;
         this.requestKey = requestKey;
+        this.replyTo = replyTo;
     }
 
     @Override
@@ -104,22 +100,7 @@ public class ModuleAsyncTask extends AsyncTask<Object,Integer,Object> {
             }else{
                 Log.i(TAG,"Method return: null, check this");
             }
-
-            if(s!=null) {
-                Log.i(TAG, "Data to send: "+ s.toString());
-            }else{
-                Log.i(TAG, "Data to send: null, check this");
-            }
-            final Object finalS = s;
-            if(s!=null){
-                Log.i(TAG,"Method return: "+ s.toString());
-            }else{
-                Log.i(TAG,"Method return: null, check this");
-            }
-
-            return finalS;
-
-
+            return s;
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
@@ -144,14 +125,19 @@ public class ModuleAsyncTask extends AsyncTask<Object,Integer,Object> {
     protected void onPostExecute(Object o) {
         super.onPostExecute(o);
         try {
-            communicationServiceWeakReference.get().send(requestId,requestKey,o);
+            communicationServiceWeakReference.get().send(replyTo,requestId,requestKey,o);
             communicationServiceWeakReference.get().processingQueue--;
-            Log.i(TAG,"Processiong request queue:"+communicationServiceWeakReference.get().processingQueue);
+            Log.i(TAG, "Processiong request queue:" + communicationServiceWeakReference.get().processingQueue);
+            clear();
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private void clear(){
+        communicationServiceWeakReference.clear();
     }
 
 

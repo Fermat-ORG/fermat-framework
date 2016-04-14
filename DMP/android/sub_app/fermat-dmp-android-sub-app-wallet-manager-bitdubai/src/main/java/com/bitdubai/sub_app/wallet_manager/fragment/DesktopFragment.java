@@ -334,13 +334,16 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                         Item item = new Item(installedWallet);
                         item.setIconResource(R.drawable.bitcoin_wallet);
                         item.setPosition(0);
+                        installedWallet.setAppStatus(AppsStatus.ALPHA);
                         lstItemsWithIcon.add(item);
+
                     }
 
                 if(installedWallet.getWalletPublicKey().equals(WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode())) {
                     Item item = new Item(installedWallet);
                     item.setIconResource(R.drawable.icon_loss_protected);
                     item.setPosition(8);
+                    installedWallet.setAppStatus(AppsStatus.ALPHA);
                     lstItemsWithIcon.add(item);
                 }
             }
@@ -354,7 +357,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode(),
                     "wallet_crypto_broker_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.getDefaultStatus());
+                    AppsStatus.DEV);
             lstInstalledWallet.add(installedWallet);
             Item item = new Item(installedWallet);
             item.setIconResource(R.drawable.crypto_broker);
@@ -370,7 +373,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     WalletsPublicKeys.CBP_CRYPTO_CUSTOMER_WALLET.getCode(),
                     "wallet_crypto_customer_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.getDefaultStatus());
+                    AppsStatus.DEV);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.crypto_customer);
@@ -387,7 +390,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     WalletsPublicKeys.DAP_ISSUER_WALLET.getCode(),
                     "wallet_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.getDefaultStatus());
+                    AppsStatus.ALPHA);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.asset_issuer);
@@ -403,7 +406,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     WalletsPublicKeys.DAP_USER_WALLET.getCode(),
                     "wallet_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.getDefaultStatus());
+                    AppsStatus.ALPHA);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.asset_user_wallet);
@@ -419,7 +422,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     WalletsPublicKeys.DAP_REDEEM_WALLET.getCode(),
                     "wallet_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.getDefaultStatus());
+                    AppsStatus.ALPHA);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.redeem_point);
@@ -461,8 +464,8 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
             lstItemsWithIcon.add(item);
 
 
-            //
-            installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
+            //TKY Fan Wallet
+            /*installedWallet= new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledWallet(WalletCategory.REFERENCE_WALLET,
                     WalletType.REFERENCE,
                     new ArrayList<InstalledSkin>(),
                     new ArrayList<InstalledLanguage>(),
@@ -476,7 +479,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.banner_tky);
             item.setPosition(9);
-            lstItemsWithIcon.add(item);
+            lstItemsWithIcon.add(item);*/
 
 
 
@@ -576,13 +579,15 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
             arrItemsWithoutIcon[i] = emptyItem;
         }
 
+        int j =0;
         for(Item itemIcon: list){
-            arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
+            arrItemsWithoutIcon[j]= itemIcon;
+            j++;
         }
 
-        if(adapter!=null) {
-            adapter.changeDataSet(Arrays.asList(arrItemsWithoutIcon));
-            adapter.notifyDataSetChanged();
+        if(recyclerView.getAdapter()!=null) {
+            ((DesktopAdapter)recyclerView.getAdapter()).changeDataSet(Arrays.asList(arrItemsWithoutIcon));
+            recyclerView.getAdapter().notifyDataSetChanged();
         }
     }
 

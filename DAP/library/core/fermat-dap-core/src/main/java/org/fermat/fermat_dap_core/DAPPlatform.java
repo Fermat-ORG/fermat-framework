@@ -35,10 +35,8 @@ public final class DAPPlatform extends AbstractPlatform {
 
             registerLayer(new ActorLayer()                  );
             registerLayer(new ActorNetworkServiceLayer()    );
-            registerLayer(new org.fermat.fermat_dap_core.layer.bussiness_transaction.BusinessTransactionLayer()    );
             registerLayer(new DigitalAssetTransactionLayer());
             registerLayer(new FundsTransactionLayer()       );
-            registerLayer(new org.fermat.fermat_dap_core.layer.negotiation_transaction.NegotiationTransactionLayer() );
             registerLayer(new IdentityLayer()               );
             registerLayer(new MiddlewareLayer()             );
             registerLayer(new NetworkServiceLayer()         );

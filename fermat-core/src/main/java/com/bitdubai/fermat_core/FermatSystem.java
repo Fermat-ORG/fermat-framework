@@ -35,12 +35,12 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantR
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartAddonException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSystemException;
 import com.bitdubai.fermat_csh_core.CSHPlatform;
-import org.fermat.fermat_dap_core.DAPPlatform;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_core.PIPPlatform;
-import com.bitdubai.fermat_tky_core.TKYPlatform;
 import com.bitdubai.fermat_wpd_core.WPDPlatform;
+
+import org.fermat.fermat_dap_core.DAPPlatform;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -133,7 +133,8 @@ public final class FermatSystem {
         try {
 
             //TODO Desactivacion debido a un tema de P2P
-            //fermatSystemContext.registerPlatform(new ARTPlatform());
+           // fermatSystemContext.registerPlatform(new ARTPlatform());
+
             fermatSystemContext.registerPlatform(new BCHPlatform());
             fermatSystemContext.registerPlatform(new BNKPlatform());
             fermatSystemContext.registerPlatform(new CBPPlatform());
@@ -144,7 +145,7 @@ public final class FermatSystem {
             fermatSystemContext.registerPlatform(new DAPPlatform());
             fermatSystemContext.registerPlatform(new P2PPlatform());
             fermatSystemContext.registerPlatform(new PIPPlatform());
-            fermatSystemContext.registerPlatform(new TKYPlatform());
+            //fermatSystemContext.registerPlatform(new TKYPlatform());
             fermatSystemContext.registerPlatform(new WPDPlatform());
 
 

@@ -12,7 +12,7 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.reference_wallet.artist_community.R;
+import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
 
 /**
@@ -52,8 +52,8 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
         super.onCreate(savedInstanceState);
 
         title = (FermatTextView) findViewById(R.id.title);
-        description = (FermatTextView) findViewById(R.id.afc_description);
-        userName = (FermatTextView) findViewById(R.id.afc_user_name);
+        description = (FermatTextView) findViewById(R.id.aac_description);
+        userName = (FermatTextView) findViewById(R.id.aac_user_name);
         positiveBtn = (FermatButton) findViewById(R.id.afc_positive_button);
         negativeBtn = (FermatButton) findViewById(R.id.afc_negative_button);
 
@@ -68,7 +68,7 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_builder;
+        return R.layout.aac_dialog_builder;
     }
 
     @Override

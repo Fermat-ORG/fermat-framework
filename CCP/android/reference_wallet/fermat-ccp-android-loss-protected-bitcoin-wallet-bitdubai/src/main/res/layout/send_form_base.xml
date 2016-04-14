@@ -147,7 +147,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:paddingTop="12dp"
-                        android:text="@string/bits_text"
+                        android:text="@string/btc_text"
                         android:textColor="#12aca1"
                         android:textSize="12sp" />
                 </LinearLayout>

@@ -3,6 +3,8 @@ package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -18,7 +20,7 @@ import java.util.List;
  * Developed by Lozadaa on 30/03/16.
  */
 
-public interface ChatIdentityModuleManager extends ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> {
+public interface ChatIdentityModuleManager extends ModuleManager<ChatIdentityPreferenceSettings, ActiveActorIdentityInformation> {
     /**
      * The method <code>getIdentityAssetUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
      *
@@ -56,5 +58,4 @@ public interface ChatIdentityModuleManager extends ModuleManager<ChatPreferenceS
      * @throws CantUpdateChatIdentityException
      */
     void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateChatIdentityException;
-
 }
