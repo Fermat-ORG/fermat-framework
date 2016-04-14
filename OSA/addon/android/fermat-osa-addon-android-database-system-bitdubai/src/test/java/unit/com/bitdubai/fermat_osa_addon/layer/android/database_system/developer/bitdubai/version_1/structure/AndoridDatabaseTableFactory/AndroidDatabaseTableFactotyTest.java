@@ -44,7 +44,7 @@ public class AndroidDatabaseTableFactotyTest {
                 false
         );
 
-        assertThat(tableFactory1.getIndex()).isEqualTo(tableFactory2.getIndex());
+        assertThat(tableFactory1.listIndexes()).isEqualTo(tableFactory2.listIndexes());
     }
 
     @Test
@@ -56,7 +56,7 @@ public class AndroidDatabaseTableFactotyTest {
                 false
         );
 
-        assertThat(tableFactory1.getIndex()).isNotEqualTo(tableFactory2.getIndex());
+        assertThat(tableFactory1.listIndexes()).isNotEqualTo(tableFactory2.listIndexes());
     }
 
     @Test

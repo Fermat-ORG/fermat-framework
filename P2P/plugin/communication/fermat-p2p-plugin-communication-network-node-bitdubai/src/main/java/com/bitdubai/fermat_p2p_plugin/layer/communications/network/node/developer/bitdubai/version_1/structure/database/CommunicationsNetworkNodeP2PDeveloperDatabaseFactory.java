@@ -225,7 +225,6 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> checkedinclientsColumns = new ArrayList<>();
 
-        checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_UUID_COLUMN_NAME);
         checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_LATITUDE_COLUMN_NAME);
         checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_LONGITUDE_COLUMN_NAME);
