@@ -6,7 +6,11 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantAcce
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantRequestActorConnectionException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
@@ -18,6 +22,7 @@ import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActo
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionSearch;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanLinkedActorIdentity;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
@@ -25,14 +30,14 @@ import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdenti
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.settings.ArtistCommunitySettings;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ActorConnectionAlreadyRequestedException;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ActorTypeNotSupportedException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantGetFanListException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantGetFanSearchResult;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantListFansException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantListIdentitiesToSelectException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantLoginFanException;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantStartRequestException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.FanCancellingFailedException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.FanDisconnectingFailedException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
@@ -207,6 +212,39 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
         }    }
 
     @Override
+    public List<LinkedFanIdentity> listFansPendingRemoteAction(FanCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantGetFanListException {
+        try {
+
+            final FanLinkedActorIdentity linkedActorIdentity = new FanLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType()
+            );
+
+            final FanActorConnectionSearch search = fanActorConnectionManager.getSearch(linkedActorIdentity);
+
+            search.addConnectionState(ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
+
+            final List<FanActorConnection> actorConnections = search.getResult(max, offset);
+
+            final List<LinkedFanIdentity> linkedFanaticIdentityList = new ArrayList<>();
+
+            for (FanActorConnection fac : actorConnections)
+                linkedFanaticIdentityList.add(new LinkedFanIdentityImpl(fac));
+
+            return linkedFanaticIdentityList;
+
+        } catch (final CantListActorConnectionsException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetFanListException("", e, "", "Error trying to list actor connections.");
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetFanListException("", e, "", "Unhandled Exception.");
+        }
+    }
+
+    @Override
     public List<FanCommunityInformation> listAllConnectedFans(FanCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantGetFanListException {
         try {
 
@@ -270,8 +308,39 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
     }
 
     @Override
-    public void askFanForAcceptance(String fanToAddName, String fanToAddPublicKey, byte[] profileImage) throws CantStartRequestException {
+    public void requestConnectionToFan(FanCommunitySelectableIdentity selectedIdentity,
+                                       FanCommunityInformation artistToContact) throws CantRequestConnectionException,ActorConnectionAlreadyRequestedException,ActorTypeNotSupportedException{
+        try {
 
+            final ActorIdentityInformation actorSending = new ActorIdentityInformation(
+                    selectedIdentity.getPublicKey()   ,
+                    selectedIdentity.getActorType()   ,
+                    selectedIdentity.getAlias()       ,
+                    selectedIdentity.getImage()
+            );
+
+            final ActorIdentityInformation actorReceiving = new ActorIdentityInformation(
+                    artistToContact.getPublicKey()   ,
+                    Actors.ART_FAN                ,
+                    artistToContact.getAlias()       ,
+                    artistToContact.getImage()
+            );
+
+           fanActorConnectionManager.requestConnection(
+                    actorSending,
+                    actorReceiving
+            );
+
+        } catch (ConnectionAlreadyRequestedException e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantRequestConnectionException(e, "", "Error trying to request the actor connection.");
+        } catch (CantRequestActorConnectionException e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new ActorTypeNotSupportedException(e, "", "Actor type is not supported.");
+        } catch (UnsupportedActorTypeException e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantRequestConnectionException(e, "", "Unhandled Exception.");
+        }
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.Fragme
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionNotificationsFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionOtherProfileFragment;
+import com.bitdubai.sub_app.fan_community.fragments.ConnectionsFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionsListFragment;
 import com.bitdubai.sub_app.fan_community.fragments.ConnectionsWorldFragment;
 import com.bitdubai.sub_app.fan_community.sessions.FanCommunitySubAppSession;
@@ -31,7 +32,7 @@ public class FanCommunityFragmentFactory extends
                 currentFragment = ConnectionsWorldFragment.newInstance();
                 break;
             case ART_SUB_APP_FAN_COMMUNITY_CONNECTIONS:
-                //currentFragment = ConnectionsFragment.newInstance();
+                currentFragment = ConnectionsFragment.newInstance();
                 break;
             case ART_SUB_APP_FAN_COMMUNITY_CONNECTION_DETAIL:
                 //currentFragment = null;
