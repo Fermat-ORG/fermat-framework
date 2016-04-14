@@ -54,11 +54,6 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractModule<ChatIdent
         super(new PluginVersionReference(new Version()));
     }
 
-//    @Override
-//    public FermatManager getManager() {
-//        return chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager);
-//    }
-
     /**
      *
      */
@@ -87,6 +82,9 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractModule<ChatIdent
 
     @Override
     public ModuleManager<ChatIdentityPreferenceSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
-        return chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager);
+        if (chatIdentityModuleManager == null)
+            chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager);
+
+        return chatIdentityModuleManager;
     }
 }
