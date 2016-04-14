@@ -341,16 +341,36 @@ public class ChatMiddlewareMonitorAgent implements
 
                     if (tsTime1 >= tsTime2)
                     {
-                        if (chat.getScheduledDelivery()) {
-                            //Enviar el mensaje pasando como argumento el objeto chat con todos los datos
-                            //Buscar el mensaje creado de ese chat guardado cuando se creo la redifusion
-                            List<Message> messages = chatMiddlewareDatabaseDao.getMessagesByChatId(chat.getChatId());
-                            chat.setMessagesAsociated(messages);
-                            //Buscar los miembros de ese chat en group member para asociarlo al objeto chat leido
-                            List<GroupMember> groupMembers = chatMiddlewareDatabaseDao.getGroupsMemberByGroupId(chat.getChatId());
-                            chat.setGroupMembersAssociated(groupMembers);
-                            //Enviar el mensaje
+                        //if (chat.getScheduledDelivery()) {
+                        //Enviar el mensaje pasando como argumento el objeto chat con todos los datos
+                        //Buscar el mensaje creado de ese chat guardado cuando se creo la redifusion
+                        List<Message> messages = chatMiddlewareDatabaseDao.getMessagesByChatId(chat.getChatId());
+                        chat.setMessagesAsociated(messages);
+                        //Buscar los miembros de ese chat en group member para asociarlo al objeto chat leido
+                        List<GroupMember> groupMembers = chatMiddlewareDatabaseDao.getGroupsMemberByGroupId(chat.getChatId());
+                        //Enviar el mensaje
+                        for (GroupMember groupMember : groupMembers) {
+                            chat.setRemoteActorPublicKey(groupMember.getActorPublicKey());
+                            chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);
+                            chat.setRemoteActorType(PlatformComponentType.ACTOR_CHAT);
+                            System.out.println("ChatMetadata to send:\n" + constructChatMetadata(chat, messages.get(0)));
+                            try {
+                                chatNetworkServiceManager.sendChatMetadata(
+                                        chat.getLocalActorPublicKey(),
+                                        chat.getRemoteActorPublicKey(),
+                                        constructChatMetadata(chat, messages.get(0))
+                                );
+                            }catch (IllegalArgumentException e) {
+                                /**
+                                 * In this case, any argument in chat or message was null or not properly set.
+                                 * I'm gonna change the status to CANNOT_SEND to avoid send this message.
+                                 */
+                                messages.get(0).setStatus(MessageStatus.CANNOT_SEND);
+                            }
                         }
+                        messages.get(0).setStatus(MessageStatus.SEND);
+                        chatMiddlewareDatabaseDao.saveMessage(messages.get(0));
+                        //}
                     }
                 }
             }
@@ -359,6 +379,10 @@ public class ChatMiddlewareMonitorAgent implements
         } catch (CantGetChatException e) {
             e.printStackTrace();
         } catch (CantGetMessageException e) {
+            e.printStackTrace();
+        } catch (CantSendChatMessageMetadataException e) {
+            e.printStackTrace();
+        } catch (CantSaveMessageException e) {
             e.printStackTrace();
         }
     }

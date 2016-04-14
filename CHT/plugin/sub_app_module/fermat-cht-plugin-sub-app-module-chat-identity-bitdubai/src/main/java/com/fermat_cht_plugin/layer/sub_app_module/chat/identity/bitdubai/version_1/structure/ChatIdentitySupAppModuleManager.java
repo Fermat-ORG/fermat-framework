@@ -16,12 +16,13 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.Chat
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by franklin on 03/04/16.
  */
-public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManager {
+public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManager, Serializable {
 
     private ChatIdentityManager chatIdentityManager;
     public ChatIdentitySupAppModuleManager(ChatIdentityManager chatIdentityManager){

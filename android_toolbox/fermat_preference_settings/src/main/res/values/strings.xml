@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">fermat_preference_settings</string>
+    <!-- Custom Dialog Fragment -->
+    <string name="title_label">Network Settings</string>
+    <string name="ok_label">OK</string>
+    <string name="cancel_label">Cancel</string>
+    <array name="items" translatable="false">
+        <item>MainNet</item>
+        <item>TestNet</item>
+        <item>RegTest</item>
+    </array>
 </resources>

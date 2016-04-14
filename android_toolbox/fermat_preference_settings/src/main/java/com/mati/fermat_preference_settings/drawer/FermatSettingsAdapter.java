@@ -1,14 +1,21 @@
 package com.mati.fermat_preference_settings.drawer;
 
 import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CompoundButton;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatActivity;
 import com.mati.fermat_preference_settings.R;
+import com.mati.fermat_preference_settings.drawer.dialog.CustomDialogFragment;
 import com.mati.fermat_preference_settings.drawer.dialog.SettingsDialog;
 import com.mati.fermat_preference_settings.drawer.holders.SettingEditTextViewHolder;
+import com.mati.fermat_preference_settings.drawer.holders.SettingLinkTextViewHolder;
 import com.mati.fermat_preference_settings.drawer.holders.SettingSwitchViewHolder;
 import com.mati.fermat_preference_settings.drawer.holders.SettingTextOpenDialogViewHolder;
 import com.mati.fermat_preference_settings.drawer.holders.SettingsTextPlusRadioHolder;
@@ -16,6 +23,7 @@ import com.mati.fermat_preference_settings.drawer.interfaces.DialogCallback;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
 import com.mati.fermat_preference_settings.drawer.listeners.OnClickListenerSettings;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsEditText;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsLinkText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsOpenDialogText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwithItem;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
@@ -29,15 +37,15 @@ import java.util.List;
  */
 public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSettingsItem, FermatViewHolder> implements DialogCallback {
 
-
-
     final int SWITH_TYPE = 1;
     final int OPEN_DIALOG_TEXT_TYPE = 2;
     final int EDIT_TEXT_TYPE = 3;
     static final int TEXT_PLUS_RADIO_TYPE = 4;
+    static final int TEXT_PLUS_LINK_TYPE = 5;
 
     WeakReference<FermatPreferenceFragment> fragmentWeakReference;
 
+    private String previousSelectedItem;
 
     protected FermatSettingsAdapter(Activity context) {
         super(context);
@@ -45,7 +53,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
 
     protected FermatSettingsAdapter(Activity context,FermatPreferenceFragment fermatPreferenceFragment ,List<PreferenceSettingsItem> dataSet) {
         super(context, dataSet);
-        this.fragmentWeakReference = new WeakReference<FermatPreferenceFragment>(fermatPreferenceFragment);
+        this.fragmentWeakReference = new WeakReference<>(fermatPreferenceFragment);
     }
 
     @Override
@@ -64,6 +72,9 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
             case TEXT_PLUS_RADIO_TYPE:
                 fermatViewHolder = new SettingsTextPlusRadioHolder(itemView,type);
                 break;
+            case TEXT_PLUS_LINK_TYPE:
+                fermatViewHolder = new SettingLinkTextViewHolder(itemView,type);
+                break;
         }
         return fermatViewHolder;
     }
@@ -81,6 +92,9 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
             case EDIT_TEXT_TYPE:
                 ret = R.layout.preference_settings_edit_text_row;
                 break;
+            case TEXT_PLUS_LINK_TYPE:
+                ret = R.layout.preference_settings_link_text_row;
+                break;
         }
         return ret;
     }
@@ -95,14 +109,11 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 settingSwitchViewHolder.getSettings_switch().setChecked(preferenceSettingsSwithItem.getSwitchChecked());
                 settingSwitchViewHolder.getTextView().setText(preferenceSettingsSwithItem.getText());
                // settingSwitchViewHolder.getSettings_switch().setOnClickListener(new OnClickListenerSettings(this, preferenceSettingsSwithItem, position));
-
                 settingSwitchViewHolder.getSettings_switch().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
                 @Override
-                public void onCheckedChanged(CompoundButton buttonView,
-                                             boolean isChecked) {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     getCallback().optionChanged(preferenceSettingsSwithItem, position, isChecked);
-
                 }
             });
                 break;
@@ -111,11 +122,34 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 final PreferenceSettingsOpenDialogText preferenceSettingsOpenDialogText = (PreferenceSettingsOpenDialogText) data;
                 settingTextOpenDialogViewHolder.getTextView().setText(preferenceSettingsOpenDialogText.getText());
                 settingTextOpenDialogViewHolder.getTextView();
-//                context.registerForContextMenu(lblMensaje);
+                // context.registerForContextMenu(lblMensaje);
+
+                final FragmentManager fragmentManager = ((AppCompatActivity)context).getSupportFragmentManager();
+                final CustomDialogFragment dialog = CustomDialogFragment.newInstance(context, preferenceSettingsOpenDialogText.getDialogData());
+                CustomDialogFragment.CustomDialogListener listener = new CustomDialogFragment.CustomDialogListener();
+                listener.setListener(new CustomDialogFragment.DialogListener() {
+                    @Override
+                    public void onDialogPositiveClick(DialogFragment dialog) {
+                        System.out.println(getClass().getSimpleName() + "------------------------------ OK button pressed");
+                        CustomDialogFragment customDialogFragment = (CustomDialogFragment) dialog;
+                        previousSelectedItem = customDialogFragment.getPreviousSelectedItem();
+                        getCallback().dialogOptionSelected(previousSelectedItem, 0);
+
+                        System.out.println(getClass().getSimpleName() + "------------------------------ " + previousSelectedItem);
+                    }
+
+                    @Override
+                    public void onDialogNegativeClick(DialogFragment dialog) {
+                        System.out.println(getClass().getSimpleName() + "------------------------------ CANCEL button pressed");
+                    }
+                });
+
                 settingTextOpenDialogViewHolder.getTextView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        new SettingsDialog(context, getCallback(), preferenceSettingsOpenDialogText.getOptionList()).show();
+                        System.out.println(getClass().getSimpleName() + "------------------------------ onClick");
+                        //new SettingsDialog(context, getCallback(), preferenceSettingsOpenDialogText.getOptionList()).show();
+                        dialog.show(fragmentManager, "CustomFragmentDialog");
                     }
                 });
                 break;
@@ -150,8 +184,23 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 settingsTextPlusRadioHolder.getRadio().setChecked(preferenceSettingsTextPlusRadioItem.isRadioTouched());
                 settingsTextPlusRadioHolder.getRadio().setText(preferenceSettingsTextPlusRadioItem.getText());
                 break;
-        }
 
+            case TEXT_PLUS_LINK_TYPE:
+                SettingLinkTextViewHolder settingLinkTextViewHolder = (SettingLinkTextViewHolder) holder;
+                final PreferenceSettingsLinkText preferenceSettingsLinkText = (PreferenceSettingsLinkText) data;
+                settingLinkTextViewHolder.getTextView().setText(preferenceSettingsLinkText.getTitleText());
+               //settingLinkTextViewHolder.getSettingsEditText().setText(preferenceSettingsLinkText.getTitleText());
+
+                settingLinkTextViewHolder.getTextView().setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        getCallback().optionSelected(preferenceSettingsLinkText, position);
+                    }
+                });
+
+
+                break;
+        }
     }
 
 
@@ -166,6 +215,8 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
             return EDIT_TEXT_TYPE;
         } else if (item instanceof PreferenceSettingsTextPlusRadioItem){
             return TEXT_PLUS_RADIO_TYPE;
+        } else if (item instanceof PreferenceSettingsLinkText){
+            return TEXT_PLUS_LINK_TYPE;
         }
         return -1;
     }
@@ -180,6 +231,11 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
     }
 
     @Override
+    public void dialogOptionSelected(String item, int position) {
+        fragmentWeakReference.get().dialogOptionSelected(item, position);
+    }
+
+    @Override
     public void optionChanged(PreferenceSettingsItem preferenceSettingsItem, int position, boolean isChecked) {
         fragmentWeakReference.get().onSettingsChanged(preferenceSettingsItem, position, isChecked);
     }
@@ -187,6 +243,4 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
     public void clear(){
         fragmentWeakReference.clear();
     }
-
-
 }

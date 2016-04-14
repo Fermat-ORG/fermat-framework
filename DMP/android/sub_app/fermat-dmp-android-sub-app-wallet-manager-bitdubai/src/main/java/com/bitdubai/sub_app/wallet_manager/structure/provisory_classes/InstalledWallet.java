@@ -174,6 +174,11 @@ public class InstalledWallet implements com.bitdubai.fermat_api.layer.dmp_module
     }
 
     @Override
+    public void setAppStatus(AppsStatus appsStatus) {
+        this.status = appsStatus;
+    }
+
+    @Override
     public String getAppName() {
         return walletName;
     }

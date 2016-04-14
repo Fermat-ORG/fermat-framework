@@ -79,6 +79,7 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.contacts_list_adapter.WalletContactListAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ConnectionWithCommunityDialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.ErrorConnectingFermatNetworkDialog;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.popup.confirm_dialog;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
@@ -133,6 +134,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
     SettingsManager<LossProtectedWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
+    boolean lossProtectedEnabled;
 
 
     public static SendFormFragment newInstance() {
@@ -159,7 +161,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
             }
 
             blockchainNetworkType = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
-            System.out.println("Network Type"+blockchainNetworkType);
+            lossProtectedEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getLossProtectedEnabled();
+            System.out.println("Network Type" + blockchainNetworkType);
             cryptoWallet = appSession.getModuleManager().getCryptoWallet();
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -598,7 +601,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
     }
 
 
-    //TODO: VER QUE PASA  SI EL CONTACTO NO TIENE UNA WALLET ADDRESS
+    //TODO: Verificar la configuracion de proteger o no de la perdida de btc
     private void sendCrypto() {
         try {
             if (cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
@@ -638,36 +641,28 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
                             BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
                             BigDecimal operator = new BigDecimal(newAmount);
-                            if(operator.compareTo(minSatoshis) == 1 )
-                            {
-                                cryptoWallet.send(
-                                        operator.longValueExact(),
-                                        validAddress,
-                                        notes,
-                                        appSession.getAppPublicKey(),
-                                        cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
-                                        Actors.INTRA_USER,
-                                        cryptoWalletWalletContact.getActorPublicKey(),
-                                        cryptoWalletWalletContact.getActorType(),
-                                        ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                        blockchainNetworkType
 
-                                        // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
-                                );
-                                Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
-                                onBack(null);
-                            }else{
-                                Toast.makeText(getActivity(), "Invalid Amount, must be greater than " +msg, Toast.LENGTH_LONG).show();
-                            }
-
+                                if (operator.compareTo(minSatoshis) == 1) {
+                                    if (!lossProtectedEnabled) {
+                                        confirm_dialog confirm_dialog = new confirm_dialog(getActivity(),cryptoWallet,operator.longValueExact(),
+                                                validAddress,
+                                                notes,
+                                                appSession.getAppPublicKey(),
+                                                cryptoWallet.getActiveIdentities().get(0).getPublicKey(),
+                                                Actors.INTRA_USER,
+                                                cryptoWalletWalletContact.getActorPublicKey(),
+                                                cryptoWalletWalletContact.getActorType(),
+                                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                                blockchainNetworkType);
+                                        confirm_dialog.show();
+                                    }else{
+                                        Toast.makeText(getActivity(), "Action not allowed,You will lose money,Restricted by LossProtectedWallet " + msg, Toast.LENGTH_LONG).show();
+                                    }
+                                } else {
+                                    Toast.makeText(getActivity(), "Invalid Amount, must be greater than " + msg, Toast.LENGTH_LONG).show();
+                                }
 
 
-                        } catch (LossProtectedInsufficientFundsException e) {
-                            Toast.makeText(getActivity(), "Insufficient funds", Toast.LENGTH_LONG).show();
-                            e.printStackTrace();
-                        } catch (CantSendLossProtectedCryptoException e) {
-                            appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                            Toast.makeText(getActivity(), "Send Error", Toast.LENGTH_LONG).show();
                         } catch (Exception e) {
                             appSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                             Toast.makeText(getActivity(), "oooopps, we have a problem here", Toast.LENGTH_SHORT).show();
