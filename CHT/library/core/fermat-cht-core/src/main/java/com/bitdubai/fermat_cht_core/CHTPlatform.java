@@ -26,12 +26,11 @@ public class CHTPlatform extends AbstractPlatform {
     public void start() throws CantStartPlatformException {
 
         try {
-
             registerLayer(new ActorConnectionLayer());
             registerLayer(new ActorNetworkServiceLayer());
-            registerLayer(new MiddlewareLayer());
             registerLayer(new IdentityLayer());
             registerLayer(new NetworkServiceLayer());
+            registerLayer(new MiddlewareLayer());
             registerLayer(new SupAppModuleLayer());
 
         } catch (CantRegisterLayerException e) {

@@ -20,11 +20,11 @@ import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 /**
  * Created by natalia on 29/02/16.
  */
-public class BitcoinWalletNavigationView extends FermatNavigationViewPainter {
+public class LossProtectedWalletNavigationView extends FermatNavigationViewPainter {
 
 
     private Activity activity;
-    public BitcoinWalletNavigationView(Activity activity, ActiveActorIdentityInformation intraUserLoginIdentity) {
+    public LossProtectedWalletNavigationView(Activity activity, ActiveActorIdentityInformation intraUserLoginIdentity) {
 
 
         super(activity, intraUserLoginIdentity);
@@ -64,7 +64,7 @@ public class BitcoinWalletNavigationView extends FermatNavigationViewPainter {
     @Override
     protected FermatAdapter getNavigationAdapter() {
         try {
-            return new BitcoinWalletNavigationViewAdapter(this.activity);
+            return new LossProtectedWalletNavigationViewAdapter(this.activity);
         } catch (Exception e) {
             e.printStackTrace();
         }

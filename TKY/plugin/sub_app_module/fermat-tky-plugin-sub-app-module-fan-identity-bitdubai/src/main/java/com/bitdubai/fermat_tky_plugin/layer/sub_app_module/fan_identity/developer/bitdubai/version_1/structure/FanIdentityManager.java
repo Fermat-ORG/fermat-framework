@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
@@ -39,7 +40,7 @@ public class FanIdentityManager implements TokenlyFanIdentityManagerModule,Seria
     }
 
     @Override
-    public Fan createFanIdentity(String userName, byte[] profileImage, String userPassword,  ExternalPlatform externalPlatform) throws CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
+    public Fan createFanIdentity(String userName, byte[] profileImage, String userPassword,  ExternalPlatform externalPlatform) throws CantCreateFanIdentityException, FanIdentityAlreadyExistsException, WrongTokenlyUserCredentialsException {
         return tokenlyFanIdentityManager.createFanIdentity(
                 userName,
                 profileImage,
@@ -48,7 +49,7 @@ public class FanIdentityManager implements TokenlyFanIdentityManagerModule,Seria
     }
 
     @Override
-    public Fan updateFanIdentity(String userName, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+    public Fan updateFanIdentity(String userName, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException, WrongTokenlyUserCredentialsException {
         return tokenlyFanIdentityManager.updateFanIdentity(
                 userName,
                 password,

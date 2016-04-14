@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:text="settings"
+        android:textSize="15sp"
+        android:paddingLeft="24dp"
+        android:paddingTop="24dp"
+        android:id="@+id/txt_settings_name"
+        android:textColor="@color/color_black"/>
+
+</LinearLayout>

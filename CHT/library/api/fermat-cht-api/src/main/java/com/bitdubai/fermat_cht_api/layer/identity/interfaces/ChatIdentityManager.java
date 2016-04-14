@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cht_api.layer.identity.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -49,5 +51,15 @@ public interface ChatIdentityManager extends FermatManager {
      * @throws CantUpdateChatIdentityException
      */
     void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateChatIdentityException;
+
+
+    /**
+     * The method <code>publishIdentity</code> is used to publish a Chat identity.
+     *
+     * @param publicKey
+     * @throws CantPublishIdentityException
+     * @throws IdentityNotFoundException
+     */
+    public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException;
 
 }
