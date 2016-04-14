@@ -838,10 +838,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         CustomerBrokerPurchaseNegotiationImpl purchaseNegotiationImpl = null;
 
         try {
-            System.out.println("**** 1) MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION ****\n" +
-                    "\n-CUSTOMER: " + negotiation.getCustomer().getPublicKey() +
-                    "\n-BROKER: " + negotiation.getBroker().getPublicKey() + "" +
-                    "\n-Memo: " + negotiation.getMemo());
 
             //VALIDATE STATUS CLAUSE
             CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(negotiation.getNegotiationId());
@@ -849,10 +845,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             purchaseNegotiationImpl.changeInfo(negotiation);
 
             if (purchaseNegotiationImpl.dataHasChanged()) {
-                System.out.println("**** 1.2) MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION - CLAUSES INFORMATION ****");
                 customerBrokerUpdateManager.createCustomerBrokerUpdatePurchaseNegotiationTranasction(purchaseNegotiationImpl);
             } else {
-                System.out.println("**** 1.2) MODULE CRYPTO CUSTOMER - CLOSE NEGOTIATION - CLAUSES INFORMATION ****");
                 customerBrokerCloseManager.createCustomerBrokerClosePurchaseNegotiationTranasction(purchaseNegotiationImpl);
             }
 
