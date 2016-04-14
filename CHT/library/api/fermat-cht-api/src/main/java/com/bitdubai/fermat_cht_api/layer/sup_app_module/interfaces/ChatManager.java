@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
@@ -47,7 +49,7 @@ import java.util.UUID;
  * Created by franklin on 06/01/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
-public interface ChatManager {
+public interface ChatManager extends ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> {
     //TODO: Implementar los metodos que necesiten manejar el module
     //Documentar
     List<Chat> getChats() throws CantGetChatException;
