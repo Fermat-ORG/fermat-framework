@@ -257,23 +257,19 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         try {
             if(ExistIdentity() == false) {
                 menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
-                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
+                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
             }else {
                 menu.add(0, MENU_ADD_ACTION, 0, "help").setIcon(R.drawable.ic_action_add)
                         .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
             }
         } catch (CHTException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-
         }
-
-
     }
 
     public void setUpDialog(){
-        PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
+        PresentationDialog pd = new PresentationDialog.Builder(getActivity(), Session)
                 .setSubTitle(R.string.cht_chat_identity_subtitle)
                 .setBody(R.string.cht_chat_identity_body)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
