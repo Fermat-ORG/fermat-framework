@@ -21,7 +21,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(MockitoJUnitRunner.class)
 public class HandleAcceptConnectionTest {
 
-    public void HandleAcceptConnection() throws CantAcceptActorConnectionRequestException, ActorConnectionNotFoundException, UnexpectedConnectionStateException {
+    public void handleAcceptConnection() throws CantAcceptActorConnectionRequestException, ActorConnectionNotFoundException, UnexpectedConnectionStateException {
         ActorConnectionEventActions actorConnectionEventActions = mock(ActorConnectionEventActions.class);
 
         doCallRealMethod().when(actorConnectionEventActions).handleAcceptConnection(Mockito.any(UUID.class));

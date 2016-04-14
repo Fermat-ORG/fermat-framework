@@ -1,4 +1,4 @@
-package ActorConnectionEventActions;
+package ActorConnectionManager;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -7,15 +7,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.PlatformComponents;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEventEnum;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
-import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
-import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -44,7 +39,7 @@ import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatConnect
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatConnectionRequest;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.database.ChatActorConnectionDao;
-import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.structure.ActorConnectionEventActions;
+import com.bitdubai.fermat_cht_plugin.layer.actor_connection.chat.developer.bitdubai.version_1.structure.ActorConnectionManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedAddonsExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPlatformExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -52,7 +47,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,7 +55,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-
 import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
@@ -238,65 +231,17 @@ public class ConstructionTest {
 
         }
     };
-    private final EventManager mEventManager = new EventManager() {
-        @Override
-        public FermatEventListener getNewListener(FermatEventEnum eventType) {
-            return null;
-        }
-
-        @Override
-        public FermatEvent getNewEvent(FermatEventEnum eventType) {
-            return null;
-        }
-
-        @Override
-        public void addListener(FermatEventListener listener) {
-
-        }
-
-        @Override
-        public void removeListener(FermatEventListener listener) {
-
-        }
-
-        @Override
-        public void raiseEvent(FermatEvent fermatEvent) {
-
-        }
-    };
-    private final Broadcaster mBroadcaster = new Broadcaster() {
-        @Override
-        public void publish(BroadcasterType broadcasterType, String code) {
-
-        }
-
-        @Override
-        public void publish(BroadcasterType broadcasterType, String appCode, String code) {
-
-        }
-
-        @Override
-        public void publish(BroadcasterType broadcasterType, String appCode, FermatBundle bundle) {
-
-        }
-
-        @Override
-        public int publish(BroadcasterType broadcasterType, FermatBundle bundle) {
-            return 0;
-        }
-    };
     private final PluginVersionReference mPluginVersionReference = new PluginVersionReference(new Version());
 
     @Test
     public void contructionWithValidParametersNewObjectCreated() {
-        ActorConnectionEventActions actorConnectionEventActions = new ActorConnectionEventActions(
+        ActorConnectionManager actorConnectionManager = new ActorConnectionManager(
                 this.mChatManager,
                 this.mChatActorConnectionDao,
                 this.mErrorManager,
-                this.mEventManager,
-                this.mBroadcaster,
                 this.mPluginVersionReference
         );
-        assertThat(actorConnectionEventActions).isNotNull();
+        assertThat(actorConnectionManager).isNotNull();
     }
+
 }

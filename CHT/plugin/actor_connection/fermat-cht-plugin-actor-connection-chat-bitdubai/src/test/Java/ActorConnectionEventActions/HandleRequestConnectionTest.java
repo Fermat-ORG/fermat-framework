@@ -22,7 +22,7 @@ import static org.mockito.Mockito.mock;
 public class HandleRequestConnectionTest {
 
     @Test
-    public void HandleRequestConnection() throws CantRequestActorConnectionException, UnsupportedActorTypeException, ConnectionAlreadyRequestedException {
+    public void handleRequestConnection() throws CantRequestActorConnectionException, UnsupportedActorTypeException, ConnectionAlreadyRequestedException {
         ActorConnectionEventActions actorConnectionEventActions = mock(ActorConnectionEventActions.class);
 
         doCallRealMethod().when(actorConnectionEventActions).handleRequestConnection(Mockito.any(ChatConnectionRequest.class));
