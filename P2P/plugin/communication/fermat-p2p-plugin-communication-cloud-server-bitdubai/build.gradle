@@ -19,9 +19,16 @@ jar {
                    'Implementation-Version': version,
                    'Main-Class': 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
     }
-
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    doFirst {
+        from(
+               // configurations.compile.collect { it.isDirectory() ? it : zipTree(it) },
+                configurations.runtime.resolve().collect { it.isDirectory() ? it : zipTree(it) }
+        ) {
+            exclude 'META-INF/MANIFEST.MF'
+            exclude 'META-INF/*.SF'
+            exclude 'META-INF/*.DSA'
+            exclude 'META-INF/*.RSA'
+        }
     }
 }
 
