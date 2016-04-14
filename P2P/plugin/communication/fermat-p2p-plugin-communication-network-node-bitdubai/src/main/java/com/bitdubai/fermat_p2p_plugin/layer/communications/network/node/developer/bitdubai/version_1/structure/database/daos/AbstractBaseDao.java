@@ -513,11 +513,14 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
 
             getDatabaseTable().insertRecord(entityRecord);
 
-        } catch (final CantInsertRecordException e) {
+        } catch (final CantInsertRecordException cantInsertRecordException) {
 
-            throw new CantInsertRecordDataBaseException(e, "Table Name: " + tableName, "The Template Database triggered an unexpected problem that wasn't able to solve by itself");
+            throw new CantInsertRecordDataBaseException(
+                    cantInsertRecordException,
+                    "Table Name: " + tableName,
+                    "The Template Database triggered an unexpected problem that wasn't able to solve by itself."
+            );
         }
-
     }
 
     /**

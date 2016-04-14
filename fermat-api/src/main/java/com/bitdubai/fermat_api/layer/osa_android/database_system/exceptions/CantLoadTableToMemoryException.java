@@ -25,7 +25,7 @@ public class CantLoadTableToMemoryException extends DatabaseSystemException {
 	}
 
 	public CantLoadTableToMemoryException(final Exception exception) {
-		this(exception.getMessage());
+		this(DEFAULT_MESSAGE, exception);
 		setStackTrace(exception.getStackTrace());
 	}
 
