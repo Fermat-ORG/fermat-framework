@@ -191,7 +191,6 @@ public class ProvisoryData {
                 "sub_app_chat_identity",
                 new Version(1, 0, 0),
                 Platforms.CHAT_PLATFORM);
-
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.chat_subapp);
         item2.setPosition(8);

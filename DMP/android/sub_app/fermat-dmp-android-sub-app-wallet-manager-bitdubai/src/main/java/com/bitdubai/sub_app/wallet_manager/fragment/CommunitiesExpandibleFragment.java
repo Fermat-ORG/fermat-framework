@@ -71,6 +71,13 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
         };
         recyclerView.addItemDecoration(itemDecoration);
 
+        layout.findViewById(R.id.btn_close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
+
         ((FermatTextView)layout.findViewById(R.id.txt_title_communities)).setFont(FontType.CAVIAR_DREAMS);
 
 
@@ -211,7 +218,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 new Version(1,0,0),
                 Platforms.CRYPTO_CURRENCY_PLATFORM);
 
-        installedSubApp.setIconResource(R.drawable.cryptou_community);
+        installedSubApp.setIconResource(R.drawable.crypto_wallet_user_community);
         installedSubApp.setBanner(R.drawable.wallet_user_community);
         installedApps.add(installedSubApp);
 
@@ -256,7 +263,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 new Version(1, 0, 0),
                 Platforms.DIGITAL_ASSET_PLATFORM);
 
-        installedSubApp.setIconResource(R.drawable.reddem_point_community);
+        installedSubApp.setIconResource(R.drawable.r_point_community);
         installedSubApp.setBanner(R.drawable.redeem_community);
         installedApps.add(installedSubApp);
 
@@ -271,7 +278,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 new Version(1, 0, 0)
                 ,Platforms.CRYPTO_BROKER_PLATFORM);
 
-        installedSubApp.setIconResource(R.drawable.crypto_broker_community_final);
+        installedSubApp.setIconResource(R.drawable.crypto_broker_community);
         installedSubApp.setBanner(R.drawable.broker_community);
         installedApps.add(installedSubApp);
 
@@ -286,7 +293,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 new Version(1, 0, 0),
                 Platforms.CRYPTO_BROKER_PLATFORM);
 
-        installedSubApp.setIconResource(R.drawable.crypto_customer_community_final);
+        installedSubApp.setIconResource(R.drawable.crypto_customer_community);
         installedSubApp.setBanner(R.drawable.customer_community);
         installedApps.add(installedSubApp);
 

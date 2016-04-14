@@ -114,7 +114,7 @@ public class AddAccountFragment extends AbstractFermatFragment implements View.O
     private void createAccount(){
         String account = accountNumberText.getText().toString();
         String alias = accountAliasText.getText().toString();
-        moduleManager.getBankingWallet().addNewAccount(BankAccountType.SAVING,alias,account,selectedCurrency);
+        moduleManager.getBankingWallet().addNewAccount(BankAccountType.SAVINGS,alias,account,selectedCurrency);
         Toast.makeText(getActivity().getApplicationContext(), "Account Created", Toast.LENGTH_SHORT).show();
     }
 

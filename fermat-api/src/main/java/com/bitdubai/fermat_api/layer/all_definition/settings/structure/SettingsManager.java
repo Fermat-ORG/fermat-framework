@@ -155,13 +155,13 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> implements S
 
             throw new CantGetSettingsException(e, "", "Cant create module settings file exception.");
         } catch( FileNotFoundException e) {
+           throw new SettingsNotFoundException(e, "", "Cant find module settings file exception.");
 
-            throw new SettingsNotFoundException(e, "", "Cant find module settings file exception.");
         }
+
     }
 
     private String buildSettingsFileName(final String publicKey) {
-
         return SETTINGS_FILE_NAME_PREFIX + "_" + publicKey;
     }
 
@@ -171,4 +171,7 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> implements S
                 "pluginId=" + pluginId +
                 '}';
     }
+
+
+
 }

@@ -126,6 +126,7 @@ public class CustomerBrokerSaleContractDeveloperDatabaseFactory implements Deals
         contractsSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_DATE_TIME_COLUMN_NAME);
         contractsSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME);
         contractsSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME);
+        contractsSaleColumns.add(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_CANCEL_REASON_COLUMN_NAME);
         /**
          * Table Contracts Sale addition.
          */
