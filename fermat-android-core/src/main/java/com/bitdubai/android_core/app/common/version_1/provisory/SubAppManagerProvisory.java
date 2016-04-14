@@ -64,32 +64,13 @@ public class SubAppManagerProvisory implements SubAppManager {
         //TODO - CHT Platform
         installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CHT_CHAT, null, null, "chat_sub_app", "Chat", SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), "chat_sub_app", new Version(1, 0, 0),Platforms.CHAT_PLATFORM);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
-
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.CHT_CHAT_IDENTITY, null, null, "sub_app_chat_identity", "Chat Identity", SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode(), "sub_app_chat_identity", new Version(1, 0, 0),Platforms.CHAT_PLATFORM);
+        lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
         //TODO - TKY Platform
         installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.TKY_ARTIST_IDENTITY_SUB_APP, null, null, "sub_app_tky_artist_identity", "Tonkenly", SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode(), "sub_app_tky_artist_identity", new Version(1, 0, 0),Platforms.TOKENLY);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
         //TODO - ART Platform
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(
-                SubApps.ART_FAN_COMMUNITY,
-                null,
-                null,
-                "sub_app_art_fan_community",
-                "Tonkenly",
-                SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
-                "sub_app_art_fan_community",
-                new Version(1, 0, 0),
-                Platforms.ART_PLATFORM);
-        lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
-
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(
-                SubApps.ART_ARTIST_IDENTITY,
-                null,
-                null,
-                "sub_app_art_artist_identity",
-                "Artist Identity",
-                SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
-                "sub_app_art_artist_identity", new Version(1, 0, 0),
-                Platforms.ART_PLATFORM);
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.ART_FAN_COMMUNITY, null, null, "sub_app_art_fan_community", "Tonkenly", SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(), "sub_app_art_fan_community", new Version(1, 0, 0),Platforms.PLATFORM_ART);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
         //TODO - Add Others SubApps
 

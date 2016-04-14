@@ -20,8 +20,9 @@ public class SettingsSliderProvisoryData {
         List<SettingsItem> list = new ArrayList<>();
         
         SettingsItem settingsItemFermatNetwork = new SettingsItem(SettingsType.FERMAT_NETWORK,R.drawable.ic_drawable_p2p_network,"Fermat Network","1 Node");
-        SettingsItem settingsItemBitcoinNetwork = new SettingsItem(SettingsType.BITCOIN_NETWORK,R.drawable.ic_drawable_btc_network,"Bitcoin Network","1 TestNet");
-        SettingsItem settingsItemPrivateNetwork = new SettingsItem(SettingsType.PRIVATE_NETWORK,R.drawable.ic_drawable_private_network,"Private Network","");
+        SettingsItem settingsItemBitcoinNetwork = new SettingsItem(SettingsType.BITCOIN_NETWORK,R.drawable.ic_drawable_btc_network,"Bitcoin Network","TestNet");
+        SettingsItem settingsItemPrivateNetwork = new SettingsItem(SettingsType.PRIVATE_NETWORK,R.drawable.private_network_hdpi,"Private Network","");
+        settingsItemPrivateNetwork.setIsBlock(true);
 
         final AndroidCoreModule androidCoreModule = FermatSystemUtils.getAndroidCoreModule();
 
@@ -30,28 +31,28 @@ public class SettingsSliderProvisoryData {
             AndroidCoreSettings androidCoreSettings = (AndroidCoreSettings) androidCoreModule.getSettingsManager().loadAndGetSettings(ApplicationConstants.SETTINGS_CORE);
             switch (androidCoreSettings.getAppsStatus()){
                 case RELEASE:
-                    appStatusRes =R.drawable.relese_icon;
+                    appStatusRes = R.drawable.filter_app_hdpi;
                     break;
                 case BETA:
-                    appStatusRes =R.drawable.beta_icon;
+                    appStatusRes = R.drawable.beta_filter_hdpi;
                     break;
                 case ALPHA:
-                    appStatusRes =R.drawable.alfa_icon;
+                    appStatusRes = R.drawable.alpha_filter_hdpi;
                     break;
                 case DEV:
-                    appStatusRes =R.drawable.developer_icon;
+                    appStatusRes = R.drawable.filter_develop_hdpi;
                     break;
                 default:
-                    appStatusRes =R.drawable.relese_icon;
+                    appStatusRes = R.drawable.beta_filter_hdpi;
                     break;
             }
         } catch (CantGetSettingsException | SettingsNotFoundException e) {
-            appStatusRes =R.drawable.relese_icon;
+            appStatusRes =R.drawable.beta_filter_hdpi;
             // e.printStackTrace();
         }
         
         
-        SettingsItem settingsItemSettings = new SettingsItem(SettingsType.APP_STATUS,appStatusRes,"App Filter","Release");
+        SettingsItem settingsItemSettings = new SettingsItem(SettingsType.APP_STATUS,appStatusRes,"App Filter","Beta");
 
         SettingsItem settingsItemRecents = new SettingsItem(SettingsType.RECENTS,R.drawable.ic_menu_recent_history,"Recents","");
 

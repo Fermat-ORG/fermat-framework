@@ -100,7 +100,7 @@ public class ConnectionNotificationsFragment extends AbstractFermatFragment<Arti
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
 
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.afc_swipeRefresh);
+            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.aac_swipeRefresh);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 

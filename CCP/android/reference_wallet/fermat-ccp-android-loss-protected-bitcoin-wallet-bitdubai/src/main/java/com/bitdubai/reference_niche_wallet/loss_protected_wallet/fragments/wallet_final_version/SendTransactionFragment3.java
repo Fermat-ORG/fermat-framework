@@ -80,8 +80,8 @@ public class SendTransactionFragment3 extends FermatWalletListFragment<LossProte
      *
      * @return InstalledFragment instance object
      */
-    public static RequestSendHistoryFragment newInstance() {
-        return new RequestSendHistoryFragment();
+    public static SendTransactionFragment3 newInstance() {
+        return new SendTransactionFragment3();
     }
 
     @Override
@@ -92,7 +92,7 @@ public class SendTransactionFragment3 extends FermatWalletListFragment<LossProte
         referenceWalletSession = (LossProtectedWalletSession)appSession;
 
         lst = new ArrayList<LossProtectedWalletTransaction>();
-
+        lst = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
         getExecutor().execute(new Runnable() {
             @Override
             public void run() {

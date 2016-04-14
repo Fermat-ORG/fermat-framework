@@ -16,7 +16,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 public class ARTPlatform extends AbstractPlatform {
 
     public ARTPlatform() {
-        super(new PlatformReference(Platforms.ART_PLATFORM));
+        super(new PlatformReference(Platforms.PLATFORM_ART));
     }
 
     @Override

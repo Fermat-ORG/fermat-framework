@@ -84,7 +84,41 @@ public final class ArtistActorNetworkServiceDatabaseFactory {
             table.addColumn(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME        , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
             table.addColumn(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_SENT_TIME_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
 
-            table.addIndex (ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_FIRST_KEY_COLUMN);
+            table.addIndex(ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+            table = databaseFactory.newTableFactory(ownerId, ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_TABLE_NAME);
+
+            table.addColumn(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_REQUEST_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_REQUESTER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_REQUESTER_ACTOR_TYPE_COLUMN_NAME,DatabaseDataType.STRING,10,Boolean.TRUE);
+            table.addColumn(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_ARTIST_PUBLIC_KEY_COLUMN_NAME,DatabaseDataType.STRING,100,Boolean.TRUE);
+            table.addColumn(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_UPDATE_TIME_COLUMN_NAME,DatabaseDataType.LONG_INTEGER,10,Boolean.TRUE);
+            table.addColumn(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_TYPE_COLUMN_NAME,DatabaseDataType.STRING,10,Boolean.TRUE);
+            table.addColumn(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_STATE_COLUMN_NAME,DatabaseDataType.STRING,10,Boolean.TRUE);
+
+            table.addIndex(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_FIRST_KEY_COLUMN);
+
+            try {
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
+            } catch (CantCreateTableException cantCreateTableException) {
+                throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
+            }
+
+            table = databaseFactory.newTableFactory(ownerId, ArtistActorNetworkServiceDatabaseConstants.INFORMATION_TABLE_NAME);
+
+            table.addColumn(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_ID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_EXTERNAL_PLATFORM_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.TRUE);
+            table.addColumn(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_EXTERNAL_USERNAME_COLUMN_NAME,DatabaseDataType.STRING,100,Boolean.TRUE);
+
+            table.addIndex(ArtistActorNetworkServiceDatabaseConstants.INFORMATION_FIRST_KEY_COLUMN);
 
             try {
                 //Create the table

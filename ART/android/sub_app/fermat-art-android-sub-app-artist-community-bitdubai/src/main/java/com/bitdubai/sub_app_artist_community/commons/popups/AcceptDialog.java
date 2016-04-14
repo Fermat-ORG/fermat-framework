@@ -54,8 +54,8 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
         title = (FermatTextView) findViewById(R.id.title);
         description = (FermatTextView) findViewById(R.id.aac_description);
         userName = (FermatTextView) findViewById(R.id.aac_user_name);
-        positiveBtn = (FermatButton) findViewById(R.id.afc_positive_button);
-        negativeBtn = (FermatButton) findViewById(R.id.afc_negative_button);
+        positiveBtn = (FermatButton) findViewById(R.id.aac_positive_button);
+        negativeBtn = (FermatButton) findViewById(R.id.aac_negative_button);
 
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
@@ -80,7 +80,7 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.afc_positive_button) {
+        if (i == R.id.aac_positive_button) {
             // try {
             if (artistCommunityInformation != null && identity != null) {
                 Toast.makeText(getContext(), "TODO ACCEPT ->", Toast.LENGTH_SHORT).show();
@@ -94,7 +94,7 @@ public class AcceptDialog extends FermatDialog<ArtistSubAppSession, SubAppResour
                 e.printStackTrace();
             }*/
             dismiss();
-        } else if (i == R.id.afc_negative_button) {
+        } else if (i == R.id.aac_negative_button) {
             //try {
             if (artistCommunityInformation != null && identity != null) {
                 Toast.makeText(getContext(), "TODO DENY ->", Toast.LENGTH_SHORT).show();

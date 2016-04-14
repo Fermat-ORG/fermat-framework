@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -42,7 +43,6 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongSt
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.FanWalletPreferenceSettings;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModule;
-import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModuleManager;
 import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.common.adapters.SongAdapter;
 import com.bitdubai.reference_wallet.fan_wallet.common.models.SongItems;
@@ -59,7 +59,6 @@ import java.util.UUID;
 public class SongFragment extends AbstractFermatFragment {
     //FermatManager
     private FanWalletSession fanwalletSession;
-    private FanWalletModuleManager fanwalletmoduleManager;
     private FanWalletPreferenceSettings fanWalletSettings;
     private ErrorManager errorManager;
     private FanWalletModule fanWalletModule;
@@ -79,6 +78,7 @@ public class SongFragment extends AbstractFermatFragment {
     private RecyclerView.LayoutManager lManager;
     String code;
     FermatBundle bundle;
+    PresentationDialog presentationDialog;
 
 
     List<SongItems> items=new ArrayList();
@@ -99,12 +99,11 @@ public class SongFragment extends AbstractFermatFragment {
         try {
 
             fanwalletSession = ((FanWalletSession) appSession);
-            fanwalletmoduleManager = fanwalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START SONG");
 
             try {
-                fanWalletSettings =  fanwalletmoduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                fanWalletSettings =  fanwalletSession.getModuleManager().getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 fanWalletSettings = null;
             }
@@ -113,7 +112,7 @@ public class SongFragment extends AbstractFermatFragment {
                 fanWalletSettings = new FanWalletPreferenceSettings();
                 fanWalletSettings.setIsPresentationHelpEnabled(true);
                 try {
-                    fanwalletmoduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
+                    fanwalletSession.getModuleManager().getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -128,7 +127,7 @@ public class SongFragment extends AbstractFermatFragment {
     }
 
     void initvalues(){
-        fanWalletModule=fanwalletmoduleManager.getFanWalletModule();
+        fanWalletModule=fanwalletSession.getModuleManager();
         compareViewAndDatabase();
         syncTokenlyAndUpdateThreads(true);
 
@@ -214,9 +213,32 @@ public class SongFragment extends AbstractFermatFragment {
             }
         });
 
+        if (fanWalletSettings.isHomeTutorialDialogEnabled() == true)
+        {
+            setUpHelpfanwallet(false);
+        }
+
 
 
         return view;
+    }
+
+    private void setUpHelpfanwallet(boolean checkButton) {
+        try {
+            presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.bannerfanwallet)
+                    .setIconRes(R.drawable.banner_tky)
+                    .setSubTitle(R.string.fan_wallet_dialog_subtitle)
+                    .setBody(R.string.fan_wallet_dialog_body)
+                    .setTextFooter(R.string.fan_wallet_footer)
+                    .setIsCheckEnabled(checkButton)
+                    .build();
+
+            presentationDialog.show();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
     }
 
 
@@ -226,8 +248,8 @@ public class SongFragment extends AbstractFermatFragment {
         syncthread=new SyncThreadClass(autosync); // Firstthread
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) // Above Api Level 13
         {
-            // syncthread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-            syncthread.execute();
+            syncthread.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+//            syncthread.execute();
         }
         else // Below Api Level 13
         {
@@ -269,7 +291,7 @@ public class SongFragment extends AbstractFermatFragment {
         songInfo=songOfBroadcast.getComposers()+"@#@#"+songOfBroadcast.getName();
         if(!listComposerAndSongNameOnView.contains(songInfo)){
             items.add(new SongItems(R.drawable.tky_tokenly_album, songOfBroadcast.getName(), songOfBroadcast.getComposers(), SongStatus.DOWNLOADING.getFriendlyName(),song_Id, 0, false));
-            adapter.setFilter(items);
+            adapter.setFilter(items,false,0);
 
         }
 
@@ -300,7 +322,7 @@ public class SongFragment extends AbstractFermatFragment {
                     listComposerAndSongNameOnView.add("TKY_WALLET songs" + walletitems.getComposers() + "@#@#" + walletitems.getName());
                     //System.out.println("TKY_NOT in view" + walletitems.getComposers() + "@#@#" + walletitems.getName());
                     items.add(new SongItems(R.drawable.tky_tokenly_album, walletitems.getName(), walletitems.getComposers(), walletitems.getSongStatus().getFriendlyName(), walletitems.getSongId(), 0, false));
-                    adapter.setFilter(items);
+                    adapter.setFilter(items,false,0);
                 }
             }
 
@@ -332,10 +354,14 @@ public class SongFragment extends AbstractFermatFragment {
                 int position=viewHolder.getAdapterPosition();
                 final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
                 final int swipeFlags = ItemTouchHelper.END;       // delete one in case you want just one direction
-                if(items.get(position).getStatus()==SongStatus.DOWNLOADING.getFriendlyName() ||items.get(position).getStatus()==SongStatus.NOT_AVAILABLE.getFriendlyName()){
-                    return 0;
+                if(position>=0) {
+                    if (items.get(position).getStatus() == SongStatus.DOWNLOADING.getFriendlyName() || items.get(position).getStatus() == SongStatus.NOT_AVAILABLE.getFriendlyName()) {
+                        return 0;
+                    } else {
+                        return makeMovementFlags(dragFlags, swipeFlags);
+                    }
                 }else{
-                    return makeMovementFlags(dragFlags, swipeFlags);
+                    return 0;
                 }
 
              //   return  items.get(position).getStatus()=="Downloading"? 0:makeMovementFlags(dragFlags, swipeFlags);
@@ -394,7 +420,7 @@ public class SongFragment extends AbstractFermatFragment {
                 });
                 dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialogo1, int id) {
-                        adapter.setFilter(original);
+                        adapter.setFilter(original,false,0);
                     }
                 });
                 dialogo1.show();
@@ -444,7 +470,7 @@ public class SongFragment extends AbstractFermatFragment {
             fanWalletModule.deleteSong(items.get(position).getSong_id());
             items.get(position).setStatus(SongStatus.DELETED.getFriendlyName());
             items.get(position).setProgress(0);
-            adapter.setFilter(items);
+            adapter.setFilter(items,false,0);
         } catch (CantDeleteSongException e) {
             errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         } catch (CantUpdateSongStatusException e) {
@@ -478,7 +504,7 @@ public class SongFragment extends AbstractFermatFragment {
     final Runnable myRunnablecancel = new Runnable() {
 
         public void run() {
-            fanwalletmoduleManager.getFanWalletModule().cancelDownload();
+            fanwalletSession.getModuleManager().cancelDownload();
         }
     };
 
@@ -530,16 +556,15 @@ public class SongFragment extends AbstractFermatFragment {
         if(progress.equals("100")){
             items.get(position).setProgressbarvissible(false);
             items.get(position).setStatus(SongStatus.DOWNLOADED.getFriendlyName());
-          //  items.get(position).setSong_id();  //TODO
         }
-        adapter.setFilter(items);
+        adapter.setFilter(items,true,position);
     }
 
     void cancelnotification(int position){
         items.get(position).setProgressbarvissible(false);
         items.get(position).setProgress(Integer.valueOf(0));
         items.get(position).setStatus(SongStatus.AVAILABLE.getFriendlyName());
-        adapter.setFilter(items);
+        adapter.setFilter(items,false,0);
     }
     // TODO: 04/04/16 what happen here?
     void downloadproblem(int position){
@@ -578,7 +603,7 @@ public class SongFragment extends AbstractFermatFragment {
             items.get(position).setProgressbarvissible(true);
             songId=items.get(position).getSong_id();
             Log.v(TAG, "Before start download");
-            adapter.setFilter(items);
+            adapter.setFilter(items,true,position);
 
         }
 
@@ -595,7 +620,7 @@ public class SongFragment extends AbstractFermatFragment {
                        break;
                     }
                     try {
-                        fanwalletmoduleManager.getFanWalletModule().downloadSong(songId,testfan.getMusicUser());
+                        fanwalletSession.getModuleManager().downloadSong(songId,testfan.getMusicUser());
                     } catch (CantDownloadSongException e) {
                         e.printStackTrace();
                     } catch (CantUpdateSongStatusException e) {
@@ -632,7 +657,7 @@ public class SongFragment extends AbstractFermatFragment {
          */
         @Override
         protected void onCancelled() {
-            fanwalletmoduleManager.getFanWalletModule().cancelDownload();
+            fanwalletSession.getModuleManager().cancelDownload();
         }
 
     }
@@ -671,10 +696,10 @@ public class SongFragment extends AbstractFermatFragment {
                 Fan testfan=getTestFanIdentity();
                 if(autosync) {
                     System.out.println("TKY_AutoSync ok");
-                    fanwalletmoduleManager.getFanWalletModule().synchronizeSongs(testfan);
+                    fanwalletSession.getModuleManager().synchronizeSongs(testfan);
                 }else{
                     System.out.println("TKY_ManualSync ok");
-                    fanwalletmoduleManager.getFanWalletModule().synchronizeSongsByUser(testfan);
+                    fanwalletSession.getModuleManager().synchronizeSongsByUser(testfan);
                 }
             }catch (Exception e ){
                 System.out.println("TKY_Error manual sync:" + e);

@@ -24,6 +24,7 @@ import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BroadcastStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantCancellBroadcastTransactionException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantFixTransactionInconsistenciesException;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetActiveBlockchainNetworkTypeException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainConnectionStatusException;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBlockchainDownloadProgress;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantGetBroadcastStatusException;
@@ -1084,5 +1085,18 @@ public class BitcoinCryptoNetworkManager implements TransactionProtocolManager {
      */
     public BlockchainDownloadProgress getBlockchainDownloadProgress(BlockchainNetworkType blockchainNetworkType) throws CantGetBlockchainDownloadProgress {
         return this.runningAgents.get(blockchainNetworkType).getBlockchainDownloadProgress();
+    }
+
+    /**
+     * Gets the active networks running on the Crypto Network
+     * @return the list of active networks {MainNet, TestNet and RegTest}
+     * @throws CantGetActiveBlockchainNetworkTypeException
+     */
+    public List<BlockchainNetworkType> getActivesBlockchainNetworkTypes() throws CantGetActiveBlockchainNetworkTypeException {
+        try {
+            return  dao.getActiveBlockchainNetworkTypes();
+        } catch (CantExecuteDatabaseOperationException e) {
+            throw new CantGetActiveBlockchainNetworkTypeException(e, "error getting list of active networks.", "database issue");
+        }
     }
 }

@@ -20,7 +20,7 @@
             android:orientation="vertical"
             android:gravity="end"
             android:layout_weight="1"
-            >
+            android:layout_marginLeft="20dp">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
@@ -49,7 +49,8 @@
             android:layout_marginTop="12dp"
             android:paddingLeft="20dp"
             android:orientation="vertical"
-            android:gravity="left">
+            android:gravity="left"
+            android:layout_marginLeft="20dp">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"

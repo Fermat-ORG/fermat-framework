@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
@@ -17,13 +18,14 @@ import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.TokenlyFanIdent
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanIdentityManagerModule;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanPreferenceSettings;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/15/16.
  */
-public class FanIdentityManager implements TokenlyFanIdentityManagerModule{
+public class FanIdentityManager implements TokenlyFanIdentityManagerModule,Serializable {
     private final ErrorManager errorManager;
     private final TokenlyFanIdentityManager tokenlyFanIdentityManager;
 
@@ -38,7 +40,7 @@ public class FanIdentityManager implements TokenlyFanIdentityManagerModule{
     }
 
     @Override
-    public Fan createFanIdentity(String userName, byte[] profileImage, String userPassword,  ExternalPlatform externalPlatform) throws CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
+    public Fan createFanIdentity(String userName, byte[] profileImage, String userPassword,  ExternalPlatform externalPlatform) throws CantCreateFanIdentityException, FanIdentityAlreadyExistsException, WrongTokenlyUserCredentialsException {
         return tokenlyFanIdentityManager.createFanIdentity(
                 userName,
                 profileImage,
@@ -47,8 +49,8 @@ public class FanIdentityManager implements TokenlyFanIdentityManagerModule{
     }
 
     @Override
-    public void updateFanIdentity(String userName,String password, UUID id,String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
-        tokenlyFanIdentityManager.updateFanIdentity(
+    public Fan updateFanIdentity(String userName, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException, WrongTokenlyUserCredentialsException {
+        return tokenlyFanIdentityManager.updateFanIdentity(
                 userName,
                 password,
                 id,

@@ -1,6 +1,9 @@
 package com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces;
 
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetBotException;
@@ -21,6 +24,7 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantSynchronizeW
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongDevicePathException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongStatusException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
+import com.bitdubai.fermat_tky_api.layer.wallet_module.FanWalletPreferenceSettings;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,7 +34,7 @@ import java.util.concurrent.ExecutionException;
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/17/16.
  * Edited by Miguel Payarez on 30/03/16.
  */
-public interface FanWalletModule {
+public interface FanWalletModule extends ModuleManager<FanWalletPreferenceSettings, ActiveActorIdentityInformation> {
 
     //Song Wallet
     /**
@@ -165,12 +169,20 @@ public interface FanWalletModule {
     DownloadSong getDownloadSongBySongId(String id) throws CantGetSongException;
 
     /**
-     * This method returns a User object by a username and key pair.
-     * @param username
-     * @param userKey
+     * This method returns a User object by a username and key pair
+     * @param username Tokenly username.
+     * @param userKey user password
      * @return
+     * @throws CantGetUserException
+     * @throws ExecutionException
+     * @throws InterruptedException
+     * @throws WrongTokenlyUserCredentialsException
      */
-    User validateTokenlyUser(String username, String userKey) throws CantGetUserException, ExecutionException, InterruptedException;
+    User validateTokenlyUser(String username, String userKey) throws
+            CantGetUserException,
+            ExecutionException,
+            InterruptedException,
+            WrongTokenlyUserCredentialsException;
 
     /**
      * This method returns a song array. This songs are provided by the Tokenly protected API, only
