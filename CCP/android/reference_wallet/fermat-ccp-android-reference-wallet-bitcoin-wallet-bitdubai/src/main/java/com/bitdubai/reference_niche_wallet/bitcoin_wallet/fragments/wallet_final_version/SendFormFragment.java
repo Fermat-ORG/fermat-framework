@@ -489,7 +489,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                 blockchainNetworkType
                         );
                     } else {
-                        walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
                         if (cryptoWalletWalletContact != null) {
                             walletContact.name = cryptoWalletWalletContact.getActorName();
                             walletContact.actorPublicKey = cryptoWalletWalletContact.getActorPublicKey();
@@ -507,7 +506,13 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                         blockchainNetworkType
                                 );
                             } else {
-                                walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
+
+                                if(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
+                                    walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
+                                else
+                                    Toast.makeText(getActivity(), "Contact don't have an Address from red " + blockchainNetworkType.getCode(), Toast.LENGTH_LONG).show();
+
+
                             }
                             walletContact.contactId = cryptoWalletWalletContact.getContactId();
                             walletContact.profileImage = cryptoWalletWalletContact.getProfilePicture();
@@ -667,7 +672,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                             "please wait 2 minutes", Toast.LENGTH_LONG).show();
                 }
             } else {
-                Toast.makeText(getActivity(), "Contact don't have an Address\nplease wait 2 minutes", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Contact don't have an Address from red "+ blockchainNetworkType.getCode() + "\nplease wait 2 minutes", Toast.LENGTH_LONG).show();
             }
 
 
