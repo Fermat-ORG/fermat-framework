@@ -26,7 +26,7 @@ public class ConstructionTest {
     private String                  publicKeyActor = new String();
     private String                  publicKeyPlugin = new String();
     private float                   amount = 1;
-    private CryptoCurrency          currency = CryptoCurrency.CHAVEZCOIN;
+    private CryptoCurrency          currency = CryptoCurrency.BITCOIN;
     private String                  memo = new String();
 
     @Test

@@ -97,10 +97,12 @@ public class CloseContractTransactionManager implements CloseContractManager {
 
             ContractStatus contractStatus = customerBrokerContractPurchase.getStatus();
 
-            if (contractStatus.getCode().equals(ContractStatus.READY_TO_CLOSE.getCode()))
+            System.out.print("\nTEST CONTRACT - CLOSE CONTRACT - MANAGER - closeSaleContract()\n");
+            if (contractStatus.getCode().equals(ContractStatus.READY_TO_CLOSE.getCode())) {
+                System.out.print("\nTEST CONTRACT - CLOSE CONTRACT - MANAGER - closeSaleContract() - STATUS VAL\n");
 //            if (contractStatus.getCode().equals(ContractStatus.MERCHANDISE_SUBMIT.getCode()))
                 this.closeContractBusinessTransactionDao.persistContractRecord(customerBrokerContractPurchase, ContractType.PURCHASE);
-            else {
+            }else {
                 throw new CantCloseContractException("The contract with the hash\n" + contractHash +
                         "\n cannot be closed, because the ContractStatus is " + contractStatus);
             }
