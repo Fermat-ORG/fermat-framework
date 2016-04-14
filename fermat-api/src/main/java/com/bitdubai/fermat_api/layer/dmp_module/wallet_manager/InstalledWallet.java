@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.dmp_module.wallet_manager;
 
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletCategory;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletType;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
@@ -76,4 +77,6 @@ public interface InstalledWallet extends Serializable, FermatInterfaceObject, Fe
     Version getWalletVersion();
 
     WalletType getWalletType();
+
+    void setAppStatus(AppsStatus appsStatus);
 }
