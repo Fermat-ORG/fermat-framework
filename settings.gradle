@@ -21,7 +21,7 @@ apply from: 'android_toolbox/settings.gradle'
 
 include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':fermat_statistics', ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai', ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai', ':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai', ':fermat-ccp-plugin-transaction-transfer-intra-wallet-users-bitdubai', ':fermat-ccp-plugin-transaction-outgoing-device-user-bitdubai', ':transactions-fragment'
 
-include ':fermat-android-core'
+//include ':fermat-android-core'
 include ':fermat-api'
 include ':fermat-core'
 include ':fermat-core-api'
@@ -29,7 +29,7 @@ include ':fermat-core-api'
 /**
  * network node implementation start
  */
-/*
+
 include ':fermat_linux_core'
 
 include ':fermat-osa-linux-core'
@@ -50,7 +50,7 @@ project(':fermat-p2p-plugin-communication-network-node-bitdubai').projectDir = n
 
 include ':fermat-p2p-plugin-communication-network-client-bitdubai'
 project(':fermat-p2p-plugin-communication-network-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-network-client-bitdubai')
-*/
+
 /**
  * network node implementation end
  */
