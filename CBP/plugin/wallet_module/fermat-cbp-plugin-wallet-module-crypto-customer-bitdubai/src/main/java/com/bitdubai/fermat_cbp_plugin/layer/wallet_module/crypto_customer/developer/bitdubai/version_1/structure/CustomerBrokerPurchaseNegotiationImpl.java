@@ -186,9 +186,6 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
     }
 
     public void changeInfo(CustomerBrokerNegotiationInformation negotiationInfo){
-        String changeClause = "";
-        String hasChange = "";
-
         dataHasChanged = dataHasChanged || !Objects.equals(cancelReason, negotiationInfo.getCancelReason());
         cancelReason = negotiationInfo.getCancelReason();
 
