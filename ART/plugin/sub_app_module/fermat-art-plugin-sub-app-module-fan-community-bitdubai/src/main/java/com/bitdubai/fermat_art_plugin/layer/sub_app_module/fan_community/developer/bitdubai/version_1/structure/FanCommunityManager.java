@@ -8,6 +8,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisc
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
@@ -21,7 +22,10 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.Fa
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
+import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.settings.ArtistCommunitySettings;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantGetFanListException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantGetFanSearchResult;
@@ -132,6 +136,11 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
             for (final Artist ai : artistIdentities)
                 selectableIdentities.add(new FanCommunitySelectableIdentityImpl(ai));
 
+            final List<Fanatic> fanaticsIdentities = fanaticIdentityManager.listIdentitiesFromCurrentDeviceUser();
+
+            for (final Fanatic ai : fanaticsIdentities)
+                selectableIdentities.add(new FanCommunitySelectableIdentityImpl(ai));
+
             return selectableIdentities;
 
         } catch (final CantListArtistIdentitiesException e) {
@@ -151,9 +160,12 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
             appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){ appSettings = null; }
 
+        //If appSettings exist, save identity
         if(appSettings != null){
             if(identity.getPublicKey() != null)
                 appSettings.setLastSelectedIdentityPublicKey(identity.getPublicKey());
+            if(identity.getActorType() != null)
+                appSettings.setLastSelectedActorType(identity.getActorType());
             try {
                 this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
             }catch (CantPersistSettingsException e){
@@ -322,6 +334,67 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
 
     @Override
     public FanCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        //Try to get appSettings
+        FanCommunitySettings appSettings = null;
+        try {
+            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+        }catch (Exception e){ return null; }
+
+
+        //Get all Fanatics identities on local device
+        List<Fanatic> fanaticsIdentitiesInDevice = new ArrayList<>();
+        try{
+            fanaticsIdentitiesInDevice = fanaticIdentityManager.listIdentitiesFromCurrentDeviceUser();
+        } catch(CantListFanIdentitiesException e) { /*Do nothing*/ }
+
+
+        //Get all Artists identities on local device
+        List<Artist> artistIdentitiesInDevice = new ArrayList<>();
+        try{
+            artistIdentitiesInDevice = artistIdentityManager.listIdentitiesFromCurrentDeviceUser();
+        } catch(CantListArtistIdentitiesException e) { /*Do nothing*/ }
+
+        //No registered users in device
+        if(fanaticsIdentitiesInDevice.size() + artistIdentitiesInDevice.size() == 0)
+            throw new CantGetSelectedActorIdentityException("", null, "", "");
+
+
+
+        //If appSettings exists, get its selectedActorIdentityPublicKey property
+        if(appSettings != null)
+        {
+            String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();
+            Actors lastSelectedActorType = appSettings.getLastSelectedActorType();
+
+            if (lastSelectedIdentityPublicKey != null && lastSelectedActorType != null) {
+
+                FanCommunitySelectableIdentityImpl selectedIdentity = null;
+
+                if(lastSelectedActorType == Actors.ART_ARTIST)
+                {
+                    for(Artist i : artistIdentitiesInDevice) {
+                        if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
+                            selectedIdentity = new FanCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.ART_ARTIST, i.getAlias(), i.getProfileImage());
+                    }
+                }
+                else if( lastSelectedActorType == Actors.ART_FAN)
+                {
+                    for(Fanatic i : fanaticsIdentitiesInDevice) {
+                        if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
+                            selectedIdentity = new FanCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.ART_FAN, i.getAlias(), i.getProfileImage());
+                    }
+                }
+
+
+                if(selectedIdentity == null)
+                    throw new ActorIdentityNotSelectedException("", null, "", "");
+
+                return selectedIdentity;
+            }
+            else
+                throw new ActorIdentityNotSelectedException("", null, "", "");
+        }
+
         return null;
     }
 

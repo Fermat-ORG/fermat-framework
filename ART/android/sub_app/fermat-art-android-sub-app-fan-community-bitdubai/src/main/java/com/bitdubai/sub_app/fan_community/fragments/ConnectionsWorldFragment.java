@@ -27,6 +27,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.settings.ArtistCommunitySettings;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.settings.FanCommunitySettings;
@@ -105,16 +106,25 @@ public class ConnectionsWorldFragment extends
             //Obtain Settings or create new Settings if first time opening subApp
             appSettings = null;
             try {
-                appSettings = this.settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
-            }catch (Exception e){ appSettings = null; }
+                if (appSession.getAppPublicKey()!= null){
+                    appSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+                }else{
+                    appSettings = settingsManager.loadAndGetSettings("123456789");
+                }
 
-            if(appSettings == null){
+            } catch (Exception e) {
+                appSettings = null;
+            }
+
+            if (appSettings == null) {
                 appSettings = new FanCommunitySettings();
-                appSettings.setIsPresentationHelpEnabled(true);
-                try {
-                    settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
-                }catch (Exception e){
-                    e.printStackTrace();
+                appSettings.setIsPresentationHelpEnabled(false);
+                if(settingsManager != null){
+                    if (appSession.getAppPublicKey()!=null){
+                        settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+                    }else{
+                        settingsManager.persistSettings("123456789", appSettings);
+                    }
                 }
             }
 
@@ -139,7 +149,7 @@ public class ConnectionsWorldFragment extends
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         moduleManager.setAppPublicKey(appSession.getAppPublicKey());
         try {
-            rootView = inflater.inflate(R.layout.afc_row_connections_world, container, false);
+            rootView = inflater.inflate(R.layout.afc_fragment_connections_world, container, false);
 
             //Set up RecyclerView
             layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
@@ -156,7 +166,7 @@ public class ConnectionsWorldFragment extends
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
-            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
+            emptyView = (LinearLayout) rootView.findViewById(R.id.afc_empty_view);
 
             if(launchActorCreationDialog) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)

@@ -22,6 +22,6 @@ public class AppFriendsListHolder extends FermatViewHolder {
     public AppFriendsListHolder(View itemView) {
         super(itemView);
         friendName = (FermatTextView) itemView.findViewById(R.id.afc_selectable_identity_username);
-        friendAvatar = (ImageView) itemView.findViewById(R.id.afc_selectable_identity_username);
+        friendAvatar = (ImageView) itemView.findViewById(R.id.afc_selectable_identity_user_avatar);
     }
 }
