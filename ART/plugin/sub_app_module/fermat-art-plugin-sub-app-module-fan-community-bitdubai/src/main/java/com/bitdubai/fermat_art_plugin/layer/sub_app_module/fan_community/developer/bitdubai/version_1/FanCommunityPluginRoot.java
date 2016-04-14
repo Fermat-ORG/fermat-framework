@@ -19,6 +19,7 @@ import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActo
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.settings.FanCommunitySettings;
 import com.bitdubai.fermat_art_plugin.layer.sub_app_module.fan_community.developer.bitdubai.version_1.structure.FanCommunityManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -27,7 +28,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 08/03/16.
  */
-public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings, ActiveActorIdentityInformation> {
+public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings, FanCommunitySelectableIdentity> {
 
     @NeededPluginReference(platform = Platforms.PLATFORM_ART,         layer = Layers.IDENTITY,              plugin = Plugins.ARTIST_IDENTITY     )
     private ArtistIdentityManager artistIdentityManager;
@@ -91,7 +92,7 @@ public class FanCommunityPluginRoot extends AbstractModule<FanCommunitySettings,
     }
 
     @Override
-    public ModuleManager<FanCommunitySettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public ModuleManager<FanCommunitySettings, FanCommunitySelectableIdentity> getModuleManager() throws CantGetModuleManagerException {
         if(fanCommunityManager == null)
             initPluginManager();
         return fanCommunityManager;

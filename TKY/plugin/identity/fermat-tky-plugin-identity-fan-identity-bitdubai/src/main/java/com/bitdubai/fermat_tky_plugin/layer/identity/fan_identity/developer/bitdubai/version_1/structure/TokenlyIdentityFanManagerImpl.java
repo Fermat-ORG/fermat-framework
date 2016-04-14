@@ -106,6 +106,11 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
         return new TokenlyFanIdentityDao(this.pluginDatabaseSystem, this.pluginFileSystem, this.pluginId);
     }
 
+    /**
+     * This method returns the Fan identity logged in current device user
+     * @return
+     * @throws CantListFanIdentitiesException
+     */
     public List<Fan> getIdentityFanFromCurrentDeviceUser() throws CantListFanIdentitiesException {
 
         try {
@@ -120,9 +125,9 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
             return fans;
 
         } catch (CantGetLoggedInDeviceUserException e) {
-            throw new CantListFanIdentitiesException("CAN'T GET ASSET NEW ARTIST IDENTITIES", e, "Error get logged user device", "");
+            throw new CantListFanIdentitiesException("CAN'T GET NEW ARTIST IDENTITIES", e, "Error get logged user device", "");
         } catch (Exception e) {
-            throw new CantListFanIdentitiesException("CAN'T GET ASSET NEW ARTIST IDENTITIES", FermatException.wrapException(e), "", "");
+            throw new CantListFanIdentitiesException("CAN'T GET NEW ARTIST IDENTITIES", FermatException.wrapException(e), "", "");
         }
     }
 
