@@ -25,6 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.ProtocolState;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.RequestType;
@@ -32,9 +33,11 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantAc
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDenyConnectionRequestException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDisconnectException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingConnectionRequestsException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingInformationRequestsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestExternalPlatformInformationException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtArtistExtraData;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
@@ -49,6 +52,7 @@ import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.develop
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.structure.ArtistActorNetworkServiceExternalPlatformInformationRequest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -995,7 +999,7 @@ public final class ArtistActorNetworkServiceDao {
             DatabaseTable actorConnectionRequestTable =
                     database.getTable(
                             ArtistActorNetworkServiceDatabaseConstants.
-                            INFORMATION_REQUEST_TABLE_NAME);
+                                    INFORMATION_REQUEST_TABLE_NAME);
             actorConnectionRequestTable.addUUIDFilter(
                     ArtistActorNetworkServiceDatabaseConstants.
                             INFORMATION_REQUEST_REQUEST_ID_COLUMN_NAME,
@@ -1027,6 +1031,136 @@ public final class ArtistActorNetworkServiceDao {
                     "",
                     "Exception not handled by the plugin, " +
                             "there is a problem in database and i cannot load the table.");
+        }
+    }
+
+    public final List<ArtArtistExtraData<ArtistExternalPlatformInformation>>
+    listPendingInformationRequests(
+            final ProtocolState protocolState,
+            final RequestType requestType) throws CantListPendingInformationRequestsException {
+
+        try {
+
+            final DatabaseTable connectionNewsTable = database.getTable(
+                    ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_TABLE_NAME);
+            connectionNewsTable.addFermatEnumFilter(
+                    ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_TYPE_COLUMN_NAME,
+                    requestType,
+                    DatabaseFilterType.EQUAL);
+            connectionNewsTable.addFermatEnumFilter(
+                    ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_STATE_COLUMN_NAME,
+                    protocolState,
+                    DatabaseFilterType.EQUAL);
+            connectionNewsTable.loadToMemory();
+
+            final List<DatabaseTableRecord> records = connectionNewsTable.getRecords();
+            final List<ArtArtistExtraData<ArtistExternalPlatformInformation>> quotesRequestsList =
+                    new ArrayList<>();
+            for (final DatabaseTableRecord record : records)
+                quotesRequestsList.add(buildInformationRequestObject(record));
+
+            return quotesRequestsList;
+
+        } catch (final CantLoadTableToMemoryException e) {
+            throw new CantListPendingInformationRequestsException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and I cannot load the table.");
+        } catch (final InvalidParameterException e) {
+            throw new CantListPendingInformationRequestsException(
+                    e,
+                    "",
+                    "Exception reading records of the table Cannot recognize the codes of the enums.");
+        }
+    }
+
+    private ArtistActorNetworkServiceExternalPlatformInformationRequest buildInformationRequestObject(
+            final DatabaseTableRecord record) throws
+            CantListPendingInformationRequestsException,
+            InvalidParameterException {
+        UUID requestId = record.getUUIDValue(
+                ArtistActorNetworkServiceDatabaseConstants.
+                        INFORMATION_REQUEST_REQUEST_ID_COLUMN_NAME);
+        String requesterPublicKey = record.getStringValue(
+                ArtistActorNetworkServiceDatabaseConstants.
+                        INFORMATION_REQUEST_REQUESTER_PUBLIC_KEY_COLUMN_NAME);
+        String requesterActorTypeString = record.getStringValue(
+                ArtistActorNetworkServiceDatabaseConstants.
+                        INFORMATION_REQUEST_REQUESTER_ACTOR_TYPE_COLUMN_NAME);
+        String artistPublicKey = record.getStringValue(
+                ArtistActorNetworkServiceDatabaseConstants.
+                        INFORMATION_REQUEST_ARTIST_PUBLIC_KEY_COLUMN_NAME);
+        Long updateTime = record.getLongValue(
+                ArtistActorNetworkServiceDatabaseConstants.
+                        INFORMATION_REQUEST_UPDATE_TIME_COLUMN_NAME);
+        String typeString = record.getStringValue(
+                ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_TYPE_COLUMN_NAME);
+        String stateString = record.getStringValue(
+                ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_STATE_COLUMN_NAME);
+
+        PlatformComponentType requesterActorType = PlatformComponentType.getByCode(
+                requesterActorTypeString);
+        RequestType type = RequestType.getByCode(typeString);
+        ProtocolState state = ProtocolState.getByCode(stateString);
+
+        return new ArtistActorNetworkServiceExternalPlatformInformationRequest(
+                requestId,
+                requesterPublicKey,
+                requesterActorType,
+                artistPublicKey,
+                updateTime,
+                type,
+                state,
+                listInformation(requestId)
+        );
+    }
+
+    private ArrayList<ArtistExternalPlatformInformation> listInformation(
+            UUID requestId) throws
+            CantListPendingInformationRequestsException {
+
+        try {
+            final DatabaseTable informationTable = database.getTable(
+                    ArtistActorNetworkServiceDatabaseConstants.INFORMATION_TABLE_NAME);
+            informationTable.addUUIDFilter(
+                    ArtistActorNetworkServiceDatabaseConstants.INFORMATION_REQUEST_ID_COLUMN_NAME,
+                    requestId,
+                    DatabaseFilterType.EQUAL);
+            informationTable.loadToMemory();
+            final List<DatabaseTableRecord> records = informationTable.getRecords();
+            ArrayList<ArtistExternalPlatformInformation> informationList = new ArrayList<>();
+            HashMap<ArtExternalPlatform,String> externalPlatformInformationMap = new HashMap<>();
+            for(DatabaseTableRecord record : records) {
+                String externalPlatformsString = record.getStringValue(
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_EXTERNAL_PLATFORM_COLUMN_NAME);
+                String externalUsername = record.getStringValue(
+                        ArtistActorNetworkServiceDatabaseConstants.
+                                INFORMATION_EXTERNAL_USERNAME_COLUMN_NAME);
+                ArtExternalPlatform externalPlatform = ArtExternalPlatform.getByCode(
+                        externalPlatformsString);
+                externalPlatformInformationMap.put(externalPlatform,externalUsername);
+            }
+            informationList.add(
+                    new ArtistExternalPlatformInformation(
+                            externalPlatformInformationMap
+                    )
+            );
+            return informationList;
+
+        } catch (final CantLoadTableToMemoryException e) {
+            throw new CantListPendingInformationRequestsException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin, " +
+                            "there is a problem in database and I cannot load the table.");
+        }  catch (final InvalidParameterException e) {
+            throw new CantListPendingInformationRequestsException(
+                    e,
+                    "",
+                    "Exception reading records of the table Cannot recognize the codes of the " +
+                            "External platform enum.");
         }
     }
 

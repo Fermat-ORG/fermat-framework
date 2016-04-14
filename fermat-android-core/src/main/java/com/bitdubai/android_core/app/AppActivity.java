@@ -245,20 +245,20 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 Log.i("APP ACTIVITY loadUI", "getFragmentFactory " + System.currentTimeMillis());
                 Activity activity = appStructure.getLastActivity();
                 Log.i("APP ACTIVITY loadUI", "getLastActivity " + System.currentTimeMillis());
-//                executor.submit(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                    }
-//                });
-                try {
-                    fermatAppConnection.setActiveIdentity(fermatSession.getModuleManager().getSelectedActorIdentity());
-                    refreshSideMenu(fermatAppConnection);
-                } catch (CantGetSelectedActorIdentityException e) {
-                    e.printStackTrace();
-                } catch (ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
+                executor.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            fermatAppConnection.setActiveIdentity(fermatSession.getModuleManager().getSelectedActorIdentity());
+                            refreshSideMenu(fermatAppConnection);
+                        } catch (CantGetSelectedActorIdentityException e) {
+                            e.printStackTrace();
+                        } catch (ActorIdentityNotSelectedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
                 Log.i("APP ACTIVITY loadUI", "getSelectedActorIdentity " + System.currentTimeMillis());
                 loadBasicUI(activity, fermatAppConnection);
                 Log.i("APP ACTIVITY loadUI", "loadBasicUI " + System.currentTimeMillis());

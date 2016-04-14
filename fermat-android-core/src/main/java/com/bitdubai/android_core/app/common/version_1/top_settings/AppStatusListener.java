@@ -5,6 +5,7 @@ import android.widget.ImageButton;
 import com.bitdubai.android_core.app.FermatActivity;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.callback.AppStatusCallbackChanges;
 
@@ -17,16 +18,17 @@ public class AppStatusListener implements AppStatusCallbackChanges {
 
     private WeakReference<ImageButton> btn_fermat_apps_status;
     private WeakReference<FermatActivity> activityWeakReference;
+    private WeakReference<FermatTextView> fermatTextViewWeakReference;
 
-    public AppStatusListener(FermatActivity activityWeakReference, ImageButton btn_fermat_apps_status) {
+    public AppStatusListener(FermatActivity activityWeakReference, ImageButton btn_fermat_apps_status,FermatTextView subTextView) {
         this.activityWeakReference = new WeakReference<FermatActivity>(activityWeakReference);
         this.btn_fermat_apps_status = new WeakReference<ImageButton>(btn_fermat_apps_status);
+        fermatTextViewWeakReference = new WeakReference<FermatTextView>(subTextView);
     }
 
     @Override
     public void appSoftwareStatusChanges(AppsStatus appsStatus) {
         for (AbstractFermatFragment fragment : activityWeakReference.get().getScreenAdapter().getLstCurrentFragments()) {
-            //TODO: ver que pasa acá
             try {
                 fragment.onUpdateViewUIThred(appsStatus.getCode());
             }catch (Exception e){
@@ -35,21 +37,23 @@ public class AppStatusListener implements AppStatusCallbackChanges {
         }
         switch (appsStatus){
             case RELEASE:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.relese_icon);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.filter_app_hdpi);
                 break;
             case BETA:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.beta_icon);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.beta_filter_hdpi);
                 break;
             case ALPHA:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.alfa_icon);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.alpha_filter_hdpi);
                 break;
             case DEV:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.developer_icon);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.filter_develop_hdpi);
                 break;
             default:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.relese_icon);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.alpha_filter_hdpi);
                 break;
         }
+
+        fermatTextViewWeakReference.get().setText(appsStatus.getCode());
     }
 
     public void clear() {

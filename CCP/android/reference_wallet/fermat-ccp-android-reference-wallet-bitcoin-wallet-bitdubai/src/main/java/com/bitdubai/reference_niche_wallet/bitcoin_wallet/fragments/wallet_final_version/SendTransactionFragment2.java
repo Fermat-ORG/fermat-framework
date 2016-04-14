@@ -13,7 +13,6 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -40,14 +39,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
@@ -62,13 +60,9 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.ContactNameAlreadyExistsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.WalletContactNotFoundException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletWalletContact;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.BitcoinWalletConstants;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.adapters.ReceivetransactionsExpandableAdapter;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.animation.AnimationManager;
@@ -79,7 +73,6 @@ import com.bitdubai.reference_niche_wallet.bitcoin_wallet.common.utils.WalletUti
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.ReferenceWalletSession;
 import com.bitdubai.reference_niche_wallet.bitcoin_wallet.session.SessionConstant;
 
-import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
@@ -87,14 +80,13 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static android.widget.Toast.makeText;
 
@@ -120,7 +112,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private int MAX_TRANSACTIONS = 20;
     // Fermat Managers
     private CryptoWallet moduleManager;
-    private ErrorManager errorManager;
+    //private ErrorManager errorManager;
     // Data
     private List<GrouperItem> openNegotiationList;
     private TextView txt_type_balance;
@@ -128,7 +120,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private long balanceAvailable;
     private View rootView;
     private List<CryptoWalletTransaction> lstCryptoWalletTransactionsAvailable;
-    //private List<CryptoWalletTransaction> lstCryptoWalletTransactionsBook;
     private int available_offset=0;
     private int book_offset=0;
     private long bookBalance;
@@ -139,49 +130,14 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private  Map<Long, Long> runningDailyBalance;
     final Handler handler = new Handler();
 
+
+    private ExecutorService _executor;
+
     public static SendTransactionFragment2 newInstance() {
         return new SendTransactionFragment2();
     }
 
-    public static String GET(String url){
-        InputStream inputStream = null;
-        String result = "";
-        try {
 
-            // create HttpClient
-            HttpClient httpclient = new DefaultHttpClient();
-
-            // make GET request to the given URL
-            HttpResponse httpResponse = httpclient.execute(new HttpGet(url));
-
-            // receive response as inputStream
-            inputStream = httpResponse.getEntity().getContent();
-
-            // convert inputstream to string
-            if(inputStream != null)
-                result = convertInputStreamToString(inputStream);
-            else
-                result = "Did not work!";
-
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-
-        return result;
-    }
-
-    // convert inputstream to String
-    private static String convertInputStreamToString(InputStream inputStream) throws IOException {
-        BufferedReader bufferedReader = new BufferedReader( new InputStreamReader(inputStream));
-        String line = "";
-        String result = "";
-        while((line = bufferedReader.readLine()) != null)
-            result += line;
-
-        inputStream.close();
-        return result;
-
-    }
 
     int progress = 1;
     int broadcasterID = 0;
@@ -189,13 +145,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        _executor = Executors.newFixedThreadPool(5);
+
         setHasOptionsMenu(true);
 
         lstCryptoWalletTransactionsAvailable = new ArrayList<>();
 
        // lstCryptoWalletTransactionsBook = new ArrayList<>();
 
-        getExecutor().execute(new Runnable() {
+        _executor.execute(new Runnable() {
             @Override
             public void run() {
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
@@ -218,19 +176,20 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         try {
             referenceWalletSession = appSession;
             moduleManager = referenceWalletSession.getModuleManager();
-            errorManager = appSession.getErrorManager();
+            //errorManager = appSession.getErrorManager();
 
 //            if(lst==null){
 //                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),appSession, walletSettings, walletResourcesProviderManager, null);
 //            }
-            getExecutor().submit(new Runnable() {
+            _executor.submit(new Runnable() {
                 @Override
                 public void run() {
                     try {
                         settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
 
+                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
-                        BitcoinWalletSettings bitcoinWalletSettings = null;
+                        BitcoinWalletSettings bitcoinWalletSettings;
                         try {
                             bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
                         } catch (Exception e) {
@@ -242,21 +201,26 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                             bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
                             bitcoinWalletSettings.setNotificationEnabled(true);
 
-
-                            if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                            }
-
+                            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                            bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
 
                             settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
                         }
+                        else
+                        {
+                            if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
+                                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                            }
+                            else
+                            {
+                                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                            }
 
-                        if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                            bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                         }
+
+
                         settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
 
-                        blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
                         System.out.println("Network Type" + blockchainNetworkType);
                         final BitcoinWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
 
@@ -269,6 +233,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                                 }
                             }
                         }, 500);
+
                     }catch (Exception e){
                         e.printStackTrace();
                     }
@@ -276,7 +241,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             });
 
 
-            getExecutor().submit(new Runnable() {
+            _executor.submit(new Runnable() {
                 @Override
                 public void run() {
                     setRunningDailyBalance();
@@ -286,9 +251,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
 
         } catch (Exception ex) {
-            if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
-                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+//            if (errorManager != null)
+//                errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
+//                        UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, ex);
+            ex.printStackTrace();
         }
 
         openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
@@ -315,7 +281,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                     }
                 }
                 try {
-                    CryptoWalletIntraUserIdentity cryptoWalletIntraUserIdentity = referenceWalletSession.getIntraUserModuleManager();
+                    ActiveActorIdentityInformation cryptoWalletIntraUserIdentity = referenceWalletSession.getIntraUserModuleManager();
                     if(cryptoWalletIntraUserIdentity==null){
                         getActivity().onBackPressed();
                     }else{
@@ -360,8 +326,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             setUpDonut(inflater);
             setUpScreen();
         }catch (Exception e){
-            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
-                    UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+//            errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI,
+//                    UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
+            e.printStackTrace();
         }
     }
 
@@ -427,7 +394,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
         circularProgressBar = (CircularProgressBar) balance_header.findViewById(R.id.progress);
 
-            getExecutor().submit(new Runnable() {
+            _executor.submit(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -559,7 +526,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         //txt_balance_amount.setTypeface(tf);
 
         try {
-            getExecutor().submit(new Runnable() {
+            _executor.submit(new Runnable() {
                 @Override
                 public void run() {
                     try {
@@ -585,8 +552,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         txt_balance_amount_type = (FermatTextView) balance_header.findViewById(R.id.txt_balance_amount_type);
         }
         catch (Exception e){
-
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+            e.printStackTrace();
+//            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
 
         }
     }
@@ -609,8 +576,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             );
             walletAddres = cryptoAddress.getAddress();
         } catch (CantRequestCryptoAddressException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
+//            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
 
         } catch (CantGetCryptoWalletException e) {
             e.printStackTrace();
@@ -710,8 +678,6 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         menu.add(1, BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(2, BitcoinWalletConstants.IC_ACTION_REPORT, 1, "report").setIcon(R.drawable.ic_action_email)
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
         //inflater.inflate(R.menu.home_menu, menu);
     }
@@ -729,20 +695,14 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 setUpPresentation(settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
-            if (id == BitcoinWalletConstants.IC_ACTION_REPORT) {
-                changeActivity(Activities.CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());
-                return true;
-            }
 
-            if (id == R.id.menu_export_key) {
-                changeActivity(Activities.CCP_BITCOIN_WALLET_MNEMONIC_ACTIVITY, appSession.getAppPublicKey());
-                return true;
-            }
+
 
         } catch (Exception e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+//            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), "Oooops! recovering from system error",
                     Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -807,11 +767,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         lstCryptoWalletTransactionsAvailable = new ArrayList<>();
 
         try {
-            CryptoWalletIntraUserIdentity intraUserLoginIdentity = referenceWalletSession.getIntraUserModuleManager();
+            ActiveActorIdentityInformation intraUserLoginIdentity = referenceWalletSession.getIntraUserModuleManager();
             if(intraUserLoginIdentity!=null) {
                 String intraUserPk = intraUserLoginIdentity.getPublicKey();
 
-                BlockchainNetworkType blockchainNetworkType = BlockchainNetworkType.getByCode(settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType().getCode());
 
                 List<CryptoWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
 
@@ -873,7 +832,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
         isRefreshing = false;
         if (isAttached) {
             swipeRefreshLayout.setRefreshing(false);
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
+//            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_WALLET, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, ex);
+            ex.printStackTrace();
         }
     }
 
@@ -985,6 +945,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }
 
             if(bitcoinWalletSettings == null){
+                bitcoinWalletSettings = new BitcoinWalletSettings();
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
 
                 runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey(),blockchainNetworkType));
                 bitcoinWalletSettings.setRunningDailyBalance(runningDailyBalance);
@@ -992,11 +954,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }
             else {
 
+                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+
                 if (bitcoinWalletSettings.getRunningDailyBalance() == null){
+
                     runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey(),blockchainNetworkType));
                 }
                 else
                 {
+
                     runningDailyBalance = bitcoinWalletSettings.getRunningDailyBalance();
 
 

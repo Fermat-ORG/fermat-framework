@@ -3,7 +3,7 @@ package com.bitdubai.android_core.app.common.version_1.util.services_helpers;
 import android.content.Context;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.NotificationService;
+import com.bitdubai.android_core.app.common.version_1.notifications.NotificationService;
 import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerService;
 
