@@ -496,6 +496,14 @@ public class SongFragment extends AbstractFermatFragment {
     void downloadSong(int position){
         downloadThread = new DownloadThreadClass(position);
         downloadThread.execute();
+        if(!isFanIdentity){
+            //We don't get the identity, we're gonna notify to user.
+            Toast.makeText(
+                    view.getContext(),
+                    "Cannot load a Fan identity",
+                    Toast.LENGTH_SHORT)
+                    .show();
+        }
     }
 
     void cancelSong(int position){
@@ -598,7 +606,7 @@ public class SongFragment extends AbstractFermatFragment {
     public class DownloadThreadClass extends AsyncTask<Void, Float, Boolean> {
     int position;
         UUID songId;
-        Fan testfan= getFanIdentity();
+        Fan fanIdentity = getFanIdentity();
         /**
          * parameters position
          */
@@ -633,7 +641,17 @@ public class SongFragment extends AbstractFermatFragment {
                        break;
                     }
                     try {
-                        fanwalletSession.getModuleManager().downloadSong(songId,testfan.getMusicUser());
+                        //We're going to check if fanIdentity is null
+                        if(fanIdentity==null){
+                            isFanIdentity=false;
+                        } else{
+                            isFanIdentity=true;
+                            fanwalletSession.getModuleManager().
+                                    downloadSong(
+                                            songId,
+                                            fanIdentity.getMusicUser());
+                        }
+
                     } catch (CantDownloadSongException e) {
                         e.printStackTrace();
                     } catch (CantUpdateSongStatusException e) {
@@ -773,6 +791,10 @@ public class SongFragment extends AbstractFermatFragment {
         try {
             //Get the fan list from the Module.
             List<Fan> fanList = fanWalletModule.listIdentitiesFromCurrentDeviceUser();
+            //If the list is empty or null we will return a null
+            if(fanList==null || fanList.isEmpty()){
+                return null;
+            }
             //In this version we will return the first Identity that we get from the list.
             return fanList.get(0);
         } catch (CantListFanIdentitiesException e) {
