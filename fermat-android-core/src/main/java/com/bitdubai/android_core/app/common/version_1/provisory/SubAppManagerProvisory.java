@@ -72,6 +72,20 @@ public class SubAppManagerProvisory implements SubAppManager {
         //TODO - ART Platform
         installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.ART_FAN_COMMUNITY, null, null, "sub_app_art_fan_community", "Tonkenly", SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(), "sub_app_art_fan_community", new Version(1, 0, 0),Platforms.PLATFORM_ART);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
+
+
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(
+                SubApps.ART_ARTIST_IDENTITY,
+                null,
+                null,
+                "sub_app_art_artist_identity",
+                "Artist Identity",
+                SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
+                "sub_app_art_artist_identity", new Version(1, 0, 0),
+                Platforms.PLATFORM_ART);
+        lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
+        //TODO - Add Others SubApps
+
         //TODO - Add Others SubApps
 
 

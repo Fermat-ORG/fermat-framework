@@ -204,7 +204,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
                 "sub_app_art_artist_identity",
                 new Version(1, 0, 0),
-                Platforms.ART_PLATFORM);
+                Platforms.PLATFORM_ART);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.icon_bitcoin_network_active);
@@ -219,7 +219,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.ART_FAN_IDENTITY.getCode(),
                 "sub_app_art_fan_identity",
                 new Version(1,0,0),
-                Platforms.ART_PLATFORM);
+                Platforms.PLATFORM_ART);
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.artist);
         item2.setPosition(9);
