@@ -15,4 +15,6 @@ public interface FermatActivityManager {
     void reportError(String userTo) throws Exception;
 
     int notificateProgressBroadcast(FermatBundle bundle);
+
+    void goHome();
 }
