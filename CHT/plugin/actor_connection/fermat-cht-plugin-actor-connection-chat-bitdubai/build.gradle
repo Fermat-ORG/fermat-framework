@@ -29,7 +29,7 @@ dependencies {
     testCompile group: 'com.googlecode.catch-exception', name: 'catch-exception', version: '1.2.0'
     testCompile 'info.cukes:cucumber-java:1.2.4'
     testCompile 'info.cukes:cucumber-junit:1.2.4'
-    compile 'com.ibm.icu:icu4j:53.1'
+    //compile 'com.ibm.icu:icu4j:53.1'
 }
 
 
