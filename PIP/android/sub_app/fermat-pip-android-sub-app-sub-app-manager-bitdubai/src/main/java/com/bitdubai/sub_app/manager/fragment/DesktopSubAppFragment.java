@@ -320,6 +320,11 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
             item.setIconResource(R.drawable.chat_subapp);
             item.setPosition(4);
             lstItemsWithIcon.add(item);
+            installedSubApp = new InstalledSubApp(SubApps.ART_MUSIC_PLAYER, null, null, "music_player_sub_app", "Music Player", SubAppsPublicKeys.ART_MUSIC_PLAYER.getCode(), "music_player_sub_app", new Version(1, 0, 0));
+            item = new Item(installedSubApp);
+            item.setIconResource(R.drawable.musicplayer);
+            item.setPosition(5);
+            lstItemsWithIcon.add(item);
 
             for (int i = 0; i < 12; i++) {
                 Item emptyItem = new Item(new EmptyItem(0, i));

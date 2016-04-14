@@ -43,6 +43,7 @@ public enum SubAppsPublicKeys implements FermatEnum {
     ART_ARTIST_IDENTITY         ("public_key_art_artist_identity"),
     ART_FAN_COMMUNITY           ("public_key_art_fan_community"),
     ART_ARTIST_COMMUNITY        ("sub_app_art_artist_community"),
+    ART_MUSIC_PLAYER            ("public_key_art_music_player"),
 
     //TODO TKY PLATFORM
     TKY_ARTIST_IDENTITY         ("public_key_tky_artist_identity"),
@@ -94,6 +95,7 @@ public enum SubAppsPublicKeys implements FermatEnum {
             //TODO ART PLATAFORM
             case "public_key_art_artist_identity":        return ART_ARTIST_IDENTITY        ;
             case "sub_app_art_artist_community":            return ART_ARTIST_COMMUNITY;
+            case "public_key_art_music_player":            return ART_MUSIC_PLAYER;
 
             //TODO TKY PLATAFORM
             case "public_key_tky_artist_identity":        return TKY_ARTIST_IDENTITY        ;
