@@ -121,4 +121,10 @@ public interface Bot {
      */
     String getBotUrl();
 
+    /**
+     * This method sets the botUrl
+     * @param botUrl
+     */
+    void setBotUrl(String botUrl);
+
 }

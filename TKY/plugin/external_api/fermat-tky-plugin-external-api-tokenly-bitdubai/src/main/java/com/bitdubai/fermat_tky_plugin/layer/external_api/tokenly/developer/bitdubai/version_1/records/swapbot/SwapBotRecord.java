@@ -309,6 +309,14 @@ public class SwapBotRecord implements Bot {
         return this.botUrl;
     }
 
+    /**
+     * This method sets the botUrl
+     * @param botUrl
+     */
+    public void setBotUrl(String botUrl){
+        this.botUrl = botUrl;
+    }
+
     @Override
     public String toString() {
         return "SwapBotRecord{" +
