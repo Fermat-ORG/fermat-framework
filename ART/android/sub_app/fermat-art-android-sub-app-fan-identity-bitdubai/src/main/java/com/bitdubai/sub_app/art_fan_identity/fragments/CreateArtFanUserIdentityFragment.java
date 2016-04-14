@@ -227,9 +227,9 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
      * @param layout
      */
     private void initViews(View layout) {
-        createButton = (Button) layout.findViewById(R.id.afi_create_art_fan_identity);
-        mFanExternalUserName = (EditText) layout.findViewById(R.id.afi_alias_label);
-        mFanExternalPassword = (EditText) layout.findViewById(R.id.afi_status_label);
+        createButton = (Button) layout.findViewById(R.id.create_tokenly_fan_identity);
+        mFanExternalUserName = (EditText) layout.findViewById(R.id.afi_alias);
+        mFanExternalPassword = (EditText) layout.findViewById(R.id.afi_status);
         fanImage = (ImageView) layout.findViewById(R.id.afi_fan_image);
         mFanExternalPlatform = (Spinner) layout.findViewById(R.id.afi_external_platform);
         relativeLayout = (RelativeLayout) layout.findViewById(R.id.afi_user_image);
