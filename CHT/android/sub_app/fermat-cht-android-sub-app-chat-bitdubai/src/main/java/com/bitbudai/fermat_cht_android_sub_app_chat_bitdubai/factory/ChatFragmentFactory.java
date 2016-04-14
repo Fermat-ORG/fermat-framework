@@ -11,6 +11,8 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactFr
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactsListFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ProfileFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ProfileListFragment;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.wizard_pages.WizardFirstStepBroadcastFragment;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.wizard_pages.WizardTwoStepBroadcastFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -86,6 +88,14 @@ public class ChatFragmentFactory extends FermatFragmentFactory<ChatSession, SubA
         if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_OPEN_PROFILELIST_FRAGMENT))
         {
             return ProfileListFragment.newInstance();
+        }
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL_FRAGMENT))
+        {
+            return WizardFirstStepBroadcastFragment.newInstance();
+        }
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL_FRAGMENT))
+        {
+            return WizardTwoStepBroadcastFragment.newInstance();
         }
         throw createFragmentNotFoundException(fragments);
     }

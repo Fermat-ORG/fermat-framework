@@ -285,7 +285,6 @@ public class ChatListFragment extends AbstractFermatFragment{
                     .setTextFooter(R.string.cht_chat_footer)
                     .setIsCheckEnabled(checkButton)
                     .build();
-
             presentationDialog.show();
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -451,7 +450,7 @@ public class ChatListFragment extends AbstractFermatFragment{
             return true;
         }
         if (id == R.id.menu_create_broadcasting) {
-            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+            changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL, appSession.getAppPublicKey());
            return true;
         }
         if (id == R.id.menu_delete_all_chats) {
