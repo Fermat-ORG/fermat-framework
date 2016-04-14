@@ -373,7 +373,9 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                             System.out.println(
                                     "tky_artistBot:" + artistBot);
                             items.add(new FollowingItems(convertUrlTobmp(artistBot.getLogoImageDetails().originalUrl()),
-                                   extractLinks(artistBot.getDescription())[0], artistBot.getUserName()));
+                                   //extractLinks(artistBot.getDescription())[0], artistBot.getUserName()));
+                                    artistBot.getBotUrl(),
+                                    artistBot.getUserName()));
 
                         }
                     }
