@@ -366,6 +366,7 @@ We are a team with diverse tastes and full of color making it an explosive integ
 
 ### Team Yayo:
 -----------------------------------
+### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/master/Logotype/FermatTeams/YAYO_1.jpg "Logo Yayo Team")
 On the Team Yayo we do believe that coding is a kind of art and should be treated like so. We don't aim to be a hardworking team but a smartworking one.
 We are responsible of only one thing, making fermat a successfully project, sharing our good ideas and developing whatever is needed without fear of what -end it is on.
 
