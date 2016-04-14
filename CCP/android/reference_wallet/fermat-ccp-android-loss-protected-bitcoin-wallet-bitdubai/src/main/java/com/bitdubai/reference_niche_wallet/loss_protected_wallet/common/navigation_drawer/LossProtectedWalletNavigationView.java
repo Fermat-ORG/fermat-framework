@@ -79,7 +79,7 @@ public class LossProtectedWalletNavigationView extends FermatNavigationViewPaint
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.getResources(), R.drawable.bg_drawer_body,options);
+                    activity.getResources(), R.drawable.navdrawer_background,options);
             //drawable = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.bg_drawer_body);
         }catch (OutOfMemoryError error){
             error.printStackTrace();
