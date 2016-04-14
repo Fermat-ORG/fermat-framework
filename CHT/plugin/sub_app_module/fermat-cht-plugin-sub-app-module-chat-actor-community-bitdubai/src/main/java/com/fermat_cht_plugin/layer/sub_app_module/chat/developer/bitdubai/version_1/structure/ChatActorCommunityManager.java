@@ -282,8 +282,32 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
     @Override
     public List<ChatActorCommunityInformation> listAllConnectedChatActor(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {
-        return null;
-    }
+        List<ChatActorCommunityInformation> chatActorCommunityInformationList = null;
+        try{
+            final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType()
+            );
+
+            final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActor);
+
+            search.addConnectionState(ConnectionState.CONNECTED);
+
+            final List<ChatActorConnection> actorConnections = search.getResult(max, offset);
+
+             chatActorCommunityInformationList = new ArrayList<>();
+
+            for (ChatActorConnection cac : actorConnections)
+                chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
+
+
+
+        } catch (CantListActorConnectionsException e) {
+            e.printStackTrace();
+        }
+        return chatActorCommunityInformationList;
+
+      }
 
 
     @Override
@@ -319,7 +343,32 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
     @Override
     public List<ChatActorCommunityInformation> listChatActorPendingRemoteAction(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {
-        return null;
+        List<ChatActorCommunityInformation> chatActorCommunityInformationList = null;
+        try {
+            final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(
+                    selectedIdentity.getPublicKey(),
+                    selectedIdentity.getActorType()
+            );
+
+            final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActor);
+
+            search.addConnectionState(ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
+
+            final List<ChatActorConnection> actorConnections = search.getResult(max, offset);
+
+            chatActorCommunityInformationList = new ArrayList<>();
+
+            for (ChatActorConnection cac : actorConnections)
+                chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
+        }
+
+
+
+        catch(CantListActorConnectionsException e){
+            e.printStackTrace();
+        }
+
+        return chatActorCommunityInformationList;
     }
 
     @Override
