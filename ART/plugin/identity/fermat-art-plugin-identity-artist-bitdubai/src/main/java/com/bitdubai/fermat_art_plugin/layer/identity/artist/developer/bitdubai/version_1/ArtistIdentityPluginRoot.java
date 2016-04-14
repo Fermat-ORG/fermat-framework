@@ -48,6 +48,7 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserM
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.TokenlyArtistIdentityManager;
 
 import java.util.ArrayList;
@@ -175,6 +176,8 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
         } catch (CantExposeIdentityException e) {
             e.printStackTrace();
         } catch (CantListArtistsException e) {
+            e.printStackTrace();
+        } catch (WrongTokenlyUserCredentialsException e) {
             e.printStackTrace();
         }
     }

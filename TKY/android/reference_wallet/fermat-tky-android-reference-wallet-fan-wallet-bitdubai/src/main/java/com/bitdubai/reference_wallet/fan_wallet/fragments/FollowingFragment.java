@@ -203,7 +203,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
     void refreshadapter(boolean nofollowing){
         if(nofollowing){
-            Toast.makeText(view.getContext(),"Your are not following artist",Toast.LENGTH_LONG).show();
+            Toast.makeText(view.getContext(),"Your are not following artist",Toast.LENGTH_SHORT).show();
         }else {
             adapter.setFilter(items);
         }
@@ -373,7 +373,9 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                             System.out.println(
                                     "tky_artistBot:" + artistBot);
                             items.add(new FollowingItems(convertUrlTobmp(artistBot.getLogoImageDetails().originalUrl()),
-                                   extractLinks(artistBot.getDescription())[0], artistBot.getUserName()));
+                                   //extractLinks(artistBot.getDescription())[0], artistBot.getUserName()));
+                                    artistBot.getBotUrl(),
+                                    artistBot.getUserName()));
 
                         }
                     }

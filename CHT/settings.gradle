@@ -16,6 +16,8 @@ project(':fermat-cht-core').projectDir = new File('CHT/library/core/fermat-cht-c
 //subapp
 include ':fermat-cht-android-sub-app-chat-bitdubai'
 project(':fermat-cht-android-sub-app-chat-bitdubai').projectDir = new File('CHT/android/sub_app/fermat-cht-android-sub-app-chat-bitdubai')
+include ':fermat-cht-android-sub-app-chat-identity-bitdubai'
+project(':fermat-cht-android-sub-app-chat-identity-bitdubai').projectDir = new File('CHT/android/sub_app/fermat-cht-android-sub-app-chat-identity-bitdubai')
 
 
 //PLUGINS

@@ -69,6 +69,7 @@ public class SideMenuBuilder {
         if(itemDecoration!=null){
             navigation_recycler_view.addItemDecoration(itemDecoration);
         }
+        navigation_recycler_view.invalidate();
     }
 
     /**

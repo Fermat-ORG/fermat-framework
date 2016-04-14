@@ -9,4 +9,6 @@ public interface AppStatusCallbackChanges {
 
     void appSoftwareStatusChanges(AppsStatus appsStatus);
 
+    void clear();
+
 }

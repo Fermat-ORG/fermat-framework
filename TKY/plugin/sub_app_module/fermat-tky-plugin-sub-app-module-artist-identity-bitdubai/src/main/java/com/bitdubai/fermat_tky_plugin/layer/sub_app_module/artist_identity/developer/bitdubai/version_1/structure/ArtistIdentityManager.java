@@ -9,6 +9,7 @@ import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnections
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
@@ -43,7 +44,7 @@ public class ArtistIdentityManager implements TokenlyArtistIdentityManagerModule
     }
 
     @Override
-    public Artist createArtistIdentity(String username, byte[] profileImage,String password, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
+    public Artist createArtistIdentity(String username, byte[] profileImage,String password, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException, WrongTokenlyUserCredentialsException {
         return tokenlyArtistIdentityManager.createArtistIdentity(
                 username,
                 profileImage,
@@ -54,8 +55,8 @@ public class ArtistIdentityManager implements TokenlyArtistIdentityManagerModule
     }
 
     @Override
-    public void updateArtistIdentity(String username,String password, UUID id,String publicKey, byte[] profileImage, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException {
-        tokenlyArtistIdentityManager.updateArtistIdentity(
+    public Artist updateArtistIdentity(String username, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform, ExposureLevel exposureLevel, ArtistAcceptConnectionsType artistAcceptConnectionsType) throws CantUpdateArtistIdentityException, WrongTokenlyUserCredentialsException {
+        return tokenlyArtistIdentityManager.updateArtistIdentity(
                 username,
                 password,
                 id,

@@ -66,9 +66,9 @@ public class ConnectDialog extends FermatDialog<ArtistSubAppSession, SubAppResou
         mDescription = (FermatTextView) findViewById(R.id.aac_description);
         mUsername = (FermatTextView) findViewById(R.id.aac_user_name);
         mSecondDescription = (FermatTextView) findViewById(R.id.aac_second_description);
-        mTitle = (FermatTextView) findViewById(R.id.title);
-        positiveBtn = (FermatButton) findViewById(R.id.afc_positive_button);
-        negativeBtn = (FermatButton) findViewById(R.id.afc_negative_button);
+        mTitle = (FermatTextView) findViewById(R.id.aac_title);
+        positiveBtn = (FermatButton) findViewById(R.id.aac_positive_button);
+        negativeBtn = (FermatButton) findViewById(R.id.aac_negative_button);
         mSecondDescription.setVisibility(View.VISIBLE);
         positiveBtn.setOnClickListener(this);
         negativeBtn.setOnClickListener(this);
@@ -109,7 +109,7 @@ public class ConnectDialog extends FermatDialog<ArtistSubAppSession, SubAppResou
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.afc_positive_button) {
+        if (i == R.id.aac_positive_button) {
             try {
                 if (information != null && identity != null) {
 
@@ -138,7 +138,7 @@ public class ConnectDialog extends FermatDialog<ArtistSubAppSession, SubAppResou
             }
 
             dismiss();
-        } else if (i == R.id.afc_negative_button) {
+        } else if (i == R.id.aac_negative_button) {
             dismiss();
         }
     }

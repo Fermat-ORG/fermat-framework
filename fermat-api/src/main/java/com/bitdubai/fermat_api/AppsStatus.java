@@ -10,10 +10,10 @@ public enum AppsStatus implements FermatEnum{
     /**
      * To make the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
-    RELEASE  ("r",1),
-    BETA    ("b",2),
-    ALPHA    ("a",3),
-    DEV ("d",4);
+    RELEASE  ("Release",1),
+    BETA    ("Beta",2),
+    ALPHA    ("Alpha",3),
+    DEV ("Develop",4);
 
     /**
      * sets the default network that will be used at start up.
@@ -31,10 +31,10 @@ public enum AppsStatus implements FermatEnum{
     public static AppsStatus getByCode(String code) {
 
         switch (code) {
-            case "r":  return RELEASE;
-            case "b": return BETA;
-            case "a": return ALPHA;
-            case "d": return DEV;
+            case "Release":  return RELEASE;
+            case "Beta": return BETA;
+            case "Alpha": return ALPHA;
+            case "Develop": return DEV;
             default:      return DEFAULT_STATUS;
         }
     }
@@ -44,7 +44,7 @@ public enum AppsStatus implements FermatEnum{
     }
 
     public boolean isAppStatusAvailable(AppsStatus appsStatus){
-        return (appsStatus!=null) ?appsStatus.getNumber()>=this.number : false;
+        return (appsStatus != null) && appsStatus.getNumber() == this.number;
     }
 
     @Override
