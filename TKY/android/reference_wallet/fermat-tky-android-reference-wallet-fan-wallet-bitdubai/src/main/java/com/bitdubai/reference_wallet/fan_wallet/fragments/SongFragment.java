@@ -48,6 +48,7 @@ import com.bitdubai.reference_wallet.fan_wallet.common.adapters.SongAdapter;
 import com.bitdubai.reference_wallet.fan_wallet.common.models.SongItems;
 import com.bitdubai.reference_wallet.fan_wallet.session.FanWalletSession;
 import com.bitdubai.reference_wallet.fan_wallet.util.ManageRecyclerviewClick;
+import com.bitdubai.reference_wallet.fan_wallet.util.TestFan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -751,7 +752,7 @@ public class SongFragment extends AbstractFermatFragment {
 
 
     private Fan getTestFanIdentity(){
-        Fan fanIdentity = new Fan() {
+        Fan fanIdentity = new TestFan();/*new Fan() {
 
 
             @Override
@@ -861,7 +862,7 @@ public class SongFragment extends AbstractFermatFragment {
             public String getUserPassword() {
                 return null;
             }
-        };
+        };*/
         return fanIdentity;
     }
 

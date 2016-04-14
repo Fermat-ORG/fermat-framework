@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors.music;
 
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetUserException;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
@@ -16,7 +17,9 @@ public class TokenlyMusicUserProcessor extends TokenlyAuthenticatedUserProcessor
 
     public static MusicUser getAuthenticatedMusicUser(
             String username,
-            String password) throws CantGetUserException{
+            String password) throws
+            CantGetUserException,
+            WrongTokenlyUserCredentialsException {
         String url = TokenlyConfiguration.URL_TOKENLY_MUSIC_AUTHENTICATION_API;
         //Get default parameters
         HashMap<String, String> parameters = TokenlyConfiguration.getMusicAuthenticationParameters();

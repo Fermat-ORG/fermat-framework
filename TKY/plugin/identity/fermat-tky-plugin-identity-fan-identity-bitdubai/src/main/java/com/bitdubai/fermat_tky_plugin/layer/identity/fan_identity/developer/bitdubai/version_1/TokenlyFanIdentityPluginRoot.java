@@ -28,6 +28,7 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserM
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.all_definitions.util.ObjectChecker;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetUserException;
@@ -151,8 +152,8 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public Fan createFanIdentity(String userName, byte[] profileImage, String externalPassword, ExternalPlatform externalPlatform) throws  CantCreateFanIdentityException {
-        //TODO: Fix this Gabo. Manuel
+    public Fan createFanIdentity(String userName, byte[] profileImage, String externalPassword, ExternalPlatform externalPlatform) throws CantCreateFanIdentityException, WrongTokenlyUserCredentialsException {
+
         User user=null;
         try{
             if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
@@ -169,7 +170,7 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
 
 
     @Override
-    public void updateFanIdentity(String userName,String password, UUID id,String publicKey, byte[] profileImage,ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+    public Fan updateFanIdentity(String userName, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException, WrongTokenlyUserCredentialsException {
         User user=null;
         try{
             if(externalPlatform == ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM)
@@ -178,7 +179,8 @@ public class TokenlyFanIdentityPluginRoot extends AbstractPlugin implements
             e.printStackTrace();
         }
         if(user != null)
-            identityFanManager.updateIdentityFan(user,password, id, publicKey, profileImage,externalPlatform);
+            return identityFanManager.updateIdentityFan(user,password, id, publicKey, profileImage,externalPlatform);
+        return null;
     }
 
     /**

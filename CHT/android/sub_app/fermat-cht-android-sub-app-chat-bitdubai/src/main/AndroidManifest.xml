@@ -6,7 +6,5 @@
         android:theme="@style/Theme.AppTheme"
         android:supportsRtl="true"
         android:windowSoftInputMode="adjustResize|stateAlwaysHidden">
-
     </application>
-
 </manifest>

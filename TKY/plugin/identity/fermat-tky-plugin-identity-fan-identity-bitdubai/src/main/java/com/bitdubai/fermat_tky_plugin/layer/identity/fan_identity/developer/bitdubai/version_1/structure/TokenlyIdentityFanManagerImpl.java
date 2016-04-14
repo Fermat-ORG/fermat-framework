@@ -165,10 +165,10 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
         }
     }
 
-    public void updateIdentityFan(User user,String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+    public Fan updateIdentityFan(User user, String password, UUID id, String publicKey, byte[] profileImage, ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
         try {
             getFantIdentityDao().updateIdentityFanUser(user, password, id, publicKey, profileImage, externalPlatform);
-
+            return getFantIdentityDao().getIdentityFan(id);
         } catch (CantInitializeTokenlyFanIdentityDatabaseException e) {
             throw new CantUpdateFanIdentityException(
                     e.getMessage(),
@@ -180,6 +180,12 @@ public class TokenlyIdentityFanManagerImpl implements DealsWithErrors, DealsWith
                     e.getMessage(),
                     e,
                     "Can't update the fan identity",
+                    "Unexpected error in database");
+        } catch (CantGetFanIdentityException e) {
+            throw new CantUpdateFanIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Can't get the fan identity",
                     "Unexpected error in database");
         }
     }

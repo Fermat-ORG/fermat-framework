@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.all_definitions.util.ObjectChecker;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
@@ -68,13 +69,21 @@ public class TokenlyManager implements TokenlyApiManager {
     }
 
     /**
-     * This method returns a User object by a username and key pair.
-     * @param username
-     * @param userKey
+     * This method returns a User object by a username and key pair
+     * @param username Tokenly username.
+     * @param userKey user password
      * @return
+     * @throws CantGetUserException
+     * @throws ExecutionException
+     * @throws InterruptedException
+     * @throws WrongTokenlyUserCredentialsException
      */
     @Override
-    public User validateTokenlyUser(String username, String userKey) throws CantGetUserException, ExecutionException, InterruptedException {
+    public User validateTokenlyUser(String username, String userKey) throws
+            CantGetUserException,
+            ExecutionException,
+            InterruptedException,
+            WrongTokenlyUserCredentialsException {
         User user = TokenlyMusicUserProcessor.getAuthenticatedMusicUser(username, userKey);
         return user;
     }

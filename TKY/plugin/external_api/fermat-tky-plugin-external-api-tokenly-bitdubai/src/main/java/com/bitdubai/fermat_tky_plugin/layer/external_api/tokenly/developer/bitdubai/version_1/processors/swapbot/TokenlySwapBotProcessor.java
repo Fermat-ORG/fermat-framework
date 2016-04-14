@@ -65,7 +65,10 @@ public class TokenlySwapBotProcessor extends AbstractTokenlyProcessor {
                     get(0).
                     getAsJsonObject();
             String id = getStringFromJsonObject(jSonObject, TokenlyBotJSonAttNames.ID);
-            return getBotByBotId(id);
+            String botUrl = getStringFromJsonObject(jSonObject, TokenlyBotJSonAttNames.BOT_URL);
+            Bot bot = getBotByBotId(id);
+            bot.setBotUrl(botUrl);
+            return bot;
         } catch (CantGetJSonObjectException e) {
             throw new CantGetBotException(
                     e,

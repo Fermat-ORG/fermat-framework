@@ -175,8 +175,6 @@ public class ProvisoryData {
         item2.setPosition(7);
         lstIdentities.add(item2);
 
-
-
         /**
          * Chat identity added by Lozadaa
          */
@@ -191,7 +189,6 @@ public class ProvisoryData {
                 "sub_app_chat_identity",
                 new Version(1, 0, 0),
                 Platforms.CHAT_PLATFORM);
-
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.chat_subapp);
         item2.setPosition(8);
@@ -211,6 +208,20 @@ public class ProvisoryData {
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.icon_bitcoin_network_active);
+        item2.setPosition(9);
+        lstIdentities.add(item2);
+        installedSubApp = new InstalledSubApp(
+                SubApps.ART_FAN_IDENTITY,
+                null,
+                null,
+                "sub_app_art_fan_identity",
+                "Art Fan Identity",
+                SubAppsPublicKeys.ART_FAN_IDENTITY.getCode(),
+                "sub_app_art_fan_identity",
+                new Version(1,0,0),
+                Platforms.ART_PLATFORM);
+        item2 = new Item(installedSubApp);
+        item2.setIconResource(R.drawable.artist);
         item2.setPosition(9);
         lstIdentities.add(item2);
 

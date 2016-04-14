@@ -115,4 +115,16 @@ public interface Bot {
      */
     String getHash();
 
+    /**
+     * This method returns the botUrl
+     * @return
+     */
+    String getBotUrl();
+
+    /**
+     * This method sets the botUrl
+     * @param botUrl
+     */
+    void setBotUrl(String botUrl);
+
 }

@@ -31,11 +31,13 @@ import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
@@ -87,6 +89,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private TokenlyFanPreferenceSettings tokenlyFanPreferenceSettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
+    private boolean authenticationSuccessful = false;
 
 
     private Handler handler;
@@ -262,11 +265,6 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 switch (resultKey) {
                     case CREATE_IDENTITY_SUCCESS:
 //                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
-                        if (!isUpdate) {
-                            Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
-                        }
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
                         Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
@@ -488,7 +486,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         public static final int CREATE_IDENTITY = 0;
         public static final int UPDATE_IDENTITY = 1;
         public static final int UPDATE_IMAGE_IDENTITY = 2;
-
+        private Fan fan;
         public ManageIdentity(
                 String fanExternalName,
                 String fanPassword,
@@ -499,20 +497,41 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             this.fanPassword = fanPassword;
             this.externalPlatform = externalPlatform;
             this.identityAction = identityAction;
+            authenticationSuccessful = true;
         }
+        @Override
+        protected void onPostExecute(Object result) {
 
+            if(!authenticationSuccessful){
+                //I'll launch a toast
+                Toast.makeText(
+                        getActivity(),
+                        "Authentication credentials are invalid.",
+                        Toast.LENGTH_SHORT).show();
+            }
+            if(Validate.isObjectNull(fan)){
+                Toast.makeText(getActivity(), "The tokenly authentication failed.", Toast.LENGTH_SHORT).show();
+            }else{
+                if(isUpdate){
+                    Toast.makeText(getActivity(), "Identity updated", Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
         @Override
         protected Object doInBackground(Object... arg0) {
             try{
                 switch (identityAction){
                     case CREATE_IDENTITY:
-                        createIdentity(fanExternalName,fanPassword,externalPlatform);
+                        fan = createIdentity(fanExternalName, fanPassword, externalPlatform);
                         break;
                     case UPDATE_IDENTITY:
-                        updateIdentity(fanExternalName,fanPassword,externalPlatform);
+                        fan = updateIdentity(fanExternalName, fanPassword, externalPlatform);
                         break;
                     case UPDATE_IMAGE_IDENTITY:
-                        updateIdentityImage(fanExternalName,fanPassword,externalPlatform);
+                        fan = updateIdentityImage(fanExternalName,fanPassword,externalPlatform);
+                        Toast.makeText(getActivity(), "Identity updated", Toast.LENGTH_SHORT).show();
                         break;
                 }
 
@@ -531,27 +550,36 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                         UISource.VIEW,
                         UnexpectedUIExceptionSeverity.UNSTABLE,
                         e);
+            } catch (WrongTokenlyUserCredentialsException e) {
+                //We are not going to report this exception
+                authenticationSuccessful=false;
+                //System.out.println("TKY WTUCE:" + e);
+
             }
             return null;
         }
     }
 
-    private void createIdentity(
+    private Fan createIdentity(
             String fanExternalName,
             String fanPassword,
             ExternalPlatform externalPlatform) throws
-            CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
-        moduleManager.createFanIdentity(
+            CantCreateFanIdentityException,
+            FanIdentityAlreadyExistsException,
+            WrongTokenlyUserCredentialsException {
+        return moduleManager.createFanIdentity(
                 fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,
                 fanPassword,
                 externalPlatform) ;
     }
 
-    private void updateIdentity(
+    private Fan updateIdentity(
             String fanExternalName,
             String fanPassword,
-            ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
-        moduleManager.updateFanIdentity(
+            ExternalPlatform externalPlatform) throws
+            CantUpdateFanIdentityException,
+            WrongTokenlyUserCredentialsException {
+        return moduleManager.updateFanIdentity(
                 fanExternalName,
                 fanPassword, identitySelected.getId(),
                 identitySelected.getPublicKey(),
@@ -559,11 +587,13 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 externalPlatform);
     }
 
-    private void updateIdentityImage(
+    private Fan updateIdentityImage(
             String fanExternalName,
             String fanPassword,
-            ExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
-        moduleManager.updateFanIdentity(
+            ExternalPlatform externalPlatform) throws
+            CantUpdateFanIdentityException,
+            WrongTokenlyUserCredentialsException {
+        return moduleManager.updateFanIdentity(
                 fanExternalName,
                 fanPassword,
                 identitySelected.getId(),

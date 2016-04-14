@@ -346,8 +346,7 @@ public enum Activities implements FermatEnum {
     ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD("ASAACCW"),
     ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE("ASAACCOP"),
 
-    ART_MUSIC_PLAYER_MAIN_ACTIVITY("ARTMPMA"),
-
+    ART_FAN_IDENTITY_CREATE_PROFILE("AFICP"),
 
     //TKY
     TKY_ARTIST_IDENTITY("TAI"),
@@ -917,9 +916,8 @@ public enum Activities implements FermatEnum {
                 return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD;
             case "ASAACCOP":
                 return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE;
-
-            case "ARTMPMA":
-                return ART_MUSIC_PLAYER_MAIN_ACTIVITY;
+            case "AFICP":
+                return ART_FAN_IDENTITY_CREATE_PROFILE;
 
             default:
                 throw new InvalidParameterException(
