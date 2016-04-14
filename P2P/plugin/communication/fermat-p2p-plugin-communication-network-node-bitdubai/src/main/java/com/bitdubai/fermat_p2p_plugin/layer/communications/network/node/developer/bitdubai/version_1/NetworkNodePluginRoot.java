@@ -532,7 +532,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     private void requestRegisterProfileInTheNodeCatalog(){
 
         AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
-        fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest);
+        fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson());
 
     }
 
@@ -543,7 +543,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     private void requestUpdateProfileInTheNodeCatalog(){
 
         UpdateNodeInCatalogMsgRequest updateNodeInCatalogMsgRequest = new UpdateNodeInCatalogMsgRequest(nodeProfile);
-        fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest);
+        fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest.toJson());
 
     }
 

@@ -8,8 +8,10 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Pack
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.ClientNodeChannelConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.AddNodeToCatalogRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.ReceivedActorCatalogTransactionsRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.ReceivedNodeCatalogTransactionsRespondProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.UpdateNodeInCatalogRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConstantAttNames;
 
@@ -103,6 +105,10 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
          */
         registerMessageProcessor(new ReceivedNodeCatalogTransactionsRespondProcessor(this));
         registerMessageProcessor(new ReceivedActorCatalogTransactionsRespondProcessor(this));
+        registerMessageProcessor(new AddNodeToCatalogRespondProcessor(this));
+        registerMessageProcessor(new UpdateNodeInCatalogRespondProcessor(this));
+
+
     }
 
     /**
@@ -187,11 +193,11 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
 
         String channelIdentityPrivateKey = getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) clientConnection.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
-        Package packageRespond = Package.createInstance(message, NetworkServiceType.UNDEFINED, PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+        Package packageRequest = Package.createInstance(message, NetworkServiceType.UNDEFINED, PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
 
         if (isConnected()){
-            this.clientConnection.getAsyncRemote().sendObject(packageRespond);
+            this.clientConnection.getAsyncRemote().sendObject(packageRequest);
         }
 
     }
