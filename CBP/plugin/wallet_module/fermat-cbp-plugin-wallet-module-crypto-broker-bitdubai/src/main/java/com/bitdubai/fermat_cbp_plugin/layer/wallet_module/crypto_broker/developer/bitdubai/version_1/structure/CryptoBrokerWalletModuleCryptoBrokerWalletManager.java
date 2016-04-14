@@ -285,6 +285,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(saleContract.getNegotiatiotId()));
                     customerIdentity = getCustomerInfoByPublicKey(saleContract.getPublicKeyBroker(), saleContract.getPublicKeyCustomer());
                     contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, saleContract, saleNegotiation);
+                    contract.setCancellationReason(saleContract.getCancelReason());
                     filteredList.add(contract);
                 }
 
@@ -305,6 +306,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
                     CustomerBrokerSaleNegotiation saleNegotiation = customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(customerBrokerContractSale.getNegotiatiotId()));
                     customerIdentity = getCustomerInfoByPublicKey(customerBrokerContractSale.getPublicKeyBroker(), customerBrokerContractSale.getPublicKeyCustomer());
                     contract = new CryptoBrokerWalletModuleContractBasicInformation(customerIdentity, customerBrokerContractSale, saleNegotiation);
+                    contract.setCancellationReason(customerBrokerContractSale.getCancelReason());
                     filteredList.add(contract);
                 }
 

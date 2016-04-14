@@ -76,6 +76,9 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
             errorManager = appSession.getErrorManager();
 
             contractHistoryList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
+
+            // contractHistoryList = (ArrayList) TestData.getContractsHistory(null);
+
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             if (errorManager != null)

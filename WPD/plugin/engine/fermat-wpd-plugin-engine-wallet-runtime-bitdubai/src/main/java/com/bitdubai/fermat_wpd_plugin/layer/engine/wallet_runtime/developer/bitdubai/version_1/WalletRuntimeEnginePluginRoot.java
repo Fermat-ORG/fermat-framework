@@ -2371,7 +2371,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         final String publicKey = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
 
-        final String statusBarColor = "#254478";
+        final String statusBarColor = "#1375a7";
         final String titleBarColor = "#254478";
         final String titleBarTitleColor = "#ffffff";
         final int titleBarTextSize = 16;

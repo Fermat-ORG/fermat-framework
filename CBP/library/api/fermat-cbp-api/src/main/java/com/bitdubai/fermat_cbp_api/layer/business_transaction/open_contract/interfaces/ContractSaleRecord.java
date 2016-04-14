@@ -30,6 +30,7 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
     float referencePrice;
     ContractStatus status;
     String contractHash;Boolean nearExpirationDatetime;
+    String cancelReason;
 
     /**
      * Represents the contract id/hash
@@ -117,6 +118,9 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
         return nearExpirationDatetime;
     }
 
+    @Override
+    public String getCancelReason() { return cancelReason; }
+
     public void setNearExpirationDatetime(Boolean nearExpirationDatetime) {this.nearExpirationDatetime = nearExpirationDatetime;
     }
 
@@ -180,6 +184,9 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
         this.status=status;
     }
 
+    public void setCancelReason(String reason){
+        this.cancelReason = reason;
+    }
     /**
      * The string of the ContractSaleRecord will be used to generate a unique Hash.
      * This hash will be used as Id.
