@@ -293,6 +293,7 @@ public enum Plugins implements FermatPluginsEnum {
     CUSTOMER_BROKER_SALE                ("CBSA"),
 
     //CHT
+    CHAT_COMMUNITY_SUP_APP_MODULE       ("CATCH"),
     CHAT_MIDDLEWARE                     ("CHMID"),
     CHAT_NETWORK_SERVICE                ("CHTNS"),
     CHAT_SUP_APP_MODULE                 ("CHTSAM"),

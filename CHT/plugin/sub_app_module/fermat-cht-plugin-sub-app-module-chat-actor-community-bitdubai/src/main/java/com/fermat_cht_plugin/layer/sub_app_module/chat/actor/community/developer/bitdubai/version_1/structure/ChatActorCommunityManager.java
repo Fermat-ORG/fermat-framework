@@ -1,4 +1,4 @@
-package com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.structure;
+package com.fermat_cht_plugin.layer.sub_app_module.chat.actor.community.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
@@ -64,7 +64,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
      private ChatActorCommunityInformation            chatActorCommunityManager             ;
      private final ChatActorConnectionManager         chatActorConnectionManager            ;
      private final ChatManager                        chatActorNetworkServiceManager        ;
-     private String                                  subAppPublicKey                       ;
+     private String                                   subAppPublicKey                       ;
      private final ErrorManager                       errorManager                          ;
      private final PluginFileSystem                   pluginFileSystem                      ;
      private final UUID                               pluginId                              ;
