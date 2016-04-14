@@ -2,7 +2,6 @@ package com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interface
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDenyActorConnectionRequestException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
@@ -25,7 +24,7 @@ import java.util.UUID;
 public interface FanCommunityModuleManager extends
         ModuleManager<
                 FanCommunitySettings,
-                ActiveActorIdentityInformation> {
+                FanCommunitySelectableIdentity> {
 
     /**
      * The method <code>listWorldFanatics</code> returns the list of all fans in the world,
