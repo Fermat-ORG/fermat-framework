@@ -3,39 +3,51 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
-    android:background="#EEE"
-    android:orientation="horizontal"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/cbw_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        android:layout_weight="1"
-        tools:text="Cash"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal"
+        android:layout_marginLeft="16dp"
+        >
 
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/cbw_sub_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_weight="4"
-        android:textColor="@color/cbw_wizard_color"
-        android:textSize="14sp"
-        tools:text="Wallet Cash USD"/>
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_title"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black"
+            android:textSize="14sp"
+            tools:text="CASH"
+            android:layout_weight="3"
+            />
 
-    <ImageView
-        android:id="@+id/cbw_close_img_button"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:scaleType="centerInside"
-        android:layout_gravity="end|center_vertical"
-        android:src="@drawable/cbw_btn_wizard_remove"/>
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_sub_title"
+            android:layout_width="0px"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/dark_grey"
+            android:textSize="14sp"
+            tools:text="Wallet Cash USD"
+            android:layout_weight="6"
+            />
+
+        <ImageView
+            android:id="@+id/cbw_close_img_button"
+            android:layout_width="0px"
+            android:layout_height="30dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/cbw_close_button"
+            android:layout_weight="1"
+            />
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/dark_grey"/>
 </LinearLayout>

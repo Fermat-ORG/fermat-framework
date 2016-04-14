@@ -2371,7 +2371,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         final String publicKey = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
 
-        final String statusBarColor = "#254478";
+        final String statusBarColor = "#1375a7";
         final String titleBarColor = "#254478";
         final String titleBarTitleColor = "#ffffff";
         final int titleBarTextSize = 16;
@@ -3456,7 +3456,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Providers");
+        runtimeTitleBar.setLabel("Bitcoin Wallet and Providers");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor(titleBarLabelColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -4922,6 +4922,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setLabelSize(16);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#073487");
+        runtimeTitleBar.setFont("Roboto-Regular.ttf");
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#073487");
         runtimeActivity.setBackgroundColor("#ffffff");
@@ -4933,11 +4934,14 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTabStrip = new TabStrip();
 
-        runtimeTabStrip.setTabsColor("#06356f");
+        runtimeTabStrip.setTabsColor("#0F5DA7");
 
-        runtimeTabStrip.setTabsTextColor("#b9bfcd");
+        runtimeTabStrip.setTabsTextColor("#FFFFFF");
 
-        runtimeTabStrip.setTabsIndicateColor("#12aca1");
+        //runtimeTabStrip.setTabsIndicateColor("#12aca1");
+
+        runtimeTabStrip.setTabsIndicateColor("#DC5A0F");
+
 
         runtimeTab = new Tab();
         runtimeTab.setLabel("Sent");
@@ -4949,7 +4953,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTab.setFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_RECEIVED_HISTORY);
         runtimeTabStrip.addTab(runtimeTab);
 
-        runtimeTabStrip.setDividerColor(0x72af9c);
+        runtimeTabStrip.setDividerColor(0xff073487);
         //runtimeTabStrip.setBackgroundColor("#72af9c");
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
@@ -5206,6 +5210,10 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
 
+        runtimeHeader = new Header();
+        runtimeHeader.setLabel("Balance");
+        runtimeActivity.setHeader(runtimeHeader);
+
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_CHUNCK_VALUES.getKey());
@@ -5245,15 +5253,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor("#073487");
 
-        runtimeTabStrip = new TabStrip();
-
-        runtimeTabStrip.setTabsColor("#1173aa");
-
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
-
-        runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
-
         runtimeActivity.setStatusBar(runtimeStatusBar);
+
+
 
         runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUES_DETAIL_FRAGMENT.getKey());
 

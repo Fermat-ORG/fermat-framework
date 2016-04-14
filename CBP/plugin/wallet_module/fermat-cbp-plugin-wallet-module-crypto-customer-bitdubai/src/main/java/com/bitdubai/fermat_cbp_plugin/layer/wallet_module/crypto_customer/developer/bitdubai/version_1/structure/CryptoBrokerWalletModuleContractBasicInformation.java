@@ -36,7 +36,8 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
 
     public CryptoBrokerWalletModuleContractBasicInformation(String customerAlias, byte[] customerImage, String brokerAlias, byte[] brokerImage, String merchandise, String typeOfPayment,
                                                             String paymentCurrency, ContractStatus status, boolean nearExpirationDatetime, CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,
-                                                            String contractId) {
+                                                            String contractId,
+                                                            String cancellationReason) {
         this.customerAlias = customerAlias;
         this.customerImage = customerImage;
         this.brokerAlias = brokerAlias;
@@ -51,7 +52,7 @@ public class CryptoBrokerWalletModuleContractBasicInformation implements Contrac
         this.nearExpirationDatetime = nearExpirationDatetime;
 
         if (customerBrokerPurchaseNegotiation != null) {
-            this.cancellationReason = customerBrokerPurchaseNegotiation.getCancelReason();
+            this.cancellationReason = cancellationReason;
             negotiationId = customerBrokerPurchaseNegotiation.getNegotiationId(); //UUID.randomUUID();
             date = customerBrokerPurchaseNegotiation.getLastNegotiationUpdateDate(); //instance.getTimeInMillis();
             try {

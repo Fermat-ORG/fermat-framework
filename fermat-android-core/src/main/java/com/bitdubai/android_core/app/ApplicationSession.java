@@ -8,6 +8,7 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerService;
+import com.bitdubai.android_core.app.common.version_1.notifications.NotificationService;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.android_core.app.common.version_1.util.services_helpers.ServicesHelpers;
 import com.bitdubai.fermat.R;
@@ -137,10 +138,12 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
             public void run() {
                 servicesHelpers = new ServicesHelpers(getInstance().getApplicationContext());
                 servicesHelpers.bindServices();
+
+
             }
         }).start();
 
-
+//        new ANRWatchDog().start();
 
         super.onCreate();
     }

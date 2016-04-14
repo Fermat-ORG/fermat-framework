@@ -238,6 +238,15 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="see_your_balance_text">* Checking your balance.\n* Sending/receiving bitcoins.\n* Requesting bitcoins.\n* Browsing your transaction history.</string>
+    <!-- Custom Dialog Fragment -->
+    <string name="title_label">Network Settings</string>
+    <string name="ok_label">OK</string>
+    <string name="cancel_label">Cancel</string>
+    <array name="items" translatable="false">
+        <item>MainNet</item>
+        <item>TestNet</item>
+        <item>RegTest</item>
+    </array>
 
 </resources>
 

@@ -5,11 +5,12 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 
 /**
  * Created by Yordin Alayn on 24.09.15.
+ * Modified by Alejandro Bicelis on 07.04.16
  */
  
 public enum BankAccountType {
-    CURRENT("CUR", "Current"),
-    SAVING("SAV", "Saving");
+    CHECKING("CHC", "Checking"),
+    SAVINGS("SAV", "Savings");
 
     private String code, friendlyName;
 
@@ -28,8 +29,8 @@ public enum BankAccountType {
 
     public static BankAccountType getByCode(String code) throws InvalidParameterException {
         switch (code) {
-            case "CUR": return BankAccountType.CURRENT;
-            case "SAV": return BankAccountType.SAVING;
+            case "CHC": return BankAccountType.CHECKING;
+            case "SAV": return BankAccountType.SAVINGS;
             default: throw new InvalidParameterException(InvalidParameterException.DEFAULT_MESSAGE, null, "Code Received: " + code, "This Code Is Not Valid for the BankAccountType enum");
         }
     }

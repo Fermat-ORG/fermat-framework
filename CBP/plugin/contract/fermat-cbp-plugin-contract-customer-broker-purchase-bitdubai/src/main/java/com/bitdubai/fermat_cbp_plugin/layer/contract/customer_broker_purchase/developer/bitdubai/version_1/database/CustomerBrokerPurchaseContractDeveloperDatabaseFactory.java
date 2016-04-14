@@ -126,6 +126,7 @@ public class CustomerBrokerPurchaseContractDeveloperDatabaseFactory implements D
         contractsPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME);
         contractsPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_STATUS_COLUMN_NAME);
         contractsPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME);
+        contractsPurchaseColumns.add(CustomerBrokerPurchaseContractDatabaseConstants.CONTRACTS_PURCHASE_CANCEL_REASON_COLUMN_NAME);
         /**
          * Table Contracts Purchase addition.
          */
