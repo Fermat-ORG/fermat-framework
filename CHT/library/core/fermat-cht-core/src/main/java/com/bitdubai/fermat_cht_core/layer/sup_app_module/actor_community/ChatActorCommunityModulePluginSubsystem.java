@@ -19,7 +19,7 @@ public class ChatActorCommunityModulePluginSubsystem extends AbstractPluginSubsy
     @Override
     public void start() throws CantStartSubsystemException {
         try {
-            registerDeveloper(new );
+            registerDeveloper(new com.fermat_cht_plugin.layer.sub_app_module.chat.actor.community.DeveloperBitDubai());
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);
