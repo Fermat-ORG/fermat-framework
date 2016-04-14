@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 public class AndroidCoreSettings implements FermatSettings {
 
     AppsStatus appsStatus;
-
+    boolean isHelpEnabled;
 
     public AndroidCoreSettings(AppsStatus appsStatus) {
         this.appsStatus = appsStatus;
@@ -26,9 +26,10 @@ public class AndroidCoreSettings implements FermatSettings {
 
     @Override
     public void setIsPresentationHelpEnabled(boolean b) {
-
+        isHelpEnabled = b;
     }
 
-
-
+    public boolean isHelpEnabled() {
+        return isHelpEnabled;
+    }
 }
