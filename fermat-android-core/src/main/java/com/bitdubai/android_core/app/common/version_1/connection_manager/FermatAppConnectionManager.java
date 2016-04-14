@@ -183,6 +183,7 @@ public class FermatAppConnectionManager {
                 break;
 
 
+
         }
 
         return fermatAppConnection;
