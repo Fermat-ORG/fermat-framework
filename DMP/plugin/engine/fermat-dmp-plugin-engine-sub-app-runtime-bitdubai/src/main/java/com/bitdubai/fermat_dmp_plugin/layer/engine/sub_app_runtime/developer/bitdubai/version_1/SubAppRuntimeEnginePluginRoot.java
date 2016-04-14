@@ -529,7 +529,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
 
 
-            createWalletStoreNavigationStructure();
+            createAppStoreNavigationStructure();
 
 
             /**
@@ -792,33 +792,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
 
             createChatSubAppNavigationStructure();
-            runtimeSubApp = new RuntimeSubApp();
-            runtimeSubApp.setType(SubApps.CHT_CHAT_IDENTITY);
-            String ChatIdentityPublicKey = SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode();
-            runtimeSubApp.setPublicKey(ChatIdentityPublicKey);
-            // Activity: Create New Identity
-            runtimeActivity = new Activity();
-            runtimeActivity.setType(Activities.CHT_CHAT_CREATE_IDENTITY);
-            runtimeActivity.setActivityType(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
-            //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
-            runtimeActivity.setColor("#03A9F4");
-            runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.addPosibleStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY);
-            runtimeTitleBar = new TitleBar();
-            runtimeTitleBar.setLabel("Chat Identity");
-            runtimeTitleBar.setColor("#1189a4");
-            runtimeTitleBar.setTitleColor("#ffffff");
-            runtimeTitleBar.setLabelSize(18);
-            runtimeTitleBar.setIsTitleTextStatic(true);
-            runtimeActivity.setTitleBar(runtimeTitleBar);
-            statusBar = new StatusBar();
-            statusBar.setColor("#1189a4");
-            runtimeActivity.setStatusBar(statusBar);
-            runtimeFragment = new Fragment();
-            runtimeFragment.setType(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
-            runtimeActivity.addFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
-            runtimeActivity.setStartFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
-            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
             /**
              * CCP INTRA USER IDENTITY
@@ -828,6 +801,44 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             *ART ARTIST IDENTITY
             */
             //createArtArtistIdentitySubAppNavigationStructure();
+
+
+
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.ART_ARTIST_IDENTITY);
+            String artArtistUserIdentityPublicKey = SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode();
+            runtimeSubApp.setPublicKey(artArtistUserIdentityPublicKey);
+            // Activity: Create New Identity
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE);
+            runtimeActivity.setActivityType(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE.getCode());
+            //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
+            runtimeActivity.setColor("#03A9F4");
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeSubApp.addPosibleStartActivity(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE);
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Artist Identity");
+            runtimeTitleBar.setColor("#1189a4");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setLabelSize(18);
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+            statusBar = new StatusBar();
+            statusBar.setColor("#1189a4");
+            runtimeActivity.setStatusBar(statusBar);
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
+            runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
+
+
+
+
+
+
+
+
 
             /*
              *TKY ARTIST IDENTITY
@@ -880,7 +891,42 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setStartFragment(Fragments.TKY_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
+            /**
+              * CHAT IDENTITY
+              */
 
+            runtimeSubApp = new RuntimeSubApp();
+            runtimeSubApp.setType(SubApps.CHT_CHAT_IDENTITY);
+            String chatIdentityPublicKey = SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode();
+            runtimeSubApp.setPublicKey(chatIdentityPublicKey);
+
+            // Activity: Create New Identity
+            runtimeActivity = new Activity();
+            runtimeActivity.setType(Activities.CHT_CHAT_CREATE_IDENTITY);
+            runtimeActivity.setActivityType(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
+
+            runtimeActivity.setColor("#47BF73");
+            runtimeSubApp.addActivity(runtimeActivity);
+            runtimeSubApp.addPosibleStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY);
+
+            runtimeTitleBar = new TitleBar();
+            runtimeTitleBar.setLabel("Chat Identity");
+            runtimeTitleBar.setColor("#47BF73");
+            runtimeTitleBar.setTitleColor("#ffffff");
+            runtimeTitleBar.setLabelSize(18);
+            runtimeTitleBar.setIsTitleTextStatic(true);
+            runtimeActivity.setTitleBar(runtimeTitleBar);
+
+            statusBar = new StatusBar();
+            statusBar.setColor("#47BF73");
+            runtimeActivity.setStatusBar(statusBar);
+
+            runtimeFragment = new Fragment();
+            runtimeFragment.setType(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
+            runtimeActivity.addFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey(), runtimeFragment);
+            runtimeActivity.setStartFragment(Fragments.CHT_CHAT_CREATE_IDENTITY_FRAGMENT.getKey());
+
+            listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
 
 
@@ -1178,7 +1224,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
     }
 
-    private void createWalletStoreNavigationStructure() {
+    private void createAppStoreNavigationStructure() {
         RuntimeSubApp runtimeSubApp;
         Activity runtimeActivity;
         StatusBar statusBar;
@@ -1200,11 +1246,11 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#B4573C");
+        statusBar.setColor("#286C99");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Wallet Store");
+        runtimeTitleBar.setLabel("App Store");
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -2312,7 +2358,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         artArtistIdentity = new RuntimeSubApp();
         artArtistIdentity.setType(SubApps.ART_ARTIST_IDENTITY);
         artArtistIdentity.setPublicKey(IdentityArtistPublicKey);
-        artArtistIdentity.addPosibleStartActivity(Activities.ART_ARTIST_IDENTITY_HOME);
+        artArtistIdentity.addPosibleStartActivity(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE);
 
         runtimeActivity = new Activity();
         statusBar = new StatusBar();
@@ -2328,10 +2374,10 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeTitleBar.setColor("#0072bb");
 
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setStartFragment(Fragments.ART_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
+        runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.ART_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey());
-        runtimeActivity.addFragment(Fragments.ART_ARTIST_IDENTITY_ACTIVITY_CREATE_PROFILE.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
+        runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey(), runtimeFragment);
 
 /*
         runtimeSideMenu = new SideMenu();

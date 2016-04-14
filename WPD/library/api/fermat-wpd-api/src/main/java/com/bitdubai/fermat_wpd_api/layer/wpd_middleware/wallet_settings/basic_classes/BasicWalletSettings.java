@@ -22,6 +22,8 @@ import java.util.UUID;
  */
 public class BasicWalletSettings implements WalletSettings {
 
+    private boolean isHomeTutorialDialogEnabled;
+
     @Override
     public UUID getDefaultLanguage() throws CantGetDefaultLanguageException, CantLoadWalletSettings {
         return null;
@@ -43,7 +45,11 @@ public class BasicWalletSettings implements WalletSettings {
     }
 
     @Override
-    public void setIsPresentationHelpEnabled(boolean b) {
+    public void setIsPresentationHelpEnabled(boolean enablePresentation) {
+        isHomeTutorialDialogEnabled = enablePresentation;
+    }
 
+    public boolean isHomeTutorialDialogEnabled() {
+        return isHomeTutorialDialogEnabled;
     }
 }

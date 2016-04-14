@@ -105,4 +105,14 @@ public class CustomerBrokerSaleManager implements CustomerBrokerContractSaleMana
         }
     }
 
+    @Override
+    public void cancelContract(String contractId, String reason)  throws CantUpdateCustomerBrokerContractSaleException {
+        try{
+            this.customerBrokerContractSaleDao.cancelContract(contractId, reason);
+        } catch (CantUpdateCustomerBrokerContractSaleException e) {
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantUpdateCustomerBrokerContractSaleException(e.getMessage(), e, "", "Cant Update Customer Broker Contract Sale");
+        }
+    }
+
 }

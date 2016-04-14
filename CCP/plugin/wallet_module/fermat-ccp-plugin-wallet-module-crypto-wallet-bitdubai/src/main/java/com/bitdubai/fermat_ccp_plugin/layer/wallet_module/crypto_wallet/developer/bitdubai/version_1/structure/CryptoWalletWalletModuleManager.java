@@ -1488,6 +1488,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,Serializabl
     private SettingsManager<BitcoinWalletSettings> settingsManager;
     @Override
     public SettingsManager<BitcoinWalletSettings> getSettingsManager() {
+        System.out.println("Settings manager 1: "+ String.valueOf(settingsManager!=null) );
         if (this.settingsManager != null)
             return this.settingsManager;
 
@@ -1495,6 +1496,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,Serializabl
                 pluginFileSystem,
                 pluginId
         );
+        System.out.println("Settings manager 2: "+ String.valueOf(settingsManager!=null) );
 
         return this.settingsManager;
     }

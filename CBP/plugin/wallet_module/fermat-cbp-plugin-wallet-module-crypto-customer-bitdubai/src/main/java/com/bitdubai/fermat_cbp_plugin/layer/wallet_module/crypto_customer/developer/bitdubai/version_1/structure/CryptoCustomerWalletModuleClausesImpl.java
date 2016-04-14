@@ -12,12 +12,12 @@ import java.util.UUID;
  */
 public class CryptoCustomerWalletModuleClausesImpl implements Clause{
 
-    private final   UUID            clauseId;
-    private final   ClauseType      type;
-    private final   String          value;
-    private final   ClauseStatus    status;
-    private final   String          proposedBy;
-    private final   short           indexOrder;
+    private UUID            clauseId;
+    private ClauseType      type;
+    private String          value;
+    private ClauseStatus    status;
+    private String          proposedBy;
+    private short           indexOrder;
 
     public CryptoCustomerWalletModuleClausesImpl(UUID clauseId, ClauseType type, String value, ClauseStatus status, String proposedBy, short indexOrder){
         this.clauseId   = clauseId;
@@ -29,41 +29,41 @@ public class CryptoCustomerWalletModuleClausesImpl implements Clause{
     }
 
     public CryptoCustomerWalletModuleClausesImpl(ClauseInformation clauseInformation, String proposer) {
-        this.clauseId = clauseInformation.getClauseID();
-        this.type = clauseInformation.getType();
-        this.value = clauseInformation.getValue();
-        this.status = clauseInformation.getStatus();
+        this.clauseId   = clauseInformation.getClauseID();
+        this.type       = clauseInformation.getType();
+        this.value      = clauseInformation.getValue();
+        this.status     = clauseInformation.getStatus();
         this.proposedBy = proposer;
-        indexOrder = 0;
+        indexOrder      = 0;
     }
 
     @Override
     public UUID getClauseId() {
-        return this.clauseId;
+        return clauseId;
     }
 
     @Override
     public ClauseType getType() {
-        return this.type;
+        return type;
     }
 
     @Override
     public String getValue() {
-        return this.value;
+        return value;
     }
 
     @Override
     public ClauseStatus getStatus() {
-        return this.status;
+        return status;
     }
 
     @Override
     public String getProposedBy() {
-        return this.proposedBy;
+        return proposedBy;
     }
 
     @Override
     public short getIndexOrder() {
-        return this.indexOrder;
+        return indexOrder;
     }
 }

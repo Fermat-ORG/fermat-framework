@@ -263,7 +263,6 @@ public class CustomerBrokerCloseNegotiationCryptoAddress {
         IntraWalletUserIdentity intraUser;
         try {
 
-            //TODO YORDIN: ACA ESTA GENERANDO UNA EXCEPTION
             if(intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser().isEmpty()){
                 throw new CantGetRequestCryptoAddressException(CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, null, CantGetRequestCryptoAddressException.DEFAULT_MESSAGE, "ERROR GET REQUEST THE CRYPTO ADDRESS IN THE NEGOTIATION, UNKNOWN FAILURE.");
             }else{

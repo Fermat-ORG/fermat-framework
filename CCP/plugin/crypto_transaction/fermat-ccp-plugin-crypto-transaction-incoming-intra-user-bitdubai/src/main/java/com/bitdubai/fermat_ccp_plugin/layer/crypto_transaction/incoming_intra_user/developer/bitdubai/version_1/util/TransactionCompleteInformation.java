@@ -41,7 +41,7 @@ public class TransactionCompleteInformation {
             CryptoTransaction       cryptoTransaction       = this.cryptoTransactionContainer.getInformation();
             CryptoAddressBookRecord cryptoAddressBookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoTransaction.getAddressTo());
 
-            long  timestamp = this.cryptoTransactionContainer.getTimestamp()                          ;
+            long timestamp = System.currentTimeMillis();
             String memo     = this.transactionMetadata       .getInformation().getPaymentDescription();
 
             return new IncomingIntraUserTransactionWrapper(
@@ -76,9 +76,10 @@ public class TransactionCompleteInformation {
             CryptoTransaction       cryptoTransaction       = this.cryptoTransactionContainer.getInformation();
             CryptoAddressBookRecord cryptoAddressBookRecord = cryptoAddressBookManager.getCryptoAddressBookRecordByCryptoAddress(cryptoTransaction.getAddressTo());
 
-            long  timestamp = this.cryptoTransactionContainer.getTimestamp()                          ;
+           // long  timestamp = this.cryptoTransactionContainer.getTimestamp()                          ;
             String memo     = this.transactionMetadata       .getInformation().getPaymentDescription();
 
+            long timestamp = System.currentTimeMillis();
             return new IncomingIntraUserLossProtectedTransactionWrapper(
                     cryptoTransactionContainer.getTransactionID()            ,
                     null,

@@ -45,15 +45,18 @@ public class BufferChannel {
         Object o = buffer.get(id);
         buffer.remove(id);
         locks1.remove(id);
+        if(o instanceof EmptyObject){
+            o = null;
+        }
         return o;
     }
 
-    public void notificateObject(UUID id,Object o){
+    public void notificateObject(UUID id,Object o) throws Exception{
         Log.i(TAG, "Notification object arrived");
-        Log.i(TAG, o.toString());
+        if(o!=null) Log.i(TAG, o.toString());
         Lock lock = locks1.get(id);
         synchronized (lock){
-            buffer.put(id, o);
+            buffer.put(id,(o!=null)? o:new EmptyObject());
             //locks.get(id).release();
             lock.unblock();
             lock.notify();

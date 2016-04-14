@@ -19,7 +19,7 @@ apply from: 'TKY/settings.gradle'
 apply from: 'WPD/settings.gradle'
 apply from: 'android_toolbox/settings.gradle'
 
-include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':fermat_statistics', ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai', ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai', ':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai', ':fermat-ccp-plugin-transaction-transfer-intra-wallet-users-bitdubai', ':fermat-ccp-plugin-transaction-outgoing-device-user-bitdubai', ':transactions-fragment', ':fermat-cht-android-sub-app-chat-identity-bitdubai'
+include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':fermat_statistics', ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai', ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai', ':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai', ':fermat-ccp-plugin-transaction-transfer-intra-wallet-users-bitdubai', ':fermat-ccp-plugin-transaction-outgoing-device-user-bitdubai', ':transactions-fragment'
 
 include ':fermat-android-core'
 include ':fermat-api'
@@ -75,4 +75,3 @@ project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP
 include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':fermat_statistics', ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai', ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai', ':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai', ':fermat-ccp-plugin-transaction-transfer-intra-wallet-users-bitdubai', ':fermat-ccp-plugin-transaction-outgoing-device-user-bitdubai', ':transactions-fragment'
 project(':fermat-pip-plugin-android-core-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-android-core-module-developer-bitdubai')
 
-project(':fermat-cht-android-sub-app-chat-identity-bitdubai').projectDir = new File('CHT/android/sub_app/fermat-cht-android-sub-app-chat-identity-bitdubai')
