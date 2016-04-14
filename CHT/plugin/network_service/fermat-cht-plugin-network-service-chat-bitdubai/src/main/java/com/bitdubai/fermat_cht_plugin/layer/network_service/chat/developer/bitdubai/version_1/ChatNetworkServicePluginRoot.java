@@ -31,6 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.NotificationNotFo
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatProtocolState;
@@ -1049,14 +1050,16 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
         }
     }
 
-    /**
-     * @param chat
-     * @throws CantSendChatMessageNewStatusNotificationException
-     */
-    @Override
-    public void sendMessageChatBroadcast(Chat chat) throws CantSendChatMessageMetadataException {
-        //TODO: Este metodo es el va hacer llamado desde el middleware para que se arme la data necesaria para proceder a enviar el mensaje desde el metodo que usamos actualmente para el envio
-    }
+//    /**
+//     * @param chatMetadata
+//     * @throws CantSendChatMessageNewStatusNotificationException
+//     */
+//    @Override
+//    public void sendMessageChatBroadcast(ChatMetadata chatMetadata) throws CantSendChatMessageMetadataException {
+//        //TODO: Este metodo es el va hacer llamado desde el middleware para que se arme la data necesaria para proceder a enviar el mensaje desde el metodo que usamos actualmente para el envio
+//
+//
+//    }
 
     @Override
     public void confirmReception(UUID transactionID) throws CantConfirmTransactionException {
