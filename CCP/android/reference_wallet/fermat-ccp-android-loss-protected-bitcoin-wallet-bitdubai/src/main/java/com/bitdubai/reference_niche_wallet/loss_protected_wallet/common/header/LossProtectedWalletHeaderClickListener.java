@@ -5,9 +5,9 @@ import android.view.View;
 /**
  * Created by Matias Furszyfer on 2015.11.16..
  */
-public class BitcoinWalletHeaderClickListener implements View.OnClickListener{
+public class LossProtectedWalletHeaderClickListener implements View.OnClickListener{
 
-    public BitcoinWalletHeaderClickListener() {
+    public LossProtectedWalletHeaderClickListener() {
     }
 
     @Override
