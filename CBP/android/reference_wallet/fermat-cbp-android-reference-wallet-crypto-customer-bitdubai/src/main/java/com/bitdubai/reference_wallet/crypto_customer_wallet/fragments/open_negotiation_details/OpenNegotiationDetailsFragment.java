@@ -85,6 +85,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private CustomerBrokerNegotiationInformation negotiationInfo;
 
     private ArrayList<MoneyType> receptionMethods;
+//    private List<String> bankAccountList;
     private List<BankAccountNumber> bankAccountList;
     private List<String> locationList;
 
@@ -110,6 +111,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 bankAccountList = new ArrayList<>();
                 appSession.setData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST, bankAccountList);
             } else {
+//                bankAccountList = (List<String>) data;
                 bankAccountList = (List<BankAccountNumber>) data;
             }
 
@@ -555,13 +557,15 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     private void actionListenerCustomerBankAccount(final ClauseInformation clause) {
 
         if (bankAccountList.size() > 0) {
+//            SimpleListDialogFragment<String> dialogFragment = new SimpleListDialogFragment<>();
             SimpleListDialogFragment<BankAccountNumber> dialogFragment = new SimpleListDialogFragment<>();
             dialogFragment.configure("bankAccount", bankAccountList);
             dialogFragment.setListener(new SimpleListDialogFragment.ItemSelectedListener<BankAccountNumber>() {
                 @Override
                 public void onItemSelected(BankAccountNumber newValue) {
                     putClauseTemp(clause.getType(), clause.getValue());
-                    putClause(clause, newValue.getAccount());
+                    putClause(clause, newValue.toString());
+//                    putClause(clause, newValue.getAccount());
                     adapter.changeDataSet(negotiationInfo);
                 }
             });
@@ -854,7 +858,8 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
                 if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null) {
                     String bankAccount = "INSERT BANK ACCOUNT IN SETTINGS WALLET.";
                     if (bankAccountList.size() > 0)
-                        bankAccount = bankAccountList.get(0).getAccount();
+                        bankAccount = bankAccountList.get(0).toString();
+//                    bankAccount = bankAccountList.get(0).getAccount();
                     putClause(ClauseType.CUSTOMER_BANK_ACCOUNT, bankAccount);
                     clauses.remove(ClauseType.CUSTOMER_CRYPTO_ADDRESS);
                     clauses.remove(ClauseType.CUSTOMER_PLACE_TO_DELIVER);
