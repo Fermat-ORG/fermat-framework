@@ -4,6 +4,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSubsystemException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.DeveloperBitDubai;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 05/11/2015.
@@ -14,13 +15,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 public class NetworkClientPluginSubsystem extends AbstractPluginSubsystem {
 
     public NetworkClientPluginSubsystem() {
-        super(new PluginReference(Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT));
+        super(new PluginReference(Plugins.NETWORK_CLIENT));
     }
 
     @Override
     public void start() throws CantStartSubsystemException {
         try {
-            //registerDeveloper(new DeveloperBitDubai());
+            registerDeveloper(new DeveloperBitDubai());
         } catch (Exception e) {
             System.err.println("Exception: " + e.getMessage());
             throw new CantStartSubsystemException(e, null, null);

@@ -1,9 +1,3 @@
-/*
- * @#CheckInProfileDiscoveryQueryRequestProcessor.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -21,7 +15,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ut
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketChannelServerEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
@@ -58,10 +52,10 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
     /**
      * Constructor whit parameter
      *
-     * @param webSocketChannelServerEndpoint register
+     * @param fermatWebSocketChannelEndpoint register
      */
-    public CheckInProfileDiscoveryQueryRequestProcessor(WebSocketChannelServerEndpoint webSocketChannelServerEndpoint) {
-        super(webSocketChannelServerEndpoint, PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_REQUEST);
+    public CheckInProfileDiscoveryQueryRequestProcessor(FermatWebSocketChannelEndpoint fermatWebSocketChannelEndpoint) {
+        super(fermatWebSocketChannelEndpoint, PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_REQUEST);
     }
 
     /**
@@ -79,7 +73,7 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
 
         try {
 
-            CheckInProfileDiscoveryQueryMsgRequest messageContent = (CheckInProfileDiscoveryQueryMsgRequest) packageReceived.getContent();
+            CheckInProfileDiscoveryQueryMsgRequest messageContent = CheckInProfileDiscoveryQueryMsgRequest.parseContent(packageReceived.getContent());
 
             /*
              * Create the method call history
@@ -142,7 +136,7 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
                  * If all ok, respond whit success message
                  */
                 CheckInProfileListMsgRespond checkInProfileListMsgRespond = new CheckInProfileListMsgRespond(CheckInProfileListMsgRespond.STATUS.SUCCESS, CheckInProfileListMsgRespond.STATUS.SUCCESS.toString(), profileList);
-                Package packageRespond = Package.createInstance(checkInProfileListMsgRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(checkInProfileListMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -161,7 +155,7 @@ public class CheckInProfileDiscoveryQueryRequestProcessor extends PackageProcess
                  * Respond whit fail message
                  */
                 CheckInProfileListMsgRespond checkInProfileListMsgRespond = new CheckInProfileListMsgRespond(CheckInProfileListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage(), profileList);
-                Package packageRespond = Package.createInstance(checkInProfileListMsgRespond, packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(checkInProfileListMsgRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond

@@ -149,6 +149,68 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
     }
 
     /**
+     * Method that list the all entities on the data base.
+     *
+     * @param max     number of records to bring
+     * @param offset  pointer to start bringing records.
+     *
+     * @return All entities.
+     *
+     * @throws CantReadRecordDataBaseException if something goes wrong.
+     */
+    public final List<E> findAll(final Integer max   ,
+                                 final Integer offset) throws CantReadRecordDataBaseException {
+
+        try {
+            // load the data base to memory
+            DatabaseTable table = getDatabaseTable();
+
+            table.setFilterTop(max.toString());
+            table.setFilterOffSet(offset.toString());
+
+            table.loadToMemory();
+
+            final List<DatabaseTableRecord> records = table.getRecords();
+
+            final List<E> list = new ArrayList<>();
+
+            // Convert into entity objects and add to the list.
+            for (DatabaseTableRecord record : records)
+                list.add(getEntityFromDatabaseTableRecord(record));
+
+            return list;
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "The data no exist");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "Invalid parameter found, maybe the enum is wrong.");
+        }
+    }
+
+    /**
+     * Method that get the count of all entities on the table.
+     *
+     * @return count of All entities.
+     *
+     * @throws CantReadRecordDataBaseException if something goes wrong.
+     */
+    public final long getAllCount() throws CantReadRecordDataBaseException {
+
+        try {
+            // load the data base to memory
+            DatabaseTable table = getDatabaseTable();
+
+            return table.getCount();
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "The data no exist");
+        }
+    }
+
+    /**
      * Method that list the all entities on the data base. The valid value of
      * the column name are the att of the <code>DatabaseConstants</code>
      *
@@ -157,7 +219,8 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      * @throws CantReadRecordDataBaseException
      *
      */
-    public final List<E> findAll(final String columnName , final String columnValue) throws CantReadRecordDataBaseException {
+    public final List<E> findAll(final String columnName ,
+                                 final String columnValue) throws CantReadRecordDataBaseException {
 
         if (columnName == null || columnName.isEmpty() || columnValue == null || columnValue.isEmpty())
             throw new IllegalArgumentException("The filter are required, can not be null or empty.");
@@ -188,6 +251,87 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
             throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "Invalid parameter found, maybe the enum is wrong.");
         }
 
+    }
+
+    /**
+     * Method that list the all entities on the data base. The valid value of
+     * the column name are the att of the <code>DatabaseConstants</code>
+     *
+     * @param max     number of records to bring
+     * @param offset  pointer to start bringing records.
+     *
+     * @return All entities filtering by the parameter specified.
+     *
+     * @throws CantReadRecordDataBaseException
+     *
+     */
+    public final List<E> findAll(final String  columnName ,
+                                 final String  columnValue,
+                                 final Integer max        ,
+                                 final Integer offset     ) throws CantReadRecordDataBaseException {
+
+        if (columnName == null || columnName.isEmpty() || columnValue == null || columnValue.isEmpty())
+            throw new IllegalArgumentException("The filter are required, can not be null or empty.");
+
+        try {
+
+            // load the data base to memory with filters
+            final DatabaseTable table = getDatabaseTable();
+
+            table.setFilterTop(max.toString());
+            table.setFilterOffSet(offset.toString());
+
+            table.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            final List<DatabaseTableRecord> records = table.getRecords();
+
+            final List<E> list = new ArrayList<>();
+
+            // Convert into entity objects and add to the list.
+            for (DatabaseTableRecord record : records)
+                list.add(getEntityFromDatabaseTableRecord(record));
+
+            return list;
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "The data no exist");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "Invalid parameter found, maybe the enum is wrong.");
+        }
+
+    }
+
+    /**
+     * Method that get the count of all entities on the table with The valid value of
+     * the column name are the att of the <code>DatabaseConstants</code>
+     *
+     * @return get the count of All entities filtering by the parameter specified.
+     *
+     * @throws CantReadRecordDataBaseException
+     *
+     */
+    public final long getAllCount(final String columnName ,
+                                  final String columnValue) throws CantReadRecordDataBaseException {
+
+        if (columnName == null || columnName.isEmpty() || columnValue == null || columnValue.isEmpty())
+            throw new IllegalArgumentException("The filter are required, can not be null or empty.");
+
+        try {
+
+            // load the data base to memory with filters
+            final DatabaseTable table = getDatabaseTable();
+
+            table.addStringFilter(columnName, columnValue, DatabaseFilterType.EQUAL);
+
+            return table.getCount();
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "The data no exist");
+        }
     }
 
     /**
@@ -246,6 +390,112 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
     }
 
     /**
+     * Method that list the all entities on the data base. The valid value of
+     * the key are the att of the <code>DatabaseConstants</code>
+     *
+     * @param max     number of records to bring
+     * @param offset  pointer to start bringing records.
+     *
+     * @return All entities filtering by the parameters specified.
+     *
+     * @throws CantReadRecordDataBaseException if something goes wrong.
+     *
+     */
+    public final List<E> findAll(final Map<String, Object> filters,
+                                 final Integer             max    ,
+                                 final Integer             offset ) throws CantReadRecordDataBaseException {
+
+        if (filters == null || filters.isEmpty())
+            throw new IllegalArgumentException("The filters are required, can not be null or empty.");
+
+        try {
+
+            // Prepare the filters
+            final DatabaseTable table = getDatabaseTable();
+
+            table.setFilterTop(max.toString());
+            table.setFilterOffSet(offset.toString());
+
+            final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
+
+            for (String key : filters.keySet()) {
+
+                DatabaseTableFilter newFilter = table.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.EQUAL);
+                newFilter.setColumn(key);
+                newFilter.setValue((String) filters.get(key));
+
+                tableFilters.add(newFilter);
+            }
+
+
+            // load the data base to memory with filters
+            table.setFilterGroup(tableFilters, null, DatabaseFilterOperator.OR);
+            table.loadToMemory();
+
+            final List<DatabaseTableRecord> records = table.getRecords();
+
+            final List<E> list = new ArrayList<>();
+
+            // Convert into entity objects and add to the list.
+            for (DatabaseTableRecord record : records)
+                list.add(getEntityFromDatabaseTableRecord(record));
+
+            return list;
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "The data no exist");
+        } catch (final InvalidParameterException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "Invalid parameter found, maybe the enum is wrong.");
+        }
+    }
+
+    /**
+     * Method that get the count of all entities on the table with The valid value of
+     * the key are the att of the <code>DatabaseConstants</code>
+     *
+     * @return get the count of All entities filtering by the parameters specified.
+     *
+     * @throws CantReadRecordDataBaseException if something goes wrong.
+     *
+     */
+    public final long getAllCount(final Map<String, Object> filters) throws CantReadRecordDataBaseException {
+
+        if (filters == null || filters.isEmpty())
+            throw new IllegalArgumentException("The filters are required, can not be null or empty.");
+
+        try {
+
+            // Prepare the filters
+            final DatabaseTable table = getDatabaseTable();
+
+            final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
+
+            for (String key : filters.keySet()) {
+
+                DatabaseTableFilter newFilter = table.getEmptyTableFilter();
+                newFilter.setType(DatabaseFilterType.EQUAL);
+                newFilter.setColumn(key);
+                newFilter.setValue((String) filters.get(key));
+
+                tableFilters.add(newFilter);
+            }
+
+
+            // load the data base to memory with filters
+            table.setFilterGroup(tableFilters, null, DatabaseFilterOperator.OR);
+
+            return table.getCount();
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "The data no exist");
+        }
+    }
+
+    /**
      * Method that create a new entity in the data base.
      *
      * @param entity to create.
@@ -263,11 +513,14 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
 
             getDatabaseTable().insertRecord(entityRecord);
 
-        } catch (final CantInsertRecordException e) {
+        } catch (final CantInsertRecordException cantInsertRecordException) {
 
-            throw new CantInsertRecordDataBaseException(e, "Table Name: " + tableName, "The Template Database triggered an unexpected problem that wasn't able to solve by itself");
+            throw new CantInsertRecordDataBaseException(
+                    cantInsertRecordException,
+                    "Table Name: " + tableName,
+                    "The Template Database triggered an unexpected problem that wasn't able to solve by itself."
+            );
         }
-
     }
 
     /**

@@ -1,24 +1,15 @@
-/*
- * @#CheckInNetworkServiceRequestProcessor.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketChannelServerEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedClientsHistory;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInClient;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInNetworkService;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedNetworkServicesHistory;
 
@@ -32,7 +23,7 @@ import javax.websocket.Session;
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckInNetworkServiceRequestProcessor</code>
  * process all packages received the type <code>MessageType.CHECK_IN_NETWORK_SERVICE_REQUEST</code><p/>
- *
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 06/12/15.
  *
  * @version 1.0
@@ -48,15 +39,15 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
     /**
      * Constructor  whit parameter
      *
-     * @param webSocketChannelServerEndpoint register
-     *
+     * @param fermatWebSocketChannelEndpoint register
      */
-    public CheckInNetworkServiceRequestProcessor(WebSocketChannelServerEndpoint webSocketChannelServerEndpoint) {
-        super(webSocketChannelServerEndpoint, PackageType.CHECK_IN_NETWORK_SERVICE_REQUEST);
+    public CheckInNetworkServiceRequestProcessor(FermatWebSocketChannelEndpoint fermatWebSocketChannelEndpoint) {
+        super(fermatWebSocketChannelEndpoint, PackageType.CHECK_IN_NETWORK_SERVICE_REQUEST);
     }
 
     /**
      * (non-javadoc)
+     *
      * @see PackageProcessor#processingPackage(Session, Package)
      */
     @Override
@@ -70,7 +61,7 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
 
         try {
 
-            CheckInProfileMsgRequest messageContent = (CheckInProfileMsgRequest) packageReceived.getContent();
+            CheckInProfileMsgRequest messageContent = CheckInProfileMsgRequest.parseContent(packageReceived.getContent());
 
             /*
              * Create the method call history
@@ -80,7 +71,7 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
             /*
              * Validate if content type is the correct
              */
-            if (messageContent.getMessageContentType() == MessageContentType.JSON){
+            if (messageContent.getMessageContentType() == MessageContentType.JSON) {
 
                 /*
                  * Obtain the profile of the network service
@@ -101,7 +92,7 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 CheckInProfileMsjRespond respondProfileCheckInMsj = new CheckInProfileMsjRespond(CheckInProfileMsjRespond.STATUS.SUCCESS, CheckInProfileMsjRespond.STATUS.SUCCESS.toString(), networkServiceProfile.getIdentityPublicKey());
-                Package packageRespond = Package.createInstance(respondProfileCheckInMsj, packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_NETWORK_SERVICE_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_NETWORK_SERVICE_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -110,7 +101,7 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
 
             }
 
-        }catch (Exception exception){
+        } catch (Exception exception) {
 
             try {
 
@@ -120,7 +111,7 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
                  * Respond whit fail message
                  */
                 CheckInProfileMsjRespond respondProfileCheckInMsj = new CheckInProfileMsjRespond(CheckInProfileMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), networkServiceProfile.getIdentityPublicKey());
-                Package packageRespond = Package.createInstance(respondProfileCheckInMsj, packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -154,7 +145,7 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
         checkedInNetworkService.setNetworkServiceType(networkServiceProfile.getNetworkServiceType().getCode());
 
         //Validate if location are available
-        if (networkServiceProfile.getLocation() != null){
+        if (networkServiceProfile.getLocation() != null) {
             checkedInNetworkService.setLatitude(networkServiceProfile.getLocation().getLatitude());
             checkedInNetworkService.setLongitude(networkServiceProfile.getLocation().getLongitude());
         }
@@ -183,7 +174,7 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
         checkedNetworkServicesHistory.setCheckType(CheckedNetworkServicesHistory.CHECK_TYPE_IN);
 
         //Validate if location are available
-        if (networkServiceProfile.getLocation() != null){
+        if (networkServiceProfile.getLocation() != null) {
             checkedNetworkServicesHistory.setLastLatitude(networkServiceProfile.getLocation().getLatitude());
             checkedNetworkServicesHistory.setLastLongitude(networkServiceProfile.getLocation().getLongitude());
         }
