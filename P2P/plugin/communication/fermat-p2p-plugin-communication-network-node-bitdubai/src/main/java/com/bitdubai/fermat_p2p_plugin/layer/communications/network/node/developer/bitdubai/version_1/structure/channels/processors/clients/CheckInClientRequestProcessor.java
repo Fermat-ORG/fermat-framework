@@ -103,6 +103,7 @@ public class CheckInClientRequestProcessor extends PackageProcessor {
             }
 
         }catch (Exception exception){
+            exception.printStackTrace();
 
             try {
 

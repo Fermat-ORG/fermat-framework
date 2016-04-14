@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableCo
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The Class <code>com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.structure.DesktopDatabaseTableFactory</code>
@@ -22,23 +23,24 @@ import java.util.ArrayList;
  */
 public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
 
-
     /**
      * DatabaseTableFactory Member Variables.
      */
 
-    private String indexName ="";
-    private String tableName;
-    ArrayList<DatabaseTableColumn> tableColumns = new ArrayList<DatabaseTableColumn>();
-
-    // Public constructor declarations.
+    private final List<List<String>>             indexes     ;
+    private final String                         tableName   ;
+    private final ArrayList<DatabaseTableColumn> tableColumns;
 
     /**
      * <p>DatabaseTableFactory class constructor
      * @param tableName table name to use
      */
-    public DesktopDatabaseTableFactory (String tableName){
+    public DesktopDatabaseTableFactory (final String tableName){
+
         this.tableName = tableName;
+
+        this.indexes      = new ArrayList<>();
+        this.tableColumns = new ArrayList<>();
     }
 
     /**
@@ -50,8 +52,16 @@ public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
      * @param index  index field name
      */
     @Override
-    public void addIndex(String index) {
-        this.indexName = index;
+    public void addIndex(final String index) {
+        List<String> indexColumns = new ArrayList<>();
+        indexColumns.add(index);
+        this.indexes.add(indexColumns);
+    }
+
+    @Override
+    public void addIndex(List<String> multipleColumnIndex) {
+
+        this.indexes.add(multipleColumnIndex);
     }
 
     /**
@@ -61,8 +71,8 @@ public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
      */
 
     @Override
-    public String getIndex(){
-        return indexName;
+    public List<List<String>> listIndexes(){
+        return indexes;
     }
 
     /**
@@ -78,22 +88,25 @@ public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
     /**
      *<p>Sets properties of a new column to the table
      *
-     * @param columnName New column name
-     * @param dataType New column data type
+     * @param columnName   New column name
+     * @param dataType     New column data type
      * @param dataTypeSize New column data size
-     * @param primaryKey Boolean column if primary ley
+     * @param primaryKey   Boolean column if primary ley
      */
-
     @Override
-    public void addColumn(String columnName, DatabaseDataType dataType, int dataTypeSize, boolean primaryKey) {
-        DesktopDatabaseTableColumn tableColumn = new DesktopDatabaseTableColumn();
-        tableColumn.setName(columnName);
-        tableColumn.setDataTypeSize(dataTypeSize);
-        tableColumn.setType(dataType);
-        tableColumn.setPrimaryKey(primaryKey);
+    public void addColumn(final String           columnName  ,
+                          final DatabaseDataType dataType    ,
+                          final int              dataTypeSize,
+                          final boolean          primaryKey  ) {
 
-        this.tableColumns.add(tableColumn);
-
+        this.tableColumns.add(
+                new DesktopDatabaseTableColumn(
+                        columnName,
+                        dataType,
+                        dataTypeSize,
+                        primaryKey
+                )
+        );
     }
 
     /**
@@ -105,7 +118,5 @@ public class DesktopDatabaseTableFactory implements DatabaseTableFactory {
     public  ArrayList<DatabaseTableColumn> getColumns (){
         return this.tableColumns;
     }
-
-
 
 }
