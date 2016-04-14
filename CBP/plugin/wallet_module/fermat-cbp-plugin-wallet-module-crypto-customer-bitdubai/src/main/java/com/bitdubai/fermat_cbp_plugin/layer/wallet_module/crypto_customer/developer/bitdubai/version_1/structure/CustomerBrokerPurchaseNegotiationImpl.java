@@ -196,7 +196,7 @@ public class CustomerBrokerPurchaseNegotiationImpl implements CustomerBrokerPurc
         memo = negotiationInfo.getMemo();
 
         Collection<ClauseInformation> values = negotiationInfo.getClauses().values();
-//        dataHasChanged = dataHasChanged || (clauses.size() != values.size());
+        dataHasChanged = dataHasChanged || (clauses.size() != values.size());
 
         clauses = new ArrayList<>();
         for (final ClauseInformation value : values) {
