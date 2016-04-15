@@ -1,4 +1,4 @@
-package com.fermat_cht_plugin.layer.sub_app_module.chat.actor.community.bitdubai.version_1;
+package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
