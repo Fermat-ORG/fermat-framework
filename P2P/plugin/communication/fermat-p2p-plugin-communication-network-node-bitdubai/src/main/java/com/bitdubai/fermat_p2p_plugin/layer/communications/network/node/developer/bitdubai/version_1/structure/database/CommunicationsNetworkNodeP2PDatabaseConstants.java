@@ -114,14 +114,11 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
      */
     public static final String CHECKED_IN_CLIENTS_TABLE_NAME = "checked_in_clients";
 
-    public static final String CHECKED_IN_CLIENTS_UUID_COLUMN_NAME = "uuid";
     public static final String CHECKED_IN_CLIENTS_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "identity_public_key";
     public static final String CHECKED_IN_CLIENTS_LATITUDE_COLUMN_NAME = "latitude";
     public static final String CHECKED_IN_CLIENTS_LONGITUDE_COLUMN_NAME = "longitude";
     public static final String CHECKED_IN_CLIENTS_DEVICE_TYPE_COLUMN_NAME = "device_type";
     public static final String CHECKED_IN_CLIENTS_CHECKED_IN_TIMESTAMP_COLUMN_NAME = "checked_in_timestamp";
-
-    public static final String CHECKED_IN_CLIENTS_FIRST_KEY_COLUMN = "uuid";
 
     /**
      * checked in network service database table definition.

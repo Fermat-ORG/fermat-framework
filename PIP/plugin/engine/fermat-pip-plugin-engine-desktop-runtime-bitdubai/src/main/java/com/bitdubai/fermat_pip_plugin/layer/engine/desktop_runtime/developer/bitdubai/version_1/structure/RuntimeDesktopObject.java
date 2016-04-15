@@ -2,6 +2,7 @@ package com.bitdubai.fermat_pip_plugin.layer.engine.desktop_runtime.developer.bi
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.LanguagePackage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -110,8 +111,13 @@ public class RuntimeDesktopObject implements DesktopObject {
     }
 
     @Override
-    public void changeActualStartActivity(int option) throws IllegalArgumentException {
-
+    public void changeActualStartActivity(String activityCode) throws IllegalArgumentException {
+        if(activities.get(activityCode)==null) throw new IllegalArgumentException();
+        try {
+            this.startActivity = Activities.getValueFromString(activityCode);
+        } catch (InvalidParameterException e) {
+            throw new IllegalArgumentException(activityCode);
+        }
     }
 
     public void setStartActivity(Activities activity) {

@@ -740,8 +740,8 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
                     null,                     // distance
                     null,                     // name
                     null,                     // extraData
-                    null,                     // offset
-                    null,                     // max
+                   offset,                     // offset
+                    max,                     // max
                     null,                     // fromOtherPlatformComponentType, when use this filter apply the identityPublicKey
                     null
             );                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey

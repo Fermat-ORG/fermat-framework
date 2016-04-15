@@ -49,10 +49,9 @@ private PluginDatabaseSystem pluginDatabaseSystem;
             try {
                 database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
 
-
-            /**
-             * Next, I will add the needed tables.
-             */
+                /**
+                 * Next, I will add the needed tables.
+                 */
 
                 DatabaseTableFactory table;
                 DatabaseFactory databaseFactory = database.getDatabaseFactory();
@@ -62,19 +61,16 @@ private PluginDatabaseSystem pluginDatabaseSystem;
                  */
                 table = databaseFactory.newTableFactory(ownerId, IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_TABLE_NAME);
 
-                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.TRUE);
-                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_NAME_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 0, Boolean.FALSE);
-                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME, DatabaseDataType.STRING, 200, Boolean.FALSE);
+                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_LINKED_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING      , 100, Boolean.TRUE );
+                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PUBLIC_KEY_COLUMN_NAME                , DatabaseDataType.STRING      , 100, Boolean.TRUE );
+                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_NAME_COLUMN_NAME                      , DatabaseDataType.STRING      , 100, Boolean.FALSE);
+                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_CONTACT_STATE_COLUMN_NAME             , DatabaseDataType.STRING      ,  50, Boolean.FALSE);
+                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_REGISTRATION_DATE_COLUMN_NAME         , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
+                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME             , DatabaseDataType.LONG_INTEGER,   0, Boolean.FALSE);
+                table.addColumn(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_PHRASE_COLUMN_NAME                    , DatabaseDataType.STRING      , 200, Boolean.FALSE);
 
-                table.addIndex(IntraWalletUserActorDatabaseConstants.INTRA_WALLET_USER_FIRST_KEY_COLUMN);
-
-
-                    //Create the table
-                    databaseFactory.createTable(ownerId, table);
+                //Create the table
+                databaseFactory.createTable(ownerId, table);
 
                 return database;
 

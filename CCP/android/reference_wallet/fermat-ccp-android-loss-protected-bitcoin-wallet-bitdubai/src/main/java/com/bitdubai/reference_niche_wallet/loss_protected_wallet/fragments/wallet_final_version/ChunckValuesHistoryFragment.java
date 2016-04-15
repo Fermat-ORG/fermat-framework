@@ -1,7 +1,6 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version;
 
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +12,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -39,12 +37,10 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.Los
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
-import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.structure.LossProtectedWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -76,14 +72,12 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     String walletPublicKey = "loss_protected_wallet";
     /**
      * MANAGERS
-    @Override
-    protected void bindHolder(ChunckValuesHistoryItemViewHolder holder, LossProtectedWalletTransaction data, int position) {
-
-    }
-
+     @Override
+     protected void bindHolder(ChunckValuesHistoryItemViewHolder holder, LossProtectedWalletTransaction data, int position) {
+     }
      */
     private LossProtectedWallet cryptoWallet;
-     /**
+    /**
      * DATA
      */
     private List<LossProtectedWalletTransaction> lstTransaction;
@@ -97,7 +91,6 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     private int offset = 0;
     private View rootView;
     private LinearLayout empty;
-    private LinearLayout chunck_header_container;
     private TextView chunk_balance_TextView;
     private  TextView exchange_rate;
 
@@ -178,7 +171,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
             recyclerView.addItemDecoration(itemDecoration);
             empty = (LinearLayout) rootView.findViewById(R.id.empty);
-            //setUp();
+
             setUpHeader(inflater);
 
         }catch (Exception e){
@@ -200,13 +193,11 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
             container_header_balance.setVisibility(View.VISIBLE);
 
-            chunck_header_container = (LinearLayout) chunk_balance_header.findViewById(R.id.chunck_header_container);
-
             final String realBalance = WalletUtils.formatBalanceStringNotDecimal(cryptoWallet.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType), ShowMoneyType.BITCOIN.getCode());
 
             final double actualExchangeRate = lossProtectedWalletSession.getActualExchangeRate();
 
-            chunk_balance_TextView = (TextView) chunk_balance_header.findViewById(R.id.txt_amount);
+            chunk_balance_TextView = (TextView) chunk_balance_header.findViewById(R.id.txt_balance_amount);
             exchange_rate = (TextView) chunk_balance_header.findViewById(R.id.txt_exchange_rate);
 
             chunk_balance_TextView.setText(realBalance);
@@ -261,7 +252,6 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     @SuppressWarnings("unchecked")
     public FermatAdapter getAdapter() {
         if (adapter == null) {
-            //WalletStoreItemPopupMenuListener listener = getWalletStoreItemPopupMenuListener();
             adapter = new ChunckValuesHistoryAdapter(getActivity(), lstTransaction,cryptoWallet,lossProtectedWalletSession,this);
             adapter.setFermatListEventListener(this); // setting up event listeners
 
@@ -304,18 +294,25 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         } catch (Exception e) {
             lossProtectedWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
                     UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-           e.printStackTrace();
-       }
+            e.printStackTrace();
+        }
 
         return lstTransaction;
     }
 
     @Override
     public void onItemClickListener(LossProtectedWalletTransaction item, int position) {
+        try {
         selectedItem = item;
-        onRefresh();
-        //showDetailsActivityFragment(selectedItem);
-    }
+                //set selected transaction id
+            lossProtectedWalletSession.setTransactionDetailId(selectedItem.getTransactionId());
+
+            //go to spending details
+            changeActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUE_DETAIL_ACTIVITY,lossProtectedWalletSession.getAppPublicKey());
+        } catch (Exception e) {
+           e.printStackTrace();
+        }
+     }
 
     /**
      * On Long item Click Listener
@@ -371,7 +368,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         menu.add(0, LossProtectedWalletConstants.IC_ACTION_SEND, 0, "send").setIcon(R.drawable.ic_actionbar_send)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        menu.add(1, LossProtectedWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.help_icon)
+        menu.add(1, LossProtectedWalletConstants.IC_ACTION_HELP_PRESENTATION, 1, "help").setIcon(R.drawable.loos_help_icon)
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         //inflater.inflate(R.menu.home_menu, menu);
     }
