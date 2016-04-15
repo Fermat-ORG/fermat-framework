@@ -561,9 +561,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                         if(!exist)
                             userList.add(intraUserCache);
                     }
-                    //guardo el cache
+                    //save cache records
+                    try {
+                        moduleManager.saveCacheIntraUsersSuggestions(userList);
+                    } catch (CantGetIntraUsersListException e) {
+                        e.printStackTrace();
+                    }
 
-                    moduleManager.saveCacheIntraUsersSuggestions(userList);
                     dataSet.addAll(userList);
                 }
             }
