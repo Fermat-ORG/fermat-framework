@@ -67,6 +67,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+
 /**
  * Created by nelson on 22/09/15.
  * Updated by Manuel Perez on 24/01/2016
@@ -85,6 +86,7 @@ public interface CryptoCustomerWalletModuleManager extends CBPWalletsModuleManag
      *
      * @param customer        the Crypto Customer ID who is going to be associated with this wallet
      * @param walletPublicKey the public key of the wallet to associate
+     *
      * @return true if the association was successful false otherwise
      */
     boolean associateIdentity(ActorIdentity customer, String walletPublicKey) throws CantCreateNewCustomerIdentityWalletRelationshipException;
@@ -93,12 +95,12 @@ public interface CryptoCustomerWalletModuleManager extends CBPWalletsModuleManag
      * Clear all identities from this wallet
      *
      * @param walletPublicKey the public key of the wallet to clear
-     * @return true if the association was successful false otherwise
      */
     void clearAssociatedIdentities(String walletPublicKey) throws CantClearAssociatedCustomerIdentityWalletRelationshipException;
 
 
-    boolean haveAssociatedIdentity(String walletPublicKey) throws CantListCryptoCustomerIdentityException, CantGetCustomerIdentityWalletRelationshipException;
+    boolean haveAssociatedIdentity(String walletPublicKey)
+            throws CantListCryptoCustomerIdentityException, CantGetCustomerIdentityWalletRelationshipException;
 
     /**
      * Through this method you can get the customer identity associated to any crypto customer wallet.
@@ -107,38 +109,40 @@ public interface CryptoCustomerWalletModuleManager extends CBPWalletsModuleManag
      *
      * @return an instance of CryptoCustomerIdentity associated to the wallet.
      *
-     * @throws CantGetAssociatedIdentityException            if something goes wrong.
-     * @throws IdentityAssociatedNotFoundException  if can't find the identity associated with the wallet.
+     * @throws CantGetAssociatedIdentityException  if something goes wrong.
+     * @throws IdentityAssociatedNotFoundException if can't find the identity associated with the wallet.
      */
-    CryptoCustomerIdentity getAssociatedIdentity(
-
-            String walletPublicKey
-
-    ) throws CantGetAssociatedIdentityException,
-            IdentityAssociatedNotFoundException;
+    CryptoCustomerIdentity getAssociatedIdentity(String walletPublicKey)
+            throws CantGetAssociatedIdentityException, IdentityAssociatedNotFoundException;
 
     /**
      * @return list of identities associated with this wallet
      */
-    List<CryptoCustomerIdentity> getListOfIdentities() throws CantGetCryptoCustomerIdentityListException, CantListCryptoCustomerIdentityException;
+    List<CryptoCustomerIdentity> getListOfIdentities()
+            throws CantGetCryptoCustomerIdentityListException, CantListCryptoCustomerIdentityException;
 
     /**
+     * @param walletPublicKey the customer wallet public key
+     *
      * @return a summary of the current market rate for the different currencies the customer is interested
-     * @param walletPublicKey
      */
-    Collection<IndexInfoSummary> getProvidersCurrentExchangeRates(String walletPublicKey) throws CantGetProvidersCurrentExchangeRatesException, CantGetProviderException, UnsupportedCurrencyPairException, CantGetExchangeRateException, CantGetSettingsException, SettingsNotFoundException;
+    Collection<IndexInfoSummary> getProvidersCurrentExchangeRates(String walletPublicKey)
+            throws CantGetProvidersCurrentExchangeRatesException, CantGetProviderException, UnsupportedCurrencyPairException,
+            CantGetExchangeRateException, CantGetSettingsException, SettingsNotFoundException;
 
     /**
      * return the list of brokers connected with the crypto customer and the merchandises that they sell
      *
      * @return the list of crypto brokers
      */
-    Collection<BrokerIdentityBusinessInfo> getListOfConnectedBrokersAndTheirMerchandises() throws CantGetCryptoBrokerListException, CantGetListActorExtraDataException;
+    Collection<BrokerIdentityBusinessInfo> getListOfConnectedBrokersAndTheirMerchandises()
+            throws CantGetCryptoBrokerListException, CantGetListActorExtraDataException;
 
     /**
      * Verify if thew wallet is configured or not
      *
      * @param customerWalletPublicKey the wallet public key
+     *
      * @return true if configure, false otherwise
      */
     boolean isWalletConfigured(String customerWalletPublicKey) throws CantGetSettingsException, SettingsNotFoundException;
@@ -149,15 +153,16 @@ public interface CryptoCustomerWalletModuleManager extends CBPWalletsModuleManag
      * @param customerPublicKey the crypto customer publicKey
      * @param brokerPublicKey   the crypto broker publicKey
      * @param clauses           the initial and mandatory clauses to start a negotiation
+     *
      * @return true if the association was successful false otherwise
      */
-    boolean startNegotiation(String customerPublicKey, String brokerPublicKey, Collection<ClauseInformation> clauses) throws CouldNotStartNegotiationException, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
+    boolean startNegotiation(String customerPublicKey, String brokerPublicKey, Collection<ClauseInformation> clauses)
+            throws CouldNotStartNegotiationException, CantCreateCustomerBrokerNewPurchaseNegotiationTransactionException;
 
     /**
      * Start a new negotiation with a crypto broker
      *
      * @param negotiation the negotiation
-     * @return true if the association was successful false otherwise
      */
     void updateNegotiation(CustomerBrokerNegotiationInformation negotiation) throws CouldNotUpdateNegotiationException;
 
@@ -166,39 +171,75 @@ public interface CryptoCustomerWalletModuleManager extends CBPWalletsModuleManag
      */
     List<InstalledWallet> getInstallWallets() throws CantListWalletsException;
 
+    /**
+     * Set the memo of the negotiation
+     *
+     * @param memo the memo
+     * @param data the negotiation information
+     *
+     * @return the updated negotiation information
+     */
     CustomerBrokerNegotiationInformation setMemo(String memo, CustomerBrokerNegotiationInformation data);
 
     /**
-     * @param location
-     * @param uri
+     * create and add a new location
+     *
+     * @param location the location
+     * @param uri      the URI for this location, can be <code>null</code>
+     *
      * @throws CantCreateLocationPurchaseException
      */
     void createNewLocation(String location, String uri) throws CantCreateLocationPurchaseException;
 
     /**
      * Clear all saved locations from wallet
+     *
      * @throws CantDeleteLocationPurchaseException
      */
     void clearLocations() throws CantDeleteLocationPurchaseException;
 
-    NegotiationBankAccount newEmptyNegotiationBankAccount(final String bankAccount, final FiatCurrency currencyType) throws CantCreateBankAccountPurchaseException;
-
-    CustomerBrokerNegotiationInformation newEmptyCustomerBrokerNegotiationInformation() throws CantNewEmptyCustomerBrokerNegotiationInformationException;
+    /**
+     * @param bankAccount  the bank account
+     * @param currencyType the currency of the account
+     *
+     * @return the {@link NegotiationBankAccount} with the bank account and its currency
+     *
+     * @throws CantCreateBankAccountPurchaseException
+     */
+    NegotiationBankAccount newEmptyNegotiationBankAccount(final String bankAccount, final FiatCurrency currencyType)
+            throws CantCreateBankAccountPurchaseException;
 
     /**
-     * @param bankAccount
+     * @return a empty {@link CustomerBrokerNegotiationInformation} to fill
+     *
+     * @throws CantNewEmptyCustomerBrokerNegotiationInformationException
+     */
+    CustomerBrokerNegotiationInformation newEmptyCustomerBrokerNegotiationInformation()
+            throws CantNewEmptyCustomerBrokerNegotiationInformationException;
+
+    /**
+     * Create and add a new bank account in the database
+     *
+     * @param bankAccount the bank account
+     *
      * @throws CantCreateBankAccountPurchaseException
      */
     void createNewBankAccount(NegotiationBankAccount bankAccount) throws CantCreateBankAccountPurchaseException;
 
     /**
-     * @param bankAccount
+     * Update a bank account in the database
+     *
+     * @param bankAccount the bank account with the updated data
+     *
      * @throws CantUpdateBankAccountPurchaseException
      */
     void updateBankAccount(NegotiationBankAccount bankAccount) throws CantUpdateBankAccountPurchaseException;
 
     /**
-     * @param bankAccount
+     * delete a bank account in the database
+     *
+     * @param bankAccount the bank account to delete
+     *
      * @throws CantDeleteBankAccountPurchaseException
      */
     void deleteBankAccount(NegotiationBankAccount bankAccount) throws CantDeleteBankAccountPurchaseException;
@@ -212,135 +253,192 @@ public interface CryptoCustomerWalletModuleManager extends CBPWalletsModuleManag
 
     /**
      * Delete all bank accounts associated with the crypto customer wallet
+     *
      * @throws CantDeleteBankAccountPurchaseException
      */
     void clearAllBankAccounts() throws CantDeleteBankAccountPurchaseException;
 
     /**
-     * @param negotiation
+     * Create a {@link CustomerBrokerNegotiationInformation} in the database
+     *
+     * @param negotiation the negotiation to add in the database
+     *
      * @throws CantCreateCustomerBrokerPurchaseNegotiationException
      */
-    void createCustomerBrokerPurchaseNegotiation(CustomerBrokerNegotiationInformation negotiation) throws CantCreateCustomerBrokerPurchaseNegotiationException;
+    void createCustomerBrokerPurchaseNegotiation(CustomerBrokerNegotiationInformation negotiation)
+            throws CantCreateCustomerBrokerPurchaseNegotiationException;
 
 
-    CryptoCustomerWalletAssociatedSetting newEmptyCryptoBrokerWalletAssociatedSetting() throws CantNewEmptyCryptoCustomerWalletAssociatedSettingException;
+    /**
+     * @return a empty {@link CryptoCustomerWalletAssociatedSetting} to fill and add to the database
+     *
+     * @throws CantNewEmptyCryptoCustomerWalletAssociatedSettingException
+     */
+    CryptoCustomerWalletAssociatedSetting newEmptyCryptoBrokerWalletAssociatedSetting()
+            throws CantNewEmptyCryptoCustomerWalletAssociatedSettingException;
 
-    void saveWalletSettingAssociated(CryptoCustomerWalletAssociatedSetting setting, String customerWalletpublicKey) throws CantSaveCryptoCustomerWalletSettingException, CantCreateFileException, CantPersistFileException, CantGetSettingsException, CantPersistSettingsException;
+    /**
+     * save in the database the association between a crypto wallet with the customer wallet
+     *
+     * @param setting                 the object with the data of the wallets to associate
+     * @param customerWalletPublicKey the customer wallet public key
+     *
+     * @throws CantSaveCryptoCustomerWalletSettingException
+     * @throws CantCreateFileException
+     * @throws CantPersistFileException
+     * @throws CantGetSettingsException
+     * @throws CantPersistSettingsException
+     */
+    void saveWalletSettingAssociated(CryptoCustomerWalletAssociatedSetting setting, String customerWalletPublicKey)
+            throws CantSaveCryptoCustomerWalletSettingException, CantCreateFileException, CantPersistFileException,
+            CantGetSettingsException, CantPersistSettingsException;
 
     /**
      * Returns a list of provider references which can obtain the ExchangeRate of the given CurrencyPair
      *
      * @param currencyFrom currency from
-     * @param currencyTo currency to
+     * @param currencyTo   currency to
+     *
      * @return a Map of name/provider reference pairs
      */
-    Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo) throws CantGetProviderException, CantGetProviderInfoException;
+    Map<String, CurrencyExchangeRateProviderManager> getProviderReferencesFromCurrencyPair(Currency currencyFrom, Currency currencyTo)
+            throws CantGetProviderException, CantGetProviderInfoException;
 
     /**
      * Returns a CER provider given its providerId
      *
      * @param providerId the provider's ID
+     *
      * @return a CurrencyExchangeRateProviderManager reference
      */
-    CurrencyExchangeRateProviderManager getProviderReferenceFromId(UUID providerId) throws CantGetProviderException;
-
-    CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerWalletProviderSetting() throws CantNewEmptyCryptoCustomerWalletProviderSettingException;
-
-    void saveCryptoCustomerWalletProviderSetting(CryptoCustomerWalletProviderSetting setting, String customerWalletpublicKey) throws CantSaveCryptoCustomerWalletSettingException, CantPersistFileException, CantCreateFileException, CantPersistSettingsException, CantGetSettingsException;
-
-    void clearCryptoCustomerWalletProviderSetting(String customerWalletpublicKey) throws CantClearCryptoCustomerWalletSettingException, CantPersistFileException, CantCreateFileException, CantPersistSettingsException, CantGetSettingsException;
-
-    List<CryptoCustomerWalletProviderSetting> getAssociatedProviders(String walletPublicKey) throws FileNotFoundException, CantCreateFileException, CantGetSettingsException, SettingsNotFoundException;
+    CurrencyExchangeRateProviderManager getProviderReferenceFromId(UUID providerId)
+            throws CantGetProviderException;
 
     /**
-     * This method returns the CustomerBrokerContractPurchase associated to a negotiationId
+     * Create a empty {@link CryptoCustomerWalletProviderSetting} object to fill and can be used
+     * to associate a exchange rate provider with a customer wallet
      *
-     * @param negotiationId
-     * @return
+     * @return a empty {@link CryptoCustomerWalletProviderSetting} object
+     *
+     * @throws CantNewEmptyCryptoCustomerWalletProviderSettingException
+     */
+    CryptoCustomerWalletProviderSetting newEmptyCryptoCustomerWalletProviderSetting()
+            throws CantNewEmptyCryptoCustomerWalletProviderSettingException;
+
+    /**
+     * Associate a exchange rate provider with the customer wallet
+     *
+     * @param setting                 the object with the data of the provider to associate
+     * @param customerWalletPublicKey the customer wallet public key
+     *
+     * @throws CantSaveCryptoCustomerWalletSettingException
+     * @throws CantPersistFileException
+     * @throws CantCreateFileException
+     * @throws CantPersistSettingsException
+     * @throws CantGetSettingsException
+     */
+    void saveCryptoCustomerWalletProviderSetting(CryptoCustomerWalletProviderSetting setting, String customerWalletPublicKey)
+            throws CantSaveCryptoCustomerWalletSettingException, CantPersistFileException, CantCreateFileException,
+            CantPersistSettingsException, CantGetSettingsException;
+
+    /**
+     * clear the exchange rate providers associated with the customer wallet
+     *
+     * @param customerWalletPublicKey the customer wallet public key
+     *
+     * @throws CantClearCryptoCustomerWalletSettingException
+     * @throws CantPersistFileException
+     * @throws CantCreateFileException
+     * @throws CantPersistSettingsException
+     * @throws CantGetSettingsException
+     */
+    void clearCryptoCustomerWalletProviderSetting(String customerWalletPublicKey)
+            throws CantClearCryptoCustomerWalletSettingException, CantPersistFileException, CantCreateFileException,
+            CantPersistSettingsException, CantGetSettingsException;
+
+    /**
+     * Return the list of associated exchange rate providers
+     *
+     * @param walletPublicKey the customer wallet public key
+     *
+     * @return the list of associated exchange rate providers
+     *
+     * @throws FileNotFoundException
+     * @throws CantCreateFileException
+     * @throws CantGetSettingsException
+     * @throws SettingsNotFoundException
+     */
+    List<CryptoCustomerWalletProviderSetting> getAssociatedProviders(String walletPublicKey)
+            throws FileNotFoundException, CantCreateFileException, CantGetSettingsException, SettingsNotFoundException;
+
+    /**
+     * This method returns the Contract associated to a negotiation ID
+     *
+     * @param negotiationId the negotiation ID
+     *
+     * @return the associated Contract
+     *
      * @throws CantGetListCustomerBrokerContractPurchaseException
      */
-    CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseByNegotiationId(
-            String negotiationId
-    ) throws CantGetListCustomerBrokerContractPurchaseException;
+    CustomerBrokerContractPurchase getCustomerBrokerContractPurchaseByNegotiationId(String negotiationId)
+            throws CantGetListCustomerBrokerContractPurchaseException;
 
     /**
-     * This method returns the currency type from a contract
+     * This method returns the money type from a contract
      *
-     * @param customerBrokerContractPurchase
-     * @param contractDetailType
-     * @return
+     * @param contractPurchase   the contract object
+     * @param contractDetailType the detail type
+     *
+     * @return the money type
+     *
      * @throws CantGetListPurchaseNegotiationsException
      */
-    MoneyType getCurrencyTypeFromContract(
-            CustomerBrokerContractPurchase customerBrokerContractPurchase,
-            ContractDetailType contractDetailType) throws
-            CantGetListPurchaseNegotiationsException;
+    MoneyType getCurrencyTypeFromContract(CustomerBrokerContractPurchase contractPurchase, ContractDetailType contractDetailType)
+            throws CantGetListPurchaseNegotiationsException;
 
     /**
      * This method send a payment according the contract elements.
      *
-     * @param contractHash
+     * @param contractHash the contract Hash/ID
      */
     void sendPayment(String contractHash) throws CantSendPaymentException;
 
     /**
      * This method execute a Customer Ack Merchandise Business Transaction
      *
-     * @param contractHash
+     * @param contractHash the contract Hash/ID
+     *
      * @throws CantAckMerchandiseException
      */
     ContractStatus ackMerchandise(String contractHash) throws CantAckMerchandiseException;
 
     /**
-     * This method returns the ContractStatus by contractHash/Id
+     * This method returns the Contract Status by contractHash/Id
      *
-     * @param contractHash
-     * @return
+     * @param contractHash the contract Hash/ID
+     *
+     * @return the Contract Status
      */
     ContractStatus getContractStatus(String contractHash) throws CantGetListCustomerBrokerContractPurchaseException;
 
     /**
-     * This method returns a string with the currency code.
-     * @param customerBrokerContractPurchase
-     * @param contractDetailType
-     * @return
-     * @throws CantGetListPurchaseNegotiationsException
-     */
-    /*String getCurrencyCodeFromContract(
-            CustomerBrokerContractPurchase customerBrokerContractPurchase,
-            ContractDetailType contractDetailType) throws
-            CantGetListPurchaseNegotiationsException;*/
-
-    /**
-     * This method returns the currency amount
-     * @param customerBrokerContractPurchase
-     * @param contractDetailType
-     * @return
-     * @throws CantGetListPurchaseNegotiationsException
-     */
-    /*float getCurrencyAmountFromContract(
-            CustomerBrokerContractPurchase customerBrokerContractPurchase,
-            ContractDetailType contractDetailType) throws
-            CantGetListPurchaseNegotiationsException;*/
-
-
-    /**
+     * @param brokerPublicKey   the broker wallet public key
+     * @param customerPublicKey the customer wallet public key
      *
-     * @param brokerPublicKey
-     * @param customerPublicKey
      * @return The basic information of the broker whose publickey equals the parameter passed as publickey.
+     *
      * @throws CantListActorConnectionsException
      */
     ActorIdentity getBrokerInfoByPublicKey(String customerPublicKey, String brokerPublicKey) throws CantListActorConnectionsException;
 
-
     /**
-     * Returns a completionDate in which a specific status was achieved for a specific contract
+     * Returns a Completion Date in which a specific status was achieved for a specific contract
      *
-     * @param contractHash
-     * @param contractStatus
-     * @param paymentMethod
-     * @return a completionDate in which a specific status was achieved for a specific contract
+     * @param contractHash   the contract Hash/ID
+     * @param contractStatus the Contract Status
+     * @param paymentMethod  the Payment Method
+     *
+     * @return a Completion Date in millis
      */
     long getCompletionDateForContractStatus(String contractHash, ContractStatus contractStatus, String paymentMethod);
 

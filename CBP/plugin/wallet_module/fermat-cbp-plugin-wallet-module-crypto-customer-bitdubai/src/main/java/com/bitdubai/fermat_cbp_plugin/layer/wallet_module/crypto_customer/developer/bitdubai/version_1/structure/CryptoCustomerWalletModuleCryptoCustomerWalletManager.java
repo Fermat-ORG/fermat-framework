@@ -1151,7 +1151,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     /**
      * This method returns the currency type from a contract
      *
-     * @param customerBrokerContractPurchase
+     * @param contractPurchase
      * @param contractDetailType
      *
      * @return
@@ -1160,11 +1160,11 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
      */
     @Override
     public MoneyType getCurrencyTypeFromContract(
-            CustomerBrokerContractPurchase customerBrokerContractPurchase,
+            CustomerBrokerContractPurchase contractPurchase,
             ContractDetailType contractDetailType) throws
             CantGetListPurchaseNegotiationsException {
         try {
-            String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
+            String negotiationId = contractPurchase.getNegotiatiotId();
             CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation =
                     customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(
                             UUID.fromString(negotiationId));

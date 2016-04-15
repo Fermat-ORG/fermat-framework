@@ -70,7 +70,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNew
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNewEmptyCryptoBrokerWalletAssociatedSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNewEmptyCryptoBrokerWalletProviderSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNewEmptyCryptoBrokerWalletSettingException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNewEmptyNegotiationBankAccountException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CBPWalletsModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
@@ -252,18 +251,6 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
      */
     CryptoBrokerWalletProviderSetting newEmptyCryptoBrokerWalletProviderSetting()
             throws CantNewEmptyCryptoBrokerWalletProviderSettingException;
-
-    /**
-     * @param bankAccountId
-     * @param bankAccount
-     * @param fiatCurrency
-     *
-     * @return
-     *
-     * @throws CantNewEmptyNegotiationBankAccountException
-     */
-    NegotiationBankAccount newEmptyNegotiationBankAccount(UUID bankAccountId, String bankAccount, FiatCurrency fiatCurrency)
-            throws CantNewEmptyNegotiationBankAccountException;
 
     /**
      * @param bankName
