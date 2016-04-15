@@ -201,7 +201,11 @@ public class DesktopDatabaseTable implements DatabaseTable {
 
             }
 
-            this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
+            String query = "INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")";
+
+            System.out.println("*** * *   *   *     *      * Im executing the query: "+query);
+
+            this.database.execSQL(query);
         } catch (Exception exception) {
             System.out.println("*** * *  *    *      *          * INSERT RECORD EXCEPTION: "+exception.getMessage());
             throw new CantInsertRecordException(exception);

@@ -195,7 +195,7 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
                 insertClientsRegistrationHistory(
                         clientPublicKey,
                         RegistrationResult.IGNORED,
-                        "There's no client registered with the given public key, indicated closed reason: "+closeReason.toString()
+                        "There is no client registered with the given public key, indicated closed reason: "+closeReason.toString()
                 );
             }
 
