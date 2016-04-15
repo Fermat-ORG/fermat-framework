@@ -33,5 +33,8 @@ public class AppLauncherReceiver extends BroadcastReceiver {
         data.putExtra(ApplicationConstants.INTENT_APP_TYPE, fermatAppType);
         data.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(data);
+        if(context instanceof FermatActivity){
+            ((FermatActivity) context).finish();
+        }
     }
 }

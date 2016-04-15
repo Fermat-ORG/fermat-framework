@@ -31,6 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatCallback;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
@@ -38,7 +39,6 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubAppRuntimeManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
-import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
@@ -373,6 +373,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
             }else {
 
+
                 SubApp subAppNavigationStructure = getSubAppRuntimeMiddleware().getSubAppByPublicKey(installedSubApp.getAppPublicKey());
 
                 intent = new Intent(this, AppActivity.class);
@@ -382,6 +383,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                 finish();
                 startActivity(intent);
                 overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
             }
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
@@ -390,15 +392,17 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     }
 
     @Override
-    public void selectApp(InstalledApp installedApp) {
+    public void selectApp(FermatApp installedApp) {
         Intent intent;
         try {
             Toast.makeText(this,"App in develop :)",Toast.LENGTH_SHORT).show();
-//            intent = new Intent();
-//            intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,installedApp.getAppPublicKey());
-//            intent.putExtra(ApplicationConstants.INTENT_APP_TYPE, installedApp.getAppType());
-//            intent.setAction("org.fermat.APP_LAUNCHER");
-//            sendBroadcast(intent);
+            intent = new Intent();
+            intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,installedApp.getAppPublicKey());
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra(ApplicationConstants.INTENT_APP_TYPE, installedApp.getAppType());
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            intent.setAction("org.fermat.APP_LAUNCHER");
+            sendBroadcast(intent);
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
@@ -452,11 +456,11 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
 
 
-                if(isHelpEnabled(fermatStructure.getPublicKey())){
-                    if (activity.getWizards() != null)
-                        setWizards(activity.getWizards());
-                    showWizard(WizardTypes.DESKTOP_WELCOME_WIZARD.getKey());
-                }else {
+//                if(isHelpEnabled(fermatStructure.getPublicKey())){
+//                    if (activity.getWizards() != null)
+//                        setWizards(activity.getWizards());
+//                    showWizard(WizardTypes.DESKTOP_WELCOME_WIZARD.getKey());
+//                }else {
 
                     loadBasicUI(activity, fermatAppConnection);
 
@@ -480,7 +484,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                     if ((activity.getBottomNavigationMenu()) != null) {
                         bottomNavigationEnabled(true);
                     }
-                }
+//                }
             } catch (Exception e) {
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
                 Toast.makeText(getApplicationContext(), "Oooops! recovering from system error",
