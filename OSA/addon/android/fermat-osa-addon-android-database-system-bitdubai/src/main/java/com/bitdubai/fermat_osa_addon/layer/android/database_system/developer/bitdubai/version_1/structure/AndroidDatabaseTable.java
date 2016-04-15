@@ -90,6 +90,11 @@ public class AndroidDatabaseTable implements DatabaseTable {
         return columns;
     }
 
+    @Override
+    public long getCount() throws CantLoadTableToMemoryException {
+        throw new RuntimeException("Implement me.");
+    }
+
     /**
      * <p>This method return a list of Database Table Record objects
      *

@@ -6,13 +6,13 @@ import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.dmp_module.AppManagerSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.CantGetUserSubAppException;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.SubAppManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -70,6 +70,19 @@ public class SubAppManagerProvisory implements SubAppManager {
         installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.TKY_ARTIST_IDENTITY_SUB_APP, null, null, "sub_app_tky_artist_identity", "Tonkenly", SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode(), "sub_app_tky_artist_identity", new Version(1, 0, 0),Platforms.TOKENLY);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
         //TODO - ART Platform
+
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(
+                SubApps.ART_ARTIST_IDENTITY,
+                null,
+                null,
+                "sub_app_art_artist_identity",
+                "Artist Identity",
+                SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
+                "sub_app_art_artist_identity", new Version(1, 0, 0),
+                Platforms.PLATFORM_ART);
+        lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
+
+
         installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.ART_FAN_COMMUNITY, null, null, "sub_app_art_fan_community", "Tonkenly", SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(), "sub_app_art_fan_community", new Version(1, 0, 0),Platforms.PLATFORM_ART);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
 
@@ -98,7 +111,7 @@ public class SubAppManagerProvisory implements SubAppManager {
     }
 
     @Override
-    public SettingsManager<FermatSettings> getSettingsManager() {
+    public SettingsManager<AppManagerSettings> getSettingsManager() {
         return null;
     }
 

@@ -7,8 +7,8 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
+    android:visibility="invisible"
     >
-   <!-- android:visibility="invisible" -->
 
     <LinearLayout
         android:id="@+id/ccw_wizard_title_container"
@@ -44,11 +44,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:gravity="center"
                 android:text="@string/ccw_wizard_exchange_rate_providers_description"
                 android:textColor="#606060"
                 android:textSize="16sp"
+                android:layout_marginBottom="12dp"
                 />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -191,7 +190,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/flecha"
+                android:src="@drawable/ccw_right_hand_arrow"
                 tools:ignore="contentDescription"/>
         </LinearLayout>
 

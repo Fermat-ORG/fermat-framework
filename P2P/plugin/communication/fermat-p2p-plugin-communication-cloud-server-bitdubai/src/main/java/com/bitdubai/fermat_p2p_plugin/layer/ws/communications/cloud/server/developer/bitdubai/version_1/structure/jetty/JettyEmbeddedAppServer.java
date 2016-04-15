@@ -23,6 +23,9 @@ import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Slf4jLog;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
+import org.fourthline.cling.UpnpServiceImpl;
+import org.fourthline.cling.support.igd.PortMappingListener;
+import org.fourthline.cling.support.model.PortMapping;
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 
 import java.io.IOException;
@@ -186,28 +189,27 @@ public class JettyEmbeddedAppServer {
      */
     public void start() throws Exception {
 
+//        Inet4Address address;
+//        try {
+//            address = getIPv4Address("eth0");
+//            // TfsClientSingleton.init(address, tfsCache);
+//        } catch (UnknownHostException | SocketException e) {
+//            throw new Error(e);
+//        }
+//
+//       PortMapping desiredMapping = new PortMapping(
+//                DEFAULT_PORT,
+//                address.getHostAddress(),
+//                PortMapping.Protocol.TCP
+//        );
+//
+//        UpnpService upnpService = new UpnpServiceImpl(
+//                new PortMappingListener(desiredMapping)
+//        );
+//
+//        upnpService.getControlPoint().search();
 
-       /* Inet4Address address;
-        try {
-            address = getIPv4Address("eth0");
-            // TfsClientSingleton.init(address, tfsCache);
-        } catch (UnknownHostException | SocketException e) {
-            throw new Error(e);
-        }
-
-       /* PortMapping desiredMapping = new PortMapping(
-                DEFAULT_PORT,
-                address.getHostAddress(),
-                PortMapping.Protocol.TCP
-        );
-
-        UpnpService upnpService = new UpnpServiceImpl(
-                new PortMappingListener(desiredMapping)
-        );
-
-        upnpService.getControlPoint().search();*/
-
-        /* Use this is OK, load the ip dynamically
+        // Use this is OK, load the ip dynamically
 
         UpnpServiceImpl upnpService = null;
         PortMapping[] arr = null;
@@ -230,7 +232,7 @@ public class JettyEmbeddedAppServer {
             upnpService = new UpnpServiceImpl(new PortMappingListener(arr));
             upnpService.getControlPoint().search();
 
-        }*/
+        }
 
         this.initialize();
         LOG.info("Starting the internal server");

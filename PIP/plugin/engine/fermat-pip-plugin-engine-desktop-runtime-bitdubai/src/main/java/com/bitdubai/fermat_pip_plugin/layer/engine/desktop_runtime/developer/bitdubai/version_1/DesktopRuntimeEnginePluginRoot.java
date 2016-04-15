@@ -184,6 +184,27 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             activity.setType(Activities.CCP_DESKTOP);
             activity.setFullScreen(true);
             activity.setBottomNavigationMenu(new BottomNavigation());
+
+//            Wizard wizard = new Wizard();
+//            WizardPage wizardPage = new WizardPage();
+//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
+//            wizard.addPage(wizardPage);
+//
+//            wizardPage = new WizardPage();
+//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_SECOND_SCREEN_FRAGMENT.getKey());
+//            wizard.addPage(wizardPage);
+//
+//            wizardPage = new WizardPage();
+//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_THIRD_SCREEN_FRAGMENT.getKey());
+//            wizard.addPage(wizardPage);
+//
+//            wizardPage = new WizardPage();
+//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_FOURTH_SCREEN_FRAGMENT.getKey());
+//            wizard.addPage(wizardPage);
+//
+//            activity.addWizard(WizardTypes.DESKTOP_WELCOME_WIZARD.getKey(),wizard);
+
+
             /**
              * set type home
              */
@@ -209,6 +230,23 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
 
             //
+
+            /**
+             * Wizard
+             */
+            activity = new Activity();
+            activity.setActivityType(Activities.DESKTOP_WIZZARD_WELCOME.getCode());
+            activity.setType(Activities.DESKTOP_WIZZARD_WELCOME);
+            activity.setFullScreen(true);
+            activity.setBackgroundColor("#ffffff");
+            activity.setStartFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
+            //runtimeDesktopObject.setStartActivity(Activities.DESKTOP_WIZZARD_WELCOME);
+
+            fragment = new Fragment();
+            fragment.setType(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
+            activity.addFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey(),fragment);
+            runtimeDesktopObject.addActivity(activity);
+
 
 
 

@@ -1,6 +1,6 @@
 package unit.CryptoBrokerWalletAssociatedSettingImpl;
 
-import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.CryptoBrokerWalletAssociatedSettingImpl;
 
 import org.junit.Test;
@@ -20,7 +20,7 @@ public class SetMerchandiseTest {
     @Test
     public void setMerchandise(){
         CryptoBrokerWalletAssociatedSettingImpl cryptoBrokerWalletAssociatedSetting = mock(CryptoBrokerWalletAssociatedSettingImpl.class, Mockito.RETURNS_DEEP_STUBS);
-        doCallRealMethod().when(cryptoBrokerWalletAssociatedSetting).setMerchandise(Mockito.any(FermatEnum.class));
+        doCallRealMethod().when(cryptoBrokerWalletAssociatedSetting).setMerchandise(Mockito.any(Currency.class));
     }
 
 }
