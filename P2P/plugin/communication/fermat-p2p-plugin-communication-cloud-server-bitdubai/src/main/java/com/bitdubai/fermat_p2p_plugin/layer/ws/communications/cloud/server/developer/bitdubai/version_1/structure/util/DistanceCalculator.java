@@ -70,6 +70,16 @@ public class DistanceCalculator {
             }
 
             @Override
+            public Double getAccuracy() {
+                return null;
+            }
+
+            @Override
+            public Double getAltitudeAccuracy() {
+                return null;
+            }
+
+            @Override
             public Long getTime() {
                 return new Long(0);
             }
@@ -95,6 +105,16 @@ public class DistanceCalculator {
             @Override
             public Double getAltitude() {
                 return 0.0;
+            }
+
+            @Override
+            public Double getAccuracy() {
+                return null;
+            }
+
+            @Override
+            public Double getAltitudeAccuracy() {
+                return null;
             }
 
             @Override
