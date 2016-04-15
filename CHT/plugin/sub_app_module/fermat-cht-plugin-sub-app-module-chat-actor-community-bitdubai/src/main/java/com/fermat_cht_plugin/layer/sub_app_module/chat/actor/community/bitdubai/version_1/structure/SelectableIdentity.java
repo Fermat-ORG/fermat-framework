@@ -1,4 +1,4 @@
-package com.fermat_cht_plugin.layer.sub_app_module.chat.actor.community.developer.bitdubai.version_1.structure;
+package com.fermat_cht_plugin.layer.sub_app_module.chat.actor.community.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
