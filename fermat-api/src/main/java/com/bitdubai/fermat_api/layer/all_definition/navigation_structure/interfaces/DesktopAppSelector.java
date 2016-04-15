@@ -1,6 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
-import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
+import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 
@@ -13,6 +13,6 @@ public interface DesktopAppSelector {
 
     void selectSubApp(InstalledSubApp installedSubApp);
 
-    void selectApp(InstalledApp installedApp);
+    void selectApp(FermatApp installedApp);
 
 }
