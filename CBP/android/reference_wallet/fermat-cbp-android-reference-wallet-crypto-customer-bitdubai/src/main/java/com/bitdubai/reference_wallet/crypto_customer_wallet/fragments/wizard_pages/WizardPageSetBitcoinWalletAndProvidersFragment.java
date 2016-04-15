@@ -288,7 +288,7 @@ public class WizardPageSetBitcoinWalletAndProvidersFragment extends AbstractFerm
             if (listOfIdentities.isEmpty())
                 getActivity().onBackPressed();
             else {
-                //invalidate();
+                invalidate();
                 selectedIdentity = listOfIdentities.get(0);
             }
 
