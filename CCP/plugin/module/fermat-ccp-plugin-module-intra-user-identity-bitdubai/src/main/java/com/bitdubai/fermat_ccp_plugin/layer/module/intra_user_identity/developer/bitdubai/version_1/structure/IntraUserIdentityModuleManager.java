@@ -22,6 +22,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.I
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -167,7 +168,9 @@ public class IntraUserIdentityModuleManager implements com.bitdubai.fermat_ccp_a
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
         ActiveActorIdentityInformation activeActorIdentityInformation = null;
         try {
-            activeActorIdentityInformation = getAllIntraWalletUsersFromCurrentDeviceUser().get(0);
+            ArrayList<IntraUserModuleIdentity> list = getAllIntraWalletUsersFromCurrentDeviceUser();
+            if (list != null && !list.isEmpty())
+                activeActorIdentityInformation = list.get(0);
         } catch (CantListIntraUsersIdentityException e) {
             e.printStackTrace();
         }
