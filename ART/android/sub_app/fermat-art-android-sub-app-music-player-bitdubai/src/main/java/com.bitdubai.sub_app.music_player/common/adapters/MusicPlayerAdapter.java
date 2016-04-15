@@ -57,4 +57,12 @@ public class MusicPlayerAdapter extends RecyclerView.Adapter<MusicPlayerAdapter.
         holder.imagen.setImageResource(items.get(i).getImagen());
         holder.texto.setText(items.get(i).getTitle());
     }
+
+    public void setFilter(List<MusicPlayerItems> newitems) {
+
+            items.clear();
+            items.addAll(newitems);
+            notifyDataSetChanged();
+
+    }
 }
