@@ -35,7 +35,7 @@
                     android:textColor="#fff"
                     android:layout_gravity="center"
                     android:gravity="center"
-                    app:typeface="CAVIAR_DREAMS"
+                    app:typeface="CAVIAR_DREAMS_BOLD"
                     android:background="@drawable/settings_name"
                     android:paddingLeft="12dp"
                     android:textSize="17sp"
