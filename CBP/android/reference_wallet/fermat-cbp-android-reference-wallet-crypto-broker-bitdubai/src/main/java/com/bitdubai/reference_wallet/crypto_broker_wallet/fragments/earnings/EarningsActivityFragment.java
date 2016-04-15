@@ -17,7 +17,6 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
@@ -50,7 +49,7 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
 
     // Fermat Managers
     private ErrorManager errorManager;
-    private CryptoBrokerWalletManager walletManager;
+    private CryptoBrokerWalletModuleManager moduleManager;
 
     private EarningsCurrencyPairsAdapter currencyPairsAdapter;
     private EarningsDetailsPageAdapter earningDetailsAdapter;
@@ -66,8 +65,7 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
         super.onCreate(savedInstanceState);
 
         try {
-            CryptoBrokerWalletModuleManager moduleManager = appSession.getModuleManager();
-            walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
+            this.moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             earningsPairs = getEarningsPairs();
@@ -142,7 +140,7 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
 
         try {
             //final List<EarningsPair> earningsPairs = TestData.getEarningsPairs(); // TODO: just for test purposes
-            final List<EarningsPair> earningsPairs = walletManager.getEarningsPairs(appSession.getAppPublicKey());
+            final List<EarningsPair> earningsPairs = moduleManager.getEarningsPairs(appSession.getAppPublicKey());
             data.addAll(earningsPairs);
         } catch (Exception ex) {
             data.addAll(TestData.getEarningsPairs());// TODO: just for test purposes

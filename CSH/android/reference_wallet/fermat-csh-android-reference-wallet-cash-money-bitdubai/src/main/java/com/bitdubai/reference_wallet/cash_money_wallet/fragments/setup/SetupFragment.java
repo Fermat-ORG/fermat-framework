@@ -12,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -29,8 +28,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.cash_money_wallet.R;
 import com.bitdubai.reference_wallet.cash_money_wallet.session.CashMoneyWalletSession;
-
-import org.glassfish.tyrus.core.frame.Frame;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_osa_addon.layer.linux.file_system.developer.bitdubai.version_1.structure;
 
-
-
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -24,68 +22,51 @@ import java.util.UUID;
  * That Plugin manage binary files
  *
  * Created by Roberto Requena - (rart3001@gmail.com) on 08/12/2015.
+ * Updated by Leon Acosta - (laion.cj91@gmail.com) on 08/04/2016.
  */
 public class LinuxPluginBinaryFile implements PluginBinaryFile {
 
-    /**
-     * PluginBinaryFile Interface member variables.
-     */
-    byte[] content;
-    String fileName;
-    String directoryName;
-    FilePrivacy privacyLevel;
-    FileLifeSpan lifeSpan;
-    UUID ownerId;
+    private static final int HASH_PRIME_NUMBER_PRODUCT = 6547;
+    private static final int HASH_PRIME_NUMBER_ADD = 3847;
 
-    public LinuxPluginBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    private final UUID         ownerId      ;
+    private final String       fileName     ;
+    private final String       directoryName;
+    private final FilePrivacy  privacyLevel ;
+    private final FileLifeSpan lifeSpan     ;
+    private       byte[]       content      ;
 
-        this.ownerId = ownerId;
+    public LinuxPluginBinaryFile(final UUID         ownerId      ,
+                                 final String       directoryName,
+                                 final String       fileName     ,
+                                 final FilePrivacy  privacyLevel ,
+                                 final FileLifeSpan lifeSpan     ){
+
+        this.ownerId       = ownerId      ;
         this.directoryName = directoryName;
-        this.fileName = fileName;
-        this.privacyLevel = privacyLevel;
-        this.lifeSpan = lifeSpan;
-
+        this.fileName      = fileName     ;
+        this.privacyLevel  = privacyLevel ;
+        this.lifeSpan      = lifeSpan     ;
     }
-    
 
     public String getFileName() {
-            return fileName;
-    }
-
-    public void setFileName(String fileName) {
-            this.fileName = fileName;
+        return fileName;
     }
 
     public String getDirectoryName() {
-            return directoryName;
-    }
-
-    public void setDirectoryName(String directoryName) {
-            this.directoryName = directoryName;
+        return directoryName;
     }
 
     public FilePrivacy getPrivacyLevel() {
-            return privacyLevel;
-    }
-
-    public void setPrivacyLevel(FilePrivacy privacyLevel) {
-            this.privacyLevel = privacyLevel;
+        return privacyLevel;
     }
 
     public UUID getOwnerId() {
-            return ownerId;
-    }
-
-    public void setOwnerId(UUID ownerId) {
-            this.ownerId = ownerId;
+        return ownerId;
     }
 
     public FileLifeSpan getLifeSpan() {
-            return lifeSpan;
-    }
-
-    public void setLifeSpan(FileLifeSpan lifeSpan) {
-            this.lifeSpan = lifeSpan;
+        return lifeSpan;
     }
 
 	/**
@@ -108,18 +89,7 @@ public class LinuxPluginBinaryFile implements PluginBinaryFile {
            /**
              *  Evaluate privacyLevel to determine the location of directory - external or internal
              */
-            String path = "";
-        if(privacyLevel == FilePrivacy.PUBLIC)
-             path = EnvironmentVariables.getExternalStorageDirectory() == null ? "" : EnvironmentVariables.getExternalStorageDirectory().toString();
-        else
-             
-            /**
-             * I set the path where the file is going to be located.
-             */
-
-
-            if(!this.directoryName.isEmpty())
-                path += "/" + this.ownerId + "/" + this.directoryName;
+            String path = buildPath();
 
             /**
              * If the directory does not exist the I create it.
@@ -152,6 +122,18 @@ public class LinuxPluginBinaryFile implements PluginBinaryFile {
         }
     }
 
+    private String buildPath() {
+
+        String path = "";
+        if(privacyLevel == FilePrivacy.PUBLIC)
+            path += EnvironmentVariables.getExternalStorageDirectory().toString();
+        else
+            path += EnvironmentVariables.getInternalStorageDirectory().toString();
+
+        path += "/" + this.ownerId + "/" + this.directoryName;
+
+        return path;
+    }
 
     @Override
     public void loadFromMedia() throws CantLoadFileException {
@@ -162,15 +144,12 @@ public class LinuxPluginBinaryFile implements PluginBinaryFile {
         /**
          *  Evaluate privacyLevel to determine the location of directory - external or internal
          */
-        String path = "";
-        if(privacyLevel == FilePrivacy.PUBLIC)
-            path = EnvironmentVariables.getExternalStorageDirectory().toString();
-            
+        String path = buildPath();
 
         /**
          * Get the file handle.
          */
-        File file = new File(path + "/" + this.ownerId + "/" + this.directoryName + "/" + this.fileName);
+        File file = new File(path, this.fileName);
 
 
             /**
@@ -214,18 +193,38 @@ public class LinuxPluginBinaryFile implements PluginBinaryFile {
          *  Evaluate privacyLevel to determine the location of directory - external or internal
          */
         try {
-            String path = "";
-            if(privacyLevel == FilePrivacy.PUBLIC)
-                path = EnvironmentVariables.getExternalStorageDirectory().toString();
-            else
-                path = EnvironmentVariables.getInternalStorageDirectory().toString();
+            String path = buildPath();
 
-            File file = new File(path +"/"+ this.directoryName, this.fileName);
+            File file = new File(path, this.fileName);
             file.delete();
 
         } catch (Exception e) {
             throw new FileNotFoundException(FileNotFoundException.DEFAULT_MESSAGE, FermatException.wrapException(e),"","Check the cause of this error");
         }
+    }
+
+    @Override
+    public boolean equals(Object o){
+        if(!(o instanceof LinuxPluginBinaryFile))
+            return false;
+
+        LinuxPluginBinaryFile compare = (LinuxPluginBinaryFile) o;
+        return directoryName.equals(compare.getDirectoryName()) && fileName.equals(compare.getFileName()) && privacyLevel.equals(compare.getPrivacyLevel());
+    }
+
+    @Override
+    public int hashCode(){
+        int c = 0;
+        c += directoryName.hashCode();
+        c += fileName.hashCode();
+        c += privacyLevel.hashCode();
+        return 	HASH_PRIME_NUMBER_PRODUCT * HASH_PRIME_NUMBER_ADD + c;
+    }
+
+    @Override
+    public String toString(){
+        String path = buildPath();
+        return path + "/" + fileName;
     }
 
 

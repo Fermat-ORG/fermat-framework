@@ -20,7 +20,7 @@ import com.bitdubai.linux.core.app.version_1.structure.context.FermatLinuxContex
  * The Class <code>com.bitdubai.linux.core.app.FermatLinuxAppMain</code> initialize
  * all fermat system
  * <p/>
- *
+ * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 30/11/15.
  *
  * @version 1.0
@@ -29,14 +29,13 @@ import com.bitdubai.linux.core.app.version_1.structure.context.FermatLinuxContex
 public class FermatLinuxAppMain {
 
 
-
     /**
      * Represent the fermatContext instance
      */
     private static final FermatLinuxContext fermatLinuxContext = FermatLinuxContext.getInstance();
 
     /**
-     *  Represent the fermatSystem instance
+     * Represent the fermatSystem instance
      */
     private static final FermatSystem fermatSystem = FermatSystem.getInstance(fermatLinuxContext, new OSAPlatform());
 
@@ -45,7 +44,7 @@ public class FermatLinuxAppMain {
      *
      * @param args
      */
-    public static void main(String [ ] args){
+    public static void main(String[] args) {
 
         try {
 
@@ -60,9 +59,10 @@ public class FermatLinuxAppMain {
             /*
              * Start the system
              */
-            fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.BITDUBAI_COMMUNICATIONS_NETWORK_NODE, Developers.BITDUBAI, new Version()) );
+            fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_NODE  , Developers.BITDUBAI, new Version()));
+            fermatSystem.startAndGetPluginVersion(new PluginVersionReference(Platforms.COMMUNICATION_PLATFORM, Layers.COMMUNICATION, Plugins.NETWORK_CLIENT, Developers.BITDUBAI, new Version()));
 
-        }catch (Exception e){
+        } catch (Exception e) {
 
             System.out.println("***********************************************************************");
             System.out.println("*FERMAT - ERROR                                                       *");

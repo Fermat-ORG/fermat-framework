@@ -6,31 +6,30 @@
     android:layout_height="match_parent">
 
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="7dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingBottom="12dp">
 
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
                 android:background="@drawable/communities_bar"
-                >
+                />
 
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/btn_close"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="5dp"
-                    android:src="@drawable/close_button"/>
 
-                </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+
 
 
             <LinearLayout
@@ -55,34 +54,44 @@
                     android:layout_height="wrap_content"
                     android:text="Communities"
                     android:gravity="center"
+                    android:id="@+id/txt_title_communities"
                     android:layout_centerHorizontal="true"
                     android:textSize="20sp"
-                    android:textStyle="italic"
-                    android:textColor="#59595B"
+                    android:textColor="#919193"
                     android:layout_gravity="center_horizontal"
                     android:paddingTop="7dp"
+
                     />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#59595B"
-                    android:layout_marginTop="7dp"
+                    android:background="#919193"
+                    android:layout_marginTop="11dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"/>
 
 
             </LinearLayout>
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/btn_close"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/close_button"/>
 
+            </FrameLayout>
 
         </RelativeLayout>
 
-    </FrameLayout>
+    </RelativeLayout>
 
 
     <LinearLayout
         android:layout_width="match_parent"
+
         android:layout_height="match_parent"
         android:orientation="vertical">
 
@@ -90,8 +99,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/communities_recycler_view"
-            android:paddingRight="7dp"
-            android:paddingLeft="7dp"
             tools:listitem="@layout/communities_row"
             android:layout_weight="50"/>
 
@@ -116,6 +123,7 @@
                 android:paddingLeft="16dp"
                 android:paddingRight="16dp"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 >
 
                 <EditText

@@ -17,15 +17,18 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_art_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantGetFanIdentityException;
@@ -34,11 +37,14 @@ import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantUpdateFanId
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentityManager;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.database.FanaticIdentityDeveloperDatabaseFactory;
+import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.event_handler.ArtistConnectionRequestUpdatesEventHandler;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.exceptions.CantInitializeFanaticIdentityDatabaseException;
+import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.structure.FanIdentityEventActions;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.structure.FanaticIdentityImp;
 import com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.version_1.structure.IdentityFanaticManagerImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
@@ -66,6 +72,9 @@ public class FanaticPluginRoot extends AbstractPlugin implements
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     private ErrorManager errorManager;
 
+    @NeededAddonReference (platform = Platforms.PLUG_INS_PLATFORM , layer = Layers.PLATFORM_SERVICE, addon  = Addons .EVENT_MANAGER )
+    private EventManager eventManager;
+
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_DATABASE_SYSTEM)
     private PluginDatabaseSystem pluginDatabaseSystem;
 
@@ -81,6 +90,9 @@ public class FanaticPluginRoot extends AbstractPlugin implements
     @NeededPluginReference(platform =  Platforms.ART_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.FAN)
     private FanManager fanManager;
 
+    @NeededPluginReference(platform =  Platforms.ART_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.ARTIST)
+    private ArtistManager artistActorNetWorkServiceManager;
+
     @NeededPluginReference(platform = Platforms.TOKENLY,layer = Layers.IDENTITY, plugin = Plugins.TOKENLY_FAN)
     private TokenlyFanIdentityManager tokenlyFanIdentityManager;
 
@@ -90,12 +102,25 @@ public class FanaticPluginRoot extends AbstractPlugin implements
     public static final String FANATIC_PRIVATE_KEYS_FILE_NAME = "fanaticIdentityPrivateKey";
 
     private IdentityFanaticManagerImpl identityFanaticManager;
+
+    /**
+     * Represents the Fan Identity Event Actions.
+     */
+    private FanIdentityEventActions fanIdentityEventActions;
+
+    /**
+     * Represents the Event listener to initialize in this plugin.
+     */
+    private List<FermatEventListener> listenersAdded;
+
     /**
      * Default constructor
      */
     public FanaticPluginRoot() {
         super(new PluginVersionReference(new Version()));
+        listenersAdded = new ArrayList<>();
     }
+
     @Override
     public void start() throws CantStartPluginException {
         try {
@@ -110,6 +135,19 @@ public class FanaticPluginRoot extends AbstractPlugin implements
                     this.fanManager,
                     this.tokenlyFanIdentityManager);
 
+            //Initialize the fan identity event actions.
+            initializeFanIdentityEventActions();
+
+            //Initialize event handlers
+            FermatEventListener updatesListener = eventManager.getNewListener(
+                    EventType.ARTIST_CONNECTION_REQUEST_UPDATES);
+            updatesListener.setEventHandler(
+                    new ArtistConnectionRequestUpdatesEventHandler(
+                            this.fanIdentityEventActions,
+                            this));
+            eventManager.addListener(updatesListener);
+            listenersAdded.add(updatesListener);
+
             System.out.println("############\n ART IDENTITY Fanatic STARTED\n");
            // testCreateArtist();
             //testAskForConnection();
@@ -117,6 +155,16 @@ public class FanaticPluginRoot extends AbstractPlugin implements
             errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.FANATIC_IDENTITY);
         }
+    }
+
+    /**
+     * This method initializes the Fan Identity Event Actions.
+     */
+    private void initializeFanIdentityEventActions(){
+        this.fanIdentityEventActions = new FanIdentityEventActions(
+                artistActorNetWorkServiceManager,
+                identityFanaticManager,
+                tokenlyFanIdentityManager);
     }
 
     /*private void testCreateArtist(){

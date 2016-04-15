@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerModuleManager;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerPreferenceSettings;
@@ -22,13 +23,14 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongSt
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.SongWalletTokenlyManager;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/29/16.
  */
-public class MusicPlayerManager implements MusicPlayerModuleManager {
+public class MusicPlayerManager implements MusicPlayerModuleManager, Serializable{
     private final ErrorManager errorManager;
     private final SongWalletTokenlyManager songWalletTokenlyManager;
     private final PluginFileSystem pluginFileSystem;

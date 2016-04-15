@@ -11,6 +11,5 @@ import com.bitdubai.fermat_tky_api.layer.sub_app_module.artist.interfaces.Tokenl
 
 public class TkyIdentitySubAppSession extends AbstractFermatSession<InstalledSubApp, TokenlyArtistIdentityManagerModule, SubAppResourcesProviderManager> {
     public TkyIdentitySubAppSession(){
-
     }
 }

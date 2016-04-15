@@ -4,6 +4,8 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -12,6 +14,7 @@ import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
 
 import java.util.List;
 
@@ -58,7 +61,6 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
         chatIdentityManager.updateIdentityChat(identityPublicKey, identityAlias, profileImage);
     }
 
-
     /**
      * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified
      * settings class parametrized.
@@ -66,7 +68,7 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
      * @return a new instance of the settings manager for the specified fermat settings object.
      */
     @Override
-    public SettingsManager<ChatPreferenceSettings> getSettingsManager() {
+    public SettingsManager<ChatIdentityPreferenceSettings> getSettingsManager() {
         return null;
     }
 
@@ -79,6 +81,13 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
      */
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+//        try {
+//            List<ChatIdentity> identities = chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
+//            return (identities == null || identities.isEmpty()) ? null : chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser().get(0);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
         return null;
     }
 
@@ -91,7 +100,7 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
      */
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-
+        chatIdentityManager.createNewIdentityChat(name, profile_img);
     }
 
     @Override

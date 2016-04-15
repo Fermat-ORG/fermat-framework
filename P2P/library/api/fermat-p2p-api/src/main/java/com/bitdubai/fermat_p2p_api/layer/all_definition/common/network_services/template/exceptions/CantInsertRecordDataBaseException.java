@@ -20,4 +20,8 @@ public class CantInsertRecordDataBaseException extends FermatException {
         this(DEFAULT_MESSAGE, cause, context, possibleReason);
     }
 
+    public CantInsertRecordDataBaseException(String context, String possibleReason) {
+        this(DEFAULT_MESSAGE, null, context, possibleReason);
+    }
+
 }

@@ -35,9 +35,6 @@ public interface DiscoveryQueryParameters {
      */
     String getAlias();
 
-
-
-
     /**
      * Get the name
      *

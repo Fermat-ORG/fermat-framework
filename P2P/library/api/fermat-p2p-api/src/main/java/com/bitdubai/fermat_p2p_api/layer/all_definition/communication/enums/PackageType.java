@@ -17,7 +17,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums;
  */
 public enum PackageType {
 
-    // Definition types
+    // Definition types Client channel
 
     /*
      * Request packet types
@@ -54,5 +54,30 @@ public enum PackageType {
 
     CHECK_IN_PROFILE_DISCOVERY_QUERY_RESPOND,
     ACTOR_TRACE_DISCOVERY_QUERY_RESPOND,
+
+    // Definition types Client channel
+
+    /*
+     * Request packet types
+     */
+    ADD_NODE_TO_CATALOG_REQUEST,
+    UPDATE_NODE_IN_CATALOG_REQUEST,
+    GET_NODE_CATALOG_REQUEST,
+    GET_NODE_CATALOG_TRANSACTIONS_REQUEST,
+    RECEIVE_NODE_CATALOG_TRANSACTIONS_REQUEST,
+    RECEIVE_ACTOR_CATALOG_TRANSACTIONS_REQUEST,
+
+    /*
+     * Respond packet types
+     */
+    ADD_NODE_TO_CATALOG_RESPOND,
+    UPDATE_NODE_IN_CATALOG_RESPOND,
+    GET_NODE_CATALOG_RESPOND,
+    GET_NODE_CATALOG_TRANSACTIONS_RESPOND,
+    RECEIVE_NODE_CATALOG_TRANSACTIONS_RESPOND,
+    RECEIVE_ACTOR_CATALOG_TRANSACTIONS_RESPOND
+
+    ;
+
 
 }
