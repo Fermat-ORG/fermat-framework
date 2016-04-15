@@ -59,7 +59,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 break;
             case CANCELLED_REMOTELY:
                 if (holder.connectionState.getVisibility() == View.GONE){
-                    holder.connectionState.setImageResource(R.drawable.icon_contact_no_conect);
+                    holder.connectionState.setImageResource(R.drawable.cht_comm_btn_conect_background);//icon_contact_no_conect
                     holder.connectionState.setVisibility(View.VISIBLE);
                 }
                 break;
@@ -69,7 +69,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 break;
             case DENIED_REMOTELY:
                 if (holder.connectionState.getVisibility() == View.GONE){
-                    holder.connectionState.setImageResource(R.drawable.icon_contact_no_conect);
+                    holder.connectionState.setImageResource(R.drawable.cht_comm_btn_conect_background);//icon_contact_no_conect
                     holder.connectionState.setVisibility(View.VISIBLE);
                 }
                 break;
@@ -85,7 +85,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 break;
             case PENDING_REMOTELY_ACCEPTANCE:
                 if (holder.connectionState.getVisibility() == View.GONE){
-                    holder.connectionState.setImageResource(R.drawable.icon_contact_standby);
+                    holder.connectionState.setImageResource(R.drawable.cht_comm_btn_conect_background);//icon_contact_standby
                     holder.connectionState.setVisibility(View.VISIBLE);
                 }
                 break;

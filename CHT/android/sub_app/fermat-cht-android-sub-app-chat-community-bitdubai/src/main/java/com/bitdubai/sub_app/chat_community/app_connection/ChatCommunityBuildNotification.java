@@ -4,6 +4,7 @@ import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 
 /**
  * ChatCommunityBuildNotification
@@ -13,10 +14,10 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
  */
 public class ChatCommunityBuildNotification {
 
-    public static NotificationPainter getNotification(IntraUserModuleManager moduleManager, String code)
+    public static NotificationPainter getNotification(ChatActorCommunitySubAppModuleManager moduleManager, String code)
     {
         NotificationPainter notification = null;
-        try {
+        //try {
             String[] params = code.split("_");
             String notificationType = params[0];
             String senderActorPublicKey = params[1];
@@ -26,11 +27,12 @@ public class ChatCommunityBuildNotification {
 
                     if(moduleManager != null) {
                         //find last notification by sender actor public key
-                        IntraWalletUserActor senderActor = null;
+                        //TODO
+//                        IntraWalletUserActor senderActor = null;
+//
+//                        senderActor = moduleManager.getLastNotification(senderActorPublicKey);
 
-                        senderActor = moduleManager.getLastNotification(senderActorPublicKey);
-
-                        notification = new ChatCommunityNotificationPainter("New Connection Request", "A new connection request was received from " + senderActor.getName(), "", "");
+                       // notification = new ChatCommunityNotificationPainter("New Connection Request", "A new connection request was received from " + senderActor.getName(), "", "");
 
                     }else
                     {
@@ -41,11 +43,12 @@ public class ChatCommunityBuildNotification {
 
                     if(moduleManager != null) {
                         //find last notification by sender actor public key
-                        IntraWalletUserActor senderActor = null;
+                        //TODO
+//                        IntraWalletUserActor senderActor = null;
+//
+//                        senderActor = moduleManager.getLastNotification(senderActorPublicKey);
 
-                        senderActor = moduleManager.getLastNotification(senderActorPublicKey);
-
-                        notification = new ChatCommunityNotificationPainter("Connection Request", "Your connection request was accepted to " + senderActor.getName(), "", "");
+                        //notification = new ChatCommunityNotificationPainter("Connection Request", "Your connection request was accepted to " + senderActor.getName(), "", "");
 
                     }else
                     {
@@ -54,12 +57,12 @@ public class ChatCommunityBuildNotification {
                     break;
 
             }
-        } catch (CantGetIntraUsersListException e) {
-            e.printStackTrace();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
+       // } catch (CantGetIntraUsersListException e) {
+        //    e.printStackTrace();
+       // }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         return notification;
     }

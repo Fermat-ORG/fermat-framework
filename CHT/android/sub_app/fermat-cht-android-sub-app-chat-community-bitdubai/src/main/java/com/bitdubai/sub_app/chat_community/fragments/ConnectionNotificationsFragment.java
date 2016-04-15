@@ -53,9 +53,9 @@ import java.util.List;
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class ConnectionNotificationsFragment
-        extends AbstractFermatFragment
-        implements SwipeRefreshLayout.OnRefreshListener,
-        FermatListItemListeners<ChatUserSubAppSession> {
+        extends AbstractFermatFragment {
+//        implements SwipeRefreshLayout.OnRefreshListener,
+//        FermatListItemListeners<ChatUserSubAppSession> {
 
     public static final String CHAT_USER_SELECTED = "chat_user";
     private static final int MAX = 20;
@@ -111,11 +111,11 @@ public class ConnectionNotificationsFragment
             layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
-            adapter = new NotificationAdapter(getActivity(), lstChatUserInformations);
-            adapter.setFermatListEventListener(this);
-            recyclerView.setAdapter(adapter);
+//            adapter = new NotificationAdapter(getActivity(), lstChatUserInformations);
+//            adapter.setFermatListEventListener(this);
+            //recyclerView.setAdapter(adapter);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
-            swipeRefresh.setOnRefreshListener(this);
+            //swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
@@ -141,7 +141,7 @@ public class ConnectionNotificationsFragment
 
     private void setUpScreen(LayoutInflater layoutInflater) throws CantGetChatUserIdentityException {}
 
-    @Override
+    //@Override
     public void onRefresh() {
         if (!isRefreshing) {
             isRefreshing = true;
@@ -168,15 +168,15 @@ public class ConnectionNotificationsFragment
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
                             lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
-                            adapter.changeDataSet(lstChatUserInformations);
+                           // adapter.changeDataSet(lstChatUserInformations);
                             if (lstChatUserInformations.isEmpty()) {
                                 showEmpty(true, emptyView);
                             } else {
                                 showEmpty(false, emptyView);
                             }
                         }
-                    } else
-                        showEmpty(adapter.getSize() < 0, emptyView);
+                    } //else
+                        //showEmpty(adapter.getSize() < 0, emptyView);
                 }
 
                 @Override
@@ -198,43 +198,36 @@ public class ConnectionNotificationsFragment
         }
     }
 
+//    @Override
+//    public void onItemClickListener(ChatActorCommunityInformation data, int position) {
+//        try {
+//            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),
+//                    chatUserSubAppSession,null, data,
+//                    moduleManager.getSelectedActorIdentity());// .getActiveChatUserIdentity());
+//            notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                @Override
+//                public void onDismiss(DialogInterface dialog) {
+//                    Object o = appSession.getData(SessionConstants.NOTIFICATION_ACCEPTED);
+//                    try {
+//                        if ((Boolean) o) {
+//                            onRefresh();
+//                            appSession.removeData(SessionConstants.NOTIFICATION_ACCEPTED);
+//                        }
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                        onRefresh();
+//                    }
+//                }
+//            });
+//            notificationAcceptDialog.show();
+//
+//        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
-    @Override
-    public void onItemClickListener(ChatActorCommunityInformation data, int position) {
-        try {
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),
-                    chatUserSubAppSession,null, data,
-                    moduleManager.getSelectedActorIdentity());// .getActiveChatUserIdentity());
-            notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    Object o = appSession.getData(SessionConstants.NOTIFICATION_ACCEPTED);
-                    try {
-                        if ((Boolean) o) {
-                            onRefresh();
-                            appSession.removeData(SessionConstants.NOTIFICATION_ACCEPTED);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        onRefresh();
-                    }
-                }
-            });
-            notificationAcceptDialog.show();
-
-        } catch (CantGetSelectedActorIdentityException e) {
-            e.printStackTrace();
-        } catch (ActorIdentityNotSelectedException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    @Override
-    public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {
-
-    }
-
+//    @Override
+//    public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {}
 
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
@@ -243,8 +236,8 @@ public class ConnectionNotificationsFragment
                 (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
-            if (adapter != null)
-                adapter.changeDataSet(null);
+            if (adapter != null){}
+                //adapter.changeDataSet(null);
         } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);

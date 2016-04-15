@@ -10,8 +10,8 @@ import android.widget.RelativeLayout;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.sub_app.intra_user_community.R;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
+import com.bitdubai.sub_app.chat_community.R;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -21,26 +21,26 @@ import com.squareup.picasso.Picasso;
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, ActiveActorIdentityInformation intraUserLoginIdentity) throws CantGetActiveLoginIdentityException {
+    public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, ChatActorCommunitySelectableIdentity identity) throws Exception {
         /**
          * Navigation view header
          */
         RelativeLayout relativeLayout = new RelativeLayout(activity);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 180);
         relativeLayout.setLayoutParams(layoutParams);
-        View view = inflater.inflate(R.layout.row_navigation_drawer_community_header, relativeLayout, true);
+        View view = inflater.inflate(R.layout.cht_comm_navigation_drawer_header_item, relativeLayout, true);
         ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
-        if (intraUserLoginIdentity != null) {
-            if (intraUserLoginIdentity.getImage() != null) {
-                if (intraUserLoginIdentity.getImage().length > 0) {
+        if (identity != null) {
+            if (identity.getImage() != null) {
+                if (identity.getImage().length > 0) {
                     BitmapWorkerTask bitmapWorkerTask = new BitmapWorkerTask(imageView,activity.getResources(),0,false);
-                    bitmapWorkerTask.execute(intraUserLoginIdentity.getImage());
+                    bitmapWorkerTask.execute(identity.getImage());
                 } else
-                    Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
+                    Picasso.with(activity).load(R.drawable.cht_comm_btn_conect_background);//profile_image).into(imageView);
             } else
-                Picasso.with(activity).load(R.drawable.profile_image).into(imageView);
+                Picasso.with(activity).load(R.drawable.cht_comm_btn_conect_background);//profile_image).into(imageView);
             FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
-            fermatTextView.setText(intraUserLoginIdentity.getAlias());
+            fermatTextView.setText(identity.getAlias());
         }
         return view;
     }

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 
-import com.bitdubai.sub_app.intra_user_community.R;
+import com.bitdubai.sub_app.chat_community.R;
 
 import java.util.List;
 

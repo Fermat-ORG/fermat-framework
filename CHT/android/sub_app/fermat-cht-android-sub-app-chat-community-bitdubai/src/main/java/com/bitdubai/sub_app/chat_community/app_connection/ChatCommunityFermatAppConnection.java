@@ -16,6 +16,10 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
+import com.bitdubai.sub_app.chat_community.fragmentFactory.ChatCommunityFragmentFactory;
+import com.bitdubai.sub_app.chat_community.navigation_drawer.ChatCommunityNavigationViewPainter;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
 
 /**
  * ChatCommunityFermatAppConnection
@@ -23,10 +27,10 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 13/04/16.
  * @version 1.0
  */
-public class ChatCommunityFermatAppConnection extends AppConnections<IntraUserSubAppSession> {
+public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSubAppSession> {
 
-    private IntraUserSubAppSession intraUserSubAppSession;
-    private IntraUserModuleManager moduleManager;
+    private ChatUserSubAppSession chatUserSubAppSession;
+    private ChatActorCommunitySubAppModuleManager moduleManager;
 
     public ChatCommunityFermatAppConnection(Context activity) {
         super(activity);
@@ -35,7 +39,7 @@ public class ChatCommunityFermatAppConnection extends AppConnections<IntraUserSu
 
     @Override
     public FermatFragmentFactory getFragmentFactory() {
-        return new IntraUserFragmentFactory();
+        return new ChatCommunityFragmentFactory();
     }
 
     @Override
@@ -51,7 +55,7 @@ public class ChatCommunityFermatAppConnection extends AppConnections<IntraUserSu
 
     @Override
     public AbstractFermatSession getSession() {
-        return new IntraUserSubAppSession();
+        return new ChatUserSubAppSession();
     }
 
     @Override
@@ -73,9 +77,9 @@ public class ChatCommunityFermatAppConnection extends AppConnections<IntraUserSu
     public NotificationPainter getNotificationPainter(String code){
         try
         {
-            this.intraUserSubAppSession = (IntraUserSubAppSession)this.getSession();
-            if(intraUserSubAppSession!=  null)
-                moduleManager = intraUserSubAppSession.getModuleManager();
+            this.chatUserSubAppSession = (ChatUserSubAppSession)this.getSession();
+            if(chatUserSubAppSession!=  null)
+                moduleManager = chatUserSubAppSession.getModuleManager();
             return ChatCommunityBuildNotification.getNotification(moduleManager,code);
         }
         catch(Exception e)

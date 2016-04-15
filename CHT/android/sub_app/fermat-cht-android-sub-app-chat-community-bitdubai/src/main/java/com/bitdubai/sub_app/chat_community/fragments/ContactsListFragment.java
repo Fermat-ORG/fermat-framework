@@ -21,16 +21,14 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.ContactsListAdapter;
-import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.adapters.AppFriendsListAdapter;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
-import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +40,9 @@ import java.util.List;
  * @version 1.0
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ContactsListFragment extends AbstractFermatFragment implements SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ChatUserInformation> {
+public class ContactsListFragment extends AbstractFermatFragment
+        implements SwipeRefreshLayout.OnRefreshListener,
+        FermatListItemListeners<ChatActorCommunityInformation> {
 
     public static final String CHAT_USER_SELECTED = "chat_user";
     private static final int MAX = 20;
@@ -57,9 +57,9 @@ public class ContactsListFragment extends AbstractFermatFragment implements Swip
     private ContactsListAdapter adapter;
     private ChatUserSubAppSession chatUserSubAppSession;
     private LinearLayout emptyView;
-    private ChatUserModuleManager moduleManager;
+    private ChatActorCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private List<ChatUserInformation> lstChatUserInformations;
+    private List<ChatActorCommunityInformation> lstChatUserInformations;
 
     public static ContactsListFragment newInstance() {
         return new ContactsListFragment();
@@ -78,7 +78,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Swip
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
-            rootView = inflater.inflate(R.layout.fragment_connections_list, container, false);
+            rootView = inflater.inflate(R.layout.cht_comm_connections_list_fragment, container, false);
             setUpScreen(inflater);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.my_recycler_view);
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
@@ -105,7 +105,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Swip
         menu.clear();
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
+    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetSelectedActorIdentityException {
     }
 
     @Override
@@ -134,7 +134,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Swip
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
-                            lstChatUserInformations = (ArrayList<ChatUserInformation>) result[0];
+                            lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
                             adapter.changeDataSet(lstChatUserInformations);
                             if (lstChatUserInformations.isEmpty()) {
                                 showEmpty(true, emptyView);
@@ -165,14 +165,14 @@ public class ContactsListFragment extends AbstractFermatFragment implements Swip
         }
     }
 
-    private synchronized List<ChatUserInformation> getMoreData() {
-        List<ChatUserInformation> dataSet = new ArrayList<>();
-        try {
-            dataSet.addAll(moduleManager.getAllChatUsers(moduleManager.getActiveChatUserIdentity().getPublicKey(), MAX, offset));
-        } catch (CantGetChatUsersListException | CantGetActiveLoginIdentityException e) {
-            e.printStackTrace();
-        }
-
+    private synchronized List<ChatActorCommunityInformation> getMoreData() {
+        List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
+        //TODO: check in module
+//        try {
+//            dataSet.addAll(moduleManager.getAllChatUsers(moduleManager.getActiveChatUserIdentity().getPublicKey(), MAX, offset));
+//        } catch (CantGetChatUsersListException | CantGetActiveLoginIdentityException e) {
+//            e.printStackTrace();
+//        }
         return dataSet;
     }
 
@@ -192,13 +192,11 @@ public class ContactsListFragment extends AbstractFermatFragment implements Swip
     }
 
     @Override
-    public void onItemClickListener(IntraUserInformation data, int position) {
+    public void onItemClickListener(ChatActorCommunityInformation data, int position) {
         appSession.setData(CHAT_USER_SELECTED, data);
         changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(), appSession.getAppPublicKey());
     }
 
     @Override
-    public void onLongItemClickListener(IntraUserInformation data, int position) {
-
-    }
+    public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {}
 }

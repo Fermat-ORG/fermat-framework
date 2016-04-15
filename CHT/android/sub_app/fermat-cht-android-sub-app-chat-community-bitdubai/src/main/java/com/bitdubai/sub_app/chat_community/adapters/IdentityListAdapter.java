@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
+import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.holders.IdentityListDrawerHolder;
 
 import java.util.List;

@@ -5,7 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
-import com.bitdubai.sub_app.intra_user_community.R;
+import com.bitdubai.sub_app.chat_community.R;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -35,15 +35,15 @@ public class ChatContactListItem implements Item {
 
     public static ArrayList<ChatContactListItem> getTestData(Resources resources) {
         ArrayList<ChatContactListItem> lst = new ArrayList<ChatContactListItem>();
-        Drawable d = resources.getDrawable(R.drawable.profile_image); // the drawable (Captain Obvious, to the rescue!!!)
-        Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
+        Drawable d = resources.getDrawable(R.drawable.cht_comm_btn_conect_background);//profile_image); // the drawable (Captain Obvious, to the rescue!!!)
+                Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
         byte[] bitmapdata = stream.toByteArray();
         ChatContactListItem chatContactListItem = new ChatContactListItem("Matias Furszyfer", "Keep moving forward", bitmapdata, "connect");
         lst.add(chatContactListItem);
 
-        d = resources.getDrawable(R.drawable.deniz_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        d = resources.getDrawable(R.drawable.cht_comm_btn_conect_background);//deniz_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
 
         if (d != null) {
             bitmap = ((BitmapDrawable) d).getBitmap();
@@ -53,7 +53,7 @@ public class ChatContactListItem implements Item {
             chatContactListItem = new ChatContactListItem("Deniz Perez", "Love playing with bitcoin", bitmapdata, "disconnect");
             lst.add(chatContactListItem);
         }
-        d = resources.getDrawable(R.drawable.kimberly_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        d = resources.getDrawable(R.drawable.cht_comm_btn_conect_background);//kimberly_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
 
         if (d != null) {
             bitmap = ((BitmapDrawable) d).getBitmap();
@@ -63,7 +63,7 @@ public class ChatContactListItem implements Item {
             chatContactListItem = new ChatContactListItem("Kimberly Reumw", "Moving around the world", bitmapdata, "connect");
             lst.add(chatContactListItem);
         }
-        d = resources.getDrawable(R.drawable.ginny_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        d = resources.getDrawable(R.drawable.cht_comm_btn_conect_background);//ginny_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
 
         if (d != null) {
             bitmap = ((BitmapDrawable) d).getBitmap();
@@ -73,7 +73,7 @@ public class ChatContactListItem implements Item {
             chatContactListItem = new ChatContactListItem("Giany Reumw", "Making people laugh", bitmapdata, "connect");
             lst.add(chatContactListItem);
         }
-        d = resources.getDrawable(R.drawable.brant_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        d = resources.getDrawable(R.drawable.cht_comm_btn_conect_background);//brant_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
         if (d != null) {
             bitmap = ((BitmapDrawable) d).getBitmap();
             stream = new ByteArrayOutputStream();
@@ -82,7 +82,7 @@ public class ChatContactListItem implements Item {
             chatContactListItem = new ChatContactListItem("Brant Wess", "Nothing to say", bitmapdata, "disconnect");
             lst.add(chatContactListItem);
         }
-        d = resources.getDrawable(R.drawable.taylor_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        d = resources.getDrawable(R.drawable.cht_comm_btn_conect_background);//taylor_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
 
         if (d != null) {
             bitmap = ((BitmapDrawable) d).getBitmap();
@@ -98,7 +98,7 @@ public class ChatContactListItem implements Item {
 
     public static ArrayList<ChatContactListItem> getTestDataExample(Resources resources) {
         ArrayList<ChatContactListItem> lst = new ArrayList<ChatContactListItem>();
-        Drawable d = resources.getDrawable(R.drawable.profile_image); // the drawable (Captain Obvious, to the rescue!!!)
+        Drawable d = resources.getDrawable(R.drawable.cht_comm_btn_conect_background);//profile_image); // the drawable (Captain Obvious, to the rescue!!!)
         Bitmap bitmap = ((BitmapDrawable) d).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 50, stream);
@@ -106,7 +106,7 @@ public class ChatContactListItem implements Item {
         ChatContactListItem intraUserConnectionListItem = new ChatContactListItem("Matias Furszyfer", "Keep moving forward", bitmapdata, "connect");
         lst.add(intraUserConnectionListItem);
 
-        d = resources.getDrawable(R.drawable.kimberly_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        d = resources.getDrawable(R.drawable.cht_comm_btn_conect_background);//kimberly_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
 
         if(d != null) {
             bitmap = ((BitmapDrawable) d).getBitmap();
@@ -116,7 +116,7 @@ public class ChatContactListItem implements Item {
             intraUserConnectionListItem = new ChatContactListItem("Kimberly Reumw", "Moving around the world", bitmapdata, "connect");
             lst.add(intraUserConnectionListItem);
         }
-        d = resources.getDrawable(R.drawable.lucia_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        d = resources.getDrawable(R.drawable.cht_comm_btn_conect_background);//lucia_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
 
         if(d != null) {
             bitmap = ((BitmapDrawable) d).getBitmap();
@@ -127,7 +127,7 @@ public class ChatContactListItem implements Item {
             lst.add(intraUserConnectionListItem);
         }
 
-        d = resources.getDrawable(R.drawable.guillermo_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
+        d = resources.getDrawable(R.drawable.cht_comm_btn_conect_background);//guillermo_profile_picture); // the drawable (Captain Obvious, to the rescue!!!)
 
         if(d != null) {
             bitmap = ((BitmapDrawable) d).getBitmap();

@@ -7,6 +7,7 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.ui.Views.BadgeDrawable;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
+import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.holders.NavigationHolder;
 
 import java.util.List;
@@ -67,17 +68,17 @@ public class NavigationAdapter extends FermatAdapter<MenuItem, NavigationHolder>
             holder.getLabel().setText(data.getLabel());
             switch (position) {
                 case 0:
-                    holder.getIcon().setImageResource(R.drawable.ic_nav_friends);
+                    holder.getIcon().setImageResource(R.drawable.cht_comm_btn_conect_background);//ic_nav_friends
                     break;
                 case 1:
-                    holder.getIcon().setImageResource(R.drawable.ic_nav_connections);
+                    holder.getIcon().setImageResource(R.drawable.cht_comm_btn_conect_background);//ic_nav_connections
                     break;
                 case 2:
-                    holder.getIcon().setImageResource(R.drawable.ic_nav_notifications);
+                    holder.getIcon().setImageResource(R.drawable.cht_comm_btn_conect_background);//ic_nav_notifications
                     holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context).setCount(data.getNotifications()).setTextSize(32).setPosition(BadgeDrawable.Position.CENTER).build());
                     break;
                 case 3:
-                    holder.getIcon().setImageResource(R.drawable.ic_nav_settings);
+                    holder.getIcon().setImageResource(R.drawable.cht_comm_btn_conect_background);//ic_nav_settings
                     break;
             }
         }catch (Exception e){

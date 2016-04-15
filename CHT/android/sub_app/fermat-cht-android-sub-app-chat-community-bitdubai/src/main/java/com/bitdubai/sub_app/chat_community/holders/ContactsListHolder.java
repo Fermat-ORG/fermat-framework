@@ -5,7 +5,7 @@ import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.sub_app.intra_user_community.R;
+import com.bitdubai.sub_app.chat_community.R;
 
 /**
  * ContactsListHolder
