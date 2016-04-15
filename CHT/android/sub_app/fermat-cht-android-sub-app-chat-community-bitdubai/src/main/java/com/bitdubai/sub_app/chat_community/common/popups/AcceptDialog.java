@@ -75,7 +75,7 @@ public class AcceptDialog extends FermatDialog<ChatUserSubAppSession,
 
         title.setText("Connect");
         description.setText("Do you want to accept");
-        userName.setText(chatUserInformation.getActorAlias());
+        userName.setText(chatUserInformation.getAlias());
 
     }
 
@@ -99,7 +99,7 @@ public class AcceptDialog extends FermatDialog<ChatUserSubAppSession,
             try {
                 if (chatUserInformation != null && identity != null) {
                     getSession().getModuleManager()
-                     .acceptChatActor(chatUserInformation.getActorConnectionId());
+                     .acceptChatActor(chatUserInformation.getConnectionId());
 
 //                            .acceptIntraUser(identity.getPublicKey(),
 //                            chatUserInformation.getName(),
@@ -107,7 +107,7 @@ public class AcceptDialog extends FermatDialog<ChatUserSubAppSession,
 //                            chatUserInformation.getProfileImage());
                     getSession().setData(SessionConstants.NOTIFICATION_ACCEPTED,Boolean.TRUE);
                     Toast.makeText(getContext(),
-                            chatUserInformation.getActorAlias() + " Accepted connection request",
+                            chatUserInformation.getAlias() + " Accepted connection request",
                             Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();
@@ -126,7 +126,7 @@ public class AcceptDialog extends FermatDialog<ChatUserSubAppSession,
             try {
                 if (chatUserInformation != null && identity != null) {
                     getSession().getModuleManager()
-                        .denyChatConnection(chatUserInformation.getActorConnectionId());
+                        .denyChatConnection(chatUserInformation.getConnectionId());
 
                     //       .denyConnection(identity.getPublicKey(),
                     // intraUserInformation.getPublicKey());

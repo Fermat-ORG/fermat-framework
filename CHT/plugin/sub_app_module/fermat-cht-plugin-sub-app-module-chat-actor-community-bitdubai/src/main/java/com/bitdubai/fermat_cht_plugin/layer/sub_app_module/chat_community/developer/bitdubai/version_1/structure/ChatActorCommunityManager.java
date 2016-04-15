@@ -1,4 +1,4 @@
-package com.fermat_cht_plugin.layer.sub_app_module.chat.actor.community.developer.bitdubai.version_1.structure;
+package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
@@ -50,6 +50,8 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.fermat_cht_plugin.layer.sub_app_module.chat.actor.community.developer.bitdubai.version_1.structure.ChatActorCommunitySubAppModuleInformationImpl;
+import com.fermat_cht_plugin.layer.sub_app_module.chat.actor.community.developer.bitdubai.version_1.structure.ChatActorCommunitySubAppModuleSearch;
 
 import java.io.Serializable;
 import java.util.ArrayList;

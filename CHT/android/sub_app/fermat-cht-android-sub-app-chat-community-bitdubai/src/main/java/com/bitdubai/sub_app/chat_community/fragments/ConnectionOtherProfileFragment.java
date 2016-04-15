@@ -99,7 +99,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
         rootView = inflater.inflate(R.layout.cht_comm_other_profile_fragment, container, false);
         toolbar = getToolbar();
         if (toolbar != null)
-            toolbar.setTitle(chatUserInformation.getActorAlias());
+            toolbar.setTitle(chatUserInformation.getAlias());
         userProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
         userStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
         userName = (FermatTextView) rootView.findViewById(R.id.username);
@@ -119,7 +119,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
         disconnect.setOnClickListener(this);
         accept.setOnClickListener(this);
 
-        switch (chatUserInformation.getActorConnectionState()) {
+        switch (chatUserInformation.getConnectionState()) {
                 case BLOCKED_LOCALLY:
                 case BLOCKED_REMOTELY:
                 case CANCELLED_LOCALLY:
@@ -146,14 +146,14 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
             }
 
         try {
-            userName.setText(chatUserInformation.getActorAlias());
-            userStatus.setText(chatUserInformation.getActorConnectionState().toString());
+            userName.setText(chatUserInformation.getAlias());
+            userStatus.setText(chatUserInformation.getConnectionState().toString());
             userStatus.setTextColor(Color.parseColor("#292929"));
-            if (chatUserInformation.getActorImage() != null) {
+            if (chatUserInformation.getImage() != null) {
                 Bitmap bitmap;
-                if (chatUserInformation.getActorImage().length > 0) {
-                    bitmap = BitmapFactory.decodeByteArray(chatUserInformation.getActorImage(), 0,
-                            chatUserInformation.getActorImage().length);
+                if (chatUserInformation.getImage().length > 0) {
+                    bitmap = BitmapFactory.decodeByteArray(chatUserInformation.getImage(), 0,
+                            chatUserInformation.getImage().length);
                 } else {
                     bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cht_comm_bg_circular_other_profile);//profile_image);
                 }
@@ -178,7 +178,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
         int i = v.getId();
         if (i == R.id.btn_conect) {
             CommonLogger.info(TAG, "User connection state " +
-                    chatUserInformation.getActorConnectionState());
+                    chatUserInformation.getConnectionState());
             ConnectDialog connectDialog;
             try {
                 connectDialog =
@@ -186,7 +186,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
                 connectDialog.setTitle("Connection Request");
                 connectDialog.setDescription("Do you want to send ");
-                connectDialog.setUsername(chatUserInformation.getActorAlias());
+                connectDialog.setUsername(chatUserInformation.getAlias());
                 connectDialog.setSecondDescription("a connection request");
                 connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -203,7 +203,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
         }
         if (i == R.id.btn_disconect) {
             CommonLogger.info(TAG, "User connection state " +
-                    chatUserInformation.getActorConnectionState());
+                    chatUserInformation.getConnectionState());
             final DisconnectDialog disconnectDialog;
             try {
                 disconnectDialog =
@@ -211,7 +211,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                                 chatUserInformation, moduleManager.getSelectedActorIdentity());
                 disconnectDialog.setTitle("Disconnect");
                 disconnectDialog.setDescription("Want to disconnect from");
-                disconnectDialog.setUsername(chatUserInformation.getActorAlias());
+                disconnectDialog.setUsername(chatUserInformation.getAlias());
                 disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -246,12 +246,12 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
         }
         if (i == R.id.btn_connection_request_send) {
             CommonLogger.info(TAG, "User connection state "
-                    + chatUserInformation.getActorConnectionState());
+                    + chatUserInformation.getConnectionState());
             Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
         }
         if (i == R.id.btn_connection_request_reject) {
             CommonLogger.info(TAG, "User connection state "
-                    + chatUserInformation.getActorConnectionState());
+                    + chatUserInformation.getConnectionState());
             Toast.makeText(getActivity(), "The connection request has been rejected", Toast.LENGTH_SHORT).show();
         }
     }
@@ -259,7 +259,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
     private void updateButton() {
         try {
             connectionState
-                    = moduleManager.getActorConnectionState(chatUserInformation.getActorPublickey());
+                    = moduleManager.getActorConnectionState(chatUserInformation.getPublicKey());
         } catch (CantValidateActorConnectionStateException e) {
             e.printStackTrace();
         }

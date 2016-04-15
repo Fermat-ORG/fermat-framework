@@ -1,4 +1,4 @@
-package com.fermat_cht_plugin.layer.sub_app_module.chat.actor.community;
+package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;

@@ -21,7 +21,7 @@ import com.squareup.picasso.Picasso;
 public class FragmentsCommons {
 
 
-    public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, ChatActorCommunitySelectableIdentity identity) throws Exception {
+    public static View setUpHeaderScreen(LayoutInflater inflater, Context activity, ActiveActorIdentityInformation identity) throws Exception {
         /**
          * Navigation view header
          */

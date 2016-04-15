@@ -27,6 +27,7 @@ dependencies {
     //Sub App Module
     compile project(':fermat-cht-plugin-sub-app-module-chat-bitdubai')
     compile project(':fermat-cht-plugin-sub-app-module-chat-identity-bitdubai')
+    compile project(':fermat-cht-plugin-sub-app-module-chat-actor-community-bitdubai')
     //Identity
     compile project(':fermat-cht-plugin-identity-chat-bitdubai')
     //Network Service
