@@ -112,7 +112,11 @@ public class RuntimeDesktopObject implements DesktopObject {
 
     @Override
     public void changeActualStartActivity(String activityCode) throws IllegalArgumentException {
-        if(activities.get(activityCode)==null) throw new IllegalArgumentException();
+        try {
+            if(activities.get(Activities.getValueFromString(activityCode))==null) throw new IllegalArgumentException();
+        } catch (InvalidParameterException e) {
+            throw new IllegalArgumentException();
+        }
         try {
             this.startActivity = Activities.getValueFromString(activityCode);
         } catch (InvalidParameterException e) {

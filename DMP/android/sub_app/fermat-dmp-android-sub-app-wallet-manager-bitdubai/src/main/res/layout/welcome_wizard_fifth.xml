@@ -16,7 +16,7 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/welcome_wizzard_first_title"
+            android:text="@string/welcome_wizzard_fifth_title"
             android:gravity="center"
             android:textColor="#0EAF9E"
             android:textSize="36sp"
@@ -27,7 +27,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="208dp"
-            android:src="@drawable/banner_welcome_fermat_hdpi"
+            android:src="@drawable/banner_fermat_apps_hdpi"
             android:layout_gravity="center"
             android:layout_marginBottom="16dp"/>
 
@@ -39,19 +39,24 @@
             android:layout_marginBottom="16dp"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:layout_marginBottom="16dp"
             android:layout_gravity="center"
             android:gravity="center"
             android:textSize="15dp"
+            android:paddingBottom="7dp"
             android:textColor="#58595B"
-            android:text="@string/wizzard_welcome_text"
-            app:typeface="CAVIAR_DREAMS"/>
+            app:typeface="CAVIAR_DREAMS"
+            android:text="To begin and learn the basics please:"
+            />
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:typeface="CAVIAR_DREAMS"
+            android:gravity="left"
+            android:textColor="#58595B"
 
-
-
+            android:text="1. Go to Chat Profile App [mostrar icono] to create your first Fermat profile.\n2. Then go to the Chat Community [mostrar icono] to connect with some people there.\n3. Finally go to the Chat App and start chatting. [mostrar icono]"/>
     </LinearLayout>
 
 
