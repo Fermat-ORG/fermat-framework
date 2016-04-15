@@ -113,7 +113,7 @@ public class RuntimeSubApp implements SubApp {
 
     @Override
     public void changeActualStartActivity(String activityCode) throws IllegalArgumentException, InvalidParameterException {
-        if(activities.get(Activities.getValueFromString(activityCode))==null) throw new IllegalArgumentException(activityCode);
+       // if(activities.get(Activities.getValueFromString(activityCode))==null) throw new IllegalArgumentException("Activity code:"+activityCode+" is not in the activities list, add first and then change the start");
         this.actualActivityStart = activityCode;
     }
 
