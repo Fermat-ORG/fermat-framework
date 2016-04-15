@@ -790,8 +790,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             /**
              * CHT CHAT
              */
-
             createChatSubAppNavigationStructure();
+
+            /**
+             * CHT COMMUNITY
+             */
+            createChatCommunitySubAppNavigationStructure();
 
             /**
              * CCP INTRA USER IDENTITY
@@ -801,7 +805,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             *ART ARTIST IDENTITY
             */
             //createArtArtistIdentitySubAppNavigationStructure();
-
 
             runtimeSubApp = new RuntimeSubApp();
             runtimeSubApp.setType(SubApps.ART_ARTIST_IDENTITY);
@@ -3742,18 +3745,19 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         StatusBar statusBar;
         Activity runtimeActivity;
         Fragment runtimeFragment;
+        RuntimeSubApp chtComm;
 
-        RuntimeSubApp subAppIntraUser = new RuntimeSubApp();
-        subAppIntraUser.setType(SubApps.CHT_COMMUNITY);
+        chtComm = new RuntimeSubApp();
+        chtComm.setType(SubApps.CHT_COMMUNITY);
         String communityPublicKey = SubAppsPublicKeys.CHT_COMMUNITY.getCode();
-        subAppIntraUser.setPublicKey(communityPublicKey);
-        listSubApp.put(subAppIntraUser.getPublicKey(), subAppIntraUser);
+        chtComm.setPublicKey(communityPublicKey);
+        listSubApp.put(chtComm.getPublicKey(), chtComm);
 
         //Activity Explore
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
-        subAppIntraUser.addPosibleStartActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
+        chtComm.addPosibleStartActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
@@ -3794,7 +3798,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeActivity.setSideMenu(runtimeSideMenu);
-        subAppIntraUser.addActivity(runtimeActivity);
+        chtComm.addActivity(runtimeActivity);
 
         // Activity: Connection
         runtimeActivity = new Activity();
@@ -3829,31 +3833,31 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSideMenu.setBackgroundColor("#0072bb");
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Cripto wallet users");
+        runtimeMenuItem.setLabel("Chat Users");
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
+        runtimeMenuItem.setLinkToActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST);
+        runtimeMenuItem.setLinkToActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST);
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS);
+        runtimeMenuItem.setLinkToActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS);
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeActivity.setSideMenu(runtimeSideMenu);
-        subAppIntraUser.addActivity(runtimeActivity);
+        chtComm.addActivity(runtimeActivity);
 
         // Activity: Notifications
         runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS);
-        runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
-        runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
+        runtimeActivity.setType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS);
+        runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
         runtimeActivity.setColor("#FF0B46F0");
 
@@ -3874,40 +3878,40 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
+        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS_FRAGMENT.getKey());
 
         runtimeSideMenu = new SideMenu();
         runtimeSideMenu.setBackgroundColor("#0072bb");
         runtimeSideMenu.setHasFooter(false);
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Cripto wallet users");
+        runtimeMenuItem.setLabel("Chat Users");
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
-        runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
+        runtimeMenuItem.setLinkToActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Connections");
-        runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST);
+        runtimeMenuItem.setLinkToActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST);
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Notifications");
-        runtimeMenuItem.setLinkToActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS);
+        runtimeMenuItem.setLinkToActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS);
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         runtimeActivity.setSideMenu(runtimeSideMenu);
-        subAppIntraUser.addActivity(runtimeActivity);
+        chtComm.addActivity(runtimeActivity);
 
         // Activity: Other Profile
         runtimeActivity = new Activity();
-        runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE);
-        runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
-        runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
+        runtimeActivity.setType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE);
+        runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
         runtimeActivity.setColor("#FF0B46F0");
 
@@ -3928,16 +3932,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
+        runtimeFragment.setType(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
 
-        subAppIntraUser.addActivity(runtimeActivity);
-        /**
-         * End of community intra user CCP
-         */
+        chtComm.addActivity(runtimeActivity);
     }
-
 
     private void createFanCommunitySubAppNavigationStructure(){
         TitleBar runtimeTitleBar;
