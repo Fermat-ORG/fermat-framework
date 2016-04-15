@@ -194,7 +194,7 @@ public class ProvisoryData {
         item2.setPosition(8);
         lstIdentities.add(item2);
 
-
+        //ART Identities
         installedSubApp = new InstalledSubApp(
                 SubApps.ART_ARTIST_IDENTITY,
                 null,
@@ -204,7 +204,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
                 "sub_app_art_artist_identity",
                 new Version(1, 0, 0),
-                Platforms.PLATFORM_ART);
+                Platforms.TOKENLY);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.icon_bitcoin_network_active);
@@ -345,6 +345,22 @@ public class ProvisoryData {
 
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.communities_bar);
+        item1.setPosition(6);
+        lstCommunities.add(item1);
+
+        installedSubApp = new InstalledSubApp(
+                SubApps.ART_ARTIST_COMMUNITY,
+                null,
+                null,
+                "sub_app_art_artist_community",
+                "Artist",
+                SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode(),
+                "sub_app_art_artist_community",
+                new Version(1, 0, 0),
+                Platforms.PLATFORM_ART);
+
+        item1 = new Item(installedSubApp);
+        item1.setIconResource(R.drawable.artist_banner);
         item1.setPosition(6);
         lstCommunities.add(item1);
 

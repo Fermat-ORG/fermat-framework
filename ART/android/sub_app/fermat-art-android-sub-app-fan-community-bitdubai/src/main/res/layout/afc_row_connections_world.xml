@@ -20,7 +20,7 @@
             android:src="@drawable/profile_image" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/community_name"
+            android:id="@+id/afc_community_name"
             android:layout_width="match_parent"
             android:layout_height="20dp"
             android:layout_alignParentBottom="true"
