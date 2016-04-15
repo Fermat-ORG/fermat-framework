@@ -165,7 +165,7 @@ public class CheckInNetworkServiceRequestProcessor extends PackageProcessor {
     private void insertCheckedInNetworkServiceHistory(NetworkServiceProfile networkServiceProfile) throws CantInsertRecordDataBaseException {
 
         /*
-         * Create the CheckedClientsHistory
+         * Create the ClientsRegistrationHistory
          */
         CheckedNetworkServicesHistory checkedNetworkServicesHistory = new CheckedNetworkServicesHistory();
         checkedNetworkServicesHistory.setIdentityPublicKey(networkServiceProfile.getIdentityPublicKey());

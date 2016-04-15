@@ -116,6 +116,36 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
     }
 
     /**
+     * Method that checks if an entity exists in database.
+     *
+     * @param id entity.
+     *
+     * @return a boolean value indicating if the entity exists.
+     *
+     * @throws CantReadRecordDataBaseException   if something goes wrong.
+     */
+    public final boolean exists(final String id) throws CantReadRecordDataBaseException {
+
+        if (id == null)
+            throw new IllegalArgumentException("The id is required, can not be null.");
+
+        try {
+
+            final DatabaseTable table = getDatabaseTable();
+            table.addStringFilter(idTableName, id, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+            List<DatabaseTableRecord> records = table.getRecords();
+
+            return !records.isEmpty();
+
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantReadRecordDataBaseException(e, "Table Name: " + tableName, "The data no exist");
+        }
+    }
+
+    /**
      * Method that list the all entities on the data base.
      *
      * @return All entities.
