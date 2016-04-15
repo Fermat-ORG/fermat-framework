@@ -7,11 +7,9 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.StepItemGetter;
 
@@ -21,7 +19,7 @@ import java.text.NumberFormat;
 
 public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWatcher {
     private final DecimalFormat decimalFormat;
-    private final CryptoCustomerWalletManager walletManager;
+    private final CryptoCustomerWalletModuleManager walletManager;
     private RecyclerView.Adapter adapter;
 
     private TextView yourExchangeRateValueLeftSide;
@@ -37,7 +35,7 @@ public class ExchangeRateStepViewHolder extends StepViewHolder implements TextWa
     private String actualValue;
 
 
-    public ExchangeRateStepViewHolder(RecyclerView.Adapter adapter, View itemView, CryptoCustomerWalletManager walletManager) {
+    public ExchangeRateStepViewHolder(RecyclerView.Adapter adapter, View itemView, CryptoCustomerWalletModuleManager walletManager) {
         super(itemView, (StepItemGetter) adapter);
 
         this.adapter = adapter;

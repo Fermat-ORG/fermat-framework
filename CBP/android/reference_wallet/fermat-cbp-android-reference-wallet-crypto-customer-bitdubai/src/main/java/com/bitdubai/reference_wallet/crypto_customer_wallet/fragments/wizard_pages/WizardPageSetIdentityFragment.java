@@ -19,11 +19,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -33,6 +29,7 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustom
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by nelson on 22/12/15.
@@ -46,7 +43,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
     private LinearLayout container;
 
     private ErrorManager errorManager;
-    private CryptoCustomerWalletManager walletManager;
+    private CryptoCustomerWalletModuleManager moduleManager;
 
 
     @Override
@@ -54,13 +51,16 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
         super.onCreate(savedInstanceState);
 
         try {
-            CryptoCustomerWalletModuleManager moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
-            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
+            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
             identities = getMoreDataAsync(FermatRefreshTypes.NEW, 0);
-        } catch (FermatException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
+        } catch (Exception ex) {
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_CUSTOMER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, ex);
+            else
+                Log.e(TAG, ex.getMessage(), ex);
         }
     }
 
@@ -80,7 +80,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
             public void onClick(View view) {
                 if (selectedIdentity != null) {
                     try {
-                        walletManager.associateIdentity(selectedIdentity, appSession.getAppPublicKey());
+                        moduleManager.associateIdentity(selectedIdentity, appSession.getAppPublicKey());
                         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS, appSession.getAppPublicKey());
 
                     } catch (FermatException e) {
@@ -107,7 +107,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
             @Override
             public void run() {
                 try {
-                    walletConfigured = walletManager.isWalletConfigured(appSession.getAppPublicKey());
+                    walletConfigured = moduleManager.isWalletConfigured(appSession.getAppPublicKey());
 
                 } catch (Exception ex) {
                     Object data = appSession.getData(CryptoCustomerWalletSession.CONFIGURED_DATA);
@@ -161,7 +161,7 @@ public class WizardPageSetIdentityFragment extends FermatWalletListFragment<Cryp
         List<CryptoCustomerIdentity> data = new ArrayList<>();
 
         try {
-            data.addAll(walletManager.getListOfIdentities());
+            data.addAll(moduleManager.getListOfIdentities());
 
         } catch (FermatException ex) {
 

@@ -3,7 +3,6 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.common;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +16,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatEditT
 import com.bitdubai.fermat_api.layer.all_definition.enums.Country;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListLocationsPurchaseException;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantCreateLocationSaleException;
-import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantGetListLocationsSaleException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -31,11 +25,11 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 
-public class CreateNewLocationFragment extends AbstractFermatFragment implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class CreateNewLocationFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, ResourceProviderManager>
+        implements AdapterView.OnItemSelectedListener, View.OnClickListener {
 
     // Data
     private Country[] countries;
@@ -48,7 +42,7 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
     private FermatEditText addressLineOneEditText;
     private FermatEditText addressLineTwoEditText;
 
-    private CryptoBrokerWalletManager walletManager;
+    private CryptoBrokerWalletModuleManager walletManager;
     private ErrorManager errorManager;
 
 
@@ -81,11 +75,10 @@ public class CreateNewLocationFragment extends AbstractFermatFragment implements
         layout.findViewById(R.id.cbw_create_new_location_button).setOnClickListener(this);
 
 
-        CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
-        errorManager = appSession.getErrorManager();
         try {
-            walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
-        } catch (CantGetCryptoBrokerWalletException e) {
+            walletManager = appSession.getModuleManager();
+            errorManager = appSession.getErrorManager();
+        } catch (Exception e) {
             if (errorManager != null)
                 errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_THIS_FRAGMENT, e);
         }

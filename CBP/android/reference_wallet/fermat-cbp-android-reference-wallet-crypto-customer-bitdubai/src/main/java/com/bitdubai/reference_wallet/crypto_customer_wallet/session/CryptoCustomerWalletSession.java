@@ -14,8 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class CryptoCustomerWalletSession
-        extends AbstractFermatSession<InstalledWallet, CryptoCustomerWalletModuleManager, WalletResourcesProviderManager> {
+public class CryptoCustomerWalletSession extends AbstractFermatSession<InstalledWallet, CryptoCustomerWalletModuleManager, WalletResourcesProviderManager> {
 
     public static final String CONTRACT_DATA = "CONTRACT_DATA";
     public static final String NEGOTIATION_DATA = "NEGOTIATION_DATA";

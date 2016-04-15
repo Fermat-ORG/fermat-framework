@@ -26,7 +26,7 @@ import java.util.UUID;
 /**
  * Created by nelson on 21/11/15.
  */
-public interface WalletManager extends ModuleManager<FermatSettings, ActiveActorIdentityInformation> {
+public interface CBPWalletsModuleManager<T extends FermatSettings, S extends ActiveActorIdentityInformation> extends ModuleManager<T, S> {
 
     /**
      * Cancel a current negotiation

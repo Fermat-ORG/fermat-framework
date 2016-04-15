@@ -1,10 +1,10 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
-import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -16,8 +16,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
@@ -49,8 +47,6 @@ import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_restock.i
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.interfaces.CryptoMoneyDestockManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_restock.interfaces.CryptoMoneyRestockManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker.developer.bitdubai.version_1.structure.CryptoBrokerWalletAssociatedSettingImpl;
@@ -81,9 +77,9 @@ import java.util.regex.Pattern;
  * @version 1.0
  * @since 05/11/2015
  */
-public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implements LogManagerForDevelopers, CryptoBrokerWalletModuleManager {
+public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBrokerWalletPreferenceSettings, ActiveActorIdentityInformation> implements LogManagerForDevelopers {
 
-    private CryptoBrokerWalletManager walletManager;
+    private CryptoBrokerWalletModuleManager walletManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     ErrorManager errorManager;
@@ -182,54 +178,11 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
         super(new PluginVersionReference(new Version()));
     }
 
-    /**
-     * Logging level for this plugin
-     */
+    /** Logging level for this plugin */
     static Map<String, LogLevel> newLoggingLevel = new HashMap<>();
 
     private SettingsManager<CryptoBrokerWalletPreferenceSettings> settingsManager;
 
-
-    @Override
-    public CryptoBrokerWalletManager getCryptoBrokerWallet(String walletPublicKey) throws CantGetCryptoBrokerWalletException {
-        try {
-            if (walletManager == null)
-                walletManager = new CryptoBrokerWalletModuleCryptoBrokerWalletManager(walletManagerManager,
-                        cryptoBrokerWalletManager,
-                        bankMoneyWalletManager,
-                        customerBrokerSaleNegotiationManager,
-                        bankMoneyRestockManager,
-                        cashMoneyRestockManager,
-                        cryptoMoneyRestockManager,
-                        cashMoneyWalletManager,
-                        bankMoneyDestockManager,
-                        cashMoneyDestockManager,
-                        cryptoMoneyDestockManager,
-                        customerBrokerContractSaleManager,
-                        currencyExchangeProviderFilterManager,
-                        cryptoBrokerIdentityManager,
-                        customerBrokerUpdateManager,
-                        bitcoinWalletManager,
-                        cryptoBrokerActorManager,
-                        customerOnlinePaymentManager,
-                        customerOfflinePaymentManager,
-                        customerAckOnlineMerchandiseManager,
-                        customerAckOfflineMerchandiseManager,
-                        brokerAckOfflinePaymentManager,
-                        brokerAckOnlinePaymentManager,
-                        brokerSubmitOfflineMerchandiseManager,
-                        brokerSubmitOnlineMerchandiseManager,
-                        matchingEngineManager,
-                        customerBrokerCloseManager,
-                        cryptoCustomerActorConnectionManager);
-
-            return walletManager;
-        } catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CRYPTO_BROKER,
-                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetCryptoBrokerWalletException(FermatException.wrapException(e));
-        }
-    }
 
     @Override
     public List<String> getClassesFullPath() {
@@ -276,52 +229,56 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractPlugin implement
     }
 
     @Override
-    public SettingsManager<CryptoBrokerWalletPreferenceSettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
-    }
-
-    @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return null;
-    }
-
-    @Override
-    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        cryptoBrokerIdentityManager.createCryptoBrokerIdentity(name, profile_img);
-    }
-
-    @Override
-    public void setAppPublicKey(String publicKey) {
-
-    }
-
-    @Override
-    public int[] getMenuNotifications() {
-        return new int[0];
-    }
-
-    @Override
     public void start() throws CantStartPluginException {
         super.start();
-        preConfigureWallet();
+        //preConfigureWallet();
+    }
+
+    @Override
+    public CryptoBrokerWalletModuleManager getModuleManager() throws CantGetModuleManagerException {
+        if (walletManager == null)
+            walletManager = new CryptoBrokerWalletModuleCryptoBrokerWalletManager(walletManagerManager,
+                    cryptoBrokerWalletManager,
+                    bankMoneyWalletManager,
+                    customerBrokerSaleNegotiationManager,
+                    bankMoneyRestockManager,
+                    cashMoneyRestockManager,
+                    cryptoMoneyRestockManager,
+                    cashMoneyWalletManager,
+                    bankMoneyDestockManager,
+                    cashMoneyDestockManager,
+                    cryptoMoneyDestockManager,
+                    customerBrokerContractSaleManager,
+                    currencyExchangeProviderFilterManager,
+                    cryptoBrokerIdentityManager,
+                    customerBrokerUpdateManager,
+                    bitcoinWalletManager,
+                    cryptoBrokerActorManager,
+                    customerOnlinePaymentManager,
+                    customerOfflinePaymentManager,
+                    customerAckOnlineMerchandiseManager,
+                    customerAckOfflineMerchandiseManager,
+                    brokerAckOfflinePaymentManager,
+                    brokerAckOnlinePaymentManager,
+                    brokerSubmitOfflineMerchandiseManager,
+                    brokerSubmitOnlineMerchandiseManager,
+                    matchingEngineManager,
+                    customerBrokerCloseManager,
+                    cryptoCustomerActorConnectionManager,
+                    pluginFileSystem,
+                    pluginId);
+
+        return walletManager;
     }
 
     private void preConfigureWallet() {
         try {
             final String brokerWalletPublicKey = "crypto_broker_wallet";
-            walletManager = getCryptoBrokerWallet(brokerWalletPublicKey);
+            walletManager = getModuleManager();
 
             if (!walletManager.isWalletConfigured(brokerWalletPublicKey)) {
                 // IDENTITY
-                createIdentity("Crypto Broker", "", new byte[0]);
+                cryptoBrokerIdentityManager.createCryptoBrokerIdentity("Crypto Broker", new byte[0]);
                 final CryptoBrokerIdentity cryptoBrokerIdentity = walletManager.getListOfIdentities().get(0);
                 walletManager.associateIdentity(cryptoBrokerIdentity, brokerWalletPublicKey);
 

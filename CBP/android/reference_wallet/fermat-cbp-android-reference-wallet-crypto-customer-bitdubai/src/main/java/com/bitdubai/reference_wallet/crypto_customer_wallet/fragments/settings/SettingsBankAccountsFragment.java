@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -15,13 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -31,7 +28,6 @@ import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.Sing
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BankAccountData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,7 +47,7 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
     private View emptyView;
 
     // Fermat Managers
-    private CryptoCustomerWalletManager walletManager;
+    private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
 
@@ -66,19 +62,15 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
         super.onCreate(savedInstanceState);
 
         try {
-            CryptoCustomerWalletModuleManager moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
-            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
+            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
-
-
-
 
             //Try to load appSession data
             Object data = appSession.getData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST);
             if(data == null) {
 
                 //Get saved locations from settings
-                bankAccountList = walletManager.getListOfBankAccounts();
+                bankAccountList = moduleManager.getListOfBankAccounts();
 
                 //Save locations to appSession data
                 appSession.setData(CryptoCustomerWalletSession.BANK_ACCOUNT_LIST, bankAccountList);
@@ -190,10 +182,10 @@ public class SettingsBankAccountsFragment extends AbstractFermatFragment impleme
 
             for (BankAccountNumber bankAccount : bankAccountList) {
                 BankAccountData bankAccountData = (BankAccountData) bankAccount;
-                NegotiationBankAccount negotiationBankAccount = walletManager.newEmptyNegotiationBankAccount(
+                NegotiationBankAccount negotiationBankAccount = moduleManager.newEmptyNegotiationBankAccount(
                         bankAccountData.toString(), bankAccount.getCurrencyType());
 
-                walletManager.createNewBankAccount(negotiationBankAccount);
+                moduleManager.createNewBankAccount(negotiationBankAccount);
             }
 
         } catch (FermatException ex) {
