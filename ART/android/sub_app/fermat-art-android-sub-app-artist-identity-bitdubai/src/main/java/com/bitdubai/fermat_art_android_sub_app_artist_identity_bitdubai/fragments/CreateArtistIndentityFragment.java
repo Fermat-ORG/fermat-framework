@@ -31,6 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.session.ArtistIdentitySubAppSession;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.ArtistIdentityManagerModule;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.ArtistIdentitySettings;
@@ -39,9 +40,11 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.sub_app.artist_identity.R;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -127,7 +130,16 @@ public class CreateArtistIndentityFragment extends AbstractFermatFragment {
         mArtistExternalUserName.requestFocus();
 
 
-        //moduleManager.
+
+/*
+        try {
+            HashMap<ExternalPlatform, HashMap<UUID, String>> s = moduleManager.listExternalIdentitiesFromCurrentDeviceUser();
+            System.out.println(" = s" );
+        } catch (CantListArtistIdentitiesException e) {
+            e.printStackTrace();
+        }
+
+*/
 
         mArtistExternalUserName.requestFocus();
         registerForContextMenu(ArtistImage);
