@@ -4,8 +4,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.da
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
 import com.google.gson.Gson;
 
-import org.apache.commons.lang.NotImplementedException;
-
 import java.util.List;
 
 /**
