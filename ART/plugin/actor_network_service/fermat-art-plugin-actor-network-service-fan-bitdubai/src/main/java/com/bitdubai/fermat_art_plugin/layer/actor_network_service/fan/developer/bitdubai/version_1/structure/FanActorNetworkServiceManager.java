@@ -96,8 +96,8 @@ public final class FanActorNetworkServiceManager implements FanManager {
                         fan.getPublicKey(),
                         (fan.getAlias()),
                         (fan.getAlias().toLowerCase()),
-                        NetworkServiceType.ARTIST_ACTOR,
-                        PlatformComponentType.ART_ARTIST,
+                        NetworkServiceType.FAN_ACTOR,
+                        PlatformComponentType.ART_FAN,
                         imageString
                 );
 
@@ -131,8 +131,8 @@ public final class FanActorNetworkServiceManager implements FanManager {
                         actor.getPublicKey(),
                         (actor.getAlias()),
                         (actor.getAlias().toLowerCase() + "_" + this.platformComponentProfile.getName().replace(" ", "_")),
-                        NetworkServiceType.ARTIST_ACTOR,
-                        PlatformComponentType.ART_ARTIST,
+                        NetworkServiceType.FAN_ACTOR,
+                        PlatformComponentType.ART_FAN,
                         imageString);
 
                 Thread thread = new Thread(new Runnable() {

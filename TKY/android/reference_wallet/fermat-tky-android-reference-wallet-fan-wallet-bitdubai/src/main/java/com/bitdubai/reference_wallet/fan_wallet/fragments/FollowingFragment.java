@@ -62,7 +62,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
     //FermatManager
     private FanWalletSession fanwalletSession;
-    private FanWalletModule fanwalletmoduleManager;
+    private FanWalletModule fanWalletModuleManager;
     private FanWalletPreferenceSettings fanWalletSettings;
     private ErrorManager errorManager;
 
@@ -89,12 +89,12 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         super.onCreate(savedInstanceState);
         try {
             fanwalletSession = ((FanWalletSession) appSession);
-            fanwalletmoduleManager =  fanwalletSession.getModuleManager();
+            fanWalletModuleManager =  fanwalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START FOLLOWING");
 
             try {
-                fanWalletSettings =  fanwalletmoduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                fanWalletSettings =  fanWalletModuleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 fanWalletSettings = null;
             }
@@ -103,7 +103,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                 fanWalletSettings = new FanWalletPreferenceSettings();
                 fanWalletSettings.setIsPresentationHelpEnabled(true);
                 try {
-                    fanwalletmoduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
+                    fanWalletModuleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -147,7 +147,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) // Above Api Level 13
         {
             new BotRequester(view).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-//            syncthread.execute();
+//            syncThread.execute();
         }
         else // Below Api Level 13
         {
@@ -201,8 +201,8 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         return data;
     }
 
-    void refreshadapter(boolean nofollowing){
-        if(nofollowing){
+    void refreshadapter(boolean noFollowing){
+        if(noFollowing){
             Toast.makeText(view.getContext(),"Your are not following artist",Toast.LENGTH_SHORT).show();
         }else {
             adapter.setFilter(items);
@@ -294,8 +294,6 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
 
-
-
         };
 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
@@ -303,34 +301,33 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     }
 
    void ask(int position, final List<FollowingItems> original){
-       AlertDialog.Builder dialogo1 = new AlertDialog.Builder(view.getContext());
-       dialogo1.setTitle("FanWallet");
-       dialogo1.setMessage("Do you really want to to chat with '" + items.get(position).getArtist_name() + "'?");
-       dialogo1.setCancelable(false);
-       dialogo1.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+       AlertDialog.Builder dialog1 = new AlertDialog.Builder(view.getContext());
+       dialog1.setTitle("FanWallet");
+       dialog1.setMessage("Do you really want to to chat with '" + items.get(position).getArtist_name() + "'?");
+       dialog1.setCancelable(false);
+       dialog1.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialogo1, int id) {
                //     items.remove(position);
                adapter.setFilter(original);
-               tochat();
+               toChat();
            }
        });
-       dialogo1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+       dialog1.setNegativeButton("No", new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialogo1, int id) {
                adapter.setFilter(original);
            }
        });
-       dialogo1.show();
+       dialog1.show();
        
    }
 
     // TODO: 23/03/16  
-    void tochat(){
-        
-        
+    void toChat(){
+        //TODO: to implement
     }
     // TODO: 01/04/16
     void getMyConnection(){
-
+        //TODO: to implement
     }
 
     private List<FollowingItems> filter(List<FollowingItems> models, String query) {
@@ -349,7 +346,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
     private class BotRequester extends AsyncTask <Void, Void, Boolean> {
 
         View view;
-        boolean nofollowing=false;
+        boolean noFollowing =false;
         public BotRequester(View view){
             this.view = view;
         }
@@ -359,23 +356,23 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         }
 
         @Override
-        protected Boolean doInBackground(Void... variableNoUsada) {
+        protected Boolean doInBackground(Void... notUsingObject) {
             try {
                 try {
-                    fanList=fanwalletmoduleManager.listIdentitiesFromCurrentDeviceUser();
+                    fanList= fanWalletModuleManager.listIdentitiesFromCurrentDeviceUser();
                     if(fanList.size()==0){
-                        nofollowing=true;
+                        noFollowing =true;
                     }
                     for(Fan artistUsername:fanList){
                         List<String> connectedArtistTKYUsername = artistUsername.getConnectedArtists();
                         for(String botUsername : connectedArtistTKYUsername){
-                            artistBot=fanwalletmoduleManager.getBotBySwapbotUsername(botUsername);
+                            artistBot= fanWalletModuleManager.getBotBySwapbotUsername(botUsername);
                             System.out.println(
                                     "tky_artistBot:" + artistBot);
-                            items.add(new FollowingItems(convertUrlTobmp(artistBot.getLogoImageDetails().originalUrl()),
+                            items.add(new FollowingItems(convertUrlToBMP(artistBot.getLogoImageDetails().originalUrl()),
                                    //extractLinks(artistBot.getDescription())[0], artistBot.getUserName()));
                                     artistBot.getBotUrl(),
-                                    artistBot.getUserName()));
+                                    artistBot.getName()));
 
                         }
                     }
@@ -383,7 +380,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                     } catch (CantGetBotException e) {
                     errorManager.reportUnexpectedUIException(
                             UISource.VIEW,
-                            UnexpectedUIExceptionSeverity.UNSTABLE,
+                            UnexpectedUIExceptionSeverity.NOT_IMPORTANT,
                             e);
                 }
 
@@ -410,7 +407,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
             return links.toArray(new String[links.size()]);
         }
 
-        Bitmap convertUrlTobmp(String imageUrl){
+        Bitmap convertUrlToBMP(String imageUrl){
             URL url;
             Bitmap bmp=null;
             try {
@@ -426,8 +423,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
         protected void onPostExecute(Boolean ready) {
 
-                refreshadapter(nofollowing);
-
+                refreshadapter(noFollowing);
 
         }
     }
