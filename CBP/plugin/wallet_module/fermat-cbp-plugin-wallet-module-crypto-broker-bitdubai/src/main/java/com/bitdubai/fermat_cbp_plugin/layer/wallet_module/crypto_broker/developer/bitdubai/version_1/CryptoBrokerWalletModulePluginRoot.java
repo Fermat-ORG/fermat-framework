@@ -79,7 +79,7 @@ import java.util.regex.Pattern;
  */
 public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBrokerWalletPreferenceSettings, ActiveActorIdentityInformation> implements LogManagerForDevelopers {
 
-    private CryptoBrokerWalletModuleManager walletManager;
+    private CryptoBrokerWalletModuleManager moduleManager;
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
     ErrorManager errorManager;
@@ -236,8 +236,8 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
 
     @Override
     public CryptoBrokerWalletModuleManager getModuleManager() throws CantGetModuleManagerException {
-        if (walletManager == null)
-            walletManager = new CryptoBrokerWalletModuleCryptoBrokerWalletManager(walletManagerManager,
+        if (moduleManager == null)
+            moduleManager = new CryptoBrokerWalletModuleCryptoBrokerWalletManager(walletManagerManager,
                     cryptoBrokerWalletManager,
                     bankMoneyWalletManager,
                     customerBrokerSaleNegotiationManager,
@@ -268,19 +268,19 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
                     pluginFileSystem,
                     pluginId);
 
-        return walletManager;
+        return moduleManager;
     }
 
     private void preConfigureWallet() {
         try {
             final String brokerWalletPublicKey = "crypto_broker_wallet";
-            walletManager = getModuleManager();
+            moduleManager = getModuleManager();
 
-            if (!walletManager.isWalletConfigured(brokerWalletPublicKey)) {
+            if (!moduleManager.isWalletConfigured(brokerWalletPublicKey)) {
                 // IDENTITY
-                cryptoBrokerIdentityManager.createCryptoBrokerIdentity("Crypto Broker", new byte[0]);
-                final CryptoBrokerIdentity cryptoBrokerIdentity = walletManager.getListOfIdentities().get(0);
-                walletManager.associateIdentity(cryptoBrokerIdentity, brokerWalletPublicKey);
+                moduleManager.createIdentity("Crypto Broker", "", new byte[0]);
+                final CryptoBrokerIdentity cryptoBrokerIdentity = moduleManager.getListOfIdentities().get(0);
+                moduleManager.associateIdentity(cryptoBrokerIdentity, brokerWalletPublicKey);
 
                 // MERCHANDISES -> Crypto BTC
                 InstalledWallet installedWallet = getInstalledWallet(Platforms.CRYPTO_CURRENCY_PLATFORM);
@@ -293,13 +293,13 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
                 associatedWalletSetting.setPlatform(installedWallet.getPlatform());
                 associatedWalletSetting.setMoneyType(MoneyType.CRYPTO);
                 associatedWalletSetting.setMerchandise(CryptoCurrency.BITCOIN);
-                walletManager.saveWalletSettingAssociated(associatedWalletSetting, brokerWalletPublicKey);
+                moduleManager.saveWalletSettingAssociated(associatedWalletSetting, brokerWalletPublicKey);
 
                 // MERCHANDISES -> Cash USD
                 installedWallet = getInstalledWallet(Platforms.CASH_PLATFORM);
                 assert installedWallet != null;
-                if (!walletManager.cashMoneyWalletExists(installedWallet.getWalletPublicKey()))
-                    walletManager.createCashMoneyWallet(installedWallet.getWalletPublicKey(), FiatCurrency.US_DOLLAR);
+                if (!moduleManager.cashMoneyWalletExists(installedWallet.getWalletPublicKey()))
+                    moduleManager.createCashMoneyWallet(installedWallet.getWalletPublicKey(), FiatCurrency.US_DOLLAR);
 
                 associatedWalletSetting = new CryptoBrokerWalletAssociatedSettingImpl();
                 associatedWalletSetting.setBrokerPublicKey(brokerWalletPublicKey);
@@ -308,21 +308,21 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
                 associatedWalletSetting.setPlatform(installedWallet.getPlatform());
                 associatedWalletSetting.setMoneyType(MoneyType.CASH_ON_HAND);
                 associatedWalletSetting.setMerchandise(FiatCurrency.US_DOLLAR);
-                walletManager.saveWalletSettingAssociated(associatedWalletSetting, brokerWalletPublicKey);
+                moduleManager.saveWalletSettingAssociated(associatedWalletSetting, brokerWalletPublicKey);
 
                 // MERCHANDISES -> Bank ARG
                 installedWallet = getInstalledWallet(Platforms.BANKING_PLATFORM);
                 assert installedWallet != null;
-                List<BankAccountNumber> accounts = walletManager.getAccounts(installedWallet.getWalletPublicKey());
+                List<BankAccountNumber> accounts = moduleManager.getAccounts(installedWallet.getWalletPublicKey());
                 BankAccountNumber bankAccountNumber;
                 if (!accounts.isEmpty()) {
                     bankAccountNumber = accounts.get(0);
                 } else {
-                    bankAccountNumber = walletManager.newEmptyBankAccountNumber("Mercantil", BankAccountType.CHECKING, "Test 1", "987654321", FiatCurrency.VENEZUELAN_BOLIVAR);
-                    walletManager.addNewAccount(bankAccountNumber, installedWallet.getWalletPublicKey());
+                    bankAccountNumber = moduleManager.newEmptyBankAccountNumber("Mercantil", BankAccountType.CHECKING, "Test 1", "987654321", FiatCurrency.VENEZUELAN_BOLIVAR);
+                    moduleManager.addNewAccount(bankAccountNumber, installedWallet.getWalletPublicKey());
 
-                    bankAccountNumber = walletManager.newEmptyBankAccountNumber("Mercantil", BankAccountType.CHECKING, "Pre-configured Bank Wallet", "123456789", FiatCurrency.ARGENTINE_PESO);
-                    walletManager.addNewAccount(bankAccountNumber, installedWallet.getWalletPublicKey());
+                    bankAccountNumber = moduleManager.newEmptyBankAccountNumber("Mercantil", BankAccountType.CHECKING, "Pre-configured Bank Wallet", "123456789", FiatCurrency.ARGENTINE_PESO);
+                    moduleManager.addNewAccount(bankAccountNumber, installedWallet.getWalletPublicKey());
                 }
 
                 associatedWalletSetting = new CryptoBrokerWalletAssociatedSettingImpl();
@@ -333,23 +333,23 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
                 associatedWalletSetting.setMoneyType(MoneyType.BANK);
                 associatedWalletSetting.setMerchandise(bankAccountNumber.getCurrencyType());
                 associatedWalletSetting.setBankAccount(bankAccountNumber.getAccount());
-                walletManager.saveWalletSettingAssociated(associatedWalletSetting, brokerWalletPublicKey);
+                moduleManager.saveWalletSettingAssociated(associatedWalletSetting, brokerWalletPublicKey);
 
                 // EARNINGS -> BTC/USD - Earning Wallet: Cash USD
                 String earningWalletPublicKey = "cash_wallet";
-                walletManager.addEarningsPairToEarningSettings(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR, earningWalletPublicKey, brokerWalletPublicKey);
+                moduleManager.addEarningsPairToEarningSettings(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR, earningWalletPublicKey, brokerWalletPublicKey);
 
                 // EARNINGS -> BTC/ARG - Earning Wallet: Bank ARG
                 earningWalletPublicKey = "banking_wallet";
-                walletManager.addEarningsPairToEarningSettings(CryptoCurrency.BITCOIN, FiatCurrency.ARGENTINE_PESO, earningWalletPublicKey, brokerWalletPublicKey);
+                moduleManager.addEarningsPairToEarningSettings(CryptoCurrency.BITCOIN, FiatCurrency.ARGENTINE_PESO, earningWalletPublicKey, brokerWalletPublicKey);
 
                 // EARNINGS -> ARG/USD - Earning Wallet: Cash USD
                 earningWalletPublicKey = "cash_wallet";
-                walletManager.addEarningsPairToEarningSettings(FiatCurrency.ARGENTINE_PESO, FiatCurrency.US_DOLLAR, earningWalletPublicKey, brokerWalletPublicKey);
+                moduleManager.addEarningsPairToEarningSettings(FiatCurrency.ARGENTINE_PESO, FiatCurrency.US_DOLLAR, earningWalletPublicKey, brokerWalletPublicKey);
 
                 // PROVIDERS -> BTC/USD
                 final List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>();
-                providers.addAll(walletManager.getProviderReferencesFromCurrencyPair(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR));
+                providers.addAll(moduleManager.getProviderReferencesFromCurrencyPair(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR));
                 CurrencyExchangeRateProviderManager provider = providers.get(0);
 
                 CryptoBrokerWalletProviderSettingImpl providerSetting = new CryptoBrokerWalletProviderSettingImpl();
@@ -359,11 +359,11 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
                 providerSetting.setPlugin(provider.getProviderId());
                 providerSetting.setCurrencyFrom(CryptoCurrency.BITCOIN.getCode());
                 providerSetting.setCurrencyTo(FiatCurrency.US_DOLLAR.getCode());
-                walletManager.saveCryptoBrokerWalletProviderSetting(providerSetting, brokerWalletPublicKey);
+                moduleManager.saveCryptoBrokerWalletProviderSetting(providerSetting, brokerWalletPublicKey);
 
                 // PROVIDERS -> BTC/ARG
                 providers.clear();
-                providers.addAll(walletManager.getProviderReferencesFromCurrencyPair(CryptoCurrency.BITCOIN, FiatCurrency.ARGENTINE_PESO));
+                providers.addAll(moduleManager.getProviderReferencesFromCurrencyPair(CryptoCurrency.BITCOIN, FiatCurrency.ARGENTINE_PESO));
                 provider = providers.get(0);
 
                 providerSetting = new CryptoBrokerWalletProviderSettingImpl();
@@ -373,11 +373,11 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
                 providerSetting.setPlugin(provider.getProviderId());
                 providerSetting.setCurrencyFrom(CryptoCurrency.BITCOIN.getCode());
                 providerSetting.setCurrencyTo(FiatCurrency.ARGENTINE_PESO.getCode());
-                walletManager.saveCryptoBrokerWalletProviderSetting(providerSetting, brokerWalletPublicKey);
+                moduleManager.saveCryptoBrokerWalletProviderSetting(providerSetting, brokerWalletPublicKey);
 
                 // PROVIDERS -> USD/ARG
                 providers.clear();
-                providers.addAll(walletManager.getProviderReferencesFromCurrencyPair(FiatCurrency.US_DOLLAR, FiatCurrency.ARGENTINE_PESO));
+                providers.addAll(moduleManager.getProviderReferencesFromCurrencyPair(FiatCurrency.US_DOLLAR, FiatCurrency.ARGENTINE_PESO));
                 provider = providers.get(0);
 
                 providerSetting = new CryptoBrokerWalletProviderSettingImpl();
@@ -387,19 +387,19 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
                 providerSetting.setPlugin(provider.getProviderId());
                 providerSetting.setCurrencyFrom(FiatCurrency.US_DOLLAR.getCode());
                 providerSetting.setCurrencyTo(FiatCurrency.ARGENTINE_PESO.getCode());
-                walletManager.saveCryptoBrokerWalletProviderSetting(providerSetting, brokerWalletPublicKey);
+                moduleManager.saveCryptoBrokerWalletProviderSetting(providerSetting, brokerWalletPublicKey);
 
                 // OTHER SETTINGS -> Spread and Automatic Restock
-                final CryptoBrokerWalletSettingSpread walletSetting = walletManager.newEmptyCryptoBrokerWalletSetting();
+                final CryptoBrokerWalletSettingSpread walletSetting = moduleManager.newEmptyCryptoBrokerWalletSetting();
                 walletSetting.setId(null);
                 walletSetting.setBrokerPublicKey(brokerWalletPublicKey);
                 walletSetting.setSpread(20);
                 walletSetting.setRestockAutomatic(true);
-                walletManager.saveWalletSetting(walletSetting, brokerWalletPublicKey);
+                moduleManager.saveWalletSetting(walletSetting, brokerWalletPublicKey);
 
                 // Locacions
-                walletManager.createNewLocation("C.C. Sambil Chacao, Edo. Miranda, Venezuela", "");
-                walletManager.createNewLocation("C.C. Metrocenter, Caracas, Venezuela", "");
+                moduleManager.createNewLocation("C.C. Sambil Chacao, Edo. Miranda, Venezuela", "");
+                moduleManager.createNewLocation("C.C. Metrocenter, Caracas, Venezuela", "");
 
 
             }
@@ -410,7 +410,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
     }
 
     private InstalledWallet getInstalledWallet(Platforms platform) throws CantListWalletsException {
-        final List<InstalledWallet> installedWallets = walletManager.getInstallWallets();
+        final List<InstalledWallet> installedWallets = moduleManager.getInstallWallets();
         for (InstalledWallet wallet : installedWallets) {
             if (wallet.getPlatform().equals(platform))
                 return wallet;

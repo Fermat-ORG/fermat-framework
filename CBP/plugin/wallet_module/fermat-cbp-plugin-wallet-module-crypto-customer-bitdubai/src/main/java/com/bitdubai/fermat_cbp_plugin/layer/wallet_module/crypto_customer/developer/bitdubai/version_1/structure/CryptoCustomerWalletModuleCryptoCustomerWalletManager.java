@@ -1523,7 +1523,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-
+        cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img);
     }
 
     @Override

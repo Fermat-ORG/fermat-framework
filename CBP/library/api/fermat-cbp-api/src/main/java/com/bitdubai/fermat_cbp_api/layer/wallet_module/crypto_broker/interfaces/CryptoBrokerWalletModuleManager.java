@@ -29,9 +29,7 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantCreateCryptoBrokerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CantListCryptoBrokerIdentitiesException;
-import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.exceptions.CryptoBrokerIdentityAlreadyExistsException;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantDisassociatePairException;
@@ -73,9 +71,9 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNew
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNewEmptyCryptoBrokerWalletProviderSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNewEmptyCryptoBrokerWalletSettingException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.exceptions.CantNewEmptyNegotiationBankAccountException;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CBPWalletsModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CBPWalletsModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetProvidersCurrentExchangeRatesException;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
@@ -301,19 +299,6 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
      */
     void createCashMoneyWallet(String walletPublicKey, FiatCurrency fiatCurrency)
             throws CantCreateCashMoneyWalletException;
-
-    /**
-     * Through the method <code>createCryptoBrokerIdentity</code> you can create a new crypto broker identity.
-     *
-     * @param alias the alias of the crypto broker that we want to create.
-     * @param image an image that represents the crypto broker. it will be shown to other actors when they try to connect.
-     *
-     * @return an instance of the recent created crypto broker identity.
-     *
-     * @throws CantCreateCryptoBrokerIdentityException if something goes wrong.
-     */
-    CryptoBrokerIdentity createCryptoBrokerIdentity(final String alias, final byte[] image)
-            throws CantCreateCryptoBrokerIdentityException, CryptoBrokerIdentityAlreadyExistsException;
 
     /**
      * @param cryptoBrokerWalletSettingSpread
@@ -632,10 +617,11 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
             throws CantGetCryptoBrokerStockTransactionException;
 
     /**
-     *
      * @param merchandise
      * @param walletPublicKey
+     *
      * @return
+     *
      * @throws CantGetAvailableBalanceCryptoBrokerWalletException
      * @throws CryptoBrokerWalletNotFoundException
      * @throws CantGetStockCryptoBrokerWalletException
