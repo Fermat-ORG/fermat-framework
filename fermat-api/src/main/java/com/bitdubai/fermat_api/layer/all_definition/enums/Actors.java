@@ -33,7 +33,8 @@ public enum Actors implements FermatEnum {
     ART_ARTIST              ("AART"),
     ART_FAN                 ("AFAN"),
 
-    CHAT                 ("CHT")
+    CHAT                 ("CHT"),
+    CHT_CHAT_ACTOR       ("CHTCOMAC")
 
     ;
 

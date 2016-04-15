@@ -1,4 +1,4 @@
-package com.fermat_cht_plugin.layer.sub_app_module.chat_actor_local_community.developer.bitdubai;
+package com.fermat_cht_plugin.layer.sub_app_module.chat.actor.community;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantStartPluginDeveloperException;
@@ -7,26 +7,26 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.ChatSupAppModulePluginRoot;
+import com.fermat_cht_plugin.layer.sub_app_module.chat.actor.community.developer.bitdubai.version_1.ChatActorCommunitySubAppModulePluginRoot;
 
-public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {
+/**
+ * Created by root on 14/04/16.
+ */
+public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor{
 
-    public DeveloperBitDubai() {
-        super(new PluginDeveloperReference(Developers.BITDUBAI));
-    }
+    public DeveloperBitDubai(){super(new PluginDeveloperReference(Developers.BITDUBAI));}
 
-    @Override
-    public void start() throws CantStartPluginDeveloperException {
-        try {
+       @Override
+        public void start() throws CantStartPluginDeveloperException {
+            try {
 
-            this.registerVersion(new CryptoBrokerIdentitySubAppModulePluginRoot());
+                this.registerVersion(new ChatActorCommunitySubAppModulePluginRoot());
 
-        } catch (CantRegisterVersionException e) {
+            } catch (Exception e) {
 
-            throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
+                throw new CantStartPluginDeveloperException(e, "", "Error registering plugin versions for the developer.");
+            }
         }
-    }
-
 
     @Override
     public int getAmountToPay() {
@@ -40,12 +40,12 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
 
     @Override
     public String getAddress() {
-        return "19qRypu7wrndwW4FRCxU1JPr5hvMmcQ3eh";
+        return "19qRypu7wrndwW4FRCxU1JPr5we134Q3eh";
     }
 
     @Override
     public TimeFrequency getTimePeriod() {
         return TimeFrequency.MONTHLY;
     }
-
 }
+
