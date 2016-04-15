@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
@@ -31,6 +32,7 @@ public class AppStatusDialog extends Dialog{
     private AndroidCoreModule androidCoreModule;
     private AppStatusCallbackChanges appStatusCallbackChanges;
     private AndroidCoreSettings androidCoreSettings;
+    RadioGroup radioGroup;
 
     public AppStatusDialog(Context context,AndroidCoreModule androidCoreModule,AppStatusCallbackChanges appStatusCallbackChanges) {
         super(context);
