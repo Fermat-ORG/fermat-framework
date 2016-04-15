@@ -50,8 +50,8 @@
                     android:layout_height="40dp"
                     android:layout_weight="0.4"
                     android:paddingBottom="2dp"
-                    android:src="@drawable/bitcoin_wallet_2"
                     tools:ignore="ContentDescription" />
+                <!-- android:src="@drawable/bitcoin_wallet_2" -->
             </LinearLayout>
             <View
                 android:layout_width="match_parent"
@@ -70,8 +70,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="fitXY"
-                    android:src="@drawable/community_banner"
                     tools:ignore="ContentDescription" />
+                <!-- android:src="@drawable/community_banner" -->
             </RelativeLayout>
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="match_parent"

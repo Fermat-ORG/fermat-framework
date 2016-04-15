@@ -18,8 +18,8 @@
             android:layout_gravity="center"
             android:paddingBottom="16dp"
             android:paddingTop="16dp"
-            android:src="@drawable/img_network_fermat"
             tools:ignore="ContentDescription" />
+           <!-- android:src="@drawable/img_network_fermat" -->
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/description"

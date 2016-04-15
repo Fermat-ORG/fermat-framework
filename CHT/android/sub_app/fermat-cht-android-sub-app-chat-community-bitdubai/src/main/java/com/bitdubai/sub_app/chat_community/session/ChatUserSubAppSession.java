@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.chat_community.session;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatCommunityModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
 /**
@@ -12,7 +13,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
  * @version 1.0
  */
 public class ChatUserSubAppSession extends AbstractFermatSession<InstalledSubApp,
-        ChatCommunityModuleManager,SubAppResourcesProviderManager>{
+        ChatActorCommunitySubAppModuleManager,SubAppResourcesProviderManager>{
 
     public static final String BASIC_DATA = "catalog item";
     public static final String PREVIEW_IMGS = "preview images";

@@ -22,19 +22,20 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActorManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUserConnectionStatusException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletIntraUserActor;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantValidateActorConnectionStateException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.common.popups.AcceptDialog;
-import com.bitdubai.sub_app.intra_user_community.common.popups.ConnectDialog;
-import com.bitdubai.sub_app.intra_user_community.common.popups.DisconectDialog;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
-import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
+import com.bitdubai.sub_app.chat_community.R;
+import com.bitdubai.sub_app.chat_community.common.popups.AcceptDialog;
+import com.bitdubai.sub_app.chat_community.common.popups.ConnectDialog;
+import com.bitdubai.sub_app.chat_community.common.popups.DisconnectDialog;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
 /**
  * ConnectionOtherProfileFragment
@@ -43,7 +44,8 @@ import com.bitdubai.sub_app.intra_user_community.util.CommonLogger;
  * @version 1.0
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class ConnectionOtherProfileFragment extends AbstractFermatFragment implements View.OnClickListener {
+public class ConnectionOtherProfileFragment extends AbstractFermatFragment
+        implements View.OnClickListener {
 
     public static final String CHAT_USER_SELECTED = "chat_user";
     private String TAG = "ConnectionOtherProfileFragment";
@@ -53,11 +55,11 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
     private ImageView userProfileAvatar;
     private FermatTextView userName;
     private FermatTextView userEmail;
-    private ChatUserModuleManager moduleManager;
+    private ChatActorCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
-    private ChatUserInformation chatUserInformation;
+    private ChatActorCommunityInformation chatUserInformation;
     private Button connect;
-    private CryptoWalletIntraUserActor identity;
+    private ChatActorCommunitySelectableIdentity identity;
     private Button disconnect;
     private int MAX = 1;
     private int OFFSET = 0;
@@ -65,7 +67,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
     private Button connectionRequestSend;
     private Button connectionRequestRejected;
     private Button accept;
-    private IntraWalletUserActorManager intraWalletUserActorManager;
+    //private IntraWalletUserActorManager intraWalletUserActorManager;
     private ConnectionState connectionState;
     private android.support.v7.widget.Toolbar toolbar;
 
@@ -84,20 +86,20 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         setHasOptionsMenu(true);
         // setting up  module
         chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
-        chatUserInformation = (ChatUserInformation) appSession.getData(CHAT_USER_SELECTED);
+        chatUserInformation = (ChatActorCommunityInformation) appSession.getData(CHAT_USER_SELECTED);
         moduleManager = chatUserSubAppSession.getModuleManager();
         errorManager = appSession.getErrorManager();
-        chatUserInformation = (IntraUserInformation) appSession.getData(ConnectionsWorldFragment.CHAT_USER_SELECTED);
+        chatUserInformation = (ChatActorCommunityInformation) appSession.getData(ConnectionsWorldFragment.CHAT_USER_SELECTED);
     }
 
     @SuppressLint("SetTextI18n")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_connections_other_profile, container, false);
+        rootView = inflater.inflate(R.layout.cht_comm_other_profile_fragment, container, false);
         toolbar = getToolbar();
         if (toolbar != null)
-            toolbar.setTitle(chatUserInformation.getName());
+            toolbar.setTitle(chatUserInformation.getActorAlias());
         userProfileAvatar = (ImageView) rootView.findViewById(R.id.img_user_avatar);
         userStatus = (FermatTextView) rootView.findViewById(R.id.userPhrase);
         userName = (FermatTextView) rootView.findViewById(R.id.username);
@@ -117,7 +119,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         disconnect.setOnClickListener(this);
         accept.setOnClickListener(this);
 
-        switch (chatUserInformation.getConnectionState()) {
+        switch (chatUserInformation.getActorConnectionState()) {
                 case BLOCKED_LOCALLY:
                 case BLOCKED_REMOTELY:
                 case CANCELLED_LOCALLY:
@@ -144,21 +146,22 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
             }
 
         try {
-            userName.setText(chatUserInformation.getName());
-            userStatus.setText(chatUserInformation.getPhrase());
+            userName.setText(chatUserInformation.getActorAlias());
+            userStatus.setText(chatUserInformation.getActorConnectionState().toString());
             userStatus.setTextColor(Color.parseColor("#292929"));
-            if (chatUserInformation.getProfileImage() != null) {
+            if (chatUserInformation.getActorImage() != null) {
                 Bitmap bitmap;
-                if (chatUserInformation.getProfileImage().length > 0) {
-                    bitmap = BitmapFactory.decodeByteArray(chatUserInformation.getProfileImage(), 0, chatUserInformation.getProfileImage().length);
+                if (chatUserInformation.getActorImage().length > 0) {
+                    bitmap = BitmapFactory.decodeByteArray(chatUserInformation.getActorImage(), 0,
+                            chatUserInformation.getActorImage().length);
                 } else {
-                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+                    bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cht_comm_bg_circular_other_profile);//profile_image);
                 }
                 bitmap = Bitmap.createScaledBitmap(bitmap, 480, 480, true);
                 userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
             } else {
                 Bitmap bitmap;
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.cht_comm_bg_circular_other_profile);//profile_image);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 480, 480, true);
                 userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
             }
@@ -174,13 +177,16 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
     public void onClick(View v) {
         int i = v.getId();
         if (i == R.id.btn_conect) {
-            CommonLogger.info(TAG, "User connection state " + chatUserInformation.getConnectionState());
+            CommonLogger.info(TAG, "User connection state " +
+                    chatUserInformation.getActorConnectionState());
             ConnectDialog connectDialog;
             try {
-                connectDialog = new ConnectDialog(getActivity(), (ChatUserSubAppSession) appSession, null, chatUserInformation, moduleManager.getActiveIntraUserIdentity());
+                connectDialog =
+                        new ConnectDialog(getActivity(), (ChatUserSubAppSession) appSession, null,
+                                chatUserInformation, moduleManager.getSelectedActorIdentity());
                 connectDialog.setTitle("Connection Request");
                 connectDialog.setDescription("Do you want to send ");
-                connectDialog.setUsername(chatUserInformation.getName());
+                connectDialog.setUsername(chatUserInformation.getActorAlias());
                 connectDialog.setSecondDescription("a connection request");
                 connectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -189,34 +195,41 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
                     }
                 });
                 connectDialog.show();
-            } catch (CantGetActiveLoginIdentityException e) {
+            } catch ( CantGetSelectedActorIdentityException e) {
                 e.printStackTrace();
-
+            } catch ( ActorIdentityNotSelectedException e) {
+                e.printStackTrace();
             }
         }
         if (i == R.id.btn_disconect) {
-            CommonLogger.info(TAG, "User connection state " + chatUserInformation.getConnectionState());
-            final DisconectDialog disconectDialog;
+            CommonLogger.info(TAG, "User connection state " +
+                    chatUserInformation.getActorConnectionState());
+            final DisconnectDialog disconnectDialog;
             try {
-                disconectDialog = new DisconectDialog(getActivity(), (ChatUserSubAppSession) appSession, null, chatUserInformation, moduleManager.getActiveIntraUserIdentity());
-                disconectDialog.setTitle("Disconnect");
-                disconectDialog.setDescription("Want to disconnect from");
-                disconectDialog.setUsername(chatUserInformation.getName());
-                disconectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                disconnectDialog =
+                        new DisconnectDialog(getActivity(), (ChatUserSubAppSession) appSession, null,
+                                chatUserInformation, moduleManager.getSelectedActorIdentity());
+                disconnectDialog.setTitle("Disconnect");
+                disconnectDialog.setDescription("Want to disconnect from");
+                disconnectDialog.setUsername(chatUserInformation.getActorAlias());
+                disconnectDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         updateButton();
                     }
                 });
-                disconectDialog.show();
-            } catch (CantGetActiveLoginIdentityException e) {
+                disconnectDialog.show();
+            } catch ( CantGetSelectedActorIdentityException e) {
+                e.printStackTrace();
+            } catch ( ActorIdentityNotSelectedException e) {
                 e.printStackTrace();
             }
         }
         if (i == R.id.btn_connection_accept){
             try {
-
-                AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),(ChatUserSubAppSession) appSession, null, chatUserInformation, moduleManager.getActiveIntraUserIdentity());
+                AcceptDialog notificationAcceptDialog =
+                        new AcceptDialog(getActivity(),(ChatUserSubAppSession) appSession, null,
+                                chatUserInformation, moduleManager.getSelectedActorIdentity());
                 notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
@@ -225,24 +238,29 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
                 });
                 notificationAcceptDialog.show();
 
-            } catch ( CantGetActiveLoginIdentityException e) {
+            } catch ( CantGetSelectedActorIdentityException e) {
+                e.printStackTrace();
+            } catch ( ActorIdentityNotSelectedException e) {
                 e.printStackTrace();
             }
         }
         if (i == R.id.btn_connection_request_send) {
-            CommonLogger.info(TAG, "User connection state " + chatUserInformation.getConnectionState());
+            CommonLogger.info(TAG, "User connection state "
+                    + chatUserInformation.getActorConnectionState());
             Toast.makeText(getActivity(), "The connection request has been sent\n you need to wait until the user responds", Toast.LENGTH_SHORT).show();
         }
         if (i == R.id.btn_connection_request_reject) {
-            CommonLogger.info(TAG, "User connection state " + chatUserInformation.getConnectionState());
+            CommonLogger.info(TAG, "User connection state "
+                    + chatUserInformation.getActorConnectionState());
             Toast.makeText(getActivity(), "The connection request has been rejected", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void updateButton() {
         try {
-            connectionState = moduleManager.getChatUsersConnectionStatus(this.chatUserInformation.getPublicKey());
-        } catch (CantGetChatUserConnectionStatusException e) {
+            connectionState
+                    = moduleManager.getActorConnectionState(chatUserInformation.getActorPublickey());
+        } catch (CantValidateActorConnectionStateException e) {
             e.printStackTrace();
         }
         switch (connectionState) {
@@ -288,8 +306,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         disconnect.setVisibility(View.GONE);
         connectionRequestRejected.setVisibility(View.GONE);
         accept.setVisibility(View.VISIBLE);
-        accept.setBackgroundResource(R.drawable.bg_shape_blue);
-
+        accept.setBackgroundResource(R.drawable.cht_comm_bg_shape_blue);
     }
 
     private void connectRequest() {
@@ -320,10 +337,10 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment imple
         if (customerImg != null && customerImg.length > 0)
             return ImagesUtils.getRoundedBitmap(res, customerImg);
 
-        return ImagesUtils.getRoundedBitmap(res, R.drawable.profile_image);
+        return ImagesUtils.getRoundedBitmap(res, R.drawable.cht_comm_bg_circular_other_profile);//profile_image);
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
+    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetChatUserIdentityException {
     }
 
     @Override

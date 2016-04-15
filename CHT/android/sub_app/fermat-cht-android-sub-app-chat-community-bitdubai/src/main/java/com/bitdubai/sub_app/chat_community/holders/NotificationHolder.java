@@ -13,7 +13,7 @@ import com.bitdubai.sub_app.chat_community.R;
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 13/04/16.
  * @version 1.0
  */
-public class NotificationsHolder extends FermatViewHolder {
+public class NotificationHolder extends FermatViewHolder {
 
     public ImageView userAvatar;
     public FermatTextView userName;
@@ -23,7 +23,7 @@ public class NotificationsHolder extends FermatViewHolder {
      *
      * @param itemView cast ui elements
      */
-    public NotificationsHolder(View itemView) {
+    public NotificationHolder(View itemView) {
         super(itemView);
         userName = (FermatTextView) itemView.findViewById(R.id.username);
         userAvatar = (ImageView)itemView.findViewById(R.id.imageView_avatar);

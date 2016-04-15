@@ -11,10 +11,11 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButto
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantAcceptRequestException;
-//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserConnectionDenialFailedException;
-//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-//import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorChatConnectionAlreadyRequestesException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorConnectionRequestNotFoundException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantAcceptChatRequestException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ChatActorConnectionDenialFailedException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.LinkedChatActorIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -37,7 +38,7 @@ public class AcceptDialog extends FermatDialog<ChatUserSubAppSession,
      * UI components
      */
     private final ChatActorCommunityInformation chatUserInformation;
-    private final LinkedChatActorIdentity identity            ;
+    private final ChatActorCommunitySelectableIdentity identity            ;
 
     private FermatTextView title      ;
     private FermatTextView description;
@@ -49,7 +50,7 @@ public class AcceptDialog extends FermatDialog<ChatUserSubAppSession,
                         final ChatUserSubAppSession          chatUserSubAppSession,
                         final SubAppResourcesProviderManager subAppResources       ,
                         final ChatActorCommunityInformation  chatUserInformation  ,
-                        final LinkedChatActorIdentity        identity              ) {
+                        final ChatActorCommunitySelectableIdentity identity              ) {
 
         super(activity, chatUserSubAppSession, subAppResources);
 
@@ -80,7 +81,7 @@ public class AcceptDialog extends FermatDialog<ChatUserSubAppSession,
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_builder;
+        return R.layout.cht_comm_dialog_builder;
     }
 
     @Override
@@ -97,19 +98,25 @@ public class AcceptDialog extends FermatDialog<ChatUserSubAppSession,
 
             try {
                 if (chatUserInformation != null && identity != null) {
-                    getSession().getModuleManager().acceptIntraUser(identity.getPublicKey(),
-                            chatUserInformation.getName(),
-                            chatUserInformation.getPublicKey(),
-                            chatUserInformation.getProfileImage());
+                    getSession().getModuleManager()
+                     .acceptChatActor(chatUserInformation.getActorConnectionId());
+
+//                            .acceptIntraUser(identity.getPublicKey(),
+//                            chatUserInformation.getName(),
+//                            chatUserInformation.getPublicKey(),
+//                            chatUserInformation.getProfileImage());
                     getSession().setData(SessionConstants.NOTIFICATION_ACCEPTED,Boolean.TRUE);
                     Toast.makeText(getContext(),
-                            chatUserInformation.getName() + " Accepted connection request",
+                            chatUserInformation.getActorAlias() + " Accepted connection request",
                             Toast.LENGTH_SHORT).show();
                 } else {
                     super.toastDefaultError();
                 }
                 dismiss();
-            } catch (final CantAcceptRequestException e) {
+            } catch (final CantAcceptChatRequestException e) {
+                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
+            } catch (final ActorConnectionRequestNotFoundException e) {
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 super.toastDefaultError();
             }
@@ -117,14 +124,21 @@ public class AcceptDialog extends FermatDialog<ChatUserSubAppSession,
 
         } else if (i == R.id.negative_button) {
             try {
-                if (chatUserInformation != null && identity != null)
-                    getSession().getModuleManager().denyConnection(identity.getPublicKey(), intraUserInformation.getPublicKey());
-                else {
+                if (chatUserInformation != null && identity != null) {
+                    getSession().getModuleManager()
+                        .denyChatConnection(chatUserInformation.getActorConnectionId());
+
+                    //       .denyConnection(identity.getPublicKey(),
+                    // intraUserInformation.getPublicKey());
+
+                }else {
                     super.toastDefaultError();
                 }
                 dismiss();
-            } catch (final IntraUserConnectionDenialFailedException e) {
-
+            } catch (final ChatActorConnectionDenialFailedException e) {
+                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
+            } catch (final ActorConnectionRequestNotFoundException e) {
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 super.toastDefaultError();
             }

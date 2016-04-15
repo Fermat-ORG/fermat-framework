@@ -4,10 +4,10 @@
 
     <item android:id="@+id/action_search"
         android:actionViewClass="android.support.v7.widget.SearchView"
-        android:icon="@drawable/ic_action_search"
         android:showAsAction="collapseActionView|always"
         android:title="@string/description_search"
         tools:ignore="AlwaysShowAction,AppCompatResource" />
+    <!-- android:icon="@drawable/ic_action_search" -->
 
     <item android:id="@+id/action_notifications"
         android:icon="@drawable/cht_comm_ic_menu_notifications"

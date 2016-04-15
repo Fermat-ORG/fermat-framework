@@ -12,7 +12,6 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
 import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.interfaces.ErrorConnectingFermatNetwork;
-import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
 
 /**
  * ErrorConnectingFermatNetworkDialog
@@ -82,17 +81,14 @@ public class ErrorConnectingFermatNetworkDialog extends FermatDialog<ChatUserSub
     @Override
     public void onClick(View v) {
         int i = v.getId();
-        if (i == R.id.positive_button) {
-            dismiss();
-        }
         if (i == R.id.negative_button) {
             if (errorConnectingFermatNetwork != null) {
                 errorConnectingFermatNetwork.errorConnectingFermatNetwork(false);
             }
-            dismiss();
-        }
-    }
 
+        }
+        dismiss();
+    }
 
     /**
      * Set positive button listener and text

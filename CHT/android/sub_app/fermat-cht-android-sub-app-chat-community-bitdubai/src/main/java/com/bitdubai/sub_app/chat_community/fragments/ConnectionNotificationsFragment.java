@@ -27,8 +27,11 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 //import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 //import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 //import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatCommunityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.chat_community.adapters.NotificationAdapter;
 import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
@@ -65,12 +68,12 @@ public class ConnectionNotificationsFragment
     private NotificationAdapter adapter;
     private ChatUserSubAppSession chatUserSubAppSession;
     private LinearLayout emptyView;
-    private ChatCommunityModuleManager moduleManager;
+    private ChatActorCommunitySubAppModuleManager moduleManager;
     private ErrorManager errorManager;
     private int offset = 0;
     private ChatActorCommunityInformation chatUserInformation;
     private List<ChatActorCommunityInformation> lstChatUserInformations;
-    private IntraUserLoginIdentity identity;
+    private ChatActorCommunitySelectableIdentity identity;
     private ProgressDialog dialog;
 
     /**
@@ -94,7 +97,6 @@ public class ConnectionNotificationsFragment
         lstChatUserInformations = new ArrayList<>();
     }
 
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -115,39 +117,29 @@ public class ConnectionNotificationsFragment
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
-
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
-
             onRefresh();
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-
         }
-
-
         return rootView;
     }
 
     private synchronized ArrayList<ChatActorCommunityInformation> getMoreData() {
         ArrayList<ChatActorCommunityInformation> dataSet = new ArrayList<>();
-
-        try {
-
-            dataSet.addAll(moduleManager.getChatUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+//        try {
+            //TODO: create a method getChatUsersWaitingYourAcceptance (moduleManager.getActiveChatUserIdentity().getPublicKey())
+            //dataSet.addAll(moduleManager.getChatUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return dataSet;
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
-
-    }
+    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetChatUserIdentityException {}
 
     @Override
     public void onRefresh() {

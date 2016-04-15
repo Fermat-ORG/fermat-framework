@@ -12,14 +12,16 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButto
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantStartRequestException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorChatConnectionAlreadyRequestesException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorChatTypeNotSupportedException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantRequestActorConnectionException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.constants.Constants;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.constants.Constants;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.R;
 
 /**
  * ConnectDialog
@@ -28,7 +30,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
  * @version 1.0
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class ConnectDialog extends FermatDialog<IntraUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class ConnectDialog extends FermatDialog<ChatUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
@@ -45,20 +47,20 @@ public class ConnectDialog extends FermatDialog<IntraUserSubAppSession, SubAppRe
     private CharSequence username;
     private CharSequence title;
 
-    private final IntraUserInformation   intraUserInformation;
-    private final IntraUserLoginIdentity identity            ;
+    private final ChatActorCommunityInformation chatUserInformation;
+    private final ChatActorCommunitySelectableIdentity identity;
 
 
-    public ConnectDialog(final Activity                       a                     ,
-                         final IntraUserSubAppSession         intraUserSubAppSession,
-                         final SubAppResourcesProviderManager subAppResources       ,
-                         final IntraUserInformation           intraUserInformation  ,
-                         final IntraUserLoginIdentity         identity              ) {
+    public ConnectDialog(final Activity a,
+                         final ChatUserSubAppSession chatUserSubAppSession,
+                         final SubAppResourcesProviderManager subAppResources,
+                         final ChatActorCommunityInformation chatUserInformation,
+                         final ChatActorCommunitySelectableIdentity identity) {
 
-        super(a, intraUserSubAppSession, subAppResources);
+        super(a, chatUserSubAppSession, subAppResources);
 
-        this.intraUserInformation = intraUserInformation;
-        this.identity             = identity            ;
+        this.chatUserInformation = chatUserInformation;
+        this.identity = identity;
     }
 
 
@@ -80,7 +82,6 @@ public class ConnectDialog extends FermatDialog<IntraUserSubAppSession, SubAppRe
         mDescription.setText(description != null ? description : "");
         mUsername.setText(username != null ? username : "");
         mTitle.setText(title != null ? title : "");
-
     }
 
     public void setSecondDescription(CharSequence secondDescription) {
@@ -102,7 +103,7 @@ public class ConnectDialog extends FermatDialog<IntraUserSubAppSession, SubAppRe
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_builder;
+        return R.layout.cht_comm_dialog_builder;
     }
 
     @Override
@@ -116,8 +117,16 @@ public class ConnectDialog extends FermatDialog<IntraUserSubAppSession, SubAppRe
         if (i == R.id.positive_button) {
             try {
                 //image null
-                if (intraUserInformation != null && identity != null) {
-                    getSession().getModuleManager().askIntraUserForAcceptance(intraUserInformation.getName(), intraUserInformation.getPhrase(),intraUserInformation.getPublicKey(),intraUserInformation.getProfileImage(), identity.getProfileImage(), identity.getPublicKey(), identity.getAlias());
+                if (chatUserInformation != null && identity != null) {
+                    getSession().getModuleManager()
+                            .requestConnectionToChatActor(identity, chatUserInformation);
+//                            .askIntraUserForAcceptance(chatUserInformation.getName(),
+//                                    chatUserInformation.getPhrase(),
+//                                    chatUserInformation.getPublicKey(),
+//                                    chatUserInformation.getProfileImage(),
+//                                    identity.getProfileImage(),
+//                                    identity.getPublicKey(),
+//                                    identity.getAlias());
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
                     sendLocalBroadcast(broadcast);
@@ -126,16 +135,17 @@ public class ConnectDialog extends FermatDialog<IntraUserSubAppSession, SubAppRe
                     super.toastDefaultError();
                 }
                 dismiss();
-            } catch (CantStartRequestException e) {
+            } catch (CantRequestActorConnectionException e) {
+                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
+            } catch (ActorChatTypeNotSupportedException e) {
+                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
+            } catch (ActorChatConnectionAlreadyRequestesException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 super.toastDefaultError();
             }
-
-            dismiss();
-        } else if (i == R.id.negative_button) {
-            dismiss();
         }
+        dismiss();
     }
-
-
 }

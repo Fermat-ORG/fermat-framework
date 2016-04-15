@@ -14,14 +14,16 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButto
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.IntraUserDisconnectingFailedException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorConnectionRequestNotFoundException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ChatActorDisconnectingFailedException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.LinkedChatActorIdentity;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.constants.Constants;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.R;
+import com.bitdubai.sub_app.chat_community.constants.Constants;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
 
 /**
  * DisconectDialog
@@ -30,7 +32,7 @@ import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
  * @version 1.0
  */
 @SuppressWarnings("FieldCanBeLocal")
-public class DisconectDialog extends FermatDialog<IntraUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class DisconnectDialog extends FermatDialog<ChatUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
 
     /**
      * UI components
@@ -44,18 +46,18 @@ public class DisconectDialog extends FermatDialog<IntraUserSubAppSession, SubApp
     private CharSequence   username    ;
     private CharSequence   title       ;
 
-    private final IntraUserInformation   intraUserInformation;
-    private final IntraUserLoginIdentity identity            ;
+    private final ChatActorCommunityInformation chatUserInformation;
+    private final ChatActorCommunitySelectableIdentity identity            ;
 
-    public DisconectDialog(final Activity                       activity              ,
-                           final IntraUserSubAppSession         intraUserSubAppSession,
-                           final SubAppResourcesProviderManager subAppResources       ,
-                           final IntraUserInformation           intraUserInformation  ,
-                           final IntraUserLoginIdentity         identity              ) {
+    public DisconnectDialog(final Activity activity,
+                            final ChatUserSubAppSession chatUserSubAppSession,
+                            final SubAppResourcesProviderManager subAppResources,
+                            final ChatActorCommunityInformation chatUserInformation,
+                            final ChatActorCommunitySelectableIdentity identity) {
 
-        super(activity, intraUserSubAppSession, subAppResources);
+        super(activity, chatUserSubAppSession, subAppResources);
 
-        this.intraUserInformation = intraUserInformation;
+        this.chatUserInformation = chatUserInformation;
         this.identity             = identity            ;
     }
 
@@ -94,7 +96,7 @@ public class DisconectDialog extends FermatDialog<IntraUserSubAppSession, SubApp
 
     @Override
     protected int setLayoutId() {
-        return R.layout.dialog_builder;
+        return R.layout.cht_comm_dialog_builder;
     }
 
     @Override
@@ -110,34 +112,28 @@ public class DisconectDialog extends FermatDialog<IntraUserSubAppSession, SubApp
         if (i == R.id.positive_button) {
             try {
                 //image null
-                if (intraUserInformation != null && identity != null) {
-
-                    getSession().getModuleManager().disconnectIntraUSer(identity.getPublicKey(),intraUserInformation.getPublicKey());
+                if (chatUserInformation != null && identity != null) {
+                    getSession().getModuleManager()
+                            .disconnectChatActor(chatUserInformation.getActorConnectionId());
 
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                     prefs.edit().putBoolean("Connected", true).apply();
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(Constants.BROADCAST_DISCONNECTED_UPDATE, true);
                     sendLocalBroadcast(broadcast);
-
                     Toast.makeText(getContext(), "Disconnected", Toast.LENGTH_SHORT).show();
-
                 } else {
                     super.toastDefaultError();
                 }
-                dismiss();
-
-            } catch (final IntraUserDisconnectingFailedException e) {
-
+            dismiss();
+            } catch (final ChatActorDisconnectingFailedException e) {
+                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
+                super.toastDefaultError();
+            } catch (final ActorConnectionRequestNotFoundException e) {
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 super.toastDefaultError();
             }
-
-            dismiss();
-        }else if( i == R.id.negative_button){
-            dismiss();
         }
+        dismiss();
     }
-
-
 }

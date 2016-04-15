@@ -41,15 +41,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/cht_comm_bg_shape_blue"
-            android:drawableLeft="@drawable/ic_profile_connect"
             android:drawablePadding="4dp"
-            android:drawableStart="@drawable/ic_profile_connect"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
             android:text="Connect"
             android:textColor="#ffffff"
             android:visibility="visible"
             tools:ignore="HardcodedText" />
+        <!--
+            android:drawableLeft="@drawable/ic_profile_connect"
+            android:drawableStart="@drawable/ic_profile_connect" -->
 
         <Button
             android:id="@+id/btn_connection_accept"
@@ -69,15 +70,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/cht_comm_bg_shape_white"
-            android:drawableLeft="@drawable/ic_profile_disconnect"
             android:drawablePadding="4dp"
-            android:drawableStart="@drawable/ic_profile_disconnect"
             android:paddingLeft="18dp"
             android:paddingRight="18dp"
             android:text="Disconnect"
             android:textColor="#0072bc"
             android:visibility="gone"
             tools:ignore="HardcodedText" />
+        <!-- android:drawableStart="@drawable/ic_profile_disconnect"
+        android:drawableLeft="@drawable/ic_profile_disconnect" -->
 
         <Button
             android:id="@+id/btn_connection_request_send"

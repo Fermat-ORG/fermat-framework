@@ -20,14 +20,13 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetS
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CouldNotCreateIntraUserException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
-import com.bitdubai.sub_app.intra_user_community.R;
-import com.bitdubai.sub_app.intra_user_community.constants.Constants;
-import com.bitdubai.sub_app.intra_user_community.interfaces.RecreateView;
-import com.bitdubai.sub_app.intra_user_community.session.IntraUserSubAppSession;
+import com.bitdubai.sub_app.chat_community.R;
+import com.bitdubai.sub_app.chat_community.constants.Constants;
+import com.bitdubai.sub_app.chat_community.interfaces.RecreateView;
+import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
 
 import java.io.ByteArrayOutputStream;
 
@@ -38,7 +37,8 @@ import java.io.ByteArrayOutputStream;
  * @version 1.0
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
-public class PresentationChatCommunityDialog extends FermatDialog<IntraUserSubAppSession, SubAppResourcesProviderManager> implements View.OnClickListener {
+public class PresentationChatCommunityDialog extends FermatDialog<ChatUserSubAppSession,
+        SubAppResourcesProviderManager> implements View.OnClickListener {
 
 
     public static final int TYPE_PRESENTATION = 1;
@@ -53,8 +53,8 @@ public class PresentationChatCommunityDialog extends FermatDialog<IntraUserSubAp
     private FrameLayout container_john_doe;
     private ImageView image_view_right;
     private FrameLayout container_jane_doe;
-    private IntraUserSubAppSession intraUserSubAppSession;
-    private IntraUserModuleManager moduleManager;
+    private ChatUserSubAppSession chatUserSubAppSession;
+    private ChatActorCommunitySubAppModuleManager moduleManager;
     private RecreateView recreateView;
 
     /**
@@ -64,9 +64,9 @@ public class PresentationChatCommunityDialog extends FermatDialog<IntraUserSubAp
      * @param resources     parent class of WalletResources and SubAppResources
      */
     public PresentationChatCommunityDialog(final Activity activity,
-                                                final IntraUserSubAppSession fermatSession,
+                                                final ChatUserSubAppSession fermatSession,
                                                 final SubAppResourcesProviderManager resources,
-                                                final IntraUserModuleManager moduleManager,
+                                                final ChatActorCommunitySubAppModuleManager moduleManager,
                                                 final int type) {
 
         super(activity, fermatSession, resources);
@@ -74,7 +74,7 @@ public class PresentationChatCommunityDialog extends FermatDialog<IntraUserSubAp
         this.activity = activity;
         this.type = type;
         this.moduleManager = moduleManager;
-        this.intraUserSubAppSession = fermatSession;
+        this.chatUserSubAppSession = fermatSession;
     }
 
     @Override
@@ -106,9 +106,9 @@ public class PresentationChatCommunityDialog extends FermatDialog<IntraUserSubAp
     protected int setLayoutId() {
         switch (type) {
             case TYPE_PRESENTATION:
-                return R.layout.tutorial_intra_user_community;
+                return R.layout.cht_comm_tutorial_user;
             case TYPE_PRESENTATION_WITHOUT_IDENTITIES:
-                return R.layout.tutorial_intra_user_community_whitout_identity;
+                return R.layout.cht_comm_tutorial_user_without_identity;
         }
         return 0;
     }
@@ -121,11 +121,11 @@ public class PresentationChatCommunityDialog extends FermatDialog<IntraUserSubAp
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        SharedPreferences pref = getContext().getSharedPreferences(Constants.PRESENTATIO_DIALOG_CHECKED, Context.MODE_PRIVATE);
+        SharedPreferences pref = getContext().getSharedPreferences(Constants.PRESENTATION_DIALOG_CHECKED, Context.MODE_PRIVATE);
         SharedPreferences.Editor edit;
         if (id == R.id.btn_left) {
             try {
-                moduleManager.createIntraUser("Jhon Doe", "Available", convertImage(R.drawable.ic_profile_male));
+                moduleManager.createIdentity("Jhon Doe", "Available", convertImage(R.drawable.ic_profile_male));
                 if (recreateView != null)
                     recreateView.recreate();
                 if (dontShowAgainCheckBox.isChecked()) {
@@ -134,12 +134,12 @@ public class PresentationChatCommunityDialog extends FermatDialog<IntraUserSubAp
                 saveSettings();
                 dismiss();
                 Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
-            } catch (CouldNotCreateIntraUserException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (id == R.id.btn_right) {
             try {
-                moduleManager.createIntraUser("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
+                moduleManager.createIdentity("Jane Doe", "Available", convertImage(R.drawable.img_profile_female));
                 if (recreateView != null) {
                     recreateView.recreate();
                 }
@@ -149,7 +149,7 @@ public class PresentationChatCommunityDialog extends FermatDialog<IntraUserSubAp
                 saveSettings();
                 dismiss();
                 Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
-            } catch (CouldNotCreateIntraUserException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else if (id == R.id.start_community) {
@@ -164,12 +164,11 @@ public class PresentationChatCommunityDialog extends FermatDialog<IntraUserSubAp
     private void saveSettings(){
         if(type!=TYPE_PRESENTATION)
                 if(dontShowAgainCheckBox.isChecked()){
-                    SettingsManager<IntraUserWalletSettings> settingsManager = moduleManager.getSettingsManager();
+                    SettingsManager<ChatActorCommunitySettings> settingsManager = moduleManager.getSettingsManager();
                     try {
-
-                        IntraUserWalletSettings intraUserWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
-                        intraUserWalletSettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
-                        settingsManager.persistSettings(getSession().getAppPublicKey(),intraUserWalletSettings);
+                        ChatActorCommunitySettings chatUserCommunitySettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
+                        chatUserCommunitySettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
+                        settingsManager.persistSettings(getSession().getAppPublicKey(),chatUserCommunitySettings);
                     } catch (CantGetSettingsException | SettingsNotFoundException | CantPersistSettingsException e) {
                         e.printStackTrace();
                     }
@@ -179,7 +178,7 @@ public class PresentationChatCommunityDialog extends FermatDialog<IntraUserSubAp
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        intraUserSubAppSession.setData(Constants.PRESENTATION_DIALOG_DISMISS, Boolean.TRUE);
+        chatUserSubAppSession.setData(Constants.PRESENTATION_DIALOG_DISMISS, Boolean.TRUE);
     }
 
     private byte[] convertImage(int resImage) {

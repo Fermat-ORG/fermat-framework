@@ -51,7 +51,6 @@
             android:layout_gravity="center"
             android:layout_weight="1"
             android:background="#010c12"
-            android:drawableRight="@drawable/ic_profile_connect"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
@@ -60,6 +59,7 @@
             android:textColor="#ffffff"
             android:textSize="16sp"
             tools:ignore="HardcodedText,RtlHardcoded" />
+        <!-- android:drawableRight="@drawable/ic_profile_connect" -->
 
     </LinearLayout>
 

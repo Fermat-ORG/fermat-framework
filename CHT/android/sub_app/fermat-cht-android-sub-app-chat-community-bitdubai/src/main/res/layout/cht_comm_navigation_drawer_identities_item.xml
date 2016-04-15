@@ -20,8 +20,8 @@
             android:layout_height="40dp"
             android:layout_gravity="center"
             android:scaleType="centerCrop"
-            android:src="@drawable/profile_image"
             tools:ignore="ContentDescription" />
+        <!--  android:src="@drawable/profile_image" -->
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/textView_identity"

@@ -43,8 +43,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/img_home_empty"
             tools:ignore="ContentDescription" />
+        <!-- android:src="@drawable/img_home_empty"-->
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
@@ -77,8 +77,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/img_home_empty"
             tools:ignore="ContentDescription" />
+        <!-- android:src="@drawable/img_home_empty"-->
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
@@ -111,8 +111,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/img_home_no_connection"
             tools:ignore="ContentDescription" />
+        <!-- android:src="@drawable/img_home_no_connection"-->
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
@@ -152,8 +152,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/img_home_no_connection"
             tools:ignore="ContentDescription" />
+        <!--android:src="@drawable/img_home_no_connection"-->
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"

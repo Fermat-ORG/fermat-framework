@@ -7,7 +7,9 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.sub_app.chat_community.R;
+import com.bitdubai.sub_app.chat_community.holders.NotificationHolder;
 
 import java.util.List;
 
@@ -18,9 +20,9 @@ import java.util.List;
  * @version 1.0
  */
 public class NotificationAdapter
-        extends FermatAdapter<IntraUserInformation, NotificationHolder> {
+        extends FermatAdapter<ChatActorCommunityInformation, NotificationHolder> {
 
-    public NotificationAdapter(Context context, List<IntraUserInformation> lst) {
+    public NotificationAdapter(Context context, List<ChatActorCommunityInformation> lst) {
         super(context, lst);
     }
 
@@ -31,15 +33,16 @@ public class NotificationAdapter
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.row_connection_notification;
+        return R.layout.cht_comm_notification_item;
     }
 
     @Override
-    protected void bindHolder(NotificationHolder holder, IntraUserInformation data, int position) {
-        if (data.getPublicKey() != null) {
-            holder.userName.setText(data.getName());
-            if (data.getProfileImage() != null && data.getProfileImage().length > 0) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(data.getProfileImage(), 0, data.getProfileImage().length);
+    protected void bindHolder(NotificationHolder holder, ChatActorCommunityInformation data, int position) {
+        if (data.getActorPublickey() != null) {
+            holder.userName.setText(data.getActorAlias());
+            if (data.getActorImage() != null && data.getActorImage().length > 0) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(data.getActorImage(), 0,
+                        data.getActorImage().length);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
                 holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
             }

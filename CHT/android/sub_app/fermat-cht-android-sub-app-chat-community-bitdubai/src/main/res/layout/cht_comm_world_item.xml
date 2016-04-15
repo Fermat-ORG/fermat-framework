@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/profile_image" />
+             />
+        <!-- android:src="@drawable/profile_image" -->
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/community_name"
@@ -43,12 +44,9 @@
             android:layout_height="25dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/ic_home_friend"
             android:visibility="gone"
             tools:ignore="ContentDescription,RtlHardcoded" />
-
-
-
+        <!-- android:src="@drawable/ic_home_friend" -->
     </RelativeLayout>
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
         android:id="@+id/connection_state_user"

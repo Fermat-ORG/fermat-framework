@@ -38,11 +38,11 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Can
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraUserWalletSettings;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetIntraUsersListException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
@@ -50,6 +50,7 @@ import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.ErrorConnectingFermatNetworkDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.interfaces.ErrorConnectingFermatNetwork;
+import com.bitdubai.sub_app.chat_community.preference_settings.ChatUserPreferenceSettings;
 import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
@@ -68,7 +69,7 @@ import static android.widget.Toast.makeText;
 
 public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         AdapterView.OnItemClickListener,
-        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ChatUserInformation> {
+        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ChatActorCommunityInformation> {
 
 
     public static final String CHAT_USER_SELECTED = "chat_user";
@@ -77,18 +78,18 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     /**
      * MANAGERS
      */
-    private static ChatUserModuleManager moduleManager;
+    private static ChatActorCommunitySubAppModuleManager moduleManager;
     private static ErrorManager errorManager;
 
     protected final String TAG = "Recycler Base";
     FermatWorker worker;
-    SettingsManager<ChatUserWalletSettings> settingsManager;
-    IntraUserWalletSettings chatUserWalletSettings = null;
+    SettingsManager<ChatActorCommunitySettings> settingsManager;
+    ChatActorCommunitySettings chatUserSettings = null;
     private ErrorConnectingFermatNetwork errorConnectingFermatNetwork;
     private int offset = 0;
     private int mNotificationsCount = 0;
     private SearchView mSearchView;
-    private AppListAdapter adapter;
+    private CommunityListAdapter adapter;
     private boolean isStartList = false;
     private RecyclerView recyclerView;
     private GridLayoutManager layoutManager;
@@ -100,11 +101,11 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private ChatUserSubAppSession chatUserSubAppSession;
     private String searchName;
     private LinearLayout emptyView;
-    private ArrayList<ChatUserInformation> lstChatUserInformations;
-    private List<ChatUserInformation> dataSet = new ArrayList<>();
+    private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;
+    private List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
     private android.support.v7.widget.Toolbar toolbar;
     private EditText searchEditText;
-    private List<ChatUserInformation> dataSetFiltered;
+    private List<ChatActorCommunityInformation> dataSetFiltered;
     private ImageView closeSearch;
     private LinearLayout searchEmptyView;
     private LinearLayout noNetworkView;
@@ -134,25 +135,23 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             settingsManager = chatUserSubAppSession.getModuleManager().getSettingsManager();
             //TODO: SETTINGS OF ACTOR LAYER
             try {
-                intraUserWalletSettings =
+                chatUserSettings =
                         settingsManager.loadAndGetSettings(chatUserSubAppSession.getAppPublicKey());
             } catch (Exception e) {
-                intraUserWalletSettings = null;
+                chatUserSettings = null;
             }
 
             if (chatUserSubAppSession.getAppPublicKey() != null) //the identity not exist yet
             {
-                if (intraUserWalletSettings == null) {
-                    intraUserWalletSettings = new IntraUserWalletSettings();
-                    intraUserWalletSettings.setIsPresentationHelpEnabled(true);
+                if (chatUserSettings == null) {
+                    chatUserSettings = new ChatActorCommunitySettings();
+                    chatUserSettings.setIsPresentationHelpEnabled(true);
                     settingsManager.persistSettings(chatUserSubAppSession.getAppPublicKey(),
-                            intraUserWalletSettings);
+                            chatUserSettings);
                 }
             }
-
-            mNotificationsCount = moduleManager.getChatUsersWaitingYourAcceptanceCount();
+            mNotificationsCount = moduleManager.getChatActorWaitingYourAcceptanceCount();
             new FetchCountTask().execute();
-
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY,
@@ -168,11 +167,11 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         try {
-            rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
+            rootView = inflater.inflate(R.layout.cht_comm_connections_world_fragment, container, false);
             toolbar = getToolbar();
             toolbar.setTitle("Chat Users");
             setUpScreen(inflater);
-            searchView = inflater.inflate(R.layout.search_edit_text, null);
+            searchView = inflater.inflate(R.layout.cht_comm_search_edit_text, null);
             setUpReferences();
             switch (getFermatState().getFermatNetworkStatus()) {
                 case CONNECTED:
@@ -221,12 +220,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
         noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
         noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
-        try {
-            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-        } catch (CantGetIntraUsersListException e) {
-            e.printStackTrace();
-        }
-        if (intraUserWalletSettings.isPresentationHelpEnabled()) {
+//        try {
+            //TODO: check this in module
+//            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+//        } catch (CantGetIntraUsersListException e) {
+//            e.printStackTrace();
+//        }
+        if (chatUserSettings.isPresentationHelpEnabled()) {
             showDialogHelp();
         } else {
             showCriptoUsersCache();
@@ -235,7 +235,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     public void showErrorNetworkDialog() {
         ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog =
-                new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
+                new ErrorConnectingFermatNetworkDialog(getActivity(), chatUserSubAppSession, null);
         errorConnectingFermatNetworkDialog.setDescription("You are not connected  /n to the Fermat Network");
         errorConnectingFermatNetworkDialog.setRightButton("Connect", new View.OnClickListener() {
             @Override
@@ -254,7 +254,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     public void showErrorFermatNetworkDialog() {
         final ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog =
-                new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
+                new ErrorConnectingFermatNetworkDialog(getActivity(), chatUserSubAppSession, null);
         errorConnectingFermatNetworkDialog.setDescription("The access to the /n Fermat Network is disabled.");
         errorConnectingFermatNetworkDialog.setRightButton("Enable", new View.OnClickListener() {
             @Override
@@ -303,22 +303,23 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                     if (result != null &&
                             result.length > 0) {
                         if (getActivity() != null && adapter != null) {
-                            lstChatUserInformations = (ArrayList<ChatUserInformation>) result[0];
+                            lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
                             adapter.changeDataSet(lstChatUserInformations);
                             if (lstChatUserInformations.isEmpty()) {
-                                try {
-                                    if (!moduleManager.getCacheSuggestionsToContact(MAX, offset).isEmpty()) {
-                                        lstChatUserInformations
-                                                .addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-                                        showEmpty(false, emptyView);
-                                        showEmpty(false, searchEmptyView);
-                                    } else {
-                                        showEmpty(true, emptyView);
-                                        showEmpty(false, searchEmptyView);
-                                    }
-                                } catch (CantGetIntraUsersListException e) {
-                                    e.printStackTrace();
-                                }
+//                                try {
+//                                    //TODO: the same as before
+//                                    if (!moduleManager.getCacheSuggestionsToContact(MAX, offset).isEmpty()) {
+//                                        lstChatUserInformations
+//                                                .addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+//                                        showEmpty(false, emptyView);
+//                                        showEmpty(false, searchEmptyView);
+//                                    } else {
+//                                        showEmpty(true, emptyView);
+//                                        showEmpty(false, searchEmptyView);
+//                                    }
+//                                } catch (CantGetIntraUsersListException e) {
+//                                    e.printStackTrace();
+//                                }
 
                             } else {
                                 showEmpty(false, emptyView);
@@ -326,14 +327,14 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             }
                         }
                     } else {
-                        try {
-                            showEmpty(false, emptyView);
-                            showEmpty(false, searchEmptyView);
-                            lstChatUserInformations
-                                    .addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-                        } catch (CantGetIntraUsersListException e) {
-                            e.printStackTrace();
-                        }
+//                        try {
+//                            showEmpty(false, emptyView);
+//                            showEmpty(false, searchEmptyView);
+//                            lstChatUserInformations
+//                                    .addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+//                        } catch (CantGetIntraUsersListException e) {
+//                            e.printStackTrace();
+//                        }
                     }
                 }
 
@@ -355,7 +356,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.cripto_users_menu, menu);
+        inflater.inflate(R.menu.cht_comm_menu, menu);//cripto_users_menu
 
         try {
             final MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -377,7 +378,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                                 menu.findItem(R.id.action_search).setVisible(true);
                                 toolbar = getToolbar();
                                 toolbar.removeView(searchView);
-                                toolbar.setTitle("Cripto wallet users");
+                                toolbar.setTitle("Chat Users");
                                 onRefresh();
                             }
                         });
@@ -408,7 +409,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                                             if (result != null &&
                                                     result.length > 0) {
                                                 if (getActivity() != null && adapter != null) {
-                                                    dataSetFiltered = (ArrayList<ChatUserInformation>) result[0];
+                                                    dataSetFiltered = (ArrayList<ChatActorCommunityInformation>) result[0];
                                                     adapter.changeDataSet(dataSetFiltered);
                                                     if (dataSetFiltered != null) {
                                                         if (dataSetFiltered.isEmpty()) {
@@ -495,13 +496,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     }
 
-    private synchronized List<ChatUserInformation> getQueryData(final CharSequence charSequence) {
+    private synchronized List<ChatActorCommunityInformation> getQueryData(final CharSequence charSequence) {
         if (dataSet != null && !dataSet.isEmpty()) {
             if (searchEditText != null && !searchEditText.getText().toString().isEmpty()) {
-                dataSetFiltered = new ArrayList<ChatUserInformation>();
-                for (ChatUserInformation chatUser : dataSet) {
+                dataSetFiltered = new ArrayList<ChatActorCommunityInformation>();
+                for (ChatActorCommunityInformation chatUser : dataSet) {
 
-                    if(chatUser.getName().toLowerCase().contains(charSequence.toString().toLowerCase()))
+                    if(chatUser.getActorAlias().toLowerCase().contains(charSequence.toString().toLowerCase()))
                         dataSetFiltered.add(chatUser);
                 }
             } else dataSetFiltered = null;
@@ -510,79 +511,79 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     }
 
 
-    private synchronized List<ChatUserInformation> getMoreData() {
-        List<ChatUserInformation> dataSet = new ArrayList<>();
+    private synchronized List<ChatActorCommunityInformation> getMoreData() {
+        List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
 
-         try {
+//         try {
             //verifico la cache para mostrar los que tenia antes y los nuevos
-             List<ChatUserInformation> userCacheList = new ArrayList<>();
-             try {
-                     userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
-             } catch (CantGetChatUsersListException e) {
-                 e.printStackTrace();
-             }
+             List<ChatActorCommunityInformation> userCacheList = new ArrayList<>();
+//             try {
+//                     userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
+//             } catch (CantGetChatUsersListException e) {
+//                 e.printStackTrace();
+//             }
 
-            List<ChatUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
-             //dataSet.addAll(userList);
-
+//            List<ChatActorCommunityInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
             if(userCacheList.size() == 0)
             {
-                dataSet.addAll(userList);
-                moduleManager.saveCacheChatUsersSuggestions(userList);
+//                dataSet.addAll(userList);
+//                moduleManager.saveCacheChatUsersSuggestions(userList);
             }
             else
             {
-                if(userList.size() == 0)
-                {
-                    dataSet.addAll(userCacheList);
-                }
-                else
-                {
-                    for (ChatUserInformation chatUserCache : userCacheList) {
-                        boolean exist = false;
-                        for (ChatUserInformation chatUser : userList) {
-                            if(chatUserCache.getPublicKey().equals(chatUser.getPublicKey())){
-                                exist = true;
-                                break;
-                            }
-                        }
-                        if(!exist)
-                            userList.add(chatUserCache);
-                    }
+//                if(userList.size() == 0)
+//                {
+//                    dataSet.addAll(userCacheList);
+//                }
+//                else
+//                {
+//                    for (ChatActorCommunityInformation chatUserCache : userCacheList) {
+//                        boolean exist = false;
+////                        for (ChatActorCommunityInformation chatUser : userList) {
+////                            if(chatUserCache.getActorPublickey().equals(chatUser.getActorPublickey())){
+////                                exist = true;
+////                                break;
+////                            }
+////                        }
+//                        if(!exist)
+//                            userList.add(chatUserCache);
+//                    }
                     //guardo el cache
 
-                    moduleManager.saveCacheChatUsersSuggestions(userList);
-                    dataSet.addAll(userList);
-                }
+//                    moduleManager.saveCacheChatUsersSuggestions(userList);
+//                    dataSet.addAll(userList);
+//                }
             }
 
             //offset = dataSet.size();
 
-        } catch (CantGetIntraUsersListException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        } catch (CantGetIntraUsersListException e) {
+//            e.printStackTrace();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
         return dataSet;
     }
 
 
     @Override
-    public void onItemClickListener(IntraUserInformation data, int position) {
+    public void onItemClickListener(ChatActorCommunityInformation data, int position) {
         try {
-            if (moduleManager.getActiveChatUserIdentity() != null) {
-                if (!moduleManager.getActiveChatUserIdentity().getPublicKey().isEmpty())
+            if (moduleManager.getSelectedActorIdentity() != null) {
+                if (!moduleManager.getSelectedActorIdentity().getPublicKey().isEmpty())
                     appSession.setData(CHAT_USER_SELECTED, data);
                 changeActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode(),
                         appSession.getAppPublicKey());
             }
-        } catch (CantGetActiveLoginIdentityException e) {
+        } catch (CantGetSelectedActorIdentityException e) {
+            e.printStackTrace();
+        } catch (ActorIdentityNotSelectedException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void onLongItemClickListener(IntraUserInformation data, int position) {
+    public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {
 
     }
 
