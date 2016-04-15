@@ -55,6 +55,12 @@ public final class MatchingEngineMiddlewareInputTransaction implements InputTran
         if (state == null)
             throw new InvalidParameterException("state is null.");
 
+        if(amountReceiving < 0)
+            throw new InvalidParameterException("receiving amount can't be lower than 0");
+
+        if(amountGiving < 0)
+            throw new InvalidParameterException("giving amount can't be lower than 0");
+
         this.id                  = id                 ;
         this.originTransactionId = originTransactionId;
         this.currencyGiving      = currencyGiving     ;

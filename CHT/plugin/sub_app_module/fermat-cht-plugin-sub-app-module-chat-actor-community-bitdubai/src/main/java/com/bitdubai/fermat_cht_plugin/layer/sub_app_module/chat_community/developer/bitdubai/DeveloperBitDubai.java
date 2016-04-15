@@ -7,7 +7,8 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_api.layer.all_definition.license.PluginLicensor;
-import com.fermat_cht_plugin.layer.sub_app_module.chat.actor.community.developer.bitdubai.version_1.ChatActorCommunitySubAppModulePluginRoot;
+import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.ChatActorCommunitySubAppModulePluginRoot;
+
 
 /**
  * Created by root on 14/04/16.
@@ -21,6 +22,7 @@ public class DeveloperBitDubai extends AbstractPluginDeveloper implements Plugin
             try {
 
                 this.registerVersion(new ChatActorCommunitySubAppModulePluginRoot());
+
 
             } catch (Exception e) {
 

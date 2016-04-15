@@ -9,7 +9,9 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="7dp">
+        android:paddingBottom="7dp"
+        android:background="@drawable/communities_top_container_background"
+        >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -19,7 +21,7 @@
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
-                android:background="@drawable/communities_bar"
+                android:background="@drawable/rectangule_communities_hdpi"
                 />
 
 

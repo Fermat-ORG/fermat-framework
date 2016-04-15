@@ -26,7 +26,34 @@ include ':fermat-api'
 include ':fermat-core'
 include ':fermat-core-api'
 
-//include ':fermat_linux_core'
+/**
+ * network node implementation start
+ */
+/*
+include ':fermat_linux_core'
+
+include ':fermat-osa-linux-core'
+project(':fermat-osa-linux-core').projectDir = new File('OSA/library/core/fermat-osa-linux-core')
+
+include ':fermat-osa-addon-linux-file-system-bitdubai'
+project(':fermat-osa-addon-linux-file-system-bitdubai').projectDir = new File('OSA/addon/linux/fermat-osa-addon-linux-file-system-bitdubai')
+
+include ':fermat-osa-addon-linux-database-system-bitdubai'
+project(':fermat-osa-addon-linux-database-system-bitdubai').projectDir = new File('OSA/addon/linux/fermat-osa-addon-linux-database-system-bitdubai')
+
+include ':fermat-osa-addon-linux-device-location-bitdubai'
+project(':fermat-osa-addon-linux-device-location-bitdubai').projectDir = new File('OSA/addon/linux/fermat-osa-addon-linux-device-location-bitdubai')
+
+
+include ':fermat-p2p-plugin-communication-network-node-bitdubai'
+project(':fermat-p2p-plugin-communication-network-node-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-network-node-bitdubai')
+
+include ':fermat-p2p-plugin-communication-network-client-bitdubai'
+project(':fermat-p2p-plugin-communication-network-client-bitdubai').projectDir = new File('P2P/plugin/communication/fermat-p2p-plugin-communication-network-client-bitdubai')
+*/
+/**
+ * network node implementation end
+ */
 //include ':manifest_generator'
 
 //BNP Projects
@@ -74,4 +101,3 @@ include ':fermat-shp-plugin-identity-brand-bitdubai'
 project(':fermat-shp-plugin-identity-brand-bitdubai').projectDir = new File('SHP/plugin/identity/fermat-shp-plugin-identity-brand-bitdubai')
 include ':fermat-android-api', ':fermat-pip-plugin-android-core-module-developer-bitdubai', ':picker-unit-selector', ':fermat_navigator_drawer', ':send-form', ':fermat_statistics', ':fermat-ccp-plugin-wallet-module-loss-protected-wallet-bitdubai', ':fermat-ccp-plugin-basic-wallet-loss-protected-wallet-bitdubai', ':fermat-ccp-android-loss-protected-bitcoin-wallet-bitdubai', ':fermat-ccp-plugin-transaction-transfer-intra-wallet-users-bitdubai', ':fermat-ccp-plugin-transaction-outgoing-device-user-bitdubai', ':transactions-fragment'
 project(':fermat-pip-plugin-android-core-module-developer-bitdubai').projectDir = new File('PIP/plugin/module/fermat-pip-plugin-android-core-module-developer-bitdubai')
-

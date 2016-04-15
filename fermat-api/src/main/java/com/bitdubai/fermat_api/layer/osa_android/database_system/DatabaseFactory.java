@@ -28,8 +28,5 @@ public interface DatabaseFactory {
     DatabaseTableFactory newTableFactory(String tableName);
 
     void createDatabase(String databaseName) throws CantCreateDatabaseException;
-
     
-    
-
 }

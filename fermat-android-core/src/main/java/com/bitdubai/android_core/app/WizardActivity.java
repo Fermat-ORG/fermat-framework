@@ -168,7 +168,8 @@ public class WizardActivity extends FermatActivity
 
                 FermatFragmentFactory walletFragmentFactory = fermatAppConnection.getFragmentFactory(); //WalletFragmentFactory.getFragmentFactoryByWalletType(wallet.getWalletCategory(), wallet.getWalletType(), wallet.getPublicKey());
                 for (WizardPage page : wizarType.getPages()) {
-                    fragments.add(walletFragmentFactory.getFragment(page.getFragment(), fermatSession, null));
+                    AbstractFermatFragment abstractFermatFragment = walletFragmentFactory.getFragment(page.getFragment(), fermatSession, null);
+                    fragments.add(abstractFermatFragment);
                 }
             } catch (FragmentNotFoundException e) {
                 e.printStackTrace();
@@ -329,26 +330,31 @@ public class WizardActivity extends FermatActivity
     @Override
     public void onBackPressed() {
 
-        String frgBackType = null;
+        try {
+            String frgBackType = null;
 
-        FermatStructure walletNavigationStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
+            FermatStructure walletNavigationStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
 
-        com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity activity = walletNavigationStructure.getLastActivity();
+            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity activity = walletNavigationStructure.getLastActivity();
 
-        com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = activity.getLastFragment();
+            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = activity.getLastFragment();
 
-        if (fragment != null) frgBackType = fragment.getBack();
+            if (fragment != null) frgBackType = fragment.getBack();
 
-        if (frgBackType != null) {
-            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = walletNavigationStructure.getLastActivity().getFragment(fragment.getBack());
-            //changeFragment(walletNavigationStructure.getWalletCategory(), walletNavigationStructure.getWalletType(), walletNavigationStructure.getPublicKey(), frgBackType);
-        } else if (activity != null && activity.getBackActivity() != null && activity.getBackAppPublicKey()!=null) {
-            //changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
-        } else {
-            Intent intent = new Intent(this, DesktopActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            if (frgBackType != null) {
+                com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = walletNavigationStructure.getLastActivity().getFragment(fragment.getBack());
+                //changeFragment(walletNavigationStructure.getWalletCategory(), walletNavigationStructure.getWalletType(), walletNavigationStructure.getPublicKey(), frgBackType);
+            } else if (activity != null && activity.getBackActivity() != null && activity.getBackAppPublicKey() != null) {
+                //changeActivity(activity.getBackActivity().getCode(),activity.getBackAppPublicKey());
+            } else {
+                Intent intent = new Intent(this, DesktopActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
         //super.onBackPressed();
     }

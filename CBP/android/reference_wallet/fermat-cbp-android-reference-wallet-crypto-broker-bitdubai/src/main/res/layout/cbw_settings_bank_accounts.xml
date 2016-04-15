@@ -15,12 +15,25 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:text="@string/cbw_select_your_bank_account_text"
+            android:textColor="#777777"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp"
+            />
+
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/cbw_select_your_bank_account"
             android:textColor="@color/cbw_wizard_color"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
+            android:textAllCaps="true"/>
 
         <View
             android:layout_width="match_parent"
@@ -28,13 +41,6 @@
             android:layout_marginTop="8dp"
             android:background="@color/cbw_wizard_color"/>
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="@string/cbw_select_your_bank_account_text"
-            android:textColor="@color/cbw_wizard_color"
-            android:textSize="14sp"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
             android:id="@+id/cbw_select_bank_accounts"
@@ -43,6 +49,7 @@
             android:layout_marginTop="8dp"
             android:background="@color/cbw_wizard_color"
             android:paddingLeft="8dp"
+            android:layout_marginBottom="8dp"
             android:paddingRight="8dp"
             android:text="@string/cbw_add_bank_account"
             android:textColor="@color/white"

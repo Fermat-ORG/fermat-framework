@@ -42,11 +42,11 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.SlidingDrawer;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.adapters.ScreenPagerAdapter;
 import com.bitdubai.android_core.app.common.version_1.adapters.TabsPagerAdapter;
+import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService;
 import com.bitdubai.android_core.app.common.version_1.base_structure.config.FermatActivityConfiguration;
 import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNavigation;
 import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
@@ -89,6 +89,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.FermatStates;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
@@ -1350,7 +1351,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
                 Log.e(TAG, "Wizard not found...");
             }
         } catch (Exception ex) {
-            makeText(this, "Cannot instantiate wizard runtime because the wizard called is null", Toast.LENGTH_SHORT).show();
+            //makeText(this, "Cannot instantiate wizard runtime because the wizard called is null", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -1431,6 +1432,22 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void goHome() {
+        try {
+            FermatAppsManagerService appsManagerService = ApplicationSession.getInstance().getAppManager();
+            appsManagerService.getAppStructure("main_desktop").getActivity(Activities.CCP_DESKTOP);
+//            onBackPressed();
+            Intent intent = new Intent(this, DesktopActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            startActivity(intent);
+            finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public void addDesktopCallBack(DesktopHolderClickCallback desktopHolderClickCallback ){
         if(bottomNavigation!=null) bottomNavigation.setDesktopHolderClickCallback(desktopHolderClickCallback);
     }
@@ -1441,22 +1458,26 @@ public abstract class FermatActivity extends AppCompatActivity implements
         executor.submit(new Runnable() {
             @Override
             public void run() {
-                FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
-                final Activity activity = fermatStructure.getLastActivity();
-                FermatSession fermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
-                final AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), getApplicationContext(), fermatSession);
                 try {
-                    appsConnections.setActiveIdentity(fermatSession.getModuleManager().getSelectedActorIdentity());
-                } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+                    FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
+                    final Activity activity = fermatStructure.getLastActivity();
+                    FermatSession fermatSession = ApplicationSession.getInstance().getAppManager().getAppsSession(fermatStructure.getPublicKey());
+                    final AppConnections appsConnections = FermatAppConnectionManager.getFermatAppConnection(fermatStructure.getPublicKey(), getApplicationContext(), fermatSession);
+                    try {
+                        appsConnections.setActiveIdentity(fermatSession.getModuleManager().getSelectedActorIdentity());
+                    } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+                        e.printStackTrace();
+                    }
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            paintSideMenu(activity, activity.getSideMenu(), appsConnections);
+                            paintFooter(activity.getFooter(), appsConnections.getFooterViewPainter());
+                        }
+                    });
+                }catch (Exception e){
                     e.printStackTrace();
                 }
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        paintSideMenu(activity, activity.getSideMenu(), appsConnections);
-                        paintFooter(activity.getFooter(), appsConnections.getFooterViewPainter());
-                    }
-                });
 
             }
         });
@@ -1479,14 +1500,18 @@ public abstract class FermatActivity extends AppCompatActivity implements
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            SideMenuBuilder.setAdapter(
-                                    navigation_recycler_view,
-                                    mAdapter,
-                                    viewPainter.addItemDecoration(),
-                                    finalLstItems,
-                                    getLisItemListenerMenu(),
-                                    fermatStructure.getLastActivity().getActivityType()
-                            );
+                            try {
+                                SideMenuBuilder.setAdapter(
+                                        navigation_recycler_view,
+                                        mAdapter,
+                                        viewPainter.addItemDecoration(),
+                                        finalLstItems,
+                                        getLisItemListenerMenu(),
+                                        fermatStructure.getLastActivity().getActivityType()
+                                );
+                            } catch (InvalidParameterException e) {
+                                e.printStackTrace();
+                            }
                         }
                     });
                 }
@@ -1780,8 +1805,6 @@ public abstract class FermatActivity extends AppCompatActivity implements
     public RelativeLayout getToolbarHeader() {
         return (RelativeLayout) findViewById(R.id.toolbar_header_container);
     }
-
-
 
 
 }

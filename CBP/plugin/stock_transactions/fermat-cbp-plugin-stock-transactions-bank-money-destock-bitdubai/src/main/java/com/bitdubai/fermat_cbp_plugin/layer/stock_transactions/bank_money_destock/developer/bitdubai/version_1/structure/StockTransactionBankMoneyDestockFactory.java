@@ -11,34 +11,29 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destoc
 import java.util.List;
 import java.util.UUID;
 
+
 /**
  * Created by franklin on 11/12/15.
  */
 public class StockTransactionBankMoneyDestockFactory {
-    private final PluginDatabaseSystem pluginDatabaseSystem;
-    private final UUID pluginId;
+    private final BusinessTransactionBankMoneyDestockDatabaseDao dao;
 
     /**
      * Constructor with params.
      *
-     * @param pluginDatabaseSystem  database system reference.
-     * @param pluginId              of this module.
+     * @param pluginDatabaseSystem database system reference.
+     * @param pluginId             the id of this plugin.
      */
-    public StockTransactionBankMoneyDestockFactory(final PluginDatabaseSystem pluginDatabaseSystem,
-                                                   final UUID pluginId) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
+    public StockTransactionBankMoneyDestockFactory(final PluginDatabaseSystem pluginDatabaseSystem, final UUID pluginId) {
+        dao = new BusinessTransactionBankMoneyDestockDatabaseDao(pluginDatabaseSystem, pluginId);
     }
 
-    private BusinessTransactionBankMoneyDestockDatabaseDao getStockTransactionBankMoneyDestockDao() {
-        return new BusinessTransactionBankMoneyDestockDatabaseDao(pluginDatabaseSystem, pluginId);
-    }
 
     public void saveBankMoneyDestockTransactionData(BankMoneyTransaction bankMoneyTransaction) throws DatabaseOperationException, MissingBankMoneyDestockDataException {
-        getStockTransactionBankMoneyDestockDao().saveBankMoneyDestockTransactionData(bankMoneyTransaction);
+        dao.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
     }
 
     public List<BankMoneyTransaction> getBankMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException {
-        return getStockTransactionBankMoneyDestockDao().getBankMoneyTransactionList(filter);
+        return dao.getBankMoneyTransactionList(filter);
     }
 }
