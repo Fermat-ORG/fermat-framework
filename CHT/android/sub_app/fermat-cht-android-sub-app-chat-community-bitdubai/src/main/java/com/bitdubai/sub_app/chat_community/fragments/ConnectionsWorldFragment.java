@@ -48,6 +48,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.sub_app.chat_community.adapters.CommunityListAdapter;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.common.popups.ErrorConnectingFermatNetworkDialog;
+import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.interfaces.ErrorConnectingFermatNetwork;
 import com.bitdubai.sub_app.chat_community.preference_settings.ChatUserPreferenceSettings;
@@ -590,30 +591,30 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     private void showDialogHelp() {
         try {
-            if (moduleManager.getActiveChatUserIdentity() != null) {
-                if (!moduleManager.getActiveChatUserIdentity().getPublicKey().isEmpty()) {
-                    PresentationChatUserCommunityDialog presentationIntraUserCommunityDialog =
-                            new PresentationChatUserCommunityDialog(getActivity(),
+            if (moduleManager.getSelectedActorIdentity() != null) {
+                if (!moduleManager.getSelectedActorIdentity().getPublicKey().isEmpty()) {
+                    PresentationChatCommunityDialog presentationChatCommunityDialog =
+                            new PresentationChatCommunityDialog(getActivity(),
                             chatUserSubAppSession,
                             null,
                             moduleManager,
-                            PresentationChatUserCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
-                    presentationIntraUserCommunityDialog.show();
-                    presentationIntraUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            PresentationChatCommunityDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES);
+                    presentationChatCommunityDialog.show();
+                    presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
                             showCriptoUsersCache();
                         }
                     });
                 } else {
-                    PresentationChatUserCommunityDialog presentationIntraUserCommunityDialog =
-                            new PresentationChatUserCommunityDialog(getActivity(),
+                    PresentationChatCommunityDialog presentationChatCommunityDialog =
+                            new PresentationChatCommunityDialog(getActivity(),
                             chatUserSubAppSession,
                             null,
                             moduleManager,
-                            PresentationChatUserCommunityDialog.TYPE_PRESENTATION);
-                    presentationChatUserCommunityDialog.show();
-                    presentationChatUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    PresentationChatCommunityDialog.TYPE_PRESENTATION);
+                    presentationChatCommunityDialog.show();
+                    presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(DialogInterface dialog) {
                             Boolean isBackPressed =
@@ -630,14 +631,14 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                     });
                 }
             } else {
-                presentationChatUserCommunityDialog presentationChatUserCommunityDialog =
-                        new PresentationChatUserCommunityDialog(getActivity(),
+                PresentationChatCommunityDialog presentationChatCommunityDialog =
+                        new PresentationChatCommunityDialog(getActivity(),
                         chatUserSubAppSession,
                         null,
                         moduleManager,
-                        PresentationChatUserCommunityDialog.TYPE_PRESENTATION);
-                presentationChatUserCommunityDialog.show();
-                presentationChatUserCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                PresentationChatCommunityDialog.TYPE_PRESENTATION);
+                presentationChatCommunityDialog.show();
+                presentationChatCommunityDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
                         Boolean isBackPressed = (Boolean) chatUserSubAppSession.getData(Constants.PRESENTATION_DIALOG_DISMISS);
@@ -650,14 +651,16 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                     }
                 });
             }
-        } catch (CantGetActiveLoginIdentityException e) {
+        } catch (CantGetSelectedActorIdentityException e) {
+            e.printStackTrace();
+        } catch (ActorIdentityNotSelectedException e) {
             e.printStackTrace();
         }
     }
 
     private void showCriptoUsersCache() {
 
-        IntraUserModuleManager moduleManager = chatUserSubAppSession.getModuleManager();
+        ChatActorCommunitySubAppModuleManager moduleManager = chatUserSubAppSession.getModuleManager();
         if(moduleManager==null){
             getActivity().onBackPressed();
         }else{
@@ -700,7 +703,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     }
 
-    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetActiveLoginIdentityException {
+    private void setUpScreen(LayoutInflater layoutInflater) throws CantGetSelectedActorIdentityException {
 
     }
 

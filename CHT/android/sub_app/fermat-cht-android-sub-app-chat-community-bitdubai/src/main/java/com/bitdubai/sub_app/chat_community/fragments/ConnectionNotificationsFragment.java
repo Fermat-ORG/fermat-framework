@@ -229,6 +229,7 @@ public class ConnectionNotificationsFragment
         }
     }
 
+
     @Override
     public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {
 
