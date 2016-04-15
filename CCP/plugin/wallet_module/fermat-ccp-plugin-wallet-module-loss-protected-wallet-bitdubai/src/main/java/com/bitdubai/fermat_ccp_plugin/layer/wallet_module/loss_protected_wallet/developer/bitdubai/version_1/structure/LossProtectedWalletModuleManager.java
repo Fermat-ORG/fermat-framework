@@ -119,6 +119,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserActor;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
+
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantEnrichLossProtectedIntraUserException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantEnrichLossProtectedTransactionException;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.exceptions.CantGetLossProtectedActorException;
@@ -167,7 +168,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     private final CryptoAddressBookManager       cryptoAddressBookManager      ;
     private final CryptoAddressesManager         cryptoAddressesNSManager      ;
     private final CryptoPaymentManager           cryptoPaymentManager          ;
-    private final CryptoVaultManager            cryptoVaultManager            ;
+    private final CryptoVaultManager            cryptoVaultManager             ;
     private final ErrorManager                   errorManager                  ;
     private final ExtraUserManager               extraUserManager              ;
     private final IntraWalletUserActorManager    intraUserManager              ;
@@ -890,16 +891,82 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     }
 
     @Override
-    public List<BitcoinLossProtectedWalletSpend> listSpendingBlocksValue(String walletPublicKey,UUID transactionId) throws CantListLossProtectedSpendingException {
-        try {
-            return bitcoinWalletManager.loadWallet(walletPublicKey).listTransactionsSpending(transactionId);
+    public List<BitcoinLossProtectedWalletSpend> listSpendingBlocksValue(String walletPublicKey,UUID transactionId) throws CantListLossProtectedSpendingException, CantLoadWalletException {
+        List<BitcoinLossProtectedWalletSpend> bitcoinLossProtectedWalletSpendList = new ArrayList<>();
 
-        } catch (CantLoadWalletException e) {
-            throw new CantListLossProtectedSpendingException(CantGetActorLossProtectedTransactionHistoryException.DEFAULT_MESSAGE, e);
+        try {
+            List<BitcoinLossProtectedWalletSpend> bitcoinLossProtectedWalletSpendList1 = new ArrayList<>();
+
+            if (bitcoinLossProtectedWalletSpendList.size()==0) {
+
+                BitcoinLossProtectedWalletSpend spendingLsit = new BitcoinLossProtectedWalletSpend() {
+                    @Override
+                    public UUID getSpendId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getAmount() {
+                        return (long) 2.2544;
+                    }
+
+                    @Override
+                    public double getExchangeRate() {
+                        return 422.14;
+                    }
+                };
+
+                bitcoinLossProtectedWalletSpendList.add(spendingLsit);
+
+            }
+
+            BitcoinLossProtectedWalletSpend spendingLsit = new BitcoinLossProtectedWalletSpend() {
+                @Override
+                public UUID getSpendId() {
+                    return UUID.randomUUID();
+                }
+
+                @Override
+                public UUID getTransactionId() {
+                    return UUID.randomUUID();
+                }
+
+                @Override
+                public long getTimestamp() {
+                    return 0;
+                }
+
+                @Override
+                public long getAmount() {
+                    return (long) 1.2544;
+                }
+
+                @Override
+                public double getExchangeRate() {
+                    return 422.14;
+                }
+            };
+
+            bitcoinLossProtectedWalletSpendList.add(spendingLsit);
+
+            return bitcoinLossProtectedWalletSpendList;
+
         } catch(Exception e){
             throw new CantListLossProtectedSpendingException(CantGetActorLossProtectedTransactionHistoryException.DEFAULT_MESSAGE, FermatException.wrapException(e));
         }
     }
+
+
 
     @Override
     public LossProtectedActorTransactionSummary getActorTransactionHistory(BalanceType balanceType,
@@ -1107,10 +1174,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
                 BitcoinLossProtectedWalletTransaction transaction = new BitcoinLossProtectedWalletTransaction() {
                     @Override
-                    public UUID getTransactionId() {
-
-                        return UUID.randomUUID();
-                    }
+                    public UUID getTransactionId() {return UUID.randomUUID();}
 
                     @Override
                     public String getTransactionHash() {

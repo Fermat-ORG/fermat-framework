@@ -7,6 +7,8 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
 
+import com.google.gson.Gson;
+
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckOutProfileMsjRespond</code>
  * <p/>
@@ -43,6 +45,8 @@ public class CheckOutProfileMsjRespond extends MsgRespond {
         return identityPublicKey;
     }
 
+    public static CheckOutProfileMsjRespond parseContent(String content) {
 
-
+        return new Gson().fromJson(content, CheckOutProfileMsjRespond.class);
+    }
 }

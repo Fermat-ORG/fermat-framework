@@ -65,7 +65,7 @@ public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fe
             options.inScaled = true;
             options.inSampleSize = 5;
             drawable = BitmapFactory.decodeResource(
-                    activity.get().getResources(), R.drawable.bg_drawer_body,options);
+                    activity.get().getResources(), R.drawable.navdrawer_background,options);
             //drawable = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.bg_drawer_body);
         }catch (OutOfMemoryError error){
             error.printStackTrace();

@@ -26,9 +26,9 @@ public class FragmentsCommons {
         View view = inflater.inflate(R.layout.navigation_view_row_first, null, true);
         FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
         try {
-            ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
+           // ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
             if (intraUserLoginIdentity != null) {
-                if (intraUserLoginIdentity.getImage() != null) {
+              /*  if (intraUserLoginIdentity.getImage() != null) {
                     if (intraUserLoginIdentity.getImage().length > 0) {
                         //BitmapFactory.Options options = new BitmapFactory.Options();
                         //options.inScaled = true;
@@ -45,7 +45,7 @@ public class FragmentsCommons {
                         //imageView.setImageBitmap(bitmap);
                     } else
                         Picasso.with(activity).load(R.drawable.ic_profile_male).into(imageView);
-                }
+                }*/
                 fermatTextView.setText(intraUserLoginIdentity.getAlias());
             }else{
                 fermatTextView.setText("");
