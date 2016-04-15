@@ -42,10 +42,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="8dp"
-            android:gravity="center"
             android:text="@string/ccw_wizard_locations_description"
             android:textColor="#777777"
-            android:textSize="15sp"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp"
             />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -127,7 +127,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:src="@drawable/flecha"
+            android:src="@drawable/ccw_right_hand_arrow"
             tools:ignore="contentDescription"/>
     </LinearLayout>
 

@@ -23,6 +23,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by Matias Furszyfer on 2015.07.20..
@@ -66,6 +67,8 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
     private String communityConnection;
 
     private double actualExchangeRate;
+
+    private UUID transactionDetailId;
     public LossProtectedWalletSession() {
     }
 
@@ -73,6 +76,12 @@ public class LossProtectedWalletSession extends AbstractFermatSession<InstalledW
     public LossProtectedWalletSession(String publicKey, InstalledWallet fermatApp, ErrorManager errorManager, LossProtectedWalletManager moduleManager, WalletResourcesProviderManager resourceProviderManager) {
         super(publicKey, fermatApp, errorManager, moduleManager, resourceProviderManager);
     }
+
+
+    public void setTransactionDetailId(UUID transactionDetailId){
+        this.transactionDetailId = transactionDetailId;
+    }
+    public  UUID getTransactionDetailId(){return transactionDetailId;}
 
     public void setActualExchangeRate(double rate){this.actualExchangeRate = rate; }
     public double getActualExchangeRate(){return actualExchangeRate;}

@@ -86,17 +86,17 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
     protected int getCardViewResource(int type) {
         switch (type) {
             case TYPE_HEADER:
-                return R.layout.ccw_notes_item;
+                return R.layout.ccw_notes_item_close;
             case TYPE_DATE_TIME:
-                return R.layout.ccw_date_time_item;
+                return R.layout.ccw_date_time_item_close;
             case TYPE_SINGLE_CHOICE:
-                return R.layout.ccw_single_choice_item;
+                return R.layout.ccw_single_choice_item_close;
             case TYPE_EXCHANGE_RATE:
-                return R.layout.ccw_exchange_rate_item;
+                return R.layout.ccw_exchange_rate_item_close;
             case TYPE_AMOUNT_TO_BUY:
-                return R.layout.ccw_amount_to_buy_item_single;
+                return R.layout.ccw_amount_to_buy_item_single_close;
             case TYPE_AMOUNT_TO_PAY:
-                return R.layout.ccw_amount_to_buy_item_single;
+                return R.layout.ccw_amount_to_buy_item_single_close;
             default:
                 throw new NoSuchElementException("Incorrect type value");
         }

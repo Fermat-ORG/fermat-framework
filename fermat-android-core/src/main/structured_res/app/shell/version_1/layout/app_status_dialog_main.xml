@@ -52,7 +52,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/filter_app_hdpi"
+            android:src="@drawable/icon_filter_hdpi"
             android:padding="7dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
@@ -76,7 +76,7 @@
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/filter_app_hdpi"/>
+            android:src="@drawable/app_filter_hdpi"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
@@ -121,7 +121,7 @@
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/beta_filter_hdpi"/>
+            android:src="@drawable/beta_hdpi"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
@@ -167,7 +167,7 @@
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/alpha_filter_hdpi"/>
+            android:src="@drawable/icon_alpha_hdpi"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
@@ -211,7 +211,7 @@
         <ImageView
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/filter_develop_hdpi"/>
+            android:src="@drawable/icon_develop_hdpi"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"

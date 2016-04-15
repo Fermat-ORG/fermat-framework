@@ -87,8 +87,8 @@ public class ClientSystemBrokerService extends Service {
             intent.setClassName(service.serviceInfo.packageName, service.serviceInfo.name);
             intent.setAction("org.fermat.COMM_SERVICE");
             //ComponentName cn = startService(intent);
-            startService(intent);
-            doBindService(intent);
+//            startService(intent);
+//            doBindService(intent);
         }
     }
 

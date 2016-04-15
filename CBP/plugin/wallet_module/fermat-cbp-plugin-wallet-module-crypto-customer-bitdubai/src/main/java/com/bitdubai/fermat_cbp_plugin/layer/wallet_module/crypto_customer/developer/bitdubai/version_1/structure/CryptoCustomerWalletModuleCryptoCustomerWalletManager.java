@@ -265,7 +265,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                             status,
                             customerBrokerContractPurchase.getNearExpirationDatetime(),
                             PurchaseNegotiation,
-                            customerBrokerContractPurchase.getContractId());
+                            customerBrokerContractPurchase.getContractId(),
+                            customerBrokerContractPurchase.getCancelReason());
 
                     filteredList.add(contract);
                 }
@@ -291,6 +292,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                                 statusContractCancelled,
                                 false,
                                 PurchaseNegotiation,
+                                "",
                                 "");
 
                         filteredList.add(contract);
@@ -323,7 +325,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                             customerBrokerContractPurchase.getStatus(),
                             customerBrokerContractPurchase.getNearExpirationDatetime(),
                             PurchaseNegotiation,
-                            customerBrokerContractPurchase.getContractId());
+                            customerBrokerContractPurchase.getContractId(),
+                            customerBrokerContractPurchase.getCancelReason());
 
                     filteredList.add(contract);
                 }
@@ -347,6 +350,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                             statusContractCancelled,
                             false,
                             PurchaseNegotiation,
+                            "",
                             "");
 
                     filteredList.add(contract);
@@ -390,7 +394,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                         customerBrokerContract.getStatus(),
                         customerBrokerContract.getNearExpirationDatetime(),
                         negotiation,
-                        customerBrokerContract.getContractId());
+                        customerBrokerContract.getContractId(),
+                        customerBrokerContract.getCancelReason());
 
                 waitingForBroker.add(contract);
             }
@@ -431,7 +436,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                         customerBrokerContract.getStatus(),
                         customerBrokerContract.getNearExpirationDatetime(),
                         negotiation,
-                        customerBrokerContract.getContractId());
+                        customerBrokerContract.getContractId(),
+                        customerBrokerContract.getCancelReason());
 
                 waitingForBroker.add(contract);
             }
@@ -832,10 +838,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         CustomerBrokerPurchaseNegotiationImpl purchaseNegotiationImpl = null;
 
         try {
-            System.out.println("**** 1) MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION ****\n" +
-                    "\n-CUSTOMER: " + negotiation.getCustomer().getPublicKey() +
-                    "\n-BROKER: " + negotiation.getBroker().getPublicKey() + "" +
-                    "\n-Memo: " + negotiation.getMemo());
 
             //VALIDATE STATUS CLAUSE
             CustomerBrokerPurchaseNegotiation purchaseNegotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(negotiation.getNegotiationId());
@@ -843,10 +845,8 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             purchaseNegotiationImpl.changeInfo(negotiation);
 
             if (purchaseNegotiationImpl.dataHasChanged()) {
-                System.out.println("**** 1.2) MODULE CRYPTO CUSTOMER - UPDATE NEGOTIATION - CLAUSES INFORMATION ****");
                 customerBrokerUpdateManager.createCustomerBrokerUpdatePurchaseNegotiationTranasction(purchaseNegotiationImpl);
             } else {
-                System.out.println("**** 1.2) MODULE CRYPTO CUSTOMER - CLOSE NEGOTIATION - CLAUSES INFORMATION ****");
                 customerBrokerCloseManager.createCustomerBrokerClosePurchaseNegotiationTranasction(purchaseNegotiationImpl);
             }
 

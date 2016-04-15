@@ -31,8 +31,8 @@ android {
         applicationId "org.fermat"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 27
-        versionName "1.1"
+        versionCode 30
+        versionName "0.64"
         multiDexEnabled true
     }
 
@@ -94,8 +94,8 @@ dependencies {
     compile project(':fermat-dmp-android-sub-app-wallet-publisher-bitdubai')
     compile project(':fermat-dmp-android-sub-app-wallet-store-bitdubai')
     /*
-                                                                            Sub APPs on the pipeline
-                                                                            */
+                                                                        Sub APPs on the pipeline
+                                                                        */
     compile project(':fermat-pip-android-sub-app-sub-app-manager-bitdubai')
     // PIP Projects (Sub APPs)
     compile project(':fermat-pip-android-sub-app-developer-bitdubai')
