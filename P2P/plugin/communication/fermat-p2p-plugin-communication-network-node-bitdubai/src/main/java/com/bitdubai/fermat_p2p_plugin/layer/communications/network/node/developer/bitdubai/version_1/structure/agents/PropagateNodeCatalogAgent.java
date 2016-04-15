@@ -1,5 +1,5 @@
 /*
- * @#PropagateNodeCataloAgent.java - 2016
+ * @#PropagateNodeCatalogAgent.java - 2016
  * Copyright bitDubai.com., All rights reserved.
  * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI/CONFIDENTIAL
@@ -28,28 +28,26 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import org.jboss.logging.Logger;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.agents.PropagateNodeCataloAgent</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.agents.PropagateNodeCatalogAgent</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 04/04/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class PropagateNodeCataloAgent  extends FermatAgent {
+public class PropagateNodeCatalogAgent extends FermatAgent {
 
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(PropagateNodeCataloAgent.class.getName());
+    private final Logger LOG = Logger.getLogger(PropagateNodeCatalogAgent.class.getName());
 
     /**
      * Represent the scheduledThreadPool
@@ -74,7 +72,7 @@ public class PropagateNodeCataloAgent  extends FermatAgent {
     /**
      * Constructor
      */
-    public  PropagateNodeCataloAgent(){
+    public PropagateNodeCatalogAgent(){
         this.scheduledThreadPool = Executors.newScheduledThreadPool(1);
         this.scheduledFutures    = new ArrayList<>();
         this.nodesCatalogDao     = ((DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY)).getNodesCatalogDao();
@@ -86,7 +84,9 @@ public class PropagateNodeCataloAgent  extends FermatAgent {
      */
     private void propagateCatalog() throws CantReadRecordDataBaseException, CantUpdateRecordDataBaseException, RecordNotFoundException {
 
-        List<NodesCatalog> nodesCatalogsList = getCatalogueListToShare();
+        LOG.info("Executing propagateCatalog()");
+
+        List<NodesCatalog> nodesCatalogsList = nodesCatalogDao.getNodeCatalogueListToShare();
         List<NodesCatalogTransaction> transactionList = getNodesCatalogTransactionsPendingForPropagationBlock();
 
         if ((nodesCatalogsList != null && !nodesCatalogsList.isEmpty()) &&
@@ -139,6 +139,7 @@ public class PropagateNodeCataloAgent  extends FermatAgent {
     @Override
     public void start() throws CantStartAgentException {
 
+        LOG.info("Start");
         try {
 
             scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PropagationTask(), 1,  1, TimeUnit.MINUTES));
@@ -154,6 +155,7 @@ public class PropagateNodeCataloAgent  extends FermatAgent {
      * @see FermatAgent#resume()
      */
     public void resume() throws CantStartAgentException {
+        LOG.info("Resume");
         try {
             try {
 
@@ -175,6 +177,7 @@ public class PropagateNodeCataloAgent  extends FermatAgent {
      * @see FermatAgent#pause()
      */
     public void pause() throws CantStopAgentException {
+        LOG.info("Pause");
         try {
 
             for (ScheduledFuture future: scheduledFutures) {
@@ -194,6 +197,7 @@ public class PropagateNodeCataloAgent  extends FermatAgent {
      * @see FermatAgent#stop()
      */
     public void stop() throws CantStopAgentException {
+        LOG.info("Stop");
         try {
 
             scheduledThreadPool.shutdown();
@@ -203,22 +207,6 @@ public class PropagateNodeCataloAgent  extends FermatAgent {
 
             throw new CantStopAgentException(FermatException.wrapException(exception), null, "You should inspect the cause.");
         }
-    }
-
-    /**
-     * Return a list of nodes catalog
-     *
-     * @return List<NodesCatalog>
-     */
-    private List<NodesCatalog> getCatalogueListToShare() throws CantReadRecordDataBaseException {
-
-        //TODO: Complete the condition filter
-        Map<String, Object> filters = new HashMap<>();
-        //filters.put();
-        //filters.put();
-
-        return nodesCatalogDao.findAll(filters);
-
     }
 
     /**

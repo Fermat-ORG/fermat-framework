@@ -2,14 +2,15 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.ClientNodeChannelConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.AddNodeToCatalogRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.ReceivedActorCatalogTransactionsRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.ReceivedNodeCatalogTransactionsRespondProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.UpdateNodeInCatalogRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConstantAttNames;
 
@@ -70,6 +71,26 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
     }
 
     /**
+     * Constructor with parameters
+     *
+     * @param ip
+     * @param port
+     */
+    public FermatWebSocketClientNodeChannel(String ip, Integer port){
+
+        try {
+
+            URI endpointURI = new URI("ws://"+ip+":"+port);
+            WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
+            clientConnection = webSocketContainer.connectToServer(this, endpointURI);
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    /**
      * (non-javadoc)
      *
      * @see FermatWebSocketChannelEndpoint#initPackageProcessorsRegistration()
@@ -83,6 +104,10 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
          */
         registerMessageProcessor(new ReceivedNodeCatalogTransactionsRespondProcessor(this));
         registerMessageProcessor(new ReceivedActorCatalogTransactionsRespondProcessor(this));
+        registerMessageProcessor(new AddNodeToCatalogRespondProcessor(this));
+        registerMessageProcessor(new UpdateNodeInCatalogRespondProcessor(this));
+
+
     }
 
     /**
@@ -167,11 +192,11 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
 
         String channelIdentityPrivateKey = getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) clientConnection.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
-        Package packageRespond = Package.createInstance(message, NetworkServiceType.UNDEFINED, PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+        Package packageRequest = Package.createInstance(message, NetworkServiceType.UNDEFINED, PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
 
         if (isConnected()){
-            this.clientConnection.getAsyncRemote().sendObject(packageRespond);
+            this.clientConnection.getAsyncRemote().sendObject(packageRequest);
         }
 
     }

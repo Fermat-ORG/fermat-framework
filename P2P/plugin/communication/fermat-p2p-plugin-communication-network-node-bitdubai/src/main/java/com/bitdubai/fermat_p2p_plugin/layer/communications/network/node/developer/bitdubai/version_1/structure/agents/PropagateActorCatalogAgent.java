@@ -28,9 +28,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import org.jboss.logging.Logger;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -109,7 +107,7 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
      */
     @Override
     public void start() throws CantStartAgentException {
-
+        LOG.info("Start");
         try {
 
             scheduledFutures.add(scheduledThreadPool.scheduleAtFixedRate(new PropagationTask(), 1,  1, TimeUnit.MINUTES));
@@ -125,6 +123,7 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
      * @see FermatAgent#resume()
      */
     public void resume() throws CantStartAgentException {
+        LOG.info("Resume");
         try {
             try {
 
@@ -146,6 +145,7 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
      * @see FermatAgent#pause()
      */
     public void pause() throws CantStopAgentException {
+        LOG.info("Pause");
         try {
 
             for (ScheduledFuture future: scheduledFutures) {
@@ -165,6 +165,7 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
      * @see FermatAgent#stop()
      */
     public void stop() throws CantStopAgentException {
+        LOG.info("Stop");
         try {
 
             scheduledThreadPool.shutdown();
@@ -181,7 +182,9 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
      */
     private void propagateCatalog() throws CantReadRecordDataBaseException, CantUpdateRecordDataBaseException, RecordNotFoundException {
 
-        List<NodesCatalog> nodesCatalogsList = getCatalogueListToShare();
+        LOG.info("Executing propagateCatalog()");
+
+        List<NodesCatalog> nodesCatalogsList = nodesCatalogDao.getNodeCatalogueListToShare();
         List<ActorsCatalogTransaction> transactionList = getActorsCatalogTransactionPendingForPropagationBlock();
 
         if ((nodesCatalogsList != null && !nodesCatalogsList.isEmpty()) &&
@@ -203,23 +206,6 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
             }
 
         }
-
-    }
-
-
-    /**
-     * Return a list of nodes catalog
-     *
-     * @return List<NodesCatalog>
-     */
-    private List<NodesCatalog> getCatalogueListToShare() throws CantReadRecordDataBaseException {
-
-        //TODO: Complete the condition filter
-        Map<String, Object> filters = new HashMap<>();
-        //filters.put();
-        //filters.put();
-
-        return nodesCatalogDao.findAll(filters);
 
     }
 

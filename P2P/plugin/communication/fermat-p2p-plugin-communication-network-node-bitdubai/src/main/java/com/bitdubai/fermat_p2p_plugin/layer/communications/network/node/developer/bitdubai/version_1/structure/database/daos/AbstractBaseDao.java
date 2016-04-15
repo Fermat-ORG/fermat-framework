@@ -631,6 +631,24 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
     }
 
     /**
+     * Get the TableName value
+     *
+     * @return TableName
+     */
+    protected String getTableName() {
+        return tableName;
+    }
+
+    /**
+     * Get the IdTableName value
+     *
+     * @return IdTableName
+     */
+    protected String getIdTableName() {
+        return idTableName;
+    }
+
+    /**
      * Construct a Entity whit the values of the a DatabaseTableRecord pass
      * by parameter
      *

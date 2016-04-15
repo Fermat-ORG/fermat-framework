@@ -20,7 +20,8 @@ public class MsgRespond extends PackageContent {
      */
     public enum STATUS{
         SUCCESS,
-        FAIL
+        FAIL,
+        EXCEPTION
     }
 
     /**
