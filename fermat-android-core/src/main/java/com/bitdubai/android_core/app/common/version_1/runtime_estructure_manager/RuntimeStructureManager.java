@@ -34,10 +34,10 @@ public class RuntimeStructureManager implements FermatRuntime {
     }
 
     @Override
-    public void changeStartActivity(int optionActivity){
+    public void changeStartActivity(String activityCode){
         try {
             FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
-            fermatStructure.changeActualStartActivity(optionActivity);
+            fermatStructure.changeActualStartActivity(activityCode);
             selectRuntimeManager().recordNAvigationStructure(fermatStructure);
         }catch (Exception e){
             e.printStackTrace();
