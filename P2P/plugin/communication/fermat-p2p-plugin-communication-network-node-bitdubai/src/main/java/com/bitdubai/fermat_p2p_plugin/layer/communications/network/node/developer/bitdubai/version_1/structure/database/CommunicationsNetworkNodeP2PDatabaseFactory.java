@@ -252,20 +252,24 @@ public class CommunicationsNetworkNodeP2PDatabaseFactory implements DealsWithPlu
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
-            }           /**
-             * Create checked clients history table.
+            }
+
+            /**
+             * Create Clients Registration History table.
              */
-            table = databaseFactory.newTableFactory(ownerId, CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_TABLE_NAME);
+            table = databaseFactory.newTableFactory(ownerId, CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_TABLE_NAME);
 
-            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_UUID_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
-            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
-            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_LAST_LATITUDE_COLUMN_NAME, DatabaseDataType.REAL, 50, Boolean.FALSE);
-            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_LAST_LONGITUDE_COLUMN_NAME, DatabaseDataType.REAL, 50, Boolean.FALSE);
-            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_DEVICE_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 50, Boolean.FALSE);
-            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
-            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_CHECK_TYPE_COLUMN_NAME, DatabaseDataType.STRING, 10, Boolean.FALSE);
+            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_ID_COLUMN_NAME                 , DatabaseDataType.STRING      , 100, Boolean.TRUE );
+            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING      , 255, Boolean.FALSE);
+            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_LAST_LATITUDE_COLUMN_NAME      , DatabaseDataType.REAL        ,  50, Boolean.FALSE);
+            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_LAST_LONGITUDE_COLUMN_NAME     , DatabaseDataType.REAL        ,  50, Boolean.FALSE);
+            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_DEVICE_TYPE_COLUMN_NAME        , DatabaseDataType.STRING      ,  50, Boolean.FALSE);
+            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME  , DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
+            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_TYPE_COLUMN_NAME               , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_RESULT_COLUMN_NAME             , DatabaseDataType.STRING      ,  10, Boolean.FALSE);
+            table.addColumn(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_DETAIL_COLUMN_NAME             , DatabaseDataType.STRING      , 100, Boolean.FALSE);
 
-            table.addIndex(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_FIRST_KEY_COLUMN);
+            table.addIndex (CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
 
             try {
                 //Create the table

@@ -45,9 +45,9 @@ public class DaoFactory {
     private CheckedActorsHistoryDao checkedActorsHistoryDao;
 
     /**
-     * Represent the checkedClientsHistoryDao instance
+     * Represent the clientsRegistrationHistoryDao instance
      */
-    private CheckedClientsHistoryDao checkedClientsHistoryDao;
+    private ClientsRegistrationHistoryDao clientsRegistrationHistoryDao;
 
     /**
      * Represent the checkedInActorDao instance
@@ -110,7 +110,7 @@ public class DaoFactory {
         this.actorsCatalogTransactionsPendingForPropagationDao = new ActorsCatalogTransactionsPendingForPropagationDao(database);
         this.callsLogDao                                       = new CallsLogDao(database);
         this.checkedActorsHistoryDao                           = new CheckedActorsHistoryDao(database);
-        this.checkedClientsHistoryDao                          = new CheckedClientsHistoryDao(database);
+        this.clientsRegistrationHistoryDao = new ClientsRegistrationHistoryDao(database);
         this.checkedInActorDao                                 = new CheckedInActorDao(database);
         this.checkedInClientDao                                = new CheckedInClientDao(database);
         this.checkedInNetworkServiceDao                        = new CheckedInNetworkServiceDao(database);
@@ -144,8 +144,8 @@ public class DaoFactory {
         return checkedActorsHistoryDao;
     }
 
-    public CheckedClientsHistoryDao getCheckedClientsHistoryDao() {
-        return checkedClientsHistoryDao;
+    public ClientsRegistrationHistoryDao getClientsRegistrationHistoryDao() {
+        return clientsRegistrationHistoryDao;
     }
 
     public CheckedInActorDao getCheckedInActorDao() {

@@ -1,9 +1,3 @@
-/*
-* @#DesktopDatabaseBridge.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.desktop.database.bridge;
 
 import java.io.File;
@@ -61,6 +55,15 @@ public class DesktopDatabaseBridge {
         }
     }
 
+    public Connection getConnection() {
+        try {
+            return DriverManager.getConnection("jdbc:sqlite:" + databasePath);
+        } catch (Exception e) {
+            System.out.println("database does not exist?"+e.getMessage());
+            return null;
+        }
+    }
+
     /**
      * Method who close the database connection
      * @exception SQLException	//if the database is not open
@@ -106,11 +109,8 @@ public class DesktopDatabaseBridge {
 
         }
 
-
-
         return rs;
     }
-
 
     /**
      * Execute a single SQL statement that is NOT a SELECT or any other SQL statement that returns data.
@@ -119,15 +119,14 @@ public class DesktopDatabaseBridge {
     "VALUES (1, 'Paul', 32, 'California', 20000.00 );";
      @exception SQLException	//if the SQL string is invalid
      */
-    public void execSQL(String sql) throws SQLException {
+    public void execSQL(final String sql) throws SQLException {
 
-        if (c == null)
-            connect();
+        Connection conn = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
 
-        stmt = c.createStatement();
-        stmt.executeUpdate(sql);
-        stmt.close();
-        c.commit();
+        Statement statement = conn.createStatement();
+        statement.executeUpdate(sql);
+        statement.close();
+        conn.close();
     }
 
     /**
@@ -244,7 +243,6 @@ public class DesktopDatabaseBridge {
             connect();
         }
 
-        ResultSet rs=null;
         try {
             stmt = c.createStatement();
             stmt.executeUpdate("UPDATE " + tableName + " SET " + setVariables + whereClause);

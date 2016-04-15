@@ -156,19 +156,19 @@ public class CommunicationsNetworkNodeP2PDatabaseConstants {
     public static final String CHECKED_ACTORS_HISTORY_FIRST_KEY_COLUMN = "uuid";
 
     /**
-     * checked clients history database table definition.
+     * Clients Registration History database table definition.
      */
-    public static final String CHECKED_CLIENTS_HISTORY_TABLE_NAME = "checked_clients_history";
+    public static final String CLIENTS_REGISTRATION_HISTORY_TABLE_NAME                      = "clients_registration_history";
 
-    public static final String CHECKED_CLIENTS_HISTORY_UUID_COLUMN_NAME = "uuid";
-    public static final String CHECKED_CLIENTS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "identity_public_key";
-    public static final String CHECKED_CLIENTS_HISTORY_LAST_LATITUDE_COLUMN_NAME = "last_latitude";
-    public static final String CHECKED_CLIENTS_HISTORY_LAST_LONGITUDE_COLUMN_NAME = "last_longitude";
-    public static final String CHECKED_CLIENTS_HISTORY_DEVICE_TYPE_COLUMN_NAME = "device_type";
-    public static final String CHECKED_CLIENTS_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME = "checked_timestamp";
-    public static final String CHECKED_CLIENTS_HISTORY_CHECK_TYPE_COLUMN_NAME = "check_type";
-
-    public static final String CHECKED_CLIENTS_HISTORY_FIRST_KEY_COLUMN = "uuid";
+    public static final String CLIENTS_REGISTRATION_HISTORY_ID_COLUMN_NAME                  = "id"                          ;
+    public static final String CLIENTS_REGISTRATION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "identity_public_key"         ;
+    public static final String CLIENTS_REGISTRATION_HISTORY_LAST_LATITUDE_COLUMN_NAME       = "last_latitude"               ;
+    public static final String CLIENTS_REGISTRATION_HISTORY_LAST_LONGITUDE_COLUMN_NAME      = "last_longitude"              ;
+    public static final String CLIENTS_REGISTRATION_HISTORY_DEVICE_TYPE_COLUMN_NAME         = "device_type"                 ;
+    public static final String CLIENTS_REGISTRATION_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME   = "checked_timestamp"           ;
+    public static final String CLIENTS_REGISTRATION_HISTORY_TYPE_COLUMN_NAME                = "type"                        ;
+    public static final String CLIENTS_REGISTRATION_HISTORY_RESULT_COLUMN_NAME              = "result"                      ;
+    public static final String CLIENTS_REGISTRATION_HISTORY_DETAIL_COLUMN_NAME              = "detail"                      ;
 
     /**
      * checked network service history database table definition.

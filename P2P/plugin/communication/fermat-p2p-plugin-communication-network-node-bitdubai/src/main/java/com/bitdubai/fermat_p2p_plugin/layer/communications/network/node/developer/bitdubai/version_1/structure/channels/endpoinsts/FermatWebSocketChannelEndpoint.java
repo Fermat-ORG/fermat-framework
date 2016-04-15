@@ -158,6 +158,11 @@ public abstract class FermatWebSocketChannelEndpoint {
         }
     }
 
+    public final DaoFactory getDaoFactory() {
+
+        return daoFactory;
+    }
+
     /**
      * Initialize the all package processors for this
      * channel

@@ -13,11 +13,13 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
+import org.glassfish.tyrus.client.ClientManager;
+import org.glassfish.tyrus.client.ClientProperties;
+
 import java.net.URI;
 
-import javax.websocket.ContainerProvider;
+import javax.websocket.CloseReason;
 import javax.websocket.Session;
-import javax.websocket.WebSocketContainer;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection</code>
@@ -34,10 +36,17 @@ public class NetworkClientCommunicationConnection extends Thread {
     private EventManager       eventManager   ;
     private LocationManager    locationManager;
     private ECCKeyPair         clientIdentity ;
-    private WebSocketContainer container      ;
     private Session            session        ;
 
-    private CommunicationsNetworkClientChannel communicationsNetworkClientChannel;
+    /**
+     * Represent if it must reconnect to the server
+     */
+    private boolean tryToReconnect;
+
+    /**
+     * Represent the webSocketContainer
+     */
+    private ClientManager container;
 
     /**
      * Represent the if is Connected
@@ -61,6 +70,9 @@ public class NetworkClientCommunicationConnection extends Thread {
         this.clientIdentity  = clientIdentity ;
 
         this.isConnected     = Boolean.FALSE  ;
+        this.tryToReconnect  = Boolean.TRUE   ;
+
+        this.container       = ClientManager.createClient();
     }
 
     public String getServerIdentity() {
@@ -68,29 +80,62 @@ public class NetworkClientCommunicationConnection extends Thread {
     }
 
     @Override
-    public void run(){
+    public void run() {
 
-        try{
+        /*
+         * Create a ReconnectHandler
+         */
+        ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
 
-            container = ContainerProvider.getWebSocketContainer();
-            /*this.communicationsNetworkClientChannel = new CommunicationsNetworkClientChannel(
-                    clientIdentity,
-                    errorManager  ,
-                    eventManager
-            );*/
+            @Override
+            public boolean onDisconnect(CloseReason closeReason) {
+                System.out.println("##########################################################################");
+                System.out.println("#  NetworkClientCommunicationConnection  - Disconnect -> Reconnecting... #");
+                System.out.println("##########################################################################");
+                return tryToReconnect;
+            }
 
-            session   = container.connectToServer(CommunicationsNetworkClientChannel.class, uri);
+            @Override
+            public boolean onConnectFailure(Exception exception) {
+                try {
+
+                    //System.out.println("# WsCommunicationsCloudClientConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
+                    // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
+                    Thread.sleep(5000);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                System.out.println("###############################################################################");
+                System.out.println("#  NetworkClientCommunicationConnection  - Connect Failure -> Reconnecting... #");
+                System.out.println("###############################################################################");
+                return tryToReconnect;
+            }
+
+        };
+
+        /*
+         * Register the ReconnectHandler
+         */
+        container.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
+
+        try {
+            session = container.connectToServer(CommunicationsNetworkClientChannel.class, uri);
 
             //validate if is connected
-            if(session.isOpen()){
+            if (session.isOpen()) {
                 this.isConnected = Boolean.TRUE;
                 serverIdentity = (String) session.getUserProperties().get("");
                 setCheckInClientRequestProcessor();
             }
-
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public void setNotTryToReconnectToCloud(){
+        tryToReconnect = Boolean.FALSE;
     }
 
     public Session getSession() {

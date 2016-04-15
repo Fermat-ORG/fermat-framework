@@ -1,12 +1,9 @@
-/*
- * @#WSClientChannelEndpoint.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantDeleteRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageEncoder;
@@ -24,7 +21,11 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckOutClientRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckOutNetworkServiceRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.NearNodeListRequestProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInClient;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ClientsConnectionHistory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ClientsRegistrationHistory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.enums.RegistrationResult;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.enums.RegistrationType;
 
 import org.jboss.logging.Logger;
 
@@ -162,17 +163,75 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
     /**
      * Method called to handle a connection close
      *
-     * @param closeReason message
-     * @param session closed
+     * @param closeReason message with the details.
+     * @param session     closed session.
      */
     @OnClose
-    public void onClose(CloseReason closeReason, Session session) {
+    public void onClose(final CloseReason closeReason,
+                        final Session     session    ) {
 
-        LOG.info("Closed session : " + session.getId() + " Code: (" + closeReason.getCloseCode() + ") - reason: "+ closeReason.getReasonPhrase());
+        LOG.info("Closed session : " + session.getId() + " Code: (" + closeReason.getCloseCode() + ") - reason: " + closeReason.getReasonPhrase());
 
+        try {
+
+            /*
+             * if the client is checked in, i will delete the record
+             * if not, i will register the inconsistency
+             */
+            String clientPublicKey = clientsSessionMemoryCache.get(session);
+
+            if (getDaoFactory().getCheckedInClientDao().exists(clientPublicKey)) {
+
+                getDaoFactory().getCheckedInClientDao().delete(clientPublicKey);
+
+                insertClientsRegistrationHistory(
+                        clientPublicKey,
+                        RegistrationResult.SUCCESS,
+                        closeReason.toString()
+                );
+
+            } else {
+
+                insertClientsRegistrationHistory(
+                        clientPublicKey,
+                        RegistrationResult.IGNORED,
+                        "There is no client registered with the given public key, indicated closed reason: "+closeReason.toString()
+                );
+            }
+
+        } catch (Exception exception) {
+
+            exception.printStackTrace();
+        }
     }
 
+    /**
+     * Create a new row into the data base
+     *
+     * @param publicKey of the client.
+     * @param result    of the registration.
+     * @param detail    of the registration.
+     *
+     * @throws CantInsertRecordDataBaseException if something goes wrong.
+     */
+    private void insertClientsRegistrationHistory(final String             publicKey,
+                                                  final RegistrationResult result   ,
+                                                  final String             detail   ) throws CantInsertRecordDataBaseException {
 
+        /*
+         * Create the ClientsRegistrationHistory
+         */
+        ClientsRegistrationHistory clientsRegistrationHistory = new ClientsRegistrationHistory();
+        clientsRegistrationHistory.setIdentityPublicKey(publicKey);
+        clientsRegistrationHistory.setType(RegistrationType.CHECK_OUT);
+        clientsRegistrationHistory.setResult(result);
+        clientsRegistrationHistory.setDetail(detail);
+
+        /*
+         * Save into the data base
+         */
+        getDaoFactory().getClientsRegistrationHistoryDao().create(clientsRegistrationHistory);
+    }
 
 
 }
