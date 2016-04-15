@@ -1,5 +1,7 @@
 ###USE CASES CHT V.2
 
+**Pruebas realizadas por:**
+
 <table style="width:100%">
   <tr>
     <td><b>Prueba Nº 1    Creación de Identidad</b></td>
@@ -40,7 +42,12 @@
 	</tr>
 	<tr>
 		<td>El usuario podrá solicitar la lista de conexiones disponibles de chat.</td>
-		<td></td>
+		<td>
+			<ol>
+				<li>Botón "Mostrar Conexiones"</li>
+				<li>Mostrar lista de conexiones</li>
+			</ol>
+		</td>
 		<td></td>
 	</tr>
 	</tr>
@@ -51,7 +58,17 @@
 	</tr>
 	<tr>
 		<td>Al momento de agregar un contacto, debe salir un estado de "esperando aprobación", en caso de que el contacto haya aceptado la solicitud, debe iniciar el chat sin problemas, caso contrario, se borrar el contacto y la conexión con el mismo.</td>
-		<td></td>
+		<td>
+			<ol>
+				<li>Agregar conexión como contacto</li>
+				<li>Aparecer en pantalla "Esperando Aprobación"</li>
+				<li>Mandar Solicitud</li>
+				<li>Mostrar estado "Aprobado"</li>
+				<li>Iniciat chat en caso de tener estado "Aprobado"</li>
+				<li>Mostrar estado "Denegado"</li>
+				<li>Borrar contacto en caso de tener estado "Denegado"</li>
+			</ol>
+		</td>
 		<td></td>
 	</tr>
 	<tr>
@@ -61,7 +78,12 @@
 	</tr>
 	<tr>
 		<td>En el momento en que se abra la comunidad, debe aparecer una lista de contactos con quien podamos iniciar chat en pantalla</td>
-		<td></td>
+		<td>
+			<ol>
+				<li>Presionar en el enlace para la lista de contactos</li>
+				<li>Mostrar lista de identidades</li>
+			</ol>
+		</td>
 		<td></td>
 	</tr>
 	<tr>
@@ -71,7 +93,14 @@
 	</tr>
 	<tr>
 		<td>La prueba de broadcasting es para mandar mensajes a múltiples contactos, pero escribiendo en un solo chat.</td>
-		<td></td>
+		<td>
+			<ol>
+				<li>Salir la opción "Broadcast" en el menú</li>
+				<li>Salir lista de selección de múltiples contactos</li>
+				<li>Abrir conexión de un chat con múltiples contactos</li>
+				<li>Recibir mensae en un solo chat con múltiples contactos</li>
+			</ol>
+		</td>
 		<td></td>
 	</tr>
 	<tr>
@@ -81,7 +110,14 @@
 	</tr>
 	<tr>
 		<td>La prueba de Group Broadcasting es para mandar mensajes a multiples contactos y con mensaje programado para llegar en una fecha en específico. Abrir pantalla en un chat por contacto, es decir, debe llegar el mensaje de manera personal, no en un chat grupal.</td>
-		<td></td>
+		<td>
+			<ol>
+				<li>Opción "Group Broadcasting"</li>
+				<li>Programación de mensaje: día, fecha y hora.</li>
+				<li>Selección de múltiples contactos</li>
+				<li>Recepción de mensaje, un chat por contacto</li>
+			</ol>
+		</td>
 		<td></td>
 	</tr>
 	<tr>
@@ -91,7 +127,13 @@
 	</tr>
 	<tr>
 		<td>Prueba para borrar contacto de chat</td>
-		<td></td>
+		<td>
+			<ol>
+				<li>Borrar Contacto</li>
+				<li>Mensaje de Confirmación</li>
+				<li>Actualización de lista de contactos</li>
+			</ol>
+		</td>
 		<td></td>
 	</tr>
 	<tr>
@@ -101,7 +143,13 @@
 	</tr>
 	<tr>
 		<td>Prueba para bloquear contacto de chat</td>
-		<td></td>
+		<td>
+			<ol>
+				<li>Bloquear contacto</li>
+				<li>Mensaje de confirmación</li>
+				<li>Actualización de lista de contactos</li>
+			</ol>
+		</td>
 		<td></td>
 	</tr>
 	<tr>
@@ -110,8 +158,14 @@
 		<td><b>Resultados</b></td>
 	</tr>
 	<tr>
-		<td>Prueba para brrar los chats de la base de datos.</td>
-		<td></td>
+		<td>Prueba para borrar los chats de la base de datos.</td>
+		<td>
+			<ol>
+				<li>Borrar Chats</li>
+				<li>Mostrar mensaje de confirmación</li>
+				<li>Actualización de pantalla con chat borrados</li>
+			</ol>
+		</td>
 		<td></td>
 	</tr>
 	<tr>
@@ -121,7 +175,13 @@
 	</tr>
 	<tr>
 		<td>Prueba para borrar todos los chats de la base de datos.</td>
-		<td></td>
+		<td>
+			<ol>
+				<li>Borrar Chats</li>
+				<li>Mensaje de confirmación para borrar mensajes</li>
+				<li>Actualización de pantalla</li>
+			</ol>
+		</td>
 		<td></td>
 	</tr>
 	<tr>
@@ -131,7 +191,14 @@
 	</tr>
 	<tr>
 		<td>Limpiar los mensajes dentro de un chat.</td>
-		<td></td>
+		<td>
+			<ol>
+				<li>Botón "Clean Chat"</li>
+				<li>Botón "Ok"</li>
+				<li>Mensaje de confirmación</li>
+				<li>Chat actualizado</li>
+			</ol>
+		</td>
 		<td></td>
 	</tr>
 	<tr>
@@ -141,7 +208,15 @@
 	</tr>
 	<tr>
 		<td>Prueba para mandar un chat vía correo electrónico.</td>
-		<td></td>
+		<td>
+			<ol>
+				<li>Botón "Send chat by e-mail"</li>
+				<li>Botón "ok"</li>
+				<li>Mensaje de confirmación</li>
+				<li>Enviar contenido via e-mail</li>
+				<li>Pantalla de actualización</li>
+			</ol>
+		</td>
 		<td></td>
 	</tr>
 	<tr>
@@ -151,7 +226,12 @@
 	</tr>
 	<tr>
 		<td>Pruab para paginación de mensajes desde el mensaje más antiguo.</td>
-		<td></td>
+		<td>
+			<ol>
+				<li>Scroll deslizable en los mensaes</li>
+				<li>Mostrar mensaje antiguo</li>
+			</ol>
+		</td>
 		<td></td>
 	</tr>
 	<tr>
@@ -161,7 +241,12 @@
 	</tr>
 	<tr>
 		<td>En esta prueba se debe mostrar cuando un contacto esté escribiendo en tiempo real.</td>
-		<td></td>
+		<td>
+			<ol>
+				<li>Mostrar leyenda "is writing..." mientras el contacto escribe</li>
+				<li>Quitar leyenda cuando el contacto no esté escribiendo</li>
+			</ol>
+		</td>
 		<td></td>
 	</tr>
 	<tr>
@@ -171,7 +256,12 @@
 	</tr>
 	<tr>
 		<td>En esta prueba se debe mostrar el estado de un contacto, si se encuentra en línea o no.</td>
-		<td></td>
+		<td>
+			<ol>
+				<li>Punto verde cuando se encuentra conectado</li>
+				<li>Punto gris cuando el contacto no esté conectado</li>
+			</ol>
+		</td>
 		<td></td>
 	</tr>		
 </table>
