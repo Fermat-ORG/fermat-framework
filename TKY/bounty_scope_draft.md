@@ -7,12 +7,12 @@ Artist and Tokenly platforms
 1.0
 
 ## ABSTRACT
-The development of Artist and Tokenly platform looks to offer to a Fermat user an evironment to connect with an artist and listening buyed music inside the Fermat system.
+The development of Artist and Tokenly platform looks to offer to a Fermat user an evironment to connect with an artist and listening bought music inside the Fermat system.
 
 In Tokenly platform (TKY) we are allowing the following:
 
 * Management of Identities.
-* Download music buyed through the music tokenly platform.
+* Download music bought through the music tokenly platform.
 * Music file management (delete and re-download)
 * Synchronize Fermat Tokenly identity with Tokenly music user.
 * Visualization of followed artist.
@@ -29,7 +29,7 @@ If the project include Use Case Analysis you must offer at least the following d
 
 If the project includes Architecture Analysis you must follow Fermat’s technical guidelines and offer at least the following deliverables: Identification of platforms, layers, components and workflows.
 
-If the project includes GUI/UX Design you must offer at least the following deliverables: Mockups and graphic design of every single screen of the app. Also the language package for the texts of the app in english.
+If the project includes GUI/UX Design you must offer at least the following deliverables: Mockups and graphic design of every single screen of the app. Also the language package for the texts of the app in English.
 
 If the project includes Implementation provide a list of features to develop sorted by priority. Each feature must have a short description, a size (% of the total) and the Fermat components involved. Example:
 
@@ -38,8 +38,8 @@ Development of the screens and logic structures that are necessary to allow the 
 **Size:** 10%   
 **Fermat components:** Artist Identity Sub app, Fan Identity Sub app, Artist Identity plugin, Fan Identity plugin, Tokenly Extenal API plugin.
 
-#### 2- TKY Download music buyed through the music tokenly platform:  
-The Music Tokenly platform is an external platform to buy music using the Tokenly Tokens, this is managed by Tokenly. TKY platform will use the music tokenly protected API to getting access to Tokenly user account, look the songs buyed by this user and download this songs to the user device. This only can be used by a fan with a Fan identity properly created.  
+#### 2- TKY Download music bought through the music tokenly platform:  
+The Music Tokenly platform is an external platform to buy music using the Tokenly Tokens, this is managed by Tokenly. TKY platform will use the music Tokenly protected API to getting access to Tokenly user account, look the songs bought by this user and download this songs to the user device. This only can be used by a fan with a Fan identity properly created.  
 All the songs are encrypted by the Fermat Plugin File System and only this plugin can restore the information stored in the file.  
 **Size:** 20%  
 **Fermat components:** Fan Wallet Reference Wallet, Tokenly Song Wallet plugin, Fan Identity plugin, Tokenly External API plugin.
