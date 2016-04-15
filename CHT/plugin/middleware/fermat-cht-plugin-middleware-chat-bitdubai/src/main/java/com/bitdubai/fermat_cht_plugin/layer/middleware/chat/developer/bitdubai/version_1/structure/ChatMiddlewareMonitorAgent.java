@@ -3,7 +3,9 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
 import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantListActorConnectionsException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Transaction;
@@ -46,6 +48,10 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.ObjectNotSetExcepti
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.SendStatusUpdateMessageNotificationException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.UnexpectedResultReturnedFromDatabaseException;
 import com.bitdubai.fermat_cht_api.all_definition.util.ObjectChecker;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
@@ -108,6 +114,7 @@ public class ChatMiddlewareMonitorAgent implements
     private PluginFileSystem pluginFileSystem;
     ChatMiddlewareDatabaseDao chatMiddlewareDatabaseDao;
     public final String BROADCAST_CODE = "13";
+    ChatActorConnectionManager chatActorConnectionManager;
 
 
     public ChatMiddlewareMonitorAgent(PluginDatabaseSystem pluginDatabaseSystem,
@@ -115,7 +122,10 @@ public class ChatMiddlewareMonitorAgent implements
                                       ErrorManager errorManager,
                                       EventManager eventManager,
                                       UUID pluginId,
-                                      NetworkServiceChatManager chatNetworkServiceManager, MiddlewareChatManager chatMiddlewareManager, Broadcaster broadcaster, PluginFileSystem pluginFileSystem) throws CantSetObjectException {
+                                      NetworkServiceChatManager chatNetworkServiceManager,
+                                      MiddlewareChatManager chatMiddlewareManager,
+                                      Broadcaster broadcaster, PluginFileSystem pluginFileSystem,
+                                      ChatActorConnectionManager chatActorConnectionManager) throws CantSetObjectException {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
@@ -125,6 +135,7 @@ public class ChatMiddlewareMonitorAgent implements
         this.chatMiddlewareManager = chatMiddlewareManager;
         this.broadcaster = broadcaster;
         this.pluginFileSystem = pluginFileSystem;
+        this.chatActorConnectionManager = chatActorConnectionManager;
     }
 
     @Override
@@ -611,38 +622,57 @@ public class ChatMiddlewareMonitorAgent implements
 //                UUID chatId = chatMetadata.getChatId();
             Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByRemotePublicKey(chatMetadata.getLocalActorPublicKey());
 //                Chat chatFromDatabase = chatMiddlewareDatabaseDao.getChatByChatId(chatId);
-            String contactLocalPublicKey = chatFromDatabase.getRemoteActorPublicKey();
-            //TODO:Vilchez revisar esta logica ya no aplica, los contactos son los actor connections
-            Contact contact = chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
+//            String contactLocalPublicKey = chatFromDatabase.getRemoteActorPublicKey();
+            ChatLinkedActorIdentity chatLinkedActorIdentity = new ChatLinkedActorIdentity(
+                chatFromDatabase.getLocalActorPublicKey(),
+                Actors.CHAT
+                );
+            final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(chatLinkedActorIdentity);
+            List<ChatActorConnection> chatActorConnections = search.getResult();
+            ChatActorConnection actorConnection = null;
+
+            for(ChatActorConnection chatActorConnection : chatActorConnections){
+                if(chatActorConnection.getPublicKey().equals(chatFromDatabase.getRemoteActorPublicKey())) {
+                    actorConnection = chatActorConnection;
+                    break;
+                }
+                else return null;
+            }
+
+//            Contact contact = chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
 //            if (contact == null) {
-//                //TODO:Vilchez revisar esta logica ya no aplica
 //                //contact = createUnregisteredContact(chatMetadata);
 //                if (contact == null) return null;
 //            }
 
             //I'll associated the contact, message and chat with the following method
 //            addContactToChat(chatFromDatabase, contact);
-            UUID contactId = contact.getContactId();
+
+//            UUID contactId = contact.getContactId();
             Message message = new MessageImpl(
                     chatFromDatabase.getChatId(),
                     chatMetadata,
                     MessageStatus.CREATED,
                     TypeMessage.INCOMMING,
-                    contactId
+                    UUID.fromString(actorConnection.getPublicKey())
             );
             return message;
         } catch (DatabaseOperationException e) {
             throw new CantGetMessageException(e,
                     "Getting message from ChatMetadata",
                     "Unexpected exception in database");
-        } catch (CantGetContactException e) {
-            throw new CantGetMessageException(e,
-                    "Getting message from ChatMetadata",
-                    "Cannot get the contact");
+//        } catch (CantGetContactException e) {
+//            throw new CantGetMessageException(e,
+//                    "Getting message from ChatMetadata",
+//                    "Cannot get the contact");
         } catch (CantGetChatException e) {
             throw new CantGetMessageException(e,
                     "Getting message from ChatMetadata",
                     "Cannot get the chat");
+        } catch (CantListActorConnectionsException e) {
+            throw new CantGetMessageException(e,
+                    "Getting message from ChatMetadata",
+                    "Cannot get the ActorConnection");
         }
     }
 
