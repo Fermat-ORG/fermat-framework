@@ -18,7 +18,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.desktop.database.bridge.DesktopDatabaseBridge;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -180,35 +183,51 @@ public class DesktopDatabaseTable implements DatabaseTable {
          * First I get the table records with values.
          * and construct de ContentValues array for SqlLite
          */
+
+        Connection conn = null;
+        PreparedStatement preparedStatement = null;
         try {
-            StringBuilder strRecords = new StringBuilder("");
-            StringBuilder strValues = new StringBuilder("");
+            conn = database.getConnection();
+            List<String> strRecords = new ArrayList<>();
+            List<String> strValues  = new ArrayList<>();
+            List<String> strSigns  = new ArrayList<>();
 
             List<DatabaseRecord> records = record.getValues();
 
             for (DatabaseRecord databaseRecord : records) {
-
-                if (strRecords.length() > 0)
-                    strRecords.append(",");
-                strRecords.append(databaseRecord.getName());
-
-                if (strValues.length() > 0)
-                    strValues.append(",");
-
-                strValues.append("'");
-                strValues.append(databaseRecord.getValue());
-                strValues.append("'");
-
+                strRecords.add(databaseRecord.getName());
+                strValues.add(databaseRecord.getValue());
+                strSigns.add("?");
             }
 
-            String query = "INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")";
+            String query = "INSERT INTO " + tableName + "(" + StringUtils.join(strRecords, ",") + ")" + " VALUES (" + StringUtils.join(strSigns, ",") + ")";
 
-            System.out.println("*** * *   *   *     *      * Im executing the query: "+query);
+            preparedStatement = conn.prepareStatement(query);
 
-            this.database.execSQL(query);
+            for(int i = 0; i < strSigns.size() ; i++)
+                preparedStatement.setString(i + 1, strValues.get(i));
+
+            preparedStatement.executeUpdate();
+
+            System.out.println("*** * *   *   *     *      * Im executing the query: " + query);
+
         } catch (Exception exception) {
             System.out.println("*** * *  *    *      *          * INSERT RECORD EXCEPTION: "+exception.getMessage());
             throw new CantInsertRecordException(exception);
+        } finally {
+
+            try {
+                if (preparedStatement != null)
+                    preparedStatement.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }

@@ -17,9 +17,10 @@ public enum ClientContextItem {
      */
 
     CLIENT_IDENTITY            ,
-    DATABASE,
+    DATABASE                   ,
     ERROR_MANAGER              ,
     EVENT_MANAGER              ,
+    LOCATION_SERVICE           ,
 
     ;
 
