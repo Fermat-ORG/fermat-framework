@@ -857,7 +857,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.addPosibleStartActivity(Activities.ART_FAN_IDENTITY_CREATE_PROFILE);
+            //runtimeSubApp.addPosibleStartActivity(Activities.ART_FAN_IDENTITY_CREATE_PROFILE);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Art Fan Identity");
@@ -4081,7 +4081,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.addPosibleStartActivity(Activities.ART_MUSIC_PLAYER_MAIN_ACTIVITY);
+        //runtimeSubApp.addPosibleStartActivity(Activities.ART_MUSIC_PLAYER_MAIN_ACTIVITY);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Fermat Music Player");
