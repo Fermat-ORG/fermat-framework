@@ -55,6 +55,11 @@ public class ConfigurationManager {
     public static final String NODE_NAME = "node_name";
 
     /**
+     * Represent the value of LAST_REGISTER_NODE_PROFILE
+     */
+    public static final String LAST_REGISTER_NODE_PROFILE = "last_register_node_profile";
+
+    /**
      * Represent the value of IP
      */
     public static final String IP = "ip";
@@ -162,6 +167,9 @@ public class ConfigurationManager {
 
         newConfigurationFile.getLayout().setComment(REGISTER_IN_CATALOG, "\n# * IS THE NODE REGISTER IN THE CATALOG");
         newConfigurationFile.addProperty(REGISTER_IN_CATALOG, Boolean.FALSE);
+
+        newConfigurationFile.getLayout().setComment(LAST_REGISTER_NODE_PROFILE, "\n# * THE LAST REGISTER NODE PROFILE IN THE NODES CATALOG (DON'T MODIFY MANUALLY)");
+        newConfigurationFile.addProperty(LAST_REGISTER_NODE_PROFILE, null);
 
         newConfigurationFile.getLayout().setComment(USER, "\n# * MONITORIG USER");
         newConfigurationFile.addProperty(USER, "fermat");
