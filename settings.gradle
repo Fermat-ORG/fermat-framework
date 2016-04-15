@@ -30,7 +30,7 @@ include ':fermat-core-api'
  * network node implementation start
  */
 
-include ':fermat_linux_core'
+include ':fermat-linux-core'
 
 include ':fermat-osa-linux-core'
 project(':fermat-osa-linux-core').projectDir = new File('OSA/library/core/fermat-osa-linux-core')
