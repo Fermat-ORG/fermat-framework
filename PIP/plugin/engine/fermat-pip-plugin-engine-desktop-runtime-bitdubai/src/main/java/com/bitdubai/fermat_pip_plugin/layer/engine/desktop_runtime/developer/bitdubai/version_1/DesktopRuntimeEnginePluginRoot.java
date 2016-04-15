@@ -240,7 +240,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             activity.setFullScreen(true);
             activity.setBackgroundColor("#ffffff");
             activity.setStartFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
-            runtimeDesktopObject.setStartActivity(Activities.DESKTOP_WIZZARD_WELCOME);
+            //runtimeDesktopObject.setStartActivity(Activities.DESKTOP_WIZZARD_WELCOME);
 
             fragment = new Fragment();
             fragment.setType(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
