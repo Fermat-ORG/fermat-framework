@@ -37,19 +37,19 @@ public class AppStatusListener implements AppStatusCallbackChanges {
         }
         switch (appsStatus){
             case RELEASE:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.filter_app_hdpi);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.app_filter_hdpi);
                 break;
             case BETA:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.beta_filter_hdpi);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.beta_hdpi);
                 break;
             case ALPHA:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.alpha_filter_hdpi);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.icon_alpha_hdpi);
                 break;
             case DEV:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.filter_develop_hdpi);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.icon_develop_hdpi);
                 break;
             default:
-                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.alpha_filter_hdpi);
+                btn_fermat_apps_status.get().setBackgroundResource(R.drawable.icon_alpha_hdpi);
                 break;
         }
 

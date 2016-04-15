@@ -1,3 +1,5 @@
+import groovy.transform.Field
+
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'application'
@@ -7,7 +9,8 @@ apply plugin: 'gradle-one-jar'
 group = "com.bitdubai.fermat.p2p"
 sourceCompatibility = 1.7
 version = '1.6.1'
-mainClassName = 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
+@Field
+def $mainClassName = 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
 
 configurations {
     deployerJars
@@ -17,7 +20,7 @@ jar {
     manifest {
         attributes 'Implementation-Title': 'fermat-p2p-plugin-communication-cloud-server-bitdubai',
                    'Implementation-Version': version,
-                   'Main-Class': 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
+                   'Main-Class': $mainClassName
     }
 
     from {
@@ -47,7 +50,7 @@ task serverJar(type: OneJar) {
     manifest = project.manifest {
         from sharedManifest
     }
-    mainClass = 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
+    mainClass = $mainClassName
     archiveName = project.name + '-with-dependencies-' + version + ".jar"
     additionalDir = file('src/main/resources/one-jar.properties')
 
