@@ -1807,6 +1807,4 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
 
-
-
 }
