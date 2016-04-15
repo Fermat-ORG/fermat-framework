@@ -51,6 +51,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -58,7 +59,7 @@ import java.util.UUID;
 /**
  * Created by Eleazar (eorono@protonmail.com) on 3/04/16.
  */
-public class ChatActorCommunityManager implements ChatActorCommunitySubAppModuleManager {
+public class ChatActorCommunityManager implements ChatActorCommunitySubAppModuleManager, Serializable {
 
      private final ChatIdentityManager                chatIdentityManager;
      private ChatActorCommunityInformation            chatActorCommunityManager             ;
@@ -425,8 +426,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         } catch(CantListChatIdentityException e) { /*Do nothing*/ }
 
 
-
-                //If appSettings exists, get its selectedActorIdentityPublicKey property
+        //If appSettings exists, get its selectedActorIdentityPublicKey property
         if(appSettings != null)
         {
             String lastSelectedIdentityPublicKey = appSettings.getLastSelectedIdentityPublicKey();

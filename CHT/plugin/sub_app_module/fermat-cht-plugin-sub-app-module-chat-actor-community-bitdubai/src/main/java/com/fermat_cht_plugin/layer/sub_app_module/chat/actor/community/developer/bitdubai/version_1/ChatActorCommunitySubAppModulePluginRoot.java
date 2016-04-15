@@ -5,8 +5,10 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionSta
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -18,6 +20,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
@@ -51,9 +54,7 @@ import java.util.UUID;
  * Created by Eleazar (eorono@protonmail.com) on 2/4/2016.
  */
 
-public class ChatActorCommunitySubAppModulePluginRoot extends AbstractPlugin{
-
-    private ChatActorCommunitySubAppModuleManager chatActorCommunitySubAppModuleManager;
+public class ChatActorCommunitySubAppModulePluginRoot extends AbstractModule<ChatActorCommunitySettings, ChatActorCommunitySelectableIdentity> {
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM     , layer = Layers.PLATFORM_SERVICE     , addon  = Addons.ERROR_MANAGER     )
     private ErrorManager errorManager;
@@ -61,128 +62,20 @@ public class ChatActorCommunitySubAppModulePluginRoot extends AbstractPlugin{
     @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM               , addon  = Addons .PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededPluginReference(platform = Platforms.CHAT_ACTOR_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CHAT_ACTOR  )
+    @NeededPluginReference(platform = Platforms.CHAT_ACTOR_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CHAT_ACTOR_NETWORK_SERVICE  )
     private ChatManager chatActorNetworkServiceManager;
 
-    @NeededPluginReference(platform = Platforms.CHAT_ACTOR_PLATFORM, layer = Layers.IDENTITY             , plugin = Plugins.CHAT_ACTOR     )
+    @NeededPluginReference(platform = Platforms.CHAT_ACTOR_PLATFORM, layer = Layers.IDENTITY             , plugin = Plugins.CHAT_IDENTITY)
     private ChatIdentityManager chatIdentityManager;
 
 
-    @NeededPluginReference(platform = Platforms.CHAT_ACTOR_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CHAT_ACTOR     )
+    @NeededPluginReference(platform = Platforms.CHAT_ACTOR_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CHAT_ACTOR_CONNECTION)
     private ChatActorConnectionManager chatActorConnectionManager;
 
     ChatActorCommunityManager fermatManager;
 
     public ChatActorCommunitySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
-
-    }
-
-
-    public FermatManager getManager(){
-        return chatActorCommunitySubAppModuleManager = new ChatActorCommunitySubAppModuleManager() {
-
-            @Override
-            public List<ChatActorCommunityInformation> listWorldChatActor(ChatActorCommunitySelectableIdentity selectableIdentity, int max, int offset) throws CantListChatActorException {
-                return null;
-            }
-
-            @Override
-            public List<ChatActorCommunitySelectableIdentity> listSelectableIdentities() throws CantListChatIdentitiesToSelectException {
-                return null;
-            }
-
-            @Override
-            public void setSelectedActorIdentity(ChatActorCommunitySelectableIdentity identity) {
-
-            }
-
-            @Override
-            public ChatActorCommunitySearch getChatActorSearch() {
-                return null;
-            }
-
-            @Override
-            public ChatActorCommunitySearch searchConnectedChatActor(ChatActorCommunitySelectableIdentity selectedIdentity) {
-                return null;
-            }
-
-            @Override
-            public void requestConnectionToChatActor(ChatActorCommunitySelectableIdentity selectedIdentity, ChatActorCommunityInformation chatActorLocalToContact) throws CantRequestActorConnectionException, ActorChatTypeNotSupportedException, ActorChatConnectionAlreadyRequestesException {
-
-            }
-
-            @Override
-            public void acceptChatActor(UUID requestId) throws CantAcceptChatRequestException, ActorConnectionRequestNotFoundException {
-
-            }
-
-            @Override
-            public void denyChatConnection(UUID requestId) throws ChatActorConnectionDenialFailedException, ActorConnectionRequestNotFoundException {
-
-            }
-
-            @Override
-            public void disconnectChatActor(UUID requestId) throws ChatActorDisconnectingFailedException, ActorConnectionRequestNotFoundException, ConnectionRequestNotFoundException, CantDisconnectFromActorException, UnexpectedConnectionStateException, ActorConnectionNotFoundException {
-
-            }
-
-            @Override
-            public void cancelChatActor(UUID requestId) throws ChatActorCancellingFailedException, ActorConnectionRequestNotFoundException, ConnectionRequestNotFoundException {
-
-            }
-
-            @Override
-            public List<ChatActorCommunityInformation> listAllConnectedChatActor(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {
-                return null;
-            }
-
-            @Override
-            public List<ChatActorCommunityInformation> listChatActorPendingLocalAction(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {
-                return null;
-            }
-
-            @Override
-            public List<ChatActorCommunityInformation> listChatActorPendingRemoteAction(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {
-                return null;
-            }
-
-            @Override
-            public int getChatActorWaitingYourAcceptanceCount() {
-                return 0;
-            }
-
-            @Override
-            public ConnectionState getActorConnectionState(String publicKey) throws CantValidateActorConnectionStateException {
-                return null;
-            }
-
-            @Override
-            public SettingsManager<ChatActorCommunitySettings> getSettingsManager() {
-                return null;
-            }
-
-            @Override
-            public ChatActorCommunitySelectableIdentity getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-                return null;
-            }
-
-            @Override
-            public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-
-            }
-
-            @Override
-            public void setAppPublicKey(String publicKey) {
-
-            }
-
-            @Override
-            public int[] getMenuNotifications() {
-                return new int[0];
-            }
-
-        };
 
     }
 
@@ -200,11 +93,6 @@ public class ChatActorCommunitySubAppModulePluginRoot extends AbstractPlugin{
                     getPluginVersionReference()
             );
 
-
-
-
-
-
             this.serviceStatus = ServiceStatus.STARTED;
 
         } catch (Exception exception) {
@@ -218,5 +106,8 @@ public class ChatActorCommunitySubAppModulePluginRoot extends AbstractPlugin{
     }
 
 
-
+    @Override
+    public ModuleManager<ChatActorCommunitySettings, ChatActorCommunitySelectableIdentity> getModuleManager() throws CantGetModuleManagerException {
+        return fermatManager;
+    }
 }
