@@ -529,7 +529,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
 
 
-            createWalletStoreNavigationStructure();
+            createAppStoreNavigationStructure();
 
 
             /**
@@ -1224,7 +1224,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
     }
 
-    private void createWalletStoreNavigationStructure() {
+    private void createAppStoreNavigationStructure() {
         RuntimeSubApp runtimeSubApp;
         Activity runtimeActivity;
         StatusBar statusBar;
@@ -1246,11 +1246,11 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
 
         statusBar = new StatusBar();
-        statusBar.setColor("#B4573C");
+        statusBar.setColor("#286C99");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Wallet Store");
+        runtimeTitleBar.setLabel("App Store");
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);

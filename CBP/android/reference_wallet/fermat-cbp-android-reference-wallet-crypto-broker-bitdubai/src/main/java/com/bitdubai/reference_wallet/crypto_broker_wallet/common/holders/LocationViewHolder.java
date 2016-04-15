@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders;
 
 import android.view.View;
+import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -10,14 +11,12 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
  */
 public class LocationViewHolder extends SingleDeletableItemViewHolder<String> {
 
-    private FermatTextView title;
-
+    private TextView title;
 
     public LocationViewHolder(View itemView) {
         super(itemView);
 
-        title = (FermatTextView) itemView.findViewById(R.id.cbw_title);
-        itemView.findViewById(R.id.cbw_sub_title).setVisibility(View.GONE);
+        title = (TextView) itemView.findViewById(R.id.cbw_sub_title);
     }
 
     @Override

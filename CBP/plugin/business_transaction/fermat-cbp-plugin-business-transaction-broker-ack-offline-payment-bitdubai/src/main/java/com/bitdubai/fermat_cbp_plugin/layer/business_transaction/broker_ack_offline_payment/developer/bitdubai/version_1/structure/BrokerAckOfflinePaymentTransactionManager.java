@@ -77,7 +77,7 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
             ObjectChecker.checkArguments(arguments);
 
             //First we check if the contract exits in this plugin database
-            boolean contractExists = this.brokerAckOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash);
+            boolean contractExists = brokerAckOfflinePaymentBusinessTransactionDao.isContractHashInDatabase(contractHash);
             if(!contractExists){
                 /**
                  * If the contract is not in database, we are going to check if exists in contract Layer,
@@ -86,13 +86,15 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                  * will suppose that the agent in this plugin has not created the contract, but exists in
                  * contract layer.
                  */
-                customerBrokerContractSale = this.customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
+                customerBrokerContractSale = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
                 if(customerBrokerContractSale == null)
                     throw new CantAckPaymentException("The CustomerBrokerContractSale with the hash: \n" + contractHash+ "\nis null");
 
-                MoneyType paymentType=getMoneyTypeFromContract(customerBrokerContractSale);
-                this.brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale, paymentType, actorPublicKey, customerAlias);
+                final MoneyType paymentType = getMoneyTypeFromContract(customerBrokerContractSale);
+                final FiatCurrency fiatCurrency = getCurrencyToDeliverFromContract(customerBrokerContractSale);
 
+                brokerAckOfflinePaymentBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale, paymentType, fiatCurrency,
+                        actorPublicKey, customerAlias);
             } else{
                 /**
                  * The contract exists in database, we are going to check the contract status.
@@ -123,10 +125,10 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
                             throw new InvalidParameterException(paymentType + " value from MoneyType is not valid in this plugin");
                     }
 
-                    final FiatCurrency currencyType = getCurrencyTypeFromContract(customerBrokerContractSale);
+                    final FiatCurrency currencyType = getCurrencyToDeliverFromContract(customerBrokerContractSale);
 
                     //Update the contract in database.
-                    this.brokerAckOfflinePaymentBusinessTransactionDao.updateRecordCurrencyTypeByContractHash(contractHash, currencyType);
+                    this.brokerAckOfflinePaymentBusinessTransactionDao.updateRecordCurrencyByContractHash(contractHash, currencyType);
                     this.brokerAckOfflinePaymentBusinessTransactionDao.updateRecordCBPWalletPublicKeyByContractHash(contractHash, walletPublicKey);
                     this.brokerAckOfflinePaymentBusinessTransactionDao.updateRecordPaymentTypeByContractHash(contractHash, paymentType);
                     this.brokerAckOfflinePaymentBusinessTransactionDao.updateCustomerAliasByContractHash(contractHash, customerAlias);
@@ -299,7 +301,7 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
      * @return
      * @throws CantGetListSaleNegotiationsException
      */
-    public FiatCurrency getCurrencyTypeFromContract(CustomerBrokerContractSale customerBrokerContractSale) throws CantGetListSaleNegotiationsException {
+    public FiatCurrency getCurrencyToDeliverFromContract(CustomerBrokerContractSale customerBrokerContractSale) throws CantGetListSaleNegotiationsException {
         try {
             final String negotiationId = customerBrokerContractSale.getNegotiatiotId();
 

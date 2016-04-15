@@ -24,9 +24,8 @@ public class WalletStoreCatalogueAdapter extends FermatAdapter<WalletStoreListIt
 
     private WalletStoreItemPopupMenuListener menuClickListener;
 
-    public WalletStoreCatalogueAdapter(Context context, ArrayList<WalletStoreListItem> dataSet, WalletStoreItemPopupMenuListener listener) {
+    public WalletStoreCatalogueAdapter(Context context, ArrayList<WalletStoreListItem> dataSet) {
         super(context, dataSet);
-        menuClickListener = listener;
     }
 
     @Override
@@ -43,7 +42,9 @@ public class WalletStoreCatalogueAdapter extends FermatAdapter<WalletStoreListIt
     protected void bindHolder(final CatalogItemViewHolder holder, final WalletStoreListItem data, final int position) {
         holder.getWalletName().setText(data.getWalletName());
         holder.getWalletIcon().setImageBitmap(data.getWalletIcon());
-        holder.getWalletPublisherName().setText("Publisher Name");
+
+        final String text = "Published by Fermat";
+        holder.getWalletPublisherName().setText(text);
 
         InstallationStatus installStatus = data.getInstallationStatus();
         int resId = UtilsFuncs.INSTANCE.getInstallationStatusStringResource(installStatus);
@@ -51,15 +52,13 @@ public class WalletStoreCatalogueAdapter extends FermatAdapter<WalletStoreListIt
 
         final ImageView menu = holder.getMenu();
         if (menuClickListener != null) {
-            menu.setVisibility(View.VISIBLE);
             menu.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     menuClickListener.onMenuItemClickListener(menu, data, position);
                 }
             });
-        } else
-            menu.setVisibility(View.INVISIBLE);
+        }
     }
 
     public void setMenuClickListener(WalletStoreItemPopupMenuListener listener) {
