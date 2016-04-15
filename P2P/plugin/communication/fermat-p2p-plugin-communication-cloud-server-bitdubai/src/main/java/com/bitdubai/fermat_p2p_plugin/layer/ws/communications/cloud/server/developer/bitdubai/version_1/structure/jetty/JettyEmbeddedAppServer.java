@@ -23,6 +23,10 @@ import org.eclipse.jetty.util.log.Log;
 import org.eclipse.jetty.util.log.Slf4jLog;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.websocket.jsr356.server.deploy.WebSocketServerContainerInitializer;
+import org.fourthline.cling.UpnpService;
+import org.fourthline.cling.UpnpServiceImpl;
+import org.fourthline.cling.support.igd.PortMappingListener;
+import org.fourthline.cling.support.model.PortMapping;
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 
 import java.io.IOException;
@@ -187,15 +191,14 @@ public class JettyEmbeddedAppServer {
     public void start() throws Exception {
 
 
-       /* Inet4Address address;
+       Inet4Address address;
         try {
-            address = getIPv4Address("eth0");
-            // TfsClientSingleton.init(address, tfsCache);
+            address = getIPv4AddressStatic();
         } catch (UnknownHostException | SocketException e) {
             throw new Error(e);
         }
 
-       /* PortMapping desiredMapping = new PortMapping(
+        PortMapping desiredMapping = new PortMapping(
                 DEFAULT_PORT,
                 address.getHostAddress(),
                 PortMapping.Protocol.TCP
@@ -205,7 +208,7 @@ public class JettyEmbeddedAppServer {
                 new PortMappingListener(desiredMapping)
         );
 
-        upnpService.getControlPoint().search();*/
+        upnpService.getControlPoint().search();
 
         /* Use this is OK, load the ip dynamically
 
@@ -263,6 +266,34 @@ public class JettyEmbeddedAppServer {
         }
 
         throw new UnsupportedAddressTypeException();
+    }
+
+
+    private static Inet4Address getIPv4AddressStatic() throws Exception {
+
+        Enumeration<NetworkInterface> enumeration = NetworkInterface.getNetworkInterfaces();
+
+        while (enumeration.hasMoreElements()) {
+
+            NetworkInterface networkInterface = NetworkInterface.getByName(enumeration.nextElement().getDisplayName());
+            Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+
+            while (addresses.hasMoreElements()) {
+                InetAddress addr = addresses.nextElement();
+                if (addr instanceof Inet4Address) {
+                    return (Inet4Address) addr;
+                }
+            }
+
+            InetAddress localhost = InetAddress.getLocalHost();
+            if (localhost instanceof Inet4Address) {
+                return (Inet4Address) localhost;
+            }
+
+        }
+
+        throw new Exception();
+
     }
 
     /*
