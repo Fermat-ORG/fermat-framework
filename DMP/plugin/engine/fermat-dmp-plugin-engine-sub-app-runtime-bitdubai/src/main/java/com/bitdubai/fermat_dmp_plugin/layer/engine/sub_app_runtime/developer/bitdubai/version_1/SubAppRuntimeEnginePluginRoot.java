@@ -4080,9 +4080,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         statusBar = new StatusBar();
         statusBar.setColor("#ffffff");
         runtimeActivity.setStatusBar(statusBar);
-
         runtimeSubApp.addActivity(runtimeActivity);
-     //   runtimeSubApp.addPosibleStartActivity(Activities.ART_MUSIC_PLAYER_MAIN_ACTIVITY);
+        //   runtimeSubApp.addPosibleStartActivity(Activities.ART_MUSIC_PLAYER_MAIN_ACTIVITY);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Fermat Music Player");
