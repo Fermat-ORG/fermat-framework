@@ -62,7 +62,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
         View layout = inflater.inflate(R.layout.cht_wizard_broadcast_one_step, container, false);
          ShowDialogWelcome();
-          NombreLista = (EditText) layout.findViewById(R.id.NombreListaDifusion);
+        //  NombreLista = (EditText) layout.findViewById(R.id.NombreListaDifusion);
      return layout;
      }
 

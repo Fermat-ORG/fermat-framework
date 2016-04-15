@@ -3,17 +3,62 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/NombreListaDifusion"
-        android:hint="Name of broadcast list" />
+        android:layout_height="match_parent">
 
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="scheduled delivery"
-        android:id="@+id/checkBox"
-        android:textColor="#7c7c7c" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Choose broadcast type"
+            android:id="@+id/textView2"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#808080"
+            android:layout_marginTop="52dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
 
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BROADCAST SIMPLE"
+            android:id="@+id/radioButton"
+            android:layout_marginTop="71dp"
+            android:textColor="#808080"
+            android:layout_below="@+id/textView2"
+            android:layout_alignStart="@+id/textView2" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/round_corner_line_dialog"
+            android:layout_marginBottom="12dp"
+            />
+
+        <RadioButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BROADCAST SCHEDULED"
+            android:id="@+id/radioButton2"
+            android:textColor="#808080"
+            android:layout_below="@+id/radioButton"
+            android:layout_alignStart="@+id/radioButton" />
+
+        <Button
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="Create"
+            android:id="@+id/btncreate"
+            android:layout_marginBottom="112dp"
+            android:background="#47BF73"
+            android:padding="10dp"
+            android:paddingLeft="40dp"
+            android:paddingRight="20dp"
+            android:textAlignment="center"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
 </LinearLayout>

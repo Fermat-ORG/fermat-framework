@@ -89,11 +89,11 @@ public class ChatFragmentFactory extends FermatFragmentFactory<ChatSession, SubA
         {
             return ProfileListFragment.newInstance();
         }
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL_FRAGMENT))
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL))
         {
             return WizardFirstStepBroadcastFragment.newInstance();
         }
-        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL_FRAGMENT))
+        if (fragments.equals(ChatFragmentsEnumType.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL))
         {
             return WizardTwoStepBroadcastFragment.newInstance();
         }
