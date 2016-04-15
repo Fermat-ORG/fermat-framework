@@ -11,11 +11,11 @@
   <tr>
     <td>Crear una nueva identidad en el chat con el nombre e imagen del perfil</td>
     <td>
-		<ul>
+		<ol>
 			<li>Presionar enlace de referido a identidades de chat para solicitar creación de identidad uicado en las identidades de fermat.</li>
 			<li>Introducir nombre de usuario y de perfil en campos de texto.</li>
 			<li>Presionar botón Create para creación de nueva identidad en el Chat.
-		</ul>
+		</ol>
 	</td> 
     <td></td>
   </tr>
@@ -27,11 +27,11 @@
 	<tr>
 		<td>Verificar que las notificaciones se muestren en lista y recibir notificación cuando se ha sido agregado por otro contacto.</td>
 		<td>
-			<ul>
+			<ol>
 				<li>Presionar enlace referido a las notificaciones.</li>
 				<li>Mostrar Lista de Notificaciones</li>
 				<li>Mostrar en pantalla "Un contacto te ha agregado"</li>
-			</ul>
+			</ol>
 		</td>
 		<td></td>
 	</tr>
