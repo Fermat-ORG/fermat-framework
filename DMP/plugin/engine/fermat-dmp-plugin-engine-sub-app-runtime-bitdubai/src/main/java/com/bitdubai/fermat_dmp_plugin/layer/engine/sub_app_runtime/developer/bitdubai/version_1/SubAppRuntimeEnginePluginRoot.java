@@ -100,10 +100,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException ex) {
             String message = CantStartPluginException.DEFAULT_MESSAGE;
-            FermatException cause = ex;
             String context = "App Runtime Start";
             String possibleReason = "Some null definition";
-            throw new CantStartPluginException(message, cause, context, possibleReason);
+            throw new CantStartPluginException(message, ex, context, possibleReason);
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Unchecked Exception occurred, check the cause");
         }
@@ -546,7 +545,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
-            subAppIntraUser.changeActualStartActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
+
             runtimeActivity.setColor("#FF0B46F0");
 
             statusBar = new StatusBar();
@@ -598,6 +597,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setSideMenu(runtimeSideMenu);
 
             subAppIntraUser.addActivity(runtimeActivity);
+            subAppIntraUser.changeActualStartActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
 
             // Activity: Connection
             runtimeActivity = new Activity();
@@ -1218,7 +1218,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             String message = com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);
             String context = "Error on method Factory Reset, setting the structure of the apps";
-            String possibleReason = "some null definition";
+            String possibleReason = e.getMessage();
             throw new com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException(message, cause, context, possibleReason);
 
         }
@@ -1328,7 +1328,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         dapFactory = new RuntimeSubApp();
         dapFactory.setType(SubApps.DAP_ASSETS_FACTORY);
-        dapFactory.changeActualStartActivity(Activities.DAP_MAIN.getCode());
+
         dapFactory.setPublicKey(dapFactoryPublicKey);
 
         runtimeActivity = new Activity();
@@ -1387,6 +1387,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setSideMenu(runtimeSideMenu);
 
         dapFactory.addActivity(runtimeActivity);
+        dapFactory.changeActualStartActivity(Activities.DAP_MAIN.getCode());
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_ASSET_EDITOR_ACTIVITY);
