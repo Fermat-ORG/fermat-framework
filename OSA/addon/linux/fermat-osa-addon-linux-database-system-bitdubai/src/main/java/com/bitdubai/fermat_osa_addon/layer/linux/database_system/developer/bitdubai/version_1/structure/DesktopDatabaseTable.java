@@ -1,9 +1,3 @@
-/*
-* @#DesktopDatabaseTable.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
@@ -24,9 +18,11 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantUpdateRecordException;
 import com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.desktop.database.bridge.DesktopDatabaseBridge;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -185,30 +181,29 @@ public class DesktopDatabaseTable implements DatabaseTable {
          * and construct de ContentValues array for SqlLite
          */
         try {
-            StringBuffer strRecords = new StringBuffer("");
-            StringBuffer strValues = new StringBuffer("");
+            StringBuilder strRecords = new StringBuilder("");
+            StringBuilder strValues = new StringBuilder("");
 
             List<DatabaseRecord> records = record.getValues();
 
-            Map<String, Object> initialValues = new HashMap<String, Object>();
-            //ContentValues initialValues = new ContentValues();
-
-            for (int i = 0; i < records.size(); ++i) {
-                initialValues.put(records.get(i).getName(), records.get(i).getValue());
+            for (DatabaseRecord databaseRecord : records) {
 
                 if (strRecords.length() > 0)
                     strRecords.append(",");
-                strRecords.append(records.get(i).getName());
+                strRecords.append(databaseRecord.getName());
 
                 if (strValues.length() > 0)
                     strValues.append(",");
 
-                strValues.append("'" + records.get(i).getValue() + "'");
+                strValues.append("'");
+                strValues.append(databaseRecord.getValue());
+                strValues.append("'");
 
             }
 
             this.database.execSQL("INSERT INTO " + tableName + "(" + strRecords + ")" + " VALUES (" + strValues + ")");
         } catch (Exception exception) {
+            System.out.println("*** * *  *    *      *          * INSERT RECORD EXCEPTION: "+exception.getMessage());
             throw new CantInsertRecordException(exception);
         }
 
@@ -217,9 +212,14 @@ public class DesktopDatabaseTable implements DatabaseTable {
     @Override
     public long getCount() throws CantLoadTableToMemoryException {
 
-        ResultSet rs = this.database.rawQuery("SELECT COUNT(*) as COUNT FROM " + tableName + makeFilter(), null);
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
 
         try {
+            conn = this.database.getConnection();
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT COUNT(*) as COUNT FROM " + tableName + makeFilter());
 
             rs.next();
 
@@ -231,6 +231,18 @@ public class DesktopDatabaseTable implements DatabaseTable {
             try {
                 if (rs != null)
                     rs.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null)
+                    conn.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -247,8 +259,16 @@ public class DesktopDatabaseTable implements DatabaseTable {
         if (this.top.length() > 0)
             topSentence = " LIMIT " + this.top;
 
-        ResultSet rs = this.database.rawQuery("SELECT  * FROM " + tableName + makeFilter() + makeOrder() + topSentence, null);
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+
         try {
+
+            conn = this.database.getConnection();
+            stmt = conn.createStatement();
+
+            rs = stmt.executeQuery("SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence);
 
             if(rs.next()) {
 
@@ -277,8 +297,26 @@ public class DesktopDatabaseTable implements DatabaseTable {
             System.out.println("an error loading to memory");
             e.printStackTrace();
             throw new CantLoadTableToMemoryException(e);
+        } finally {
+            try {
+                if (rs != null)
+                    rs.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (stmt != null)
+                    stmt.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            try {
+                if (conn != null)
+                    conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-
     }
 
     /**
@@ -464,6 +502,33 @@ public class DesktopDatabaseTable implements DatabaseTable {
     @Override
     public void deleteRecord(DatabaseTableRecord record) throws CantDeleteRecordException {
 
+        try {
+
+            List<DatabaseRecord> records = record.getValues();
+
+            String queryWhereClause = "";
+
+            if (!records.isEmpty()) {
+                for (DatabaseRecord record1 : records) {
+
+                    if (queryWhereClause.length() > 0) {
+                        queryWhereClause += " and ";
+                        queryWhereClause += record1.getName();
+                    } else
+                        queryWhereClause += record1.getName();
+                    queryWhereClause += "=";
+                    queryWhereClause += "'" + record1.getValue() + "'";
+                }
+            }
+
+            String query = "DELETE FROM " + tableName + (!queryWhereClause.isEmpty() ? " WHERE " + queryWhereClause : null);
+
+            System.out.println("*** * *   *   *     *      * Im executing the query: "+query);
+            database.execSQL(query);
+
+        } catch (Exception e) {
+            throw new CantDeleteRecordException(e);
+        }
     }
 
     @Override
