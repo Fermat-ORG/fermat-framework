@@ -1,9 +1,9 @@
-package com.bitdubai.linux.core.app.version_1.location_service.exceptions;
+package com.bitdubai.fermat_api.layer.all_definition.util.ip_address;
 
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The exception <code>com.bitdubai.linux.core.app.version_1.location_service.exceptions.CantGetCurrentIPAddressException</code>
+ * The exception <code>com.bitdubai.fermat_api.layer.all_definition.util.ip_address.CantGetCurrentIPAddressException</code>
  * is thrown when there is an error trying to get the current ip address.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/04/2016.

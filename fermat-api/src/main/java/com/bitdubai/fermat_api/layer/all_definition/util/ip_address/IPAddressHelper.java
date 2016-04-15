@@ -1,6 +1,4 @@
-package com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.utils;
-
-import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.exceptions.CantGetCurrentIPAddressException;
+package com.bitdubai.fermat_api.layer.all_definition.util.ip_address;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,7 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 /**
- * The class <code>com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.utils.IPAddressHelper</code>
+ * The class <code>com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper</code>
  * is a helper class which contains methods related with ip address.
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 01/04/2016.
