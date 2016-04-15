@@ -507,7 +507,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                 );
                             } else {
 
-                                if(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress() != null)
+                                if(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null)
                                     walletContact.address = cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress();
                                 else
                                     Toast.makeText(getActivity(), "Contact don't have an Address from red " + blockchainNetworkType.getCode(), Toast.LENGTH_LONG).show();
