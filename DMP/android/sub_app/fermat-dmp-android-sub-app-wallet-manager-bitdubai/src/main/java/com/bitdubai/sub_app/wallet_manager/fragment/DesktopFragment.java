@@ -115,21 +115,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         lstItems = new ArrayList<>();
-        settingsSettingsManager = appSession.getModuleManager().getSettingsManager();
-//
-//        try {
-//            appManagerSettings = settingsSettingsManager.loadAndGetSettings(appSession.getAppPublicKey());
-//        } catch (CantGetSettingsException e) {
-//            e.printStackTrace();
-//        } catch (SettingsNotFoundException e) {
-//            appManagerSettings = new DesktopManagerSettings();
-//            appManagerSettings.setIsPresentationHelpEnabled(true);
-//            try {
-//                settingsSettingsManager.persistSettings(appSession.getAppPublicKey(),appManagerSettings);
-//            } catch (CantPersistSettingsException e1) {
-//                e1.printStackTrace();
-//            }
-//        }
+
 
 
 
