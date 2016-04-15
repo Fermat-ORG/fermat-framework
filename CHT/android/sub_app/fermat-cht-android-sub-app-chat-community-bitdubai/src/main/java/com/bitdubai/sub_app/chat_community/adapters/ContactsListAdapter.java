@@ -39,10 +39,10 @@ public class ContactsListAdapter
 
     @Override
     protected void bindHolder(ContactsListHolder holder, ChatActorCommunityInformation data, int position) {
-        if (data.getActorPublickey() != null) {
-            holder.friendName.setText(data.getActorAlias());
-            if (data.getActorImage() != null && data.getActorImage().length > 0) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(data.getActorImage(), 0, data.getActorImage().length);
+        if (data.getPublicKey() != null) {
+            holder.friendName.setText(data.getAlias());
+            if (data.getImage() != null && data.getImage().length > 0) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0, data.getImage().length);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
                 holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
             }

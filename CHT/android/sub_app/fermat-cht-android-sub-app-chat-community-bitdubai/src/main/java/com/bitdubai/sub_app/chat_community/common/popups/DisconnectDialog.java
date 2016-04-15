@@ -13,7 +13,11 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
+import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ChatActorDisconnectingFailedException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
@@ -114,7 +118,7 @@ public class DisconnectDialog extends FermatDialog<ChatUserSubAppSession, SubApp
                 //image null
                 if (chatUserInformation != null && identity != null) {
                     getSession().getModuleManager()
-                            .disconnectChatActor(chatUserInformation.getActorConnectionId());
+                            .disconnectChatActor(chatUserInformation.getConnectionId());
 
                     SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                     prefs.edit().putBoolean("Connected", true).apply();
@@ -126,10 +130,13 @@ public class DisconnectDialog extends FermatDialog<ChatUserSubAppSession, SubApp
                     super.toastDefaultError();
                 }
             dismiss();
-            } catch (final ChatActorDisconnectingFailedException e) {
-                super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                super.toastDefaultError();
-            } catch (final ActorConnectionRequestNotFoundException e) {
+            } catch (ChatActorDisconnectingFailedException
+                    | ActorConnectionRequestNotFoundException
+                    | ConnectionRequestNotFoundException
+                    | CantDisconnectFromActorException
+                    | UnexpectedConnectionStateException
+                    | ActorConnectionNotFoundException
+                    e) {
                 super.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 super.toastDefaultError();
             }

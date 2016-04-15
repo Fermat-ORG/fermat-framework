@@ -11,6 +11,7 @@ import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.sub_app.chat_community.adapters.NavigationAdapter;
 import com.bitdubai.sub_app.chat_community.common.utils.FragmentsCommons;
 
@@ -34,12 +35,12 @@ public class ChatCommunityNavigationViewPainter implements NavigationViewPainter
     }
 
     @Override
-    public View addNavigationViewHeader(ActiveActorIdentityInformation intraUserLoginIdentity) {
+    public View addNavigationViewHeader(ActiveActorIdentityInformation chatUserLoginIdentity) {
         try {
             return FragmentsCommons.setUpHeaderScreen((LayoutInflater) activity.get()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE), activity.get(),
                     chatUserLoginIdentity);
-        } catch (CantGetActiveLoginIdentityException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
