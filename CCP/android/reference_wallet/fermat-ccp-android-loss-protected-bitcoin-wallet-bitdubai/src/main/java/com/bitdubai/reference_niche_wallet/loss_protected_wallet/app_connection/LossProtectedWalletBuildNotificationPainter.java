@@ -38,20 +38,20 @@ public class LossProtectedWalletBuildNotificationPainter {
                             loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
                                 transaction= moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey,loggedIntraUserPublicKey);
 
-                            notification = new LossProtectedWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","",true,walletPublicKey);
 
                         }else{
-                            notification = new LossProtectedWalletNotificationPainter("Received money", "BTC Arrived","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Received money", "BTC Arrived","","",true,walletPublicKey);
                         }
                         break;
                     case "TRANSACTION_REVERSE":
                         if(moduleManager != null) {
                             loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
                             transaction = moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey, loggedIntraUserPublicKey);
-                            notification = new LossProtectedWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC could not be completed.", "", "",true);
+                            notification = new LossProtectedWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC could not be completed.", "", "",true,walletPublicKey);
                         }else
                         {
-                            notification = new LossProtectedWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true,walletPublicKey);
                         }
                         break;
 
@@ -60,33 +60,33 @@ public class LossProtectedWalletBuildNotificationPainter {
                         if(moduleManager != null){
 
                             paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                            notification = new LossProtectedWalletNotificationPainter("Received new Payment Request","You have received a Payment Request, for" + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Received new Payment Request","You have received a Payment Request, for" + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC","","",true,walletPublicKey);
                         }
                         else
                         {
-                            notification = new LossProtectedWalletNotificationPainter("Received new Payment Request","You have received a new Payment Request.","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Received new Payment Request","You have received a new Payment Request.","","",true,walletPublicKey);
                         }
                         break;
 
                     case "PAYMENTDENIED":
                         if(moduleManager != null){
                             paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                            notification = new LossProtectedWalletNotificationPainter("Payment Request deny","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was deny.","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Payment Request deny","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was deny.","","",true,walletPublicKey);
                         }
                         else
                         {
-                            notification = new LossProtectedWalletNotificationPainter("Payment Request deny","Your Payment Request was deny.","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Payment Request deny","Your Payment Request was deny.","","",true,walletPublicKey);
                         }
                         break;
 
                     case "PAYMENTERROR":
                         if(moduleManager != null){
                             paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                            notification = new LossProtectedWalletNotificationPainter("Payment Request reverted","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was reverted.","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Payment Request reverted","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was reverted.","","",true,walletPublicKey);
                         }
                         else
                         {
-                            notification = new LossProtectedWalletNotificationPainter("Payment Request reverted","Your Last Payment Request was reverted.","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Payment Request reverted","Your Last Payment Request was reverted.","","",true,walletPublicKey);
                         }
                         break;
 

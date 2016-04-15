@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="#00B397"
+    android:layout_marginBottom="5dp"
+    >
 
 
     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -9,9 +12,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/txt_grouper"
         android:text="Plataforma"
-        android:paddingLeft="16dp"
+        android:paddingLeft="42dp"
         android:paddingTop="9dp"
-        android:textSize="20sp"
+        android:paddingBottom="9dp"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#fff"
         android:layout_weight="50"
         android:layout_gravity="center_vertical"/>
 
@@ -20,9 +26,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:id="@+id/arrow"
-        android:src="@drawable/ic_home_arrow_down"
+        android:src="@drawable/white_row_hdpi"
+        android:paddingTop="3dp"
         android:layout_weight="4"
-        android:layout_marginTop="9dp"
         android:layout_marginRight="20dp"/>
 
 </LinearLayout>

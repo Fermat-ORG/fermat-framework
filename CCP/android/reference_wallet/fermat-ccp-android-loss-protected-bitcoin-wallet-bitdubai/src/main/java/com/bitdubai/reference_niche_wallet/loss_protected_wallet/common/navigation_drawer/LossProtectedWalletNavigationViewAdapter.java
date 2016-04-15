@@ -15,11 +15,11 @@ import com.squareup.picasso.Picasso;
 /**
  * Created by natalia on 29/02/16.
  */
-public class BitcoinWalletNavigationViewAdapter  extends FermatNavigatorDrawerAdapter {
+public class LossProtectedWalletNavigationViewAdapter extends FermatNavigatorDrawerAdapter {
 
     //TODO: navigation   drawer tool implementation
     Typeface tf;
-    protected BitcoinWalletNavigationViewAdapter(Activity context) {
+    protected LossProtectedWalletNavigationViewAdapter(Activity context) {
         super(context);
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }

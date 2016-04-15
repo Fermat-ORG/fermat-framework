@@ -175,6 +175,11 @@ public class WalletManagerModuleInstalledWallet implements InstalledWallet, Seri
         return this.walletType;
     }
 
+    @Override
+    public void setAppStatus(AppsStatus appsStatus) {
+        this.appStatus = appsStatus;
+    }
+
 
     @Override
     public String getAppName() {

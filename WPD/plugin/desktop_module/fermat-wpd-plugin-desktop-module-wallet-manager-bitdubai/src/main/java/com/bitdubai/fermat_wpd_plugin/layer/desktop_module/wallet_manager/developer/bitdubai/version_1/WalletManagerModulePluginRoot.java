@@ -582,7 +582,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<FermatSettings
                         WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
-                        AppsStatus.getDefaultStatus());
+                        AppsStatus.ALPHA);
                 break;
             case "asset_issuer":
                 installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
@@ -631,7 +631,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<FermatSettings
                         WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
-                        AppsStatus.getDefaultStatus());
+                        AppsStatus.ALPHA);
                 break;
             default:
                 throw new CantCreateNewWalletException("No existe public key",null,null,null);
@@ -658,7 +658,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<FermatSettings
                         WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode(),
                         FermatApps.BITCOIN_REFERENCE_WALLET.getCode(),
                         new Version(1,0,0),
-                        AppsStatus.getDefaultStatus());
+                        AppsStatus.ALPHA);
                 break;
             default:
                 throw new CantCreateNewWalletException("No existe public key",null,null,null);
