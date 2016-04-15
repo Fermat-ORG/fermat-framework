@@ -262,15 +262,7 @@ public class SongFragment extends AbstractFermatFragment {
                 // Below Api Level 13
                 syncThread.execute();
             }
-        if(!isFanIdentity){
-            //We don't get the identity, we're gonna notify to user.
-            Toast.makeText(
-                    view.getContext(),
-                    "Cannot load a Fan identity",
-                    Toast.LENGTH_SHORT)
-                    .show();
-            //TODO: Miguel, we need to study if we gonna launch the Fan Identity Fragment.
-        }
+
        /* monitorThreadClass=new MonitorThreadClass(); // Secondthread
         if(android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)// Above Api Level 13
         {
@@ -496,14 +488,7 @@ public class SongFragment extends AbstractFermatFragment {
     void downloadSong(int position){
         downloadThread = new DownloadThreadClass(position);
         downloadThread.execute();
-        if(!isFanIdentity){
-            //We don't get the identity, we're gonna notify to user.
-            Toast.makeText(
-                    view.getContext(),
-                    "Cannot load a Fan identity",
-                    Toast.LENGTH_SHORT)
-                    .show();
-        }
+
     }
 
     void cancelSong(int position){
@@ -672,16 +657,24 @@ public class SongFragment extends AbstractFermatFragment {
          * To update the view
          */
         @Override
-        protected void onProgressUpdate(Float... porcentajeProgreso) {
+        protected void onProgressUpdate(Float... percentProgress) {
 
         }
 
 
         /**
-         * afte finish receive the value of doinbackground
+         * after finish receive the value of doInBackground
          */
 
         protected void onPostExecute(Boolean ready) {
+            if(!isFanIdentity){
+                //We don't get the identity, we're gonna notify to user.
+                Toast.makeText(
+                        view.getContext(),
+                        "Cannot load a Fan identity",
+                        Toast.LENGTH_SHORT)
+                        .show();
+            }
         }
         /**
          * when the method cancel is called
@@ -764,6 +757,15 @@ public class SongFragment extends AbstractFermatFragment {
         protected void onPostExecute(Boolean ready) {
 
             Log.v(TAG, "Game Over SyncThreadClass");
+            if(!isFanIdentity){
+                //We don't get the identity, we're gonna notify to user.
+                Toast.makeText(
+                        view.getContext(),
+                        "Cannot load a Fan identity",
+                        Toast.LENGTH_SHORT)
+                        .show();
+                //TODO: Miguel, we need to study if we gonna launch the Fan Identity Fragment.
+            }
 
         }
         /**

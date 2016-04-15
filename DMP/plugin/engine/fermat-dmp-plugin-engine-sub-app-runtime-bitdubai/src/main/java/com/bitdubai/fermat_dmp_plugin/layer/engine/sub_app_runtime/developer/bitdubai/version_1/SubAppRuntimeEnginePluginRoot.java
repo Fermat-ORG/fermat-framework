@@ -797,6 +797,12 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              * CCP INTRA USER IDENTITY
              */
 
+            /*
+            *ART MusicPlayer
+            */
+
+            createMusicPlayerSubAppNavigationStructure();
+
            /*
             *ART ARTIST IDENTITY
             */
@@ -4048,6 +4054,48 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
 
         listSubApp.put(subAppArtistCommunity.getPublicKey(), subAppArtistCommunity);
+    }
+
+    private void createMusicPlayerSubAppNavigationStructure() {
+        RuntimeSubApp runtimeSubApp;
+        Activity runtimeActivity;
+        StatusBar statusBar;
+        TitleBar runtimeTitleBar;
+        TabStrip runtimeTabStrip;
+        Tab runtimeTab;
+        Fragment runtimeFragment;
+        final int titleBarLabelSize = 20;
+
+        runtimeSubApp = new RuntimeSubApp();
+        runtimeSubApp.setType(SubApps.ART_MUSIC_PLAYER);
+        runtimeSubApp.setPublicKey(SubAppsPublicKeys.ART_MUSIC_PLAYER.getCode());
+
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.ART_MUSIC_PLAYER_MAIN_ACTIVITY);
+        runtimeActivity.setActivityType(Activities.ART_MUSIC_PLAYER_MAIN_ACTIVITY.getCode());
+        runtimeActivity.setColor("#ffffff");
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#ffffff");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.addPosibleStartActivity(Activities.ART_MUSIC_PLAYER_MAIN_ACTIVITY);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Fermat Music Player");
+        runtimeTitleBar.setLabelSize(titleBarLabelSize);
+        runtimeTitleBar.setTitleColor("#000000");
+        runtimeTitleBar.setColor("#fafafa");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.ART_MUSIC_PLAYER_MAIN_ACTIVITY.getKey());
+        runtimeActivity.addFragment(Fragments.ART_MUSIC_PLAYER_MAIN_ACTIVITY.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.ART_MUSIC_PLAYER_MAIN_ACTIVITY.getKey());
+
+
+        listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
 
 

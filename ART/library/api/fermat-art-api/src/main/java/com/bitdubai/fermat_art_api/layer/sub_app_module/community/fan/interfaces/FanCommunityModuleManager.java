@@ -5,6 +5,11 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ActorConnectionAlreadyRequestedException;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ActorTypeNotSupportedException;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunityInformation;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantAcceptRequestException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantGetFanListException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions.CantListFansException;
@@ -64,6 +69,16 @@ public interface FanCommunityModuleManager extends
             final int offset) throws CantGetFanListException;
 
     /**
+     * The method <code>listFanPendingLocalAction</code> returns the list of fans waiting
+     * to be accepted or rejected by the logged user
+     * @return the list of fans waiting to be accepted or rejected by the logged in user.
+     * @throws CantGetFanListException if something goes wrong.
+     */
+    List<LinkedFanIdentity> listFansPendingRemoteAction(
+            final FanCommunitySelectableIdentity selectedIdentity,
+            final int max,
+            final int offset) throws CantGetFanListException;
+    /**
      * The method <code>listAllConnectedFans</code> returns the list of all fan
      * registered by the logged in user
      * @return the list of fans connected to the logged in user
@@ -110,18 +125,18 @@ public interface FanCommunityModuleManager extends
     FanCommunitySearch getFanaticSearch();
 
     /**
-     * The method <code>askFanForAcceptance</code> initialize the request of contact between
-     * a fanatic and a other fan.
+     * The method <code>requestConnectionToArtist</code> initialises a contact request between
+     * two Artists.
      *
-     * @param fanToAddName      The name of the fanatic to add
-     * @param fanToAddPublicKey The public key of the fanatic to add
-     * @param profileImage            The profile image that the fanatic has
-     * @throws CantStartRequestException
+     * @param selectedIdentity       The selected local artist identity.
+     * @param artistToContact  The information of the remote artist to connect to.
+     *
+     * @throws CantRequestConnectionException           if something goes wrong.
+     * @throws ActorConnectionAlreadyRequestedException if the connection already exists.
+     * @throws ActorTypeNotSupportedException           if the actor type is not supported.
      */
-    void askFanForAcceptance(
-            String fanToAddName,
-            String fanToAddPublicKey,
-            byte[] profileImage) throws CantStartRequestException;
+    void requestConnectionToFan(FanCommunitySelectableIdentity selectedIdentity,
+                                FanCommunityInformation artistToContact) throws CantRequestConnectionException,ActorConnectionAlreadyRequestedException,ActorTypeNotSupportedException;
 
     /**
      * The method <code>disconnectFan</code> disconnect a fan from the list managed by this
