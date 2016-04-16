@@ -31,32 +31,32 @@ public class SettingsSliderProvisoryData {
             AndroidCoreSettings androidCoreSettings = (AndroidCoreSettings) androidCoreModule.getSettingsManager().loadAndGetSettings(ApplicationConstants.SETTINGS_CORE);
             switch (androidCoreSettings.getAppsStatus()){
                 case RELEASE:
-                    appStatusRes = R.drawable.filter_app_hdpi;
+                    appStatusRes = R.drawable.app_filter_hdpi;
                     break;
                 case BETA:
-                    appStatusRes = R.drawable.beta_filter_hdpi;
+                    appStatusRes = R.drawable.beta_hdpi;
                     break;
                 case ALPHA:
-                    appStatusRes = R.drawable.alpha_filter_hdpi;
+                    appStatusRes = R.drawable.icon_alpha_hdpi;
                     break;
                 case DEV:
-                    appStatusRes = R.drawable.filter_develop_hdpi;
+                    appStatusRes = R.drawable.icon_develop_hdpi;
                     break;
                 default:
-                    appStatusRes = R.drawable.beta_filter_hdpi;
+                    appStatusRes = R.drawable.icon_alpha_hdpi;
                     break;
             }
         } catch (CantGetSettingsException | SettingsNotFoundException e) {
-            appStatusRes =R.drawable.beta_filter_hdpi;
+            appStatusRes =R.drawable.icon_alpha_hdpi;
             // e.printStackTrace();
         }
         
         
         SettingsItem settingsItemSettings = new SettingsItem(SettingsType.APP_STATUS,appStatusRes,"App Filter","Beta");
 
-        SettingsItem settingsItemRecents = new SettingsItem(SettingsType.RECENTS,R.drawable.ic_menu_recent_history,"Recents","");
+        SettingsItem settingsItemRecents = new SettingsItem(SettingsType.RECENTS,R.drawable.recent_buttom_hdpi,"Recents","");
 
-        SettingsItem settingsHelp = new SettingsItem(SettingsType.HELP,R.drawable.ic_action_help_grey,"Help","");
+        SettingsItem settingsHelp = new SettingsItem(SettingsType.HELP,R.drawable.help_buttom_hdpi,"Help","");
 
 
         list.add(settingsItemFermatNetwork);
