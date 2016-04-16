@@ -158,7 +158,8 @@ public class ChatSupAppModulePluginRoot extends AbstractModule<ChatPreferenceSet
          * Init the plugin manager
          */
         chatManager=new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager);
-        //TODO: This method is only for testing, please, comment it when the test is finish, thanks.
+
+        System.out.println("******* Init Chat Sup App Module Chat ******");
         //testMethod();
 
     }
