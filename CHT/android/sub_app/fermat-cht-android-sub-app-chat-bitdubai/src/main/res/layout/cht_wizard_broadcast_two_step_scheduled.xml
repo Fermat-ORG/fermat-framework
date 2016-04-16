@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.7dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/round_corner_line_dialog"
+            android:layout_marginBottom="12dp"
+            android:id="@+id/view" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Add broadcast list recipients"
+            android:id="@+id/textView"
+            android:textColor="#808080"
+            android:singleLine="false"
+            android:textAlignment="center"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/editTextContacts"
+            android:hint="Type contact name"
+            android:layout_marginTop="44dp"
+            android:layout_below="@+id/textView"
+            android:layout_alignEnd="@+id/textView3" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Broadcast Scheduled"
+            android:id="@+id/textView3"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#6d6d6d"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="49dp" />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/fecha"
+            android:layout_above="@+id/editTextContacts"
+            android:layout_alignStart="@+id/view"
+            android:layout_marginBottom="50dp"
+            android:layout_alignEnd="@+id/editTextContacts" />
+
+        <Spinner
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/hora"
+            android:layout_toEndOf="@+id/editTextContacts"
+            android:layout_alignBottom="@+id/fecha"
+            android:layout_alignTop="@+id/fecha" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="DAY PROGRAMMING"
+            android:id="@+id/textView4"
+            android:layout_above="@+id/fecha"
+            android:layout_alignStart="@+id/fecha" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:hint="Type broadcast name"
+            android:layout_marginTop="25dp"
+            android:ems="10"
+            android:id="@+id/editTextNameBroadcast"
+            android:layout_below="@+id/textView3"
+            android:layout_alignEnd="@+id/textView3" />
+
+    </RelativeLayout>
+</LinearLayout>

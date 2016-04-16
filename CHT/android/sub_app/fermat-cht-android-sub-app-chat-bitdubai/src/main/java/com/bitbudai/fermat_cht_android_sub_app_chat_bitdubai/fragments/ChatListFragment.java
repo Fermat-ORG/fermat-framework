@@ -241,7 +241,6 @@ public class ChatListFragment extends AbstractFermatFragment{
             List<ChatUserIdentity> con = null; //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
             size = con.size();
             if ((chatSettings.getLocalPlatformComponentType() == null || chatSettings.getLocalPublicKey() == null) && size > 0) {
-
                 ChatUserIdentity profileSelected = null;//TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();//chatManager.getChatUserIdentity(con.get(0).getPublicKey());
                 //chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getPlatformComponentType());
             }
@@ -450,7 +449,7 @@ public class ChatListFragment extends AbstractFermatFragment{
             return true;
         }
         if (id == R.id.menu_create_broadcasting) {
-            changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL, appSession.getAppPublicKey());
+            changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL);
            return true;
         }
         if (id == R.id.menu_delete_all_chats) {
