@@ -196,6 +196,9 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
         return true;
     }
 
+
+
+
     /**
      * Dispatch onStop() to all fragments.  Ensure all loaders are stopped.
      */

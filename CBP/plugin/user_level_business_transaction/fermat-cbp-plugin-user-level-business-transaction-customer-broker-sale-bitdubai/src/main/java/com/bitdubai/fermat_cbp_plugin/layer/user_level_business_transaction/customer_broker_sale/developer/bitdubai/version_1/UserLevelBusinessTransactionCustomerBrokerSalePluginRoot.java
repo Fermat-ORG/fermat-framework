@@ -218,14 +218,15 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
         return developerDatabaseTableRecordList;
     }
 
-    UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent;
+    UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent agent;
     /**
      * This method will start the Monitor Agent that watches the asyncronic process registered in the Customer Broker Sale plugin
      * @throws CantStartAgentException
      */
     private void startMonitorAgent() throws CantStartAgentException {
-        if(userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent == null) {
-            userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent = new UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(errorManager,
+        if(agent == null) {
+            agent = new UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent(
+                    errorManager,
                     customerBrokerSaleNegotiationManager,
                     pluginDatabaseSystem,
                     pluginId,
@@ -237,11 +238,11 @@ public class UserLevelBusinessTransactionCustomerBrokerSalePluginRoot extends Ab
                     bankMoneyRestockManager,
                     cashMoneyRestockManager,
                     cryptoMoneyRestockManager,
-                    notificationManagerMiddleware,
-                    customerBrokerSaleManager,
                     broadcaster);
-            userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent.start();
-        }else userLevelBusinessTransactionCustomerBrokerSaleMonitorAgent.start();
+
+            agent.start();
+
+        }else agent.start();
     }
 
     public EventManager getEventManager() {

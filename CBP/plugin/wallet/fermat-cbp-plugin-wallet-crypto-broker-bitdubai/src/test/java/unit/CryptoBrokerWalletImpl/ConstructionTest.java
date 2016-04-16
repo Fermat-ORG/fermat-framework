@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
+import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
@@ -37,6 +38,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collection;
@@ -127,6 +129,11 @@ public class ConstructionTest {
         }
 
         @Override
+        public boolean isTextFileExist(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws Exception {
+            return false;
+        }
+
+        @Override
         public PluginBinaryFile getBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws FileNotFoundException, CantCreateFileException {
             return null;
         }
@@ -144,6 +151,11 @@ public class ConstructionTest {
         @Override
         public void deleteBinaryFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan) throws CantCreateFileException, FileNotFoundException {
 
+        }
+
+        @Override
+        public String getAppPath() {
+            return null;
         }
     };
     private CurrencyExchangeProviderFilterManager providerFilter = new CurrencyExchangeProviderFilterManager() {
@@ -176,7 +188,8 @@ public class ConstructionTest {
                 this.pluginDatabaseSystem,
                 this.pluginFileSystem,
                 this.pluginId,
-                this.providerFilter
+                this.providerFilter,
+                Mockito.any(Broadcaster.class)
         );
         assertThat(cryptoBrokerWallet).isNotNull();
     }

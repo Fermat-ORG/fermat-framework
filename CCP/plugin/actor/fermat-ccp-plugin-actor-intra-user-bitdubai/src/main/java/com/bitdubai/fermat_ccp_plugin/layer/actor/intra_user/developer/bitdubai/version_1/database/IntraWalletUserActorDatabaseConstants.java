@@ -27,6 +27,4 @@ public class IntraWalletUserActorDatabaseConstants {
     public static final String INTRA_WALLET_USER_MODIFIED_DATE_COLUMN_NAME              = "modified_date"             ;
     public static final String INTRA_WALLET_USER_PHRASE_COLUMN_NAME                      = "phrase"             ;
 
-    public static final String INTRA_WALLET_USER_FIRST_KEY_COLUMN                       = "public_key"                ;
-
 }

@@ -82,6 +82,8 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
                     getPluginVersionReference()
             );
 
+            System.out.println("******* Init Chat Actor Network Service ******");
+
         } catch (final CantInitializeDatabaseException e) {
 
             errorManager.reportUnexpectedPluginException(this.getPluginVersionReference(), UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);

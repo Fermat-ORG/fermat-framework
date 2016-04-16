@@ -22,6 +22,7 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
     private ContractStatus status;
     private Collection<ContractClause> clause;
     private Boolean nearExpirationDatetime;
+    private String cancelReason;
 
     public String getContractId() { return this.contractID; }
 
@@ -38,5 +39,7 @@ public class ContractSaleRecord implements CustomerBrokerContractSale {
     public Collection<ContractClause> getContractClause() { return clause; }
 
     public Boolean getNearExpirationDatetime() { return this.nearExpirationDatetime; }
+
+    public String getCancelReason() { return this.cancelReason; }
 
 }
