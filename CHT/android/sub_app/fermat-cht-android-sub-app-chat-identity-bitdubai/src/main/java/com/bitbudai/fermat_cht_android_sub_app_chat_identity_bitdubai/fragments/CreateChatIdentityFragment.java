@@ -12,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -82,7 +83,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     byte[] fanImageByteArray;
     ChatIdentitySession Session;
     Context context;
-
+    Toolbar toolbar;
     SettingsManager<ChatIdentityPreferenceSettings> settingsManager;
     public static CreateChatIdentityFragment newInstance() {
         return new CreateChatIdentityFragment();
@@ -103,6 +104,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
 
         }
+        toolbar = getToolbar();
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -273,7 +277,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 .setSubTitle(R.string.cht_chat_identity_subtitle)
                 .setBody(R.string.cht_chat_identity_body)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                .setIconRes(R.drawable.chat_subapp)
+                .setIconRes(R.drawable.chat_identity_subapp)
                 .setBannerRes(R.drawable.banner_identity_chat)
                 .setTextFooter(R.string.cht_chat_footer).build();
         pd.show();
