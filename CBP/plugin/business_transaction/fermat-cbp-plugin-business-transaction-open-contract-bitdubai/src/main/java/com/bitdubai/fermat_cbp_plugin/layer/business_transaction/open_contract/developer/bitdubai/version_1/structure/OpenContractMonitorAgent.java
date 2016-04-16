@@ -35,9 +35,13 @@ import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.enum
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.events.NewContractOpened;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractPurchaseRecord;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.interfaces.ContractSaleRecord;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantUpdateCustomerBrokerContractPurchaseException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchaseManager;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantUpdateCustomerBrokerContractSaleException;
+import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSale;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.interfaces.CustomerBrokerContractSaleManager;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantConfirmNotificationReceptionException;
 import com.bitdubai.fermat_cbp_api.layer.network_service.transaction_transmission.exceptions.CantSendBusinessTransactionHashException;
@@ -170,7 +174,6 @@ public class OpenContractMonitorAgent implements
         int iterationNumber = 0;
         OpenContractBusinessTransactionDao openContractBusinessTransactionDao;
         boolean threadWorking;
-        Map<UUID, UUID> transmissionSend = new HashMap<>();
 
         @Override
         public void setErrorManager(ErrorManager errorManager) {
@@ -453,8 +456,6 @@ public class OpenContractMonitorAgent implements
 
                                     System.out.print("\nTEST CONTRACT - OPEN CONTRACT - AGENT - checkPendingEvent() - INCOMING_BUSINESS_TRANSACTION_CONTRACT_HASH - HASH - VAL\n");
 
-                                    //TODO YORDIN: mismo contenido, nunca entrara al HASH_REJECTED.
-
                                     //SEND CONFIRM RECEPTION HASH
                                     transactionTransmissionManager.confirmNotificationReception(
                                             businessTransactionMetadata.getReceiverId(),
@@ -529,12 +530,19 @@ public class OpenContractMonitorAgent implements
                                 contractType = openContractBusinessTransactionDao.getContractType(contractHash);
                                 switch (contractType) {
                                     case PURCHASE:
-                                        customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash,
-                                                ContractStatus.PENDING_PAYMENT);
+                                        CustomerBrokerContractPurchase contractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
+                                        if(!contractPurchase.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode())) {
+                                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash,
+                                                    ContractStatus.PENDING_PAYMENT);
+                                        }
                                         break;
                                     case SALE:
-                                        customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash,
-                                                ContractStatus.PENDING_PAYMENT);
+                                        CustomerBrokerContractSale contractSale = customerBrokerContractSaleManager.getCustomerBrokerContractSaleForContractId(contractHash);
+                                        if(!contractSale.getStatus().getCode().equals(ContractStatus.CANCELLED.getCode())) {
+                                            customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash,
+                                                    ContractStatus.PENDING_PAYMENT);
+                                        }
+                                        break;
                                 }
 
                                 //CONFIRM RECEPTION OF TRANSMISSION
@@ -568,12 +576,22 @@ public class OpenContractMonitorAgent implements
                         e,
                         "Checking pending transactions",
                         "Cannot update the purchase contract");
+            } catch (CantGetListCustomerBrokerContractPurchaseException e){
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        e,
+                        "Checking pending transactions",
+                        "Cannot update the purchase contract");
             } catch (CantConfirmTransactionException e) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         e,
                         "Checking pending transactions",
                         "Cannot confirm transaction");
             } catch (CantUpdateCustomerBrokerContractSaleException e) {
+                throw new UnexpectedResultReturnedFromDatabaseException(
+                        e,
+                        "Checking pending transactions",
+                        "Cannot update the sale contract");
+            } catch (CantGetListCustomerBrokerContractSaleException e){
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         e,
                         "Checking pending transactions",

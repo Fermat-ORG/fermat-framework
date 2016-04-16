@@ -1,9 +1,3 @@
-/*
-* @#DesktopDatabase.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -24,7 +18,10 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Inva
 import com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.desktop.database.bridge.DesktopDatabaseBridge;
 import com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.desktop.database.bridge.EnvironmentVariables;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.File;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -43,32 +40,14 @@ public class DesktopDatabase implements Database, DatabaseFactory {
      * Database Interface member variables.
      */
 
-    public String getDatabaseName() {
-        return databaseName;
-    }
-
-    public void setDatabaseName(String databaseName) {
-        this.databaseName = databaseName;
-    }
-
-    public DatabaseTransaction getDatabaseTransaction() {
-        return databaseTransaction;
-    }
-
-    public void setDatabaseTransaction(DatabaseTransaction databaseTransaction) {
-        this.databaseTransaction = databaseTransaction;
-    }
-
     private String databaseName;
     private UUID ownerId;
     private String query;
     private DesktopDatabaseBridge Database;
-    private DatabaseTransaction databaseTransaction;
     private DatabaseTable databaseTable;
 
     // Public constructor declarations.
     public DesktopDatabase(UUID ownerId, String databaseName) {
-        //this.context = context;
         this.ownerId = ownerId;
         this.databaseName = databaseName;
     }
@@ -91,7 +70,12 @@ public class DesktopDatabase implements Database, DatabaseFactory {
      */
     @Override
     public void executeQuery(String query) throws CantExecuteQueryException {
-        Database.execSQL(query);
+
+        try {
+            Database.execSQL(query);
+        } catch (SQLException exception) {
+            throw new CantExecuteQueryException(exception);
+        }
     }
 
 
@@ -101,9 +85,9 @@ public class DesktopDatabase implements Database, DatabaseFactory {
      * @return DatabaseTransaction object
      */
     @Override
-    public DatabaseTransaction newTransaction(){
+    public DatabaseTransaction newTransaction() {
 
-        return databaseTransaction = new DesktopDatabaseTransaction();
+        return new DesktopDatabaseTransaction();
     }
 
     /**
@@ -113,7 +97,7 @@ public class DesktopDatabase implements Database, DatabaseFactory {
      * @return DatabaseTable Object
      */
     @Override
-    public DatabaseTable getTable(String tableName){
+    public DatabaseTable getTable(String tableName) {
 
         databaseTable = new DesktopDatabaseTable(this.Database, tableName);
         return databaseTable;
@@ -126,7 +110,7 @@ public class DesktopDatabase implements Database, DatabaseFactory {
      * @throws DatabaseTransactionFailedException
      */
     @Override
-    public void executeTransaction(DatabaseTransaction transaction) throws DatabaseTransactionFailedException{
+    public void executeTransaction(DatabaseTransaction transaction) throws DatabaseTransactionFailedException {
 
         /**
          * I get tablets and records to insert or update
@@ -137,25 +121,24 @@ public class DesktopDatabase implements Database, DatabaseFactory {
         List<DatabaseTable> updateTables = transaction.getTablesToUpdate();
         List<DatabaseTableRecord> updateRecords = transaction.getRecordsToUpdate();
         List<DatabaseTableRecord> insertRecords = transaction.getRecordsToInsert();
-        try{
+        try {
             this.Database.beginTransaction(); // EXCLUSIVE
 
             //update
-            if(updateTables != null)
-                for (int i = 0; i < updateTables.size(); ++i){
+            if (updateTables != null)
+                for (int i = 0; i < updateTables.size(); ++i) {
                     updateTables.get(i).updateRecord(updateRecords.get(i));
                 }
 
             //insert
-            if(insertTables != null)
-                for (int i = 0; i < insertTables.size(); ++i){
+            if (insertTables != null)
+                for (int i = 0; i < insertTables.size(); ++i) {
                     insertTables.get(i).insertRecord(insertRecords.get(i));
                 }
 
             this.Database.setTransactionSuccessful();
             this.Database.endTransaction();
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             /**
              * for error not complete transaction
              */
@@ -171,23 +154,23 @@ public class DesktopDatabase implements Database, DatabaseFactory {
     @Override
     public void openDatabase() throws CantOpenDatabaseException, DatabaseNotFoundException {
 
-        String databasePath ="";
+        String databasePath = "";
         /**
          * if owner id if null
          * because it comes from platformdatabase
          */
-        if(ownerId != null)
+        if (ownerId != null)
             //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
-            databasePath = EnvironmentVariables.getExternalStorageDirectory()+"/"+ownerId.toString();
+            databasePath = EnvironmentVariables.getExternalStorageDirectory() + "/" + ownerId.toString();
         else
             //databasePath =  this.context.getFilesDir().getPath() + "/databases/";
             databasePath = String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
 
         File storagePath = new File(databasePath);
-        if (!storagePath.exists()){
+        if (!storagePath.exists()) {
             //storagePath.mkdirs();
             throw new DatabaseNotFoundException();
-        }else {
+        } else {
 
             databasePath += "/" + databaseName.replace("-", "") + ".db";
 
@@ -195,7 +178,7 @@ public class DesktopDatabase implements Database, DatabaseFactory {
             this.Database = DesktopDatabaseBridge.openDatabase(databasePath, null, 0, null);
         }
 
-        databasePath += "/" + this.databaseName.replace("-","") + ".db";
+        databasePath += "/" + this.databaseName.replace("-", "") + ".db";
 
         Database = DesktopDatabaseBridge.openDatabase(databasePath, null, 0, null);
 
@@ -212,22 +195,22 @@ public class DesktopDatabase implements Database, DatabaseFactory {
          * First I try to open the database.
          */
         try {
-            String databasePath ="";
+            String databasePath = "";
             /**
              * if owner id if null
              * because it comes from platformdatabase
              */
-            if(ownerId != null)
+            if (ownerId != null)
                 //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
-                databasePath = EnvironmentVariables.getExternalStorageDirectory()+"/"+ownerId.toString();
+                databasePath = EnvironmentVariables.getExternalStorageDirectory() + "/" + ownerId.toString();
             else
                 databasePath = String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
 
             File storagePath = new File(databasePath);
-            if (!storagePath.exists()){
+            if (!storagePath.exists()) {
                 //storagePath.mkdirs();
                 throw new DatabaseNotFoundException();
-            }else {
+            } else {
 
                 databasePath += "/" + databaseName.replace("-", "") + ".db";
 
@@ -235,8 +218,7 @@ public class DesktopDatabase implements Database, DatabaseFactory {
                 this.Database = DesktopDatabaseBridge.openDatabase(databasePath, null, 0, null);
             }
 
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
 
             /**
              * Probably there is no distinctions between a database that it can not be opened and a one that doesn't not exist.
@@ -265,25 +247,24 @@ public class DesktopDatabase implements Database, DatabaseFactory {
 
         try {
             // determine directry path name
-            String databasePath ="";
+            String databasePath = "";
             /**
              * if owner id if null
              * because it comes from platformdatabase
              */
-            if(ownerId != null)
-                databasePath = EnvironmentVariables.getExternalStorageDirectory()+"/"+ownerId.toString();
+            if (ownerId != null)
+                databasePath = EnvironmentVariables.getExternalStorageDirectory() + "/" + ownerId.toString();
                 //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" +  ownerId.toString();
             else
-                databasePath =String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
+                databasePath = String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
             //databasePath =  this.context.getFilesDir().getPath() + "/databases/";
 
-            databasePath += "/" + databaseName.replace("-","") + ".db";
+            databasePath += "/" + databaseName.replace("-", "") + ".db";
             File databaseFile = new File(databasePath);
 
             DesktopDatabaseBridge.deleteDatabase(databaseFile);
 
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
 
             /**
              * unexpected error deleting the database
@@ -307,8 +288,7 @@ public class DesktopDatabase implements Database, DatabaseFactory {
         try {
 
 
-
-            String databasePath ="";
+            String databasePath = "";
             /**
              * if owner id if null
              * because it comes from platformdatabase
@@ -316,15 +296,15 @@ public class DesktopDatabase implements Database, DatabaseFactory {
 
             //preguntar si conviene más centralizar la carpeta de base de datos o hacer un contexto individual
 
-            if(ownerId != null)
-                databasePath = EnvironmentVariables.getExternalStorageDirectory()+"/"+ownerId.toString();
+            if (ownerId != null)
+                databasePath = EnvironmentVariables.getExternalStorageDirectory() + "/" + ownerId.toString();
                 //databasePath =  this.context.getFilesDir().getPath() +   "/databases/" +   ownerId.toString();
             else
-                databasePath =String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
+                databasePath = String.valueOf(EnvironmentVariables.getExternalStorageDirectory());
             //databasePath =  this.context.getFilesDir().getPath() +  "/databases/" ;
 
             File storagePath = new File(databasePath);
-            if (!storagePath.exists()){
+            if (!storagePath.exists()) {
                 storagePath.mkdirs();
             }
 
@@ -332,13 +312,12 @@ public class DesktopDatabase implements Database, DatabaseFactory {
              * Hash data base name
              */
 
-            databasePath += "/" + databaseName.replace("-","") + ".db";
+            databasePath += "/" + databaseName.replace("-", "") + ".db";
             File databaseFile = new File(databasePath);
             this.Database = DesktopDatabaseBridge.openOrCreateDatabase(databaseFile, null);
 
 
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
 
 
             /**
@@ -357,7 +336,7 @@ public class DesktopDatabase implements Database, DatabaseFactory {
      * verify plugin owner id
      *
      * @param ownerId Plugin owner id
-     * @param table DatabaseTableFactory object containing the definition of the table
+     * @param table   DatabaseTableFactory object containing the definition of the table
      * @throws InvalidOwnerIdException
      * @throws CantCreateTableException
      */
@@ -374,39 +353,48 @@ public class DesktopDatabase implements Database, DatabaseFactory {
         /**
          * Get the columns of the table and write the query to create it
          */
-        try
-        {
-            this.query ="CREATE TABLE IF NOT EXISTS " + table.getTableName() + "(";
+        try {
+            List<String> primaryKey = new ArrayList<>();
+            this.query = "CREATE TABLE IF NOT EXISTS " + table.getTableName() + "(";
             ArrayList<DatabaseTableColumn> tableColumns = table.getColumns();
 
             for (int i = 0; i < tableColumns.size(); i++) {
 
-                this.query += tableColumns.get(i).getName() +" " +  tableColumns.get(i).getDataType().name();
-                if(tableColumns.get(i).getDataType() == DatabaseDataType.STRING)
-                    this.query +="("+ String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
+                this.query += tableColumns.get(i).getName() + " " + tableColumns.get(i).getDataType().name();
+                if (tableColumns.get(i).getDataType() == DatabaseDataType.STRING)
+                    this.query += "(" + String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
 
-                if(i < tableColumns.size()-1)
-                    this.query +=",";
+                if (tableColumns.get(i).isPrimaryKey())
+                    primaryKey.add(tableColumns.get(i).getName());
+
+                if (i < tableColumns.size() - 1)
+                    this.query += ",";
             }
+            /**
+             * add primary key
+             */
+            if (!primaryKey.isEmpty())
+                this.query += ", PRIMARY KEY (" + StringUtils.join(primaryKey, ",") + ") ";
 
             this.query += ")";
 
+            System.out.println("Create table Query: " + query);
 
             executeQuery(this.query);
 
             /**
              * get index column
              */
-            if(table.getIndex() != null && !table.getIndex().isEmpty ()) {
-                this.query = " CREATE INDEX IF NOT EXISTS " + table.getIndex() + "_idx ON " + table.getTableName() + " (" + table.getIndex() + ")";
 
+            List<List<String>> indexes = table.listIndexes();
+            for (List<String> indexColumns : indexes) {
+                query = " CREATE INDEX IF NOT EXISTS " + table.getTableName()+"_" +StringUtils.join(indexColumns, "_")+ "_idx ON " + table.getTableName() + " (" + StringUtils.join(indexColumns, ",") + ")";
                 executeQuery(this.query);
             }
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new CantCreateTableException();
+            throw new CantCreateTableException(e);
         }
 
 
@@ -426,52 +414,47 @@ public class DesktopDatabase implements Database, DatabaseFactory {
         /**
          * Get the columns of the table and write the query to create it
          */
-        try
-        {
-            String primaryKey = "";
-            this.query ="CREATE TABLE IF NOT EXISTS " + table.getTableName() + " (";
+        try {
+            List<String> primaryKey = new ArrayList<>();
+            this.query = "CREATE TABLE IF NOT EXISTS " + table.getTableName() + " (";
             ArrayList<DatabaseTableColumn> tableColumns = table.getColumns();
 
             for (int i = 0; i < tableColumns.size(); i++) {
 
-                this.query += tableColumns.get(i).getName() +" " +  tableColumns.get(i).getDataType().name();
+                this.query += tableColumns.get(i).getName() + " " + tableColumns.get(i).getDataType().name();
 
-                if(tableColumns.get(i).getDataType() == DatabaseDataType.STRING)
-                    this.query +="("+ String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
+                if (tableColumns.get(i).getDataType() == DatabaseDataType.STRING)
+                    this.query += "(" + String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
 
-                if(tableColumns.get(i).isPrimaryKey())
-                    primaryKey = tableColumns.get(i).getName();
-                if(i < tableColumns.size()-1)
-                    this.query +=",";
-
-
+                if (tableColumns.get(i).isPrimaryKey())
+                    primaryKey.add(tableColumns.get(i).getName());
+                if (i < tableColumns.size() - 1)
+                    this.query += ",";
             }
 
             /**
              * add primary key
              */
-            if(!primaryKey.isEmpty())
-                this.query += ", PRIMARY KEY ("+primaryKey+") ";
+            if (!primaryKey.isEmpty())
+                this.query += ", PRIMARY KEY (" + StringUtils.join(primaryKey, ",") + ") ";
 
             this.query += ")";
-            executeQuery();
+
+            System.out.println("Create table Query: " + query);
+            executeQuery(this.query);
             /**
              * get index column
              */
-            if(table.getIndex() != null && !table.getIndex().isEmpty ()) {
-                this.query = " CREATE INDEX IF NOT EXISTS " + table.getIndex() + "_idx ON " + table.getTableName() + " (" + table.getIndex() + ")";
-                executeQuery();
+            List<List<String>> indexes = table.listIndexes();
+            for (List<String> indexColumns : indexes) {
+                query = " CREATE INDEX IF NOT EXISTS " + table.getTableName()+"_" +StringUtils.join(indexColumns, "_")+ "_idx ON " + table.getTableName() + " (" + StringUtils.join(indexColumns, ",") + ")";
+                executeQuery(this.query);
             }
 
-
-
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            throw new CantCreateTableException();
+            throw new CantCreateTableException(e);
         }
-
-
     }
 
 
@@ -479,7 +462,7 @@ public class DesktopDatabase implements Database, DatabaseFactory {
      * This method provides the caller with a Table Structure object.
      * verify plugin owner id
      *
-     * @param ownerId Plugin owner id
+     * @param ownerId   Plugin owner id
      * @param tableName table name to use
      * @return DatabaseTableFactory Object
      * @throws InvalidOwnerIdException
@@ -508,9 +491,5 @@ public class DesktopDatabase implements Database, DatabaseFactory {
     public DatabaseTableFactory newTableFactory(String tableName) {
 
         return new DesktopDatabaseTableFactory(tableName);
-    }
-
-    public void executeQuery() {
-        Database.execSQL(query);
     }
 }

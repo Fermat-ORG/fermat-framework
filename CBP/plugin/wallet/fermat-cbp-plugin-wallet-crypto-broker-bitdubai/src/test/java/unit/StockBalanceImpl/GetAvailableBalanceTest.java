@@ -1,5 +1,6 @@
 package unit.StockBalanceImpl;
 
+import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetAvailableBalanceCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.StockBalanceImpl;
@@ -19,7 +20,7 @@ import static org.mockito.Mockito.when;
 public class GetAvailableBalanceTest {
 
     @Test
-    public void getAvailableBalance() throws CantGetAvailableBalanceCryptoBrokerWalletException {
+    public void getAvailableBalance() throws CantGetAvailableBalanceCryptoBrokerWalletException, CantStartPluginException {
         StockBalanceImpl stockBalance = mock(StockBalanceImpl.class);
         when(stockBalance.getAvailableBalance(FiatCurrency.ARGENTINE_PESO)).thenReturn(1f);
         assertThat(stockBalance.getAvailableBalance(FiatCurrency.ARGENTINE_PESO)).isNotNull();

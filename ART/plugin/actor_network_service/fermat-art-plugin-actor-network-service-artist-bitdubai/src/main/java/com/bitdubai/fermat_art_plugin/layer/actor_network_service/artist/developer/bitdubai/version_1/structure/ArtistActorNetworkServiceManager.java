@@ -17,6 +17,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDi
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingConnectionRequestsException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingInformationRequestsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestExternalPlatformInformationException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
@@ -491,7 +492,6 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
                             state,
                             type
                     );
-
             sendMessage(
                     informationRequest.toJson(),
                     informationRequest.getRequesterPublicKey(),
@@ -499,9 +499,7 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
                     informationRequest.getArtistPublicKey(),
                     PlatformComponentType.ART_ARTIST
             );
-
             return informationRequest;
-
         } catch (final CantRequestExternalPlatformInformationException e){
             errorManager.reportUnexpectedPluginException(
                     this.pluginVersionReference,
@@ -514,6 +512,38 @@ public final class ArtistActorNetworkServiceManager implements ArtistManager {
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
                     e);
             throw new CantRequestExternalPlatformInformationException(
+                    e,
+                    null,
+                    "Unhandled Exception.");
+        }
+    }
+
+    /**
+     * This method returns the pending information request list.
+     * @param requestType SENT or RECEIVED
+     * @return
+     * @throws CantListPendingInformationRequestsException
+     */
+    @Override
+    public List<ArtArtistExtraData<ArtistExternalPlatformInformation>> listPendingInformationRequests(
+            RequestType requestType) throws CantListPendingInformationRequestsException {
+        try {
+
+            return artistActorNetworkServiceDao.listPendingInformationRequests(
+                    ProtocolState.PENDING_LOCAL_ACTION,
+                    requestType);
+        } catch (final CantListPendingInformationRequestsException e){
+            errorManager.reportUnexpectedPluginException(
+                    this.pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw e;
+        } catch (final Exception e){
+            errorManager.reportUnexpectedPluginException(
+                    this.pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    e);
+            throw new CantListPendingInformationRequestsException(
                     e,
                     null,
                     "Unhandled Exception.");

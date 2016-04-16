@@ -21,8 +21,8 @@ public enum Plugins implements FermatPluginsEnum {
     BITDUBAI_WS_COMMUNICATION_CLIENT_CHANNEL    ("BWSCCLIENTCH" ),
     BITDUBAI_WS_COMMUNICATION_CLOUD_SERVER      ("BWSCCLSERVER" ),
 
-    BITDUBAI_COMMUNICATIONS_NETWORK_NODE        ("BCNNODE"),
-    BITDUBAI_COMMUNICATIONS_NETWORK_CLIENT      ("BCNCLIENT"),
+    NETWORK_NODE("BCNNODE"),
+    NETWORK_CLIENT("BCNCLIENT"),
 
     BITDUBAI_CLOUD_SERVER_COMMUNICATION                             ("BCLOUSC"      ),
     BITDUBAI_USER_NETWORK_SERVICE                                   ("BUSERNETS"    ),
@@ -203,6 +203,7 @@ public enum Plugins implements FermatPluginsEnum {
     BITCOIN_WATCH_ONLY_VAULT    ("BWOV"),
     BITCOIN_HOLD                ("BHOLD"),
     BITCOIN_UNHOLD              ("BUNHOLD"),
+    CHAT_ACTOR                  ("CHTA"),
     CRYPTO_ADDRESSES            ("CA"),
     CRYPTO_ADDRESS_BOOK         ("CAB"),
     CRYPTO_BROKER               ("CB"),
@@ -292,6 +293,7 @@ public enum Plugins implements FermatPluginsEnum {
     CUSTOMER_BROKER_SALE                ("CBSA"),
 
     //CHT
+    CHAT_COMMUNITY_SUP_APP_MODULE       ("CATCH"),
     CHAT_MIDDLEWARE                     ("CHMID"),
     CHAT_NETWORK_SERVICE                ("CHTNS"),
     CHAT_SUP_APP_MODULE                 ("CHTSAM"),

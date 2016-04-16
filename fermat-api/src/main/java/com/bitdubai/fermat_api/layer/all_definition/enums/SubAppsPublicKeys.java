@@ -12,6 +12,8 @@ public enum SubAppsPublicKeys implements FermatEnum {
 
     //TODO CHT Platform
     CHT_OPEN_CHAT               ("public_key_cht_chat"),
+    CHT_CHAT_IDENTITY           ("public_key_cht_identity_chat"),
+    CHT_COMMUNITY               ("public_key_cht_community"),
 
     //TODO CBP Platform
     CBP_BROKER_COMMUNITY        ("public_key_crypto_broker_community"),
@@ -47,7 +49,6 @@ public enum SubAppsPublicKeys implements FermatEnum {
     //TODO TKY PLATFORM
     TKY_ARTIST_IDENTITY         ("public_key_tky_artist_identity"),
     TKY_FAN_IDENTITY            ("sub_app_tky_fan_create_identity"),
-    CHT_CHAT_IDENTITY           ("public_key_cht_identity_chat"),
 
 
     ;

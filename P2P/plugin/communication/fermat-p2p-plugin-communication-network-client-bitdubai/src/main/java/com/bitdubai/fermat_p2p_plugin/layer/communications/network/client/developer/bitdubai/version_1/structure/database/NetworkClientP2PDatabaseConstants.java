@@ -25,8 +25,8 @@ public class NetworkClientP2PDatabaseConstants {
      */
     public static final String NODE_CONNECTION_HISTORY_TABLE_NAME = "node_connection_history";
 
-    public  static final String NODE_CONNECTION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "identity_public_key";
-    public  static final String NODE_CONNECTION_HISTORY_IP_COLUMN_NAME = "ip";
+    public static final String NODE_CONNECTION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME = "identity_public_key";
+    public static final String NODE_CONNECTION_HISTORY_IP_COLUMN_NAME = "ip";
     public static final String NODE_CONNECTION_HISTORY_DEFAULT_PORT_COLUMN_NAME = "default_port";
     public static final String NODE_CONNECTION_HISTORY_LATITUDE_COLUMN_NAME = "latitude";
     public static final String NODE_CONNECTION_HISTORY_LONGITUDE_COLUMN_NAME = "longitude";

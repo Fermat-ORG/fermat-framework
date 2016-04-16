@@ -9,7 +9,6 @@ package com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitd
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,15 +34,12 @@ public class DesktopDatabaseBridge {
     private boolean transaccionSatisfactoria=false;
     private String databasePath;
 
-
     /**
      * Constructor
      */
     public DesktopDatabaseBridge(String databasePath){
         this.databasePath=databasePath;
     }
-
-
 
     /**
      * Method who open the database connection
@@ -123,24 +119,15 @@ public class DesktopDatabaseBridge {
     "VALUES (1, 'Paul', 32, 'California', 20000.00 );";
      @exception SQLException	//if the SQL string is invalid
      */
-    public void execSQL(String sql) {
+    public void execSQL(String sql) throws SQLException {
 
         if (c == null)
             connect();
 
-        ResultSet rs=null;
-        try {
-            stmt = c.createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
-            c.commit();
-
-        }catch(SQLException ex){
-            Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-
-        }
-
-
+        stmt = c.createStatement();
+        stmt.executeUpdate(sql);
+        stmt.close();
+        c.commit();
     }
 
     /**
@@ -252,18 +239,6 @@ public class DesktopDatabaseBridge {
 
             i++;
         }
-
-       // PreparedStatement ps;
-       /* try {
-            System.out.println("UPDATE "+tableName+" SET "+setVariables+whereClause);
-            ps = c.prepareStatement("UPDATE "+tableName+" SET "+setVariables+whereClause);
-
-            ps.executeUpdate();
-            ps.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
 
         if (c == null){
             connect();

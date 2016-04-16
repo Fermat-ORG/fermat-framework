@@ -74,6 +74,7 @@ public class CloseContractBusinessTransactionDatabaseFactory implements DealsWit
             table.addColumn(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_TRANSMISSION_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_TYPE_COLUMN_NAME, DatabaseDataType.STRING,10,Boolean.FALSE);
             table.addColumn(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_CONTRACT_XML_COLUMN_NAME, DatabaseDataType.STRING,4000,Boolean.FALSE);
+            table.addColumn(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_COMPLETION_DATE_COLUMN_NAME, DatabaseDataType.LONG_INTEGER,0,Boolean.FALSE);
 
             table.addIndex(CloseContractBusinessTransactionDatabaseConstants.CLOSE_CONTRACT_FIRST_KEY_COLUMN);
 
