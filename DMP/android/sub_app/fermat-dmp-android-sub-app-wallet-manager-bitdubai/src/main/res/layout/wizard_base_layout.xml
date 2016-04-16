@@ -23,7 +23,8 @@
 
         <CheckBox
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:id="@+id/checkbox"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
@@ -45,7 +46,7 @@
             android:layout_width="8dp"
             android:layout_height="8dp"
             android:background="@drawable/radio_selector"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="9dp"
             />
 
         <RadioButton
@@ -53,7 +54,7 @@
             android:layout_height="8dp"
             android:background="@drawable/radio_selector"
             android:checked="false"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="9dp"
             />
 
         <RadioButton
@@ -61,7 +62,7 @@
             android:layout_height="8dp"
             android:checked="false"
             android:background="@drawable/radio_selector"
-            android:layout_marginRight="5dp"
+            android:layout_marginRight="9dp"
             />
 
         <RadioButton

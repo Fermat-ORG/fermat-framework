@@ -1,5 +1,0 @@
-include ':fermat-api'
-project(':fermat-api').projectDir = new File('../../../fermat-api')
-
-include ':fermat-pip-addon-platform-service-error-manager-bitdubai'
-project(':fermat-pip-addon-platform-service-error-manager-bitdubai').projectDir = new File('../../../PIP/addon/platform_service/fermat-pip-addon-platform-service-error-manager-bitdubai')

@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 
@@ -12,11 +13,9 @@ public interface FermatWallet extends FermatStructure{
 
     Activity getActivity(Activities activities);
 
-    Activity getStartActivity();
+    Activity getStartActivity() throws InvalidParameterException;
 
-    void addPosibleStartActivity(Activities activity);
-
-    Activity getLastActivity();
+    Activity getLastActivity() throws InvalidParameterException;
 
     void setPublicKey(String publicKey);
 

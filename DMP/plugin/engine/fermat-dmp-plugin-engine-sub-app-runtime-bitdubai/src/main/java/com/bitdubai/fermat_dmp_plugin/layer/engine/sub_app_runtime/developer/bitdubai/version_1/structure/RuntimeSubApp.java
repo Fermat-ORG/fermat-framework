@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bi
 
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.LanguagePackage;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -10,9 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.F
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.SubApp;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,8 +26,7 @@ public class RuntimeSubApp implements SubApp {
 
     Map<Activities, Activity> activities = new  HashMap<Activities, Activity>();
 
-    private List<Activities> startActivities = new ArrayList<>();
-    private int actualStart = 0;
+    private String actualActivityStart;
 
     Activities lastActivity;
 
@@ -48,6 +46,9 @@ public class RuntimeSubApp implements SubApp {
     }
 
     public void addActivity (Activity activity){
+        if(actualActivityStart==null){
+            actualActivityStart = activity.getType().getCode();
+        }
         activities.put(activity.getType(), activity);
     }
 
@@ -92,31 +93,29 @@ public class RuntimeSubApp implements SubApp {
     }
 
     @Override
-    public Activity getStartActivity() {
-        if(!startActivities.isEmpty())
-        return activities.get(startActivities.get(actualStart));
-        else return activities.get(0);
+    public Activity getStartActivity() throws IllegalAccessException {
+        if(!activities.isEmpty())
+            try {
+                return activities.get(Activities.getValueFromString(actualActivityStart));
+            } catch (InvalidParameterException e) {
+                throw new IllegalAccessException(actualActivityStart);
+            }
+        else throw new IllegalAccessException();
     }
 
     @Override
-    public Activity getLastActivity() {
+    public Activity getLastActivity() throws InvalidParameterException {
         if(lastActivity==null){
-            return activities.get(startActivities.get(actualStart));
+            return activities.get(Activities.getValueFromString(actualActivityStart));
         }
         return activities.get(lastActivity);
     }
 
     @Override
-    public void changeActualStartActivity(int option)throws IllegalArgumentException{
-        if(option>activities.size() || option<0) throw new IllegalArgumentException();
-        this.actualStart = option;
+    public void changeActualStartActivity(String activityCode) throws IllegalArgumentException, InvalidParameterException {
+       // if(activities.get(Activities.getValueFromString(activityCode))==null) throw new IllegalArgumentException("Activity code:"+activityCode+" is not in the activities list, add first and then change the start");
+        this.actualActivityStart = activityCode;
     }
-
-    @Override
-    public void addPosibleStartActivity(Activities activity) {
-        this.startActivities.add(activity);
-    }
-
 
     @Override
     public Map<String,LanguagePackage> getLanguagePackages(){
