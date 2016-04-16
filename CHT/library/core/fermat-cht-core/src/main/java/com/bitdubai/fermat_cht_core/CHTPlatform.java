@@ -2,6 +2,8 @@ package com.bitdubai.fermat_cht_core;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_cht_core.layer.actor_connection.ActorConnectionLayer;
+import com.bitdubai.fermat_cht_core.layer.actor_network_service.ActorNetworkServiceLayer;
 import com.bitdubai.fermat_cht_core.layer.identity.IdentityLayer;
 import com.bitdubai.fermat_cht_core.layer.middleware.MiddlewareLayer;
 import com.bitdubai.fermat_cht_core.layer.network_service.NetworkServiceLayer;
@@ -24,10 +26,11 @@ public class CHTPlatform extends AbstractPlatform {
     public void start() throws CantStartPlatformException {
 
         try {
-
-            registerLayer(new MiddlewareLayer());
+            registerLayer(new ActorConnectionLayer());
+            registerLayer(new ActorNetworkServiceLayer());
             registerLayer(new IdentityLayer());
             registerLayer(new NetworkServiceLayer());
+            registerLayer(new MiddlewareLayer());
             registerLayer(new SupAppModuleLayer());
 
         } catch (CantRegisterLayerException e) {

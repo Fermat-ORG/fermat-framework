@@ -31,6 +31,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Fermat
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -39,6 +40,8 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.runtime.FermatApp;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 
@@ -196,7 +199,11 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 
     @Override
     public void setChangeBackActivity(Activities activityCodeBack) {
-        ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().setBackActivity(activityCodeBack);
+        try {
+            ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().setBackActivity(activityCodeBack);
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -231,19 +238,32 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
     /**
      * Method that loads the UI
      */
-    protected void loadUI(FermatSession fermatSession) {
+    protected void loadUI(final FermatSession fermatSession) {
         try {
             if(fermatSession!=null) {
                 Log.i("APP ACTIVITY loadUI", "INICIA " + System.currentTimeMillis());
                 FermatStructure appStructure = ApplicationSession.getInstance().getAppManager().getAppStructure(fermatSession.getAppPublicKey());
                 Log.i("APP ACTIVITY loadUI", "Get App Structure " + System.currentTimeMillis());
-                AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, fermatSession);
+                final AppConnections fermatAppConnection = FermatAppConnectionManager.getFermatAppConnection(appStructure.getPublicKey(), this, fermatSession);
                 Log.i("APP ACTIVITY loadUI", "getFermatAppConnection " + System.currentTimeMillis());
                 FermatFragmentFactory fermatFragmentFactory = fermatAppConnection.getFragmentFactory();
                 Log.i("APP ACTIVITY loadUI", "getFragmentFactory " + System.currentTimeMillis());
                 Activity activity = appStructure.getLastActivity();
                 Log.i("APP ACTIVITY loadUI", "getLastActivity " + System.currentTimeMillis());
-                fermatAppConnection.setActiveIdentity(fermatSession.getModuleManager().getSelectedActorIdentity());
+                executor.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            fermatAppConnection.setActiveIdentity(fermatSession.getModuleManager().getSelectedActorIdentity());
+                            refreshSideMenu(fermatAppConnection);
+                        } catch (CantGetSelectedActorIdentityException e) {
+                            e.printStackTrace();
+                        } catch (ActorIdentityNotSelectedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
                 Log.i("APP ACTIVITY loadUI", "getSelectedActorIdentity " + System.currentTimeMillis());
                 loadBasicUI(activity, fermatAppConnection);
                 Log.i("APP ACTIVITY loadUI", "loadBasicUI " + System.currentTimeMillis());

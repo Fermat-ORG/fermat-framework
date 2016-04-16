@@ -114,6 +114,7 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_LAST_MESSAGE_DATE_COLUMN_NAME);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_CONTACT_ASSOCIATED_LIST);
         chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_TYPE_CHAT);
+        chatsColumns.add(ChatMiddlewareDatabaseConstants.CHATS_SCHEDULED_DELIVERY);
         /**
          * Table Chats addition.
          */
@@ -207,21 +208,6 @@ public class ChatMiddlewareDeveloperDatabaseFactory implements DealsWithPluginDa
          */
         DeveloperDatabaseTable identitiesTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.IDENTITY_TABLE_NAME, identitiesColumns);
         tables.add(identitiesTable);
-
-        /**
-         * Table Group columns.
-         */
-        List<String> groupColumns = new ArrayList<String>();
-
-        groupColumns.add(ChatMiddlewareDatabaseConstants.GROUP_ID_COLUMN_NAME);
-        groupColumns.add(ChatMiddlewareDatabaseConstants.GROUP_NAME_COLUMN_NAME);
-
-
-        /**
-         * Table Group addition.
-         */
-        DeveloperDatabaseTable groupTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatMiddlewareDatabaseConstants.GROUP_TABLE_NAME, groupColumns);
-        tables.add(groupTable);
 
         /**
          * Table Group Member columns.

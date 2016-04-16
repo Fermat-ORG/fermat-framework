@@ -2,6 +2,7 @@ package com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bit
 
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.enums.DeviceDirectory;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
@@ -10,11 +11,15 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
+import com.bitdubai.fermat_tky_api.all_definitions.util.ObjectChecker;
 import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.music.MusicUser;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_plugin.layer.identity.fan_identity.developer.bitdubai.version_1.TokenlyFanIdentityPluginRoot;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -32,6 +37,7 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
     private String externalPassword;
     private ExternalPlatform externalPlatform;
     private String email;
+    private List<String> artistsConnectedList;
     /**
      * DealsWithPluginFileSystem Interface member variables.
      */
@@ -257,5 +263,60 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
 
     public void setTokenlyID(String tokenlyID) {
         this.tokenlyID = tokenlyID;
+    }
+
+    /**
+     * This method returns a list with the username from the artists connected.
+     * @return
+     */
+    @Override
+    public List<String> getConnectedArtists() {
+        //TODO: to implement and remove this hardcode
+        List<String> hardcodedList=new ArrayList<>();
+        hardcodedList.add("TatianaMoroz");
+        hardcodedList.add("adam");
+        return hardcodedList;
+        //TODO: this is the real implementation.
+        /*if(this.artistsConnectedList==null || this.artistsConnectedList.isEmpty()){
+            return new ArrayList<>();
+        } else{
+            return this.artistsConnectedList;
+        }*/
+    }
+
+    /**
+     * This method persist the username in the fan identity.
+     * @param userName
+     */
+    public void addNewArtistConnected(String userName) throws ObjectNotSetException {
+        ObjectChecker.checkArgument(userName, "The user name is null");
+        if(this.artistsConnectedList==null){
+            this.artistsConnectedList = new ArrayList<>();
+        }
+        this.artistsConnectedList.add(userName);
+    }
+
+    /**
+     * This method sets the artist connected list from a XML String.
+     * @param xmlStringList
+     */
+    public void addArtistConnectedList(String xmlStringList){
+        if(!(xmlStringList==null || xmlStringList.isEmpty())){
+            List<String> proposedList = new ArrayList<>();
+            proposedList = (List<String>) XMLParser.parseXML(xmlStringList, proposedList);
+            this.artistsConnectedList = proposedList;
+        }
+    }
+
+    /**
+     * This method returns the XML String representation from the Artist Connected List.
+     * @return
+     */
+    public String getArtistsConnectedStringList(){
+        if(this.artistsConnectedList==null || this.artistsConnectedList.isEmpty()){
+            return "";
+        } else{
+            return XMLParser.parseObject(this.artistsConnectedList);
+        }
     }
 }

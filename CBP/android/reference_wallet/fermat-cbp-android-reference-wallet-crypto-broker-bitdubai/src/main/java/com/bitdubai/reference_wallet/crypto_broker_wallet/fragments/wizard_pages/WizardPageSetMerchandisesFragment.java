@@ -10,8 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
@@ -21,6 +19,7 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -222,19 +221,21 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
                         .setBannerRes(R.drawable.banner_crypto_broker)
                         .setIconRes(R.drawable.crypto_broker)
-                        .setBody(R.string.cbw_wizard_merchandise_dialog_body)
                         .setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title)
+                        .setBody(R.string.cbw_wizard_merchandise_dialog_body)
                         .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
+                        .setCheckboxText(R.string.cbw_wizard_not_show_text)
                         .build();
 
             } else {
                 presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setSubTitle(R.string.cbw_crypto_broker_wallet_merchandises_subTitle)
-                        .setBody(R.string.cbw_crypto_broker_wallet_merchandises_body)
-                        .setTextFooter(R.string.cbw_crypto_broker_wallet_merchandises_footer)
                         .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                         .setBannerRes(R.drawable.banner_crypto_broker)
                         .setIconRes(R.drawable.crypto_broker)
+                        .setSubTitle(R.string.cbw_wizard_merchandise_dialog_sub_title)
+                        .setBody(R.string.cbw_wizard_merchandise_dialog_body)
+                        .setTextFooter(R.string.cbw_wizard_merchandise_dialog_footer)
+                        .setCheckboxText(R.string.cbw_wizard_not_show_text)
                         .build();
             }
 
@@ -276,10 +277,10 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                         case BANKING_PLATFORM:
                             showBankAccountsDialog(selectedItem);
                             break;
+
                         case CASH_PLATFORM:
-                            if (!walletManager.cashMoneyWalletExists("cash_wallet")) {
-                                final InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
-                                inputDialogCBP.DialogType(2);
+                            if ( !walletManager.cashMoneyWalletExists(WalletsPublicKeys.CSH_MONEY_WALLET.getCode())){
+                                final InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager, InputDialogCBP.CASH_DIALOG);
                                 inputDialogCBP.show();
                                 inputDialogCBP.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                     @Override
@@ -291,8 +292,8 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                                         }
                                     }
                                 });
-
-                            } else if (!containWallet(selectedItem)) {
+                            }
+                            else if (!containWallet(selectedItem)) {
                                 stockWallets.add(selectedItem);
                                 adapter.changeDataSet(stockWallets);
                                 showOrHideNoSelectedWalletsView();
@@ -325,7 +326,9 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
 
     private void showBankAccountsDialog(final InstalledWallet selectedWallet) {
         try {
-            List<BankAccountNumber> accounts = walletManager.getAccounts("banking_wallet");
+            List<BankAccountNumber> accounts = walletManager.getAccounts(WalletsPublicKeys.BNK_BANKING_WALLET.getCode());
+
+            //If there is at least one bank wallet account created
             if (!accounts.isEmpty()) {
 
                 SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();
@@ -347,15 +350,17 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
 
                 });
                 accountsDialog.show(getFragmentManager(), "accountsDialog");
-            } else {
-                final InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager);
-                inputDialogCBP.DialogType(1);
+            }
+
+            //If there are no accounts, prompt user to create a new bank account
+            else {
+                final InputDialogCBP inputDialogCBP = new InputDialogCBP(getActivity(), appSession, null, walletManager, InputDialogCBP.BANK_DIALOG);
                 inputDialogCBP.show();
                 inputDialogCBP.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        String account_dialog = inputDialogCBP.getAccountnumber().getAccount();
-                        FiatCurrency currency_dialog = inputDialogCBP.getAccountnumber().getCurrencyType();
+                        String account_dialog = inputDialogCBP.getCreatedBankAccount().getAccount();
+                        FiatCurrency currency_dialog = inputDialogCBP.getCreatedBankAccount().getCurrencyType();
                         bankCurrencies.put(selectedWallet.getWalletPublicKey(), currency_dialog);
                         bankAccounts.put(selectedWallet.getWalletPublicKey(), account_dialog);
                         if (!containWallet(selectedWallet)) {

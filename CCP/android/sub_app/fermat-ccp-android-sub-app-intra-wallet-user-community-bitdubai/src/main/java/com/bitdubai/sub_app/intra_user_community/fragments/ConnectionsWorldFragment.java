@@ -76,7 +76,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     public static final String INTRA_USER_SELECTED = "intra_user";
 
-    private static final int MAX = 20;
+    private static final int MAX = 10;
     /**
      * MANAGERS
      */
@@ -279,6 +279,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     @Override
     public void onRefresh() {
+
+        offset = 0;
         if (!isRefreshing) {
             isRefreshing = true;
             worker = new FermatWorker() {
@@ -525,8 +527,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
          try {
             //verifico la cache para mostrar los que tenia antes y los nuevos
+             List<IntraUserInformation> userCacheList = new ArrayList<>();
+             try {
+                     userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
+             } catch (CantGetIntraUsersListException e) {
+                 e.printStackTrace();
+             }
 
-            List<IntraUserInformation> userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
             List<IntraUserInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
              //dataSet.addAll(userList);
 
@@ -561,7 +568,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                 }
             }
 
-            offset = dataSet.size();
+            //set offset if have more than 1 page;
 
         } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();

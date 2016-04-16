@@ -2,34 +2,29 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Handler;
-import android.os.SystemClock;
+import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
@@ -37,6 +32,7 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.enums.ChatStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
@@ -51,9 +47,11 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 
 import java.io.ByteArrayInputStream;
 import java.sql.Timestamp;
@@ -63,9 +61,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Set;
+import java.util.TimeZone;
 import java.util.UUID;
 
 /**
@@ -218,13 +214,12 @@ public class ChatAdapterView extends LinearLayout {
                     long nanos = (mess.getMessageDate().getNanos() / 1000000);
                     long milliseconds = timemess + nanos;
                     Date dated= new java.util.Date(milliseconds);
+                    DateFormat formatter = DateFormat.getDateTimeInstance();
                     if (Validate.isDateToday(dated)) {
-                        String S = new SimpleDateFormat("HH:mm").format(new java.util.Date(milliseconds));
-                        msg.setDate(S);
-                    }else
-                    {
-                        msg.setDate(DateFormat.getDateTimeInstance().format(new java.util.Date(milliseconds)));
+                        formatter = new SimpleDateFormat("HH:mm");
                     }
+                    formatter.setTimeZone(TimeZone.getDefault());
+                    msg.setDate(formatter.format(new java.util.Date(milliseconds)));
                     msg.setUserId(mess.getContactId());
                     msg.setMessage(message);
                     msg.setType(mess.getType().toString());
@@ -232,11 +227,7 @@ public class ChatAdapterView extends LinearLayout {
                 }
                 adapter = new ChatAdapter(this.getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
                 messagesContainer.setAdapter(adapter);
-            }//else{
-             //   Toast.makeText(getContext(),"Waiting for chat message", Toast.LENGTH_SHORT).show();
-            //}
-        //}catch (CantSaveMessageException e) {
-           // errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
         }catch (CantGetMessageException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }catch (Exception e){
@@ -268,12 +259,70 @@ public class ChatAdapterView extends LinearLayout {
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+                onBackPressed();
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void onBackPressed() {
+        final int actualHeight = getHeight();
+        FrameLayout.LayoutParams layoutParams =
+                (FrameLayout.LayoutParams) messagesContainer.getLayoutParams();
+        layoutParams.height = 764;
+        messagesContainer.setLayoutParams(layoutParams);
+    }
+
+   public void onAdjustKeyboard() {
+       FrameLayout.LayoutParams layoutParams =
+               (FrameLayout.LayoutParams) messagesContainer.getLayoutParams();
+       layoutParams.height = 440;
+       messagesContainer.setLayoutParams(layoutParams);
+   }
+
+    @Override
+    public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+        if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                onBackPressed();
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    private boolean isKeyboardShown(View rootView) {
+        final int SOFT_KEYBOARD_HEIGHT_DP_THRESHOLD = 128;
+        Rect r = new Rect();
+        rootView.getWindowVisibleDisplayFrame(r);
+        DisplayMetrics dm = rootView.getResources().getDisplayMetrics();
+        int heightDiff = rootView.getBottom() - r.bottom;
+        // Threshold size: dp to pixels, multiply with display density
+        boolean isKeyboardShown = heightDiff > SOFT_KEYBOARD_HEIGHT_DP_THRESHOLD * dm.density;
+        return isKeyboardShown;
+    }
+
+
     public void initControls() {
         messagesContainer = (RecyclerView) findViewById(R.id.messagesContainer);
         messagesContainer.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         messageET = (EditText) findViewById(R.id.messageEdit);
         sendBtn = (Button) findViewById(R.id.chatSendButton);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        messageET.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+                    if (!isKeyboardShown(messageET.getRootView())) {
+                        onBackPressed();
+                    } else onAdjustKeyboard();
+                }
+            }
+        });
+        //mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         //adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
         //messagesContainer.setAdapter(adapter);
         //messageET.setText("Type message");
@@ -285,7 +334,7 @@ public class ChatAdapterView extends LinearLayout {
             whatToDo();
             findMessage();
             scroll();
-        
+
 //        if (rightName != null) {
 //            meLabel.setText(rightName);
 //        } else {
@@ -302,19 +351,34 @@ public class ChatAdapterView extends LinearLayout {
 //        } else {
 //            companionLabel.setText("Contacto");
 //        }
-        
+
         //if (background != -1) {
         //    container.setBackgroundColor(background);
         //}
 
-        messageET.setOnClickListener(new View.OnClickListener() {
+        messageET.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 //messageET.setText("");
             }
         });
 
-        sendBtn.setOnClickListener(new View.OnClickListener() {
+//        messageET.setOnTouchListener(new OnTouchListener() {
+//            public boolean onTouch(View view, MotionEvent event) {
+//                // TODO Auto-generated method stub
+//                if (view.getId() == R.id.messageEdit) {
+//                    view.getParent().requestDisallowInterceptTouchEvent(true);
+//                    switch (event.getAction() & MotionEvent.ACTION_MASK) {
+//                        case MotionEvent.ACTION_UP:
+//                            view.getParent().requestDisallowInterceptTouchEvent(false);
+//                            break;
+//                    }
+//                }
+//                return false;
+//            }
+//        });
+
+        sendBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 BackgroundAsyncTask sendMessageAsync = new BackgroundAsyncTask();
@@ -358,8 +422,9 @@ public class ChatAdapterView extends LinearLayout {
                          * LocalActorType as is defined in database
                          */
                         //chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
-                        Contact newContact = chatManager.getContactByContactId(
-                                contactId);
+                        //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                        Contact newContact = null;//chatManager.getContactByContactId(
+                                //contactId);
                         PlatformComponentType remoteActorType = newContact.getRemoteActorType();
                         remotePublicKey = newContact.getRemoteActorPublicKey();
                         chat.setRemoteActorType(remoteActorType);
@@ -377,6 +442,7 @@ public class ChatAdapterView extends LinearLayout {
                         chat.setChatName("Chat_" + newContact.getAlias());
                         chat.setDate(new Timestamp(dv));
                         chat.setLastMessageDate(new Timestamp(dv));
+                        chat.setTypeChat(TypeChat.INDIVIDUAL);
                         /**
                          * Now we got the identities registered in the device.
                          * To avoid nulls, I'll put default data in chat object

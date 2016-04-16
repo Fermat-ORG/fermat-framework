@@ -97,7 +97,7 @@
 
         </activity>
 
-        <service android:name="com.bitdubai.android_core.app.NotificationService"/>
+        <service android:name="com.bitdubai.android_core.app.common.version_1.notifications.NotificationService"/>
 
 
         <activity
@@ -138,8 +138,8 @@
             android:exported="true"
             >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <!--<action android:name="android.intent.action.MAIN" />-->
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
                 <!-- Service name -->
                 <action android:name="org.fermat.COMM_SERVICE" />
             </intent-filter>
@@ -150,6 +150,7 @@
             />
 
         <service android:name="com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService"/>
+        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerService"/>
 
     </application>
 </manifest>

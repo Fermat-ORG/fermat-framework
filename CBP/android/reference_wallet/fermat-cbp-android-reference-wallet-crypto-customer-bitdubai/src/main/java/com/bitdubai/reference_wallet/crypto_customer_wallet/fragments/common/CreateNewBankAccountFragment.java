@@ -1,6 +1,8 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +52,8 @@ public class CreateNewBankAccountFragment extends AbstractFermatFragment impleme
 
         View layout = inflater.inflate(R.layout.ccw_fragement_create_new_bank_account, container, false);
 
+        configureToolbar();
+
         currencies = FiatCurrency.values();
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), R.layout.ccw_spinner_item, getListOfCurrenciesNames(currencies));
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -75,6 +79,18 @@ public class CreateNewBankAccountFragment extends AbstractFermatFragment impleme
 
         return layout;
     }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
+
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
+    }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -122,8 +138,8 @@ public class CreateNewBankAccountFragment extends AbstractFermatFragment impleme
 
     private List<String> getListOfAccountTypeNames() {
         List<String> data = new ArrayList<>();
-        data.add("Saving (" + BankAccountType.SAVING.getCode() + ")");
-        data.add("Current (" + BankAccountType.CURRENT.getCode() + ")");
+        data.add("Saving (" + BankAccountType.SAVINGS.getCode() + ")");
+        data.add("Current (" + BankAccountType.CHECKING.getCode() + ")");
 
         return data;
     }

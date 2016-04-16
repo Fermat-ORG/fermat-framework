@@ -1,6 +1,8 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,7 +74,21 @@ public class SettingsCreateNewBankAccountFragment extends AbstractFermatFragment
 
         layout.findViewById(R.id.ccw_create_new_location_button).setOnClickListener(this);
 
+
+        configureToolbar();
+
         return layout;
+    }
+
+    private void configureToolbar() {
+        Toolbar toolbar = getToolbar();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors, null));
+        else
+            toolbar.setBackground(getResources().getDrawable(R.drawable.ccw_action_bar_gradient_colors));
+
+        if (toolbar.getMenu() != null) toolbar.getMenu().clear();
     }
 
     @Override
@@ -121,8 +137,8 @@ public class SettingsCreateNewBankAccountFragment extends AbstractFermatFragment
 
     private List<String> getListOfAccountTypeNames() {
         List<String> data = new ArrayList<>();
-        data.add("Saving (" + BankAccountType.SAVING.getCode() + ")");
-        data.add("Current (" + BankAccountType.CURRENT.getCode() + ")");
+        data.add("Saving (" + BankAccountType.SAVINGS.getCode() + ")");
+        data.add("Current (" + BankAccountType.CHECKING.getCode() + ")");
 
         return data;
     }

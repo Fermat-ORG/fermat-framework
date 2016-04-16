@@ -31,6 +31,7 @@ public enum Activities implements FermatEnum {
     CCP_BITCOIN_WALLET_SETTINGS_ACTIVITY_MAIN_NETWORK("CCPBWSAMN"),
     CCP_BITCOIN_WALLET_ADD_CONNECTION_ACTIVITY("CCPBWACA"),
     CCP_BITCOIN_WALLET_NO_IDENTITY_ACTIVITY("CCPBWNIA"),
+    CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT("CCPBWSER"),
 
 
     /**
@@ -54,6 +55,7 @@ public enum Activities implements FermatEnum {
     CCP_BITCOIN_LOSS_PROTECTED_WALLET_NO_IDENTITY_ACTIVITY("CCPBLPWNIA"),
     CCP_BITCOIN_LOSS_PROTECTED_WALLET_MNEMONIC_ACTIVITY("CCPBLPWMNA"),
     CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUE_DETAIL_ACTIVITY("CCPBLPWCVD"),
+    CCP_BITCOIN_LOSS_PROTECTED_WALLET_OPEN_SEND_ERROR_REPORT("CCPBLPSER"),
 
     /**
      * Intra user
@@ -148,6 +150,12 @@ public enum Activities implements FermatEnum {
     DAP_WALLET_ASSET_USER_ASSET_TRANSFER_ACTIVITY("DWAUATA"),
     DAP_WALLET_ASSET_USER_ASSET_TRANSFER_SELECT_USERS_ACTIVITY("DWAUATSUA"),
     DAP_WALLET_ASSET_USER_ASSET_NEGOTIATION_DETAIL_ACTIVITY("DWAUANDA"),
+
+    DAP_WALLET_ASSET_USER_V2_HOME("DWAUH"),
+    DAP_WALLET_ASSET_USER_V2_DETAIL("DWAUD"),
+    DAP_WALLET_ASSET_USER_V2_REDEEM_POINTS("DWAURP"),
+
+    DAP_WALLET_ASSET_USER_V3_HOME("DWAU3H"),
 
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
     DAP_WALLET_REDEEM_POINT_HISTORY_ACTIVITY("DWRPHA"),
@@ -316,6 +324,7 @@ public enum Activities implements FermatEnum {
      * Chat
      */
     CHT_CHAT_OPEN_CHATLIST("CHTOCHL"),
+    CHT_CHAT_CREATE_IDENTITY("CHTCI"),
     CHT_CHAT_OPEN_CONTACTLIST("CHTOCONTL"),
     CHT_CHAT_OPEN_MESSAGE_LIST("CHTOML"),
     CHT_CHAT_OPEN_CONTACT_DETAIL("CHTOCOD"),
@@ -326,8 +335,17 @@ public enum Activities implements FermatEnum {
     CHT_CHAT_OPEN_SEND_ERROR_REPORT("CHTOSER"),
 
     //ART
-    ART_ARTIST_IDENTITY_HOME("AACACP"),
+    ART_ARTIST_IDENTITY_CREATE_PROFILE("AAICP"),
+    ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST("ASAFCCFL"),
+    ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS("ASAFCCN"),
+    ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD("ASAFCCW"),
     ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE("ASAFCCOP"),
+
+    ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST("ASAACCFL"),
+    ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS("ASAACCN"),
+    ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD("ASAACCW"),
+    ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE("ASAACCOP"),
+
 
     //TKY
     TKY_ARTIST_IDENTITY("TAI"),
@@ -339,7 +357,11 @@ public enum Activities implements FermatEnum {
     DESKTOP_SETTING_FERMAT_NETWORK("DSFN"),
     CCP_DESKTOP_P2P("DP2P"),
     CCP_DESKTOP_SOCIAL("DSOCIAL"),
-    DESKTOP_COMMUNITY_ACTIVITY("DESCA");
+    DESKTOP_COMMUNITY_ACTIVITY("DESCA"),
+
+
+    DESKTOP_WIZZARD_WELCOME("DWW")
+    ;
 
     private String code;
 
@@ -354,6 +376,8 @@ public enum Activities implements FermatEnum {
         //    }
         //}
         switch (code) {
+            case "AAICP":
+                return Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE;
             case "TAICP":
                 return Activities.TKY_ARTIST_IDENTITY_CREATE_PROFILE;
             case "DAPSARPI":
@@ -671,6 +695,8 @@ public enum Activities implements FermatEnum {
                 return CCP_BITCOIN_WALLET_CONTACT_DETAIL_ACTIVITY;
             case "CCPBWNIA":
                 return CCP_BITCOIN_WALLET_NO_IDENTITY_ACTIVITY;
+            case "CCPBWSER":
+                return CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT;
             case "CCPSAIUCCFL":
                 return CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_FRIEND_LIST;
             case "CCPSAIUCCW":
@@ -707,6 +733,14 @@ public enum Activities implements FermatEnum {
 //                return DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY;
             case "DWUIMA":
                 return DAP_WALLET_ASSET_USER_MAIN_ACTIVITY;
+            case "DWAUH":
+                return DAP_WALLET_ASSET_USER_V2_HOME;
+            case "DWAU3H":
+                return DAP_WALLET_ASSET_USER_V3_HOME;
+            case "DWAUD":
+                return DAP_WALLET_ASSET_USER_V2_DETAIL;
+            case "DWAURP":
+                return DAP_WALLET_ASSET_USER_V2_REDEEM_POINTS;
             case "DWAUHA":
                 return DAP_WALLET_ASSET_USER_HISTORY_ACTIVITY;
             case "DWAUAD":
@@ -750,6 +784,8 @@ public enum Activities implements FermatEnum {
                 return Activities.CHT_CHAT_OPEN_CONNECTIONLIST;
             case "CHTOPRL":
                 return Activities.CHT_CHAT_OPEN_PROFILELIST;
+            case "CHTCI":
+                return Activities.CHT_CHAT_CREATE_IDENTITY;
             case "CHTOPOD":
                 return Activities.CHT_CHAT_OPEN_PROFILE_DETAIL;
             case "CHTOSER":
@@ -857,7 +893,8 @@ public enum Activities implements FermatEnum {
                 return CCP_BITCOIN_LOSS_PROTECTED_WALLET_ADD_CONNECTION_ACTIVITY;
             case "CCPBLPWNIA":
                 return CCP_BITCOIN_LOSS_PROTECTED_WALLET_NO_IDENTITY_ACTIVITY;
-
+            case "CCPBLPSER":
+                return CCP_BITCOIN_LOSS_PROTECTED_WALLET_OPEN_SEND_ERROR_REPORT;
             case "CCPBLPWMNA":
                 return CCP_BITCOIN_LOSS_PROTECTED_WALLET_MNEMONIC_ACTIVITY;
             case "TKYSUBAPPFANCREATE":
@@ -868,6 +905,22 @@ public enum Activities implements FermatEnum {
             //ART
             case "ASAFCCOP":
                 return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_OTHER_PROFILE;
+            case "ASAFCCW":
+                return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD;
+            case "ASAFCCFL":
+                return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST;
+            case "ASAFCCN":
+                return ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS;
+            case "ASAACCFL":
+                return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_FRIEND_LIST;
+            case "ASAACCN":
+                return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_NOTIFICATIONS;
+            case "ASAACCW":
+                return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD;
+            case "ASAACCOP":
+                return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE;
+            case "DWW":
+                return DESKTOP_WIZZARD_WELCOME;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

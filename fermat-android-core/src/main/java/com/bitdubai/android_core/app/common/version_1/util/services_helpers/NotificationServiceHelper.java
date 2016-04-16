@@ -7,7 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.NotificationService;
+import com.bitdubai.android_core.app.common.version_1.notifications.NotificationService;
 
 import java.lang.ref.WeakReference;
 

@@ -67,10 +67,10 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
     public NotificationPainter getNotificationPainter(String code){
         try
         {
-            this.intraUserSubAppSession = (IntraUserSubAppSession)this.getSession();
+            this.intraUserSubAppSession = (IntraUserSubAppSession)this.getFullyLoadedSession();
             if(intraUserSubAppSession!=  null)
                moduleManager = intraUserSubAppSession.getModuleManager();
-            return CryptoWalletUserCommunityBuildNotification.getNotification(moduleManager,code);
+            return CryptoWalletUserCommunityBuildNotification.getNotification(moduleManager,code,intraUserSubAppSession.getAppPublicKey());
         }
         catch(Exception e)
         {

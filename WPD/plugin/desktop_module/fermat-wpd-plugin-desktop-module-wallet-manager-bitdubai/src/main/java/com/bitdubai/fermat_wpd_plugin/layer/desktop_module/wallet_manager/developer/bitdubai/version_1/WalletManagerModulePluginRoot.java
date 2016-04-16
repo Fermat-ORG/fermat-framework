@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.CantCreateNewWalletException;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledLanguage;
 import com.bitdubai.fermat_api.layer.dmp_middleware.wallet_manager.InstalledSkin;
+import com.bitdubai.fermat_api.layer.dmp_module.AppManagerSettings;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantCreateDefaultWalletsException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantEnableWalletException;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantGetIfIntraWalletUsersExistsException;
@@ -39,7 +40,6 @@ import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.WalletManager;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.structure.WalletManagerModuleInstalledWallet;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
@@ -93,7 +93,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class WalletManagerModulePluginRoot extends AbstractModule<FermatSettings,ActiveActorIdentityInformation> implements
+public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSettings,ActiveActorIdentityInformation> implements
         LogManagerForDevelopers,
         WalletManagerModule,
         WalletManager {
@@ -138,6 +138,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<FermatSettings
     static Map<String, LogLevel> newLoggingLevel = new HashMap<String, LogLevel>();
 
     List<FermatEventListener> listenersAdded = new ArrayList<>();
+    private SettingsManager<AppManagerSettings> settingsManager;
 
 
     public WalletManagerModulePluginRoot() {
@@ -582,7 +583,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<FermatSettings
                         WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
-                        AppsStatus.getDefaultStatus());
+                        AppsStatus.ALPHA);
                 break;
             case "asset_issuer":
                 installedWallet= new WalletManagerModuleInstalledWallet(WalletCategory.REFERENCE_WALLET,
@@ -631,7 +632,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<FermatSettings
                         WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
-                        AppsStatus.getDefaultStatus());
+                        AppsStatus.ALPHA);
                 break;
             default:
                 throw new CantCreateNewWalletException("No existe public key",null,null,null);
@@ -658,7 +659,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<FermatSettings
                         WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode(),
                         FermatApps.BITCOIN_REFERENCE_WALLET.getCode(),
                         new Version(1,0,0),
-                        AppsStatus.getDefaultStatus());
+                        AppsStatus.ALPHA);
                 break;
             default:
                 throw new CantCreateNewWalletException("No existe public key",null,null,null);
@@ -815,8 +816,17 @@ public class WalletManagerModulePluginRoot extends AbstractModule<FermatSettings
     }
 
     @Override
-    public SettingsManager<FermatSettings> getSettingsManager() {
-        return null;
+    public SettingsManager<AppManagerSettings> getSettingsManager() {
+        System.out.println("Settings manager 1: "+ String.valueOf(settingsManager!=null) );
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override
@@ -849,7 +859,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<FermatSettings
     }
 
     @Override
-    public ModuleManager<FermatSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public ModuleManager<AppManagerSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         return this;
     }
 }

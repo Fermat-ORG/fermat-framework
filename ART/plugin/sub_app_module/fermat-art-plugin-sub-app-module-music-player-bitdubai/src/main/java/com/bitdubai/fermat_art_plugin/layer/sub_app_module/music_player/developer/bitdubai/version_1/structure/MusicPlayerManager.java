@@ -4,7 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerModuleManager;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
@@ -20,19 +23,30 @@ import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantUpdateSongSt
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.SongWalletTokenlyManager;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/29/16.
  */
-public class MusicPlayerManager implements MusicPlayerModuleManager {
+public class MusicPlayerManager implements MusicPlayerModuleManager, Serializable{
     private final ErrorManager errorManager;
     private final SongWalletTokenlyManager songWalletTokenlyManager;
+    private final PluginFileSystem pluginFileSystem;
+    private final UUID pluginId;
 
-    public MusicPlayerManager(ErrorManager errorManager, SongWalletTokenlyManager songWalletTokenlyManager) {
+    private SettingsManager<MusicPlayerPreferenceSettings> settingsManager;
+
+
+    public MusicPlayerManager(ErrorManager errorManager,
+                              SongWalletTokenlyManager songWalletTokenlyManager,
+                              PluginFileSystem pluginFileSystem,
+                              UUID pluginId) {
         this.errorManager = errorManager;
         this.songWalletTokenlyManager = songWalletTokenlyManager;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
     }
 
 
@@ -81,9 +95,18 @@ public class MusicPlayerManager implements MusicPlayerModuleManager {
         return songWalletTokenlyManager.getSongWithBytes(songId);
     }
 
+
     @Override
-    public SettingsManager getSettingsManager() {
-        return null;
+    public SettingsManager<MusicPlayerPreferenceSettings> getSettingsManager() {
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override

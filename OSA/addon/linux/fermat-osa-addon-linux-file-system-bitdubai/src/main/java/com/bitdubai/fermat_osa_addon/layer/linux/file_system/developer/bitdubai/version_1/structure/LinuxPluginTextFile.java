@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_osa_addon.layer.linux.file_system.developer.bitdubai.version_1.structure;
 
-
-
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
@@ -40,62 +39,17 @@ import javax.crypto.spec.SecretKeySpec;
 
 public class LinuxPluginTextFile implements PluginTextFile {
 
-    /**
-     * PluginTextFile interface member variables.
-     */
-    
-    public FileLifeSpan getLifeSpan() {
-		return lifeSpan;
-	}
-
-    public void setLifeSpan(FileLifeSpan lifeSpan) {
-            this.lifeSpan = lifeSpan;
-    }
+    private static final String CHARSET_NAME = "UTF-8";
+    private static final String DIGEST_ALGORITHM = "MD5";
+    private static final String KEYSPEC_ALGORITHM = "DESede";
 
 
+    private final String directoryName;
+    private final String fileName;
+    private final FilePrivacy privacyLevel;
+    private final FileLifeSpan lifeSpan;
+    private final UUID ownerId;
     private String content = "";
-    private String fileName;
-
-    public String getFileName() {
-            return fileName;
-    }
-
-    public void setFileName(String fileName) {
-            this.fileName = fileName;
-    }
-
-    public FilePrivacy getPrivacyLevel() {
-            return privacyLevel;
-    }
-
-    public void setPrivacyLevel(FilePrivacy privacyLevel) {
-            this.privacyLevel = privacyLevel;
-    }
-
-    public String getDirectoryName() {
-            return directoryName;
-    }
-
-    public void setDirectoryName(String directoryName) {
-            this.directoryName = directoryName;
-    }
-
-    public UUID getOwnerId() {
-            return ownerId;
-    }
-
-    public void setOwnerId(UUID ownerId) {
-            this.ownerId = ownerId;
-    }
-
-
-    private FilePrivacy privacyLevel;
-    private FileLifeSpan lifeSpan;
-    private String directoryName;
-    private UUID ownerId;
-
-
-    // Public constructor declarations.
 
     /**
      * <p>PlugIn implementation constructor
@@ -106,19 +60,39 @@ public class LinuxPluginTextFile implements PluginTextFile {
      * @param privacyLevel level of privacy for the file, if it is public or private
      * @param lifeSpan lifetime of the file, whether it is permanent or temporary
      */
-    public LinuxPluginTextFile(UUID ownerId, String directoryName, String fileName, FilePrivacy privacyLevel, FileLifeSpan lifeSpan){
+    public LinuxPluginTextFile(final UUID         ownerId      ,
+                               final String       directoryName,
+                               final String       fileName     ,
+                               final FilePrivacy  privacyLevel ,
+                               final FileLifeSpan lifeSpan     ){
 
         this.ownerId = ownerId;
         this.fileName = fileName;
         this.privacyLevel = privacyLevel;
         this.lifeSpan = lifeSpan;
         this.directoryName = directoryName;
-
     }
-    
-    /**
-     * PluginTextFile interface implementation.
-     */
+
+    public FileLifeSpan getLifeSpan() {
+        return lifeSpan;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public FilePrivacy getPrivacyLevel() {
+        return privacyLevel;
+    }
+
+    public String getDirectoryName() {
+        return directoryName;
+    }
+
+    public UUID getOwnerId() {
+        return ownerId;
+    }
+
 
     /**
      *<p>This method returns the contents of a file in string.
@@ -140,6 +114,18 @@ public class LinuxPluginTextFile implements PluginTextFile {
         this.content = content;
     }
 
+    private String buildPath() {
+
+        String path = "";
+        if(privacyLevel == FilePrivacy.PUBLIC)
+            path += EnvironmentVariables.getExternalStorageDirectory().toString();
+        else
+            path += EnvironmentVariables.getInternalStorageDirectory().toString();
+
+        path += "/" + this.ownerId + "/" + this.directoryName;
+
+        return path;
+    }
 
     /**
      * <p>This method encrypts the content and the writes it into the media.
@@ -149,40 +135,31 @@ public class LinuxPluginTextFile implements PluginTextFile {
     @Override
     public void persistToMedia() throws CantPersistFileException {
         
-        try 
-        {
+        try {
 
             /**
              *  Evaluate privacyLevel to determine the location of directory - external or internal
              */
-            String path = "";
-            if(privacyLevel == FilePrivacy.PUBLIC)
-                path = EnvironmentVariables.getExternalStorageDirectory().toString();
-            else
-                path = EnvironmentVariables.getInternalStorageDirectory().toString();
-               // path = this.context.getFilesDir().toString();
-                // acá iria el path de donde están los archivos
+            String path = buildPath();
 
             /**
              * If the directory does not exist, we create it here.
              */
             
-            File storagePath = new File(path +"/"+ this.directoryName);
+            File storagePath = new File(path);
             if (!storagePath.exists() && storagePath.mkdirs()) {storagePath=null;}
-                
-           
+
             /**
              * Then we create the file.
              */
             File file = new File(storagePath, fileName);
-
 
             OutputStream outputStream;
 
             /**
              * We encrypt the content.
              */
-            String encryptedContent = this.encrypt(this.content,this.ownerId.toString());
+            String encryptedContent = this.encrypt(this.content);
 
             /**
              * We write the encrypted content into the file.
@@ -191,15 +168,11 @@ public class LinuxPluginTextFile implements PluginTextFile {
             outputStream.write(encryptedContent.getBytes(Charset.forName("UTF-8")));
             outputStream.close();
 
-
-            
         } catch (Exception e) {
 
             throw new CantPersistFileException(e.getMessage());
         }
     }
-    
-
 
     /**
      * This method reads the file, decrypts its content and then it load it into memory.
@@ -208,23 +181,18 @@ public class LinuxPluginTextFile implements PluginTextFile {
      */
     @Override
     public void loadFromMedia() throws CantLoadFileException {
+
     	BufferedReader bufferedReader = null;
-        try 
-        {
+        try {
             /**
              *  Evaluate privacyLevel to determine the location of directory - external or internal
              */
-            String path = "";
-            if(privacyLevel == FilePrivacy.PUBLIC)
-                path = EnvironmentVariables.getExternalStorageDirectory().toString();
-            else
-                path = EnvironmentVariables.getInternalStorageDirectory().toString();
-
+            String path = buildPath();
 
             /**
              * We open the file and read its encrypted content.
              */
-            File file = new File(path +"/"+ this.directoryName, this.fileName);
+            File file = new File(path, fileName);
 
             InputStream inputStream ;
             inputStream =  new BufferedInputStream(new FileInputStream(file));
@@ -277,14 +245,9 @@ public class LinuxPluginTextFile implements PluginTextFile {
         /**
          *  Evaluate privacyLevel to determine the location of directory - external or internal
          */
-        String path = "";
+        String path = buildPath();
 
-        if(privacyLevel == FilePrivacy.PUBLIC)
-            path = EnvironmentVariables.getExternalStorageDirectory().toString();
-        else
-            path = EnvironmentVariables.getInternalStorageDirectory().toString();
-
-        File file = new File(path +"/" + ownerId.toString() +"/"+ this.directoryName, this.fileName);
+        File file = new File(path, this.fileName);
         file.delete();
     }
 
@@ -292,70 +255,77 @@ public class LinuxPluginTextFile implements PluginTextFile {
     /**
      * Private Encrypting Method.
      */
-    
-    private  String encrypt(String text, String secretKey) throws CantEncryptException {
 
-        String base64EncryptedString = "";
+    private  String encrypt(final String text) throws CantEncryptException {
 
         try {
 
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
+            String secretKey = this.ownerId.toString();
+
+            MessageDigest md = MessageDigest.getInstance(DIGEST_ALGORITHM);
+            byte[] digestOfPassword = md.digest(secretKey.getBytes(CHARSET_NAME));
             byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
 
-            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
-            Cipher cipher = Cipher.getInstance("DESede");
+            SecretKey key = new SecretKeySpec(keyBytes, KEYSPEC_ALGORITHM);
+            Cipher cipher = Cipher.getInstance(KEYSPEC_ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, key);
 
-            byte[] plainTextBytes = text.getBytes("utf-8");
+            byte[] plainTextBytes = text.getBytes(CHARSET_NAME);
             byte[] buf = cipher.doFinal(plainTextBytes);
-
             Base64 base64 = new Base64();
             byte[] base64Bytes = base64.encode(buf);
 
-            base64EncryptedString = new String(base64Bytes, "UTF-8");
+            return new String(base64Bytes, CHARSET_NAME);
 
-        } catch (Exception e) {
-        	e.printStackTrace();
-            throw  new CantEncryptException();
+        } catch (Exception ex) {
+            String message = CantEncryptException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(ex);
+            String context = "Encription Digest Algorithm: " + DIGEST_ALGORITHM;
+            context += CantDecryptException.CONTEXT_CONTENT_SEPARATOR;
+            context += "Encription KeySpec Algorithm: " + KEYSPEC_ALGORITHM;
+            context += CantDecryptException.CONTEXT_CONTENT_SEPARATOR;
+            context += "Charset: " + CHARSET_NAME;
+            String possibleReason = "This is most likely to happen due to a bad Secret Key passing";
+            throw  new CantEncryptException(message, cause, context, possibleReason);
         }
-        return base64EncryptedString;
     }
 
 
     /**
      * Private Decrypting Method.
      */
-    
-    private  String decrypt(String encryptedText) throws CantDecryptException {
 
-        String secretKey = this.ownerId.toString();
-        String base64EncryptedString = "";
+    private  String decrypt(final String encryptedText) throws CantDecryptException {
 
         try {
-            Base64 base64 = new Base64();                   
-            byte[] message =base64.decode(encryptedText.getBytes("utf-8"));
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            byte[] digestOfPassword = md.digest(secretKey.getBytes("utf-8"));
-            byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
-            SecretKey key = new SecretKeySpec(keyBytes, "DESede");
 
-            Cipher decipher = Cipher.getInstance("DESede");
+            String secretKey = this.ownerId.toString();
+
+            Base64 base64 = new Base64();
+            byte[] message = base64.decode(encryptedText.getBytes(CHARSET_NAME));
+            MessageDigest md = MessageDigest.getInstance(DIGEST_ALGORITHM);
+            byte[] digestOfPassword = md.digest(secretKey.getBytes(CHARSET_NAME));
+            byte[] keyBytes = Arrays.copyOf(digestOfPassword, 24);
+            SecretKey key = new SecretKeySpec(keyBytes, KEYSPEC_ALGORITHM);
+
+            Cipher decipher = Cipher.getInstance(KEYSPEC_ALGORITHM);
             decipher.init(Cipher.DECRYPT_MODE, key);
 
             byte[] plainText = decipher.doFinal(message);
 
-            base64EncryptedString = new String(plainText, "UTF-8");
-            return base64EncryptedString;
+            return new String(plainText, CHARSET_NAME);
 
-        } catch (Exception e) {
-        	e.printStackTrace();
-            throw  new CantDecryptException();
+        } catch (Exception ex) {
+            String message = CantEncryptException.DEFAULT_MESSAGE;
+            FermatException cause = FermatException.wrapException(ex);
+            String context = "Encription Digest Algorithm: " + DIGEST_ALGORITHM;
+            context += CantDecryptException.CONTEXT_CONTENT_SEPARATOR;
+            context += "Encription KeySpec Algorithm: " + KEYSPEC_ALGORITHM;
+            context += CantDecryptException.CONTEXT_CONTENT_SEPARATOR;
+            context += "Charset: " + CHARSET_NAME;
+            String possibleReason = "This is most likely to happen due to a bad Secret Key passing";
+            throw  new CantDecryptException(message, cause, context, possibleReason);
 
         }
-
     }
-
-
-
 }

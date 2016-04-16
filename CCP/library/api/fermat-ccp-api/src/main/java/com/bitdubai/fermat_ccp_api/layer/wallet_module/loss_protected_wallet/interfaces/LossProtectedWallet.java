@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
@@ -332,19 +333,27 @@ public interface LossProtectedWallet extends Serializable {
 
 
     /**
-     * Throw the method <code>getBalance</code> you can get the balance of the wallet, having i count the type of balance that you need.
+     * Throw the method <code>getBalance</code> you can get the real balance of the wallet, having i count the type of balance that you need.
      *
-     * @param balanceType     type of balance that you need
      * @param walletPublicKey public key of the wallet which you're working with.
      *
      * @return the balance of the wallet in long format.
      *
      * @throws CantGetLossProtectedBalanceException if something goes wrong
      */
-    long getBalance(BalanceType balanceType,
-                    String      walletPublicKey,
+    long getRealBalance(String      walletPublicKey,
                     BlockchainNetworkType blockchainNetworkType) throws CantGetLossProtectedBalanceException;
 
+    /**
+     * Throw the method <code>getBalance</code> you can get the book balance of the wallet, having i count the type of balance that you need.
+     * @param walletPublicKey
+     * @param blockchainNetworkType
+     * @return
+     * @throws CantGetLossProtectedBalanceException
+     */
+
+    long geBookBalance(String      walletPublicKey,
+                        BlockchainNetworkType blockchainNetworkType) throws CantGetLossProtectedBalanceException;
 
     /**
      * Throw the method <code>getBalance</code> you can get the balance of the wallet, having i count the type of balance that you need and actual exange rate.
@@ -466,7 +475,7 @@ public interface LossProtectedWallet extends Serializable {
      * @return
      * @throws CantListLossProtectedSpendingException
      */
-    List<BitcoinLossProtectedWalletSpend> listSpendingBlocksValue(String walletPublicKey,UUID transactionId) throws CantListLossProtectedSpendingException;
+    List<BitcoinLossProtectedWalletSpend> listSpendingBlocksValue(String walletPublicKey,UUID transactionId) throws CantListLossProtectedSpendingException, CantLoadWalletException;
 
     /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.

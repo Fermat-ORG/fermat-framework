@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.CantStartAgentException;
 import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -22,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.DealsWithLogger;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.agent.CBPTransactionAgent;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
@@ -62,6 +64,12 @@ import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.i
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.exceptions.CantCreateCashMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.interfaces.CashMoneyDestockManager;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.exceptions.CantCreateCryptoMoneyDestockException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerWalletSettingException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.BrokerSubmitOfflineMerchandisePluginRoot;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDao;
 import com.bitdubai.fermat_cbp_plugin.layer.business_transaction.broker_submit_offline_merchandise.developer.bitdubai.version_1.database.BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants;
@@ -78,6 +86,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 22/12/15.
@@ -104,6 +113,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
     CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
     CashMoneyDestockManager cashMoneyDestockManager;
     BankMoneyDestockManager bankMoneyDestockManager;
+    CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
     public BrokerSubmitOfflineMerchandiseMonitorAgent(
             PluginDatabaseSystem pluginDatabaseSystem,
@@ -116,18 +126,20 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
             CustomerBrokerContractSaleManager customerBrokerContractSaleManager,
             CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager,
             CashMoneyDestockManager cashMoneyDestockManager,
-            BankMoneyDestockManager bankMoneyDestockManager) {
+            BankMoneyDestockManager bankMoneyDestockManager,
+            CryptoBrokerWalletManager cryptoBrokerWalletManager) {
         this.eventManager = eventManager;
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.errorManager = errorManager;
         this.pluginId = pluginId;
-        this.logManager=logManager;
-        this.transactionTransmissionManager=transactionTransmissionManager;
-        this.customerBrokerContractPurchaseManager=customerBrokerContractPurchaseManager;
-        this.customerBrokerContractSaleManager=customerBrokerContractSaleManager;
-        this.customerBrokerSaleNegotiationManager=customerBrokerSaleNegotiationManager;
-        this.bankMoneyDestockManager=bankMoneyDestockManager;
-        this.cashMoneyDestockManager=cashMoneyDestockManager;
+        this.logManager = logManager;
+        this.transactionTransmissionManager = transactionTransmissionManager;
+        this.customerBrokerContractPurchaseManager = customerBrokerContractPurchaseManager;
+        this.customerBrokerContractSaleManager = customerBrokerContractSaleManager;
+        this.customerBrokerSaleNegotiationManager = customerBrokerSaleNegotiationManager;
+        this.bankMoneyDestockManager = bankMoneyDestockManager;
+        this.cashMoneyDestockManager = cashMoneyDestockManager;
+        this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
     }
 
     @Override
@@ -147,23 +159,23 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                     Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     exception);
-        }catch (Exception exception){
+        } catch (Exception exception) {
             this.errorManager.reportUnexpectedPluginException(
                     Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
                     UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,
                     FermatException.wrapException(exception));
         }
 
-        this.agentThread = new Thread(monitorAgent,this.getClass().getSimpleName());
+        this.agentThread = new Thread(monitorAgent, this.getClass().getSimpleName());
         this.agentThread.start();
 
     }
 
     @Override
     public void stop() {
-        try{
+        try {
             this.agentThread.interrupt();
-        }catch(Exception exception){
+        } catch (Exception exception) {
             this.errorManager.reportUnexpectedPluginException(
                     Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
                     UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
@@ -173,34 +185,34 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
 
     @Override
     public void setErrorManager(ErrorManager errorManager) {
-        this.errorManager=errorManager;
+        this.errorManager = errorManager;
     }
 
     @Override
     public void setEventManager(EventManager eventManager) {
-        this.eventManager=eventManager;
+        this.eventManager = eventManager;
     }
 
     @Override
     public void setLogManager(LogManager logManager) {
-        this.logManager=logManager;
+        this.logManager = logManager;
     }
 
     @Override
     public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem=pluginDatabaseSystem;
+        this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
     @Override
     public void setPluginId(UUID pluginId) {
-        this.pluginId=pluginId;
+        this.pluginId = pluginId;
     }
 
     /**
      * Private class which implements runnable and is started by the Agent
      * Based on MonitorAgent created by Rodrigo Acosta
      */
-    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable{
+    private class MonitorAgent implements DealsWithPluginDatabaseSystem, DealsWithErrors, Runnable {
 
         ErrorManager errorManager;
         PluginDatabaseSystem pluginDatabaseSystem;
@@ -218,13 +230,14 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
         public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
             this.pluginDatabaseSystem = pluginDatabaseSystem;
         }
+
         @Override
         public void run() {
 
-            threadWorking=true;
+            threadWorking = true;
             logManager.log(BrokerSubmitOfflineMerchandisePluginRoot.getLogLevelByClass(this.getClass().getName()),
                     "Broker Submit Offline Merchandise Monitor Agent: running...", null, null);
-            while(threadWorking){
+            while (threadWorking) {
                 /**
                  * Increase the iteration counter
                  */
@@ -252,17 +265,17 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
             }
 
         }
+
         public void Initialize() throws CantInitializeCBPAgent {
             try {
 
                 database = this.pluginDatabaseSystem.openDatabase(pluginId,
                         BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseConstants.DATABASE_NAME);
-            }
-            catch (DatabaseNotFoundException databaseNotFoundException) {
+            } catch (DatabaseNotFoundException databaseNotFoundException) {
 
                 //Logger LOG = Logger.getGlobal();
                 //LOG.info("Database in Open Contract monitor agent doesn't exists");
-                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseFactory brokerSubmitOfflineMerchandiseBusinessTransactionDatabaseFactory=
+                BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseFactory brokerSubmitOfflineMerchandiseBusinessTransactionDatabaseFactory =
                         new BrokerSubmitOfflineMerchandiseBusinessTransactionDatabaseFactory(this.pluginDatabaseSystem);
                 try {
                     database = brokerSubmitOfflineMerchandiseBusinessTransactionDatabaseFactory.createDatabase(pluginId,
@@ -287,8 +300,8 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
             }
         }
 
-        private void doTheMainTask() throws
-                CannotSendContractHashException,
+        private void doTheMainTask()
+                throws CannotSendContractHashException,
                 CantUpdateRecordException,
                 CantSendContractNewStatusNotificationException,
                 CantCreateCryptoMoneyDestockException,
@@ -296,8 +309,9 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                 CantCreateCashMoneyDestockException,
                 CantSubmitMerchandiseException {
 
-            try{
-                brokerSubmitOfflineMerchandiseBusinessTransactionDao =new BrokerSubmitOfflineMerchandiseBusinessTransactionDao(
+            try {
+
+                brokerSubmitOfflineMerchandiseBusinessTransactionDao = new BrokerSubmitOfflineMerchandiseBusinessTransactionDao(
                         pluginDatabaseSystem,
                         pluginId,
                         database,
@@ -309,21 +323,17 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                  * Check if there is some transaction to crypto de stock
                  * The de stock condition is reading the ContractTransactionStatus in PENDING_ONLINE_DE_STOCK
                  */
-                List<BusinessTransactionRecord> pendingToDeStockTransactionList= brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingDeStockTransactionList();
-                MoneyType moneyType;
-                for(BusinessTransactionRecord pendingToDeStockTransaction : pendingToDeStockTransactionList){
+                List<BusinessTransactionRecord> pendingToDeStockTransactionList = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingDeStockTransactionList();
+                for (BusinessTransactionRecord pendingToDeStockTransaction : pendingToDeStockTransactionList) {
 
                     System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList()\n");
 
-                    moneyType =pendingToDeStockTransaction.getPaymentType();
-                    switch (moneyType){
+                    MoneyType moneyType = pendingToDeStockTransaction.getPaymentType();
+                    switch (moneyType) {
                         case BANK:
                             System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList() - BANK\n");
                             executeBankDeStock(pendingToDeStockTransaction);
                             break;
-                        case CRYPTO:
-                            throw new CantSubmitMerchandiseException(
-                                    "The currency type is CRYPTO, can't send crypto money from this plugin");
                         case CASH_DELIVERY:
                             System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList() - CASH DELIVERY\n");
                             executeCashDeStock(pendingToDeStockTransaction);
@@ -332,25 +342,29 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                             System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingDeStockTransactionList() - CASH ON HAND\n");
                             executeCashDeStock(pendingToDeStockTransaction);
                             break;
+                        case CRYPTO:
+                            throw new CantSubmitMerchandiseException("The currency type is CRYPTO, can't send crypto money from this plugin");
                     }
                 }
                 /**
                  * Check contract status to send. Broker Side
                  */
                 List<BusinessTransactionRecord> pendingToSubmitNotificationList = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitNotificationList();
-                for(BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList){
+                for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
 
                     System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitNotificationList()\n");
 
-                    contractHash=pendingToSubmitNotificationRecord.getTransactionHash();
+                    contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
                     transactionTransmissionManager.sendContractStatusNotification(
                             pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
                             ContractTransactionStatus.OFFLINE_MERCHANDISE_SUBMITTED,
-                            Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE , PlatformComponentType.ACTOR_CRYPTO_BROKER,PlatformComponentType.ACTOR_CRYPTO_CUSTOMER
-                    );
+                            Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
+
                     //Updating the business transaction record
                     pendingToSubmitNotificationRecord.setContractTransactionStatus(ContractTransactionStatus.OFFLINE_MERCHANDISE_SUBMITTED);
                     brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(pendingToSubmitNotificationRecord);
@@ -360,11 +374,11 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                  * Check pending notifications - Customer side
                  */
                 List<BusinessTransactionRecord> pendingToSubmitConfirmationList = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingToSubmitConfirmList();
-                for(BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList){
+                for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
 
-                    contractHash=pendingToSubmitConfirmationRecord.getTransactionHash();
+                    contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
 
-                    System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitConfirmList(): "+contractHash+"\n");
+                    System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - getPendingToSubmitConfirmList(): " + contractHash + "\n");
 
                     transactionTransmissionManager.confirmNotificationReception(
                             pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
@@ -374,129 +388,141 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                             Plugins.BROKER_SUBMIT_OFFLINE_MERCHANDISE,
                             PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
                             PlatformComponentType.ACTOR_CRYPTO_BROKER);
+
                     //Updating the business transaction record
-                    brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(
-                        contractHash,
-                        ContractTransactionStatus.CONFIRM_OFFLINE_CONSIGNMENT
-                    );
-//                    brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(pendingToSubmitConfirmationRecord);
+                    brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash,
+                            ContractTransactionStatus.CONFIRM_OFFLINE_CONSIGNMENT);
                 }
+
                 /**
                  * Check if pending events
                  */
-                List<String> pendingEventsIdList=
-                        brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingEvents();
-                for(String eventId : pendingEventsIdList){
+                List<String> pendingEventsIdList = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getPendingEvents();
+                for (String eventId : pendingEventsIdList) {
                     checkPendingEvent(eventId);
                 }
 
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
-                throw new CannotSendContractHashException(
-                        e,
-                        "Sending contract hash",
-                        "Unexpected result in database");
-            } catch (CantSendContractNewStatusNotificationException e) {
-                throw new CantSendContractNewStatusNotificationException(
-                        CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
-                        e,
-                        "Sending contract hash",
-                        "Error in Transaction Transmission Network Service");
-            } catch (CantGetContractListException e) {
-                throw new CantUpdateRecordException(
-                        "",
-                        e,
-                        "Getting the Contract",
-                        "Cannot get the contract list");
-            } catch (CantConfirmNotificationReceptionException e){
-                throw new CantSendContractNewStatusNotificationException(
-                        CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
-                        e,
-                        "Sending confirm contract hash",
-                        "Error in Transaction Transmission Network Service");
-            }
+                throw new CannotSendContractHashException(e, "Sending contract hash", "Unexpected result in database");
 
+            } catch (CantSendContractNewStatusNotificationException e) {
+                throw new CantSendContractNewStatusNotificationException(CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
+                        e, "Sending contract hash", "Error in Transaction Transmission Network Service");
+
+            } catch (CantGetContractListException e) {
+                throw new CantUpdateRecordException("", e, "Getting the Contract", "Cannot get the contract list");
+
+            } catch (CantConfirmNotificationReceptionException e) {
+                throw new CantSendContractNewStatusNotificationException(CantSendContractNewStatusNotificationException.DEFAULT_MESSAGE,
+                        e, "Sending confirm contract hash", "Error in Transaction Transmission Network Service");
+            }
         }
 
         private void executeBankDeStock(BusinessTransactionRecord pendingToDeStockTransaction)
                 throws CantCreateBankMoneyDestockException,
                 CantUpdateRecordException,
                 UnexpectedResultReturnedFromDatabaseException {
-            
-            BankMoneyDeStockRecord bankMoneyDeStockRecord = new BankMoneyDeStockRecord(pendingToDeStockTransaction);
 
-            BigDecimal amount = getAmount(pendingToDeStockTransaction.getContractHash());
+            final BankMoneyDeStockRecord destockRecord = new BankMoneyDeStockRecord(pendingToDeStockTransaction);
 
-            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeBankDeStock(): \n" +
-                    " - bankMoneyDeStockRecord.getPublicKeyActor(): "+bankMoneyDeStockRecord.getPublicKeyActor()+",\n" +
-                    " - bankMoneyDeStockRecord.getFiatCurrency(): "+bankMoneyDeStockRecord.getFiatCurrency()+",\n" +
-                    " - bankMoneyDeStockRecord.getCbpWalletPublicKey(): "+bankMoneyDeStockRecord.getCbpWalletPublicKey()+",\n" +
-                    " - bankMoneyDeStockRecord.getBankWalletPublicKey(): "+bankMoneyDeStockRecord.getBankWalletPublicKey()+",\n" +
-                    " - bankMoneyDeStockRecord.getBankAccount(): "+bankMoneyDeStockRecord.getBankAccount()+",\n" +
-                    " - Amount(): "+amount+",\n" +
-                    " - bankMoneyDeStockRecord.getMemo(): "+bankMoneyDeStockRecord.getMemo()+",\n" +
-                    " - bankMoneyDeStockRecord.getPriceReference(): "+bankMoneyDeStockRecord.getPriceReference()+",\n" +
-                    " - bankMoneyDeStockRecord.getOriginTransaction(): "+bankMoneyDeStockRecord.getOriginTransaction()+",\n" +
-                    " - pendingToDeStockTransaction.getContractHash(): "+pendingToDeStockTransaction.getContractHash()+"\n");
+            final BigDecimal amount = getAmount(pendingToDeStockTransaction.getContractHash());
+            destockRecord.setAmount(amount);
+
+            final String accountNumber = getAccountNumber(destockRecord.getCbpWalletPublicKey(), destockRecord.getFiatCurrency());
+            destockRecord.setBankAccount(accountNumber);
+
+            System.out.println("TEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeBankDeStock():" +
+                    "\n - deStockRecord.getPublicKeyActor(): " + destockRecord.getPublicKeyActor() +
+                    "\n - deStockRecord.getFiatCurrency(): " + destockRecord.getFiatCurrency() +
+                    "\n - deStockRecord.getCbpWalletPublicKey(): " + destockRecord.getCbpWalletPublicKey() +
+                    "\n - deStockRecord.getBankWalletPublicKey(): " + destockRecord.getBankWalletPublicKey() +
+                    "\n - deStockRecord.getBankAccount(): " + destockRecord.getBankAccount() +
+                    "\n - deStockRecord.getAmount(): " + destockRecord.getAmount() +
+                    "\n - deStockRecord.getMemo(): " + destockRecord.getMemo() +
+                    "\n - deStockRecord.getPriceReference(): " + destockRecord.getPriceReference() +
+                    "\n - deStockRecord.getOriginTransaction(): " + destockRecord.getOriginTransaction() +
+                    "\n - pendingToDeStockTransaction.getContractHash(): " + pendingToDeStockTransaction.getContractHash());
 
             bankMoneyDestockManager.createTransactionDestock(
-                    bankMoneyDeStockRecord.getPublicKeyActor(),
-                    bankMoneyDeStockRecord.getFiatCurrency(),
-                    bankMoneyDeStockRecord.getCbpWalletPublicKey(),
-                    bankMoneyDeStockRecord.getBankWalletPublicKey(),
-                    bankMoneyDeStockRecord.getBankAccount(),
-                    amount,
-                    bankMoneyDeStockRecord.getMemo(),
-                    bankMoneyDeStockRecord.getPriceReference(),
-                    bankMoneyDeStockRecord.getOriginTransaction(),
-                    pendingToDeStockTransaction.getContractHash()
-            );
-            
+                    destockRecord.getPublicKeyActor(),
+                    destockRecord.getFiatCurrency(),
+                    destockRecord.getCbpWalletPublicKey(),
+                    destockRecord.getBankWalletPublicKey(),
+                    destockRecord.getBankAccount(),
+                    destockRecord.getAmount(),
+                    destockRecord.getMemo(),
+                    destockRecord.getPriceReference(),
+                    destockRecord.getOriginTransaction(),
+                    pendingToDeStockTransaction.getContractHash());
+
             pendingToDeStockTransaction.setContractTransactionStatus(ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION);
-            
+
             brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(pendingToDeStockTransaction);
         }
 
         private void executeCashDeStock(BusinessTransactionRecord pendingToDeStockTransaction)
-                throws CantCreateBankMoneyDestockException,
-                CantUpdateRecordException,
-                UnexpectedResultReturnedFromDatabaseException, CantCreateCashMoneyDestockException {
-            
-            CashMoneyDeStockRecord cashMoneyDeStockRecord = new CashMoneyDeStockRecord(pendingToDeStockTransaction);
+                throws CantUpdateRecordException,
+                UnexpectedResultReturnedFromDatabaseException,
+                CantCreateCashMoneyDestockException {
 
-            BigDecimal amount = getAmount(pendingToDeStockTransaction.getContractHash());
+            CashMoneyDeStockRecord destockRecord = new CashMoneyDeStockRecord(pendingToDeStockTransaction);
 
-            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeCashDeStock(): \n" +
-                    " - cashMoneyDeStockRecord.getPublicKeyActor(): " + cashMoneyDeStockRecord.getPublicKeyActor() + ",\n" +
-                    " - cashMoneyDeStockRecord.getFiatCurrency(): " + cashMoneyDeStockRecord.getFiatCurrency() + ",\n" +
-                    " - cashMoneyDeStockRecord.getCbpWalletPublicKey(): " + cashMoneyDeStockRecord.getCbpWalletPublicKey() + ",\n" +
-                    " - cashMoneyDeStockRecord.getBankWalletPublicKey(): " + cashMoneyDeStockRecord.getCshWalletPublicKey() + ",\n" +
-                    " - cashMoneyDeStockRecord.getCashReference(): " + cashMoneyDeStockRecord.getCashReference() + ",\n" +
-                    " - Amount(): " + amount + ",\n" +
-                    " - cashMoneyDeStockRecord.getMemo(): " + cashMoneyDeStockRecord.getMemo() + ",\n" +
-                    " - cashMoneyDeStockRecord.getPriceReference(): " + cashMoneyDeStockRecord.getPriceReference() + ",\n" +
-                    " - cashMoneyDeStockRecord.getOriginTransaction(): " + cashMoneyDeStockRecord.getOriginTransaction() + ",\n" +
-                    " - pendingToDeStockTransaction.getContractHash(): " + pendingToDeStockTransaction.getContractHash() + "\n");
-            
+            final BigDecimal amount = getAmount(pendingToDeStockTransaction.getContractHash());
+            destockRecord.setAmount(amount);
+
+            System.out.println("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - doTheMainTask() - executeCashDeStock():" +
+                    "\n - destockRecord.getPublicKeyActor(): " + destockRecord.getPublicKeyActor() +
+                    "\n - destockRecord.getFiatCurrency(): " + destockRecord.getFiatCurrency() +
+                    "\n - destockRecord.getCbpWalletPublicKey(): " + destockRecord.getCbpWalletPublicKey() +
+                    "\n - destockRecord.getBankWalletPublicKey(): " + destockRecord.getCshWalletPublicKey() +
+                    "\n - destockRecord.getCashReference(): " + destockRecord.getCashReference() +
+                    "\n - destockRecord.getAmount(): " + destockRecord.getAmount() +
+                    "\n - destockRecord.getMemo(): " + destockRecord.getMemo() +
+                    "\n - destockRecord.getPriceReference(): " + destockRecord.getPriceReference() +
+                    "\n - destockRecord.getOriginTransaction(): " + destockRecord.getOriginTransaction() +
+                    "\n - pendingToDeStockTransaction.getContractHash(): " + pendingToDeStockTransaction.getContractHash());
+
             cashMoneyDestockManager.createTransactionDestock(
-                    cashMoneyDeStockRecord.getPublicKeyActor(),
-                    cashMoneyDeStockRecord.getFiatCurrency(),
-                    cashMoneyDeStockRecord.getCbpWalletPublicKey(),
-                    cashMoneyDeStockRecord.getCshWalletPublicKey(),
-                    cashMoneyDeStockRecord.getCashReference(),
-                    amount,
-                    cashMoneyDeStockRecord.getMemo(),
-                    cashMoneyDeStockRecord.getPriceReference(),
-                    cashMoneyDeStockRecord.getOriginTransaction(),
-                    pendingToDeStockTransaction.getContractHash()
-            );
+                    destockRecord.getPublicKeyActor(),
+                    destockRecord.getFiatCurrency(),
+                    destockRecord.getCbpWalletPublicKey(),
+                    destockRecord.getCshWalletPublicKey(),
+                    destockRecord.getCashReference(),
+                    destockRecord.getAmount(),
+                    destockRecord.getMemo(),
+                    destockRecord.getPriceReference(),
+                    destockRecord.getOriginTransaction(),
+                    pendingToDeStockTransaction.getContractHash());
 
             pendingToDeStockTransaction.setContractTransactionStatus(ContractTransactionStatus.PENDING_SUBMIT_OFFLINE_MERCHANDISE_NOTIFICATION);
-
             brokerSubmitOfflineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(pendingToDeStockTransaction);
         }
 
+        private String getAccountNumber(String cbpWalletPublicKey, Currency merchandiseCurrency) throws UnexpectedResultReturnedFromDatabaseException {
+            try {
 
-        private BigDecimal getAmount(String contractHash) throws UnexpectedResultReturnedFromDatabaseException{
+                final CryptoBrokerWallet cryptoBrokerWallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(cbpWalletPublicKey);
+                final CryptoBrokerWalletSetting cryptoBrokerWalletSetting = cryptoBrokerWallet.getCryptoWalletSetting();
+                List<CryptoBrokerWalletAssociatedSetting> associatedWallets = cryptoBrokerWalletSetting.getCryptoBrokerWalletAssociatedSettings();
+
+                for(CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets){
+                    Platforms platform = associatedWallet.getPlatform();
+                    Currency currency = associatedWallet.getMerchandise();
+
+                    if(platform == Platforms.BANKING_PLATFORM && currency == merchandiseCurrency)
+                        return associatedWallet.getBankAccount();
+                }
+
+                return "";
+
+            } catch (CantGetCryptoBrokerWalletSettingException e) {
+                throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the bank account", "Cant Get the associated wallets");
+            } catch (CryptoBrokerWalletNotFoundException e) {
+                throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the bank account", "Cant Get the broker wallet settings");
+            }
+        }
+
+        private BigDecimal getAmount(String contractHash) throws UnexpectedResultReturnedFromDatabaseException {
 
             try {
 
@@ -528,13 +554,13 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                 throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the amount merchandise", "Cant Get ContractHash");
             } catch (CantGetListSaleNegotiationsException e) {
                 throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the amount merchandise", "Cant Get Negotiation");
-            } catch (CantGetListClauseException e){
+            } catch (CantGetListClauseException e) {
                 throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the amount merchandise", "Cant Get Clause");
             } catch (ObjectNotSetException e) {
                 throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the amount merchandise", "Cant Get ObjectChecker");
             } catch (InvalidParameterException e) {
                 throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the amount merchandise", "An invalid parameter is detected");
-            } catch (Exception e){
+            } catch (Exception e) {
                 throw new UnexpectedResultReturnedFromDatabaseException(e, "Getting the amount merchandise", "N/A");
             }
 
@@ -544,7 +570,9 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
          * This method parse a String object to a long object
          *
          * @param stringValue
+         *
          * @return
+         *
          * @throws InvalidParameterException
          */
         public double parseToDouble(String stringValue) throws InvalidParameterException {
@@ -560,7 +588,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
             }
         }
 
-        private void raisePaymentConfirmationEvent(String contractHash, MoneyType moneyType){
+        private void raisePaymentConfirmationEvent(String contractHash, MoneyType moneyType) {
             FermatEvent fermatEvent = eventManager.getNewEvent(EventType.BROKER_SUBMIT_MERCHANDISE_CONFIRMED);
             BrokerSubmitMerchandiseConfirmed brokerSubmitMerchandiseConfirmed = (BrokerSubmitMerchandiseConfirmed) fermatEvent;
             brokerSubmitMerchandiseConfirmed.setSource(EventSource.BROKER_SUBMIT_OFFLINE_MERCHANDISE);
@@ -571,31 +599,31 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
 
         private void checkPendingEvent(String eventId) throws UnexpectedResultReturnedFromDatabaseException {
 
-            try{
+            try {
 
-                String eventTypeCode= brokerSubmitOfflineMerchandiseBusinessTransactionDao.getEventType(eventId);
+                String eventTypeCode = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getEventType(eventId);
                 String contractHash;
                 BusinessTransactionMetadata businessTransactionMetadata;
                 ContractTransactionStatus contractTransactionStatus;
                 BusinessTransactionRecord businessTransactionRecord;
 
-                if(eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())){
+                if (eventTypeCode.equals(EventType.INCOMING_NEW_CONTRACT_STATUS_UPDATE.getCode())) {
 
                     System.out.print("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_NEW_CONTRACT_STATUS_UPDATE\n");
 
                     //This will happen in customer side
                     List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
-                    for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
+                    for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
 
-                        businessTransactionMetadata=record.getInformation();
-                        contractHash=businessTransactionMetadata.getContractHash();
+                        businessTransactionMetadata = record.getInformation();
+                        contractHash = businessTransactionMetadata.getContractHash();
 
-                        if(brokerSubmitOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)){
+                        if (brokerSubmitOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
 
-                            contractTransactionStatus= brokerSubmitOfflineMerchandiseBusinessTransactionDao.getContractTransactionStatus(contractHash);
+                            contractTransactionStatus = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getContractTransactionStatus(contractHash);
                             //TODO: analyze what we need to do here.
 
-                        }else{
+                        } else {
 
                             System.out.print("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_NEW_CONTRACT_STATUS_UPDATE - VAL\n");
 
@@ -604,7 +632,7 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                             ObjectChecker.checkArgument(customerBrokerContractPurchase);
                             brokerSubmitOfflineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase);
                             customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
-                            Date date=new Date();
+                            Date date = new Date();
                             brokerSubmitOfflineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
                             //TODO: I'm going to set BANK, I need to look a better way to set this
                             raisePaymentConfirmationEvent(contractHash, MoneyType.BANK);
@@ -618,28 +646,28 @@ public class BrokerSubmitOfflineMerchandiseMonitorAgent implements
                 }
 
 
-                if(eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())){
+                if (eventTypeCode.equals(EventType.INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE.getCode())) {
 
                     System.out.print("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE\n");
 
                     //This will happen in broker side
                     List<Transaction<BusinessTransactionMetadata>> pendingTransactionList = transactionTransmissionManager.getPendingTransactions(Specialist.UNKNOWN_SPECIALIST);
-                    for(Transaction<BusinessTransactionMetadata> record : pendingTransactionList){
+                    for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
 
-                        businessTransactionMetadata=record.getInformation();
-                        contractHash=businessTransactionMetadata.getContractHash();
+                        businessTransactionMetadata = record.getInformation();
+                        contractHash = businessTransactionMetadata.getContractHash();
 
-                        if(brokerSubmitOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)){
+                        if (brokerSubmitOfflineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
 
                             System.out.print("\nTEST CONTRACT - SUBMIT OFFLINE MERCHANDISE - AGENT - checkPendingEvent() - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE\n");
 
                             businessTransactionRecord = brokerSubmitOfflineMerchandiseBusinessTransactionDao.getBusinessTransactionRecord(contractHash);
-                            contractTransactionStatus= businessTransactionRecord.getContractTransactionStatus();
+                            contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
 
-                            if(contractTransactionStatus.getCode().equals(ContractTransactionStatus.OFFLINE_MERCHANDISE_SUBMITTED.getCode())){
+                            if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.OFFLINE_MERCHANDISE_SUBMITTED.getCode())) {
                                 businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_OFFLINE_CONSIGNMENT);
                                 customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
-                                Date date=new Date();
+                                Date date = new Date();
                                 brokerSubmitOfflineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, date.getTime());
                                 raisePaymentConfirmationEvent(contractHash, businessTransactionRecord.getPaymentType());
                             }

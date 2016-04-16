@@ -10,30 +10,20 @@
     <LinearLayout
         android:id="@+id/ccw_wizard_title_container"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="@color/ccw_wizard_color"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ccw_action_bar_gradient_colors"
         android:orientation="vertical"
         android:padding="16dp">
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/ccw_wizard_bank_account_title"
-            android:textAllCaps="true"
+            android:layout_gravity="left"
+            android:text="Bank Account List"
+            android:textAllCaps="false"
             android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textSize="20sp" />
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:text="@string/ccw_wizard_bank_account_description"
-            android:textColor="@color/white"
-            android:textSize="14sp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -44,29 +34,43 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/ccw_add_your_bank_accounts"
-            android:textColor="@color/ccw_wizard_color"/>
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:text="@string/ccw_wizard_set_bank_accounts_description"
+            android:textColor="#777777"
+            android:textSize="16sp"
+            android:layout_marginBottom="12dp"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp">
+
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                android:id="@+id/ccw_add_bank_account_button"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_marginTop="0dp"
+                android:background="#E5007E"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:text="@string/ccw_add_bank_account"
+                android:textColor="@color/white"
+                android:textSize="14sp"/>
+
+        </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
-            android:background="@color/ccw_wizard_color"/>
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-            android:id="@+id/ccw_add_bank_account_button"
-            android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:layout_marginTop="8dp"
-            android:background="@color/ccw_wizard_color"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:text="@string/ccw_add_bank_account"
-            android:textColor="@color/white"
-            android:textSize="14sp"/>
+            android:background="#aeaeae"/>
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -102,7 +106,7 @@
         android:layout_height="40dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="16dp"
-        android:background="@color/ccw_wizard_color"
+        android:background="#E5007E"
         android:orientation="horizontal"
         android:paddingBottom="8dp"
         android:paddingEnd="16dp"

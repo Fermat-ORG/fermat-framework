@@ -2,14 +2,11 @@ package com.bitdubai.reference_wallet.crypto_broker_wallet.util;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -19,67 +16,75 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.adapters.WalletsAdapter;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 /**
  * Created by Lozadaa on 26/01/16.
+ * Modified by abicelis on 06/04/16
  */
 
 public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesProviderManager> implements View.OnClickListener{
 
-    private final Activity activity;
+    //Constants
+    public static final int BANK_DIALOG = 1;
+    public static final int CASH_DIALOG = 2;
     private static final String TAG = "InputDialogCBP";
-    int DialogType;
-    Button btn,btn2;
-    EditText Account,Alias,BankName;
-    Spinner Tipo,CurrencySpinner,Cash;
-    private List<InstalledWallet> stockWallets;
-    String AccountV,AliasV,BankNameV;
-    BankAccountType TipoV;
-    FiatCurrency CurrencyV,CurrencyCash;
+
+
+    //Managers
     private CryptoBrokerWalletSession walletSession;
     private CryptoBrokerWalletModuleManager moduleManager;
-    private SettingsManager<CryptoBrokerWalletPreferenceSettings> settingsManager;
     private ErrorManager errorManager;
-    CryptoBrokerWalletManager WalletManager;
-    BankAccountNumber accountnumber;
-    private WalletsAdapter adapter;
-    private RecyclerView recyclerView;
-    private FermatTextView emptyView;
+    CryptoBrokerWalletManager walletManager;
 
-    public InputDialogCBP(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources, CryptoBrokerWalletManager WalletManager) {
+    //UI
+    private final Activity activity;
+    FermatTextView buttonActionBank, buttonActionCash;
+    EditText bankAccountNumber, bankAccountAlias, bankAccountBankName;
+    Spinner bankAccountTypeSpinner, bankAccountCurrencySpinner, cashCurrencySpinner;
+
+    //Data
+    int dialogType;
+    String selectedBankAccountNumber, selectedBankAccountAlias, selectedBankAccountBankName;
+    BankAccountType selectedBankAccountType;
+
+    FiatCurrency selectedBankAccountCurrency, selectedCashCurrency;
+    BankAccountNumber createdBankAccount;
+
+    List<String> fiatCurrenciesFriendly =  new ArrayList<>();
+    List<String> fiatCurrencies =  new ArrayList<>();
+    List<String> bankAccountTypesFriendly =  new ArrayList<>();
+    List<String> bankAccountTypes =  new ArrayList<>();
+
+
+    public InputDialogCBP(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources, CryptoBrokerWalletManager WalletManager, int dialogType) {
         super(activity, fermatSession, resources);
         this.activity = activity;
-        this.WalletManager = WalletManager;
+        this.walletManager = WalletManager;
+        this.dialogType = dialogType;
+
     }
-
-
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
             walletSession = ((CryptoBrokerWalletSession) getSession());
             moduleManager = walletSession.getModuleManager();
-            settingsManager = moduleManager.getSettingsManager();
             errorManager = getSession().getErrorManager();
-
-
 
         } catch (Exception e) {
             if (errorManager != null)
@@ -87,116 +92,147 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
         }
 
 
-        if(DialogType == 1) {
-            btn = (Button) findViewById(R.id.btn_action_bank);
-            Account = (EditText) findViewById(R.id.Accountf);
-            BankName = (EditText) findViewById(R.id.editTextBankName);
-            Alias = (EditText) findViewById(R.id.AccountAlias);
-            Tipo = (Spinner) findViewById(R.id.spinner2Bank);
-            adapter = new WalletsAdapter(getActivity(), stockWallets);
-            BankAccountType[] bankType = BankAccountType.values();
-            ArrayAdapter<BankAccountType> Tipos = new ArrayAdapter<BankAccountType>(getActivity(),android.R.layout.simple_spinner_item,bankType);
-            Tipo.setAdapter(Tipos);
-            setUpListeners();
-            Tipo.setBackgroundColor(0);
-            Tipo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        //Get fermat FiatCurrencies
+        for (FiatCurrency f : FiatCurrency.values()) {
+            fiatCurrencies.add(f.getCode());
+            fiatCurrenciesFriendly.add(f.getFriendlyName() + " (" + f.getCode() + ")");
+        }
+
+
+
+
+        if(dialogType == BANK_DIALOG) {
+
+            //Set up Views
+            bankAccountTypeSpinner = (Spinner) findViewById(R.id.idcbp_bank_account_type);
+            bankAccountBankName = (EditText) findViewById(R.id.idcbp_bank_account_bank_name);
+            bankAccountAlias = (EditText) findViewById(R.id.idcbp_bank_account_alias);
+            bankAccountNumber = (EditText) findViewById(R.id.idcbp_bank_account_number);
+            bankAccountCurrencySpinner = (Spinner) findViewById(R.id.idcbp_bank_account_currency);
+            buttonActionBank = (FermatTextView) findViewById(R.id.idcbp_button_action_bank);
+            buttonActionBank.setOnClickListener(this);
+
+            //Get fermat BankAccountTypes
+            for (BankAccountType b : BankAccountType.values()) {
+                bankAccountTypes.add(b.getCode());
+                bankAccountTypesFriendly.add(b.getFriendlyName());
+            }
+
+            //Set up bankAccountType Spinner
+            ArrayAdapter<String> bankAccountTypeAdapter = new ArrayAdapter<>(getActivity(),android.R.layout.simple_spinner_item, bankAccountTypesFriendly);
+            bankAccountTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            bankAccountTypeSpinner.setAdapter(bankAccountTypeAdapter);
+            bankAccountTypeSpinner.setBackgroundColor(0);
+            bankAccountTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                    TipoV = (BankAccountType) Tipo.getSelectedItem();
+                    try {
+                        selectedBankAccountType = BankAccountType.getByCode(bankAccountTypes.get(position));
+                    } catch (InvalidParameterException e) {}
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
+                public void onNothingSelected(AdapterView<?> parent) {}
             });
-            CurrencySpinner = (Spinner) findViewById(R.id.spinner2Currency);
 
-            FiatCurrency[] Currency = FiatCurrency.values();
-            ArrayAdapter<FiatCurrency> currency = new ArrayAdapter<FiatCurrency>(getActivity(),android.R.layout.simple_spinner_item,Currency);
-            currency.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            CurrencySpinner.setAdapter(currency);
-            CurrencySpinner.setBackgroundColor(0);
-            CurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            //Set up currency Spinner
+            ArrayAdapter<String> currencyAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, fiatCurrenciesFriendly);
+            currencyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+            bankAccountCurrencySpinner.setAdapter(currencyAdapter);
+            bankAccountCurrencySpinner.setBackgroundColor(0);
+            bankAccountCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                    CurrencyV = (FiatCurrency) CurrencySpinner.getSelectedItem();
+                    try {
+                        selectedBankAccountCurrency = FiatCurrency.getByCode(fiatCurrencies.get(position));
+                    } catch (InvalidParameterException e) {
+                    }
                 }
 
                 @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
+                public void onNothingSelected(AdapterView<?> parent) {}
             });
 
-
-        }else {
-            btn2 = (Button) findViewById(R.id.btn_action_cash);
-            Cash = (Spinner) findViewById(R.id.spinner2Cash);
-            Cash.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                               public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                                                   CurrencyCash = (FiatCurrency) Cash.getSelectedItem();
-                                               }
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-                    FiatCurrency[] Currency = FiatCurrency.values();
-            ArrayAdapter<FiatCurrency> currency = new ArrayAdapter<FiatCurrency>(getContext(),android.R.layout.simple_spinner_item,Currency);
-            currency.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-             Cash.setBackgroundColor(0);
-            Cash.setAdapter(currency);
-            setUpListeners2();
 
         }
 
+        else if (dialogType == CASH_DIALOG) {
+
+            //Set up Views
+            cashCurrencySpinner = (Spinner) findViewById(R.id.idcbp_cash_currency);
+            buttonActionCash = (FermatTextView) findViewById(R.id.idcbp_button_action_cash);
+            buttonActionCash.setOnClickListener(this);
+
+            //Set up currency Spinner
+            ArrayAdapter<String> currencyAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, fiatCurrenciesFriendly);
+            currencyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            cashCurrencySpinner.setAdapter(currencyAdapter);
+            cashCurrencySpinner.setBackgroundColor(0);
+            cashCurrencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                    try {
+                        selectedCashCurrency = FiatCurrency.getByCode(fiatCurrencies.get(position));
+                    } catch (InvalidParameterException e) {}
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                }
+            });
+        }
     }
 
-    public void DialogType(int DialogTypeset){DialogType = DialogTypeset;}
-    public String getName(){ return BankNameV; }
-    public String getAlias(){ return AliasV; }
-    public String getAccount(){ return AccountV; }
-    public BankAccountNumber getAccountnumber(){ return accountnumber; }
-    private void CustomInfo(){BankNameV = BankName.getText().toString();
-        AliasV = Alias.getText().toString();
-        AccountV = Account.getText().toString();
-    }
+
+    public BankAccountNumber getCreatedBankAccount(){ return createdBankAccount; }
+
+
     protected int setLayoutId() {
-        if(DialogType == 1) {
-            return R.layout.inputdialogcbp;
-        }else {
+        if(dialogType == BANK_DIALOG)
+            return R.layout.inputdialogcbp_bank;
+        else
             return R.layout.inputdialogcbp_cash;
-        }
+            //return R.layout.hello;
     }
 
-    private void setUpListeners() {
-        btn.setOnClickListener(this);
-    }
-    private void setUpListeners2() {
-        btn2.setOnClickListener(this);
-    }
 
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.btn_action_bank) {
-            CustomInfo();
-              try {
-                    accountnumber =   WalletManager.newEmptyBankAccountNumber(BankNameV, TipoV, AliasV, AccountV, CurrencyV);
-                    String bankWalletPublicKey = WalletsPublicKeys.BNK_BANKING_WALLET.getCode();//"banking_wallet"; //TODO:Revisar como podemos obtener el public key de la wallet Bank
-                    WalletManager.addNewAccount(accountnumber, bankWalletPublicKey);
-                    dismiss();
-                }catch(Exception e){
-                  Log.e(TAG,"Error on:"+ e +" ------------VALORES DE VARIABLES----------->" +BankNameV+"->"+TipoV+"->"+AliasV+"->"+AccountV+"->"+CurrencyV);
+        if (id == R.id.idcbp_button_action_bank) {
+            selectedBankAccountBankName = bankAccountBankName.getText().toString();
+            selectedBankAccountAlias = bankAccountAlias.getText().toString();
+            selectedBankAccountNumber = bankAccountNumber.getText().toString();
+
+            try {
+
+                if (selectedBankAccountBankName.equals("")) {
+                    Toast.makeText(activity.getApplicationContext(), "Please enter a bank name", Toast.LENGTH_SHORT).show();
+                    return;
                 }
-            }
-            if (id == R.id.btn_action_cash) {
-                try {
-                    String cashWalletPublicKey = WalletsPublicKeys.CSH_MONEY_WALLET.getCode();//"cash_wallet";
-                    WalletManager.createCashMoneyWallet(cashWalletPublicKey,CurrencyCash);
-                    dismiss();
-                } catch (Exception e) {
-                    Log.e(TAG, "Error on:" + e + " ------------VALORES DE VARIABLES----------->" + CurrencyCash);
+                if (selectedBankAccountAlias.equals("")) {
+                    Toast.makeText(activity.getApplicationContext(), "Please enter an alias for the account", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                if (selectedBankAccountNumber.equals("")) {
+                    Toast.makeText(activity.getApplicationContext(), "Please enter an account number", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                createdBankAccount = walletManager.newEmptyBankAccountNumber(selectedBankAccountBankName, selectedBankAccountType, selectedBankAccountAlias, selectedBankAccountNumber, selectedBankAccountCurrency);
+                walletManager.addNewAccount(createdBankAccount, WalletsPublicKeys.BNK_BANKING_WALLET.getCode());
+                dismiss();
+            }catch(Exception e){
+                Log.e(TAG,"Error on:"+ e +" ------------VALORES DE VARIABLES----------->" + selectedBankAccountBankName +"->"+ selectedBankAccountType +"->"+ selectedBankAccountAlias +"->"+ selectedBankAccountNumber +"->"+ selectedBankAccountCurrency);
             }
+        }
+        if (id == R.id.idcbp_button_action_cash) {
+            try {
+                walletManager.createCashMoneyWallet(WalletsPublicKeys.CSH_MONEY_WALLET.getCode(), selectedCashCurrency);
+                dismiss();
+            } catch (Exception e) {
+                Log.e(TAG, "Error on:" + e + " ------------VALORES DE VARIABLES----------->" + selectedCashCurrency);
+            }
+        }
 
     }
 
