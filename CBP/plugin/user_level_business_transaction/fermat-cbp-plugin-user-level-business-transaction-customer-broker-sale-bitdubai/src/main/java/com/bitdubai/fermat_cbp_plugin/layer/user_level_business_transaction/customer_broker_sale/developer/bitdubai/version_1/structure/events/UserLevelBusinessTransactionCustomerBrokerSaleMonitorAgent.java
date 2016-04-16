@@ -326,11 +326,11 @@ public class UserLevelBusinessTransactionCustomerBrokerSaleMonitorAgent extends 
                     if (clauseValue != null)
                         timeToDelivery = Long.parseLong(clauseValue);
 
-                    System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN PAYMENT ***\n" +
+                    /*System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN PAYMENT ***\n" +
                                     "\n - Contract: " + customerBrokerContractSale.getContractId() +
                                     "\n - timeStampToday: " + timeStampToday +
                                     "\n - dateTimeToDelivery: " + timeToDelivery
-                    );
+                    );*/
 
                     if (timeStampToday >= timeToDelivery) {
 
