@@ -3690,7 +3690,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         listSubApp.put(chtChat.getPublicKey(), chtChat);
     }
 
-    private void createFanCommunitySubAppNavigationStructure() throws InvalidParameterException {
+    private void createChatCommunitySubAppNavigationStructure() throws InvalidParameterException {
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
@@ -3709,7 +3709,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
-        chtComm.addPosibleStartActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
+        chtComm.changeActualStartActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
@@ -3891,7 +3891,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         chtComm.addActivity(runtimeActivity);
     }
 
-    private void createFanCommunitySubAppNavigationStructure(){
+    private void createFanCommunitySubAppNavigationStructure() throws InvalidParameterException {
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
