@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Large Text"
+            android:textColor="@color/textviewcolor"
             android:id="@+id/songname"
             android:layout_toRightOf="@+id/imagen"
             android:layout_alignParentTop="true"
@@ -34,6 +35,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="Small Text"
+            android:textColor="@color/textviewcolor"
             android:id="@+id/artistname"
             android:layout_below="@+id/songname"
             android:layout_alignLeft="@+id/songname" />

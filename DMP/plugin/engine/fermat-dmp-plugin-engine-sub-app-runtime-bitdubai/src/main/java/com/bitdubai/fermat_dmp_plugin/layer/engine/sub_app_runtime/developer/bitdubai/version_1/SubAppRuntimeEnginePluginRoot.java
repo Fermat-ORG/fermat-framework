@@ -4058,7 +4058,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         listSubApp.put(subAppArtistCommunity.getPublicKey(), subAppArtistCommunity);
     }
 
-    private void createMusicPlayerSubAppNavigationStructure() {
+    private void createMusicPlayerSubAppNavigationStructure() throws InvalidParameterException {
         RuntimeSubApp runtimeSubApp;
         Activity runtimeActivity;
         StatusBar statusBar;
@@ -4081,6 +4081,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         statusBar.setColor("#ffffff");
         runtimeActivity.setStatusBar(statusBar);
         runtimeSubApp.addActivity(runtimeActivity);
+        runtimeSubApp.changeActualStartActivity(Activities.ART_MUSIC_PLAYER_MAIN_ACTIVITY.getCode());
         //   runtimeSubApp.addPosibleStartActivity(Activities.ART_MUSIC_PLAYER_MAIN_ACTIVITY);
 
         runtimeTitleBar = new TitleBar();
