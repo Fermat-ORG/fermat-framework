@@ -280,7 +280,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             song.setText(items.get(position).getSong_name());
             songPlayerThread = new ThreadSong(false);
             songPlayerThread.execute();
-            stop();
+ //           stop();
  //           mp.reset();
 
             mp.prepare();

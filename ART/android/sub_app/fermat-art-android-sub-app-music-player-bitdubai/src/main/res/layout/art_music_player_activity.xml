@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:columnCount="30"
     android:rowCount="31"
-    android:background="#b5c39a">
+    android:background="#a6a7b0">
 
     <Button
         android:layout_width="wrap_content"
@@ -31,8 +31,9 @@
         android:id="@+id/forward"
         android:layout_above="@+id/progressBar"
         android:layout_toEndOf="@+id/play"
-        android:layout_marginBottom="55dp"
-        android:layout_marginLeft="20dp" />
+        android:layout_marginBottom="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp" />
 
     <SeekBar
         style="?android:attr/progressBarStyleHorizontal"
@@ -73,7 +74,7 @@
             android:layout_height="match_parent"
             android:padding="3dp"
             android:scrollbars="vertical"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="20dp"
             android:background="#e8e8e8" />
 
 
