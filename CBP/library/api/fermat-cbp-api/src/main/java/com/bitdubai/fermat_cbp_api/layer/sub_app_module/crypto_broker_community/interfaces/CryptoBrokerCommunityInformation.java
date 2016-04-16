@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_broker_community
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ import java.util.UUID;
  * Created by natalia on 16/09/15.
  */
 
-public interface CryptoBrokerCommunityInformation {
+public interface CryptoBrokerCommunityInformation extends Serializable {
 
     /**
      * The method <code>getPublicKey</code> returns the public key of the represented crypto broker
