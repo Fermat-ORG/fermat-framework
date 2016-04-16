@@ -13,7 +13,7 @@
             android:layout_width="150dp"
             android:layout_height="50dp"
             android:text="Select"
-            android:id="@+id/button"
+            android:id="@+id/buttondialog"
             android:textColor="#fff"
             android:background="#47BF73"
             android:layout_alignParentBottom="true"
@@ -22,11 +22,11 @@
             android:textSize="30dp"
             android:textAlignment="center"
             android:singleLine="true" />
-
+T
         <TimePicker
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/timePicker"
+            android:id="@+id/ChtTimePicker"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
     </RelativeLayout>

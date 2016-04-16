@@ -1,6 +1,7 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.wizard_pages;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -50,7 +51,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
          errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
      }
      errorManager = appSession.getErrorManager();
-
+     Toolbar toolbar = getToolbar();
+     toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
 
  }
 
@@ -58,8 +60,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
      public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View layout = inflater.inflate(R.layout.cht_wizard_broadcast_one_step, container, false);
+        View layout = inflater.inflate(R.layout.cht_wizard_broadcast_two_step, container, false);
          ShowDialogWelcome();
+
 
      return layout;
      }
@@ -78,8 +81,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
      @Override
      public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-         menu.add(0, ChtConstants.CHT_BROADCAST_NEXT_STEP, 0, "help")
-                 .setTitle("Finish")
+         menu.add(0, ChtConstants.CHT_BROADCAST_NEXT_STEP, 0, "Create")
+                 .setTitle("Create")
                  .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
      }
@@ -87,36 +90,20 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
      @Override
      public boolean onOptionsItemSelected(MenuItem item) {
          int id = item.getItemId();
-         if(id == ChtConstants.CHT_BROADCAST_NEXT_STEP){
-
+         switch (id){
+             case ChtConstants.CHT_BROADCAST_NEXT_STEP:
+                 saveSettingAndGoNextStep();
+                 break;
+             case android.R.id.home:
+                 changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL);
+                 break;
          }
          return super.onOptionsItemSelected(item);
      }
 
      private void saveSettingAndGoNextStep() {
-         changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL);
-        /*try {
-           walletSetting = walletManager.newEmptyCryptoBrokerWalletSetting();
-            walletSetting.setId(null);
-            walletSetting.setBrokerPublicKey(appSession.getAppPublicKey());
-            walletSetting.setSpread(spreadValue);
-            walletSetting.setRestockAutomatic(automaticRestock);
-            walletManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
-            appSession.setData(CryptoBrokerWalletSession.CONFIGURED_DATA, true);
-            // TODO Solo para testing, eliminar despues
-            changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
-           } catch (FermatException ex) {
-            Toast.makeText(WizardFirstStepBroadcastFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
-
-            Log.e(TAG, ex.getMessage(), ex);
-            if (errorManager != null) {
-             errorManager.reportUnexpectedWalletException(
-                     Wallets.CBP_CRYPTO_BROKER_WALLET,
-                     UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
-                     ex);
-            }
-        }*/
-
+         //TODO: AÑADIR SAVESETTINGS
+         changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
 
      }
 
