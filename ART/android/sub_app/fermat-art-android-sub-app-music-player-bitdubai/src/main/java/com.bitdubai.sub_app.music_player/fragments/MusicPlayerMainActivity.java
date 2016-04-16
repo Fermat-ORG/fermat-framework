@@ -21,6 +21,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayer
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetSongException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.exceptions.CantGetSongListException;
 import com.bitdubai.fermat_tky_api.layer.song_wallet.interfaces.WalletSong;
 import com.bitdubai.reference_wallet.fan_wallet.util.ManageRecyclerviewClickEvent;
@@ -56,7 +57,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     SeekBar pb;
     TextView tiempo;
     TextView song;
-    TextView duration;
+
 
     RecyclerView recyclerView;
     private MusicPlayerAdapter adapter;
@@ -65,7 +66,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
     MediaPlayer mp = new MediaPlayer();
     private final String TAG="art_mplayer";
-    ThreadSong miTareaAsincrona;
+    ThreadSong songPlayerThread;
     boolean pause=false;
     int songposition=0;
 
@@ -119,7 +120,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        view=inflater.inflate(R.layout.art_music_player_coming_soon,container,false);
+        view=inflater.inflate(R.layout.art_music_player_activity,container,false);
         getActivity().getWindow().setBackgroundDrawableResource(R.drawable.musicplayer_background_viewpager);
         bplay = (Button) view.findViewById(R.id.play);
         bbb = (Button) view.findViewById(R.id.back);
@@ -129,7 +130,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         recyclerView = (RecyclerView) view.findViewById(R.id.rv);
         song=(TextView)view.findViewById(R.id.songname);
 
-        init();
+
 
         pb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -157,8 +158,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         adapter = new MusicPlayerAdapter(items);
         recyclerView.setAdapter(adapter);
 
-
-
+        init();
 
         recyclerView.addOnItemTouchListener(
                 new ManageRecyclerviewClickEvent(view.getContext(), new ManageRecyclerviewClickEvent.OnItemClickListener() {
@@ -176,8 +176,8 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             @Override
             public void onClick(View v) {
                 play();
-                miTareaAsincrona = new ThreadSong(false);
-                miTareaAsincrona.execute();
+                songPlayerThread = new ThreadSong(false);
+                songPlayerThread.execute();
 
             }
         });
@@ -214,7 +214,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
                 Toast.makeText(view.getContext(),"No song, dowload with the FanWallet",Toast.LENGTH_LONG).show();
             }else{
                 for(WalletSong walletSong:mysong){
-                    songview.add(new MusicPlayerItems(walletSong.getName(),R.drawable.download,walletSong.getSongBytes(),walletSong.getSongId()));
+                    songview.add(new MusicPlayerItems(walletSong.getComposers(), walletSong.getName(),R.drawable.adam,walletSong.getSongBytes(),walletSong.getSongId()));
                 }
                 adapter.setFilter(songview);
             }
@@ -223,6 +223,10 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
         }
     }
+
+
+
+
 
     private void clickplay(int position) {
 
@@ -252,32 +256,52 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         }*/
 
         try {
+
+
             // create temp file that will hold byte array
-            File tempMp3 = File.createTempFile(items.get(position).getTitle(), "mp3", view.getContext().getCacheDir());
+            File tempMp3 = File.createTempFile("i_know_now", "mp3", view.getContext().getCacheDir());
             tempMp3.deleteOnExit();
             FileOutputStream fos = new FileOutputStream(tempMp3);
-            fos.write(items.get(position).getSong());
+            fos.write(musicPlayermoduleManager.getSongWithBytes(items.get(position).getSong_id()).getSongBytes());
             fos.close();
 
             // Tried reusing instance of media player
             // but that resulted in system crashes...
-            MediaPlayer mediaPlayer = new MediaPlayer();
+          //  MediaPlayer mediaPlayer = new MediaPlayer();
 
             // Tried passing path directly, but kept getting
-            // "Prepare failed.: status=0x1"
-            // so using file descriptor instead
-            FileInputStream fis = new FileInputStream(tempMp3);
-            mediaPlayer.setDataSource(fis.getFD());
 
-            mediaPlayer.prepare();
-            mediaPlayer.start();
+            FileInputStream fis = new FileInputStream(tempMp3);
+            mp.setDataSource(fis.getFD());
+
+
+            Toast.makeText(view.getContext(), items.get(position).getSong_name(), Toast.LENGTH_SHORT).show();
+            songposition=position;
+            song.setText(items.get(position).getSong_name());
+            songPlayerThread = new ThreadSong(false);
+            songPlayerThread.execute();
+            stop();
+ //           mp.reset();
+
+            mp.prepare();
+            mp.start();
+
+
+            pb.setMax( (int)(mp.getDuration()/1000));
+
+
+
+
         }  catch (IOException e) {
-            String s = e.toString();
+
+        } catch (CantGetSongException e) {
             e.printStackTrace();
         }
 
 
     }
+
+
 
     private void play() {
 
