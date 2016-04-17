@@ -377,7 +377,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
                 SubApp subAppNavigationStructure = getSubAppRuntimeMiddleware().getSubAppByPublicKey(installedSubApp.getAppPublicKey());
 
-                if(subAppNavigationStructure.getPlatform() != Platforms.CRYPTO_BROKER_PLATFORM) {
+                if(subAppNavigationStructure.getPlatform() != Platforms.CRYPTO_BROKER_PLATFORM || subAppNavigationStructure.getPlatform() != Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION) {
                     intent = new Intent(this, AppActivity.class);
                     intent.putExtra(ApplicationConstants.INSTALLED_FERMAT_APP, installedSubApp);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);

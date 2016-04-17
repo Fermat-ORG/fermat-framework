@@ -22,6 +22,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractDesktopFr
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -299,11 +300,13 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
             Item item = new Item(installedSubApp);
             item.setIconResource(R.drawable.wallet_factory);
             item.setPosition(0);
+            installedSubApp.setPlatforms(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
             lstItemsWithIcon.add(item);
             installedSubApp = new InstalledSubApp(SubApps.CWP_WALLET_PUBLISHER, null, null, "wallet_publisher", "Wallet Publisher", SubAppsPublicKeys.CWP_PUBLISHER.getCode(), "wallet_publisher", new Version(1, 0, 0));
             item = new Item(installedSubApp);
             item.setIconResource(R.drawable.wallet_publisher);
             item.setPosition(1);
+            installedSubApp.setPlatforms(Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION);
             lstItemsWithIcon.add(item);
             installedSubApp = new InstalledSubApp(SubApps.DAP_ASSETS_FACTORY, null, null, "sub-app-asset-factory", "Asset Factory", SubAppsPublicKeys.DAP_FACTORY.getCode(), "sub-app-asset-factory", new Version(1, 0, 0));
             item = new Item(installedSubApp);
