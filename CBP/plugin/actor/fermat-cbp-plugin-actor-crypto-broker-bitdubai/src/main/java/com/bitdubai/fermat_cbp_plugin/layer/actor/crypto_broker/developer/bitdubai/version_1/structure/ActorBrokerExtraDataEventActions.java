@@ -26,6 +26,8 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 
 /**
  * Created by angel on 4/02/16.
@@ -61,7 +63,7 @@ public class ActorBrokerExtraDataEventActions {
                 for (CryptoBrokerExtraData<CryptoBrokerQuote> extraDate : dataNS) {
                     String brokerPublicKey = extraDate.getCryptoBrokerPublicKey();
                     cryptoBrokerANSManager.answerQuotesRequest(
-                        extraDate.getRequestId(),
+                        UUID.randomUUID(),
                         System.currentTimeMillis(),
                         getExtraData(brokerPublicKey)
                     );
