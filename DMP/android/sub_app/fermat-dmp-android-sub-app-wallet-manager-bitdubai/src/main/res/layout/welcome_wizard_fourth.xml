@@ -27,7 +27,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="208dp"
-            android:src="@drawable/banner_fermat_apps_hdpi"
+            android:src="@drawable/banner_communities_hdpi"
             android:layout_gravity="center"
             android:layout_marginBottom="16dp"/>
 
