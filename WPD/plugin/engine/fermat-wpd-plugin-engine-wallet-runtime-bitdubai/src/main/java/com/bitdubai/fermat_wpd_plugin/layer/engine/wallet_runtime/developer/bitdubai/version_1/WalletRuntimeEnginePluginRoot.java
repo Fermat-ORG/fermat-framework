@@ -2377,6 +2377,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         final int titleBarTextSize = 16;
 
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
+        runtimeWalletNavigationStructure.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
@@ -2920,7 +2921,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
-        lstWalletNavigationStructureOpen.put(publicKey,runtimeWalletNavigationStructure);
+        runtimeWalletNavigationStructure.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
+        lstWalletNavigationStructureOpen.put(publicKey, runtimeWalletNavigationStructure);
+
 
 
         // Side Menu

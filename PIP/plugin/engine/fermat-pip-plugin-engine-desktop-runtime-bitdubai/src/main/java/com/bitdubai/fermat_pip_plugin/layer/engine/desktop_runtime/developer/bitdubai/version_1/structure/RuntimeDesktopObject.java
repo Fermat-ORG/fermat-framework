@@ -2,6 +2,7 @@ package com.bitdubai.fermat_pip_plugin.layer.engine.desktop_runtime.developer.bi
 
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.LanguagePackage;
@@ -84,6 +85,11 @@ public class RuntimeDesktopObject implements DesktopObject {
     @Override
     public FermatAppType getFermatAppType() {
         return FermatAppType.DESKTOP;
+    }
+
+    @Override
+    public Platforms getPlatform() {
+        return null;
     }
 
     @Override
