@@ -61,15 +61,16 @@ import java.util.UUID;
  */
 public class ChatActorCommunityManager implements ChatActorCommunitySubAppModuleManager, Serializable {
 
-     private final ChatIdentityManager                chatIdentityManager;
-     private ChatActorCommunityInformation            chatActorCommunityManager             ;
-     private final ChatActorConnectionManager         chatActorConnectionManager            ;
-     private final ChatManager                        chatActorNetworkServiceManager        ;
-     private String                                   subAppPublicKey                       ;
-     private final ErrorManager                       errorManager                          ;
-     private final PluginFileSystem                   pluginFileSystem                      ;
-     private final UUID                               pluginId                              ;
-     private final PluginVersionReference             pluginVersionReference                ;
+     private final ChatIdentityManager                   chatIdentityManager;
+     private ChatActorCommunityInformation               chatActorCommunityManager             ;
+     private final ChatActorConnectionManager            chatActorConnectionManager            ;
+     private final ChatManager                           chatActorNetworkServiceManager        ;
+     private String                                      subAppPublicKey                       ;
+     private final ErrorManager                          errorManager                          ;
+     private final PluginFileSystem                      pluginFileSystem                      ;
+     private final UUID                                  pluginId                              ;
+     private final PluginVersionReference                pluginVersionReference                ;
+     private SettingsManager<ChatActorCommunitySettings> settingsManager                       ;
 
     public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager, ChatActorConnectionManager chatActorConnectionManager, ChatManager chatActorNetworkServiceManager, ErrorManager errorManager, PluginFileSystem pluginFileSystem, UUID pluginId, PluginVersionReference pluginVersionReference) {
         this.chatIdentityManager= chatIdentityManager;
@@ -80,11 +81,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
         this.pluginVersionReference= pluginVersionReference;
-
-
     }
-
-
 
     @Override
     public List<ChatActorCommunityInformation> listWorldChatActor(ChatActorCommunitySelectableIdentity selectableIdentity, int max, int offset) throws CantListChatActorException {
@@ -141,8 +138,6 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
     }
 
-    private SettingsManager<ChatActorCommunitySettings> settingsManager;
-
     @Override
     public void setSelectedActorIdentity(ChatActorCommunitySelectableIdentity identity) {
 
@@ -165,15 +160,11 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         }
     }
 
-
-
-
     @Override
     public ChatActorCommunitySearch getChatActorSearch() {
         return new ChatActorCommunitySubAppModuleSearch(chatActorNetworkServiceManager) {
                   };
     }
-
 
 
     @Override
@@ -333,8 +324,6 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                 chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
         }
 
-
-
         catch(CantListActorConnectionsException e){
             e.printStackTrace();
         }
@@ -362,8 +351,6 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
             for (ChatActorConnection cac : actorConnections)
                 chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
         }
-
-
 
         catch(CantListActorConnectionsException e){
             e.printStackTrace();
@@ -417,8 +404,6 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         try {
             appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){ return null; }
-
-
 
         List<ChatIdentity> IdentitiesInDevice = new ArrayList<>();
         try{
