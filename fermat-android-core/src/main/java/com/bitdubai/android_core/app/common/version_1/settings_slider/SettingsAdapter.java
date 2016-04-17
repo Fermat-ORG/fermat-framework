@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.view.View;
 
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
 
 import java.util.List;
@@ -46,6 +47,7 @@ public class SettingsAdapter extends FermatAdapterImproved<SettingsItem, Setting
         protected void bindHolder(final SettingsHolder holder, final SettingsItem data, final int position) {
 
             holder.getText().setText(data.getText());
+            holder.getText().setFont(FontType.CAVIAR_DREAMS);
             holder.getSubText().setText(data.getSubText());
             holder.getImg().setBackgroundResource(data.getImgRes());
 

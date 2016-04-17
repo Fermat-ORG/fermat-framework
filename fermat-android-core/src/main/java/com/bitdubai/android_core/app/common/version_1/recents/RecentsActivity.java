@@ -21,6 +21,7 @@ import android.app.SearchManager;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
@@ -41,8 +42,11 @@ import java.util.List;
 
 /**
  * The main Recents activity that is started from AlternateRecentsComponent.
+ *
+ * Created by Matias Furszyfer
  */
 public class RecentsActivity extends Activity implements Overview.RecentsViewCallbacks, OverviewAdapter.Callbacks, RecentCallback<RecentApp> {
+    private static final String TAG = "RecentsActivity";
     boolean mVisible;
     // Top level views
     Overview mRecentsView;
@@ -58,6 +62,7 @@ public class RecentsActivity extends Activity implements Overview.RecentsViewCal
 
         // Initialize the widget host (the host id is static and does not change)
 
+        Log.i(TAG,"onCreate");
         // Set the Recents layout
         setContentView(R.layout.recents);
 

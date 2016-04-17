@@ -16,7 +16,7 @@
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/welcome_wizzard_first_title"
+            android:text="@string/welcome_wizzard_fourth_title"
             android:gravity="center"
             android:textColor="#0EAF9E"
             android:textSize="36sp"
@@ -27,7 +27,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="208dp"
-            android:src="@drawable/banner_welcome_fermat_hdpi"
+            android:src="@drawable/banner_communities_hdpi"
             android:layout_gravity="center"
             android:layout_marginBottom="16dp"/>
 
@@ -39,18 +39,15 @@
             android:layout_marginBottom="16dp"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:layout_marginBottom="16dp"
             android:layout_gravity="center"
             android:gravity="center"
-            android:textSize="15dp"
+            app:typeface="CAVIAR_DREAMS"
             android:textColor="#58595B"
-            android:text="@string/wizzard_welcome_text"
-            app:typeface="CAVIAR_DREAMS"/>
+            android:textSize="15dp"
 
-
+            android:text="In Fermat each type of user profile has a community app where you can browse, search and find people with that type of profile around you or globally. To interact with other people in most cases you have to request the other party to accept to be connected with you. After you are accepted you can use any of the apps available that accept that allows you to be logged in with that type of profile."/>
 
     </LinearLayout>
 

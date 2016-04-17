@@ -632,7 +632,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
                         WalletsPublicKeys.CWP_LOSS_PROTECTED_WALLET.getCode(),
                         "wallet_platform_identifier",
                         new Version(1,0,0),
-                        AppsStatus.ALPHA);
+                        AppsStatus.DEV);
                 break;
             default:
                 throw new CantCreateNewWalletException("No existe public key",null,null,null);

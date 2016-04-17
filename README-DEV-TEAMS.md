@@ -204,8 +204,10 @@ We are in charge of Android-core, Fermat-Core, Android framework development and
 
 <br>
 
-### Disruptor Team:
+### Disruptors Team:
 -----------------------------------
+<br>
+### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/2b7f511ca8ba2f796df1178ecc065e884fc7ca69/Logotype/FermatTeams/Logo_disruptors_team.jpg "Logo Disruptors Team")
 
 We are team that wants to combine technical capacity with creative talent, where passion for development and satisfaction for the work done are important ingredients of the daily motivation, and also so engaged that we do not hesitate in sharing nights without sleep to fullfill the goals! The spirit of gentle collaboration is also very important to us. We are willing to share our work with new members.
 
@@ -364,6 +366,7 @@ We are a team with diverse tastes and full of color making it an explosive integ
 
 ### Team Yayo:
 -----------------------------------
+### ![alt text](https://raw.githubusercontent.com/Fermat-ORG/media-kit/master/Logotype/FermatTeams/YAYO_1.jpg "Logo Yayo Team")
 On the Team Yayo we do believe that coding is a kind of art and should be treated like so. We don't aim to be a hardworking team but a smartworking one.
 We are responsible of only one thing, making fermat a successfully project, sharing our good ideas and developing whatever is needed without fear of what -end it is on.
 
