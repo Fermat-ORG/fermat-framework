@@ -56,7 +56,7 @@ We believe the open source community collectively has more influence than any of
 
 We are asking each of you to help lead the way. Because we’re already connected with you as we are also developers and designers, and we want to build our relationship with you into a network of developers across the world to share new ideas and forge new collaborations. Working together, we can build the tools and technology that people need to become financially independent, have access from any country to financial products and be safe of nasty third parties spying on them or trying to tell them what they can and can not do with their money. We believe in true financial freedom.
 
-We want to hear from you on how we can build this network. We are by now about 50 developers / designers / academics / entrepreneurs working full time on Fermat and our goal is to reach 500. To learn more about how to join, just read the [how-to-participate-guide](https://github.com/bitDubai/participate-now). We hope at every single one of you will join us.  Because Fermat and the world need you.  We need your skills, imagination and optimism.  And with this new network, we're sure we can be partners for decades to come.
+We want to hear from you on how we can build this network. We are by now about 100+ developers / designers / academics / entrepreneurs working full time on Fermat and our goal is to reach 500. To learn more about how to join, just read the [how-to-participate-guide](https://github.com/Fermat-ORG/participate-now). We hope at every single one of you will join us.  Because Fermat and the world need you.  We need your skills, imagination and optimism.  And with this new network, we're sure we can be partners for decades to come.
 
 We believe in people with passion who are crazy enough to think they can change the world. With a lot of hard work, we believe we can accomplish this.
 
@@ -112,10 +112,10 @@ Technically Fermat is an open-source P2P system built on a Plug-in architecture 
 Fermat is moving towards version 1, but we're not stopping there. We have many feature ideas on our
 [white paper](FERMAT-WHITE-PAPER.md) that we're anxious to add. So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your own digital wallet or financial APP.
 
-You can learn more, see some cool images of Fermat's architecture and its P2P network and explore the design space at [Fermat.org](http://www.fermat.org).
+You can learn more about the project and see the latest information at the official site [Fermat.org](http://www.fermat.org).
 
 
-![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Coins/Fiat%20Coins/Fiat%20Art/Scene1/HQ_1920x1080.jpg "Fermat Digital Money")
+![alt text](https://github.com/Fermat-ORG/media-kit/blob/master/MediaKit/Coins/Fiat%20Coins/Fiat%20Art/Scene1/HQ_1920x1080.jpg "Fermat Digital Money")
 
 <br>
 ### Fermat's Purpose
@@ -249,15 +249,16 @@ log into the [IRC DEV Channel](http://irc.lc/freenode/fermat-dev/), and we will 
 
 #### Learn More?
 
-Take a look at the [Fermat Book](https://github.com/bitDubai/fermat/tree/master/fermat-book) that it is being written in order to help developers learn more about Fermat technology.
+Take a look at the [Fermat Book](https://github.com/Fermat-ORG/fermat-book/blob/master/README.md) that it is being written in order to help developers learn more about Fermat technology.
 
 #### Project status
 
-As of November 2015 the project status is the following:
+As of March 2016 the project status is the following:
 
-**Code state** : Under development for 6 months. No releases yet. Many full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
+**Code state** : Under development for 10 months. No releases yet. Alpha version available at [fermat.org].
+Fermat Dev Teams is a network of developers teams actively working on the project. [Dev Teams](https://github.com/Fermat-ORG/fermat/blob/master/README-DEV-TEAMS.md)
 
-**Future path of development** : Active (First release with very limited features scheduled for December 2015).
+**Future path of development** : Active (First release with very limited features scheduled for April 2016).
 
 <br>
 ## I Want to Join the Team!
