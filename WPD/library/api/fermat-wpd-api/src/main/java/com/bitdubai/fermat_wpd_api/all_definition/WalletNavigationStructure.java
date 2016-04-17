@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_wpd_api.all_definition;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
@@ -55,6 +56,7 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
 
     private DeveloperIdentity developer;
     private String actualStart;
+    private Platforms platform;
 
     /**
      * WalletNavigationStructure constructor
@@ -70,6 +72,9 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
         this.activities = activities;
     }
 
+    public void setPlatform(Platforms platform) {
+        this.platform = platform;
+    }
 
     @Override
     public FermatApps getFermatApp() {
@@ -79,6 +84,11 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
     @Override
     public FermatAppType getFermatAppType() {
         return FermatAppType.WALLET;
+    }
+
+    @Override
+    public Platforms getPlatform() {
+        return platform;
     }
 
     /**

@@ -15,11 +15,11 @@ import java.util.Map;
 /**
  * Created by mati on 2016.04.13..
  */
-public class WelcomeWizardFourthFragment extends AbstractFermatFragment implements WizardPageListener {
+public class WelcomeWizardFifthFragment extends AbstractFermatFragment implements WizardPageListener {
 
 
     public static AbstractFermatFragment newInstance(){
-        return new WelcomeWizardFourthFragment();
+        return new WelcomeWizardFifthFragment();
     }
 
 
@@ -31,7 +31,7 @@ public class WelcomeWizardFourthFragment extends AbstractFermatFragment implemen
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.welcome_wizard_fourth,container,false);
+        View view = inflater.inflate(R.layout.welcome_wizard_fifth,container,false);
 
 
 

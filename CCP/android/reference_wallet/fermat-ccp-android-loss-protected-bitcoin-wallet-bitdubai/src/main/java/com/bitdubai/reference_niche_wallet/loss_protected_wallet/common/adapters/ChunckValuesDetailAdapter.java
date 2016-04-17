@@ -17,20 +17,23 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatAmountString;
+import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatExchangeRateString;
+
 /**
  * Created by root on 12/04/16.
  */
 public class ChunckValuesDetailAdapter extends FermatAdapter<BitcoinLossProtectedWalletSpend,ChunckValuesDetailItemViewHolder> {
     private onRefreshList onRefresh;
     private LossProtectedWallet cryptoWallet;
-    private LossProtectedWalletSession referenceWalletSession;
+    private LossProtectedWalletSession lossProtectedWalletSession;
     private Typeface tf;
 
 
-    public ChunckValuesDetailAdapter(Context context, List<BitcoinLossProtectedWalletSpend> dataSet, LossProtectedWallet cryptoWallet, LossProtectedWalletSession referenceWalletSession, onRefreshList onRefresh) {
+    public ChunckValuesDetailAdapter(Context context, List<BitcoinLossProtectedWalletSpend> dataSet, LossProtectedWallet cryptoWallet, LossProtectedWalletSession lossProtectedWalletSession, onRefreshList onRefresh) {
         super(context, dataSet);
         this.cryptoWallet = cryptoWallet;
-        this.referenceWalletSession = referenceWalletSession;
+        this.lossProtectedWalletSession = lossProtectedWalletSession;
         this.onRefresh = onRefresh;
         tf = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto-Regular.ttf");
     }
@@ -46,12 +49,12 @@ public class ChunckValuesDetailAdapter extends FermatAdapter<BitcoinLossProtecte
     @Override
     protected void bindHolder(ChunckValuesDetailItemViewHolder holder, BitcoinLossProtectedWalletSpend data, int position) {
         //Get date and set a FormatDate for Data value
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy HH:mm", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
         holder.getDate().setText(sdf.format(data.getTimestamp()));
 
-        holder.getAmountBalance().setText(data.getAmount() + " BTC");
+        holder.getAmountBalance().setText(formatAmountString(data.getAmount())+" BTC");
 
-        holder.getExchangeRate().setText("1 BTC = "+data.getExchangeRate()+" US$");
+        holder.getExchangeRate().setText("1 BTC = "+formatExchangeRateString(data.getExchangeRate())+" US$");
 
 
 
