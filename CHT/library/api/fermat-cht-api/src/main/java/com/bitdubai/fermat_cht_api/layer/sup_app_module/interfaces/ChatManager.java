@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdentityException;
@@ -108,4 +109,12 @@ public interface ChatManager extends ModuleManager<ChatPreferenceSettings, Activ
 
     void clearChatMessageByChatId(UUID chatId) throws CantDeleteMessageException, CantGetMessageException;
 
+    /**
+     * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified
+     * settings class parametrized.
+     *
+     * @return a new instance of the settings manager for the specified fermat settings object.
+     */
+    @Override
+    SettingsManager<ChatPreferenceSettings> getSettingsManager();
 }
