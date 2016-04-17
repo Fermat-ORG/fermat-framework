@@ -471,7 +471,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
                     "wallet_fan_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.DEV);
+                    AppsStatus.ALPHA);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.banner_tky);
