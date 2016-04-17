@@ -54,7 +54,7 @@ public class SettingsSliderProvisoryData {
         }
         
         
-        SettingsItem settingsItemSettings = new SettingsItem(SettingsType.APP_STATUS,appStatusRes,"App Filter",appStatusName);
+        SettingsItem settingsItemSettings = new SettingsItem(SettingsType.APP_STATUS,appStatusRes,"App Filter",(appStatusName.equals(""))?"Alpha":appStatusName);
 
         SettingsItem settingsItemRecents = new SettingsItem(SettingsType.RECENTS,R.drawable.recent_buttom_hdpi,"Recents Apps","");
 
