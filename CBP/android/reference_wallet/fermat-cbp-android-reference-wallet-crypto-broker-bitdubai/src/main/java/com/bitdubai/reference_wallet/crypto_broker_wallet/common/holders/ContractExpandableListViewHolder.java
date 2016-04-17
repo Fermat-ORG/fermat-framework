@@ -102,18 +102,28 @@ public class ContractExpandableListViewHolder extends ChildViewHolder {
         if (status == ContractStatus.CANCELLED)
             return R.string.contract_cancelled;
 
-        if (status == ContractStatus.PENDING_PAYMENT)
+        /*if (status == ContractStatus.PENDING_PAYMENT)
             return R.string.waiting_for_the_customer;
 
         if(nearExpirationDatetime)
-            return R.string.about_to_expire;
+            return R.string.about_to_expire;*/
+
+        //UPDATE YORDIN ALAYN 07.04.16
+        if (status == ContractStatus.PENDING_PAYMENT){
+            if(nearExpirationDatetime)
+                return R.string.about_to_expire;
+            else
+                return R.string.waiting_for_the_customer;
+        }
 
         return R.string.waiting_for_you;
 
     }
 
     private int getStatusColor(ContractStatus status, boolean nearExpirationDatetime) {
-        if (status != ContractStatus.CANCELLED && status != ContractStatus.PENDING_PAYMENT && nearExpirationDatetime)
+//        if (status != ContractStatus.CANCELLED && status != ContractStatus.PENDING_PAYMENT && nearExpirationDatetime)
+        //UPDATE YORDIN ALAYN 07.04.16
+        if (status == ContractStatus.PENDING_PAYMENT && nearExpirationDatetime)
             return res.getColor(R.color.cbw_contract_status_about_to_expire);
         return res.getColor(R.color.cbw_contract_status_normal);
     }

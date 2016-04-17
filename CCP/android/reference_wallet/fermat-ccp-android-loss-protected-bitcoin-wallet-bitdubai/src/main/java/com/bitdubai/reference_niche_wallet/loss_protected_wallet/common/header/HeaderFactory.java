@@ -18,7 +18,7 @@ public abstract class HeaderFactory <OCL extends View.OnClickListener>{
 
 
     public static View constructHeader(ViewGroup view){
-        BitcoinWalletHeaderFactory headerFactory = new BitcoinWalletHeaderFactory(view);
+        LossProtectedWalletHeaderFactory headerFactory = new LossProtectedWalletHeaderFactory(view);
         return headerFactory.obtainView();
     }
 

@@ -31,6 +31,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Fermat
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
@@ -198,7 +199,11 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 
     @Override
     public void setChangeBackActivity(Activities activityCodeBack) {
-        ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().setBackActivity(activityCodeBack);
+        try {
+            ApplicationSession.getInstance().getAppManager().getLastAppStructure().getLastActivity().setBackActivity(activityCodeBack);
+        } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -245,20 +250,20 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 Log.i("APP ACTIVITY loadUI", "getFragmentFactory " + System.currentTimeMillis());
                 Activity activity = appStructure.getLastActivity();
                 Log.i("APP ACTIVITY loadUI", "getLastActivity " + System.currentTimeMillis());
-//                executor.submit(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                    }
-//                });
-                try {
-                    fermatAppConnection.setActiveIdentity(fermatSession.getModuleManager().getSelectedActorIdentity());
-                    refreshSideMenu(fermatAppConnection);
-                } catch (CantGetSelectedActorIdentityException e) {
-                    e.printStackTrace();
-                } catch (ActorIdentityNotSelectedException e) {
-                    e.printStackTrace();
-                }
+                executor.submit(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            fermatAppConnection.setActiveIdentity(fermatSession.getModuleManager().getSelectedActorIdentity());
+                            refreshSideMenu(fermatAppConnection);
+                        } catch (CantGetSelectedActorIdentityException e) {
+                            e.printStackTrace();
+                        } catch (ActorIdentityNotSelectedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
                 Log.i("APP ACTIVITY loadUI", "getSelectedActorIdentity " + System.currentTimeMillis());
                 loadBasicUI(activity, fermatAppConnection);
                 Log.i("APP ACTIVITY loadUI", "loadBasicUI " + System.currentTimeMillis());

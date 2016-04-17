@@ -67,7 +67,7 @@ public class TokenlyFanIdentityDatabaseFactory implements DealsWithErrors, Deals
             table.addColumn(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ACCESS_TOKEN_COLUMN_NAME, DatabaseDataType.STRING, 200, false);
             table.addColumn(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EMAIL_COLUMN_NAME, DatabaseDataType.STRING, 200, false);
             table.addColumn(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME, DatabaseDataType.STRING, 100, false);
-
+            table.addColumn(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_ARTIST_CONNECTED_LIST_COLUMN_NAME, DatabaseDataType.STRING,200,false);
 
             table.addIndex(TokenlyFanIdentityDatabaseConstants.TOKENLY_FAN_IDENTITY_FIRST_KEY_COLUMN);
 

@@ -15,14 +15,16 @@ public class BitcoinWalletNotificationPainter implements NotificationPainter {
     private RemoteViews remoteViews;
     private String activityCodeToOpen;
     private boolean showNotification;
+    private String codeReturn;
 
     //constructor
 
-    public BitcoinWalletNotificationPainter(String title, String textBody, String image, String viewCode, boolean showNotification){
+    public BitcoinWalletNotificationPainter(String title, String textBody, String image, String viewCode, boolean showNotification,String codeReturn){
         this.title    = title;
         this.textBody = textBody;
         this.image    = image;
         this.showNotification = showNotification;
+        this.codeReturn = codeReturn;
 
     }
 
@@ -53,7 +55,7 @@ public class BitcoinWalletNotificationPainter implements NotificationPainter {
 
     @Override
     public String getActivityCodeResult() {
-        return null;
+        return this.codeReturn;
     }
 
     @Override

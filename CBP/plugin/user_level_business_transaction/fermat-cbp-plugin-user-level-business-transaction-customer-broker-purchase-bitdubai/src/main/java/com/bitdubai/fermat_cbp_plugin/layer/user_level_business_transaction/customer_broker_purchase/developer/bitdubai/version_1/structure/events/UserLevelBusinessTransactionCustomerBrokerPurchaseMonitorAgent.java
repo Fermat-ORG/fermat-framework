@@ -14,10 +14,13 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFi
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
+import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
+import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.exceptions.CantCloseContractException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.close_contract.interfaces.CloseContractManager;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.open_contract.exceptions.CantOpenContractException;
@@ -29,6 +32,7 @@ import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.inter
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.exceptions.CantGetListPurchaseNegotiationsException;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiation;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_purchase.interfaces.CustomerBrokerPurchaseNegotiationManager;
+import com.bitdubai.fermat_cbp_api.layer.negotiation.exceptions.CantGetListClauseException;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.common.enums.TransactionStatus;
 import com.bitdubai.fermat_cbp_api.layer.user_level_business_transaction.customer_broker_purchase.interfaces.CustomerBrokerPurchase;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
@@ -52,6 +56,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -296,6 +301,103 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
                                 broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
 
                             }
+                        }
+                    }
+                }
+            }
+
+            /**
+             * IN_CONTRACT_SUBMIT -> Update Contract Status to CANCELLED for expiration time in payment submit:
+             *
+             * If Expiration Time is done, Update the contract status to CANCELLED.
+             */
+            for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_CONTRACT_SUBMIT.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
+            {
+                for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_PAYMENT)) {
+
+                    String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
+
+                    if (customerBrokerPurchase.getTransactionId().equals(negotiationId)) {
+
+                        long timeToDelivery                     = 0;
+                        long timeStampToday                     = new Date().getTime();
+                        Negotiation negotiation                 = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                        Collection<Clause> negotiationClause    = negotiation.getClauses();
+                        String clauseValue                      = getNegotiationClause(negotiationClause, ClauseType.CUSTOMER_DATE_TIME_TO_DELIVER);
+
+                        if(clauseValue != null) timeToDelivery = Long.parseLong(clauseValue);
+
+                        System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN PAYMENT ***\n" +
+                                "\n - Contract: "+customerBrokerContractPurchase.getContractId()+
+                                "\n - timeStampToday: "+timeStampToday+
+                                "\n - dateTimeToDelivery: String: "+clauseValue+". Long"+timeToDelivery
+                        );
+
+                        if (timeStampToday >= timeToDelivery) {
+
+                            //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION//UPDATE CONTRACT STATUS
+//                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(
+//                                    customerBrokerContractPurchase.getContractId(),
+//                                    ContractStatus.CANCELLED);
+                            customerBrokerContractPurchaseManager.cancelContract(
+                                    customerBrokerContractPurchase.getContractId(),
+                                    "CANCELLATION CONTRACT BY EXPIRATION IN DATE OF SUBMIT PAYMENT.");
+
+                            //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION
+                            customerBrokerPurchase.setTransactionStatus(TransactionStatus.CANCELLED);
+                            userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.saveCustomerBrokerPurchaseTransactionData(customerBrokerPurchase);
+
+                            //BROADCASTER
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION);
+                            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+
+                        }
+                    }
+                }
+            }
+
+            /**
+             * IN_PAYMENT_SUBMIT -> Update Contract Status to CANCELLED for expiration time in merchandise:
+             *
+             * If Expiration Time is done, Update the contract status to CANCELLED.
+             */
+            for (CustomerBrokerPurchase customerBrokerPurchase : userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.getCustomerBrokerPurchases(getFilterTable(TransactionStatus.IN_PENDING_MERCHANDISE.getCode(), UserLevelBusinessTransactionCustomerBrokerPurchaseConstants.CUSTOMER_BROKER_PURCHASE_TRANSACTION_STATUS_COLUMN_NAME))) //IN_CONTRACT_SUBMIT
+            {
+                for (CustomerBrokerContractPurchase customerBrokerContractPurchase : customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForStatus(ContractStatus.PENDING_MERCHANDISE)) {
+
+                    String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
+
+                    if (customerBrokerPurchase.getTransactionId().equals(negotiationId)) {
+
+                        long timeToDelivery                     = 0;
+                        long timeStampToday                     = new Date().getTime();
+                        Negotiation negotiation                 = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                        Collection<Clause> negotiationClause    = negotiation.getClauses();
+                        String clauseValue                      = getNegotiationClause(negotiationClause, ClauseType.BROKER_DATE_TIME_TO_DELIVER);
+
+                        if(clauseValue != null) timeToDelivery = Long.parseLong(clauseValue);
+
+//                        System.out.println("\n*** TEST USER LEVEL - IN PAYMENT SUMIT - CANCELLED CONTRACT FOR EXPIRATION TIME IN MERCHANDISE ***\n" +
+//                                        "\n - Contract: "+customerBrokerContractPurchase.getContractId()+
+//                                        "\n - timeStampToday: "+timeStampToday+
+//                                        "\n - dateTimeToDelivery: "+timeToDelivery
+//                        );
+
+                        if (timeStampToday >= timeToDelivery) {
+
+                            //UPDATE CONTRACT STATUS
+                            customerBrokerContractPurchaseManager.cancelContract(
+                                    customerBrokerContractPurchase.getContractId(),
+                                    "CANCELLATION CONTRACT BY EXPIRATION IN DATE OF SUBMIT MERCHANDISE.");
+
+                            //UPDATE STATUS USER LEVEL BUSINESS TRANSACTION
+                            customerBrokerPurchase.setTransactionStatus(TransactionStatus.CANCELLED);
+                            userLevelBusinessTransactionCustomerBrokerPurchaseDatabaseDao.saveCustomerBrokerPurchaseTransactionData(customerBrokerPurchase);
+
+                            //BROADCASTER
+                            broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, customerWalletPublicKey, CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION);
+                            broadcaster.publish(BroadcasterType.UPDATE_VIEW, CBPBroadcasterConstants.CCW_CONTRACT_UPDATE_VIEW);
+
                         }
                     }
                 }
@@ -554,5 +656,19 @@ public class UserLevelBusinessTransactionCustomerBrokerPurchaseMonitorAgent exte
 
         //Can't do nothing more
         throw new CantGetExchangeRateException();
+    }
+
+    /**
+     * Get Value of Clause
+     *
+     * @param negotiationClause
+     * @param clauseType
+     */
+    private String getNegotiationClause(Collection<Clause> negotiationClause, ClauseType clauseType){
+
+        for (Clause clause : negotiationClause)
+            if (clause.getType().getCode().equals(clauseType.getCode())) return clause.getValue();
+        return null;
+
     }
 }

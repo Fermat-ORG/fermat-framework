@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
+import com.google.gson.Gson;
 
 import java.util.List;
 
@@ -45,5 +46,10 @@ public class NearNodeListMsgRespond extends MsgRespond {
      */
     public List<NodeProfile> getNodes() {
         return nodes;
+    }
+
+    public static NearNodeListMsgRespond parseContent(String content) {
+
+        return new Gson().fromJson(content, NearNodeListMsgRespond.class);
     }
 }

@@ -2,22 +2,27 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.support.v7.widget.Toolbar;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatMessage;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
@@ -42,9 +47,11 @@ import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
-import com.bitdubai.fermat_dap_api.layer.all_definition.util.Validate;
+
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 
 import java.io.ByteArrayInputStream;
 import java.sql.Timestamp;
@@ -54,9 +61,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -255,12 +259,70 @@ public class ChatAdapterView extends LinearLayout {
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+                onBackPressed();
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public void onBackPressed() {
+        final int actualHeight = getHeight();
+        FrameLayout.LayoutParams layoutParams =
+                (FrameLayout.LayoutParams) messagesContainer.getLayoutParams();
+        layoutParams.height = 764;
+        messagesContainer.setLayoutParams(layoutParams);
+    }
+
+   public void onAdjustKeyboard() {
+       FrameLayout.LayoutParams layoutParams =
+               (FrameLayout.LayoutParams) messagesContainer.getLayoutParams();
+       layoutParams.height = 440;
+       messagesContainer.setLayoutParams(layoutParams);
+   }
+
+    @Override
+    public boolean onKeyPreIme(int keyCode, KeyEvent event) {
+        if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+            if (event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                onBackPressed();
+            }
+        }
+        return super.dispatchKeyEvent(event);
+    }
+
+    private boolean isKeyboardShown(View rootView) {
+        final int SOFT_KEYBOARD_HEIGHT_DP_THRESHOLD = 128;
+        Rect r = new Rect();
+        rootView.getWindowVisibleDisplayFrame(r);
+        DisplayMetrics dm = rootView.getResources().getDisplayMetrics();
+        int heightDiff = rootView.getBottom() - r.bottom;
+        // Threshold size: dp to pixels, multiply with display density
+        boolean isKeyboardShown = heightDiff > SOFT_KEYBOARD_HEIGHT_DP_THRESHOLD * dm.density;
+        return isKeyboardShown;
+    }
+
+
     public void initControls() {
         messagesContainer = (RecyclerView) findViewById(R.id.messagesContainer);
         messagesContainer.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         messageET = (EditText) findViewById(R.id.messageEdit);
         sendBtn = (Button) findViewById(R.id.chatSendButton);
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        messageET.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                if (android.os.Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
+                    if (!isKeyboardShown(messageET.getRootView())) {
+                        onBackPressed();
+                    } else onAdjustKeyboard();
+                }
+            }
+        });
+        //mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         //adapter = new ChatAdapter(getContext(), (chatHistory != null) ? chatHistory : new ArrayList<ChatMessage>());
         //messagesContainer.setAdapter(adapter);
         //messageET.setText("Type message");

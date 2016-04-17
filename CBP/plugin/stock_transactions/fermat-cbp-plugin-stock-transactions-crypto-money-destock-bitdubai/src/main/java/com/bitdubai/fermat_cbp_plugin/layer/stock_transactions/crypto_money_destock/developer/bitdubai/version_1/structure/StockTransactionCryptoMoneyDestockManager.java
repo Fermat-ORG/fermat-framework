@@ -4,16 +4,11 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.BankMoneyTransaction;
-import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CryptoMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.exceptions.CantCreateCryptoMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.interfaces.CryptoMoneyDestockManager;
-import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.database.StockTransactionsCryptoMoneyDestockDatabaseDao;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_destock.developer.bitdubai.version_1.exceptions.MissingCryptoMoneyDestockDataException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -21,7 +16,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -43,7 +37,8 @@ public class StockTransactionCryptoMoneyDestockManager implements
      * @param pluginId              of this module.
      */
     public StockTransactionCryptoMoneyDestockManager(final PluginDatabaseSystem pluginDatabaseSystem,
-                                                     final UUID pluginId) {
+                                                     final UUID pluginId,
+                                                     ErrorManager errorManager) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
         this.errorManager = errorManager;

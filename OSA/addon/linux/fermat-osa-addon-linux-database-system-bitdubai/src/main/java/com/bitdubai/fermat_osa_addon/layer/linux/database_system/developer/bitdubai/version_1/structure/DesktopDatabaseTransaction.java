@@ -46,10 +46,10 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
     @Override
     public void addRecordToUpdate(DatabaseTable table, DatabaseTableRecord record){
         if(updateTables == null)
-            updateTables = new ArrayList<DatabaseTable>();
+            updateTables = new ArrayList<>();
 
         if(updateRecords == null)
-            updateRecords = new ArrayList<DatabaseTableRecord>();
+            updateRecords = new ArrayList<>();
 
         updateTables.add(table);
         updateRecords.add(record);
@@ -65,10 +65,10 @@ public class DesktopDatabaseTransaction implements DatabaseTransaction {
     public void addRecordToInsert(DatabaseTable table, DatabaseTableRecord record){
 
         if(insertTables == null)
-            insertTables = new ArrayList<DatabaseTable>();
+            insertTables = new ArrayList<>();
 
         if(insertRecords == null)
-            insertRecords = new ArrayList<DatabaseTableRecord>();
+            insertRecords = new ArrayList<>();
 
         insertTables.add(table);
         insertRecords.add(record);

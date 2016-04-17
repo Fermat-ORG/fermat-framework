@@ -151,6 +151,12 @@ public enum Activities implements FermatEnum {
     DAP_WALLET_ASSET_USER_ASSET_TRANSFER_SELECT_USERS_ACTIVITY("DWAUATSUA"),
     DAP_WALLET_ASSET_USER_ASSET_NEGOTIATION_DETAIL_ACTIVITY("DWAUANDA"),
 
+    DAP_WALLET_ASSET_USER_V2_HOME("DWAUH"),
+    DAP_WALLET_ASSET_USER_V2_DETAIL("DWAUD"),
+    DAP_WALLET_ASSET_USER_V2_REDEEM_POINTS("DWAURP"),
+
+    DAP_WALLET_ASSET_USER_V3_HOME("DWAU3H"),
+
     DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY("DWRPMA"),
     DAP_WALLET_REDEEM_POINT_HISTORY_ACTIVITY("DWRPHA"),
     DAP_WALLET_REDEEM_POINT_STADISTICS_ACTIVITY("DWRPSA"),
@@ -329,7 +335,7 @@ public enum Activities implements FermatEnum {
     CHT_CHAT_OPEN_SEND_ERROR_REPORT("CHTOSER"),
 
     //ART
-    ART_ARTIST_IDENTITY_HOME("AACACP"),
+    ART_ARTIST_IDENTITY_CREATE_PROFILE("AAICP"),
     ART_SUB_APP_FAN_COMMUNITY_CONNECTION_FRIEND_LIST("ASAFCCFL"),
     ART_SUB_APP_FAN_COMMUNITY_CONNECTION_NOTIFICATIONS("ASAFCCN"),
     ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD("ASAFCCW"),
@@ -351,7 +357,11 @@ public enum Activities implements FermatEnum {
     DESKTOP_SETTING_FERMAT_NETWORK("DSFN"),
     CCP_DESKTOP_P2P("DP2P"),
     CCP_DESKTOP_SOCIAL("DSOCIAL"),
-    DESKTOP_COMMUNITY_ACTIVITY("DESCA");
+    DESKTOP_COMMUNITY_ACTIVITY("DESCA"),
+
+
+    DESKTOP_WIZZARD_WELCOME("DWW")
+    ;
 
     private String code;
 
@@ -366,6 +376,8 @@ public enum Activities implements FermatEnum {
         //    }
         //}
         switch (code) {
+            case "AAICP":
+                return Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE;
             case "TAICP":
                 return Activities.TKY_ARTIST_IDENTITY_CREATE_PROFILE;
             case "DAPSARPI":
@@ -721,6 +733,14 @@ public enum Activities implements FermatEnum {
 //                return DAP_WALLET_ASSET_ISSUER_STADISTICS_ACTIVITY;
             case "DWUIMA":
                 return DAP_WALLET_ASSET_USER_MAIN_ACTIVITY;
+            case "DWAUH":
+                return DAP_WALLET_ASSET_USER_V2_HOME;
+            case "DWAU3H":
+                return DAP_WALLET_ASSET_USER_V3_HOME;
+            case "DWAUD":
+                return DAP_WALLET_ASSET_USER_V2_DETAIL;
+            case "DWAURP":
+                return DAP_WALLET_ASSET_USER_V2_REDEEM_POINTS;
             case "DWAUHA":
                 return DAP_WALLET_ASSET_USER_HISTORY_ACTIVITY;
             case "DWAUAD":
@@ -899,6 +919,8 @@ public enum Activities implements FermatEnum {
                 return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD;
             case "ASAACCOP":
                 return ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_OTHER_PROFILE;
+            case "DWW":
+                return DESKTOP_WIZZARD_WELCOME;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

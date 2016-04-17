@@ -40,7 +40,7 @@ public class AndroidCoreModuleManager  implements AndroidCoreManager {
     @Override
     public NetworkStatus getBitcoinNetworkStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBitcoinNetworkStatusException{
         try {
-            if(bitcoinNetworkManager.getBlockchainConnectionStatus(blockchainNetworkType).IsConnected())
+            if(bitcoinNetworkManager.getBlockchainConnectionStatus(blockchainNetworkType).isConnected())
              return NetworkStatus.CONNECTED;
             else
                 return NetworkStatus.DISCONNECTED;

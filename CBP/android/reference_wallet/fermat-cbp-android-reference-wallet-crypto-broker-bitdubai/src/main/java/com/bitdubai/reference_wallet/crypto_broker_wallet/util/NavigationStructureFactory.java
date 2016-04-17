@@ -80,7 +80,7 @@ public class NavigationStructureFactory {
         runtimeActivity.setType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getCode());
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY);
+        runtimeWalletNavigationStructure.changeActualStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_IDENTITY.getCode());
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
