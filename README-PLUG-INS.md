@@ -133,111 +133,10 @@ The mandatory initial structure is the following: (note: the word ISSUE is not p
 This is the root of your issue structure and must be labeled as _SUPER ISSUE_. It is closed only when all its children and grandchildren are closed.
 
 <br>
-##### ISSUE: '_Plugin Name_' - Analysis
-
-This is the Analysis root. It is closed whenever all analysis is done. This issue must be linked to the root of the issue structure.
-
-<br>
 ##### ISSUE: '_Plugin Name_' - Implementation
 
 This is the Implementation root. It is closed whenever all implementation is done. This issue must be linked to the root of the issue structure.
 
-<br>
-1 - ISSUE: **'_Plugin Name_' - Implementation - Developer Class** 
- 
-This issue is closed when this class if fully implemented. 
-
-<br>
-2 - ISSUE: **'_Plugin Name_' - Implementation - Plug-in Root** 
-
-This issue is closed when this class if fully implemented. 
-
-<br>
-3 - ISSUE: **'_Plugin Name_' - Implementation - Database** 
- 
-This issue is closed when all database classes are fully implemented. 
-
-* ISSUE: '_Plugin Name_' - Implementation - Database - Database Factory Class
-
-This issue is closed when this class if fully implemented. 
-
-* ISSUE: '_Plugin Name_' - Implementation - Database - Database Constants Class
-
-This issue is closed when this class if fully implemented.
-
-* ISSUE: '_Plugin Name_' - Implementation - Database - Developer Database Factory Class
-
-This issue is closed when this class if fully implemented.
-
-* ISSUE: '_Plugin Name_' - Implementation - Database - Database Factory Exceptions Class
-
-This issue is closed when this class if fully implemented.
-
-* ISSUE: '_Plugin Name_' - Implementation - Database - DAO Class 
-
-This issue is closed when this class if fully implemented.
-
-<br>
-4 - ISSUE: **'_Plugin Name_' - Implementation - Public Interfaces**
-
-This issue is closed when all public interface code is written.  Note that the 1, 2, n must be replaced with the actual interfase names.
-
-* ISSUE: '_Plugin Name_' - Implementation - Public Interfaces - Interface 1
-
-This issue is closed when the first public interface is written.
-
-* ISSUE: '_Plugin Name_' - Implementation - Public Interfaces - Interface 2
-
-This issue is closed when the second public interface is written.
-
-* ISSUE: '_Plugin Name_' Implementation - Public Interfaces - Interface n
-
-This issue is closed when the n public interfaces is written.
-
-<br>
-5 - ISSUE: **'_Plugin Name_' - Implementation - Internal Structure**
-
-This issue is closed when all the internal code structure is written.  Note that the 1, 2, n must be replaced with the actual class names.
-
-* ISSUE: '_Plugin Name_' - Implementation - Internal Structure - Class 1
-  
-This issue is closed when this class if fully implemented.
-
-* ISSUE: '_Plugin Name_' - Implementation - Internal Structure - Class 2
-  
-This issue is closed when this class if fully implemented.
-
-* ISSUE: '_Plugin Name_' - Implementation - Internal Structure - Class n
-  
-This issue is closed when this class if fully implemented.
-
-<br>
-6 - ISSUE: **'_Plugin Name_' - Implementation - Event Handling**
-
-This issue is closed when all event handler classes are written. Note that the 1, 2, n must be replaced with the actual class names.
-
-* ISSUE: '_Plugin Name_' - Implementation - Event Handling - Event Handler 1
-
-This issue is closed when this Event Handler class if fully implemented.
-
-* ISSUE: '_Plugin Name_' - Implementation - Event Handling - Event Handler 2
-
-This issue is closed when this Event Handler class if fully implemented.
-
-* ISSUE: '_Plugin Name_' - Implementation - Event Handling - Event Handler n
-
-This issue is closed when this Event Handler class if fully implemented.
-
-<br>
-##### ISSUE: '_Plugin Name_' - Testing
-
-This is the Testing root. It is closed whenever all testing is done. This issue must be linked to the root of the issue structure.
-
-* ISSUE: '_Plugin Name_' - Testing - Unit Testing
-
-* ISSUE: '_Plugin Name_' - Testing - Integration Testing
- 
- 
 <br>
 ##### ISSUE: '_Plugin Name_' - QA
  
@@ -245,15 +144,6 @@ This is the Testing root. It is closed whenever all testing is done. This issue 
 This is the QA root. It is closed whenever QA tests are passed. This issue must be linked to the root of the issue structure.
 
 It is expected to have here child issues in the form '_Plugin Name_' QA - Bug Fix n, where n is both the number and the bug name.
-
-<br>
-##### ISSUE: '_Plugin Name_' - Production
-
-This is the Production root. It is closed whenever the Plug-in reaches production. It can be re-opened if bug issues are found on production and closed again once they are fixed. This issue must be linked to the root of the issue structure.
-
-It is expected to have here child issues in the form  '_Plugin Name_' Production - Bug Fix n, where n is both the number and the bug name.
-
-
 
 <br>
 
@@ -587,7 +477,7 @@ Example code of a complete class implementation:
 /*
  * @#WsCommunicationVpnServerManagerAgent.java - 2015
  * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
+ * You may not modify, use, reproduce or distribute this software.
  * BITDUBAI
  */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.vpn;
@@ -804,15 +694,15 @@ The name must be in upper case continued the legend that says you element being 
 <br>
 For example:
 ```java
-public class ”MyPluginName”DatabaseConstants {    
+public class MyPluginNameDatabaseConstants {    
 /**define database name**/
-	public static final String “DECLARE_NAME_OF_THE_DATABASE”_DATABASE_NAME ="declare_name_of_the_database";
+	public static final String DECLARE_NAME_OF_THE_DATABASE_DATABASE_NAME ="declare_name_of_the_database";
 /**define table name**/
-      public static final String “DECLARING_THE_TABLE_NAME”_TABLE_NAME ="declaring_the_table_name";
+      public static final String DECLARING_THE_TABLE_NAME_TABLE_NAME ="declaring_the_table_name";
       /**define column name**/
-      static final String “DECLARE_THE_COLUMN_NAME”_COLUMN_NAME="declare_the_column_name";
+      static final String DECLARE_THE_COLUMN_NAME_COLUMN_NAME="declare_the_column_name";
       /**define primary key name**/
-      static final String “DECLARE_THE_PRIMARY_KEY_NAME”_FIRST_KEY_COLUMN ="the_primary_key_name";
+      static final String DECLARE_THE_PRIMARY_KEY_NAME_FIRST_KEY_COLUMN ="the_primary_key_name";
 }
 ```
 

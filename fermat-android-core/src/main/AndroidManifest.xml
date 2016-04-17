@@ -122,6 +122,7 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:launchMode="singleInstance"
+            android:hardwareAccelerated="true"
             />
 
         <receiver android:name="com.bitdubai.android_core.app.AppLauncherReceiver">
