@@ -3,6 +3,7 @@ package com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bi
 
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.LanguagePackage;
@@ -32,6 +33,7 @@ public class RuntimeSubApp implements SubApp {
 
     Map<String,LanguagePackage> languagePackages = new HashMap<String,LanguagePackage>();
     private int bannerRes;
+    private Platforms platform;
 
 
     /**
@@ -57,6 +59,10 @@ public class RuntimeSubApp implements SubApp {
         languagePackages.put(languagePackage.getName(),languagePackage);
     }
 
+    public void setPlatform(Platforms platform) {
+        this.platform = platform;
+    }
+
     /**
      * SubApp interface implementation.
      */
@@ -74,6 +80,11 @@ public class RuntimeSubApp implements SubApp {
     @Override
     public FermatAppType getFermatAppType() {
         return FermatAppType.SUB_APP;
+    }
+
+    @Override
+    public Platforms getPlatform() {
+        return platform;
     }
 
     @Override

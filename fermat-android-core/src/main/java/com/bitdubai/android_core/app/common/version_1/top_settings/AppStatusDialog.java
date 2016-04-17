@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
@@ -32,7 +31,7 @@ public class AppStatusDialog extends Dialog{
     private AndroidCoreModule androidCoreModule;
     private AppStatusCallbackChanges appStatusCallbackChanges;
     private AndroidCoreSettings androidCoreSettings;
-    RadioGroup radioGroup;
+    RadioButton radioChecked;
 
     public AppStatusDialog(Context context,AndroidCoreModule androidCoreModule,AppStatusCallbackChanges appStatusCallbackChanges) {
         super(context);
@@ -43,7 +42,7 @@ public class AppStatusDialog extends Dialog{
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
-            androidCoreSettings = new AndroidCoreSettings(AppsStatus.RELEASE);
+            androidCoreSettings = new AndroidCoreSettings(AppsStatus.ALPHA);
             try {
                 androidCoreModule.getSettingsManager().persistSettings(ApplicationConstants.SETTINGS_CORE, androidCoreSettings);
             } catch (CantPersistSettingsException e1) {
@@ -66,12 +65,13 @@ public class AppStatusDialog extends Dialog{
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.app_status_dialog_main);
 
-        RadioButton radioButton =(RadioButton) findViewById(R.id.radio_release);
+        final RadioButton radioButton =(RadioButton) findViewById(R.id.radio_release);
         radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
                     Toast.makeText(getContext(), "No apps in Release for now", Toast.LENGTH_SHORT).show();
+                    buttonView.setChecked(false);
 //                    androidCoreSettings.setAppsStatus(AppsStatus.RELEASE);
 //                    uncheckAllExcept();
 //                    buttonView.setChecked(isChecked);
@@ -88,9 +88,11 @@ public class AppStatusDialog extends Dialog{
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
                     Toast.makeText(getContext(), "No apps in Beta for now", Toast.LENGTH_SHORT).show();
+                    buttonView.setChecked(false);
 //                    androidCoreSettings.setAppsStatus(AppsStatus.BETA);
 //                    uncheckAllExcept();
 //                    buttonView.setChecked(isChecked);
+
 //                    appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.BETA);
                 }
 
@@ -103,8 +105,10 @@ public class AppStatusDialog extends Dialog{
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
                     androidCoreSettings.setAppsStatus(AppsStatus.ALPHA);
-                    uncheckAllExcept();
-                    buttonView.setChecked(isChecked);
+//                    uncheckAllExcept();
+                    radioChecked.setChecked(false);
+                    buttonView.setChecked(true);
+                    radioChecked = (RadioButton) buttonView;
                     appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.ALPHA);
                 }
 
@@ -117,8 +121,10 @@ public class AppStatusDialog extends Dialog{
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked) {
                     androidCoreSettings.setAppsStatus(AppsStatus.DEV);
-                    uncheckAllExcept();
-                    buttonView.setChecked(isChecked);
+//                    uncheckAllExcept();
+                    radioChecked.setChecked(false);
+                    buttonView.setChecked(true);
+                    radioChecked = (RadioButton) buttonView;
                     appStatusCallbackChanges.appSoftwareStatusChanges(AppsStatus.DEV);
                 }
 
@@ -127,15 +133,20 @@ public class AppStatusDialog extends Dialog{
 
         switch (androidCoreSettings.getAppsStatus()){
             case RELEASE:
+                radioChecked = radioButton;
                 radioButton.setChecked(true);
+
                 break;
             case BETA:
+                radioChecked = radioButton1;
                 radioButton1.setChecked(true);
                 break;
             case ALPHA:
+                radioChecked = radioButton2;
                 radioButton2.setChecked(true);
                 break;
             case DEV:
+                radioChecked = radioButton3;
                 radioButton3.setChecked(true);
                 break;
         }
@@ -190,7 +201,6 @@ public class AppStatusDialog extends Dialog{
         ((FermatTextView)findViewById(R.id.txt_alpha)).setFont(FontType.CAVIAR_DREAMS);
         ((FermatTextView)findViewById(R.id.txt_dev)).setFont(FontType.CAVIAR_DREAMS);
         ((FermatTextView)findViewById(R.id.txt_title_app_status)).setFont(FontType.CAVIAR_DREAMS_BOLD);
-
 
 
 
