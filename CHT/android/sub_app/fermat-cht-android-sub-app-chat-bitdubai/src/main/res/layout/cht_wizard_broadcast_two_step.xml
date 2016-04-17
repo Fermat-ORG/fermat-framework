@@ -3,14 +3,56 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select the contacts to add into broadcast"
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal" />
 
-    <android.support.v7.widget.RecyclerView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="ADD BROADCAST LIST RECIPIENTS"
+            android:id="@+id/textView"
+            android:drawableEnd="@drawable/ic_action_add"
+            android:textColor="#808080"
+            android:singleLine="false"
+            android:textAlignment="center"
+            android:layout_marginTop="46dp"
+            android:layout_below="@+id/editTextNameBroadcast"
+            android:layout_centerHorizontal="true" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/editTextContacts"
+            android:hint="Type contact name"
+            android:layout_below="@+id/textView"
+            android:layout_alignStart="@+id/textView"
+            android:layout_alignEnd="@+id/textView" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="BROADCAST SIMPLE"
+            android:id="@+id/textView3"
+            android:layout_gravity="center_horizontal"
+            android:textColor="#000"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="49dp" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/editTextNameBroadcast"
+            android:hint="Type name for the broadcast"
+            android:layout_below="@+id/textView3"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
 </LinearLayout>
