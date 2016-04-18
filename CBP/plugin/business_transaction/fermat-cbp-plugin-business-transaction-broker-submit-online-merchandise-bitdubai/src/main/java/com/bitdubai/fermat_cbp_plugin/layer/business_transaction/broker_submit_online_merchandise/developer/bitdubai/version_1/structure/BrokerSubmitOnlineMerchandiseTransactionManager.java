@@ -235,15 +235,19 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             String customerCryptoAddress=getBrokerCryptoAddressString(
                     customerBrokerSaleNegotiation
             );
+            String cryptoAddress,intraActorPk,aux[];
+            aux = customerCryptoAddress.split(":");
+            cryptoAddress=aux[0];
+            intraActorPk=aux[1];
             long cryptoAmount= getAmount(customerBrokerSaleNegotiation);
             this.brokerSubmitOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(
                     customerBrokerContractSale,
-                    customerCryptoAddress,
+                    cryptoAddress,
                     walletPublicKey,
                     cryptoAmount,
                     cbpWalletPublicKey,
                     referencePrice,
-                    blockchainNetworkType);
+                    blockchainNetworkType,intraActorPk);
         } catch (CantGetListCustomerBrokerContractSaleException e) {
             errorManager.reportUnexpectedPluginException(
                     Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,

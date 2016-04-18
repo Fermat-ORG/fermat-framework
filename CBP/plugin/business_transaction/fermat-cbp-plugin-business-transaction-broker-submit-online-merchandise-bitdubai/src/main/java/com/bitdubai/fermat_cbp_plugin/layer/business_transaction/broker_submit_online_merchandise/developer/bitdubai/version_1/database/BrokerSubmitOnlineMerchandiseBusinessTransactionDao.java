@@ -377,7 +377,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             long cryptoAmount,
             String cbpWalletPublicKey,
             BigDecimal referencePrice,
-            BlockchainNetworkType blockchainNetworkType)
+            BlockchainNetworkType blockchainNetworkType,String intraActorPK)
             throws CantInsertRecordException {
         try{
             DatabaseTable databaseTable=getDatabaseSubmitTable();
@@ -390,7 +390,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     cryptoAmount,
                     cbpWalletPublicKey,
                     referencePrice,
-                    blockchainNetworkType
+                    blockchainNetworkType,intraActorPK
             );
             databaseTable.insertRecord(databaseTableRecord);
         }catch(CantInsertRecordException exception){
@@ -466,7 +466,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             long cryptoAmount,
             String cbpWalletPublicKey,
             BigDecimal referencePrice,
-            BlockchainNetworkType blockchainNetworkType) {
+            BlockchainNetworkType blockchainNetworkType,String intraActorPk) {
 
         UUID transactionId=UUID.randomUUID();
         record.setUUIDValue(
@@ -488,6 +488,9 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         record.setStringValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_ADDRESS_COLUMN_NAME,
                 brokerCryptoAddress);
+        record.setStringValue(
+                BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_INTRA_ACTOR_PUBLIC_KEY_COLUMN_NAME,
+                intraActorPk);
         record.setStringValue(
                 BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_CRYPTO_WALLET_PUBLIC_KEY_COLUMN_NAME,
                 walletPublicKey);
