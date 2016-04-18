@@ -1,11 +1,4 @@
-/*
- * @#NetworkNodePluginRoot.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1;
-
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -57,7 +50,6 @@ import org.apache.commons.configuration.ConfigurationException;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
-
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.NetworkNodePluginRoot</code> is
@@ -164,8 +156,6 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     public NetworkNodePluginRoot() {
         super(new PluginVersionReference(new Version()));
-        this.propagateNodeCatalogAgent = new PropagateNodeCatalogAgent();
-        this.propagateActorCatalogAgent =  new PropagateActorCatalogAgent();
     }
 
     /**
@@ -224,8 +214,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             /*
              * Add references to the node context
              */
-            NodeContext.add(NodeContextItem.DAO_FACTORY                , daoFactory              );
-            NodeContext.add(NodeContextItem.DEVELOPER_DATABASE_FACTORY , developerDatabaseFactory);
+            NodeContext.add(NodeContextItem.DAO_FACTORY, daoFactory);
+            NodeContext.add(NodeContextItem.DEVELOPER_DATABASE_FACTORY, developerDatabaseFactory);
             NodeContext.add(NodeContextItem.ERROR_MANAGER              , errorManager            );
             NodeContext.add(NodeContextItem.EVENT_MANAGER              , eventManager            );
             NodeContext.add(NodeContextItem.FERMAT_EMBEDDED_NODE_SERVER, fermatEmbeddedNodeServer);
@@ -237,6 +227,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             /*
              * Initialize propagate catalog agents
              */
+
+            this.propagateNodeCatalogAgent = new PropagateNodeCatalogAgent();
+            this.propagateActorCatalogAgent =  new PropagateActorCatalogAgent();
             propagateNodeCatalogAgent.start();
             propagateActorCatalogAgent.start();
 
