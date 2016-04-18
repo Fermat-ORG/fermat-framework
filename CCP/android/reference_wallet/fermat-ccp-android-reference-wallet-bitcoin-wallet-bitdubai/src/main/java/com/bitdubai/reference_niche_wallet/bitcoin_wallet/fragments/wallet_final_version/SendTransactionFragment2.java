@@ -130,6 +130,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     private  Map<Long, Long> runningDailyBalance;
     final Handler handler = new Handler();
 
+    private BitcoinWalletSettings bitcoinWalletSettings = null;
+
 
     private ExecutorService _executor;
 
@@ -181,50 +183,55 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 //            if(lst==null){
 //                startWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(),appSession, walletSettings, walletResourcesProviderManager, null);
 //            }
+
+            //get wallet settings
+            settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
+
+
+            try {
+                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+            } catch (Exception e) {
+                bitcoinWalletSettings = null;
+            }
+
+            if (bitcoinWalletSettings == null) {
+                bitcoinWalletSettings = new BitcoinWalletSettings();
+                bitcoinWalletSettings.setIsContactsHelpEnabled(true);
+                bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
+                bitcoinWalletSettings.setNotificationEnabled(true);
+
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+
+                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+            }
+            else
+            {
+                if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
+                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                }
+                else
+                {
+                    blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+                }
+
+            }
+
+            try {
+                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+
+            System.out.println("Network Type" + blockchainNetworkType);
+            final BitcoinWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
+
             _executor.submit(new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
-
-                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-
-                        BitcoinWalletSettings bitcoinWalletSettings;
-                        try {
-                            bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
-                        } catch (Exception e) {
-                            bitcoinWalletSettings = null;
-                        }
-                        if (bitcoinWalletSettings == null) {
-                            bitcoinWalletSettings = new BitcoinWalletSettings();
-                            bitcoinWalletSettings.setIsContactsHelpEnabled(true);
-                            bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
-                            bitcoinWalletSettings.setNotificationEnabled(true);
-
-                            blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-                            bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
-
-                            settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
-                        }
-                        else
-                        {
-                            if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                            }
-                            else
-                            {
-                                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-                            }
-
-                        }
-
-
-                        settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
-
-                        System.out.println("Network Type" + blockchainNetworkType);
-                        final BitcoinWalletSettings bitcoinWalletSettingsTemp = bitcoinWalletSettings;
-
-
 
                         handler.postDelayed(new Runnable() {
                             public void run() {
@@ -937,27 +944,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             long currentTime = System.currentTimeMillis();
             runningDailyBalance = new HashMap<Long, Long>();
 
-            BitcoinWalletSettings bitcoinWalletSettings = null;
+          /*  BitcoinWalletSettings bitcoinWalletSettings = null;
             try {
                 bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
             }catch (Exception e){
                 bitcoinWalletSettings = null;
-            }
+            }*/
 
-            if(bitcoinWalletSettings == null){
-                bitcoinWalletSettings = new BitcoinWalletSettings();
-                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            if(bitcoinWalletSettings != null){
 
-                //defualt values
-                bitcoinWalletSettings.setIsContactsHelpEnabled(true);
-                bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
-                bitcoinWalletSettings.setNotificationEnabled(true);
-
-                runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey(),blockchainNetworkType));
-                bitcoinWalletSettings.setRunningDailyBalance(runningDailyBalance);
-                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
-            }
-            else {
 
                 blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
 

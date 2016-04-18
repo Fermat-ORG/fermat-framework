@@ -65,7 +65,7 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractModule<ChatIdent
          *
          */
         System.out.println("******* Init Chat Sup App Module Identity ******");
-        chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager);
+        chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager, pluginFileSystem, pluginId);
         //TODO: This method is only for testing, please, comment it when the test is finish, thanks.
         //testMethod("Franklin Marcano", new byte[0]);
 
@@ -83,7 +83,7 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractModule<ChatIdent
     @Override
     public ModuleManager<ChatIdentityPreferenceSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         if (chatIdentityModuleManager == null)
-            chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager);
+            chatIdentityModuleManager = new com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.structure.ChatIdentitySupAppModuleManager(chatIdentityManager, pluginFileSystem, pluginId);
 
         return chatIdentityModuleManager;
     }
