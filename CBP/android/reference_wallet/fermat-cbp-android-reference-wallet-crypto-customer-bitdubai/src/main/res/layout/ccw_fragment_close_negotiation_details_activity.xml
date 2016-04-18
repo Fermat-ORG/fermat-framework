@@ -34,7 +34,7 @@
             android:layout_toEndOf="@+id/ccw_customer_image"
             android:layout_toRightOf="@+id/ccw_customer_image"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:textSize="16sp"
             tools:text="Selling 12 BTC"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -45,7 +45,7 @@
             android:layout_toEndOf="@+id/ccw_customer_image"
             android:layout_toRightOf="@+id/ccw_customer_image"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="16sp"
             tools:text="1 BTC @ 254 USD"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -56,7 +56,7 @@
             android:layout_toEndOf="@+id/ccw_customer_image"
             android:layout_toRightOf="@+id/ccw_customer_image"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="14sp"
             tools:text="Broker Name"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
