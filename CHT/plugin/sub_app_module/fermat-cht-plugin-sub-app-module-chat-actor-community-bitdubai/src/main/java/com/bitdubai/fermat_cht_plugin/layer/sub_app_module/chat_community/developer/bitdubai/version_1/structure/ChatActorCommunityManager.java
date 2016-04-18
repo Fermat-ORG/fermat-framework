@@ -11,10 +11,10 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Connecti
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -26,7 +26,9 @@ import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorCo
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ErrorSearchingChatSuggestionsException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatActorWaitingException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
@@ -70,6 +72,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
      private final PluginFileSystem                   pluginFileSystem                      ;
      private final UUID                               pluginId                              ;
      private final PluginVersionReference             pluginVersionReference                ;
+    private ChatActorCommunitySubAppModuleManager chatActorCommunitySubAppModuleManager;
 
     public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager, ChatActorConnectionManager chatActorConnectionManager, ChatManager chatActorNetworkServiceManager, ErrorManager errorManager, PluginFileSystem pluginFileSystem, UUID pluginId, PluginVersionReference pluginVersionReference) {
         this.chatIdentityManager= chatIdentityManager;
@@ -342,6 +345,39 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         return chatActorCommunityInformationList;
     }
 
+
+
+    @Override
+    public List<ChatActorCommunityInformation> getCacheSuggestionsToContact(int max, int offset) throws CantListChatIdentityException {
+        try {
+
+            List<ChatActorCommunityInformation> chatActorCommunityInformationModuleList = new ArrayList<>();
+
+            List<ChatActorCommunityInformation> chatActorCommunityInformationList = new ArrayList<>();
+            chatActorCommunityInformationList = chatActorNetworkServiceManager.getCacheSuggestionsToContact(max, offset);
+
+
+            for (ChatActorCommunityInformation record : chatActorCommunityInformationList) {
+
+                //get connection state status
+                ConnectionState connectionState = this.chatActorNetworkServiceManager.getCacheSuggestionsToContact(record.getPublicKey());
+
+                //return intra user information - if not connected - status return null
+                ChatActorCommunityInformation chatUserInformation = new ChatActorCommunitySubAppModuleInformationImpl(record.getPublicKey(),record.getAlias(),record.getImage(),record.getConnectionState(),record.getConnectionId());
+                chatActorCommunityInformationModuleList.add(chatUserInformation);
+            }
+
+            return chatActorCommunityInformationModuleList;
+        }
+        catch (ErrorSearchingChatSuggestionsException e) {
+            throw new CantListChatIdentityException("CAN'T GET CACHE SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
+        }
+        catch (Exception e) {
+            throw new CantListChatIdentityException("CAN'T GET CACHE SUGGESTIONS TO CONTACT",e,"","Unknown Error");
+
+        }
+    }
+
     @Override
     public List<ChatActorCommunityInformation> listChatActorPendingRemoteAction(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {
         List<ChatActorCommunityInformation> chatActorCommunityInformationList = null;
@@ -372,8 +408,35 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         return chatActorCommunityInformationList;
     }
 
-    @Override
-    public int getChatActorWaitingYourAcceptanceCount() { return 0;  }
+    public List<ChatActorCommunityInformation> getChatActorWaitingYourAcceptanceCount(final String PublicKey, int max, int offset) throws CantGetChatActorWaitingException {
+        List<ChatActorCommunityInformation> actorList = null;
+        try {
+            List<ChatActorCommunityInformation> chatActorList;
+            actorList = new ArrayList<>();
+
+            chatActorList = this.chatActorCommunitySubAppModuleManager.getChatActorWaitingYourAcceptanceCount(PublicKey, max, offset);
+
+
+
+            for (ChatActorCommunityInformation record : chatActorList)
+                actorList.add((new ChatActorCommunitySubAppModuleInformationImpl(
+                        record.getPublicKey(),
+                        record.getAlias(),
+                        record.getImage(),
+                        record.getConnectionState(),
+                        record.getConnectionId())));
+
+
+        } catch (CantGetChatActorWaitingException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_COMMUNITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            try {
+                throw new CantGetChatActorWaitingException("CAN'T GET CHAT ACTOR WAITING THEIR ACCEPTANCE", e, "", "Error on CHAT ACTOR MANAGER");
+            } catch (CantGetChatActorWaitingException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return actorList;
+    }
 
     @Override
     public ConnectionState getActorConnectionState(String publicKey) throws CantValidateActorConnectionStateException {
@@ -462,12 +525,25 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
 
     @Override
-    public void setAppPublicKey(String publicKey) {
+    public void setAppPublicKey(String publicKey) { this.subAppPublicKey= publicKey;}
 
-    }
+
 
     @Override
     public int[] getMenuNotifications() {
-        return new int[0];
+        int[] notifications = new int[4];
+        try {
+            if(getSelectedActorIdentity() != null)
+                notifications[2] = chatActorCommunitySubAppModuleManager.getChatActorWaitingYourAcceptanceCount(getSelectedActorIdentity().getPublicKey(),99,0).size();
+            else
+                notifications[2] = 0;
+        } catch (CantGetSelectedActorIdentityException e) {
+            e.printStackTrace();
+        } catch (ActorIdentityNotSelectedException e) {
+            e.printStackTrace();
+        } catch (CantGetChatActorWaitingException e) {
+            e.printStackTrace();
+        }
+        return notifications;
     }
 }
