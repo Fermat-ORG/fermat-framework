@@ -4842,7 +4842,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTabStrip.setTabsIndicateColor("#12aca1");
 
 
-        runtimeTab = new Tab();
+       /* runtimeTab = new Tab();
         runtimeTab.setLabel("Sent");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_SEND);
         runtimeTabStrip.addTab(runtimeTab);
@@ -4850,7 +4850,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_RECEIVE);
-        runtimeTabStrip.addTab(runtimeTab);
+        runtimeTabStrip.addTab(runtimeTab);*/
 
 
         runtimeTabStrip.setDividerColor(0x72af9c);
