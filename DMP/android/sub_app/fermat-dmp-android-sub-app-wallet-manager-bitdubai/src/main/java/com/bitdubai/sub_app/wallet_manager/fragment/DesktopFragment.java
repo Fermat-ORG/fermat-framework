@@ -115,21 +115,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         lstItems = new ArrayList<>();
-        settingsSettingsManager = appSession.getModuleManager().getSettingsManager();
-//
-//        try {
-//            appManagerSettings = settingsSettingsManager.loadAndGetSettings(appSession.getAppPublicKey());
-//        } catch (CantGetSettingsException e) {
-//            e.printStackTrace();
-//        } catch (SettingsNotFoundException e) {
-//            appManagerSettings = new DesktopManagerSettings();
-//            appManagerSettings.setIsPresentationHelpEnabled(true);
-//            try {
-//                settingsSettingsManager.persistSettings(appSession.getAppPublicKey(),appManagerSettings);
-//            } catch (CantPersistSettingsException e1) {
-//                e1.printStackTrace();
-//            }
-//        }
+
 
 
 
@@ -354,7 +340,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     Item item = new Item(installedWallet);
                     item.setIconResource(R.drawable.icon_loss_protected);
                     item.setPosition(8);
-                    installedWallet.setAppStatus(AppsStatus.ALPHA);
+                    installedWallet.setAppStatus(AppsStatus.DEV);
                     lstItemsWithIcon.add(item);
                 }
             }
@@ -523,10 +509,17 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                 arrItemsWithoutIcon[i] = emptyItem;
             }
 
-            for(Item itemIcon: lstItemsWithIcon){
-                arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
-            }
+            int pos = 0;
+            for(int i = 0;i<lstItemsWithIcon.size();i++){
+                Item itemIcon = lstItemsWithIcon.get(i);
+                if(itemIcon.getInterfaceObject() instanceof InstalledWallet){
+                    if(((InstalledWallet) itemIcon.getInterfaceObject()).getAppStatus() == AppsStatus.ALPHA){
+                        arrItemsWithoutIcon[pos]= itemIcon;
+                        pos++;
+                    }
+                }
 
+            }
             dataSet.addAll(Arrays.asList(arrItemsWithoutIcon));
 
         } catch (Exception e){

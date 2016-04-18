@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces;
 
-import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
-
 /**
  * Created by mati on 2015.11.14..
  */
@@ -20,9 +18,9 @@ public interface FermatRuntime {
     /**
      *  Change start activity of an app,
      *
-     * @param optionActivity  is the position added in the runtime
+     * @param activityCode  is the position added in the runtime
      * @return
      */
 
-    void changeStartActivity(int optionActivity);
+    void changeStartActivity(String activityCode);
 }
