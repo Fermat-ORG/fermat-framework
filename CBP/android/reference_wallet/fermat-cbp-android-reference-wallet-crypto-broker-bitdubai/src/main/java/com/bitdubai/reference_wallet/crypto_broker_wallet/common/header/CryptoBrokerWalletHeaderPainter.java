@@ -15,8 +15,7 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.exceptions.CantGetCryptoBrokerWalletException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -41,7 +40,8 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
 
     private final CryptoBrokerWalletSession session;
     private final WeakReference<Context> activity;
-    private CryptoBrokerWalletManager walletManager;
+    private ErrorManager errorManager;
+    private CryptoBrokerWalletModuleManager moduleManager;
 
 
     public CryptoBrokerWalletHeaderPainter(Context activity, CryptoBrokerWalletSession fullyLoadedSession) {
@@ -49,9 +49,14 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
         session = fullyLoadedSession;
 
         try {
-            walletManager = session.getModuleManager().getCryptoBrokerWallet(session.getAppPublicKey());
-        } catch (CantGetCryptoBrokerWalletException e) {
-            e.printStackTrace();
+            moduleManager = session.getModuleManager();
+            errorManager = session.getErrorManager();
+        } catch (Exception e) {
+            if (errorManager != null)
+                errorManager.reportUnexpectedWalletException(Wallets.CBP_CRYPTO_BROKER_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            else
+                Log.e(TAG, e.getMessage(), e);
         }
     }
 
@@ -71,7 +76,7 @@ public class CryptoBrokerWalletHeaderPainter implements HeaderViewPainter {
             @Override
             protected Object doInBackground() throws Exception {
                 List<IndexInfoSummary> data = new ArrayList<>();
-                data.addAll(walletManager.getProvidersCurrentExchangeRates(session.getAppPublicKey()));
+                data.addAll(moduleManager.getProvidersCurrentExchangeRates(session.getAppPublicKey()));
 
                 return data;
             }

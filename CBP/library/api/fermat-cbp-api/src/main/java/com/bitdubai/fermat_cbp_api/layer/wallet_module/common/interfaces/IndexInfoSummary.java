@@ -2,13 +2,14 @@ package com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces;
 
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 
 /**
  * Summarized information about a index
  */
-public interface IndexInfoSummary {
+public interface IndexInfoSummary extends Serializable {
 
     /**
      * @return the provider's name or "Unknown Provider"

@@ -4,13 +4,14 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communi
 
 import com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_community.exceptions.CantGetCryptoCustomerSearchResult;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * The interface <code>CryptoCustomerCommunitySearch</code>
  * provides the methods to search for a particular crypto customer
  */
-public interface CryptoCustomerCommunitySearch {
+public interface CryptoCustomerCommunitySearch extends Serializable {
 
     void addAlias(String alias);
 
