@@ -91,6 +91,15 @@
             android:layout_height="8dp"
             android:checked="false"
             android:id="@+id/radio_fourth"
+            android:layout_marginRight="9dp"
+            android:background="@drawable/radio_selector"
+            />
+
+        <RadioButton
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:checked="false"
+            android:id="@+id/radio_fifth"
             android:background="@drawable/radio_selector"
             />
 
