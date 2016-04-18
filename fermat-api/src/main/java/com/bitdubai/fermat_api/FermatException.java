@@ -5,10 +5,10 @@ public class FermatException extends Exception {
 	public static final String CONTEXT_CONTENT_SEPARATOR = "&&";
 
 	/**
-	 *
+	 * 
 	 */
 	private static final long serialVersionUID = 6066719615565752788L;
-
+	
 	public static final String DEFAULT_MESSAGE = "FERMAT HAS DETECTED AN EXCEPTION: ";
 
 
@@ -43,8 +43,7 @@ public class FermatException extends Exception {
 		if(cause != null)
 			this.cause = cause instanceof FermatException ? (FermatException) cause : FermatException.wrapException(cause);
 		else
-			this.cause = null;
-		this.context = context == null || context.isEmpty() ? "N/A" : context;
+			this.cause = null;		this.context = context == null || context.isEmpty() ? "N/A" : context;
 		this.possibleReason = possibleReason == null || possibleReason.isEmpty() ? "N/A" : possibleReason;
 		this.depth = (this.cause == null) ? Integer.valueOf(1) : Integer.valueOf(this.cause.getDepth() + 1);
 	}
@@ -93,23 +92,37 @@ public class FermatException extends Exception {
 	@Override
 	public String toString(){
 		StringBuilder builder = new StringBuilder();
-
-		if(cause != null)
+		
+		if(cause != null) {
 			builder.append(cause.toString());
 
-		builder.append("Exception Number: ").append(depth.toString()).append("\n");
-		builder.append("Exception Type: ").append(exceptionName).append("\n");
-		builder.append("Exception Message: ").append(getMessage()).append("\n");
-		builder.append("Exception Possible Cause: ");
-		builder.append(getPossibleReason()).append("\n");
-		builder.append("Exception Context: " );
-		builder.append("\n---------------------------------------------------------------------------------\n");
-		builder.append(getFormattedContext());
-		builder.append("---------------------------------------------------------------------------------\n");
-		builder.append("Exception Stack Trace: \n");
-		builder.append("---------------------------------------------------------------------------------\n");
-		builder.append(getFormattedTrace());
-		builder.append("---------------------------------------------------------------------------------\n");
+			builder.append("Exception Number: ").append(depth.toString()).append("\n");
+			builder.append("Exception Type: ").append(exceptionName).append("\n");
+			builder.append("Exception Message: ").append(getMessage()).append("\n");
+			builder.append("Exception Possible Cause: ");
+			builder.append(getPossibleReason()).append("\n");
+			builder.append("Exception Context: ");
+			builder.append("\n---------------------------------------------------------------------------------\n");
+			builder.append(getFormattedContext());
+			builder.append("---------------------------------------------------------------------------------\n");
+
+		} else {
+
+			builder.append("Exception Number: ").append(depth.toString()).append("\n");
+			builder.append("Exception Type: ").append(exceptionName).append("\n");
+			builder.append("Exception Message: ").append(getMessage()).append("\n");
+			builder.append("Exception Possible Cause: ");
+			builder.append(getPossibleReason()).append("\n");
+			builder.append("Exception Context: ");
+			builder.append("\n---------------------------------------------------------------------------------\n");
+			builder.append(getFormattedContext());
+			builder.append("---------------------------------------------------------------------------------\n");
+			builder.append("Exception Stack Trace: \n");
+			builder.append("---------------------------------------------------------------------------------\n");
+			builder.append(getFormattedTrace());
+			builder.append("---------------------------------------------------------------------------------\n");
+
+		}
 
 		return builder.toString();
 	}
