@@ -12,8 +12,8 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetS
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.FanIdentityManagerModule;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.FanIdentitySettings;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentityManagerModule;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.sub_app.art_fan_identity.R;
 
@@ -59,7 +59,6 @@ public class PresentationArtFanUserIdentityDialog extends
         startCommunity.setOnClickListener(this);
         dontShowAgainCheckBox.setChecked(true);
 
-
     }
 
     @Override
@@ -104,7 +103,6 @@ public class PresentationArtFanUserIdentityDialog extends
                     settingsManager.persistSettings(getSession().getAppPublicKey(),fanIdentitySettings);
 
                 }else{
-                    //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
                     FanIdentitySettings tokenlyFanPreferenceSettings =
                             settingsManager.loadAndGetSettings("PresentationArtFanUserIdentityDialog");
                     tokenlyFanPreferenceSettings.setIsPresentationHelpEnabled(

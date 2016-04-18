@@ -207,7 +207,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             String tokenlySongId;
             System.out.println("TKY "+songs.length);
             //TODO: limit for testing
-            int limit=3;
+            int limit=2;
             int c=0;
             FermatBundle fermatBundle;
             //SongId

@@ -376,13 +376,15 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
                 SubApp subAppNavigationStructure = getSubAppRuntimeMiddleware().getSubAppByPublicKey(installedSubApp.getAppPublicKey());
 
-                intent = new Intent(this, AppActivity.class);
-                intent.putExtra(ApplicationConstants.INSTALLED_FERMAT_APP, installedSubApp);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                resetThisActivity();
-                finish();
-                startActivity(intent);
-                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                //if(subAppNavigationStructure.getPlatform() != Platforms.CRYPTO_BROKER_PLATFORM) {
+                    intent = new Intent(this, AppActivity.class);
+                    intent.putExtra(ApplicationConstants.INSTALLED_FERMAT_APP, installedSubApp);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    resetThisActivity();
+                    finish();
+                    startActivity(intent);
+                    overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                //}
 
             }
         }catch (Exception e){
@@ -395,14 +397,25 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     public void selectApp(FermatApp installedApp) {
         Intent intent;
         try {
-            Toast.makeText(this,"App in develop :)",Toast.LENGTH_SHORT).show();
-            intent = new Intent();
-            intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,installedApp.getAppPublicKey());
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.putExtra(ApplicationConstants.INTENT_APP_TYPE, installedApp.getAppType());
-            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-            intent.setAction("org.fermat.APP_LAUNCHER");
-            sendBroadcast(intent);
+            if(installedApp.getAppName().equals("Chat")){
+                intent = new Intent(this, AppActivity.class);
+                intent.putExtra(ApplicationConstants.INSTALLED_FERMAT_APP, installedApp);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                resetThisActivity();
+                finish();
+                startActivity(intent);
+                overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            }else {
+                Toast.makeText(this,"App in develop :)",Toast.LENGTH_SHORT).show();
+            }
+
+//            intent = new Intent();
+//            intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY,installedApp.getAppPublicKey());
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            intent.putExtra(ApplicationConstants.INTENT_APP_TYPE, installedApp.getAppType());
+//            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+//            intent.setAction("org.fermat.APP_LAUNCHER");
+//            sendBroadcast(intent);
         }catch (Exception e){
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in selectWallet"));
             Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();

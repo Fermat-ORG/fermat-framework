@@ -109,7 +109,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
                 if (appSession.getAppPublicKey()!= null){
                     appSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
                 }else{
-                    //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
                     appSettings = settingsManager.loadAndGetSettings("123456789");
                 }
 
@@ -187,7 +186,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
                         .setTextFooter(R.string.art_afc_launch_action_creation_dialog_footer)
                         .setTextNameLeft(R.string.art_afc_launch_action_creation_name_left)
                         .setTextNameRight(R.string.art_afc_launch_action_creation_name_right)
-                        .setImageRight(R.drawable.ic_profile_male)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override

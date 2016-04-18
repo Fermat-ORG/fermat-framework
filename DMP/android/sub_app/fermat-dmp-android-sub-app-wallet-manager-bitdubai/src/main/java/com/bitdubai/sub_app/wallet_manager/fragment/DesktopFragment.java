@@ -340,7 +340,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     Item item = new Item(installedWallet);
                     item.setIconResource(R.drawable.icon_loss_protected);
                     item.setPosition(8);
-                    installedWallet.setAppStatus(AppsStatus.ALPHA);
+                    installedWallet.setAppStatus(AppsStatus.DEV);
                     lstItemsWithIcon.add(item);
                 }
             }
@@ -471,7 +471,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                     WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
                     "wallet_fan_platform_identifier",
                     new Version(1,0,0),
-                    AppsStatus.DEV);
+                    AppsStatus.ALPHA);
             lstInstalledWallet.add(installedWallet);
             item = new Item(installedWallet);
             item.setIconResource(R.drawable.banner_tky);
@@ -509,10 +509,17 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                 arrItemsWithoutIcon[i] = emptyItem;
             }
 
-            for(Item itemIcon: lstItemsWithIcon){
-                arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
-            }
+            int pos = 0;
+            for(int i = 0;i<lstItemsWithIcon.size();i++){
+                Item itemIcon = lstItemsWithIcon.get(i);
+                if(itemIcon.getInterfaceObject() instanceof InstalledWallet){
+                    if(((InstalledWallet) itemIcon.getInterfaceObject()).getAppStatus() == AppsStatus.ALPHA){
+                        arrItemsWithoutIcon[pos]= itemIcon;
+                        pos++;
+                    }
+                }
 
+            }
             dataSet.addAll(Arrays.asList(arrItemsWithoutIcon));
 
         } catch (Exception e){
