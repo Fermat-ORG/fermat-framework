@@ -48,7 +48,7 @@
 
 
             app:typeface="CAVIAR_DREAMS"
-            android:text="Fermat Apps  In Fermat you will find several apps, and many more are being built right now. The difference between Fermat apps and regular mobile apps is that:"/>
+            android:text="In Fermat you will find several apps, and many more are being built right now. The difference between Fermat apps and regular mobile apps is that:"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:layout_width="match_parent"

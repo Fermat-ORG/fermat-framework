@@ -78,7 +78,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="2. Then go to the Chat Community [mostrar icono] to connect with some people there."
+                android:text="2. Then go to the Chat Community to connect with some people there."
                 android:layout_weight="1"
                 app:typeface="CAVIAR_DREAMS"
                 android:textColor="#58595B"
@@ -105,8 +105,7 @@
                 app:typeface="CAVIAR_DREAMS"
                 android:textColor="#58595B"
                 android:layout_weight="1"/>
-            app:typeface="CAVIAR_DREAMS"
-            android:textColor="#58595B"
+
 
             <ImageView
                 android:layout_width="96dp"
@@ -125,7 +124,7 @@
             android:gravity="left"
             android:textColor="#58595B"
             android:paddingBottom="12dp"
-            android:text="If you want to repeat this help open the settings slider like this"/>
+            android:text="If you want to repeat this help screen open the settings slider"/>
 
 
 

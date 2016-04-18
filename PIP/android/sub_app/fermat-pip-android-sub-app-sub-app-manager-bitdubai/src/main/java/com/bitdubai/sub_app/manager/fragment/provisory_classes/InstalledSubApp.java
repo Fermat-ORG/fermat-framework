@@ -48,7 +48,10 @@ public class InstalledSubApp implements com.bitdubai.fermat_api.layer.dmp_module
         this.iconResource = iconResource;
     }
 
-    /**
+    public void setAppStatus(AppsStatus appStatus) {
+        this.appStatus = appStatus;
+    }
+/**
      * InstalledWallet Interface implementation.
      */
 
