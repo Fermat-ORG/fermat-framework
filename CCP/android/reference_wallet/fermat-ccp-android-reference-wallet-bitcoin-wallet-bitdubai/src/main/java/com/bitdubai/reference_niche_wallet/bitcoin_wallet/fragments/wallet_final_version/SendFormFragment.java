@@ -593,7 +593,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
     //TODO: VER QUE PASA  SI EL CONTACTO NO TIENE UNA WALLET ADDRESS
     private void sendCrypto() {
         try {
-            if (cryptoWalletWalletContact.getReceivedCryptoAddress().size() > 0) {
+            if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
                 CryptoAddress validAddress = WalletUtils.validateAddress(cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType).getAddress(), cryptoWallet);
                 if (validAddress != null) {
                     EditText txtAmount = (EditText) rootView.findViewById(R.id.amount);
@@ -668,8 +668,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                         Toast.makeText(getActivity(), "Invalid Amount", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Toast.makeText(getActivity(), "Contact don't have an Address\n" +
-                            "please wait 2 minutes", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Contact don't have an valid Address", Toast.LENGTH_LONG).show();
                 }
             } else {
                 Toast.makeText(getActivity(), "Contact don't have an Address from red "+ blockchainNetworkType.getCode() + "\nplease wait 2 minutes", Toast.LENGTH_LONG).show();
