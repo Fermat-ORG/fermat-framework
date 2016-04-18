@@ -373,21 +373,18 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
                 arrItemsWithoutIcon[i] = emptyItem;
             }
 
-            for(Item itemIcon: lstItemsWithIcon){
-                arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
-            }
-
-//            int pos = 0;
-//            for(int i = 0;i<lstItemsWithIcon.size();i++){
-//                Item itemIcon = lstItemsWithIcon.get(i);
-//                if(itemIcon.getInterfaceObject() instanceof InstalledSubApp){
-//                    if(((InstalledSubApp) itemIcon.getInterfaceObject()).getAppStatus() == AppsStatus.ALPHA){
-//                        arrItemsWithoutIcon[pos]= itemIcon;
-//                        pos++;
-//                    }
-//                }
-//
+//            for(Item itemIcon: lstItemsWithIcon){
+//                arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
 //            }
+
+            int pos = 0;
+            for(int i = 0;i<lstItemsWithIcon.size();i++){
+                Item itemIcon = lstItemsWithIcon.get(i);
+                if((itemIcon.getAppStatus() == AppsStatus.ALPHA)){
+                    arrItemsWithoutIcon[pos]= itemIcon;
+                    pos++;
+                }
+            }
 
             dataSet.addAll(Arrays.asList(arrItemsWithoutIcon));
 

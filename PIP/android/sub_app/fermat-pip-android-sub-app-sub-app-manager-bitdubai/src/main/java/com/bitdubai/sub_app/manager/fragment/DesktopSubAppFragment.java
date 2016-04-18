@@ -329,21 +329,19 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
                 arrItemsWithoutIcon[i] = emptyItem;
             }
 
-            for (Item itemIcon : lstItemsWithIcon) {
-                arrItemsWithoutIcon[itemIcon.getPosition()] = itemIcon;
-            }
+//            for (Item itemIcon : lstItemsWithIcon) {
+//                arrItemsWithoutIcon[itemIcon.getPosition()] = itemIcon;
+//            }
 
             int pos = 0;
             for(int i = 0;i<lstItemsWithIcon.size();i++){
                 Item itemIcon = lstItemsWithIcon.get(i);
-                if(itemIcon.getInterfaceObject() instanceof InstalledWallet){
-                    if(((InstalledWallet) itemIcon.getInterfaceObject()).getAppStatus() == AppsStatus.ALPHA){
-                        arrItemsWithoutIcon[pos]= itemIcon;
-                        pos++;
-                    }
+                if(itemIcon.getAppStatus() == AppsStatus.ALPHA){
+                    arrItemsWithoutIcon[pos]= itemIcon;
+                    pos++;
                 }
-
             }
+
 
             dataSet.addAll(Arrays.asList(arrItemsWithoutIcon));
 
