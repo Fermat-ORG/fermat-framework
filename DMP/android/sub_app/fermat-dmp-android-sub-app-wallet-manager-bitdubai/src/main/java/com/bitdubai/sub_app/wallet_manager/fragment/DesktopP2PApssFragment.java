@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -446,17 +445,13 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
 
     private void select(AppsStatus appsStatus){
         try {
-            Log.i("DEsktopP2P", appsStatus.getCode());
             List<Item> list = new ArrayList<>();
             for (Item installedWallet : lstItemsWithIcon) {
-
                 if(installedWallet.getAppStatus()!=null) {
                     if(appsStatus.isAppStatusAvailable(installedWallet.getAppStatus())) {
                         list.add(installedWallet);
                     }
                 }
-
-                Log.i("DEsktopP2P", installedWallet.getAppStatus().getCode());
             }
             Item[] arrItemsWithoutIcon = new Item[12];
             for (int i = 0; i < 12; i++) {
