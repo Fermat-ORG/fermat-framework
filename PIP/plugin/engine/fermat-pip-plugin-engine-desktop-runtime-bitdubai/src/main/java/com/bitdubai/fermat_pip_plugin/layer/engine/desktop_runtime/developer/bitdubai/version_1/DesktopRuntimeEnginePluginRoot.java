@@ -25,6 +25,15 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.F
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatBottomNavigation;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatStructure;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FileLifeSpan;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.FilePrivacy;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopObject;
 import com.bitdubai.fermat_api.layer.pip_engine.desktop_runtime.DesktopRuntimeManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
@@ -45,8 +54,13 @@ import java.util.Set;
  */
 public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements DesktopRuntimeManager {
 
+    final String NAVIGATION_STRUCTURE_FILE_PATH = "navigation_structure";
+
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.EVENT_MANAGER)
     private EventManager eventManager;
+
+    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
+    private PluginFileSystem pluginFileSystem;
 
     /**
      * SubAppRuntimeManager Interface member variables.
@@ -81,7 +95,10 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
              * functionality based on wallets downloaded by users this wont be an option.
              * * *
              */
-            factoryReset();
+            if(!loadConfig()) {
+                factoryReset();
+                saveFactory();
+            }
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (CantFactoryResetException ex) {
@@ -93,6 +110,29 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Unchecked Exception occurred, check the cause");
         }
+    }
+
+    private void saveFactory(){
+        try {
+            PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId,"config","desktop-runtime-config",FilePrivacy.PRIVATE,FileLifeSpan.PERMANENT);
+            pluginTextFile.setContent(Boolean.TRUE.toString());
+            pluginTextFile.persistToMedia();
+        } catch (CantCreateFileException e) {
+            e.printStackTrace();
+        } catch (CantPersistFileException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean loadConfig(){
+        try {
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId,"config","desktop-runtime-config",FilePrivacy.PRIVATE,FileLifeSpan.PERMANENT);
+            pluginTextFile.loadFromMedia();
+            return Boolean.getBoolean(pluginTextFile.getContent());
+        }catch (Exception e){
+            return false;
+        }
+
     }
 
     @Override
@@ -123,13 +163,14 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
     }
 
     @Override
-    public DesktopObject getDesktopObject(String desktopObjectType) {
+    public DesktopObject getDesktopObject(String desktopObjectPublicKey) {
         //DesktopObject desktopObject = mapDesktops.get(desktopObjectType);
 //        if (desktopObject != null) {
 //            lastDesktopObject = desktopObjectType;
 //            return desktopObject;
 //        }
-        return lstDesktops.get(desktopObjectType);
+
+        return lstDesktops.get(desktopObjectPublicKey);
     }
 
     @Override
@@ -184,6 +225,27 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             activity.setType(Activities.CCP_DESKTOP);
             activity.setFullScreen(true);
             activity.setBottomNavigationMenu(new BottomNavigation());
+
+//            Wizard wizard = new Wizard();
+//            WizardPage wizardPage = new WizardPage();
+//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
+//            wizard.addPage(wizardPage);
+//
+//            wizardPage = new WizardPage();
+//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_SECOND_SCREEN_FRAGMENT.getKey());
+//            wizard.addPage(wizardPage);
+//
+//            wizardPage = new WizardPage();
+//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_THIRD_SCREEN_FRAGMENT.getKey());
+//            wizard.addPage(wizardPage);
+//
+//            wizardPage = new WizardPage();
+//            wizardPage.setFragment(Fragments.WELCOME_WIZARD_FOURTH_SCREEN_FRAGMENT.getKey());
+//            wizard.addPage(wizardPage);
+//
+//            activity.addWizard(WizardTypes.DESKTOP_WELCOME_WIZARD.getKey(),wizard);
+
+
             /**
              * set type home
              */
@@ -209,6 +271,23 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
 
             //
+
+            /**
+             * Wizard
+             */
+            activity = new Activity();
+            activity.setActivityType(Activities.DESKTOP_WIZZARD_WELCOME.getCode());
+            activity.setType(Activities.DESKTOP_WIZZARD_WELCOME);
+            activity.setFullScreen(true);
+            activity.setBackgroundColor("#ffffff");
+            activity.setStartFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
+            //runtimeDesktopObject.setStartActivity(Activities.DESKTOP_WIZZARD_WELCOME);
+
+            fragment = new Fragment();
+            fragment.setType(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
+            activity.addFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey(),fragment);
+            runtimeDesktopObject.addActivity(activity);
+
 
 
 
@@ -421,9 +500,35 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
     }
 
 
+
     @Override
     public void recordNAvigationStructure(FermatStructure fermatStructure) {
+        String publiKey = fermatStructure.getPublicKey();
+        try {
+            String navigationStructureXml = parseNavigationStructureXml(fermatStructure);
+            String navigationStructureName = publiKey + ".xml";
+            try {
+                PluginTextFile newFile = pluginFileSystem.createTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                newFile.setContent(navigationStructureXml);
+                newFile.persistToMedia();
+            } catch (CantPersistFileException e) {
+                e.printStackTrace();
+                //throw new CantSetWalletFactoryProjectNavigationStructureException(CantSetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't create or overwrite navigation structure file.", "");
+            } catch (CantCreateFileException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            //throw new CantSetWalletFactoryProjectNavigationStructureException(CantSetWalletFactoryProjectNavigationStructureException.DEFAULT_MESSAGE, e, "Can't convert navigation structure to xml format", "");
+        }
+    }
 
+    private String parseNavigationStructureXml(FermatStructure walletNavigationStructure) {
+        String xml = null;
+        if (walletNavigationStructure != null) {
+            xml = XMLParser.parseObject(walletNavigationStructure);
+        }
+        return xml;
     }
 
     @Override
@@ -439,7 +544,36 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
     @Override
     public FermatStructure getAppByPublicKey(String appPublicKey) {
-        return getDesktopObject(appPublicKey);
+        DesktopObject fermatStructure = null;
+        if (appPublicKey != null) {
+            if (lstDesktops.containsKey(appPublicKey)) {
+                fermatStructure = lstDesktops.get(appPublicKey);
+            } else {
+                String navigationStructureName = appPublicKey + ".xml";
+                try {
+                    PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                    pluginTextFile.loadFromMedia();
+                    String xml = pluginTextFile.getContent();
+                    fermatStructure = (DesktopObject) XMLParser.parseXML(xml, fermatStructure);
+                    lstDesktops.put(appPublicKey,fermatStructure);
+                } catch (FileNotFoundException e) {
+                    try {
+                        PluginTextFile layoutFile = pluginFileSystem.createTextFile(pluginId, NAVIGATION_STRUCTURE_FILE_PATH, navigationStructureName, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                        layoutFile.setContent("");
+
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                    }
+
+
+                } catch (CantCreateFileException e) {
+                    e.printStackTrace();
+                } catch (CantLoadFileException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return fermatStructure;
     }
 
     @Override
