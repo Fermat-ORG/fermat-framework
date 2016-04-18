@@ -82,12 +82,9 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
     private LossProtectedWalletManager moduleManager;
     private LossProtectedWalletTransaction transaction;
     private LossProtectedWalletModuleManager lossProtectedWalletModuleManager;
-    /**
-     * Executor Service
-     */
-    private ExecutorService executor;
 
-    private View rootView,rootHeaderView;
+
+    private View rootView;
     private LinearLayout empty;
     private AnimationManager animationManager;
     private LinearLayout header;
@@ -123,7 +120,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
 
         lossProtectedWalletSession = (LossProtectedWalletSession)appSession;
 
-        listBitcoinLossProtectedWalletSpend = new ArrayList<BitcoinLossProtectedWalletSpend>();
+        listBitcoinLossProtectedWalletSpend = new ArrayList<>();
         try {
             moduleManager = lossProtectedWalletSession.getModuleManager();
 
@@ -169,7 +166,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
+        super.onCreateView(inflater, container, savedInstanceState);
         try {
             rootView =  super.onCreateView(inflater, container, savedInstanceState);
             empty = (LinearLayout) rootView.findViewById(R.id.empty);
@@ -198,19 +195,51 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
         try {
             final RelativeLayout container_header = getToolbarHeader();
 
-                LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = null;
-                intraUserLoginIdentity = lossProtectedWalletSession.getIntraUserModuleManager();
-                String intraUserPk = null;
-                if (intraUserLoginIdentity != null) {
-                    intraUserPk = intraUserLoginIdentity.getPublicKey();
-                }
-
             try {
                 container_header.removeAllViews();
             } catch (Exception e) {
 
             }
 
+            container_header.setVisibility(View.VISIBLE);
+            final View chunck_header_detail = inflater.inflate(R.layout.chunck_header_detail, container_header, true);
+
+            LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = null;
+            intraUserLoginIdentity = lossProtectedWalletSession.getIntraUserModuleManager();
+            String intraUserPk = null;
+            if (intraUserLoginIdentity != null) {
+                intraUserPk = intraUserLoginIdentity.getPublicKey();
+            }
+
+            //Get transaction data
+            transaction = lossProtectedWallet.getTransaction(
+                    lossProtectedWalletSession.getTransactionDetailId(),
+                    lossProtectedWalletSession.getAppPublicKey(),
+                    intraUserPk);
+
+            //set transaction data header
+            txt_chunck_detail_balance = (TextView) chunck_header_detail.findViewById(R.id.txt_amount_chunck_detail);
+            txt_chunck_detail_exchangeRate = (TextView) chunck_header_detail.findViewById(R.id.txt_exchange_rate_chunck_detail);
+            txt_chunck_detail_amountSpent = (TextView) chunck_header_detail.findViewById(R.id.txt_amount_spent);
+            txt_percent_spent = (TextView) chunck_header_detail.findViewById(R.id.txt_percentage_spent);
+
+
+
+            progressBar_percent = (ProgressBar) chunck_header_detail.findViewById(R.id.progressBarLine);
+
+            final String chunckAmount = WalletUtils.formatAmountString(transaction.getAmount());
+            final String chunckExchangeRate = WalletUtils.formatExchangeRateString(transaction.getExchangeRate());
+            final String chunckAmountSpent = WalletUtils.formatAmountString(getTotalSpent());
+            final String chunckPercentageSpent = WalletUtils.formatAmountStringNotDecimal(getSpendingPercentage(transaction));
+
+
+            txt_chunck_detail_balance.setText(chunckAmount);
+            txt_chunck_detail_exchangeRate.setText("(1 BTC = "+chunckExchangeRate+" US$)");
+            txt_chunck_detail_amountSpent.setText("BTC Spent: "+chunckAmountSpent+" BTC");
+            txt_percent_spent.setText("("+chunckPercentageSpent+"%)");
+
+
+           //set header background
             container_header.setBackgroundColor(Color.parseColor("#06356f"));
             final Handler handler = new Handler();
             Runnable runnable = new Runnable() {
@@ -222,7 +251,6 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
                     options.inSampleSize = 2;
                     try {
                         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.back_header, options);
-//                    bitmap = Bitmap.createScaledBitmap(bitmap,300,400,true);
                         final Bitmap finalBitmap = bitmap;
                         if (finalBitmap != null) {
                             Runnable runnableHandler = new Runnable() {
@@ -242,37 +270,8 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
             };
             Thread thread = new Thread(runnable);
             thread.start();
-            final View chunck_header_detail = inflater.inflate(R.layout.chunck_header_detail, container_header, true);
-            try {
-                transaction = lossProtectedWallet.getTransaction(
-                        lossProtectedWalletSession.getTransactionDetailId(),
-                        lossProtectedWalletSession.getAppPublicKey(),
-                        intraUserPk);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
 
 
-
-            txt_chunck_detail_balance = (TextView) chunck_header_detail.findViewById(R.id.txt_amount_chunck_detail);
-            txt_chunck_detail_exchangeRate = (TextView) chunck_header_detail.findViewById(R.id.txt_exchange_rate_chunck_detail);
-            txt_chunck_detail_amountSpent = (TextView) chunck_header_detail.findViewById(R.id.txt_amount_spent);
-            txt_percent_spent = (TextView) chunck_header_detail.findViewById(R.id.txt_percentage_spent);
-
-            container_header.setVisibility(View.VISIBLE);
-
-            progressBar_percent = (ProgressBar) chunck_header_detail.findViewById(R.id.progressBarLine);
-
-            final String chunckAmount = WalletUtils.formatAmountString(transaction.getAmount());
-            final String chunckExchangeRate = WalletUtils.formatExchangeRateString(transaction.getExchangeRate());
-            final String chunckAmountSpent = WalletUtils.formatAmountString(getTotalSpent());
-            final String chunckPercentageSpent = WalletUtils.formatAmountStringNotDecimal(getSpendingPercentage(transaction));
-
-
-            txt_chunck_detail_balance.setText(chunckAmount);
-            txt_chunck_detail_exchangeRate.setText("(1 BTC = "+chunckExchangeRate+" US$)");
-            txt_chunck_detail_amountSpent.setText("BTC Spent: "+chunckAmountSpent+" BTC");
-            txt_percent_spent.setText("("+chunckPercentageSpent+"%)");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -284,7 +283,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-            listBitcoinLossProtectedWalletSpend = new ArrayList<BitcoinLossProtectedWalletSpend>();
+            listBitcoinLossProtectedWalletSpend = new ArrayList<>();
             animationManager = new AnimationManager(rootView,empty);
             getPaintActivtyFeactures().addCollapseAnimation(animationManager);
         } catch (Exception e){
