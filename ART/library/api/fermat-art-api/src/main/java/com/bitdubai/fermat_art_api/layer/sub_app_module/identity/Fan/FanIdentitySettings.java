@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_art_api.layer.sub_app_module.identity;
+package com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan;
 
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantGetDefaultLanguageException;
 import com.bitdubai.fermat_pip_api.all_definition.sub_app_module.settings.exceptions.CantGetDefaultSkinException;

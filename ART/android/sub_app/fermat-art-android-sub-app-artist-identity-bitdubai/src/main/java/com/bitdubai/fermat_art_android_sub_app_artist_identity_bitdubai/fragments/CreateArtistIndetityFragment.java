@@ -11,11 +11,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,31 +23,21 @@ import android.widget.Toast;
 
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.session.ArtistIdentitySubAppSession;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.util.CommonLogger;
-import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.ArtistIdentityManagerModule;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.ArtistIdentitySettings;
-import com.bitdubai.fermat_art_core.layer.sub_app_module.artist_identity.ArtArtistPreferenceSettings;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist.ArtistIdentityManagerModule;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist.ArtistIdentitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.sub_app.artist_identity.R;
 
 import java.io.ByteArrayOutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.UUID;
 
 
-public class CreateArtistIndentityFragment extends AbstractFermatFragment {
+public class CreateArtistIndetityFragment extends AbstractFermatFragment {
 
 
 
@@ -87,8 +75,8 @@ public class CreateArtistIndentityFragment extends AbstractFermatFragment {
 
     private Handler handler;
 
-    public static CreateArtistIndentityFragment newInstance() {
-        return new CreateArtistIndentityFragment();
+    public static CreateArtistIndetityFragment newInstance() {
+        return new CreateArtistIndetityFragment();
     }
 
     @Override

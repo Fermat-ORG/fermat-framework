@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_art_api.layer.sub_app_module.identity;
+package com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan;
 
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
