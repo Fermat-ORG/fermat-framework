@@ -6,8 +6,8 @@
  */
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
+
+import com.google.common.io.BaseEncoding;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.FermatCipher</code>
@@ -20,22 +20,9 @@ import sun.misc.BASE64Encoder;
 public abstract class FermatCipher {
 
     /**
-     * Represent the base64Decoder
+     * Represent the HEXADECIMAL_ARRAY
      */
-    private BASE64Decoder base64Decoder;
-
-    /**
-     * Represent the base64Encoder
-     */
-    private BASE64Encoder base64Encoder;
-
-    /**
-     * Constructor
-     */
-    public FermatCipher(){
-        base64Decoder = new BASE64Decoder();
-        base64Encoder = new BASE64Encoder();
-    }
+    protected final static char[] HEXADECIMAL_ARRAY = "0123456789ABCDEF".toCharArray();
 
     /**
      * Convert a byte array into a hexadecimal format string
@@ -44,11 +31,13 @@ public abstract class FermatCipher {
      * @throws Exception
      */
     public String convertHexString(byte[] bytes) throws Exception {
-        String result = "";
-        for (int i=0; i < bytes.length; i++) {
-            result += Integer.toString(( bytes[i] & 0xff ) + 0x100, 16).substring( 1 );
+        char[] hexChars = new char[bytes.length * 2];
+        for ( int j = 0; j < bytes.length; j++ ) {
+            int v = bytes[j] & 0xFF;
+            hexChars[j * 2] = HEXADECIMAL_ARRAY[v >>> 4];
+            hexChars[j * 2 + 1] = HEXADECIMAL_ARRAY[v & 0x0F];
         }
-        return result;
+        return new String(hexChars);
     }
 
     /**
@@ -58,30 +47,12 @@ public abstract class FermatCipher {
      * @return byte[]
      */
     public byte[] convertHexStringToByteArray(String string) {
-        int len = string.length();
+        /*int len = string.length();
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
             data[i / 2] = (byte) ((Character.digit(string.charAt(i), 16) << 4) + Character.digit(string.charAt(i+1), 16));
-        }
-        return data;
-    }
-
-    /**
-     * Get the Base64Decoder value
-     *
-     * @return Base64Decoder
-     */
-    public BASE64Decoder getBase64Decoder() {
-        return base64Decoder;
-    }
-
-    /**
-     * Get the Base64Encoder value
-     *
-     * @return Base64Encoder
-     */
-    public BASE64Encoder getBase64Encoder() {
-        return base64Encoder;
+        }*/
+        return BaseEncoding.base16().decode(string);
     }
 
     /**
