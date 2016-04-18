@@ -11,6 +11,8 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
+import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatActorWaitingException;
+import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorChatConnectionAlreadyRequestesException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorChatTypeNotSupportedException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.ActorConnectionRequestNotFoundException;
@@ -68,11 +70,13 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager <Ch
                                                                                final int max,
                                                                                final int offset) throws CantListChatActorException;
 
+    List<ChatActorCommunityInformation> getCacheSuggestionsToContact(int max, int offset) throws CantListChatIdentityException;
+
     List<ChatActorCommunityInformation> listChatActorPendingRemoteAction(final ChatActorCommunitySelectableIdentity selectedIdentity,
                                                                                 final int max,
                                                                                 final int offset) throws CantListChatActorException;
 
-    int getChatActorWaitingYourAcceptanceCount();
+    List<ChatActorCommunityInformation> getChatActorWaitingYourAcceptanceCount(String publicKey, int max, int offset) throws CantGetChatActorWaitingException;
 
     ConnectionState getActorConnectionState(String publicKey) throws CantValidateActorConnectionStateException;
     @Override
