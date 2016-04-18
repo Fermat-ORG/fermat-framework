@@ -255,8 +255,9 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                 String txtType = txt_type.getText().toString();
                 String amount = editTextAmount.getText().toString();
                 String newAmount = "";
-
-
+                    if (amount.equals("")){
+                        amount = "0";
+                    }
                     switch (position) {
                         case 0:
                             text = "[bits]";
@@ -623,7 +624,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                                 VaultType.CRYPTO_CURRENCY_VAULT,
                                 CryptoCurrencyVault.BITCOIN_VAULT.getCode(),
                                 appSession.getAppPublicKey(),
-                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
+                                ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET,
                                 blockchainNetworkType
                         );
                         cryptoWallet.sendCryptoPaymentRequest(
@@ -636,7 +637,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
                                 notes,
                                 operator.longValueExact(),
                                 blockchainNetworkType,
-                                ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET
+                                ReferenceWallet.BASIC_WALLET_LOSS_PROTECTED_WALLET
 
                         );
                         Toast.makeText(getActivity(), "Request Sent", Toast.LENGTH_LONG).show();
