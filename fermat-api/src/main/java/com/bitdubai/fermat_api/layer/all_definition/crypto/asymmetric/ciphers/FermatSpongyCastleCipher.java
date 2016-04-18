@@ -32,7 +32,7 @@ public class FermatSpongyCastleCipher extends FermatCipher {
     @Override
     public String encrypt(String pubKey, String plaintTex) throws Exception{
 
-        String encryptedData = "";
+        StringBuilder encryptedData = new StringBuilder();
         AsymmetricKeyParameter publicKey = PublicKeyFactory.createKey(Base64.decode(pubKey, Base64.DEFAULT));
         AsymmetricBlockCipher asymmetricBlockCipher = new RSAEngine();
         asymmetricBlockCipher = new PKCS1Encoding(asymmetricBlockCipher);
@@ -48,11 +48,11 @@ public class FermatSpongyCastleCipher extends FermatCipher {
             }
 
             byte[] hexEncodedCipher = asymmetricBlockCipher.processBlock(messageBytes, i, blockSize);
-            encryptedData = encryptedData + convertHexString(hexEncodedCipher);
+            encryptedData.append(convertHexString(hexEncodedCipher));
             i += asymmetricBlockCipher.getInputBlockSize();
         }
 
-        return encryptedData;
+        return encryptedData.toString();
     }
 
     /**
@@ -62,7 +62,8 @@ public class FermatSpongyCastleCipher extends FermatCipher {
     @Override
     public String decrypt(String privateKey, String encryptedTex) throws Exception{
 
-        String decryptedMsj = "";
+        StringBuilder decryptedMsj = new StringBuilder();
+
         AsymmetricKeyParameter privateKeyParameter = PrivateKeyFactory.createKey(Base64.decode(privateKey, Base64.DEFAULT));
         AsymmetricBlockCipher asymmetricBlockCipher = new RSAEngine();
         asymmetricBlockCipher = new PKCS1Encoding(asymmetricBlockCipher);
@@ -77,11 +78,11 @@ public class FermatSpongyCastleCipher extends FermatCipher {
                 blockSize = messageBytes.length - i;
             }
             byte[] hexEncodedCipher = asymmetricBlockCipher.processBlock(messageBytes, i, blockSize);
-            decryptedMsj = decryptedMsj + new String(hexEncodedCipher);
+            decryptedMsj.append(new String(hexEncodedCipher));
             i += asymmetricBlockCipher.getInputBlockSize();
         }
 
-        return decryptedMsj;
+        return decryptedMsj.toString();
 
     }
 
