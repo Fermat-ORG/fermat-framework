@@ -7,7 +7,6 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database;
 
 
-import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
@@ -16,7 +15,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -29,7 +27,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDeveloperDatabaseFactory</code> have
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp</code> have
  * contains the methods that the Developer Database Tools uses to show the information.
  * <p/>
  *
@@ -39,30 +37,24 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 
-public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements DealsWithPluginDatabaseSystem, DealsWithPluginIdentity {
+public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
-    PluginDatabaseSystem pluginDatabaseSystem;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
+    private final UUID                 pluginId            ;
 
-    /**
-     * DealsWithPluginIdentity Interface member variables.
-     */
-    UUID pluginId;
-
-
-    Database database;
+    private Database database;
 
     /**
      * Constructor
      *
-     * @param pluginDatabaseSystem
-     * @param pluginId
+     * @param pluginDatabaseSystem database system plug-in reference
+     * @param pluginId             plug-in id reference
      */
-    public CommunicationsNetworkNodeP2PDeveloperDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem, UUID pluginId) {
+    public CommunicationsNetworkNodeP2PDeveloperDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem,
+                                                                final UUID pluginId) {
+
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId = pluginId;
+        this.pluginId             = pluginId            ;
     }
 
     /**
@@ -112,19 +104,21 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * I only have one database on my plugin. I will return its name.
          */
-        List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
+        List<DeveloperDatabase> databases = new ArrayList<>();
         databases.add(developerObjectFactory.getNewDeveloperDatabase("Communications Network Node", CommunicationsNetworkNodeP2PDatabaseConstants.DATA_BASE_NAME));
         return databases;
     }
 
 
-    public List<DeveloperDatabaseTable> getDatabaseTableList(DeveloperObjectFactory developerObjectFactory) {
-        List<DeveloperDatabaseTable> tables = new ArrayList<DeveloperDatabaseTable>();
+    public List<DeveloperDatabaseTable> getDatabaseTableList(final DeveloperObjectFactory developerObjectFactory,
+                                                             final DeveloperDatabase      developerDatabase     ) {
+
+        List<DeveloperDatabaseTable> tables = new ArrayList<>();
 
         /**
          * Table actor catalog columns.
          */
-        List<String> actorcatalogColumns = new ArrayList<String>();
+        List<String> actorcatalogColumns = new ArrayList<>();
 
         actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         actorcatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_NAME_COLUMN_NAME);
@@ -145,7 +139,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * Table actor catalog transaction columns.
          */
-        List<String> actorcatalogtransactionColumns = new ArrayList<String>();
+        List<String> actorcatalogtransactionColumns = new ArrayList<>();
 
         actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_HASH_ID_COLUMN_NAME);
         actorcatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_TRANSACTION_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
@@ -168,7 +162,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * Table actors catalog transactions pending for propagation columns.
          */
-        List<String> actorscatalogtransactionspendingforpropagationColumns = new ArrayList<String>();
+        List<String> actorscatalogtransactionspendingforpropagationColumns = new ArrayList<>();
 
         actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_HASH_ID_COLUMN_NAME);
         actorscatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.ACTORS_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
@@ -191,7 +185,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * Table calls log columns.
          */
-        List<String> callslogColumns = new ArrayList<String>();
+        List<String> callslogColumns = new ArrayList<>();
 
         callslogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_CALL_ID_COLUMN_NAME);
         callslogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CALLS_LOG_CALL_TIMESTAMP_COLUMN_NAME);
@@ -207,7 +201,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * Table checked in actor columns.
          */
-        List<String> checkedinactorColumns = new ArrayList<String>();
+        List<String> checkedinactorColumns = new ArrayList<>();
 
         checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_UUID_COLUMN_NAME);
         checkedinactorColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
@@ -229,9 +223,8 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * Table checked in clients columns.
          */
-        List<String> checkedinclientsColumns = new ArrayList<String>();
+        List<String> checkedinclientsColumns = new ArrayList<>();
 
-        checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_UUID_COLUMN_NAME);
         checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_LATITUDE_COLUMN_NAME);
         checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_LONGITUDE_COLUMN_NAME);
@@ -246,7 +239,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * Table checked in network service columns.
          */
-        List<String> checkedinnetworkserviceColumns = new ArrayList<String>();
+        List<String> checkedinnetworkserviceColumns = new ArrayList<>();
 
         checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_UUID_COLUMN_NAME);
         checkedinnetworkserviceColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
@@ -264,7 +257,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * Table checked actors history columns.
          */
-        List<String> checkedactorshistoryColumns = new ArrayList<String>();
+        List<String> checkedactorshistoryColumns = new ArrayList<>();
 
         checkedactorshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_UUID_COLUMN_NAME);
         checkedactorshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
@@ -287,7 +280,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * Table checked clients history columns.
          */
-        List<String> checkedclientshistoryColumns = new ArrayList<String>();
+        List<String> checkedclientshistoryColumns = new ArrayList<>();
 
         checkedclientshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_UUID_COLUMN_NAME);
         checkedclientshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
@@ -305,7 +298,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * Table checked network service history columns.
          */
-        List<String> checkednetworkservicehistoryColumns = new ArrayList<String>();
+        List<String> checkednetworkservicehistoryColumns = new ArrayList<>();
 
         checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_UUID_COLUMN_NAME);
         checkednetworkservicehistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_NETWORK_SERVICE_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
@@ -324,7 +317,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * Table clients connections history columns.
          */
-        List<String> clientsconnectionshistoryColumns = new ArrayList<String>();
+        List<String> clientsconnectionshistoryColumns = new ArrayList<>();
 
         clientsconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_UUID_COLUMN_NAME);
         clientsconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_CONNECTIONS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
@@ -342,7 +335,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * Table nodes connections history columns.
          */
-        List<String> nodesconnectionshistoryColumns = new ArrayList<String>();
+        List<String> nodesconnectionshistoryColumns = new ArrayList<>();
 
         nodesconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_UUID_COLUMN_NAME);
         nodesconnectionshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CONNECTIONS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
@@ -361,7 +354,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * Table method calls history columns.
          */
-        List<String> methodcallshistoryColumns = new ArrayList<String>();
+        List<String> methodcallshistoryColumns = new ArrayList<>();
 
         methodcallshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_UUID_COLUMN_NAME);
         methodcallshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_METHOD_NAME_COLUMN_NAME);
@@ -377,7 +370,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * Table nodes catalog columns.
          */
-        List<String> nodescatalogColumns = new ArrayList<String>();
+        List<String> nodescatalogColumns = new ArrayList<>();
 
         nodescatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         nodescatalogColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_NAME_COLUMN_NAME);
@@ -398,7 +391,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * Table nodes catalog transaction columns.
          */
-        List<String> nodescatalogtransactionColumns = new ArrayList<String>();
+        List<String> nodescatalogtransactionColumns = new ArrayList<>();
 
         nodescatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_HASH_ID_COLUMN_NAME);
         nodescatalogtransactionColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTION_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
@@ -419,7 +412,7 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         /**
          * Table nodes catalog transactions pending for propagation columns.
          */
-        List<String> nodescatalogtransactionspendingforpropagationColumns = new ArrayList<String>();
+        List<String> nodescatalogtransactionspendingforpropagationColumns = new ArrayList<>();
 
         nodescatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_HASH_ID_COLUMN_NAME);
         nodescatalogtransactionspendingforpropagationColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
@@ -437,64 +430,50 @@ public class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory implements Dea
         DeveloperDatabaseTable nodescatalogtransactionspendingforpropagationTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_TRANSACTIONS_PENDING_FOR_PROPAGATION_TABLE_NAME, nodescatalogtransactionspendingforpropagationColumns);
         tables.add(nodescatalogtransactionspendingforpropagationTable);
 
-
-
         return tables;
     }
 
+    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(final DeveloperObjectFactory developerObjectFactory,
+                                                                      final DeveloperDatabase      developerDatabase     ,
+                                                                      final DeveloperDatabaseTable developerDatabaseTable) {
 
-    public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabaseTable developerDatabaseTable) {
-        /**
-         * Will get the records for the given table
-         */
-        List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<DeveloperDatabaseTableRecord>();
-
-
-        /**
-         * I load the passed table name from the SQLite database.
-         */
-        DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
         try {
+
+            this.initializeDatabase();
+
+            List<DeveloperDatabaseTableRecord> returnedRecords = new ArrayList<>();
+
+            final DatabaseTable selectedTable = database.getTable(developerDatabaseTable.getName());
+
             selectedTable.loadToMemory();
-        } catch (CantLoadTableToMemoryException cantLoadTableToMemory) {
-            /**
-             * if there was an error, I will returned an empty list.
-             */
-            return returnedRecords;
-        }
 
-        List<DatabaseTableRecord> records = selectedTable.getRecords();
-        List<String> developerRow = new ArrayList<String>();
-        for (DatabaseTableRecord row : records) {
-            /**
-             * for each row in the table list
-             */
-            for (DatabaseRecord field : row.getValues()) {
-                /**
-                 * I get each row and save them into a List<String>
-                 */
-                developerRow.add(field.getValue());
+            final List<DatabaseTableRecord> records = selectedTable.getRecords();
+
+            List<String> developerRow;
+
+            for (final DatabaseTableRecord row: records){
+
+                developerRow = new ArrayList<>();
+
+                for (final DatabaseRecord field : row.getValues())
+                    developerRow.add(field.getValue());
+
+                returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
             }
-            /**
-             * I create the Developer Database record
-             */
-            returnedRecords.add(developerObjectFactory.getNewDeveloperDatabaseTableRecord(developerRow));
+
+            return returnedRecords;
+
+        } catch (final CantLoadTableToMemoryException                 |
+                       CantInitializeCommunicationsNetworkNodeP2PDatabaseException e) {
+
+            System.err.println(e);
+
+            return new ArrayList<>();
+
+        } catch (final Exception e){
+
+            return new ArrayList<>();
         }
-
-
-        /**
-         * return the list of DeveloperRecords for the passed table.
-         */
-        return returnedRecords;
     }
 
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
-
-    @Override
-    public void setPluginId(UUID pluginId) {
-        this.pluginId = pluginId;
-    }
 }

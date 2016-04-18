@@ -186,28 +186,30 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
         // get actual fragment on execute
         String frgBackType = null;
 
-        WalletRuntimeManager walletRuntimeManager = getWalletRuntimeManager();
+        try {
 
-        WalletNavigationStructure walletNavigationStructure = walletRuntimeManager.getLastWallet();
+            WalletRuntimeManager walletRuntimeManager = getWalletRuntimeManager();
 
-        Activity activity = walletNavigationStructure.getLastActivity();
+            WalletNavigationStructure walletNavigationStructure = walletRuntimeManager.getLastWallet();
 
-        com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = activity.getLastFragment();
+            Activity activity = walletNavigationStructure.getLastActivity();
 
-        if (fragment != null) frgBackType = fragment.getBack();
+            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragment = activity.getLastFragment();
 
-        if (frgBackType != null) {
+            if (fragment != null) frgBackType = fragment.getBack();
 
-            com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = walletRuntimeManager.getLastWallet().getLastActivity().getFragment(fragment.getBack());
+            if (frgBackType != null) {
 
-            //loadFragment(frgBackType);
+                com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment fragmentBack = walletRuntimeManager.getLastWallet().getLastActivity().getFragment(fragment.getBack());
+
+                //loadFragment(frgBackType);
 //            changeFragment(walletNavigationStructure.getWalletCategory(), walletNavigationStructure.getWalletType(), walletNavigationStructure.getPublicKey(), frgBackType);
 
 
-        } else if (activity != null && activity.getBackActivity() != null) {
-            //todo: hacer esto
-            //changeActivity(activity.getBackActivity().getCode());
-        } else {
+            } else if (activity != null && activity.getBackActivity() != null) {
+                //todo: hacer esto
+                //changeActivity(activity.getBackActivity().getCode());
+            } else {
 //            getSubAppRuntimeMiddleware().getSubApp(SubApps.CWP_WALLET_MANAGER);
 //            getSubAppRuntimeMiddleware().getLastApp().getActivity(Activities.CWP_WALLET_MANAGER_MAIN);
 //            resetThisActivity();
@@ -217,7 +219,7 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 //            startActivity(intent);
 //            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-        }
+            }
 
 
 //        if (getWalletRuntimeManager().getLastWallet().getLastActivity().getType()!= Activities.CWP_WALLET_MANAGER_MAIN){
@@ -234,6 +236,9 @@ public class EditableWalletActivity extends FermatActivity implements FermatScre
 //        }else{
 //            super.onBackPressed();
 //        }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override

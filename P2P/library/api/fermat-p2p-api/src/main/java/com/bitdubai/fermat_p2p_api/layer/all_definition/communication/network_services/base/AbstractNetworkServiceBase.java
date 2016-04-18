@@ -286,6 +286,11 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
                         this.communicationSupervisorPendingMessagesAgent = new CommunicationSupervisorPendingMessagesAgent(this);
                         this.communicationSupervisorPendingMessagesAgent.start();
                     }
+                    else {
+
+                        System.out.println(" -- COMMUNICATION  cloud client is DISABLED");
+
+                    }
 
                     /*
                      * Call on start method

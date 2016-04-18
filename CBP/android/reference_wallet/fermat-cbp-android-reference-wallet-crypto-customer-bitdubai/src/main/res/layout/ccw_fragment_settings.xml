@@ -8,6 +8,7 @@
     android:background="@color/white">
 
     <LinearLayout
+        android:id="@+id/settings_my_location"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
@@ -16,7 +17,6 @@
         android:background="@color/white">
 
         <LinearLayout
-            android:id="@+id/settings_my_location"
             android:layout_width="350dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
@@ -40,7 +40,7 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/flecha"
+                android:src="@drawable/ccw_right_hand_arrow"
                 android:layout_gravity="center_vertical"
                 tools:ignore="contentDescription"/>
         </LinearLayout>
@@ -55,6 +55,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/settings_bank_account"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
@@ -63,7 +64,6 @@
         android:background="@color/white">
 
         <LinearLayout
-            android:id="@+id/settings_bank_account"
             android:layout_width="350dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
@@ -87,12 +87,12 @@
             <ImageView
                 android:layout_width="20dp"
                 android:layout_height="20dp"
-                android:src="@drawable/flecha"
+                android:src="@drawable/ccw_right_hand_arrow"
                 android:layout_gravity="center_vertical"
                 tools:ignore="contentDescription"/>
         </LinearLayout>
 
-        <ImageView
+        <View
             android:layout_width="350dp"
             android:layout_height="1dp"
             android:layout_gravity="center_horizontal"
@@ -134,6 +134,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/settings_providers"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:orientation="vertical"
@@ -142,7 +143,6 @@
         android:background="@color/white">
 
         <LinearLayout
-            android:id="@+id/settings_providers"
             android:layout_width="350dp"
             android:layout_height="50dp"
             android:layout_gravity="center_horizontal"
@@ -159,7 +159,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:gravity="left"
-                android:text="Providers"
+                android:text="Bitcoin Wallet and Providers"
                 android:textSize="20sp"
                 android:textColor="#949494"/>
 
@@ -167,7 +167,7 @@
                 android:layout_width="20dp"
                 android:layout_height="20dp"
                 android:layout_gravity="center_vertical"
-                android:src="@drawable/flecha"
+                android:src="@drawable/ccw_right_hand_arrow"
                 tools:ignore="contentDescription"/>
         </LinearLayout>
 

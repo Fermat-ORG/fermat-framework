@@ -261,7 +261,7 @@ public class CloseContractMonitorAgent implements
 
                     contractType = closeContractBusinessTransactionDao.getContractType(hashToSubmit);
                     contractXML = closeContractBusinessTransactionDao.getContractXML(hashToSubmit);
-                    transactionId = closeContractBusinessTransactionDao.getTransactionId(hashToSubmit);
+//                    transactionId = closeContractBusinessTransactionDao.getTransactionId(hashToSubmit);
                     UUID transmissionId = UUID.randomUUID();
 
                     System.out.println("\nTEST CONTRACT - CLOSE CONTRACT - AGENT - doTheMainTask() - getNewContractToCloseList() \n" +
@@ -274,8 +274,7 @@ public class CloseContractMonitorAgent implements
                             purchaseContract = (ContractPurchaseRecord) XMLParser.parseXML(contractXML, purchaseContract);
                             System.out.println("\nTEST CONTRACT - CLOSE CONTRACT - AGENT - doTheMainTask() - getNewContractToCloseList() - PURCHASE\n" +
                                     " - purchaseContract.getPublicKeyCustomer(): "+purchaseContract.getPublicKeyCustomer()+"\n" +
-                                    " - purchaseContract.getPublicKeyBroker(): "+purchaseContract.getPublicKeyBroker()+"\n"+
-                                    purchaseContract.toString()
+                                    " - purchaseContract.getPublicKeyBroker(): "+purchaseContract.getPublicKeyBroker()+"\n"
                             );
 
                             transactionTransmissionManager.sendContractStatusNotification(
@@ -293,8 +292,7 @@ public class CloseContractMonitorAgent implements
                             saleContract = (ContractSaleRecord) XMLParser.parseXML(contractXML, saleContract);
                             System.out.println("\nTEST CONTRACT - CLOSE CONTRACT - AGENT - doTheMainTask() - getNewContractToCloseList() - SALE\n" +
                                     " - saleContract.getPublicKeyCustomer(): "+saleContract.getPublicKeyCustomer()+"\n" +
-                                    " - saleContract.getPublicKeyBroker(): "+saleContract.getPublicKeyBroker()+"\n"+
-                                    saleContract.toString()
+                                    " - saleContract.getPublicKeyBroker(): "+saleContract.getPublicKeyBroker()+"\n"
                             );
 
                             transactionTransmissionManager.sendContractStatusNotification(

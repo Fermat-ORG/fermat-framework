@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ExposureLevel;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetPrivateKeyException;
@@ -124,6 +125,41 @@ public class ChatIdentityDatabaseDao {
             throw new CantCreateNewDeveloperException(e.getMessage(), FermatException.wrapException(e), "Chat Identity", "Cant create new Asset Issuer, unknown failure.");
         }
     }
+
+    public void changeExposureLevel(String publicKey, ExposureLevel exposureLevel) throws CantUpdateChatIdentityException
+    {
+        try {
+            /**
+             * 1) Get the table.
+             */
+            DatabaseTable table = getDatabaseTable(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME);//this.database.getTable(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME);
+
+            if (table == null) {
+                /**
+                 * Table not found.
+                 */
+                throw new CantGetUserDeveloperIdentitiesException("Cant get Chat Identity list, table not found.", "Chat Identity", "Cant get Chat Identity list, table not found.");
+            }
+
+            // 2) Find the Intra users.
+            table.addStringFilter(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
+            table.loadToMemory();
+
+
+            // 3) Get Intra users.
+            for (DatabaseTableRecord record : table.getRecords()) {
+                //set new values
+                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_EXPOSURE_LEVEL_COLUMN_NAME, exposureLevel.getCode());
+                table.updateRecord(record);
+            }
+
+        } catch (CantUpdateRecordException e) {
+            throw new CantUpdateChatIdentityException(e.getMessage(), e, "Chat Identity", "Cant update Chat Identity, database problems.");
+        }  catch (Exception e) {
+            throw new CantUpdateChatIdentityException(e.getMessage(), FermatException.wrapException(e), "Chat Identity", "Cant update Chat Identity, unknown failure.");
+        }
+    }
+
 
     public void updateChatIdentity(String publicKey, String alias, byte[] profileImage) throws CantUpdateChatIdentityException {
         try {

@@ -49,7 +49,7 @@ public class BusinessTransactionRecord {
     private String customerAlias;
 
     //Offline fields
-    private FiatCurrency currencyType;
+    private FiatCurrency fiatCurrency;
 
     private long paymentAmount;
 
@@ -119,8 +119,8 @@ public class BusinessTransactionRecord {
      * This method returns the FiatCurrency.
      * @return
      */
-    public FiatCurrency getCurrencyType() {
-        return currencyType;
+    public FiatCurrency getFiatCurrency() {
+        return fiatCurrency;
     }
 
     /**
@@ -259,8 +259,8 @@ public class BusinessTransactionRecord {
      * This method sets the currency type.
      * @param currencyType
      */
-    public void setCurrencyType(FiatCurrency currencyType) {
-        this.currencyType = currencyType;
+    public void setFiatCurrency(FiatCurrency currencyType) {
+        this.fiatCurrency = currencyType;
     }
 
     /**
@@ -401,7 +401,7 @@ public class BusinessTransactionRecord {
                 ", blockchainNetworkType=" + blockchainNetworkType +
                 ", externalTransactionId=" + externalTransactionId +
                 ", customerAlias=" + customerAlias +
-                ", currencyType=" + currencyType +
+                ", fiatCurrency=" + fiatCurrency +
                 ", paymentAmount=" + paymentAmount +
                 ", paymentType=" + paymentType +
                 ", actorPublicKey='" + actorPublicKey + '\'' +

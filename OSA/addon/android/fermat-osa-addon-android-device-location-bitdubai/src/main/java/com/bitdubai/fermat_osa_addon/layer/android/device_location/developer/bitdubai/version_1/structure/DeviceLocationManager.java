@@ -10,7 +10,7 @@ import android.os.Looper;
 import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
 
 /**
@@ -30,6 +30,15 @@ public class DeviceLocationManager implements LocationManager, LocationListener 
         this.context = context;
     }
 
+    @Override
+    public Location getLocation(LocationSource source) throws CantGetDeviceLocationException {
+        return null;
+    }
+
+    @Override
+    public Location getLastKnownLocation() throws CantGetDeviceLocationException {
+        return null;
+    }
 
     /**
      * LocationListener Interface member variables.
@@ -66,7 +75,7 @@ public class DeviceLocationManager implements LocationManager, LocationListener 
                     deviceLocation = locationManager.getLastKnownLocation(android.location.LocationManager.GPS_PROVIDER);
                     if (deviceLocation != null) {
 
-                        location = new DeviceLocation(deviceLocation.getLatitude(),deviceLocation.getLongitude(),deviceLocation.getTime(),deviceLocation.getAltitude(), LocationProvider.GPS);
+                        location = new DeviceLocation(deviceLocation.getLatitude(),deviceLocation.getLongitude(),deviceLocation.getTime(),deviceLocation.getAltitude(), LocationSource.GPS);
 
                     }
                     else{
@@ -93,7 +102,7 @@ public class DeviceLocationManager implements LocationManager, LocationListener 
                         deviceLocation = locationManager.getLastKnownLocation(android.location.LocationManager.NETWORK_PROVIDER);
                         if (deviceLocation != null) {
 
-                            location = new DeviceLocation(deviceLocation.getLatitude(),deviceLocation.getLongitude(),deviceLocation.getTime(),deviceLocation.getAltitude(), LocationProvider.NETWORK);
+                            location = new DeviceLocation(deviceLocation.getLatitude(),deviceLocation.getLongitude(),deviceLocation.getTime(),deviceLocation.getAltitude(), LocationSource.NETWORK);
 
                         }
                         else{

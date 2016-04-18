@@ -31,8 +31,8 @@ android {
         applicationId "org.fermat"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 27
-        versionName "0.62"
+        versionCode 30
+        versionName "0.64"
         multiDexEnabled true
     }
 
@@ -169,6 +169,6 @@ dependencies {
     //  compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
     compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
     compile project(':fermat-art-android-sub-app-artist-community-bitdubai')
-    compile 'com.github.anrwatchdog:anrwatchdog:1.2.+'
+  //  compile 'com.github.anrwatchdog:anrwatchdog:1.2.+'
 
 }

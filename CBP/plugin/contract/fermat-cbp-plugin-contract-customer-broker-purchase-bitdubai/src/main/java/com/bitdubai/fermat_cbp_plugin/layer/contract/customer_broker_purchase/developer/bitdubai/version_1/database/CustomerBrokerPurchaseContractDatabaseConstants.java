@@ -24,6 +24,7 @@ public class CustomerBrokerPurchaseContractDatabaseConstants {
     static final String CONTRACTS_PURCHASE_DATE_TIME_COLUMN_NAME = "date_time";
     static final String CONTRACTS_PURCHASE_STATUS_COLUMN_NAME = "status";
     static final String CONTRACTS_PURCHASE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME = "near_expiration_date_time";
+    static final String CONTRACTS_PURCHASE_CANCEL_REASON_COLUMN_NAME = "cancel_reason";
 
     static final String CONTRACTS_PURCHASE_FIRST_KEY_COLUMN = "contract_id";
 
