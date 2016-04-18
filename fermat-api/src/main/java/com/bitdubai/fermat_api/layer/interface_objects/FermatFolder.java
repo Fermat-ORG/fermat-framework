@@ -1,10 +1,7 @@
 package com.bitdubai.fermat_api.layer.interface_objects;
 
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.desktop.Item;
-import com.bitdubai.fermat_api.layer.interface_objects.FermatInterfaceObject;
-import com.bitdubai.fermat_api.layer.interface_objects.InterfaceType;
-
-
 
 import java.util.List;
 
@@ -62,6 +59,11 @@ public class FermatFolder implements FermatInterfaceObject {
     @Override
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    @Override
+    public AppsStatus getAppStatus() {
+        return null;
     }
 
     @Override
