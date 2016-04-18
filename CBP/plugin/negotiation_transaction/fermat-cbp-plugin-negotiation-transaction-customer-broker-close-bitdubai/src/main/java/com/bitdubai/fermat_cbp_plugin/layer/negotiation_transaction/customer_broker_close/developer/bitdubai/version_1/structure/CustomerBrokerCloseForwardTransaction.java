@@ -43,7 +43,7 @@ public class CustomerBrokerCloseForwardTransaction {
 
         try {
 
-            System.out.print("\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - FORWARD TRANSACTION ****\n");
+//            System.out.print("\n**** X) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - FORWARD TRANSACTION ****\n");
 
             UUID transactionId;
             int numberSend;

@@ -18,14 +18,18 @@ public interface Location {
 
     Double getAltitude();
 
+    Double getAccuracy();
+
+    Double getAltitudeAccuracy();
+
     /**
      * @return the last update time of the coordinates.
      */
     Long getTime();
 
     /**
-     * @return the provider that you use to get the coordinates, gps, wifi, etc.
+     * @return the source that you use to get the coordinates, gps, wifi, etc.
      */
-    LocationProvider getProvider();
+    LocationSource getSource();
 
 }

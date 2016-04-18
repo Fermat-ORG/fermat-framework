@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventListener;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Fragment;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MainMenu;
@@ -99,10 +100,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException ex) {
             String message = CantStartPluginException.DEFAULT_MESSAGE;
-            FermatException cause = ex;
             String context = "App Runtime Start";
             String possibleReason = "Some null definition";
-            throw new CantStartPluginException(message, cause, context, possibleReason);
+            throw new CantStartPluginException(message, ex, context, possibleReason);
         } catch (Exception exception) {
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception), null, "Unchecked Exception occurred, check the cause");
         }
@@ -219,7 +219,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setType(Activities.CWP_WALLET_FACTORY_MAIN);
             runtimeActivity.setColor("#b46a54");
             runtimeActivity.setBackPublicKey(factory_public_key);
-            runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_FACTORY_MAIN);
+//            runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_FACTORY_MAIN);
             //runtimeActivity.setStatusBarColor("");
 
 
@@ -333,7 +333,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setType(Activities.CWP_WALLET_PUBLISHER_MAIN);
             runtimeActivity.setColor("#b46a54");
             //runtimeActivity.setStatusBarColor("#b46a54");556
-            runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_PUBLISHER_MAIN);
+//            runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_PUBLISHER_MAIN);
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Wallet Publisher");
@@ -529,7 +529,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
              */
 
 
-            createWalletStoreNavigationStructure();
+            createAppStoreNavigationStructure();
 
 
             /**
@@ -545,7 +545,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
             runtimeActivity.setActivityType(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
-            subAppIntraUser.addPosibleStartActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD);
+
             runtimeActivity.setColor("#FF0B46F0");
 
             statusBar = new StatusBar();
@@ -597,6 +597,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.setSideMenu(runtimeSideMenu);
 
             subAppIntraUser.addActivity(runtimeActivity);
+            subAppIntraUser.changeActualStartActivity(Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_WORLD.getCode());
 
             // Activity: Connection
             runtimeActivity = new Activity();
@@ -808,6 +809,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeSubApp.setType(SubApps.ART_ARTIST_IDENTITY);
             String artArtistUserIdentityPublicKey = SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode();
             runtimeSubApp.setPublicKey(artArtistUserIdentityPublicKey);
+
             // Activity: Create New Identity
             runtimeActivity = new Activity();
             runtimeActivity.setType(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE);
@@ -815,7 +817,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.addPosibleStartActivity(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE);
+            runtimeSubApp.changeActualStartActivity(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE.getCode());
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Artist Identity");
             runtimeTitleBar.setColor("#1189a4");
@@ -831,14 +833,6 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             runtimeActivity.addFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey(), runtimeFragment);
             runtimeActivity.setStartFragment(Fragments.ART_SUB_APP_ARTIST_IDENTITY_CREATE_PROFILE.getKey());
             listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
-
-
-
-
-
-
-
-
 
             /*
              *TKY ARTIST IDENTITY
@@ -874,7 +868,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.addPosibleStartActivity(Activities.TKY_ARTIST_IDENTITY_CREATE_PROFILE);
+            runtimeSubApp.changeActualStartActivity(Activities.TKY_ARTIST_IDENTITY_CREATE_PROFILE.getCode());
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Tokenly Artist Identity");
             runtimeTitleBar.setColor("#1189a4");
@@ -907,7 +901,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
             runtimeActivity.setColor("#47BF73");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.addPosibleStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY);
+            runtimeSubApp.changeActualStartActivity(Activities.CHT_CHAT_CREATE_IDENTITY.getCode());
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Chat Identity");
@@ -945,7 +939,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.addPosibleStartActivity(Activities.TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT);
+            runtimeSubApp.changeActualStartActivity(Activities.TKY_SUB_APP_FAN_IDENTITY_CREATE_IDENTITY_FRAGMENT.getCode());
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Tokenly Fan Identity");
@@ -1007,7 +1001,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.addPosibleStartActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY);
+            runtimeSubApp.changeActualStartActivity(Activities.CCP_SUB_APP_INTRA_IDENTITY_CREATE_IDENTITY.getCode());
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Identity Manager");
@@ -1073,7 +1067,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 //            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY);
+            runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_ISSUER_IDENTITY_CREATE_IDENTITY.getCode());
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Create New Issuer Identity");
@@ -1134,7 +1128,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 //            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY);
+            runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_ASSET_USER_IDENTITY_CREATE_IDENTITY.getCode());
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Create New User Identity");
@@ -1194,7 +1188,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 //            runtimeActivity.setBackActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY);
             runtimeActivity.setColor("#03A9F4");
             runtimeSubApp.addActivity(runtimeActivity);
-            runtimeSubApp.addPosibleStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY);
+            runtimeSubApp.changeActualStartActivity(Activities.DAP_SUB_APP_REDEEM_POINT_IDENTITY_CREATE_IDENTITY.getCode());
 
             runtimeTitleBar = new TitleBar();
             runtimeTitleBar.setLabel("Create New Redeem Point Identity");
@@ -1217,14 +1211,14 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
             String message = com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException.DEFAULT_MESSAGE;
             FermatException cause = FermatException.wrapException(e);
             String context = "Error on method Factory Reset, setting the structure of the apps";
-            String possibleReason = "some null definition";
+            String possibleReason = e.getMessage();
             throw new com.bitdubai.fermat_dmp_plugin.layer.engine.sub_app_runtime.developer.bitdubai.version_1.exceptions.CantFactoryResetException(message, cause, context, possibleReason);
 
         }
 
     }
 
-    private void createWalletStoreNavigationStructure() {
+    private void createAppStoreNavigationStructure() throws InvalidParameterException {
         RuntimeSubApp runtimeSubApp;
         Activity runtimeActivity;
         StatusBar statusBar;
@@ -1243,14 +1237,14 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setType(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
         runtimeActivity.setActivityType(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY.getCode());
         runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY);
+        runtimeSubApp.changeActualStartActivity(Activities.CWP_WALLET_STORE_MAIN_ACTIVITY.getCode());
 
         statusBar = new StatusBar();
-        statusBar.setColor("#B4573C");
+        statusBar.setColor("#286C99");
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Wallet Store");
+        runtimeTitleBar.setLabel("App Store");
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -1312,7 +1306,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStartFragment(Fragments.CWP_WALLET_STORE_MORE_DETAIL_ACTIVITY.getKey());
     }
 
-    private void createAssetFactorySubAppNavigationStructure() {
+    private void createAssetFactorySubAppNavigationStructure() throws InvalidParameterException {
         RuntimeSubApp dapFactory;
         Activity runtimeActivity;
         Tab runtimeTab;
@@ -1327,7 +1321,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
         dapFactory = new RuntimeSubApp();
         dapFactory.setType(SubApps.DAP_ASSETS_FACTORY);
-        dapFactory.addPosibleStartActivity(Activities.DAP_MAIN);
+
         dapFactory.setPublicKey(dapFactoryPublicKey);
 
         runtimeActivity = new Activity();
@@ -1386,6 +1380,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setSideMenu(runtimeSideMenu);
 
         dapFactory.addActivity(runtimeActivity);
+        dapFactory.changeActualStartActivity(Activities.DAP_MAIN.getCode());
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_ASSET_EDITOR_ACTIVITY);
@@ -1500,7 +1495,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         listSubApp.put(dapFactory.getPublicKey(), dapFactory);
     }
 
-    private void createAssetIssuerCommunitySubAppNavigationStructure() {
+    private void createAssetIssuerCommunitySubAppNavigationStructure() throws InvalidParameterException {
         RuntimeSubApp dapAssetIssuerCommunity;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
@@ -1514,7 +1509,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         dapAssetIssuerCommunity = new RuntimeSubApp();
         dapAssetIssuerCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_ISSUER);
         dapAssetIssuerCommunity.setPublicKey(communityIssuerPublicKey);
-        dapAssetIssuerCommunity.addPosibleStartActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
+        dapAssetIssuerCommunity.changeActualStartActivity(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN.getCode());
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_ASSET_ISSUER_COMMUNITY_ACTIVITY_MAIN);
@@ -1800,7 +1795,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         listSubApp.put(dapAssetIssuerCommunity.getPublicKey(), dapAssetIssuerCommunity);
     }
 
-    private void createAssetUserCommunitySubAppNavigationStructure() {
+    private void createAssetUserCommunitySubAppNavigationStructure() throws InvalidParameterException {
         RuntimeSubApp dapAssetUserCommunity;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
@@ -1814,7 +1809,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         dapAssetUserCommunity = new RuntimeSubApp();
         dapAssetUserCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_USER);
         dapAssetUserCommunity.setPublicKey(communityUserPublicKey);
-        dapAssetUserCommunity.addPosibleStartActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
+        dapAssetUserCommunity.changeActualStartActivity(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN.getCode());
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_ASSET_USER_COMMUNITY_ACTIVITY_MAIN);
@@ -2302,7 +2297,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         listSubApp.put(dapAssetUserCommunity.getPublicKey(), dapAssetUserCommunity);
     }
 
-    private void createTkyArtistIdentityNavigationStructure(){
+    private void createTkyArtistIdentityNavigationStructure() throws InvalidParameterException {
         RuntimeSubApp runtimeSubApp = new RuntimeSubApp();
         Activity runtimeActivity;
         StatusBar statusBar;
@@ -2320,7 +2315,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         //runtimeActivity.setBackActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY);
         runtimeActivity.setColor("#03A9F4");
         runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.addPosibleStartActivity(Activities.TKY_ARTIST_IDENTITY);
+        runtimeSubApp.changeActualStartActivity(Activities.TKY_ARTIST_IDENTITY.getCode());
 
         TitleBar runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Tokenly Identity");
@@ -2344,7 +2339,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
 
     }
 
-    private void createArtArtistIdentitySubAgracppNavigationStructure(){
+    private void createArtArtistIdentitySubAgracppNavigationStructure() throws InvalidParameterException {
         RuntimeSubApp artArtistIdentity;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
@@ -2358,7 +2353,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         artArtistIdentity = new RuntimeSubApp();
         artArtistIdentity.setType(SubApps.ART_ARTIST_IDENTITY);
         artArtistIdentity.setPublicKey(IdentityArtistPublicKey);
-        artArtistIdentity.addPosibleStartActivity(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE);
+        artArtistIdentity.changeActualStartActivity(Activities.ART_ARTIST_IDENTITY_CREATE_PROFILE.getCode());
 
         runtimeActivity = new Activity();
         statusBar = new StatusBar();
@@ -2390,7 +2385,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         listSubApp.put(artArtistIdentity.getPublicKey(), artArtistIdentity);
     } //ArtArtistIdentity
 
-    private void createRedeemPointCommunitySubAppNavigationStructure() {
+    private void createRedeemPointCommunitySubAppNavigationStructure() throws InvalidParameterException {
         RuntimeSubApp dapAssetRedeemPointCommunity;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
@@ -2404,7 +2399,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         dapAssetRedeemPointCommunity = new RuntimeSubApp();
         dapAssetRedeemPointCommunity.setType(SubApps.DAP_ASSETS_COMMUNITY_REDEEM_POINT);
         dapAssetRedeemPointCommunity.setPublicKey(communityRedeemPointPublicKey);
-        dapAssetRedeemPointCommunity.addPosibleStartActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
+        dapAssetRedeemPointCommunity.changeActualStartActivity(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN.getCode());
 
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.DAP_ASSET_REDEEM_POINT_COMMUNITY_ACTIVITY_MAIN);
@@ -2693,7 +2688,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         listSubApp.put(dapAssetRedeemPointCommunity.getPublicKey(), dapAssetRedeemPointCommunity);
     }
 
-    private void createCryptoCustomerIdentitySubAppNavigationStructure() {
+    private void createCryptoCustomerIdentitySubAppNavigationStructure() throws InvalidParameterException {
         RuntimeSubApp runtimeSubApp;
         Activity runtimeActivity;
         TitleBar runtimeTitleBar;
@@ -2705,6 +2700,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSubApp = new RuntimeSubApp();
         runtimeSubApp.setType(SubApps.CBP_CRYPTO_CUSTOMER_IDENTITY);
         runtimeSubApp.setPublicKey(publicKey);
+        runtimeSubApp.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
 
         // Activity: List of identities
@@ -2712,7 +2708,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode());
         runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.addPosibleStartActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY);
+        runtimeSubApp.changeActualStartActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY.getCode());
 
         statusBar = new StatusBar();
         statusBar.setColor("#0e738b");
@@ -2785,7 +2781,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_CUSTOMER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
     }
 
-    private void createCryptoBrokerIdentitySubAppNavigationStructure() {
+    private void createCryptoBrokerIdentitySubAppNavigationStructure() throws InvalidParameterException {
         RuntimeSubApp runtimeSubApp;
         Activity runtimeActivity;
         StatusBar statusBar;
@@ -2804,7 +2800,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
         runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.addPosibleStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY);
+        runtimeSubApp.changeActualStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY.getCode());
 
         statusBar = new StatusBar();
         statusBar.setColor("#9A12B09F");
@@ -2877,7 +2873,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStartFragment(Fragments.CBP_SUB_APP_CRYPTO_BROKER_IDENTITY_EDIT_IDENTITY_FRAGMENT.getKey());
     }
 
-    private void createCryptoBrokerCommunitySubAppNavigationStructure() {
+    private void createCryptoBrokerCommunitySubAppNavigationStructure() throws InvalidParameterException {
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
@@ -2888,6 +2884,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         RuntimeSubApp subAppBrokerCommunity = new RuntimeSubApp();
         subAppBrokerCommunity.setType(SubApps.CBP_CRYPTO_BROKER_COMMUNITY);
         String communityPublicKey = SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode();
+        subAppBrokerCommunity.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
         subAppBrokerCommunity.setPublicKey(communityPublicKey);
 
         //Side Menu definition
@@ -2917,7 +2914,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getCode());
-        subAppBrokerCommunity.addPosibleStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD);
+        subAppBrokerCommunity.changeActualStartActivity(Activities.CBP_SUB_APP_CRYPTO_BROKER_COMMUNITY_CONNECTION_WORLD.getCode());
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
@@ -3043,7 +3040,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         listSubApp.put(subAppBrokerCommunity.getPublicKey(), subAppBrokerCommunity);
     }
 
-    private void createCryptoCustomerCommunitySubAppNavigationStructure() {
+    private void createCryptoCustomerCommunitySubAppNavigationStructure() throws InvalidParameterException {
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
@@ -3055,6 +3052,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         subAppCustomerCommunity.setType(SubApps.CBP_CRYPTO_CUSTOMER_COMMUNITY);
         String communityPublicKey = SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode();
         subAppCustomerCommunity.setPublicKey(communityPublicKey);
+        subAppCustomerCommunity.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
 
         //Side Menu definition
         runtimeSideMenu = new SideMenu();
@@ -3083,7 +3081,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getCode());
-        subAppCustomerCommunity.addPosibleStartActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD);
+        subAppCustomerCommunity.changeActualStartActivity(Activities.CBP_SUB_APP_CRYPTO_CUSTOMER_COMMUNITY_CONNECTION_WORLD.getCode());
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
@@ -3209,7 +3207,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         listSubApp.put(subAppCustomerCommunity.getPublicKey(), subAppCustomerCommunity);
     }
 
-    private void createDeveloperSubAppNavigationStructure() {
+    private void createDeveloperSubAppNavigationStructure() throws InvalidParameterException {
         RuntimeSubApp runtimeSubApp;
         Activity runtimeActivity;
         StatusBar statusBar;
@@ -3233,7 +3231,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.addPosibleStartActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER);
+        runtimeSubApp.changeActualStartActivity(Activities.CWP_SUB_APP_ALL_DEVELOPER.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Developer");
@@ -3291,7 +3289,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE);
+        runtimeSubApp.changeActualStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE.getCode());
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_LIST_FRAGMENT.getKey());
@@ -3319,7 +3317,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST);
+        runtimeSubApp.changeActualStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST.getCode());
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_LIST_FRAGMENT.getKey());
@@ -3346,7 +3344,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeSubApp.addActivity(runtimeActivity);
-        runtimeSubApp.addPosibleStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST);
+        runtimeSubApp.changeActualStartActivity(Activities.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST.getCode());
 
         runtimeFragment = new Fragment();
         runtimeFragment.setType(Fragments.CWP_WALLET_DEVELOPER_TOOL_DATABASE_TABLE_RECORD_LIST_FRAGMENT.getKey());
@@ -3371,7 +3369,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         listSubApp.put(runtimeSubApp.getPublicKey(), runtimeSubApp);
     }
 
-    private void createChatSubAppNavigationStructure() {
+    private void createChatSubAppNavigationStructure() throws InvalidParameterException {
 
         RuntimeSubApp chtChat;
         Activity runtimeActivity;
@@ -3392,7 +3390,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CHATLIST);
         runtimeActivity.setActivityType(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
         runtimeActivity.setBackgroundColor("F9F9F9");
-        chtChat.addPosibleStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
+        chtChat.changeActualStartActivity(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
 
         statusBar = new StatusBar();
         statusBar.setColor("#47BF73");
@@ -3442,6 +3440,58 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         chtChat.addActivity(runtimeActivity);
         listSubApp.put(chtChat.getPublicKey(), chtChat);
 
+        // Activity: Broadcast step one
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
+        runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
+        chtChat.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Broadcast");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#47BF73");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getKey());
+
+        // Activity: Broadcast step two
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL);
+        runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
+        chtChat.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Broadcast");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#47BF73");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getKey());
+
         // Activity: Contacts
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_CHAT_OPEN_CONTACTLIST);
@@ -3467,6 +3517,31 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeFragment.setType(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_CONTACTLIST_TAB_FRAGMENT.getKey());
+        // Activity: Wizard step two scheduled
+        runtimeActivity = new Activity();
+        runtimeActivity.setType(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL);
+        runtimeActivity.setActivityType(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL.getCode());
+        runtimeActivity.setBackActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL);
+        runtimeActivity.setBackPublicKey(chatPublicKey);//runtimeActivity.setBackPublicKey(Activities.CHT_CHAT_OPEN_CHATLIST.getCode());
+        runtimeActivity.setBackgroundColor("F9F9F9");
+        chtChat.addActivity(runtimeActivity);
+
+        statusBar = new StatusBar();
+        statusBar.setColor("#47BF73");
+        runtimeActivity.setStatusBar(statusBar);
+
+        runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Contacts");
+        runtimeTitleBar.setLabelSize(20);
+        runtimeTitleBar.setTitleColor("#FFFFFF");
+        runtimeTitleBar.setIsTitleTextStatic(true);
+        runtimeTitleBar.setColor("#47BF73");
+        runtimeActivity.setTitleBar(runtimeTitleBar);
+
+        runtimeFragment = new Fragment();
+        runtimeFragment.setType(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL.getKey());
 
 //        //Menu Tabs
 //        runtimeTabStrip = new TabStrip();
@@ -3603,6 +3678,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.addFragment(Fragments.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CHT_CHAT_OPEN_MESSAGE_LIST_FRAGMENT.getKey());
 
+
         // Activity: Broadcast
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL);
@@ -3625,9 +3701,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL_FRAGMENT.getKey());
+        runtimeFragment.setType(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL.getKey());
 
         // Activity: Broadcast 2
         runtimeActivity = new Activity();
@@ -3651,9 +3727,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setTitleBar(runtimeTitleBar);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL_FRAGMENT.getKey());
-        runtimeActivity.addFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL_FRAGMENT.getKey(), runtimeFragment);
-        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL_FRAGMENT.getKey());
+        runtimeFragment.setType(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getKey());
+        runtimeActivity.addFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getKey(), runtimeFragment);
+        runtimeActivity.setStartFragment(Fragments.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL.getKey());
 
 
 
@@ -3740,7 +3816,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         listSubApp.put(chtChat.getPublicKey(), chtChat);
     }
 
-    private void createFanCommunitySubAppNavigationStructure(){
+    private void createFanCommunitySubAppNavigationStructure() throws InvalidParameterException {
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
@@ -3780,7 +3856,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD.getCode());
-        subAppCustomerCommunity.addPosibleStartActivity(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD);
+        subAppCustomerCommunity.changeActualStartActivity(Activities.ART_SUB_APP_FAN_COMMUNITY_CONNECTION_WORLD.getCode());
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();
@@ -3906,7 +3982,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         listSubApp.put(subAppCustomerCommunity.getPublicKey(), subAppCustomerCommunity);
     }
 
-    private void createArtistCommunitySubAppNavigationStructure() {
+    private void createArtistCommunitySubAppNavigationStructure() throws InvalidParameterException {
         TitleBar runtimeTitleBar;
         SideMenu runtimeSideMenu;
         MenuItem runtimeMenuItem;
@@ -3946,7 +4022,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD.getCode());
-        subAppArtistCommunity.addPosibleStartActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD);
+        subAppArtistCommunity.changeActualStartActivity(Activities.ART_SUB_APP_ARTIST_COMMUNITY_CONNECTION_WORLD.getCode());
         runtimeActivity.setColor("#FF0B46F0");
 
         statusBar = new StatusBar();

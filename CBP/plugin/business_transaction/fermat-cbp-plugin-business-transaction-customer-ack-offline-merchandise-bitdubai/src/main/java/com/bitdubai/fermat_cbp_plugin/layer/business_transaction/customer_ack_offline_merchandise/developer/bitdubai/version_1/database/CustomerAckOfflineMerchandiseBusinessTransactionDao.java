@@ -727,7 +727,7 @@ public class CustomerAckOfflineMerchandiseBusinessTransactionDao {
 
             currencyType= FiatCurrency.getByCode(record.getStringValue(CustomerAckOfflineMerchandiseBusinessTransactionDatabaseConstants.
                 ACK_OFFLINE_MERCHANDISE_CURRENCY_TYPE_COLUMN_NAME));
-            businessTransactionRecord.setCurrencyType(currencyType);
+            businessTransactionRecord.setFiatCurrency(currencyType);
             */
             return businessTransactionRecord;
 

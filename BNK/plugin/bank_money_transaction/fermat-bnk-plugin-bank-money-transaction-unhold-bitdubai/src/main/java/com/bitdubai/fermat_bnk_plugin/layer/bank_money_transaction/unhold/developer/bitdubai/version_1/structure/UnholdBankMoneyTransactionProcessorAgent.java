@@ -102,7 +102,7 @@ public class UnholdBankMoneyTransactionProcessorAgent extends FermatAgent {
             try {
                 heldfunds = bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).getBookBalance().getBalance(transaction.getAccountNumber());
                 if(heldfunds >= transaction.getAmount()) {
-                    bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).unhold(new BankMoneyTransactionRecordImpl(errorManager,transaction.getTransactionId(), BalanceType.AVAILABLE.getCode(), TransactionType.UNHOLD.getCode(),transaction.getAmount(), transaction.getCurrency().getCode(), BankOperationType.UNHOLD.getCode(),"testing reference","test BNK name",transaction.getAccountNumber(), BankAccountType.SAVING.getCode(),0,0,transaction.getTimestamp(),transaction.getMemo(), BankTransactionStatus.CONFIRMED.getCode()));
+                    bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).unhold(new BankMoneyTransactionRecordImpl(errorManager,transaction.getTransactionId(), BalanceType.AVAILABLE.getCode(), TransactionType.UNHOLD.getCode(),transaction.getAmount(), transaction.getCurrency().getCode(), BankOperationType.UNHOLD.getCode(),"testing reference","test BNK name",transaction.getAccountNumber(), BankAccountType.SAVINGS.getCode(),0,0,transaction.getTimestamp(),transaction.getMemo(), BankTransactionStatus.CONFIRMED.getCode()));
                     unholdTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
                 }
                 else {

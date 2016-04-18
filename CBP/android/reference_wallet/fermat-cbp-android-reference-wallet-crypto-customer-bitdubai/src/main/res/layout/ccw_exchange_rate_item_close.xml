@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    android:id="@+id/ccw_exchange_rate_card_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardBackgroundColor="@color/ccw_card_background_status_confirm"
+    app:cardCornerRadius="4dp"
+    app:cardElevation="4dp"
+    tools:visibility="visible">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/ccw_clause_number"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="9dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/bg_detail_number_01"
+            tools:ignore="contentDescription"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ccw_card_view_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:gravity="center"
+                android:textAllCaps="true"
+                android:textColor="#1271A7"
+                android:textSize="18sp"
+                tools:text="Exchange Rate Reference"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#1271A7"/>
+
+            <RelativeLayout
+                android:id="@+id/ccw_market_rate_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp">
+
+                <TextView
+                    android:id="@+id/ccw_market_rate_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/market_exchange_rate"
+                    android:textColor="@color/description_text_status_confirm"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/ccw_market_rate_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/ccw_market_rate_text"
+                    android:layout_toEndOf="@+id/ccw_market_rate_text"
+                    android:layout_toRightOf="@+id/ccw_market_rate_text"
+                    android:textColor="@color/text_value_status_confirm"
+                    android:textSize="18sp"
+                    tools:text="1 BTC / 210 USD"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp">
+
+                <TextView
+                    android:id="@+id/ccw_exchange_rate_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:text="@string/yours_exchange_rate_title"
+                    android:textColor="@color/description_text_status_confirm"
+                    android:textSize="18sp"/>
+
+                <TextView
+                    android:id="@+id/ccw_exchange_rate_value_left_side"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/ccw_exchange_rate_text"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_toEndOf="@+id/ccw_exchange_rate_text"
+                    android:layout_toRightOf="@+id/ccw_exchange_rate_text"
+                    android:textColor="@color/text_value_status_confirm"
+                    android:textSize="18sp"
+                    tools:text="1 USD / "/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                    android:id="@+id/ccw_exchange_rate_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_toEndOf="@+id/ccw_exchange_rate_value_left_side"
+                    android:layout_toRightOf="@+id/ccw_exchange_rate_value_left_side"
+                    android:background="#FFF"
+                    android:inputType="numberDecimal"
+                    android:maxWidth="150dp"
+                    android:minWidth="50dp"
+                    android:paddingEnd="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingStart="8dp"
+                    android:textAllCaps="false"
+                    android:textColor="#222"
+                    android:textSize="18sp"
+                    tools:text="556.4"/>
+
+                <TextView
+                    android:id="@+id/ccw_exchange_rate_value_right_side"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_toEndOf="@+id/ccw_exchange_rate_value"
+                    android:layout_toRightOf="@+id/ccw_exchange_rate_value"
+                    android:textColor="@color/text_value_status_confirm"
+                    android:textSize="18sp"
+                    tools:text="BTC"/>
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:minHeight="34dp"
+                android:visibility="gone">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#2e2e2e2e"/>
+
+                <Button
+                    android:id="@+id/ccw_confirm_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="end"
+                    android:layout_margin="8dp"
+                    android:text="@string/status_confirm"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+</android.support.v7.widget.CardView>

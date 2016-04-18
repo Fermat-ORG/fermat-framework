@@ -31,8 +31,8 @@ android {
         applicationId "org.fermat"
         minSdkVersion 17
         targetSdkVersion 23
-        versionCode 27
-        versionName "0.62"
+        versionCode 30
+        versionName "0.64"
         multiDexEnabled true
     }
 
@@ -126,6 +126,8 @@ dependencies {
     compile project(':fermat-csh-android-reference-wallet-cash-money-bitdubai')
     //CHT
     compile project(':fermat-cht-android-sub-app-chat-bitdubai')
+    compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
+    compile project(':fermat-cht-android-sub-app-chat-community-bitdubai')
     //TKY
     compile project(':fermat-tky-android-reference-wallet-fan-wallet-bitdubai')
     compile project(':fermat-tky-android-sub-app-artist-identity-bitdubai')
@@ -166,8 +168,6 @@ dependencies {
     compile 'com.github.Bossyao168:StackOverView:9808f07dca'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.github.Bossyao168:StackOverView:9808f07dca'
-    //  compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
-    compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
     compile project(':fermat-art-android-sub-app-artist-community-bitdubai')
     compile 'com.github.anrwatchdog:anrwatchdog:1.2.+'
 

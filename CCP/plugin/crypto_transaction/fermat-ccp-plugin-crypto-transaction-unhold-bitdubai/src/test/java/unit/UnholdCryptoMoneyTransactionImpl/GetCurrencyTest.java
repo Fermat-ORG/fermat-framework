@@ -20,7 +20,7 @@ public class GetCurrencyTest {
     @Test
     public void getCurrency(){
         UnHoldCryptoMoneyTransactionImpl unHoldCryptoMoneyTransaction = mock(UnHoldCryptoMoneyTransactionImpl.class);
-        when(unHoldCryptoMoneyTransaction.getCurrency()).thenReturn(CryptoCurrency.CHAVEZCOIN);
+        when(unHoldCryptoMoneyTransaction.getCurrency()).thenReturn(CryptoCurrency.BITCOIN);
         assertThat(unHoldCryptoMoneyTransaction.getCurrency()).isNotNull();
     }
 

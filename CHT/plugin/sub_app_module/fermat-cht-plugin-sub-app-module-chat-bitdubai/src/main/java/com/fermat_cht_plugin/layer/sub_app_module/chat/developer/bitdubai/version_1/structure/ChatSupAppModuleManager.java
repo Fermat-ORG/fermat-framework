@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
@@ -61,11 +62,19 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
 
     private final MiddlewareChatManager middlewareChatManager;
     private final ChatIdentityManager chatIdentityManager;
+    private SettingsManager<ChatPreferenceSettings> settingsManager;
+    private final PluginFileSystem pluginFileSystem;
+    private final UUID pluginId;
 
-    public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager, ChatIdentityManager chatIdentityManager)
+    public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager,
+                                   ChatIdentityManager chatIdentityManager,
+                                   PluginFileSystem pluginFileSystem,
+                                   UUID pluginId)
     {
         this.middlewareChatManager = middlewareChatManager;
         this.chatIdentityManager   = chatIdentityManager;
+        this.pluginFileSystem      = pluginFileSystem                         ;
+        this.pluginId              = pluginId                                 ;
     }
 
     @Override
@@ -223,7 +232,15 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
      */
     @Override
     public SettingsManager<ChatPreferenceSettings> getSettingsManager() {
-        return null;
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     /**
@@ -247,7 +264,7 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
      */
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-
+        chatIdentityManager.createNewIdentityChat(name, profile_img);
     }
 
     @Override

@@ -53,7 +53,7 @@ public class ClientChannelConfigurator extends ServerEndpointConfig.Configurator
             String cpki = handshakeRequest.getHeaders().get(HeadersAttName.CPKI_ATT_HEADER_NAME).get(0);
 
             /*
-             * Pass the identity create to the WebSocketClientChannelServerEndpoint
+             * Pass the identity create to the FermatWebSocketClientChannelServerEndpoint
              */
             serverEndpointConfig.getUserProperties().put(HeadersAttName.CPKI_ATT_HEADER_NAME, cpki);
 
@@ -75,7 +75,7 @@ public class ClientChannelConfigurator extends ServerEndpointConfig.Configurator
              handshakeResponse.getHeaders().put(HeadersAttName.NPKI_ATT_HEADER_NAME, value);
 
             /*
-             * Pass the identity create to the WebSocketClientChannelServerEndpoint
+             * Pass the identity create to the FermatWebSocketClientChannelServerEndpoint
              */
              serverEndpointConfig.getUserProperties().put(HeadersAttName.NPKI_ATT_HEADER_NAME, nodeIdentityForSession);
 

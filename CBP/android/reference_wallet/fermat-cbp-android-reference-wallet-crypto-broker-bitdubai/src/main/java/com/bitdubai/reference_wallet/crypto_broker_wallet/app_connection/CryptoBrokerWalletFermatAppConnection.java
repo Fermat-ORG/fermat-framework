@@ -28,6 +28,8 @@ import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcaste
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_CONTRACT_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_NEW_NEGOTIATION_NOTIFICATION;
 import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CBW_WAITING_FOR_BROKER_NOTIFICATION;
+import static com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants.CCW_CONTRACT_CANCELLED_NOTIFICATION;
+
 
 
 /**
@@ -95,6 +97,8 @@ public class CryptoBrokerWalletFermatAppConnection extends AppConnections<Crypto
                 return new CryptoBrokerNotificationPainter("Contract Update","You just received a payment.","");
             case CBW_CONTRACT_COMPLETED_NOTIFICATION:
                 return new CryptoBrokerNotificationPainter("Contract Completed","The contract has been completed.","");
+            case CCW_CONTRACT_CANCELLED_NOTIFICATION:
+                return new CryptoBrokerNotificationPainter("Contract Cancelled","The contract has been cancellede.","");
             default:
                 return super.getNotificationPainter(code);
         }

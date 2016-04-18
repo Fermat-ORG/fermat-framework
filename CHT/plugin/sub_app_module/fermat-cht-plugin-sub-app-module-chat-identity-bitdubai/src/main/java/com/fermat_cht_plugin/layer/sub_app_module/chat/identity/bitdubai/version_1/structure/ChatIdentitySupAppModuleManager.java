@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
@@ -18,6 +19,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.Chat
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by franklin on 03/04/16.
@@ -25,8 +27,15 @@ import java.util.List;
 public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManager, Serializable {
 
     private ChatIdentityManager chatIdentityManager;
-    public ChatIdentitySupAppModuleManager(ChatIdentityManager chatIdentityManager){
+    private SettingsManager<ChatIdentityPreferenceSettings> settingsManager;
+    private final PluginFileSystem pluginFileSystem;
+    private final UUID pluginId;
+    public ChatIdentitySupAppModuleManager(ChatIdentityManager chatIdentityManager,
+                                           PluginFileSystem pluginFileSystem,
+                                           UUID pluginId){
         this.chatIdentityManager = chatIdentityManager;
+        this.pluginFileSystem    = pluginFileSystem                         ;
+        this.pluginId            = pluginId;
     }
     /**
      * The method <code>getIdentityAssetUsersFromCurrentDeviceUser</code> will give us a list of all the intra wallet users associated to the actual Device User logged in
@@ -70,7 +79,15 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
      */
     @Override
     public SettingsManager<ChatIdentityPreferenceSettings> getSettingsManager() {
-        return null;
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     /**

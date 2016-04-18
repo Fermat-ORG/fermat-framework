@@ -97,7 +97,7 @@ public class DeveloperDatabaseFactory {
         LossProtectedBtcSpendingColumns.add(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TRANSACTION_ID_COLUMN_NAME);
         LossProtectedBtcSpendingColumns.add(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_BTC_SPENT_COLUMN_NAME);
         LossProtectedBtcSpendingColumns.add(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_TIME_STAMP_COLUMN_NAME);
-
+        LossProtectedBtcSpendingColumns.add(BitcoinLossProtectedWalletDatabaseConstants.LOSS_PROTECTED_WALLET_SPENT_TABLE_EXCHANGE_RATE_COLUMN_NAME);
 
 
 

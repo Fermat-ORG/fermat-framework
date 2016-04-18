@@ -3,14 +3,14 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services
 import com.bitdubai.fermat_api.FermatException;
 
 /**
- * The exception <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantDeleteRecordDataBaseException</code>
+ * The exception <code>com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException</code>
  * is thrown when we can't find a record in database.
  * <p>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 02/11/2015.
  */
 public class RecordNotFoundException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T RECORD NOT FOUND IN DATABASE EXCEPTION";
+    public static final String DEFAULT_MESSAGE = "RECORD NOT FOUND IN DATABASE EXCEPTION";
 
     public RecordNotFoundException(String message, Exception cause, String context, String possibleReason) {
         super(message, cause, context, possibleReason);
