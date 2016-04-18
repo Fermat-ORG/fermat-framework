@@ -17,7 +17,7 @@ import org.spongycastle.crypto.util.PublicKeyFactory;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.FermatSpongyCastleCipher</code>
- * <p/>
+ * use the SpongyCastle implementation that is specially for Android Operating System <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 17/04/16.
  *
  * @version 1.0
