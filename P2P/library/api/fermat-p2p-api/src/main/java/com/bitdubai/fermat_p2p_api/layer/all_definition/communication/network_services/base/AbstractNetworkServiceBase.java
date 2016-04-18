@@ -998,7 +998,8 @@ public abstract class AbstractNetworkServiceBase  extends AbstractPlugin impleme
      * This method is called when the network service method
      * AbstractPlugin#start() is called
      */
-    protected abstract void onStart() throws CantStartPluginException;
+    protected abstract void
+    onStart() throws CantStartPluginException;
 
     /**
      * This method is automatically called when the network service is registered
