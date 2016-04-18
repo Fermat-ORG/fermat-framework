@@ -20,7 +20,6 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.BankAccountType;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -49,7 +48,7 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
     private CryptoBrokerWalletSession walletSession;
     private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
-    CryptoBrokerWalletManager walletManager;
+    CryptoBrokerWalletModuleManager walletManager;
 
     //UI
     private final Activity activity;
@@ -71,7 +70,7 @@ public class InputDialogCBP extends FermatDialog<FermatSession, SubAppResourcesP
     List<String> bankAccountTypes =  new ArrayList<>();
 
 
-    public InputDialogCBP(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources, CryptoBrokerWalletManager WalletManager, int dialogType) {
+    public InputDialogCBP(Activity activity, FermatSession fermatSession, SubAppResourcesProviderManager resources, CryptoBrokerWalletModuleManager WalletManager, int dialogType) {
         super(activity, fermatSession, resources);
         this.activity = activity;
         this.walletManager = WalletManager;

@@ -117,7 +117,7 @@ public final class CryptoBrokerActorNetworkServiceDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_TABLE_NAME);
 
-            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_ID_COLUMN_NAME           , DatabaseDataType.STRING, 100, Boolean.TRUE );
+            table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_REQUEST_ID_COLUMN_NAME           , DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_COLUMN_NAME          , DatabaseDataType.STRING,  10, Boolean.FALSE);
             table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_MERCHANDISE_TYPE_COLUMN_NAME     , DatabaseDataType.STRING,  10, Boolean.FALSE);
             table.addColumn(CryptoBrokerActorNetworkServiceDatabaseConstants.QUOTES_PAYMENT_CURRENCY_COLUMN_NAME     , DatabaseDataType.STRING,  10, Boolean.FALSE);

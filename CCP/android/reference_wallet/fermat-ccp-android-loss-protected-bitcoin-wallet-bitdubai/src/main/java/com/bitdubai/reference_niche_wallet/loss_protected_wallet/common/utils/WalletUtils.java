@@ -103,5 +103,42 @@ public class WalletUtils {
         // alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
     }
+    /**
+     *  Formationg Amount
+     * @param amount
+     * @return
+     */
+    public static String formatAmountString(double amount) {
+        String stringAmount = "";
+
+
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        df.setMinimumFractionDigits(2);
+
+        stringAmount =df.format(amount);//+ " BTC";
+
+        return stringAmount;
+    }
+
+
+
+    /**
+     *  Formationg Exchange Rate Amount
+     * @param rateAmount
+     * @return
+     */
+    public static String formatExchangeRateString(double rateAmount) {
+        String stringAmount = "";
+
+
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        df.setMinimumFractionDigits(2);
+
+        stringAmount =df.format(rateAmount);//+ " BTC";
+
+        return stringAmount;
+    }
 
 }

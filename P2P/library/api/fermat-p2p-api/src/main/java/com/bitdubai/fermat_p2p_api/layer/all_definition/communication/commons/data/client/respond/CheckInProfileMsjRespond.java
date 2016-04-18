@@ -1,11 +1,6 @@
-/*
- * @#ProfileCheckInMsjRespond.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
+import com.google.gson.Gson;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond</code>
@@ -43,6 +38,9 @@ public class CheckInProfileMsjRespond extends MsgRespond {
         return identityPublicKey;
     }
 
+    public static CheckInProfileMsjRespond parseContent(String content) {
 
+        return new Gson().fromJson(content, CheckInProfileMsjRespond.class);
+    }
 
 }

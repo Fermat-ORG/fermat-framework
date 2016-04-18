@@ -32,6 +32,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * This class define methods to execute query and transactions on database
  * And method to get a database table definition
@@ -485,6 +487,7 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
          * Get the columns of the table and write the query to create it
          */
         try {
+            List<String> primaryKey = new ArrayList<>();
             String query = "CREATE TABLE IF NOT EXISTS " + table.getTableName() + "(";
             ArrayList<DatabaseTableColumn> tableColumns = table.getColumns();
 
@@ -494,9 +497,18 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
                 if (tableColumns.get(i).getDataType() == DatabaseDataType.STRING)
                     query += "(" + String.valueOf(tableColumns.get(i).getDataTypeSize()) + ")";
 
+                if (tableColumns.get(i).isPrimaryKey())
+                    primaryKey.add(tableColumns.get(i).getName());
+
                 if (i < tableColumns.size() - 1)
                     query += ",";
             }
+
+            /**
+             * add primary key
+             */
+            if (!primaryKey.isEmpty())
+                query += ", PRIMARY KEY (" + StringUtils.join(primaryKey, ",") + ") ";
 
             query += ")";
 
@@ -505,8 +517,9 @@ public class AndroidDatabase implements Database, DatabaseFactory, Serializable 
             /**
              * get index column
              */
-            if (table.getIndex() != null && !table.getIndex().isEmpty()) {
-                query = " CREATE INDEX IF NOT EXISTS " + table.getIndex() + "_idx ON " + table.getTableName() + " (" + table.getIndex() + ")";
+            List<List<String>> indexes = table.listIndexes();
+            for (List<String> indexColumns : indexes) {
+                query = " CREATE INDEX IF NOT EXISTS " + table.getTableName()+"_" +StringUtils.join(indexColumns, "_")+ "_idx ON " + table.getTableName() + " (" + StringUtils.join(indexColumns, ",") + ")";
                 executeQuery(query);
             }
         } catch (Exception ex) {

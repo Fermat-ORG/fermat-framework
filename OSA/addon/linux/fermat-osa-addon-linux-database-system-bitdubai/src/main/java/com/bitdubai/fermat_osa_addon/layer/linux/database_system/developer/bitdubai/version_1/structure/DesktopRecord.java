@@ -26,6 +26,17 @@ public class DesktopRecord  implements DatabaseRecord {
     private String recordValue;
     private boolean recordChange;
 
+    public DesktopRecord() {
+    }
+
+    public DesktopRecord(final String  recordName  ,
+                         final String  recordValue ,
+                         final boolean recordChange) {
+
+        this.recordName   = recordName  ;
+        this.recordValue  = recordValue ;
+        this.recordChange = recordChange;
+    }
 
     /**
      * DatabaseRecord interface implementation.
@@ -90,4 +101,8 @@ public class DesktopRecord  implements DatabaseRecord {
 
     }
 
+    @Override
+    public String toString() {
+        return recordName+"="+recordValue;
+    }
 }

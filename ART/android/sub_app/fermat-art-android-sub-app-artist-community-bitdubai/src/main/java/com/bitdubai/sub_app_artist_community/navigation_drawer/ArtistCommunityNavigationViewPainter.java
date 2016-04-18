@@ -14,7 +14,7 @@ import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.interfaces.ArtistCommunitySubAppModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.reference_wallet.artist_community.R;
+import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.commons.popups.ListIdentitiesDialog;
 import com.bitdubai.sub_app_artist_community.commons.utils.FragmentsCommons;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
@@ -83,7 +83,7 @@ public class ArtistCommunityNavigationViewPainter implements NavigationViewPaint
 
     @Override
     public ViewGroup addNavigationViewBodyContainer(LayoutInflater layoutInflater, ViewGroup base) {
-        RelativeLayout layout = (RelativeLayout) layoutInflater.inflate(R.layout.afc_navigation_view_bottom, base, true);
+        RelativeLayout layout = (RelativeLayout) layoutInflater.inflate(R.layout.aac_navigation_view_bottom, base, true);
         //FermatTextView bitcoinBalance = (FermatTextView) layout.findViewById(R.id.ccw_navigation_view_bitcoin_balance);
         //bitcoinBalance.setText("0.3521 BTC");
 

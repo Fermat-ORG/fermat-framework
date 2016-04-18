@@ -19,6 +19,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BitcoinNetworkSelector;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainConnectionStatus;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.BlockchainDownloadProgress;
+import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.ConnectedBitcoinNode;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetwork;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.RegTestNetwork.FermatTestNetworkNode;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.exceptions.CantBroadcastTransactionException;
@@ -54,6 +55,10 @@ import org.bitcoinj.params.RegTestParams;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -771,12 +776,25 @@ public class BitcoinCryptoNetworkMonitor implements Agent {
          */
         public BlockchainConnectionStatus getBlockchainConnectionStatus() throws CantGetBlockchainConnectionStatusException {
             try{
-                int connectedPeers = peerGroup.getConnectedPeers().size();
-                String downloadNodeIp = peerGroup.getDownloadPeer().getAddress().toString();
-                long downloadPing = peerGroup.getDownloadPeer().getLastPingTime();
+                List<ConnectedBitcoinNode> connectedBitcoinNodeList = new ArrayList<>();
 
-                BlockchainConnectionStatus blockchainConnectionStatus = new BlockchainConnectionStatus(connectedPeers, downloadNodeIp, downloadPing, BLOCKCHAIN_NETWORKTYPE);
+                for (Peer peer : peerGroup.getConnectedPeers()){
 
+                    Boolean isDownload = false;
+                    if (peer.equals(peerGroup.getDownloadPeer()))
+                        isDownload = true;
+
+                    // If create the ConnectedBitcoinNode object
+                    ConnectedBitcoinNode connectedBitcoinNode = new ConnectedBitcoinNode(peer.getAddress().toString(),
+                            peer.getPeerVersionMessage().subVer,
+                            isDownload,
+                            peer.getPingTime());
+
+                    //add it to the list
+                    connectedBitcoinNodeList.add(connectedBitcoinNode);
+                }
+
+                BlockchainConnectionStatus blockchainConnectionStatus = new BlockchainConnectionStatus(connectedBitcoinNodeList, this.BLOCKCHAIN_NETWORKTYPE);
                 return blockchainConnectionStatus;
             } catch (Exception e){
                 CantGetBlockchainConnectionStatusException exception = new CantGetBlockchainConnectionStatusException(CantGetBlockchainConnectionStatusException.DEFAULT_MESSAGE, e, "Error getting connection status from peers.", null);

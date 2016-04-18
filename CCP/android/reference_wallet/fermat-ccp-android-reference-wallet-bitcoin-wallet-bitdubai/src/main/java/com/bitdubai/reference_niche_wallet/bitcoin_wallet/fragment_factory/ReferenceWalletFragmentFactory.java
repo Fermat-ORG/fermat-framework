@@ -1,5 +1,7 @@
 package com.bitdubai.reference_niche_wallet.bitcoin_wallet.fragment_factory;
 
+import android.os.Bundle;
+
 import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.exceptions.FragmentNotFoundException;
@@ -38,13 +40,7 @@ public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<Refere
                  * Executing fragments for BITCOIN REQUESTED.
                  */
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_RECEIVE:
-//                    currentFragment = new AbstractFermatFragment() {
-//                        @Override
-//                        public void onCreate(Bundle savedInstanceState) {
-//                            super.onCreate(savedInstanceState);
-//                        }
-//                    } ;
-                     currentFragment = ReceiveTransactionFragment2.newInstance();
+                    currentFragment = ReceiveTransactionFragment2.newInstance();
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_ALL_BITDUBAI_SEND:
                     currentFragment =SendTransactionFragment2.newInstance(); //RequestHomePaymentFragment.newInstance();

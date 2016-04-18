@@ -1,16 +1,9 @@
-/*
-* @#NetworkClientP2PDatabaseFactory.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.database;
 
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFactory;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
@@ -28,12 +21,9 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NetworkClientP2PDatabaseFactory implements DealsWithPluginDatabaseSystem {
+public class NetworkClientP2PDatabaseFactory {
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface member variables.
-     */
-    private PluginDatabaseSystem pluginDatabaseSystem;
+    private final PluginDatabaseSystem pluginDatabaseSystem;
 
     /**
      * Constructor with parameters to instantiate class
@@ -41,7 +31,8 @@ public class NetworkClientP2PDatabaseFactory implements DealsWithPluginDatabaseS
      *
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
-    public NetworkClientP2PDatabaseFactory(PluginDatabaseSystem pluginDatabaseSystem) {
+    public NetworkClientP2PDatabaseFactory(final PluginDatabaseSystem pluginDatabaseSystem) {
+
         this.pluginDatabaseSystem = pluginDatabaseSystem;
     }
 
@@ -129,11 +120,4 @@ public class NetworkClientP2PDatabaseFactory implements DealsWithPluginDatabaseS
         return database;
     }
 
-    /**
-     * DealsWithPluginDatabaseSystem Interface implementation.
-     */
-    @Override
-    public void setPluginDatabaseSystem(PluginDatabaseSystem pluginDatabaseSystem) {
-        this.pluginDatabaseSystem = pluginDatabaseSystem;
-    }
 }

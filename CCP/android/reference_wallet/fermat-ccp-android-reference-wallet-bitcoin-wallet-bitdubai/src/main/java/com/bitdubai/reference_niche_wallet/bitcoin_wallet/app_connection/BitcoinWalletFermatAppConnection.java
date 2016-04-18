@@ -79,14 +79,11 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
      try
         {
             SettingsManager<BitcoinWalletSettings> settingsManager = null;
-            boolean enabledNotification = true;
-            this.referenceWalletSession = (ReferenceWalletSession)this.getFullyLoadedSession();
+           boolean enabledNotification = true;
+            this.referenceWalletSession = this.getFullyLoadedSession();
             if(referenceWalletSession!=  null) {
                 if (referenceWalletSession.getModuleManager() != null) {
                     moduleManager = referenceWalletSession.getModuleManager();
-
-                    //get enabled notification settings
-
                     settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
                     enabledNotification = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getNotificationEnabled();
                 }
@@ -95,7 +92,7 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
                 if (enabledNotification)
                     return BitcoinWalletBuildNotificationPainter.getNotification(moduleManager, code, referenceWalletSession.getAppPublicKey());
                 else
-                    return new BitcoinWalletNotificationPainter("", "", "", "", false);
+                    return new BitcoinWalletNotificationPainter("", "", "", "", false,referenceWalletSession.getAppPublicKey());
 
             }
             else

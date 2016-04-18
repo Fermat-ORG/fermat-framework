@@ -33,8 +33,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.setting
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanPreferenceSettings;
-import com.bitdubai.reference_wallet.artist_community.R;
+import com.bitdubai.sub_app.artist_community.R;
 import com.bitdubai.sub_app_artist_community.adapters.AppListAdapter;
 import com.bitdubai.sub_app_artist_community.commons.popups.ListIdentitiesDialog;
 import com.bitdubai.sub_app_artist_community.sessions.ArtistSubAppSession;
@@ -120,7 +119,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
 
             if (appSettings == null) {
                 appSettings = new ArtistCommunitySettings();
-                appSettings.setIsPresentationHelpEnabled(true);
+                appSettings.setIsPresentationHelpEnabled(false);
                 if(settingsManager != null){
                     if (appSession.getAppPublicKey()!=null){
                         settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
@@ -158,24 +157,24 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ArtistSubAp
         moduleManager.setAppPublicKey(appSession.getAppPublicKey());
 
         try {
-            rootView = inflater.inflate(R.layout.fragment_connections_world, container, false);
+            rootView = inflater.inflate(R.layout.aac_fragment_connections_world, container, false);
 
             //Set up RecyclerView
             layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
             adapter = new AppListAdapter(getActivity(), artistCommunityInformationList);
             adapter.setFermatListEventListener(this);
-            recyclerView = (RecyclerView) rootView.findViewById(R.id.afc_gridView);
+            recyclerView = (RecyclerView) rootView.findViewById(R.id.aac_gridView);
             recyclerView.setHasFixedSize(true);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(layoutManager);
 
             //Set up swipeRefresher
-            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.afc_swipe);
+            swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.aac_swipe);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
             rootView.setBackgroundColor(Color.parseColor("#000b12"));
-            emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
+            emptyView = (LinearLayout) rootView.findViewById(R.id.aac_empty_view);
 
 
             if(launchActorCreationDialog) {

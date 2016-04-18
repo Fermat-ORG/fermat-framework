@@ -23,6 +23,7 @@ import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnections
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -30,7 +31,7 @@ import java.util.UUID;
 /**
  * Created by alexander on 3/15/16.
  */
-public class ModuleArtistIdentityManager implements ArtistIdentityManagerModule {
+public class ModuleArtistIdentityManager implements ArtistIdentityManagerModule,Serializable {
     private final ArtistIdentityManager artistIdentityManager;
     private final ErrorManager errorManager;
     private final PluginFileSystem pluginFileSystem;

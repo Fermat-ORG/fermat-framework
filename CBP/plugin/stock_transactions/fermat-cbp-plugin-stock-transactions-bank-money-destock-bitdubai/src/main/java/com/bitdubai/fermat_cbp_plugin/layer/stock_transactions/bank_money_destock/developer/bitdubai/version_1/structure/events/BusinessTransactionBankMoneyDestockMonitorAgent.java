@@ -12,6 +12,8 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockBalance;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.StockTransactionBankMoneyDestockFactory;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.bank_money_destock.developer.bitdubai.version_1.structure.StockTransactionBankMoneyDestockManager;
@@ -166,6 +168,11 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
             // I define the filter to null for all
             final List<BankMoneyTransaction> bankMoneyTransactionList = stockTransactionBankMoneyDestockFactory.getBankMoneyTransactionList(null);
             for (BankMoneyTransaction bankMoneyTransaction : bankMoneyTransactionList) {
+
+                bankMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");  //TODO:Solo para testear
+                final CryptoBrokerWallet cryptoBrokerWallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey());
+                final StockBalance stockBalance = cryptoBrokerWallet.getStockBalance();
+
                 switch (bankMoneyTransaction.getTransactionStatus()) {
                     case INIT_TRANSACTION:
                         //Llamar al metodo de la interfaz public del manager de Bank Hold
@@ -178,7 +185,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de la wallet si lo consigue entonces le cambia el status de COMPLETED
                         WalletTransactionWrapper walletTransactionRecordBook = new WalletTransactionWrapper(
-                                bankMoneyTransaction.getTransactionId(),
+                                UUID.randomUUID(),
                                 bankMoneyTransaction.getFiatCurrency(),
                                 BalanceType.BOOK,
                                 TransactionType.DEBIT,
@@ -194,7 +201,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                                 false);
 
                         WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
-                                bankMoneyTransaction.getTransactionId(),
+                                UUID.randomUUID(),
                                 bankMoneyTransaction.getFiatCurrency(),
                                 BalanceType.AVAILABLE,
                                 TransactionType.DEBIT,
@@ -209,9 +216,8 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                                 bankMoneyTransaction.getOriginTransactionId(),
                                 false);
 
-                        bankMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");  //TODO:Solo para testear
-                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecordBook, BalanceType.BOOK);
-                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().debit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
+                        stockBalance.debit(walletTransactionRecordBook, BalanceType.BOOK);
+                        stockBalance.debit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
                         bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_UNHOLD);
                         stockTransactionBankMoneyDestockFactory.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
                     }
@@ -221,7 +227,6 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                         //Luego cambiar el status al registro de la transaccion leido
                         //Buscar el regsitro de la transaccion en manager de Bank Hold y si lo consigue entonces le cambia el status de IN_WALLET y hace el credito
                         BankTransactionParametersWrapper bankTransactionParametersWrapper = new BankTransactionParametersWrapper(
-
                                 bankMoneyTransaction.getTransactionId(),
                                 bankMoneyTransaction.getFiatCurrency(),
                                 bankMoneyTransaction.getBnkWalletPublicKey(),
@@ -250,7 +255,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                         break;
                     case REJECTED:{
                         WalletTransactionWrapper walletTransactionRecordBook = new WalletTransactionWrapper(
-                                bankMoneyTransaction.getTransactionId(),
+                                UUID.randomUUID(),
                                 bankMoneyTransaction.getFiatCurrency(),
                                 BalanceType.BOOK,
                                 TransactionType.CREDIT,
@@ -266,7 +271,7 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                                 false);
 
                         WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
-                                bankMoneyTransaction.getTransactionId(),
+                                UUID.randomUUID(),
                                 bankMoneyTransaction.getFiatCurrency(),
                                 BalanceType.AVAILABLE,
                                 TransactionType.CREDIT,
@@ -280,10 +285,9 @@ public class BusinessTransactionBankMoneyDestockMonitorAgent extends FermatAgent
                                 bankMoneyTransaction.getOriginTransaction(),
                                 bankMoneyTransaction.getOriginTransactionId(),
                                 false);
-                        //TODO:Solo para testear
-                        bankMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
-                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecordBook, BalanceType.BOOK);
-                        cryptoBrokerWalletManager.loadCryptoBrokerWallet(bankMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
+
+                        stockBalance.credit(walletTransactionRecordBook, BalanceType.BOOK);
+                        stockBalance.credit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
                         bankMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
                         stockTransactionBankMoneyDestockFactory.saveBankMoneyDestockTransactionData(bankMoneyTransaction);
                         break;

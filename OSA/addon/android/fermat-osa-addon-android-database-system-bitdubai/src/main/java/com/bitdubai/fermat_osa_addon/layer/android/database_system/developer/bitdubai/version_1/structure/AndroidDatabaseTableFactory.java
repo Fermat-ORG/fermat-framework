@@ -5,36 +5,34 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableCo
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
 
 import java.util.ArrayList;
-
-/**
- * Created by ciencias on 3/23/15.
- */
+import java.util.List;
 
 /**
  * This class define methods to sets the columns that were used to make the filter on a table.
  *
- *
- * *
+ * Created by ciencias on 3/23/15.
+ * Updated by Leon Acosta (laion.cj91@gmail.com) on 14/07/2016.
  */
-
 public class AndroidDatabaseTableFactory implements DatabaseTableFactory {
 
     /**
      * DatabaseTableFactory Member Variables.
      */
 
-    private String indexName ="";
-    private String tableName;
-    ArrayList<DatabaseTableColumn> tableColumns = new ArrayList<DatabaseTableColumn>();
-
-    // Public constructor declarations.
+    private final List<List<String>>             indexes     ;
+    private final String                         tableName   ;
+    private final ArrayList<DatabaseTableColumn> tableColumns;
 
     /**
      * <p>DatabaseTableFactory class constructor
      * @param tableName table name to use
      */
-    public AndroidDatabaseTableFactory (String tableName){
+    public AndroidDatabaseTableFactory (final String tableName){
+
         this.tableName = tableName;
+
+        this.indexes      = new ArrayList<>();
+        this.tableColumns = new ArrayList<>();
     }
 
     /**
@@ -46,8 +44,16 @@ public class AndroidDatabaseTableFactory implements DatabaseTableFactory {
      * @param index  index field name
      */
     @Override
-    public void addIndex(String index) {
-        this.indexName = index;
+    public void addIndex(final String index) {
+        List<String> indexColumns = new ArrayList<>();
+        indexColumns.add(index);
+        this.indexes.add(indexColumns);
+    }
+
+    @Override
+    public void addIndex(List<String> multipleColumnIndex) {
+
+        this.indexes.add(multipleColumnIndex);
     }
 
     /**
@@ -57,8 +63,8 @@ public class AndroidDatabaseTableFactory implements DatabaseTableFactory {
      */
 
     @Override
-    public String getIndex(){
-        return indexName;
+    public List<List<String>> listIndexes(){
+        return indexes;
     }
 
     /**
@@ -74,27 +80,25 @@ public class AndroidDatabaseTableFactory implements DatabaseTableFactory {
     /**
      *<p>Sets properties of a new column to the table
      *
-     * @param columnName New column name
-     * @param dataType New column data type
+     * @param columnName   New column name
+     * @param dataType     New column data type
      * @param dataTypeSize New column data size
-     * @param primaryKey Boolean column if primary ley
+     * @param primaryKey   Boolean column if primary ley
      */
-
     @Override
     public void addColumn(final String           columnName  ,
                           final DatabaseDataType dataType    ,
                           final int              dataTypeSize,
                           final boolean          primaryKey  ) {
 
-        DatabaseTableColumn tableColumn = new AndroidDatabaseTableColumn(
-                columnName  ,
-                dataType    ,
-                dataTypeSize,
-                primaryKey
+        this.tableColumns.add(
+                new AndroidDatabaseTableColumn(
+                        columnName,
+                        dataType,
+                        dataTypeSize,
+                        primaryKey
+                )
         );
-
-        this.tableColumns.add(tableColumn);
-
     }
 
     /**
@@ -106,20 +110,4 @@ public class AndroidDatabaseTableFactory implements DatabaseTableFactory {
     public  ArrayList<DatabaseTableColumn> getColumns (){
         return this.tableColumns;
     }
-
-    @Override
-    public String toString(){
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(tableName + "(");
-        for(DatabaseTableColumn column : tableColumns){
-            if(buffer.charAt(buffer.length()-1) != '(')
-                buffer.append(", ");
-            buffer.append(column.toString());
-        }
-        buffer.append(")");
-
-        return buffer.toString();
-    }
-
-
 }
