@@ -1,12 +1,5 @@
-/*
- * @#NodeProfile.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
-import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
 import com.google.gson.Gson;
 
 /**
