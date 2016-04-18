@@ -191,7 +191,7 @@ public class JettyEmbeddedAppServer {
      */
     public void start() throws Exception {
 
-        Inet4Address address;
+ /*       Inet4Address address;
         try {
             address = getIPv4Address("wlan0");
             // TfsClientSingleton.init(address, tfsCache);
@@ -209,7 +209,7 @@ public class JettyEmbeddedAppServer {
                 new PortMappingListener(desiredMapping)
         );
 
-        upnpService.getControlPoint().search();
+        upnpService.getControlPoint().search(); */
 
         // Use this is OK, load the ip dynamically
 
