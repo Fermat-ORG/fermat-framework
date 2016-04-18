@@ -40,7 +40,10 @@ public class FermatException extends Exception {
 	public FermatException(final String message, final Exception cause, final String context, final String possibleReason){
 		super(message, cause);
 		this.exceptionName = getClass().toString();
-		this.cause = cause instanceof FermatException ? (FermatException) cause : FermatException.wrapException(cause);
+		if(cause != null)
+			this.cause = cause instanceof FermatException ? (FermatException) cause : FermatException.wrapException(cause);
+		else
+			this.cause = null;
 		this.context = context == null || context.isEmpty() ? "N/A" : context;
 		this.possibleReason = possibleReason == null || possibleReason.isEmpty() ? "N/A" : possibleReason;
 		this.depth = (this.cause == null) ? Integer.valueOf(1) : Integer.valueOf(this.cause.getDepth() + 1);
