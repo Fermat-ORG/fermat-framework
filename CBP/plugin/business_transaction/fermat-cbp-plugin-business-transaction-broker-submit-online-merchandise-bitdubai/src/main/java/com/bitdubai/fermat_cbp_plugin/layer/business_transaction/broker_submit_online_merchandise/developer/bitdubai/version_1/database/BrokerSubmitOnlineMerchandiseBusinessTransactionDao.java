@@ -897,6 +897,9 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
             //I going to set the money as bitcoin in this version
             brokerCryptoAddress=new CryptoAddress(cryptoAddressString, CryptoCurrency.BITCOIN);
             businessTransactionRecord.setCryptoAddress(brokerCryptoAddress);
+
+            businessTransactionRecord.setActorPublicKey(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_INTRA_ACTOR_PUBLIC_KEY_COLUMN_NAME));
+
             businessTransactionRecord.setExternalWalletPublicKey(
                     record.getStringValue(
                             BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.

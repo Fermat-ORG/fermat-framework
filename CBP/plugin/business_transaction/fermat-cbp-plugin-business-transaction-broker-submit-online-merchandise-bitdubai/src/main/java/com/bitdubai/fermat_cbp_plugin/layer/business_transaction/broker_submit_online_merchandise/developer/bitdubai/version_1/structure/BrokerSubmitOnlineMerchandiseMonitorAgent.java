@@ -345,9 +345,9 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                             businessTransactionRecord.getCryptoAmount(),
                             "Payment from Crypto Customer contract " + pendingContractHash,
                             businessTransactionRecord.getBrokerPublicKey(),
-                            businessTransactionRecord.getCustomerPublicKey(),
+                            businessTransactionRecord.getActorPublicKey(),
                             Actors.CBP_CRYPTO_BROKER,
-                            Actors.CBP_CRYPTO_CUSTOMER,
+                            Actors.INTRA_USER,
                             ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
                             businessTransactionRecord.getBlockchainNetworkType());
 

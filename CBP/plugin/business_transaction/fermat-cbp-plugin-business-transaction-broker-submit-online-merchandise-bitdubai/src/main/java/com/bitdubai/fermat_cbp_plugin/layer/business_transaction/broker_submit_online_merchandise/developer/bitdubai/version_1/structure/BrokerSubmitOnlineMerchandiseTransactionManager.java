@@ -150,7 +150,8 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
             throw new InvalidParameterException("Cannot parse a null string value to long");
         }else{
             try{
-                return Long.valueOf(stringValue);
+                double aux = Float.valueOf(stringValue)*100000000;
+                return (long) aux;
             }catch (Exception exception){
                 errorManager.reportUnexpectedPluginException(
                         Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE,
