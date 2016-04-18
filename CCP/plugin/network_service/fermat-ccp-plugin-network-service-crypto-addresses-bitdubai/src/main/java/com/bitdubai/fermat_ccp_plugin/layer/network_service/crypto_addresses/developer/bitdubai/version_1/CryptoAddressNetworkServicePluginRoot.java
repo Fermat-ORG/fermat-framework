@@ -123,29 +123,41 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
          * Initialize Developer Database Factory
          */
 
-        cryptoAddressesNetworkServiceDatabaseFactory = new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem,pluginId);
         try {
-            cryptoAddressesNetworkServiceDatabaseFactory.initializeDatabase();
-        } catch (CantInitializeCryptoAddressesNetworkServiceDatabaseException e) {
+
+            executorService = Executors.newFixedThreadPool(1);
+
+            cryptoAddressesNetworkServiceDatabaseFactory = new CryptoAddressesNetworkServiceDeveloperDatabaseFactory(pluginDatabaseSystem,pluginId);
+            try {
+                cryptoAddressesNetworkServiceDatabaseFactory.initializeDatabase();
+            } catch (CantInitializeCryptoAddressesNetworkServiceDatabaseException e) {
+                e.printStackTrace();
+            }
+
+            //DAO
+            cryptoAddressesNetworkServiceDao = new CryptoAddressesNetworkServiceDao(pluginDatabaseSystem, pluginId);
+
+            try {
+                cryptoAddressesNetworkServiceDao.initialize();
+            } catch (CantInitializeCryptoAddressesNetworkServiceDatabaseException e) {
+                e.printStackTrace();
+            }
+
+
+
+            // change message state to process again first time
+            reprocessPendingMessage();
+
+            //declare a schedule to process waiting request message
+            startTimer();
+
+        }catch (Exception e){
+
+            System.out.println(" -- CRYPTO ADDRESS NS START ERROR " + e.getMessage());
             e.printStackTrace();
         }
 
-        //DAO
-        cryptoAddressesNetworkServiceDao = new CryptoAddressesNetworkServiceDao(pluginDatabaseSystem, pluginId);
 
-        try {
-            cryptoAddressesNetworkServiceDao.initialize();
-        } catch (CantInitializeCryptoAddressesNetworkServiceDatabaseException e) {
-            e.printStackTrace();
-        }
-
-        executorService = Executors.newFixedThreadPool(1);
-
-        // change message state to process again first time
-        reprocessPendingMessage();
-
-        //declare a schedule to process waiting request message
-        startTimer();
 
 
     }
@@ -555,7 +567,13 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
         {
             System.out.println("ADDRESS NS EXCEPCION REPROCESANDO WAIT MESSAGE");
             e.printStackTrace();
+
         }
+        catch(Exception e)
+            {
+                System.out.println("ADDRESS NS EXCEPCION REPROCESANDO WAIT MESSAGE");
+                e.printStackTrace();
+            }
     }
     @Override
     protected void reprocessMessages() {
