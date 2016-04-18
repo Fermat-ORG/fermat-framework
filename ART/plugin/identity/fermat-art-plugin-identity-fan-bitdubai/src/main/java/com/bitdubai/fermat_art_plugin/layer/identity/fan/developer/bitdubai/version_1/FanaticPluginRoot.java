@@ -147,7 +147,7 @@ public class FanaticPluginRoot extends AbstractPlugin implements
             listenersAdded.add(updatesListener);
 
             System.out.println("############\n ART IDENTITY Fanatic STARTED\n");
-            testCreateArtist();
+            //testCreateArtist();
             //testAskForConnection();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.FANATIC_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
