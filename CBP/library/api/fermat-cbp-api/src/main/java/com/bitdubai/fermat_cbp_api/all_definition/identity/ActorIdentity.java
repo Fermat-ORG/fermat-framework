@@ -23,4 +23,5 @@ public interface ActorIdentity extends Serializable {
     ExposureLevel getExposureLevel();
 
     String createMessageSignature(String message) throws CantCreateMessageSignatureException;
+
 }
