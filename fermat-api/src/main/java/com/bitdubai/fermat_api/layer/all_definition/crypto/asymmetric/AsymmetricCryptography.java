@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.Fe
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.FermatCipher;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.FermatSpongyCastleCipher;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 
 import java.math.BigInteger;
 import java.security.KeyFactory;
@@ -27,6 +28,11 @@ public class AsymmetricCryptography {
 	 * Represent the RSA_ALGORITHM
 	 */
 	private static final String RSA_ALGORITHM = "RSA";
+
+    /**
+     * Represent the DIGEST_SHA1
+     */
+    static final String DIGEST_SHA1 = "SHA1withRSA";
 
     /**
      * Represent the KEY_SIZE
@@ -82,7 +88,7 @@ public class AsymmetricCryptography {
 
         try {
 
-            SecureRandom random = SecureRandom.getInstance("SHA1PRNG", "SUN");
+            SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
             KeyPairGenerator generator = KeyPairGenerator.getInstance(RSA_ALGORITHM, getSecurityProvider().getName());
             generator.initialize(KEY_SIZE, random);
             return generator.generateKeyPair();
@@ -100,7 +106,7 @@ public class AsymmetricCryptography {
      * @throws Exception
      */
     public static PrivateKey getPrivateKeyFromString(String keyStringBase64) throws Exception {
-        byte[] clear = fermatCipher.getBase64Decoder().decodeBuffer(keyStringBase64);
+        byte[] clear = Base64.decode(keyStringBase64, Base64.DEFAULT);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(clear);
         KeyFactory fact = KeyFactory.getInstance(RSA_ALGORITHM);
         PrivateKey privateKey = fact.generatePrivate(keySpec);
@@ -115,10 +121,10 @@ public class AsymmetricCryptography {
      * @throws Exception
      */
     public static PublicKey getPublicKeyFromString(String keyStringBase64) throws Exception {
-        byte[] data = fermatCipher.getBase64Decoder().decodeBuffer(keyStringBase64);
-        X509EncodedKeySpec spec = new X509EncodedKeySpec(data);
-        KeyFactory fact = KeyFactory.getInstance(RSA_ALGORITHM);
-        return fact.generatePublic(spec);
+        byte[] publicBytes = Base64.decode(keyStringBase64, Base64.DEFAULT);
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicBytes);
+        KeyFactory keyFactory = KeyFactory.getInstance(RSA_ALGORITHM);
+        return keyFactory.generatePublic(keySpec);
     }
 
     /**
@@ -130,7 +136,7 @@ public class AsymmetricCryptography {
         try {
 
             java.security.KeyPair keyPair = createNewKeyPair();
-            return fermatCipher.getBase64Encoder().encode(keyPair.getPrivate().getEncoded());
+            return Base64.encodeToString(keyPair.getPrivate().getEncoded(), Base64.DEFAULT);
 
         }catch (Exception e){
             throw new IllegalArgumentException(e);
@@ -154,7 +160,7 @@ public class AsymmetricCryptography {
             RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(getPrivateKeyFromString(privateKeyString), RSAPrivateKeySpec.class);
             RSAPublicKeySpec keySpec = new RSAPublicKeySpec(privateKeySpec.getModulus(), BigInteger.valueOf(65537));
             PublicKey publicKey = keyFactory.generatePublic(keySpec);
-            return fermatCipher.getBase64Encoder().encode(publicKey.getEncoded());
+            return Base64.encodeToString(publicKey.getEncoded(), Base64.DEFAULT);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -177,10 +183,10 @@ public class AsymmetricCryptography {
 
         try {
 
-            Signature signature = Signature.getInstance("SHA256withRSA", getSecurityProvider().getName());
+            Signature signature = Signature.getInstance(DIGEST_SHA1);
             signature.initSign(getPrivateKeyFromString(privateKey));
-            signature.update(fermatCipher.getBase64Decoder().decodeBuffer(message));
-            return fermatCipher.getBase64Encoder().encode(signature.sign());
+            signature.update(fermatCipher.convertHexStringToByteArray(message));
+            return Base64.encodeToString(signature.sign(), Base64.DEFAULT);
 
         }catch (Exception e) {
 
@@ -208,11 +214,12 @@ public class AsymmetricCryptography {
 
         try {
 
-            Signature signature = Signature.getInstance("SHA256withRSA", getSecurityProvider().getName());
-            signature.initSign(getPrivateKeyFromString(publicKey));
-            return signature.verify(fermatCipher.getBase64Decoder().decodeBuffer(encryptedMessage));
+            Signature signer = Signature.getInstance(DIGEST_SHA1);
+            signer.initVerify(getPublicKeyFromString(publicKey));
+            signer.update(fermatCipher.convertHexStringToByteArray(encryptedMessage));
+            return (signer.verify(Base64.decode(signatureString, Base64.DEFAULT)));
 
-        }catch (Exception e){
+        } catch (Exception e){
             e.printStackTrace();
             throw new IllegalArgumentException(e);
         }
@@ -283,7 +290,7 @@ public class AsymmetricCryptography {
         try {
 
             java.security.KeyPair keyPair = createNewKeyPair();
-            return new ECCKeyPair(fermatCipher.getBase64Encoder().encode(keyPair.getPrivate().getEncoded()), fermatCipher.getBase64Encoder().encode(keyPair.getPublic().getEncoded()));
+            return new ECCKeyPair(Base64.encodeToString(keyPair.getPrivate().getEncoded(), Base64.DEFAULT), Base64.encodeToString(keyPair.getPublic().getEncoded(), Base64.DEFAULT));
 
         }catch (Exception e){
             throw new IllegalArgumentException(e);
