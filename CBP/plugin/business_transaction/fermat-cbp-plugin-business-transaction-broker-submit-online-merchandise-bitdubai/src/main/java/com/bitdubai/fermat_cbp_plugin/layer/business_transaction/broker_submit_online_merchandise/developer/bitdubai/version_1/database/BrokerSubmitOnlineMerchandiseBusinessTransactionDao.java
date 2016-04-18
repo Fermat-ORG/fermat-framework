@@ -886,7 +886,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
                     record.getStringValue(
                             BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                                     SUBMIT_ONLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
-            businessTransactionRecord.setTransactionHash(contractHash);
+            businessTransactionRecord.setTransactionHash(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_TRANSACTION_HASH_COLUMN_NAME));
             businessTransactionRecord.setTransactionId(
                     record.getStringValue(
                             BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
