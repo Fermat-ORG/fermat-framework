@@ -131,11 +131,11 @@ dependencies {
     compile project(':fermat-tky-android-sub-app-artist-identity-bitdubai')
     compile project(':fermat-tky-android-sub-app-fan-identity-bitdubai')
     //ART
-    // compile project(':fermat-art-android-sub-app-artist-identity-bitdubai')
     compile project(':fermat-art-android-sub-app-artist-community-bitdubai')
     compile project(':fermat-art-android-sub-app-artist-identity-bitdubai')
     compile project(':fermat-art-android-sub-app-fan-community-bitdubai')
     compile project(':fermat-art-android-sub-app-fan-identity-bitdubai')
+    compile project(':fermat-art-android-sub-app-music-player-bitdubai')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:support-v4:23.1.1'
@@ -165,5 +165,4 @@ dependencies {
     compile 'com.github.Bossyao168:StackOverView:9808f07dca'
     //  compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
     compile project(':fermat-cht-android-sub-app-chat-identity-bitdubai')
-    compile project(':fermat-art-android-sub-app-music-player-bitdubai')
 }
