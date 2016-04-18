@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.resources_structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Languages;
-
 import com.bitdubai.fermat_api.layer.all_definition.resources_structure.interfaces.FermatLanguage;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.dmp_identity.translator.interfaces.TranslatorIdentity;

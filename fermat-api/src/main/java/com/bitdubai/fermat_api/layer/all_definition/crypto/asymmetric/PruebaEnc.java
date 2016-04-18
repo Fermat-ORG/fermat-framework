@@ -7,10 +7,6 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.io.BaseEncoding;
-
-import java.security.Key;
-import java.security.KeyPair;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.PruebaEnc</code>

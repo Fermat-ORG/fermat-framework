@@ -1,7 +1,5 @@
 package com.bitdubai.fermat_api.layer.interface_objects;
 
-import java.util.List;
-
 /**
  * Created by mati on 2015.11.01..
  */
