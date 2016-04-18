@@ -6,6 +6,7 @@
  */
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers;
 
+import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 import com.google.common.base.Stopwatch;
 
 import org.bouncycastle.crypto.AsymmetricBlockCipher;
@@ -41,7 +42,7 @@ public class FermatBouncyCastleCipher extends FermatCipher {
     public String encrypt(String pubKey, String plaintTex) throws Exception{
 
         String encryptedData = "";
-        AsymmetricKeyParameter publicKey = PublicKeyFactory.createKey(getBase64Decoder().decodeBuffer(pubKey));
+        AsymmetricKeyParameter publicKey = PublicKeyFactory.createKey(Base64.decode(pubKey, Base64.DEFAULT));
         AsymmetricBlockCipher asymmetricBlockCipher = new RSAEngine();
         asymmetricBlockCipher = new PKCS1Encoding(asymmetricBlockCipher);
         asymmetricBlockCipher.init(true, publicKey);
@@ -72,7 +73,7 @@ public class FermatBouncyCastleCipher extends FermatCipher {
 
         String decryptedMsj = "";
 
-        AsymmetricKeyParameter privateKeyParameter = PrivateKeyFactory.createKey(getBase64Decoder().decodeBuffer(privateKey));
+        AsymmetricKeyParameter privateKeyParameter = PrivateKeyFactory.createKey(Base64.decode(privateKey, Base64.DEFAULT));
         AsymmetricBlockCipher asymmetricBlockCipher = new RSAEngine();
         asymmetricBlockCipher = new org.bouncycastle.crypto.encodings.PKCS1Encoding(asymmetricBlockCipher);
         asymmetricBlockCipher.init(false, privateKeyParameter);
@@ -116,18 +117,18 @@ public class FermatBouncyCastleCipher extends FermatCipher {
             Key pubKey = pair.getPublic();
             Key privKey = pair.getPrivate();
 
-            System.out.println("publicKey : " + fermatBouncyCastleCipher.getBase64Encoder().encode(pubKey.getEncoded()));
+            System.out.println("publicKey : " + Base64.encodeToString(pubKey.getEncoded(), Base64.DEFAULT));
             System.out.println(" ----------------------------------------------- ");
-            System.out.println("privateKey : " + fermatBouncyCastleCipher.getBase64Encoder().encode(privKey.getEncoded()));
+            System.out.println("privateKey : " + Base64.encodeToString(privKey.getEncoded(), Base64.DEFAULT));
 
-            String encryptedData = fermatBouncyCastleCipher.encrypt(fermatBouncyCastleCipher.getBase64Encoder().encode(pubKey.getEncoded()), msj);
+            String encryptedData = fermatBouncyCastleCipher.encrypt(Base64.encodeToString(pubKey.getEncoded(), Base64.DEFAULT), msj);
 
             System.out.println(" ----------------------------------------------- ");
             System.out.println(" encryptedData : " + encryptedData);
 
             System.out.println(" ----------------------------------------------- ");
 
-            String decryptedData = fermatBouncyCastleCipher.decrypt(fermatBouncyCastleCipher.getBase64Encoder().encode(privKey.getEncoded()), encryptedData);
+            String decryptedData = fermatBouncyCastleCipher.decrypt(Base64.encodeToString(privKey.getEncoded(), Base64.DEFAULT), encryptedData);
             System.out.println(" decryptedData : " + decryptedData);
 
             System.out.println(stopwatch.stop());

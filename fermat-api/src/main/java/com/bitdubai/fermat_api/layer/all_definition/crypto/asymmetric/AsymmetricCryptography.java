@@ -60,7 +60,7 @@ public class AsymmetricCryptography {
      * Get the FermatCipher
      * @return FermatCipher
      */
-    private static FermatCipher getFermatCipher(){
+    public static FermatCipher getFermatCipher(){
         if (OS.equals("Linux")){
             return  new FermatBouncyCastleCipher();
         }else {

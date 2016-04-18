@@ -6,6 +6,8 @@
  */
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers;
 
+import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
+
 import org.spongycastle.crypto.AsymmetricBlockCipher;
 import org.spongycastle.crypto.encodings.PKCS1Encoding;
 import org.spongycastle.crypto.engines.RSAEngine;
@@ -31,7 +33,7 @@ public class FermatSpongyCastleCipher extends FermatCipher {
     public String encrypt(String pubKey, String plaintTex) throws Exception{
 
         String encryptedData = "";
-        AsymmetricKeyParameter publicKey = PublicKeyFactory.createKey(getBase64Decoder().decodeBuffer(pubKey));
+        AsymmetricKeyParameter publicKey = PublicKeyFactory.createKey(Base64.decode(pubKey, Base64.DEFAULT));
         AsymmetricBlockCipher asymmetricBlockCipher = new RSAEngine();
         asymmetricBlockCipher = new PKCS1Encoding(asymmetricBlockCipher);
         asymmetricBlockCipher.init(true, publicKey);
@@ -61,7 +63,7 @@ public class FermatSpongyCastleCipher extends FermatCipher {
     public String decrypt(String privateKey, String encryptedTex) throws Exception{
 
         String decryptedMsj = "";
-        AsymmetricKeyParameter privateKeyParameter = PrivateKeyFactory.createKey(getBase64Decoder().decodeBuffer(privateKey));
+        AsymmetricKeyParameter privateKeyParameter = PrivateKeyFactory.createKey(Base64.decode(privateKey, Base64.DEFAULT));
         AsymmetricBlockCipher asymmetricBlockCipher = new RSAEngine();
         asymmetricBlockCipher = new PKCS1Encoding(asymmetricBlockCipher);
         asymmetricBlockCipher.init(false, privateKeyParameter);
