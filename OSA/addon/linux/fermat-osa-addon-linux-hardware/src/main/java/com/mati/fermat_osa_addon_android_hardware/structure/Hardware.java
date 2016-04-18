@@ -14,6 +14,6 @@ public class Hardware implements FermatManager,HardwareManager{
 
     @Override
     public OS getOperativeSystem() {
-        return OS.ANDROID;
+        return OS.LINUX;
     }
 }

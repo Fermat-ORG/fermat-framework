@@ -5,9 +5,9 @@ import java.io.Serializable;
 /**
  * Created by mati on 2016.04.18..
  */
-public class AbstractFermatModuleObject<O> implements FermatModuleObjectInterface{
+public class FermatModuleObject<O> implements FermatModuleObjectInterface{
 
-    public AbstractFermatModuleObject(Serializable creator) {
+    public FermatModuleObject(Serializable creator) {
         creator(creator);
     }
 

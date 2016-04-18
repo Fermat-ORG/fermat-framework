@@ -1,14 +1,11 @@
 package com.mati.fermat_osa_addon_android_hardware.version_1;
 
-import android.content.Context;
-
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddon;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededOsContext;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bitdubai.version_1.structure.AndroidPluginDatabaseSystem;
+import com.mati.fermat_osa_addon_android_hardware.structure.Hardware;
 
 /**
  * This addon handles a layer of database representation.
@@ -21,10 +18,10 @@ import com.bitdubai.fermat_osa_addon.layer.android.database_system.developer.bit
 
 public final class PluginHardwareAndroidAddonRoot extends AbstractAddon {
 
-    @NeededOsContext
-    private Context context;
+//    @NeededOsContext
+//    private Context context;
 
-    private FermatManager pluginDatabaseSystemManager;
+    private Hardware hardware;
 
     /**
      * Constructor without parameters.
@@ -38,7 +35,7 @@ public final class PluginHardwareAndroidAddonRoot extends AbstractAddon {
 
         try {
 
-            pluginDatabaseSystemManager = new AndroidPluginDatabaseSystem(context);
+            hardware = new Hardware();
 
             super.start();
 
@@ -50,6 +47,6 @@ public final class PluginHardwareAndroidAddonRoot extends AbstractAddon {
 
     @Override
     public final FermatManager getManager() {
-        return pluginDatabaseSystemManager;
+        return hardware;
     }
 }

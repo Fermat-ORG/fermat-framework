@@ -2,8 +2,6 @@ package com.bitdubai.android_core.app.common.version_1.communication.server_syst
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-
 import com.bitdubai.fermat_api.module_object_creator.FermatModuleObject;
 import com.bitdubai.fermat_api.module_object_creator.FermatModuleObjectInterface;
 

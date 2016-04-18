@@ -134,7 +134,7 @@
 
         </receiver>
 
-        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.CommunicationService"
+        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationService"
             android:label="CommService"
             android:exported="true"
             >
