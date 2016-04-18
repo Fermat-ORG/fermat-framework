@@ -23,8 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
-import com.bitdubai.fermat_android_api.ui.Views.CircularProgressBar;
-import com.bitdubai.fermat_android_api.ui.Views.DividerItemDecoration;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
@@ -36,7 +34,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListCryptoWalletIntraUserIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
@@ -44,7 +41,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exc
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedSpendingException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletManager;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.fermat_ccp_plugin.layer.wallet_module.loss_protected_wallet.developer.bitdubai.version_1.structure.LossProtectedWalletModuleManager;
@@ -65,8 +61,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import static android.widget.Toast.makeText;
-import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatAmountString;
-import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.formatExchangeRateString;
+
 
 /**
  * Created by root on 12/04/16.
@@ -200,6 +195,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
         }
     }
 
+    //TODO: en la cabecera del fragmento se muestra el resumen de la transaccion asociada
     private void setUpHeader(LayoutInflater inflater){
         try {
             final RelativeLayout container_header_balance = getToolbarHeader();
@@ -254,16 +250,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
         }catch (Exception e){}
 
     }
-   /* @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        try {
-            super.onActivityCreated(savedInstanceState);
-            listBitcoinLossProtectedWalletSpend = new ArrayList<BitcoinLossProtectedWalletSpend>();
-        } catch (Exception e){
-            makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
-            lossProtectedWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
-        }
-    }*/
+
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {

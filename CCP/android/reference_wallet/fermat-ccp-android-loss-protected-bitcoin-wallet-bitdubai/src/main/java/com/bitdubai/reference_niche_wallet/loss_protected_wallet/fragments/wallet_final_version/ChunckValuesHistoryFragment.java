@@ -53,7 +53,6 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.on
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
