@@ -66,7 +66,7 @@ public class ReferenceWalletFragmentFactory extends FermatFragmentFactory<Refere
                 case CCP_BITCOIN_WALLET_TRANSACTIONS_SENT:
                     break;
                 case CCP_BITCOIN_WALLET_TRANSACTIONS_RECEIVED:
-                    break;oa
+                    break;
                 case CCP_BITCOIN_WALLET_REQUEST_RECEIVED:
                     currentFragment = RequestSendHistoryFragment.newInstance();
                     break;
