@@ -68,7 +68,7 @@ public class ContractsHistoryActivityFragment extends FermatWalletListFragment<C
 
             contractHistoryList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
 
-            // contractHistoryList = (ArrayList) TestData.getContractsHistory(null);
+            //contractHistoryList = (ArrayList) TestData.getContractsHistory(null);
 
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
