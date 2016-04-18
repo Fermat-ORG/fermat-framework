@@ -76,7 +76,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     public static final String INTRA_USER_SELECTED = "intra_user";
 
-    private static final int MAX = 20;
+    private static final int MAX = 10;
     /**
      * MANAGERS
      */
@@ -103,7 +103,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private IntraUserSubAppSession intraUserSubAppSession;
     private String searchName;
     private LinearLayout emptyView;
-    private ArrayList<IntraUserInformation> lstIntraUserInformations;
+    private ArrayList<IntraUserInformation> lstIntraUserInformations = new ArrayList<>();
     private List<IntraUserInformation> dataSet = new ArrayList<>();
     private android.support.v7.widget.Toolbar toolbar;
     private EditText searchEditText;
@@ -279,6 +279,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     @Override
     public void onRefresh() {
+
+        offset = 0;
         if (!isRefreshing) {
             isRefreshing = true;
             worker = new FermatWorker() {
@@ -559,14 +561,18 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                         if(!exist)
                             userList.add(intraUserCache);
                     }
-                    //guardo el cache
+                    //save cache records
+                    try {
+                        moduleManager.saveCacheIntraUsersSuggestions(userList);
+                    } catch (CantGetIntraUsersListException e) {
+                        e.printStackTrace();
+                    }
 
-                    moduleManager.saveCacheIntraUsersSuggestions(userList);
                     dataSet.addAll(userList);
                 }
             }
 
-            //offset = dataSet.size();
+            //set offset if have more than 1 page;
 
         } catch (CantGetIntraUsersListException e) {
             e.printStackTrace();

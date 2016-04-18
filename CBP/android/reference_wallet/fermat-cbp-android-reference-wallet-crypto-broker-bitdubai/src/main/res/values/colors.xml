@@ -57,7 +57,8 @@
 
     <color name="cbw_setting_item_color">#dbdbdb</color>
 
-    <color name="cbw_wizard_color">#2c648f</color>
+    <color name="cbw_wizard_color">#1270A6</color>
+    <color name="cbw_wizard_color_2">#12aca0</color>
     <color name="cbw_wizard_border_color">#455077</color>
     <color name="light_grey">#EEE</color>
 
@@ -72,4 +73,8 @@
     <color name="card_background_status_changed">#39ab89</color>
     <color name="card_background_status_confirm">#f1f1f1</color>
     <color name="card_background_status_inactive">#a4a4a4</color>
+
+    <color name="cbw_wizard_merchandises_wallet_button_color">#12aca0</color>
+
+
 </resources>

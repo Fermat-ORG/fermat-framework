@@ -13,7 +13,7 @@ public interface AbstractFermatFragmentInterface<S extends FermatSession,R exten
 
     void setAppResourcesProviderManager(R appResourcesProviderManager);
 
-
     void onUpdateViewOnUIThread(String code);
     void onUpdateView(String code);
+
 }

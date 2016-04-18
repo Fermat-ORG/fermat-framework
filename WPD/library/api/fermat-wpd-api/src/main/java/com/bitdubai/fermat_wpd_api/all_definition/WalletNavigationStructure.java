@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_wpd_api.all_definition;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FermatApps;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.SideMenu;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
@@ -9,9 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfa
 import com.bitdubai.fermat_wpd_api.layer.wpd_identity.developer.interfaces.DeveloperIdentity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -41,12 +41,6 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
     private Map<Activities, Activity> activities = new HashMap<Activities, Activity>();
 
     /**
-     * Main screen of the wallet
-     */
-
-    private List<Activities> startActivities = new ArrayList<>();
-
-    /**
      * Activity used to block something
      */
     private Activities blockActivity;
@@ -61,7 +55,8 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
 
 
     private DeveloperIdentity developer;
-    private int actualStart = 0;
+    private String actualStart;
+    private Platforms platform;
 
     /**
      * WalletNavigationStructure constructor
@@ -77,6 +72,9 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
         this.activities = activities;
     }
 
+    public void setPlatform(Platforms platform) {
+        this.platform = platform;
+    }
 
     @Override
     public FermatApps getFermatApp() {
@@ -86,6 +84,11 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
     @Override
     public FermatAppType getFermatAppType() {
         return FermatAppType.WALLET;
+    }
+
+    @Override
+    public Platforms getPlatform() {
+        return platform;
     }
 
     /**
@@ -113,18 +116,8 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
      * @return Activity
      */
     @Override
-    public Activity getStartActivity() {
-        return activities.get(startActivities.get(actualStart));
-    }
-
-    /**
-     *  Set the main screen
-     *
-     * @param activity
-     */
-    @Override
-    public void addPosibleStartActivity(Activities activity) {
-        this.startActivities.add(activity);
+    public Activity getStartActivity() throws InvalidParameterException {
+        return activities.get(Activities.getValueFromString(actualStart));
     }
 
     /**
@@ -132,17 +125,25 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
      * @return Activity
      */
     @Override
-    public Activity getLastActivity() {
+    public Activity getLastActivity() throws InvalidParameterException {
         if (lastActivity == null) {
-            return activities.get(startActivities.get(actualStart));
+            try {
+                return activities.get(Activities.getValueFromString(actualStart));
+            } catch (InvalidParameterException e) {
+                throw new InvalidParameterException();
+            }
         }
         return activities.get(lastActivity);
     }
 
     @Override
-    public void changeActualStartActivity(int option)throws IllegalArgumentException{
-        if(option>activities.size() || option<0) throw new IllegalArgumentException();
-        this.actualStart = option;
+    public void changeActualStartActivity(String activityCode)throws IllegalArgumentException{
+        try {
+            if(activities.get(Activities.getValueFromString(activityCode))==null) throw new IllegalArgumentException();
+        } catch (InvalidParameterException e) {
+            throw new IllegalArgumentException(activityCode);
+        }
+        this.actualStart = activityCode;
     }
 
     @Override
@@ -181,6 +182,9 @@ public class WalletNavigationStructure implements FermatWallet,Serializable{
      * @param activity
      */
     public void addActivity(Activity activity) {
+        if(actualStart==null){
+            actualStart = activity.getType().getCode();
+        }
         activities.put(activity.getType(), activity);
     }
 

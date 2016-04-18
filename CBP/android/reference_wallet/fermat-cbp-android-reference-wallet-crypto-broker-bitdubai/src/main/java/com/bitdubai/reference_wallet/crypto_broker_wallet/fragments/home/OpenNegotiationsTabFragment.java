@@ -19,7 +19,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -52,7 +51,6 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
     // Data
     private List<GrouperItem> openNegotiationList;
-    private CryptoBrokerWalletManager walletManager;
 
     private  View emptyListViewsContainer;
 
@@ -66,8 +64,7 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
-            walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -161,8 +158,8 @@ public class OpenNegotiationsTabFragment extends FermatWalletExpandableListFragm
 
             try {
 
-                waitingForBroker.addAll(walletManager.getNegotiationsWaitingForBroker(0, 10));
-                waitingForCustomer.addAll(walletManager.getNegotiationsWaitingForCustomer(0, 10));
+                waitingForBroker.addAll(moduleManager.getNegotiationsWaitingForBroker(0, 10));
+                waitingForCustomer.addAll(moduleManager.getNegotiationsWaitingForCustomer(0, 10));
 
                 if (!waitingForBroker.isEmpty() || !waitingForCustomer.isEmpty()) {
                     grouperText = getActivity().getString(R.string.waiting_for_you);

@@ -1,13 +1,12 @@
 package com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting;
 
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by franklin on 03/12/15.
  */
-public interface CryptoBrokerWalletProviderSetting {
+public interface CryptoBrokerWalletProviderSetting extends Serializable {
     //TODO: Documentar y manejo de excepciones
 
     /**

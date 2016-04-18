@@ -26,6 +26,6 @@ public class BankAccountsAdapter extends SingleDeletableItemAdapter<BankAccountN
 
     @Override
     protected int getCardViewResource() {
-        return R.layout.cbw_wizard_recycler_view_item;
+        return R.layout.cbw_wizard_recycler_view_bank_item;
     }
 }

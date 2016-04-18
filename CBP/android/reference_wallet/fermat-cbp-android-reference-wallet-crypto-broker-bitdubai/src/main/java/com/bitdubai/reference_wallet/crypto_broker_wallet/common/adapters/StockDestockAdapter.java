@@ -4,12 +4,9 @@ import android.content.Context;
 import android.view.View;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_wpd_api.layer.wpd_middleware.wallet_manager.interfaces.InstalledWallet;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.StockDestockViewHolder;
-import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.WalletViewHolder;
 
 import java.util.List;
 
@@ -18,9 +15,9 @@ import java.util.List;
  */
 public class StockDestockAdapter extends FermatAdapter<CryptoBrokerWalletAssociatedSetting, StockDestockViewHolder> {
 
-    CryptoBrokerWalletManager moduleManager;
+    CryptoBrokerWalletModuleManager moduleManager;
 
-    public StockDestockAdapter(Context context, List<CryptoBrokerWalletAssociatedSetting> dataSet,CryptoBrokerWalletManager moduleManager) {
+    public StockDestockAdapter(Context context, List<CryptoBrokerWalletAssociatedSetting> dataSet,CryptoBrokerWalletModuleManager moduleManager) {
         super(context, dataSet);
         this.moduleManager = moduleManager;
     }

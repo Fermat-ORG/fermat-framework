@@ -1221,7 +1221,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setSideMenu(loadSideMenuAssetIssuerWallet(publicKey));
 
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY);
+        runtimeWalletNavigationStructure.changeActualStartActivity(Activities.DAP_WALLET_ASSET_ISSUER_MAIN_ACTIVITY.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("My Assets");
@@ -1634,7 +1634,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setSideMenu(loadSideMenuAssetUserWallet(publicKey));
 
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.DAP_WALLET_ASSET_USER_V3_HOME);
+        runtimeWalletNavigationStructure.changeActualStartActivity(Activities.DAP_WALLET_ASSET_USER_V3_HOME.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("My Assets");
@@ -2035,7 +2035,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 //        runtimeActivity.setColor("#627284");
         runtimeActivity.setSideMenu(loadSideMenuAssetRedeemPoint(publicKey));
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY);
+        runtimeWalletNavigationStructure.changeActualStartActivity(Activities.DAP_WALLET_REDEEM_POINT_MAIN_ACTIVITY.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("My Assets");
@@ -2371,12 +2371,13 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         final String publicKey = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
 
-        final String statusBarColor = "#254478";
+        final String statusBarColor = "#1375a7";
         final String titleBarColor = "#254478";
         final String titleBarTitleColor = "#ffffff";
         final int titleBarTextSize = 16;
 
         runtimeWalletNavigationStructure = new WalletNavigationStructure();
+        runtimeWalletNavigationStructure.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
@@ -2419,7 +2420,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES.getCode());
         runtimeActivity.setBackPublicKey(publicKey);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES);
+        runtimeWalletNavigationStructure.changeActualStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SET_MERCHANDISES.getCode());
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
@@ -2531,7 +2532,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_BROKER_WALLET_HOME.getCode());
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Broker Wallet");
@@ -2920,7 +2920,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.setWalletCategory(WalletCategory.REFERENCE_WALLET.getCode());
         runtimeWalletNavigationStructure.setWalletType(WalletType.REFERENCE.getCode());
         runtimeWalletNavigationStructure.setPublicKey(publicKey);
-        lstWalletNavigationStructureOpen.put(publicKey,runtimeWalletNavigationStructure);
+        runtimeWalletNavigationStructure.setPlatform(Platforms.CRYPTO_BROKER_PLATFORM);
+        lstWalletNavigationStructureOpen.put(publicKey, runtimeWalletNavigationStructure);
+
 
 
         // Side Menu
@@ -2953,12 +2955,12 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         // WIZARD
 
-        // step 2 - Set Bitcoin Wallet and Providers
+        // step 1 - Set Bitcoin Wallet and Providers
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS.getCode());
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS);
+        runtimeWalletNavigationStructure.changeActualStartActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS.getCode());
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
@@ -2969,7 +2971,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_SET_BITCOIN_WALLET_AND_PROVIDERS.getKey());
 
-        // step 3 - Set Locations
+        // step 2 - Set Locations
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS.getCode());
@@ -2986,7 +2988,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.addFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS.getKey(), runtimeFragment);
         runtimeActivity.setStartFragment(Fragments.CBP_CRYPTO_CUSTOMER_WALLET_SET_LOCATIONS.getKey());
 
-        // step 4 - Set Bank Accounts
+        // step 3 - Set Bank Accounts
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BANK_ACCOUNT);
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_SET_BANK_ACCOUNT.getCode());
@@ -3062,7 +3064,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME.getCode());
         runtimeActivity.setSideMenu(runtimeSideMenu);
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME);
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Customer Wallet");
@@ -3086,8 +3087,10 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
 
         runtimeTabStrip = new TabStrip();
-        runtimeTabStrip.setTabsColor("#502681");
-        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+//        runtimeTabStrip.setTabsColor("#502681");
+//        runtimeTabStrip.setTabsTextColor("#FFFFFF");
+        runtimeTabStrip.setTabsColor("#222222");
+        runtimeTabStrip.setTabsTextColor("#F9F9F9");
         runtimeTabStrip.setTabsIndicateColor("#dbdbdb");
         runtimeTabStrip.setDividerColor(0x72af9c);
         runtimeActivity.setTabStrip(runtimeTabStrip);
@@ -3456,7 +3459,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Providers");
+        runtimeTitleBar.setLabel("Bitcoin Wallet and Providers");
         runtimeTitleBar.setLabelSize(titleBarLabelSize);
         runtimeTitleBar.setTitleColor(titleBarLabelColor);
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -3530,7 +3533,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.BNK_BANK_MONEY_WALLET_SETUP);
         runtimeActivity.setActivityType(Activities.BNK_BANK_MONEY_WALLET_SETUP.getCode());
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.BNK_BANK_MONEY_WALLET_SETUP);
+        runtimeWalletNavigationStructure.changeActualStartActivity(Activities.BNK_BANK_MONEY_WALLET_SETUP.getCode());
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
@@ -3671,7 +3674,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CSH_CASH_MONEY_WALLET_SETUP);
         runtimeActivity.setActivityType(Activities.CSH_CASH_MONEY_WALLET_SETUP.getCode());
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.CSH_CASH_MONEY_WALLET_SETUP);
+        runtimeWalletNavigationStructure.changeActualStartActivity(Activities.CSH_CASH_MONEY_WALLET_SETUP.getCode());
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor(statusBarColor);
@@ -3755,7 +3758,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.TKY_FAN_WALLET_MAIN_ACTIVITY);
         runtimeActivity.setActivityType(Activities.TKY_FAN_WALLET_MAIN_ACTIVITY.getCode());
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.addPosibleStartActivity(Activities.TKY_FAN_WALLET_MAIN_ACTIVITY);
+        runtimeWalletNavigationStructure.changeActualStartActivity(Activities.TKY_FAN_WALLET_MAIN_ACTIVITY.getCode());
 
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Fan Wallet");
@@ -3996,7 +3999,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeActivity.setColor("#12aca1");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.addPosibleStartActivity(runtimeActivity.getType());
+        runtimeWalletNavigationStructure.changeActualStartActivity(runtimeActivity.getType().getCode());
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Balance");
@@ -4087,13 +4090,13 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
          * Wizard
          */
          /* Adding WizardTypes */
-        Wizard runtimeWizard = new Wizard();
-        // step 1 wizard create from scratch
-        WizardPage runtimeWizardPage = new WizardPage();
-        runtimeWizardPage.setFragment(Fragments.CCP_BITCOIN_WALLET_NO_IDENTITY_FRAGMENT.getKey());
-        runtimeWizard.addPage(runtimeWizardPage);
-            /* Adding wizard */
-        runtimeActivity.addWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(), runtimeWizard);
+//        Wizard runtimeWizard = new Wizard();
+//        // step 1 wizard create from scratch
+//        WizardPage runtimeWizardPage = new WizardPage();
+//        runtimeWizardPage.setFragment(Fragments.CCP_BITCOIN_WALLET_NO_IDENTITY_FRAGMENT.getKey());
+//        runtimeWizard.addPage(runtimeWizardPage);
+//            /* Adding wizard */
+//        runtimeActivity.addWizard(WizardTypes.CCP_WALLET_BITCOIN_START_WIZARD.getKey(), runtimeWizard);
 
         /**
          * Transaction Activity
@@ -4808,7 +4811,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_MAIN);
         runtimeActivity.setColor("#073487");
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
-        runtimeWalletNavigationStructure.addPosibleStartActivity(runtimeActivity.getType());
+        runtimeWalletNavigationStructure.changeActualStartActivity(runtimeActivity.getType().getCode());
 
         runtimeHeader = new Header();
         runtimeHeader.setLabel("Balance");
@@ -5190,6 +5193,11 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
+        runtimeHeader = new Header();
+        runtimeHeader.setLabel("Chunck Values");
+        runtimeActivity.setHeader(runtimeHeader);
+
+
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Chunk Value");
         runtimeTitleBar.setLabelSize(16);
@@ -5202,9 +5210,10 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor("#073487");
 
+
         runtimeTabStrip = new TabStrip();
 
-        runtimeTabStrip.setTabsColor("#1173aa");
+       runtimeTabStrip.setTabsColor("#1173aa");
 
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
 
@@ -5234,7 +5243,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUE_DETAIL_ACTIVITY);
         runtimeActivity.setActivityType(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUE_DETAIL_ACTIVITY.getCode());
         runtimeActivity.setColor("#12aca1");
-        runtimeActivity.setBackActivity(Activities.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUE_DETAIL_ACTIVITY);
+        runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_LOSS_PROTECTED_WALLET_BITDUBAI_VERSION_1_CHUNCK_VALUES);
         runtimeActivity.setBackPublicKey(publicKey);
 
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
@@ -5255,6 +5264,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
+        runtimeHeader = new Header();
+        runtimeHeader.setLabel("Chunck Detail Header");
+        runtimeActivity.setHeader(runtimeHeader);
 
 
         runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUES_DETAIL_FRAGMENT.getKey());

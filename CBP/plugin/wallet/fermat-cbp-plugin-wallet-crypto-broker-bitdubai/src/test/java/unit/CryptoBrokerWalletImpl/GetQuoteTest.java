@@ -2,6 +2,7 @@ package unit.CryptoBrokerWalletImpl;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetCryptoBrokerQuoteException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.structure.util.CryptoBrokerWalletImpl;
@@ -24,7 +25,7 @@ public class GetQuoteTest {
     @Test
     public void getQuote() throws CantGetCryptoBrokerQuoteException {
         CryptoBrokerWalletImpl cryptoBrokerWallet = mock(CryptoBrokerWalletImpl.class);
-        when(cryptoBrokerWallet.getQuote(Mockito.any(FermatEnum.class), Mockito.any(float.class), Mockito.any(FiatCurrency.class))).thenReturn(new Quote() {
+        when(cryptoBrokerWallet.getQuote(Mockito.any(Currency.class), Mockito.any(float.class), Mockito.any(FiatCurrency.class))).thenReturn(new Quote() {
             @Override
             public FermatEnum getMerchandise() {
                 return null;
@@ -45,7 +46,7 @@ public class GetQuoteTest {
                 return 0;
             }
         }).thenCallRealMethod();
-        assertThat(cryptoBrokerWallet.getQuote(Mockito.any(FermatEnum.class), Mockito.any(float.class), Mockito.any(FiatCurrency.class))).isNotNull();
+        assertThat(cryptoBrokerWallet.getQuote(Mockito.any(Currency.class), Mockito.any(float.class), Mockito.any(FiatCurrency.class))).isNotNull();
     }
 
 }

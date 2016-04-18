@@ -1,14 +1,7 @@
-/*
- * @#NearNodeListRequestProcessor.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients;
 
-
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NearNodeListMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.NearNodeListMsgRespond;
@@ -17,7 +10,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ut
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.WebSocketChannelServerEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 
@@ -51,10 +44,10 @@ public class NearNodeListRequestProcessor extends PackageProcessor {
     /**
      * Constructor whit parameter
      *
-     * @param webSocketChannelServerEndpoint register
+     * @param fermatWebSocketChannelEndpoint register
      */
-    public NearNodeListRequestProcessor(WebSocketChannelServerEndpoint webSocketChannelServerEndpoint) {
-        super(webSocketChannelServerEndpoint, PackageType.NEAR_NODE_LIST_REQUEST);
+    public NearNodeListRequestProcessor(FermatWebSocketChannelEndpoint fermatWebSocketChannelEndpoint) {
+        super(fermatWebSocketChannelEndpoint, PackageType.NEAR_NODE_LIST_REQUEST);
     }
 
     /**
@@ -71,7 +64,7 @@ public class NearNodeListRequestProcessor extends PackageProcessor {
 
         try {
 
-            NearNodeListMsgRequest messageContent = (NearNodeListMsgRequest) packageReceived.getContent();
+            NearNodeListMsgRequest messageContent = NearNodeListMsgRequest.parseContent(packageReceived.getContent());
 
             /*
              * Create the method call history
@@ -119,7 +112,7 @@ public class NearNodeListRequestProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 NearNodeListMsgRespond respondNearNodeListMsg = new NearNodeListMsgRespond(NearNodeListMsgRespond.STATUS.SUCCESS, NearNodeListMsgRespond.STATUS.SUCCESS.toString(),nodesProfileList);
-                Package packageRespond = Package.createInstance(respondNearNodeListMsg, packageReceived.getNetworkServiceTypeSource(), PackageType.NEAR_NODE_LIST_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondNearNodeListMsg.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.NEAR_NODE_LIST_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -138,7 +131,7 @@ public class NearNodeListRequestProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 NearNodeListMsgRespond respondNearNodeListMsg = new NearNodeListMsgRespond(NearNodeListMsgRespond.STATUS.FAIL, exception.getLocalizedMessage(), null);
-                Package packageRespond = Package.createInstance(respondNearNodeListMsg, packageReceived.getNetworkServiceTypeSource(), PackageType.NEAR_NODE_LIST_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondNearNodeListMsg.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.NEAR_NODE_LIST_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -184,6 +177,16 @@ public class NearNodeListRequestProcessor extends PackageProcessor {
 
                 Location nodeLocation = new Location() {
                     @Override
+                    public Double getAccuracy() {
+                        return null;
+                    }
+
+                    @Override
+                    public Double getAltitudeAccuracy() {
+                        return null;
+                    }
+
+                    @Override
                     public Double getLatitude() {
                         return node.getLastLatitude();
                     }
@@ -204,7 +207,7 @@ public class NearNodeListRequestProcessor extends PackageProcessor {
                     }
 
                     @Override
-                    public LocationProvider getProvider() {
+                    public LocationSource getSource() {
                         return null;
                     }
                 };
