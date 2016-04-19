@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Unexpect
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
@@ -41,6 +42,7 @@ import java.util.UUID;
 
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 06/04/16.
+ * Edited by Miguel Rincon on 19/04/2016
  */
 public class ActorConnectionEventActions {
 
@@ -80,6 +82,8 @@ public class ActorConnectionEventActions {
                 CantRequestActorConnectionException |
                 UnsupportedActorTypeException |
                 ConnectionAlreadyRequestedException e) {
+
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
             throw new CantHandleNewsEventException(e, "", "Error handling Crypto Broker Connection Request News Event.");
         }
@@ -125,6 +129,7 @@ public class ActorConnectionEventActions {
                 CantCancelActorConnectionRequestException */ |
                 CantDenyActorConnectionRequestException |
                 CantDisconnectFromActorException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
             throw new CantHandleUpdateEventException(e, "", "Error handling Crypto Addresses News Event.");
         }
