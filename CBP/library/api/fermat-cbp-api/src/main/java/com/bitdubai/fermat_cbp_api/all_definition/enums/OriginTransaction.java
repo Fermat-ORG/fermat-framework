@@ -12,7 +12,8 @@ public enum OriginTransaction implements FermatEnum {
     RESTOCK("RESTOCK"),
     DESTOCK("DESTOCK"),
     PURCHASE("PURC"),
-    SALE("SALE");
+    SALE("SALE"),
+    EARNING_EXTRACTION("EAREXT");
 
     OriginTransaction(String code) {
         this.code = code;
