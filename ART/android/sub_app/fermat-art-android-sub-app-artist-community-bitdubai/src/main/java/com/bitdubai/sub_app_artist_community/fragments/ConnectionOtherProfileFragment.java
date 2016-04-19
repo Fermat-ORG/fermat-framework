@@ -118,7 +118,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment<Artis
             if(artistCommunityInformation.getImage() != null && artistCommunityInformation.getImage().length > 0)
                 bitmap = BitmapFactory.decodeByteArray(artistCommunityInformation.getImage(), 0, artistCommunityInformation.getImage().length);
             else
-                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profile_image);
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.aac_profile_image);
 
             bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
             userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
