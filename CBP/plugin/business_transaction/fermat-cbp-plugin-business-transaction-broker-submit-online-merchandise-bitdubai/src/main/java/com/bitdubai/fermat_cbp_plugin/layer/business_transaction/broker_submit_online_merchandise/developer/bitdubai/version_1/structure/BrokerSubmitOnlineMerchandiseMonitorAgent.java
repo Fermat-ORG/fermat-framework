@@ -529,21 +529,22 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                         businessTransactionMetadata = record.getInformation();
                         contractHash = businessTransactionMetadata.getContractHash();
+                        if(businessTransactionMetadata.getRemoteBusinessTransaction()==Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE){
+                            if (brokerSubmitOnlineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
+                                contractTransactionStatus = brokerSubmitOnlineMerchandiseBusinessTransactionDao.getContractTransactionStatus(contractHash);
+                                //TODO: analyze what we need to do here.
 
-                        if (brokerSubmitOnlineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
-                            contractTransactionStatus = brokerSubmitOnlineMerchandiseBusinessTransactionDao.getContractTransactionStatus(contractHash);
-                            //TODO: analyze what we need to do here.
+                            } else {
+                                CustomerBrokerContractPurchase contractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
+                                ObjectChecker.checkArgument(contractPurchase); //If the contract is null, I cannot handle with this situation
 
-                        } else {
-                            CustomerBrokerContractPurchase contractPurchase = customerBrokerContractPurchaseManager.getCustomerBrokerContractPurchaseForContractId(contractHash);
-                            ObjectChecker.checkArgument(contractPurchase); //If the contract is null, I cannot handle with this situation
-
-                            brokerSubmitOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(contractPurchase);
-                            brokerSubmitOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
-                            customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
-                            raisePaymentConfirmationEvent(contractHash);
+                                brokerSubmitOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(contractPurchase);
+                                brokerSubmitOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
+                                customerBrokerContractPurchaseManager.updateStatusCustomerBrokerPurchaseContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
+                                raisePaymentConfirmationEvent(contractHash);
+                            }
+                            transactionTransmissionManager.confirmReception(record.getTransactionID());
                         }
-                        transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }
                     brokerSubmitOnlineMerchandiseBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
@@ -555,20 +556,21 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                         businessTransactionMetadata = record.getInformation();
                         contractHash = businessTransactionMetadata.getContractHash();
+                        if(businessTransactionMetadata.getRemoteBusinessTransaction()==Plugins.BROKER_SUBMIT_ONLINE_MERCHANDISE){
+                            if (brokerSubmitOnlineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
+                                businessTransactionRecord = brokerSubmitOnlineMerchandiseBusinessTransactionDao.getBrokerBusinessTransactionRecord(contractHash);
+                                contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
 
-                        if (brokerSubmitOnlineMerchandiseBusinessTransactionDao.isContractHashInDatabase(contractHash)) {
-                            businessTransactionRecord = brokerSubmitOnlineMerchandiseBusinessTransactionDao.getBrokerBusinessTransactionRecord(contractHash);
-                            contractTransactionStatus = businessTransactionRecord.getContractTransactionStatus();
-
-                            if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_MERCHANDISE_SUBMITTED.getCode())) {
-                                businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_CONSIGNMENT);
-                                brokerSubmitOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(businessTransactionRecord);
-                                brokerSubmitOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
-                                customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
-                                raisePaymentConfirmationEvent(contractHash);
+                                if (contractTransactionStatus.getCode().equals(ContractTransactionStatus.ONLINE_MERCHANDISE_SUBMITTED.getCode())) {
+                                    businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_CONSIGNMENT);
+                                    brokerSubmitOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(businessTransactionRecord);
+                                    brokerSubmitOnlineMerchandiseBusinessTransactionDao.setCompletionDateByContractHash(contractHash, (new Date()).getTime());
+                                    customerBrokerContractSaleManager.updateStatusCustomerBrokerSaleContractStatus(contractHash, ContractStatus.MERCHANDISE_SUBMIT);
+                                    raisePaymentConfirmationEvent(contractHash);
+                                }
                             }
+                            transactionTransmissionManager.confirmReception(record.getTransactionID());
                         }
-                        transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }
                     brokerSubmitOnlineMerchandiseBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
