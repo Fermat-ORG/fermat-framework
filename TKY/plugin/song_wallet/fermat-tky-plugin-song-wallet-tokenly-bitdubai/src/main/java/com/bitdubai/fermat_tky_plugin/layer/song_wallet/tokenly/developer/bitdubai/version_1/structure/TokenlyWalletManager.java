@@ -281,7 +281,7 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
         } catch (CantGetAlbumException e) {
             broadcaster.publish(BroadcasterType.UPDATE_VIEW,
                     WalletsPublicKeys.TKY_FAN_WALLET.getCode(),
-                    "Conection Error");
+                    "Connection Error");
             throw new CantSynchronizeWithExternalAPIException(
                     e,
                     "Synchronizing songs by user request",

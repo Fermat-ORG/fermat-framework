@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_tky_api.all_definitions.interfaces;
 
+import com.bitdubai.fermat_tky_api.all_definitions.enums.HTTPErrorResponse;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyRequestMethod;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.HTTPErrorResponseException;
@@ -135,9 +136,11 @@ public abstract class RemoteJSonProcessor {
             System.out.println("Response Code : " + responseCode);
             if(responseCode!=200){
                 String errorResponse = httpsURLConnection.getResponseMessage();
+                HTTPErrorResponse httpErrorResponse = HTTPErrorResponse.getByCode(""+responseCode);
                 throw new HTTPErrorResponseException(
                         responseCode,
-                        errorResponse);
+                        errorResponse,
+                        httpErrorResponse);
             }
             //Get the response String
             BufferedReader bufferedReader = new BufferedReader(
@@ -203,9 +206,11 @@ public abstract class RemoteJSonProcessor {
             int responseCode = httpsURLConnection.getResponseCode();
             if(responseCode!=200){
                 String errorResponse = httpsURLConnection.getResponseMessage();
+                HTTPErrorResponse httpErrorResponse = HTTPErrorResponse.getByCode("" + responseCode);
                 throw new HTTPErrorResponseException(
                         responseCode,
-                        errorResponse);
+                        errorResponse,
+                        httpErrorResponse);
             }
             BufferedReader bufferedReader = new BufferedReader(
                     new InputStreamReader(httpsURLConnection.getInputStream()));
