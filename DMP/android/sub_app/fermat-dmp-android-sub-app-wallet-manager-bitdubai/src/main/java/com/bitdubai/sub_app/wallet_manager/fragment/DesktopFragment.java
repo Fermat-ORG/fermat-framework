@@ -503,7 +503,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
 //            lstItemsWithIcon.add(itemFolder);
 
 
-            for(int i=0;i<12;i++){
+          /*  for(int i=0;i<12;i++){
                 Item emptyItem = new Item(new EmptyItem(0,i));
                 emptyItem.setIconResource(-1);
                 arrItemsWithoutIcon[i] = emptyItem;
@@ -515,12 +515,14 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                 if(itemIcon.getInterfaceObject() instanceof InstalledWallet){
                     if(((InstalledWallet) itemIcon.getInterfaceObject()).getAppStatus() == AppsStatus.ALPHA){
                         arrItemsWithoutIcon[pos]= itemIcon;
-                        pos++;
+                    pos++;
                     }
                 }
 
             }
-            dataSet.addAll(Arrays.asList(arrItemsWithoutIcon));
+            dataSet.addAll(Arrays.asList(arrItemsWithoutIcon));*/
+
+            dataSet.addAll(lstItemsWithIcon);
 
         } catch (Exception e){
             e.printStackTrace();
