@@ -360,7 +360,11 @@ public enum Activities implements FermatEnum {
     DESKTOP_SETTING_FERMAT_NETWORK("DSFN"),
     CCP_DESKTOP_P2P("DP2P"),
     CCP_DESKTOP_SOCIAL("DSOCIAL"),
-    DESKTOP_COMMUNITY_ACTIVITY("DESCA");
+    DESKTOP_COMMUNITY_ACTIVITY("DESCA"),
+
+
+    DESKTOP_WIZZARD_WELCOME("DWW")
+    ;
 
     private String code;
 
@@ -923,6 +927,8 @@ public enum Activities implements FermatEnum {
             case "ARTMPMA":
                 return ART_MUSIC_PLAYER_MAIN_ACTIVITY;
 
+            case "DWW":
+                return DESKTOP_WIZZARD_WELCOME;
             default:
                 throw new InvalidParameterException(
                         "Code Received: " + code,

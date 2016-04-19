@@ -24,14 +24,14 @@ public class MusicPlayerAdapter extends RecyclerView.Adapter<MusicPlayerAdapter.
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imagen;
         TextView texto;
-        TextView duration;
+        TextView artistname;
 
         public ViewHolder(View v){
             super(v);
             imagen=(ImageView)v.findViewById(R.id.imagen);
             texto=(TextView)v.findViewById(R.id.songname);
-            duration=(TextView)v.findViewById(R.id.artistname);
-            duration.setText("");
+            artistname=(TextView)v.findViewById(R.id.artistname);
+
         }
 
     }
@@ -55,6 +55,15 @@ public class MusicPlayerAdapter extends RecyclerView.Adapter<MusicPlayerAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int i) {
         holder.imagen.setImageResource(items.get(i).getImagen());
-        holder.texto.setText(items.get(i).getTitle());
+        holder.texto.setText(items.get(i).getSong_name());
+        holder.artistname.setText(items.get(i).getArtist_name());
+    }
+
+    public void setFilter(List<MusicPlayerItems> newitems) {
+
+            items.clear();
+            items.addAll(newitems);
+            notifyDataSetChanged();
+
     }
 }

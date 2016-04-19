@@ -16,11 +16,9 @@ import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArti
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.ArtistIdentityManager;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.ArtistIdentityManagerModule;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.ArtistIdentitySettings;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist.ArtistIdentityManagerModule;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist.ArtistIdentitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 
 import java.io.Serializable;

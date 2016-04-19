@@ -7,7 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.util;
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationProvider;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationSource;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.util.DistanceCalculator</code> has the
@@ -70,12 +70,22 @@ public class DistanceCalculator {
             }
 
             @Override
+            public Double getAccuracy() {
+                return null;
+            }
+
+            @Override
+            public Double getAltitudeAccuracy() {
+                return null;
+            }
+
+            @Override
             public Long getTime() {
                 return new Long(0);
             }
 
             @Override
-            public LocationProvider getProvider() {
+            public LocationSource getSource() {
                 return null;
             }
         };
@@ -98,12 +108,22 @@ public class DistanceCalculator {
             }
 
             @Override
+            public Double getAccuracy() {
+                return null;
+            }
+
+            @Override
+            public Double getAltitudeAccuracy() {
+                return null;
+            }
+
+            @Override
             public Long getTime() {
                 return new Long(0);
             }
 
             @Override
-            public LocationProvider getProvider() {
+            public LocationSource getSource() {
                 return null;
             }
         };

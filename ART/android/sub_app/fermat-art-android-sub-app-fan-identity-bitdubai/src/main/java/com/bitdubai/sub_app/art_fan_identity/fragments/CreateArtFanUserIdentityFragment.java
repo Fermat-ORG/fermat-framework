@@ -38,8 +38,8 @@ import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantCreateFanId
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.FanIdentityManagerModule;
-import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.FanIdentitySettings;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentityManagerModule;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -409,7 +409,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error loading the picture", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }

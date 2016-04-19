@@ -137,8 +137,8 @@ public class SettingsCreateNewBankAccountFragment extends AbstractFermatFragment
 
     private List<String> getListOfAccountTypeNames() {
         List<String> data = new ArrayList<>();
-        data.add("Saving (" + BankAccountType.SAVING.getCode() + ")");
-        data.add("Current (" + BankAccountType.CURRENT.getCode() + ")");
+        data.add("Saving (" + BankAccountType.SAVINGS.getCode() + ")");
+        data.add("Current (" + BankAccountType.CHECKING.getCode() + ")");
 
         return data;
     }

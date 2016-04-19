@@ -72,7 +72,7 @@ public class StockTransactionsCashMoneyRestockPluginRoot extends AbstractPlugin 
 
     @Override
     public void start() throws CantStartPluginException {
-        stockTransactionCashMoneyRestockManager = new StockTransactionCashMoneyRestockManager(pluginDatabaseSystem, pluginId);
+        stockTransactionCashMoneyRestockManager = new StockTransactionCashMoneyRestockManager(pluginDatabaseSystem, pluginId, errorManager);
         try {
             Database database = pluginDatabaseSystem.openDatabase(pluginId, StockTransactionsCashMoneyRestockDatabaseConstants.CASH_MONEY_RESTOCK_DATABASE_NAME);
 

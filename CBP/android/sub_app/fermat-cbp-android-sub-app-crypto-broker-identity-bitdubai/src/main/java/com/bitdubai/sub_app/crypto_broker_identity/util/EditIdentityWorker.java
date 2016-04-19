@@ -48,8 +48,14 @@ public class EditIdentityWorker extends FermatWorker {
             moduleManager.updateCryptoBrokerIdentity(identity);
             if (valueChanged) {
                 if (identity.isPublished()) {
+
+                    System.out.println("VLZ: Publicando");
+
                     moduleManager.publishIdentity(identity.getPublicKey());
                 }else {
+
+                    System.out.println("VLZ: Ocultando");
+
                     moduleManager.hideIdentity(identity.getPublicKey());
                 }
             }

@@ -81,6 +81,7 @@ public class CustomerBrokerSaleContractDatabaseFactory implements DealsWithPlugi
             table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_DATE_TIME_COLUMN_NAME, DatabaseDataType.LONG_INTEGER, 100, Boolean.FALSE);
             table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_STATUS_COLUMN_NAME, DatabaseDataType.STRING, 20, Boolean.FALSE);
             table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_NEAR_EXPIRATION_DATE_TIME_COLUMN_NAME, DatabaseDataType.STRING, 1, Boolean.FALSE);
+            table.addColumn(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_CANCEL_REASON_COLUMN_NAME, DatabaseDataType.STRING, 300, Boolean.FALSE);
 
             table.addIndex(CustomerBrokerSaleContractDatabaseConstants.CONTRACTS_SALE_FIRST_KEY_COLUMN);
 

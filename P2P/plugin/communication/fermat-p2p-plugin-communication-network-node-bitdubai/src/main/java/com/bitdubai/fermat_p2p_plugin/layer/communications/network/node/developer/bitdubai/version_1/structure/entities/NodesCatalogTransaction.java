@@ -13,6 +13,12 @@ public class NodesCatalogTransaction extends AbstractBaseEntity implements Seria
 
 	private static final long serialVersionUID = 1L;
 
+    public static final String ADD_TRANSACTION_TYPE = "ADD";
+
+    public static final String DELETE_TRANSACTION_TYPE = "DELETE";
+
+    public static final String UPDATE_TRANSACTION_TYPE = "UPDATE";
+
 	private String hashId;
 
 	private Timestamp lastConnectionTimestamp;

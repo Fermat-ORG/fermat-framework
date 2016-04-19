@@ -56,6 +56,11 @@ public class DeveloperSubAppModulePluginRoot extends AbstractPlugin implements
         logManagersOnAddons  = new ConcurrentHashMap<>();
     }
 
+    @Override
+    public void start() throws CantStartPluginException {
+        System.out.println("Developer SubApp Module started...");
+        super.start();
+    }
 
     @Override
     public void addDatabaseManager(final PluginVersionReference       pluginVersionReference      ,
