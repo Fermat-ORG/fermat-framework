@@ -7,11 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.StepItemGetter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.fragments.common.SingleChoiceDialogFragment;
@@ -22,7 +20,7 @@ import java.util.List;
 public class SingleChoiceStepViewHolder extends StepViewHolder
         implements View.OnClickListener, SingleChoiceDialogFragment.SelectedItem<String> {
 
-    private CryptoCustomerWalletManager walletManager;
+    private CryptoCustomerWalletModuleManager walletManager;
     private List<String> dataList;
     private String selectedValue;
 
@@ -33,7 +31,7 @@ public class SingleChoiceStepViewHolder extends StepViewHolder
     private TextView descriptionTextView;
 
 
-    public SingleChoiceStepViewHolder(RecyclerView.Adapter adapter, View viewItem, Activity activity, CryptoCustomerWalletManager walletManager) {
+    public SingleChoiceStepViewHolder(RecyclerView.Adapter adapter, View viewItem, Activity activity, CryptoCustomerWalletModuleManager walletManager) {
         super(viewItem, (StepItemGetter) adapter);
 
         this.adapter = adapter;

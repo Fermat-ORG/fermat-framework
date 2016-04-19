@@ -26,7 +26,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -129,8 +128,7 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment {
             public void onClick(View view) {
                 CustomerBrokerNegotiationInformation info;
                 try {
-                    CryptoBrokerWalletManager walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
-                    info = walletManager.getNegotiationInformation(contractBasicInfo.getNegotiationId());
+                    info = moduleManager.getNegotiationInformation(contractBasicInfo.getNegotiationId());
                     appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, info);
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT, appSession.getAppPublicKey());
 

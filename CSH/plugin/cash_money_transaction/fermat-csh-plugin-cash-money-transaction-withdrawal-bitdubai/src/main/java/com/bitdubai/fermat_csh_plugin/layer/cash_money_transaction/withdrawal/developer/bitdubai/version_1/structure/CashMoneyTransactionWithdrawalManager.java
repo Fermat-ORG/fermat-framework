@@ -69,8 +69,10 @@ public class CashMoneyTransactionWithdrawalManager implements CashWithdrawalTran
         }
 
         try{
-            wallet.getAvailableBalance().debit(withdrawalParameters.getTransactionId(), withdrawalParameters.getPublicKeyActor(), withdrawalParameters.getPublicKeyPlugin(), withdrawalParameters.getAmount(), withdrawalParameters.getMemo());
-            wallet.getBookBalance().debit(withdrawalParameters.getTransactionId(), withdrawalParameters.getPublicKeyActor(), withdrawalParameters.getPublicKeyPlugin(), withdrawalParameters.getAmount(), withdrawalParameters.getMemo());
+            // TODO - Se le esta colocando un random ID pra que sea unico. Por favor revisar esto
+            wallet.getAvailableBalance().debit(UUID.randomUUID(), withdrawalParameters.getPublicKeyActor(), withdrawalParameters.getPublicKeyPlugin(), withdrawalParameters.getAmount(), withdrawalParameters.getMemo());
+            // TODO - Se le esta colocando un random ID pra que sea unico. Por favor revisar esto
+            wallet.getBookBalance().debit(UUID.randomUUID(), withdrawalParameters.getPublicKeyActor(), withdrawalParameters.getPublicKeyPlugin(), withdrawalParameters.getAmount(), withdrawalParameters.getMemo());
 
         } catch (CantGetCashMoneyWalletBalanceException e) {
             errorManager.reportUnexpectedPluginException(Plugins.BITDUBAI_CSH_MONEY_TRANSACTION_WITHDRAWAL, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);

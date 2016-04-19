@@ -23,7 +23,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletProviderSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
@@ -63,7 +62,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
     private FermatTextView emptyView;
 
     // Fermat Managers
-    private CryptoBrokerWalletManager walletManager;
+    private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
     private ProvidersAdapter adapter;
 
@@ -80,13 +79,12 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
         currencies = getCurrenciesList();
 
         try {
-            CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
-            walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
+            moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
             //Delete potential previous configurations made by this wizard page
             //So that they can be reconfigured cleanly
-            walletManager.clearCryptoBrokerWalletProviderSetting(appSession.getAppPublicKey());
+            moduleManager.clearCryptoBrokerWalletProviderSetting(appSession.getAppPublicKey());
 
             //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
             Object aux = appSession.getData(PresentationDialog.PRESENTATION_SCREEN_ENABLED);
@@ -181,14 +179,14 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
             String tempS = "";
 
             List<CurrencyPairAndProvider> providers = new ArrayList<>();
-            Map<String, CurrencyPair> map = walletManager.getWalletProviderAssociatedCurrencyPairs(null, appSession.getAppPublicKey());
+            Map<String, CurrencyPair> map = moduleManager.getWalletProviderAssociatedCurrencyPairs(null, appSession.getAppPublicKey());
 
             for (Map.Entry<String, CurrencyPair> e : map.entrySet()) {
 
                 Currency currencyFrom = e.getValue().getFrom();
                 Currency currencyTo = e.getValue().getTo();
 
-                Collection<CurrencyExchangeRateProviderManager> providerManagers = walletManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
+                Collection<CurrencyExchangeRateProviderManager> providerManagers = moduleManager.getProviderReferencesFromCurrencyPair(currencyFrom, currencyTo);
                 if (providerManagers != null){
                     for (CurrencyExchangeRateProviderManager providerManager : providerManagers) {
 
@@ -238,7 +236,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
 
         try {
             for (CurrencyPairAndProvider currencyPairAndProvider : selectedProviders) {
-                CryptoBrokerWalletProviderSetting setting = walletManager.newEmptyCryptoBrokerWalletProviderSetting();
+                CryptoBrokerWalletProviderSetting setting = moduleManager.newEmptyCryptoBrokerWalletProviderSetting();
                 setting.setBrokerPublicKey(appSession.getAppPublicKey());
 
                 CurrencyExchangeRateProviderManager provider = currencyPairAndProvider.getProvider();
@@ -248,7 +246,7 @@ public class WizardPageSetProvidersFragment extends AbstractFermatFragment
                 setting.setCurrencyFrom(currencyPairAndProvider.getCurrencyFrom().getCode());
                 setting.setCurrencyTo(currencyPairAndProvider.getCurrencyTo().getCode());
 
-                walletManager.saveCryptoBrokerWalletProviderSetting(setting, appSession.getAppPublicKey());
+                moduleManager.saveCryptoBrokerWalletProviderSetting(setting, appSession.getAppPublicKey());
             }
 
         } catch (FermatException ex) {

@@ -39,7 +39,7 @@
                 android:gravity="center"
                 android:textAllCaps="true"
                 android:textColor="#1271A7"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:text="Exchange Rate Reference"/>
 
             <View
@@ -61,7 +61,7 @@
                     android:layout_marginRight="5dp"
                     android:text="@string/market_exchange_rate"
                     android:textColor="@color/description_text_status_confirm"
-                    android:textSize="18sp"/>
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/ccw_market_rate_value"
@@ -71,7 +71,7 @@
                     android:layout_toEndOf="@+id/ccw_market_rate_text"
                     android:layout_toRightOf="@+id/ccw_market_rate_text"
                     android:textColor="@color/text_value_status_confirm"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     tools:text="1 BTC / 210 USD"/>
             </RelativeLayout>
 
@@ -91,7 +91,7 @@
                     android:layout_marginRight="5dp"
                     android:text="@string/yours_exchange_rate_title"
                     android:textColor="@color/description_text_status_confirm"
-                    android:textSize="18sp"/>
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/ccw_exchange_rate_value_left_side"
@@ -104,7 +104,7 @@
                     android:layout_toEndOf="@+id/ccw_exchange_rate_text"
                     android:layout_toRightOf="@+id/ccw_exchange_rate_text"
                     android:textColor="@color/text_value_status_confirm"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     tools:text="1 USD / "/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
@@ -126,7 +126,7 @@
                     android:paddingStart="8dp"
                     android:textAllCaps="false"
                     android:textColor="#222"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     tools:text="556.4"/>
 
                 <TextView
@@ -139,7 +139,7 @@
                     android:layout_toEndOf="@+id/ccw_exchange_rate_value"
                     android:layout_toRightOf="@+id/ccw_exchange_rate_value"
                     android:textColor="@color/text_value_status_confirm"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     tools:text="BTC"/>
 
             </RelativeLayout>

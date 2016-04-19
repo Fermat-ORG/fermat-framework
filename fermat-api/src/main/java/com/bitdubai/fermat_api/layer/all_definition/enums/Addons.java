@@ -33,7 +33,8 @@ public enum Addons implements FermatEnum {
     PLUGIN_DATABASE_SYSTEM      ("PLUDS"),
     REMOTE_DEVICE               ("REMD"),
 
-    PLUGIN_BROADCASTER_SYSTEM("PBS");
+    PLUGIN_BROADCASTER_SYSTEM("PBS"),
+    HARDWARE("H");
 
     private final String code;
 
@@ -62,6 +63,7 @@ public enum Addons implements FermatEnum {
             case "PLUFS":   return PLUGIN_FILE_SYSTEM;
             case "REMD":    return REMOTE_DEVICE;
             case "PBS":     return PLUGIN_BROADCASTER_SYSTEM;
+            case "H": return HARDWARE;
 
             default:
                 throw new InvalidParameterException(

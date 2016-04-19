@@ -65,7 +65,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
     CustomerBrokerSaleNegotiationManager saleNegotiationManager;
 
     /**
-     * Represents the CryptoBrokerWalletManager
+     * Represents the CryptoBrokerWalletModuleManager
      */
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
