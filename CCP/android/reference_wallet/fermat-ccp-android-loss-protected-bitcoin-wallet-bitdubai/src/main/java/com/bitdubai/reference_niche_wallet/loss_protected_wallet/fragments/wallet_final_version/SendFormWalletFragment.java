@@ -317,6 +317,9 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                 String text = "";
                 String txtType = txt_type.getText().toString();
                 String amount = editTextAmount.getText().toString();
+                if (amount.equals("")){
+                    amount = "0";
+                }
                 String newAmount = "";
                 switch (position) {
                     case 0:

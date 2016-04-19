@@ -24,7 +24,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAcc
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantClearBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetRelationBetweenBrokerIdentityAndBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantAckPaymentException;
 import com.bitdubai.fermat_cbp_api.layer.business_transaction.common.exceptions.CantSubmitMerchandiseException;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_sale.exceptions.CantGetListCustomerBrokerContractSaleException;
@@ -162,9 +162,9 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
      * @return
      *
      * @throws CantListCryptoBrokerIdentitiesException
-     * @throws CantGetListBrokerIdentityWalletRelationshipException
+     * @throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException
      */
-    boolean haveAssociatedIdentity(String walletPublicKey) throws CantListCryptoBrokerIdentitiesException, CantGetListBrokerIdentityWalletRelationshipException;
+    boolean haveAssociatedIdentity(String walletPublicKey) throws CantListCryptoBrokerIdentitiesException, CantGetRelationBetweenBrokerIdentityAndBrokerWalletException;
 
     /**
      * @param walletPublicKey
@@ -172,10 +172,10 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
      * @return
      *
      * @throws CantListCryptoBrokerIdentitiesException
-     * @throws CantGetListBrokerIdentityWalletRelationshipException
+     * @throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException
      * @throws CantGetAssociatedIdentityException
      */
-    CryptoBrokerIdentity getAssociatedIdentity(String walletPublicKey) throws CantListCryptoBrokerIdentitiesException, CantGetListBrokerIdentityWalletRelationshipException, CantGetAssociatedIdentityException;
+    CryptoBrokerIdentity getAssociatedIdentity(String walletPublicKey) throws CantListCryptoBrokerIdentitiesException, CantGetRelationBetweenBrokerIdentityAndBrokerWalletException, CantGetAssociatedIdentityException;
 
     /**
      * @return list of identities associated with this wallet

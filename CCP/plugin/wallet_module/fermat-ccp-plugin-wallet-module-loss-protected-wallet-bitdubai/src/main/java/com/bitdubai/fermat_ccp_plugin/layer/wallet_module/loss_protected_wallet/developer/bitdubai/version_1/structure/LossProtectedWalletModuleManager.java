@@ -916,13 +916,11 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                     }
 
                     @Override
-                    public long getAmount() {
-                        return (long) 2.2544;
-                    }
+                    public long getAmount() {return  (long)9.2; }
 
                     @Override
                     public double getExchangeRate() {
-                        return 422.14;
+                        return 422.1;
                     }
                 };
 
@@ -947,14 +945,10 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                 }
 
                 @Override
-                public long getAmount() {
-                    return (long) 1.2544;
-                }
+                public long getAmount() {return (long)0.8;}
 
                 @Override
-                public double getExchangeRate() {
-                    return 422.14;
-                }
+                public double getExchangeRate() {return 427.14;}
             };
 
             bitcoinLossProtectedWalletSpendList.add(spendingLsit);
@@ -1107,7 +1101,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                         }
                         @Override
                         public long getAmount() {
-                            return (long) 2.2;
+                            return (long) 10;
                         }
                         @Override
                         public long getRunningBookBalance() {

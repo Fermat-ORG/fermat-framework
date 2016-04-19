@@ -5,11 +5,12 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communi
  * Created by Alejandro Bicelis on 2/2/2016.
  */
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 
-public interface LinkedCryptoCustomerIdentity {
+public interface LinkedCryptoCustomerIdentity extends Serializable{
 
     /**
      * The method <code>getPublicKey</code> returns the UUID of the connected actor to this identity

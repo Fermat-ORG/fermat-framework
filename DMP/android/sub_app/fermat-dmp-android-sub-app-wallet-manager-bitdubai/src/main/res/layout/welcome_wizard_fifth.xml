@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp">
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome_wizzard_fifth_title"
+            android:gravity="center"
+            android:textColor="#0EAF9E"
+            android:textSize="36sp"
+            app:typeface="CAVIAR_DREAMS"
+            android:paddingTop="20dp"
+            />
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#0EAF9E"
+            android:layout_marginBottom="16dp"/>
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:paddingBottom="12dp"
+            android:textColor="#58595B"
+            app:typeface="CAVIAR_DREAMS"
+            android:text="To begin and learn the basics please:"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="1. Go to Chat Profile App to create your first Fermat profile."
+                android:layout_weight="1"
+                app:typeface="CAVIAR_DREAMS"
+                android:textColor="#58595B"
+
+                />
+
+            <ImageView
+                android:layout_width="96dp"
+                android:layout_height="48dp"
+                android:paddingBottom="9dp"
+                android:src="@drawable/chat_subapp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp">
+
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="2. Then go to the Chat Community [mostrar icono] to connect with some people there."
+                android:layout_weight="1"
+                app:typeface="CAVIAR_DREAMS"
+                android:textColor="#58595B"
+                />
+
+            <ImageView
+                android:layout_width="96dp"
+                android:layout_height="48dp"
+                android:paddingBottom="9dp"
+                android:src="@drawable/chat_community"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="3. Finally go to the Chat App and start chatting."
+                app:typeface="CAVIAR_DREAMS"
+                android:textColor="#58595B"
+                android:layout_weight="1"/>
+            app:typeface="CAVIAR_DREAMS"
+            android:textColor="#58595B"
+
+            <ImageView
+                android:layout_width="96dp"
+                android:layout_height="48dp"
+                android:paddingBottom="9dp"
+                android:src="@drawable/chat_subapp"/>
+
+        </LinearLayout>
+
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:typeface="CAVIAR_DREAMS"
+            android:gravity="left"
+            android:textColor="#58595B"
+            android:paddingBottom="12dp"
+            android:text="If you want to repeat this help open the settings slider like this"/>
+
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:src="@drawable/screen_setting_hdpi"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"/>
+
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>

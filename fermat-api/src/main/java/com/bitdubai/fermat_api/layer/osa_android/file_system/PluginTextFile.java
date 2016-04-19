@@ -9,7 +9,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPers
  *  <p>The abstract class <code>PluginTextFile</code> is a interface
  *     that define the methods to get, set and save text file content.
  *
- *
+ * //TODO:  please explain this interface..
  *  @author  Luis
  *  @version 1.0.0
  *  @since   22/01/15.
