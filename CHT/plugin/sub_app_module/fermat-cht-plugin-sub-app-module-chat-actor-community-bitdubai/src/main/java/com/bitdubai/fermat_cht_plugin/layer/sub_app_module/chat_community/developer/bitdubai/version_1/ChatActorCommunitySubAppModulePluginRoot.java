@@ -101,6 +101,7 @@ public class ChatActorCommunitySubAppModulePluginRoot extends AbstractModule<Cha
 
             this.serviceStatus = ServiceStatus.STARTED;
         } catch (Exception exception) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
             throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
                     null,
                     null);
