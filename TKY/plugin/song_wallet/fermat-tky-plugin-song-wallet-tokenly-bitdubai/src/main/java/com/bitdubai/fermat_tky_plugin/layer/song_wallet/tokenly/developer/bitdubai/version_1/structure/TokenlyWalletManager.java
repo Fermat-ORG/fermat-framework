@@ -79,6 +79,11 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
     private final long TIME_BETWEEN_SYNC = TimeUnit.DAYS.toMillis(3);
 
     /**
+     * This represents if this class is in develop version, please, set in false in beta.
+     */
+    private final boolean DEVELOP_VERSION = true;
+
+    /**
      * Constructor with parameters
      * @param tokenlySongWalletDao
      */
@@ -207,25 +212,45 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             String tokenlySongId;
             System.out.println("TKY "+songs.length);
             //TODO: limit for testing
-            int limit=2;
+            int limit=3;
             int c=0;
             FermatBundle fermatBundle;
             //SongId
             UUID songId;
-            for(Song song : songs){
-                //Check if song is in database
-                tokenlySongId = song.getId();
-                if(!databaseSongsId.contains(tokenlySongId)){
-                    /**
-                     * If the databaseSongList doesn't contains the song Id, I'll add in the
-                     * toDownloadList
-                     */
-                    toDownloadSongList.add(song);
+            /**
+             * This runs only in develop version, we need to download the last songs from the album,
+             * the first songs had frame rate issues, so the song duration is wrong displayed.
+             */
+            if(DEVELOP_VERSION){
+                Song song;
+                int lastIndex = songs.length-1;
+                for(int i=lastIndex; i>lastIndex-limit; i--){
+                    song = songs[i];
+                    tokenlySongId = song.getId();
+                    if(!databaseSongsId.contains(tokenlySongId)){
+                        /**
+                         * If the databaseSongList doesn't contains the song Id, I'll add in the
+                         * toDownloadList
+                         */
+                        toDownloadSongList.add(song);
+                    }
                 }
-                c++;
-                //TODO: remove in production
-                if(c==limit){
-                    break;
+            }else{
+                for(Song song : songs){
+                    //Check if song is in database
+                    tokenlySongId = song.getId();
+                    if(!databaseSongsId.contains(tokenlySongId)){
+                        /**
+                         * If the databaseSongList doesn't contains the song Id, I'll add in the
+                         * toDownloadList
+                         */
+                        toDownloadSongList.add(song);
+                    }
+                    c++;
+                    //TODO: remove in production
+                    if(c==limit){
+                        break;
+                    }
                 }
             }
             System.out.println("TKY - Songs to download "+toDownloadSongList.size());

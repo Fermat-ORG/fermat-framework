@@ -43,7 +43,6 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentity
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.sub_app.art_fan_identity.R;
 
 import java.io.ByteArrayOutputStream;
