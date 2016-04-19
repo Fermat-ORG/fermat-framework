@@ -182,7 +182,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                     public void onItemClick(View view, int position) {
 
                         Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setData(Uri.parse(items.get(position).getArtist_url()));
+                        intent.setData(Uri.parse(items.get(position).getURL()));
                         startActivity(intent);
 
                     }
@@ -303,7 +303,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
    void ask(int position, final List<FollowingItems> original){
        AlertDialog.Builder dialog1 = new AlertDialog.Builder(view.getContext());
        dialog1.setTitle("FanWallet");
-       dialog1.setMessage("Do you really want to to chat with '" + items.get(position).getArtist_name() + "'?");
+       dialog1.setMessage("Do you really want to to chat with '" + items.get(position).getUsername() + "'?");
        dialog1.setCancelable(false);
        dialog1.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialogo1, int id) {
@@ -335,7 +335,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
         final List<FollowingItems> filteredModelList = new ArrayList<>();
         for (FollowingItems model : models) {
-            final String text = model.getArtist_name().toLowerCase();
+            final String text = model.getUsername().toLowerCase();
             if (text.contains(query)) {
                 filteredModelList.add(model);
             }
@@ -372,7 +372,8 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                             items.add(new FollowingItems(convertUrlToBMP(artistBot.getLogoImageDetails().originalUrl()),
                                    //extractLinks(artistBot.getDescription())[0], artistBot.getUserName()));
                                     artistBot.getBotUrl(),
-                                    artistBot.getName()));
+                                    artistBot.getName(),
+                                    artistBot.getDescriptionHtml()));
 
                         }
                     }
