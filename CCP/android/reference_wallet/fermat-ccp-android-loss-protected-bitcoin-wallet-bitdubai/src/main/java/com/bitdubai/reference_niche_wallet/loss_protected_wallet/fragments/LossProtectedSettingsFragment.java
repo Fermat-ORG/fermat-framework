@@ -27,6 +27,7 @@ import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextP
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMessage;
 
