@@ -55,7 +55,7 @@ import java.util.UUID;
 import static android.widget.Toast.makeText;
 
 /**
- * Created by root on 18/04/16.
+ * Created by Gian Barboza on 18/04/16.
  */
 public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSession,ResourceProviderManager> {
 
@@ -73,7 +73,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     private ErrorManager errorManager;
 
     private TextView txt_type_balance;
+    private TextView txt_touch_to_change;
     private TextView txt_balance_amount;
+    private TextView txt_balance_amount_type;
     private TextView txt_exchange_rate;
     private long balanceAvailable;
     private View rootView;
@@ -82,7 +84,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     private long realBalance;
     private LinearLayout emptyListViewsContainer;
     private AnimationManager animationManager;
-    private FermatTextView txt_balance_amount_type;
+   // private FermatTextView txt_balance_amount_type;
     private int progress1=1;
 
 
@@ -226,7 +228,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             rootView = inflater.inflate(R.layout.lossprotected_home, container, false);
             setUp(inflater);
 
-            getAndShowMarketExchangeRateData(rootView);
+
             return rootView;
         }
         catch (Exception e) {
@@ -252,6 +254,70 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
     private void setUpHeader(LayoutInflater inflater){
 
+        try {
+
+            //Select all header Element
+            txt_balance_amount      = (TextView) rootView.findViewById(R.id.txt_balance_amount);
+            txt_balance_amount_type = (TextView) rootView.findViewById(R.id.txt_balance_amount_type);
+            txt_type_balance        = (TextView) rootView.findViewById(R.id.txt_type_balance);
+            txt_touch_to_change     = (TextView) rootView.findViewById(R.id.txt_touch_to_change);
+            txt_exchange_rate       = (TextView) rootView.findViewById(R.id.txt_exchange_rate);
+
+            //show Exchange Market Rate
+            getAndShowMarketExchangeRateData(rootView);
+
+            //Event Click For change the balance type
+            txt_touch_to_change.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    changeBalanceType(txt_type_balance, txt_balance_amount);
+                }
+            });
+
+            //Event Click For change the balance type
+            txt_type_balance.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    changeBalanceType(txt_type_balance,txt_balance_amount);
+                }
+            });
+
+            //Event for change the balance amount
+            txt_balance_amount.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    changeAmountType();
+                }
+            });
+            //Event for change the balance amount type
+            txt_balance_amount_type.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    changeAmountType();
+                }
+            });
+
+            long balance = 0;
+            if (BalanceType.getByCode(lossProtectedWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE))
+                balance = moduleManager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, "0");
+            else
+                balance = moduleManager.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
+
+            txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, lossProtectedWalletSession.getTypeAmount()));
+
+
+        }catch (Exception e){
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void earningAndLosts(){
 
     }
 
@@ -262,12 +328,12 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         String moneyTpe = "";
         switch (showMoneyType){
             case BITCOIN:
-                moneyTpe = "btc";
-                txt_balance_amount.setTextSize(28);
+                moneyTpe = "BTC";
+                txt_balance_amount.setTextSize(24);
                 break;
             case BITS:
-                moneyTpe = "bits";
-                txt_balance_amount.setTextSize(20);
+                moneyTpe = "BITS";
+                txt_balance_amount.setTextSize(24);
                 break;
         }
 
@@ -321,12 +387,12 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             if (appSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 realBalance = loadBalance(BalanceType.REAL);
                 txt_balance_amount.setText(WalletUtils.formatBalanceString(realBalance, lossProtectedWalletSession.getTypeAmount()));
-                txt_type_balance.setText(R.string.real_balance);
+                txt_type_balance.setText(R.string.real_balance_text);
                 lossProtectedWalletSession.setBalanceTypeSelected(BalanceType.REAL);
             } else if (lossProtectedWalletSession.getBalanceTypeSelected().equals(BalanceType.REAL.getCode())) {
                 balanceAvailable = loadBalance(BalanceType.AVAILABLE);
                 txt_balance_amount.setText(WalletUtils.formatBalanceString(balanceAvailable, lossProtectedWalletSession.getTypeAmount()));
-                txt_type_balance.setText(R.string.available_balance);
+                txt_type_balance.setText(R.string.available_balance_text);
                 lossProtectedWalletSession.setBalanceTypeSelected(BalanceType.AVAILABLE);
             }
         } catch (Exception e) {
@@ -386,7 +452,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                     ExchangeRate rate = (ExchangeRate) result[0];
                     // progressBar.setVisibility(View.GONE);
-                    txt_exchange_rate.setText("1 BTC - " + String.valueOf(rate.getPurchasePrice()) + " USD");
+                    txt_exchange_rate.setText("1 BTC = " + String.valueOf(rate.getPurchasePrice()) + " USD");
 
                     //get available balance to actual exchange rate
 
