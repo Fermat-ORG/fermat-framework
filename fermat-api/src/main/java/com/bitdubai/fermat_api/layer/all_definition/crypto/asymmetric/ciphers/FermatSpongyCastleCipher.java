@@ -6,14 +6,21 @@
  */
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers;
 
-import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
-
+import org.spongycastle.asn1.pkcs.RSAPublicKey;
 import org.spongycastle.crypto.AsymmetricBlockCipher;
 import org.spongycastle.crypto.encodings.PKCS1Encoding;
 import org.spongycastle.crypto.engines.RSAEngine;
 import org.spongycastle.crypto.params.AsymmetricKeyParameter;
 import org.spongycastle.crypto.util.PrivateKeyFactory;
 import org.spongycastle.crypto.util.PublicKeyFactory;
+import org.spongycastle.util.encoders.Base64;
+
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.RSAPublicKeySpec;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.FermatSpongyCastleCipher</code>
@@ -23,7 +30,7 @@ import org.spongycastle.crypto.util.PublicKeyFactory;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class FermatSpongyCastleCipher extends FermatCipher {
+public class FermatSpongyCastleCipher implements FermatCipher {
 
     /**
      * (non-javadoc)
@@ -32,13 +39,15 @@ public class FermatSpongyCastleCipher extends FermatCipher {
     @Override
     public String encrypt(String pubKey, String plaintTex) throws Exception{
 
-        StringBuilder encryptedData = new StringBuilder();
-        AsymmetricKeyParameter publicKey = PublicKeyFactory.createKey(Base64.decode(pubKey, Base64.DEFAULT));
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byteArrayOutputStream.reset();
+        AsymmetricKeyParameter publicKey = PublicKeyFactory.createKey(decode(pubKey));
         AsymmetricBlockCipher asymmetricBlockCipher = new RSAEngine();
         asymmetricBlockCipher = new PKCS1Encoding(asymmetricBlockCipher);
         asymmetricBlockCipher.init(true, publicKey);
 
-        byte[] messageBytes = plaintTex.getBytes();
+        byte[] messageBytes = plaintTex.getBytes("UTF-8");
+
         int i = 0;
         int blockSize = asymmetricBlockCipher.getInputBlockSize();
         while (i < messageBytes.length){
@@ -47,12 +56,11 @@ public class FermatSpongyCastleCipher extends FermatCipher {
                 blockSize = messageBytes.length - i;
             }
 
-            byte[] hexEncodedCipher = asymmetricBlockCipher.processBlock(messageBytes, i, blockSize);
-            encryptedData.append(convertHexString(hexEncodedCipher));
+            byteArrayOutputStream.write( asymmetricBlockCipher.processBlock(messageBytes, i, blockSize));
             i += asymmetricBlockCipher.getInputBlockSize();
         }
 
-        return encryptedData.toString();
+        return encode(byteArrayOutputStream.toByteArray());
     }
 
     /**
@@ -64,12 +72,12 @@ public class FermatSpongyCastleCipher extends FermatCipher {
 
         StringBuilder decryptedMsj = new StringBuilder();
 
-        AsymmetricKeyParameter privateKeyParameter = PrivateKeyFactory.createKey(Base64.decode(privateKey, Base64.DEFAULT));
+        AsymmetricKeyParameter privateKeyParameter = PrivateKeyFactory.createKey(decode(privateKey));
         AsymmetricBlockCipher asymmetricBlockCipher = new RSAEngine();
         asymmetricBlockCipher = new PKCS1Encoding(asymmetricBlockCipher);
         asymmetricBlockCipher.init(false, privateKeyParameter);
 
-        byte[] messageBytes = convertHexStringToByteArray(encryptedTex);
+        byte[] messageBytes = decode(encryptedTex);
 
         int i = 0;
         int blockSize = asymmetricBlockCipher.getInputBlockSize();
@@ -82,8 +90,46 @@ public class FermatSpongyCastleCipher extends FermatCipher {
             i += asymmetricBlockCipher.getInputBlockSize();
         }
 
-        return decryptedMsj.toString();
+        return new String(decryptedMsj.toString().getBytes(), "UTF-8");
 
     }
 
+    /**
+     * (non-javadoc)
+     * @see FermatCipher#encrypt(String, String)
+     */
+    public PublicKey getPublicKeyFromString(String keyStringBase64) throws Exception{
+
+        byte[] publicKeyBytes = decode(keyStringBase64);
+        byte[] exponentByte   = "65537".getBytes("UTF-8");
+        RSAPublicKeySpec pubKeySpec = new RSAPublicKeySpec(new BigInteger(publicKeyBytes), new BigInteger(exponentByte));
+        BigInteger modulus = pubKeySpec.getModulus();
+        BigInteger publicExponent = pubKeySpec.getPublicExponent();
+        RSAPublicKeySpec keySpec = new RSAPublicKeySpec(modulus, publicExponent);
+        KeyFactory kf = KeyFactory.getInstance("RSA");
+        PublicKey generatedPublic = kf.generatePublic(keySpec);
+        System.out.printf("Modulus: %X%n", modulus);
+        System.out.printf("Public exponent: %d ... 17? Why?%n", publicExponent); // 17? OK.
+        System.out.printf("See, Java class result: %s, is RSAPublicKey: %b%n", generatedPublic.getClass().getName(), generatedPublic instanceof RSAPublicKey);
+
+        return generatedPublic;
+    }
+
+
+    /**
+     * (non-javadoc)
+     * @see FermatCipher#encode(byte[])
+     */
+    public String encode(byte[] data){
+
+        return Base64.toBase64String(data);
+    }
+
+    /**
+     * (non-javadoc)
+     * @see FermatCipher#decode(String)
+     */
+    public byte[] decode(String data) throws UnsupportedEncodingException {
+        return Base64.decode(data.getBytes("UTF-8"));
+    }
 }

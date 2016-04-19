@@ -26,7 +26,7 @@ public class PruebaEnc {
             Stopwatch stopwatch = Stopwatch.createStarted();
 
             //String msj = "Hello world!";
-            String msj = "Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!Hello world!";
+            String msj = "You need to find a way to reduce compilation times when developing source code in our development environment (Android-Studio) to also have efficiency and effectiveness when working on the development and testing of code, there are currently members of fermat that have a high compilation time, the overall average is 2-5 minutes compilation about, some members have more time about 15-30 minutes and if this time is shared among all members of fermat it is a very large idle time when compiling and testing development.";
             //System.out.println("msj = " + msj);
 
             ECCKeyPair eccKeyPair = new ECCKeyPair();
@@ -52,10 +52,19 @@ public class PruebaEnc {
 
             System.out.println(stopwatch.stop());
 
-           /* KeyPair keyPair = AsymmetricCryptography.createNewKeyPair();
+         /*     KeyPair keyPair = AsymmetricCryptography.createNewKeyPair();
+            String hexPk = AsymmetricCryptography.getFermatCipher().convertHexString(keyPair.getPublic().getEncoded());
+
+            System.out.println("HEX = "+hexPk);
 
 
-            byte [] raw  = keyPair.getPrivate().getEncoded();
+            System.out.println("HEX2 = "+AsymmetricCryptography.getFermatCipher().getPublicKeyFromString(hexPk)); */
+
+
+           // AsymmetricCryptography.getFermatCipher().getPublicKeyFromString(hexPk);
+
+
+        /*    byte [] raw  = keyPair.getPrivate().getEncoded();
 
             Stopwatch stopwatch1 = Stopwatch.createStarted();
             AsymmetricCryptography.getFermatCipher().convertHexString(raw);

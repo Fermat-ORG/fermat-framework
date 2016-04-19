@@ -7,7 +7,8 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers;
 
 
-import com.google.common.io.BaseEncoding;
+import java.io.UnsupportedEncodingException;
+import java.security.PublicKey;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.FermatCipher</code>
@@ -17,43 +18,25 @@ import com.google.common.io.BaseEncoding;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class FermatCipher {
+public interface FermatCipher {
 
     /**
-     * Represent the HEXADECIMAL_ARRAY
-     */
-    protected final static char[] HEXADECIMAL_ARRAY = "0123456789ABCDEF".toCharArray();
-
-    /**
-     * Convert a byte array into a hexadecimal format string
-     * @param bytes
-     * @return String
-     * @throws Exception
-     */
-    public String convertHexString(byte[] bytes) throws Exception {
-        char[] hexChars = new char[bytes.length * 2];
-        for ( int j = 0; j < bytes.length; j++ ) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = HEXADECIMAL_ARRAY[v >>> 4];
-            hexChars[j * 2 + 1] = HEXADECIMAL_ARRAY[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
-
-    /**
-     * Convert a hexadecimal format string into a byte array
+     * Convert the byte array into a string
+     * encode in base 64 charset UTF-8
      *
-     * @param string
+     * @param data
+     * @return String
+     */
+    String encode(byte[] data);
+
+    /**
+     * Convert the string in base 64 charset UTF-8 into
+     * a byte array
+     *
+     * @param data
      * @return byte[]
      */
-    public byte[] convertHexStringToByteArray(String string) {
-        /*int len = string.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(string.charAt(i), 16) << 4) + Character.digit(string.charAt(i+1), 16));
-        }*/
-        return BaseEncoding.base16().decode(string);
-    }
+    byte[] decode(String data) throws UnsupportedEncodingException;
 
     /**
      *  Method that encrypt a plaint text and return a
@@ -63,7 +46,7 @@ public abstract class FermatCipher {
      * @param plaintTex
      * @return String encode hexadecimal format
      */
-    public abstract String encrypt(String pubKey, String plaintTex) throws Exception;
+    String encrypt(String pubKey, String plaintTex) throws Exception;
 
     /**
      *  Method that receive a encrypted hexadecimal format string to
@@ -73,7 +56,15 @@ public abstract class FermatCipher {
      * @param encryptedTex
      * @return String
      */
-    public abstract String decrypt(String privateKey, String encryptedTex) throws Exception;
+    String decrypt(String privateKey, String encryptedTex) throws Exception;
 
+    /**
+     * Method that get a PublicKey object from string base 64
+     *
+     * @param keyStringBase64
+     * @return PublicKey
+     * @throws Exception
+     */
+    PublicKey getPublicKeyFromString(String keyStringBase64) throws Exception;
 
 }
