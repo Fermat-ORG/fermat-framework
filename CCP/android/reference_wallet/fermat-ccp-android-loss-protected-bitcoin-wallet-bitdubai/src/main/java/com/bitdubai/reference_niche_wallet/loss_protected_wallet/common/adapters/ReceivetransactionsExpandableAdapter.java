@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
-
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.GrouperViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.TransactionViewHolder;
