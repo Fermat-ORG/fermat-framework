@@ -36,6 +36,31 @@
         android:layout_above="@+id/afi_create_art_fan_identity"
         android:weightSum="1">
 
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/afi_external_platform_label"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:text="External Platform"
+            android:textColor="#000000"
+            tools:ignore="HardcodedText" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/afi_external_platform"
+            android:spinnerMode="dropdown"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"/>
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/afi_external_platform_user_id"
+            android:layout_centerVertical="true" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -116,24 +141,6 @@
             android:layout_height="104dp"
             android:layout_gravity="center_horizontal">
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/afi_external_platform_label"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentEnd="true"
-                android:text="External Platform"
-                android:textColor="#000000"
-                tools:ignore="HardcodedText" />
-
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/afi_external_platform"
-                android:spinnerMode="dropdown"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentStart="true"/>
             <!--android:entries="@array/externalPlatforms"/>-->
 
         </RelativeLayout>
@@ -141,7 +148,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/create_tokenly_fan_identity"
+        android:id="@+id/afi_create_art_fan_identity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
