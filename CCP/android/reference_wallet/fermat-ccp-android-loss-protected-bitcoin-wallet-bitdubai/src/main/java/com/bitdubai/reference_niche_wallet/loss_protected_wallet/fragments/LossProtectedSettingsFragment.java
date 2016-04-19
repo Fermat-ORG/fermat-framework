@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
@@ -115,7 +116,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
             List<PreferenceSettingsTextPlusRadioItem> stringsProviders = new ArrayList<PreferenceSettingsTextPlusRadioItem>();
 
-            //get providers list
+            //Get providers list
             List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
 
             int position = 11;
@@ -145,8 +146,6 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
     }
 
     /**
-     * Cuando se elige algun settings va a pasar por acá
-     *
      * @param preferenceSettingsItem
      * @param position
      */
@@ -167,9 +166,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
                 //Exchange Rate provider settings
                 PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
-
-
-                //get providers list
+                //Get providers list
                 List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
 
                 cryptoWallet.setExchangeProvider(providers.get(0).getProviderId());

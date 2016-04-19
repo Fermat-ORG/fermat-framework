@@ -88,7 +88,7 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
                 if (referenceWalletSession.getModuleManager() != null) {
                     moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
 
-                    //get enabled notification settings
+                    //enable notification settings
 
                     settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
                     enabledNotification = settingsManager.loadAndGetSettings(walletPublicKey).getNotificationEnabled();
