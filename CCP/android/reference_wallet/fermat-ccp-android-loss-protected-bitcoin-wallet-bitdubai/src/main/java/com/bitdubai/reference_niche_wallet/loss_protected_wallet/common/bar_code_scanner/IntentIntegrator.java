@@ -1,5 +1,10 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.bar_code_scanner;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -12,11 +17,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import android.widget.EditText;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 
 public final class IntentIntegrator {

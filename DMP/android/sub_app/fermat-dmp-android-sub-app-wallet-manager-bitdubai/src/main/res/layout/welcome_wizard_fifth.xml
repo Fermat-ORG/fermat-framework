@@ -36,9 +36,9 @@
             android:gravity="center"
             android:textSize="16sp"
             android:lineSpacingExtra="5dp"
-            android:paddingBottom="14dp"
+            android:paddingBottom="12dp"
             android:textColor="#58595B"
-            app:typeface="CAVIAR_DREAMS_BOLD"
+            app:typeface="CAVIAR_DREAMS"
             android:text="To begin and learn the basics please:"
             />
 
@@ -48,20 +48,11 @@
             android:orientation="vertical">
 
 
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#0EAF9E"
-                android:layout_marginBottom="12dp"/>
-
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="1. Go to Chat Profile App to create your first Fermat profile."
                 android:layout_weight="1"
-                android:gravity="center"
-                android:textSize="14sp"
                 app:typeface="CAVIAR_DREAMS"
                 android:lineSpacingExtra="5dp"
                 android:textColor="#58595B"
@@ -69,10 +60,10 @@
 
             <ImageView
                 android:layout_width="96dp"
-                android:layout_height="56dp"
+                android:layout_height="48dp"
                 android:paddingBottom="9dp"
                 android:layout_gravity="center"
-                android:src="@drawable/chat_identity"/>
+                android:src="@drawable/chat_identity_subapp"/>
 
         </LinearLayout>
 
@@ -88,8 +79,6 @@
                 android:layout_height="wrap_content"
                 android:text="2. Then go to the Chat Community to connect with some people there."
                 android:layout_weight="1"
-                android:gravity="center"
-                android:textSize="14sp"
                 app:typeface="CAVIAR_DREAMS"
                 android:textColor="#58595B"
                 android:lineSpacingExtra="5dp"
@@ -97,10 +86,10 @@
                 />
 
             <ImageView
-                android:layout_width="160dp"
+                android:layout_width="96dp"
                 android:layout_gravity="center"
-                android:layout_height="65dp"
-                android:layout_marginTop="8dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="9dp"
                 android:src="@drawable/chat_community"/>
 
         </LinearLayout>
@@ -115,21 +104,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="3. Finally go to the Chat App and start chatting."
-                android:gravity="center"
-                android:textSize="14sp"
-                android:paddingBottom="3dp"
                 app:typeface="CAVIAR_DREAMS"
                 android:lineSpacingExtra="5dp"
+
                 android:textColor="#58595B"
                 android:layout_weight="1"/>
 
 
             <ImageView
                 android:layout_width="96dp"
-                android:layout_height="56dp"
+                android:layout_height="48dp"
                 android:layout_gravity="center"
                 android:paddingBottom="9dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="9dp"
                 android:src="@drawable/chat_subapp"/>
 
         </LinearLayout>
