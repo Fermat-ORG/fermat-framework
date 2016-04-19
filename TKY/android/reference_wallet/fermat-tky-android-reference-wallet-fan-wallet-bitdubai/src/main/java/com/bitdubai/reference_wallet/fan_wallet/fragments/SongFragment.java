@@ -291,7 +291,7 @@ public class SongFragment extends AbstractFermatFragment {
        List<String> listComposerAndSongNameOnView=new ArrayList<>();
         for(SongItems songitems : items){
                if(!listComposerAndSongNameOnView.contains(songitems.getArtist_name()+"@#@#"+songitems.getSong_name())){
-                   //   System.out.println("TKY_VIEW songs"+songitems.getArtist_name()+"@#@#"+songitems.getSong_name());
+                   //   System.out.println("TKY_VIEW songs"+songitems.getUsername()+"@#@#"+songitems.getSong_name());
                    listComposerAndSongNameOnView.add(songitems.getArtist_name()+"@#@#"+songitems.getSong_name());
                }
         }
@@ -317,7 +317,7 @@ public class SongFragment extends AbstractFermatFragment {
 
         for(SongItems songitems : items){
             if(!listComposerAndSongNameOnView.contains(songitems.getArtist_name()+"@#@#"+songitems.getSong_name())){
-             //   System.out.println("TKY_VIEW songs"+songitems.getArtist_name()+"@#@#"+songitems.getSong_name());
+             //   System.out.println("TKY_VIEW songs"+songitems.getUsername()+"@#@#"+songitems.getSong_name());
                 listComposerAndSongNameOnView.add(songitems.getArtist_name()+"@#@#"+songitems.getSong_name());
             }
         }
@@ -862,9 +862,9 @@ public class SongFragment extends AbstractFermatFragment {
             String databaseInfo;
 
             for(SongItems songitems : listSongInView){
-                if(!listComposerAndSongNameOnView.contains(songitems.getArtist_name()+"@#@#"+songitems.getSong_name())){
-                    System.out.println("TKY_VIEW songs"+songitems.getArtist_name()+"@#@#"+songitems.getSong_name());
-                    listComposerAndSongNameOnView.add(songitems.getArtist_name()+"@#@#"+songitems.getSong_name());
+                if(!listComposerAndSongNameOnView.contains(songitems.getUsername()+"@#@#"+songitems.getSong_name())){
+                    System.out.println("TKY_VIEW songs"+songitems.getUsername()+"@#@#"+songitems.getSong_name());
+                    listComposerAndSongNameOnView.add(songitems.getUsername()+"@#@#"+songitems.getSong_name());
                 }
             }
             if(listAvailableSongs.size()>listComposerAndSongNameOnView.size()){
