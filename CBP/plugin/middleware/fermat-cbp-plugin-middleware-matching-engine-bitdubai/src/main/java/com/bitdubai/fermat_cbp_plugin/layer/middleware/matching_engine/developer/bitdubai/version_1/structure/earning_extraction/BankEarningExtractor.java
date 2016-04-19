@@ -1,12 +1,12 @@
-package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_transfer_apliers;
+package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_extraction;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantTransferEarningsToWalletException;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningToWalletTransferApplier;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantExtractEarningsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractor;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
@@ -20,16 +20,18 @@ import java.util.List;
 /**
  * Created by nelsonalfo on 19/04/16.
  */
-public class EarningToBankWalletTransferApplier implements EarningToWalletTransferApplier {
+public class BankEarningExtractor implements EarningExtractor {
+    private static final String MEMO = "Transference of earnings from the Broker Wallet";
+
     final private BankMoneyDestockManager bankMoneyDestockManager;
     private List<CryptoBrokerWalletAssociatedSetting> associatedWallets;
 
-    public EarningToBankWalletTransferApplier(BankMoneyDestockManager bankMoneyDestockManager) {
+    public BankEarningExtractor(BankMoneyDestockManager bankMoneyDestockManager) {
         this.bankMoneyDestockManager = bankMoneyDestockManager;
     }
 
     @Override
-    public void applyTransference(EarningsPair earningsPair, EarningTransaction earningTransaction, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantTransferEarningsToWalletException {
+    public void applyEarningExtraction(EarningsPair earningsPair, EarningTransaction earningTransaction, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantExtractEarningsException {
         try {
             final Currency earningCurrency = earningsPair.getEarningCurrency();
             final String accountNumber = getAccountNumber(earningCurrency);
@@ -41,24 +43,22 @@ public class EarningToBankWalletTransferApplier implements EarningToWalletTransf
                     earningWalletPublicKey,
                     accountNumber,
                     BigDecimal.valueOf(earningTransaction.getAmount()),
-                    "Transference of earnings from the Broker Wallet",
+                    MEMO,
                     BigDecimal.ZERO,
                     OriginTransaction.EARNING_EXTRACTION,
                     earningTransaction.getId().toString());
 
         } catch (InvalidParameterException e) {
-            throw new CantTransferEarningsToWalletException("Cant Transfer the earnings to the Earning Wallet", e,
-                    "Trying to get the earning currency to make the destock", "Verify the currency code or the currency type is correct");
+            throw new CantExtractEarningsException(e, "Trying to get the earning currency to make the destock",
+                    "Verify the currency code or the currency type is correct");
 
         } catch (CantCreateBankMoneyDestockException e) {
-            throw new CantTransferEarningsToWalletException("Cant Transfer the earnings to the Earning Wallet", e,
-                    "Trying to make the Bank Destock of the merchandise", "Verify the params are correct");
-
+            throw new CantExtractEarningsException( e,"Trying to make the Bank Destock of the merchandise",
+                    "Verify the params are correct");
         }
     }
 
-    private String getAccountNumber(Currency merchandiseCurrency)
-            throws CantTransferEarningsToWalletException {
+    private String getAccountNumber(Currency merchandiseCurrency) {
 
         for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
             Platforms platform = associatedWallet.getPlatform();
@@ -83,11 +83,10 @@ public class EarningToBankWalletTransferApplier implements EarningToWalletTransf
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof EarningToWalletTransferApplier))
+        if (!(obj instanceof EarningExtractor))
             return false;
 
-        EarningToWalletTransferApplier transferApplier = (EarningToWalletTransferApplier) obj;
-
+        EarningExtractor transferApplier = (EarningExtractor) obj;
         return transferApplier.getPlatform() == Platforms.BANKING_PLATFORM;
     }
 }

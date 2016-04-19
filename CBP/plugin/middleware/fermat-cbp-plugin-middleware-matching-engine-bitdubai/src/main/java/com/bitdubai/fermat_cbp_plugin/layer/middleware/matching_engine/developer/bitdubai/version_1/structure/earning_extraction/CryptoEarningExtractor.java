@@ -1,12 +1,12 @@
-package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_transfer_apliers;
+package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_extraction;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantTransferEarningsToWalletException;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningToWalletTransferApplier;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantExtractEarningsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractor;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.exceptions.CantCreateCryptoMoneyDestockException;
@@ -17,15 +17,18 @@ import java.math.BigDecimal;
 import java.util.List;
 
 
-public class EarningToCryptoWalletTransferApplier implements EarningToWalletTransferApplier {
-    final private CryptoMoneyDestockManager cryptoMoneyDestockManager;
+public class CryptoEarningExtractor implements EarningExtractor {
+    private static final String MEMO = "Earnings transference from the Broker Wallet";
 
-    public EarningToCryptoWalletTransferApplier(CryptoMoneyDestockManager cryptoMoneyDestockManager) {
+    private final CryptoMoneyDestockManager cryptoMoneyDestockManager;
+
+
+    public CryptoEarningExtractor(CryptoMoneyDestockManager cryptoMoneyDestockManager) {
         this.cryptoMoneyDestockManager = cryptoMoneyDestockManager;
     }
 
     @Override
-    public void applyTransference(EarningsPair earningsPair, EarningTransaction earningTransaction, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantTransferEarningsToWalletException {
+    public void applyEarningExtraction(EarningsPair earningsPair, EarningTransaction earningTransaction, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantExtractEarningsException {
         try {
             cryptoMoneyDestockManager.createTransactionDestock(
                     "Actor",
@@ -33,19 +36,19 @@ public class EarningToCryptoWalletTransferApplier implements EarningToWalletTran
                     brokerWalletPublicKey,
                     earningWalletPublicKey,
                     BigDecimal.valueOf(earningTransaction.getAmount()),
-                    "Transference of Earnings from the Broker Wallet",
+                    MEMO,
                     BigDecimal.ZERO,
                     OriginTransaction.EARNING_EXTRACTION,
                     earningTransaction.getId().toString(),
                     BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
         } catch (CantCreateCryptoMoneyDestockException e) {
-            throw new CantTransferEarningsToWalletException("Cant Transfer the earnings to the Earning Wallet", e,
-                    "Trying to make the Crypto Destock of the merchandise", "Verify the params are correct");
+            throw new CantExtractEarningsException(e, "Trying to make the Crypto Destock of the merchandise",
+                    "Verify the params are correct");
 
         } catch (InvalidParameterException e) {
-            throw new CantTransferEarningsToWalletException("Cant Transfer the earnings to the Earning Wallet", e,
-                    "Trying to get the earning currency to make the destock", "Verify the currency code or the currency type is correct");
+            throw new CantExtractEarningsException(e, "Trying to get the earning currency to make the destock",
+                    "Verify the currency code or the currency type is correct");
         }
     }
 
@@ -56,16 +59,14 @@ public class EarningToCryptoWalletTransferApplier implements EarningToWalletTran
 
     @Override
     public void setAssociatedWallets(List<CryptoBrokerWalletAssociatedSetting> associatedWallets) {
-
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof EarningToWalletTransferApplier))
+        if (!(obj instanceof EarningExtractor))
             return false;
 
-        EarningToWalletTransferApplier transferApplier = (EarningToWalletTransferApplier) obj;
-
+        EarningExtractor transferApplier = (EarningExtractor) obj;
         return transferApplier.getPlatform() == Platforms.CRYPTO_CURRENCY_PLATFORM;
     }
 }
