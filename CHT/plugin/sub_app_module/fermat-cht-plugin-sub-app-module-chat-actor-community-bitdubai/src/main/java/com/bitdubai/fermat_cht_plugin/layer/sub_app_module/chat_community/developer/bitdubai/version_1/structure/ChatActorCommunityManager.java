@@ -11,7 +11,6 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.Connecti
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnexpectedConnectionStateException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.UnsupportedActorTypeException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.structure_common_classes.ActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
@@ -335,6 +334,41 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         return chatActorCommunityInformationList;
     }
 
+
+
+    @Override
+    public List<ChatActorCommunityInformation> getSuggestionsToContact(String publicKey, int max, int offset) throws CantListChatIdentityException {
+        try {
+
+            List<ChatActorCommunityInformation> chatActorCommunityInformationModuleList = new ArrayList<>();
+
+            List<ChatActorCommunityInformation> chatActorCommunityInformationList = new ArrayList<>();
+            chatActorCommunityInformationList = chatActorNetworkServiceManager.getSuggestionsToContact(publicKey, max, offset);
+
+
+            for (ChatActorCommunityInformation record : chatActorCommunityInformationList) {
+
+                //get connection state status
+                List<ChatActorCommunityInformation> connectionState = this.chatActorNetworkServiceManager.getSuggestionsToContact(record.getPublicKey(), max, offset);
+
+                //return intra user information - if not connected - status return null
+                ChatActorCommunityInformation chatUserInformation = new ChatActorCommunitySubAppModuleInformationImpl(record.getPublicKey(),record.getAlias(),record.getImage(),record.getConnectionState(),record.getConnectionId());
+                chatActorCommunityInformationModuleList.add(chatUserInformation);
+            }
+
+            return chatActorCommunityInformationModuleList;
+        }
+        catch (ErrorSearchingChatSuggestionsException e) {
+            throw new CantListChatIdentityException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
+        }
+        catch (Exception e) {
+            throw new CantListChatIdentityException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
+
+        }
+    }
+
+
+
     @Override
     public List<ChatActorCommunityInformation> getCacheSuggestionsToContact(int max, int offset) throws CantListChatIdentityException {
         try {
@@ -348,7 +382,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
             for (ChatActorCommunityInformation record : chatActorCommunityInformationList) {
 
                 //get connection state status
-                ConnectionState connectionState = this.chatActorNetworkServiceManager.getCacheSuggestionsToContact(record.getPublicKey());
+                List<ChatActorCommunityInformation> connectionState = this.chatActorNetworkServiceManager.getCacheSuggestionsToContact(record.getPublicKey(), max, offset);
 
                 //return intra user information - if not connected - status return null
                 ChatActorCommunityInformation chatUserInformation = new ChatActorCommunitySubAppModuleInformationImpl(record.getPublicKey(),record.getAlias(),record.getImage(),record.getConnectionState(),record.getConnectionId());
@@ -365,6 +399,8 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
         }
     }
+
+
 
     @Override
     public List<ChatActorCommunityInformation> listChatActorPendingRemoteAction(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {

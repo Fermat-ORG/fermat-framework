@@ -70,6 +70,10 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager <Ch
                                                                                final int max,
                                                                                final int offset) throws CantListChatActorException;
 
+
+
+    List<ChatActorCommunityInformation> getSuggestionsToContact(String publicKey, int max, int offset) throws CantListChatIdentityException;
+
     List<ChatActorCommunityInformation> getCacheSuggestionsToContact(int max, int offset) throws CantListChatIdentityException;
 
     List<ChatActorCommunityInformation> listChatActorPendingRemoteAction(final ChatActorCommunitySelectableIdentity selectedIdentity,
