@@ -166,7 +166,7 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
 
 
         }catch (Exception e){
-            reportUnexpectedError(e);
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
         }
 
 
@@ -360,7 +360,6 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             //quiere decir que no estoy reciviendo metadata si no una respuesta
             System.out.println("EXCEPCION DENTRO DEL PROCCESS EVENT");
             reportUnexpectedError(e);
-
         }
     }
 

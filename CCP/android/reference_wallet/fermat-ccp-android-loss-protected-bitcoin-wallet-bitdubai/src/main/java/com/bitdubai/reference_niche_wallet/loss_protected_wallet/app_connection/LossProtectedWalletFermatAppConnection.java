@@ -1,7 +1,12 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection;
 
 import android.content.Context;
-import com.bitdubai.fermat_android_api.engine.*;
+
+import com.bitdubai.fermat_android_api.engine.FermatFragmentFactory;
+import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
+import com.bitdubai.fermat_android_api.engine.HeaderViewPainter;
+import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
+import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.AbstractFermatSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppConnections;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -11,7 +16,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.LossProtectedWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.header.LossProtectedWalletHeaderPainter;

@@ -1,4 +1,5 @@
 package com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1;
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
@@ -34,6 +35,7 @@ import java.util.List;
 /**
  * FERMAT-ORG
  * Developed by Lozadaa on 30/03/16.
+ * Edited by Miguel Rincon on 18/04/2016
  */
 
 
@@ -76,7 +78,7 @@ public class ChatIdentitySubAppModulePluginRoot extends AbstractModule<ChatIdent
         try {
             chatIdentityManager.createNewIdentityChat(alias, profileImage);
         } catch (CantCreateNewChatIdentityException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
     }
 
