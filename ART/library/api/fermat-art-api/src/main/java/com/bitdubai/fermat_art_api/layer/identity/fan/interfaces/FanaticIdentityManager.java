@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_art_api.layer.identity.fan.interfaces;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
@@ -35,7 +36,7 @@ public interface FanaticIdentityManager extends FermatManager {
      * @return
      * @throws CantListArtistIdentitiesException
      */
-    HashMap<ExternalPlatform,HashMap<UUID,String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
+    HashMap<ArtExternalPlatform,HashMap<UUID,String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
 
     /**
      * Return an Object with the basic data from the linked identity and its respectible

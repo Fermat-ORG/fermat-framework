@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_art_api.all_definition.interfaces;
 
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 
 import java.util.UUID;
@@ -39,6 +40,6 @@ public interface ArtIdentity {
      * This method returns the external platform that the identity uses to redeem tokens.
      * @return
      */
-    ExternalPlatform getExternalPlatform();
+    ArtExternalPlatform getExternalPlatform();
 
 }

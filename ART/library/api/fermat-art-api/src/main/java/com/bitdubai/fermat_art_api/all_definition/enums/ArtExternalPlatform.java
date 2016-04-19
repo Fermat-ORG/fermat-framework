@@ -12,6 +12,7 @@ import java.util.List;
 public enum ArtExternalPlatform implements FermatEnum {
 
     TOKENLY("TKY","Tokenly"),
+    UNDEFINED("UNDEF","Undefined"),
     ;
 
     String code;

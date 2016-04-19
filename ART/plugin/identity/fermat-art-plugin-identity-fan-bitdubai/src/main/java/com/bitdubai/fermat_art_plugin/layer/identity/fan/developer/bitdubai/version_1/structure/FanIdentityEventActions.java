@@ -121,7 +121,7 @@ public class FanIdentityEventActions {
             CantAddNewArtistConnectedException {
         //First, we get the Identities from this device
         List<Fanatic> fanaticList = fanaticIdentityManager.listIdentitiesFromCurrentDeviceUser();
-        ExternalPlatform externalPlatform;
+        ArtExternalPlatform externalPlatform;
         ActorSearch<ArtistExposingData> actorSearch;
         List<ArtistExposingData> artistExposingDataList;
         for(Fanatic fanatic : fanaticList){

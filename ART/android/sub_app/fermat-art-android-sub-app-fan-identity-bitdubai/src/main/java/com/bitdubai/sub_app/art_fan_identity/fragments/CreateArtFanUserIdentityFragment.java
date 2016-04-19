@@ -583,7 +583,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private List<String> getFanIdentityByPlatform(ArtExternalPlatform externalPlatform) throws Exception{
         HashMap<UUID, String> fanIdentityByPlatform = null;
         if(externalPlatform == ArtExternalPlatform.TOKENLY){
-            fanIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(ExternalPlatform.TOKENLY);
+            fanIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(ArtExternalPlatform.TOKENLY);
         }
 
         Iterator<Map.Entry<UUID, String>> entries2 = fanIdentityByPlatform.entrySet().iterator();
@@ -601,7 +601,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private List<UUID> getFanIdentityIdByPlatform(ArtExternalPlatform externalPlatform) throws Exception{
         HashMap<UUID, String> fanIdentityByPlatform = null;
         if(externalPlatform == ArtExternalPlatform.TOKENLY){
-            fanIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(ExternalPlatform.TOKENLY);
+            fanIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(ArtExternalPlatform.TOKENLY);
         }
 
         Iterator<Map.Entry<UUID, String>> entries2 = fanIdentityByPlatform.entrySet().iterator();

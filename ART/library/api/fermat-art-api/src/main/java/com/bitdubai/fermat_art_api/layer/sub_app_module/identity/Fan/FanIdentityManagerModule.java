@@ -2,6 +2,7 @@ package com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan;
 
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
@@ -36,7 +37,7 @@ public interface FanIdentityManagerModule extends ModuleManager<FanIdentitySetti
      * @return
      * @throws CantListArtistIdentitiesException
      */
-    HashMap<ExternalPlatform,HashMap<UUID,String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
+    HashMap<ArtExternalPlatform,HashMap<UUID,String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListFanIdentitiesException;
 
     /**
      * Return an Object with the basic data from the linked identity and its respectible

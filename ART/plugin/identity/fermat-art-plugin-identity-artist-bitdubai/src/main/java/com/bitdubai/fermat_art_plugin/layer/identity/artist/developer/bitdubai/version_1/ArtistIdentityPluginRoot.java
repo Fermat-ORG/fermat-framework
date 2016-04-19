@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
@@ -226,8 +227,8 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
         try {
             Artist artist = identityArtistManager.getIdentitArtist(publicKey);
             if(artist != null){
-                for (ExternalPlatform externalPlatform:
-                        ExternalPlatform.values()) {
+                for (ArtExternalPlatform externalPlatform:
+                        ArtExternalPlatform.values()) {
                     //Future platform will need to be added manually to the switch
                     switch (externalPlatform){
                         case TOKENLY:
