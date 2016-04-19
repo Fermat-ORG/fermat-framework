@@ -134,6 +134,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     private BitmapDrawable contactIconCircular;
     private int size;
     ImageView noData;
+
     public static ChatListFragment newInstance() {
         return new ChatListFragment();}
 
@@ -203,7 +204,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     }
 
     @Override
-     public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         try {
@@ -238,12 +239,13 @@ public class ChatListFragment extends AbstractFermatFragment{
         try {
             //TODO:Cardozo revisar esta logica ya no aplica
             //chatManager.createSelfIdentities();
-            List<ChatUserIdentity> con = null; //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
-            size = con.size();
-            if ((chatSettings.getLocalPlatformComponentType() == null || chatSettings.getLocalPublicKey() == null) && size > 0) {
-                ChatUserIdentity profileSelected = null;//TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();//chatManager.getChatUserIdentity(con.get(0).getPublicKey());
-                //chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getPlatformComponentType());
-            }
+//            List<ChatUserIdentity> con = null; //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
+//            size = con.size();
+//            if ((chatSettings.getLocalPlatformComponentType() == null || chatSettings.getLocalPublicKey() == null) && size > 0) {
+//
+//                ChatUserIdentity profileSelected = null;//TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();//chatManager.getChatUserIdentity(con.get(0).getPublicKey());
+//                //chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getPlatformComponentType());
+//            }
             //}catch(CantCreateSelfIdentityException e)
         } catch (Exception e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -396,31 +398,30 @@ public class ChatListFragment extends AbstractFermatFragment{
                // Inflate the menu items
                inflater.inflate(R.menu.chat_list_menu, menu);
                // Locate the search item
-               //MenuItem searchItem = menu.findItem(R.id.menu_search);
+               MenuItem searchItem = menu.findItem(R.id.menu_search);
+               searchView = (SearchView) searchItem.getActionView();
+               searchView.setQueryHint(getResources().getString(R.string.search_hint));
+               searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                   @Override
+                   public boolean onQueryTextSubmit(String s) {
+                       return false;
+                   }
 
-//               searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-//               searchView.setQueryHint(getResources().getString(R.string.search_hint));
-//               searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//                   @Override
-//                   public boolean onQueryTextSubmit(String s) {
-//                       return false;
-//                   }
-//
-//                   @Override
-//                   public boolean onQueryTextChange(String s) {
-//                       if (s.equals(searchView.getQuery().toString())) {
-//                           adapter.getFilter().filter(s);
-//                       }
-//                       return false;
-//                   }
-//               });
-//               if (chatSession.getData("filterString") != null) {
-//                   String filterString = (String) chatSession.getData("filterString");
-//                   if (filterString.length() > 0) {
-//                       searchView.setQuery(filterString, true);
-//                       searchView.setIconified(false);
-//                   }
-//               }
+                   @Override
+                   public boolean onQueryTextChange(String s) {
+                       if (s.equals(searchView.getQuery().toString())) {
+                           adapter.getFilter().filter(s);
+                       }
+                       return false;
+                   }
+               });
+               if (chatSession.getData("filterString") != null) {
+                   String filterString = (String) chatSession.getData("filterString");
+                   if (filterString.length() > 0) {
+                       searchView.setQuery(filterString, true);
+                       searchView.setIconified(false);
+                   }
+               }
            //}
            menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);

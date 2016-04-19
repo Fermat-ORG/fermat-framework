@@ -13,7 +13,7 @@ public class ChatActorNetworkServiceDatabaseConstants {
      * Connection News database table definition.
      */
     public static final String CONNECTION_NEWS_TABLE_NAME                          = "connection_news"         ;
-
+    public static final String CONNECTION_NEWS_SENDER_CONTACT_STATE_COLUMN_NAME    = "contact_state"           ;
     public static final String CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME              = "request_id"              ;
     public static final String CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME       = "sender_public_key"       ;
     public static final String CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME       = "sender_actor_type"       ;
@@ -21,6 +21,8 @@ public class ChatActorNetworkServiceDatabaseConstants {
     public static final String CONNECTION_NEWS_DESTINATION_PUBLIC_KEY_COLUMN_NAME  = "destination_public_key"  ;
     public static final String CONNECTION_NEWS_REQUEST_TYPE_COLUMN_NAME            = "request_type"            ;
     public static final String CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME           = "request_state"           ;
+    public static final String CONNECTION_USER_REGISTRATION_DATE_COLUMN_NAME       = "registration_date"         ;
+    public static final String CONNECTION_NEWS_MODIFIED_DATE_COLUMN_NAME           = "modified_date"             ;
     public static final String CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME          = "request_action"          ;
     public static final String CONNECTION_NEWS_SENT_TIME_COLUMN_NAME               = "sent_time"               ;
 

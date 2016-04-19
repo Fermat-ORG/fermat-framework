@@ -343,7 +343,7 @@ public class ProvisoryData {
                 null,
                 null,
                 "sub_app_cht_community",
-                "Chaters",
+                "Chat Users",
                 SubAppsPublicKeys.CHT_COMMUNITY.getCode(),
                 "sub_app_cht_community",
                 new Version(1, 0, 0),
