@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFactory;
@@ -7,13 +8,18 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseS
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateTableException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.InvalidOwnerIdException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.UUID;
 
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 07/04/16.
+ * Edited by Miguel Rincon on 14/04/2016
  */
 public class ChatActorNetworkServiceDatabaseFactory {
+
+    private ErrorManager errorManager;
 
     private final PluginDatabaseSystem pluginDatabaseSystem;
 
@@ -48,6 +54,7 @@ public class ChatActorNetworkServiceDatabaseFactory {
             database = this.pluginDatabaseSystem.createDatabase(ownerId, databaseName);
 
         } catch (final CantCreateDatabaseException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             /**
              * I can not handle this situation.
              */
@@ -82,12 +89,14 @@ public class ChatActorNetworkServiceDatabaseFactory {
                 //Create the table
                 databaseFactory.createTable(ownerId, table);
             } catch (CantCreateTableException cantCreateTableException) {
+                errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, cantCreateTableException);
                 throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, cantCreateTableException, "", "Exception not handled by the plugin, There is a problem and i cannot create the table.");
             }
 
             return database;
 
         } catch (InvalidOwnerIdException invalidOwnerId) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, invalidOwnerId);
             /**
              * This shouldn't happen here because I was the one who gave the owner id to the database file system,
              * but anyway, if this happens, I can not continue.
