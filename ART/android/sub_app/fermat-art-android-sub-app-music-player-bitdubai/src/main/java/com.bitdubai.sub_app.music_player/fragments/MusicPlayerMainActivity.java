@@ -205,6 +205,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     }
 
 
+
     void loadmysong(){
         List<WalletSong> mysong=new ArrayList<>();
         List<MusicPlayerItems> songview=new ArrayList<>();
@@ -231,30 +232,6 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     private void clickplay(int position) {
 
 
-   /*     try {
-            AssetFileDescriptor afd = getResources().openRawResourceFd(items.get(position).getSong());
-
-            Toast.makeText(view.getContext(), items.get(position).getTitle(), Toast.LENGTH_SHORT).show();
-            songposition=position;
-            song.setText(items.get(position).getTitle());
-            miTareaAsincrona = new ThreadSong(false);
-            miTareaAsincrona.execute();
-            stop();
-            mp.reset();
-            mp.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getDeclaredLength());
-            mp.prepare();
-            mp.start();
-            pb.setMax( (int)(mp.getDuration()/1000));
-
-            afd.close();
-        } catch (IllegalArgumentException e) {
-            Log.e(TAG, "Unable to play audio queue do to exception: " + e.getMessage(), e);
-        } catch (IllegalStateException e) {
-            Log.e(TAG, "Unable to play audio queue do to exception: " + e.getMessage(), e);
-        } catch (IOException e) {
-            Log.e(TAG, "Unable to play audio queue do to exception: " + e.getMessage(), e);
-        }*/
-
         try {
 
 
@@ -265,30 +242,34 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             fos.write(musicPlayermoduleManager.getSongWithBytes(items.get(position).getSong_id()).getSongBytes());
             fos.close();
 
-            // Tried reusing instance of media player
-            // but that resulted in system crashes...
-          //  MediaPlayer mediaPlayer = new MediaPlayer();
 
-            // Tried passing path directly, but kept getting
+            if(mp.isPlaying()){
+                stop();
+                mp.reset();
+            }
+
+            songPlayerThread = new ThreadSong(false);
+            songPlayerThread.execute();
 
             FileInputStream fis = new FileInputStream(tempMp3);
             mp.setDataSource(fis.getFD());
 
 
-            Toast.makeText(view.getContext(), items.get(position).getSong_name(), Toast.LENGTH_SHORT).show();
+          //  Toast.makeText(view.getContext(), items.get(position).getSong_name(), Toast.LENGTH_SHORT).show();
             songposition=position;
             song.setText(items.get(position).getSong_name());
-            songPlayerThread = new ThreadSong(false);
-            songPlayerThread.execute();
- //           stop();
- //           mp.reset();
+
 
             mp.prepare();
+
+       //     System.out.println("ART_MP_duration:" + mp.getDuration());
+
+            pb.setMax((int) (mp.getDuration() / 1000));
+
+
+
+
             mp.start();
-
-
-            pb.setMax( (int)(mp.getDuration()/1000));
-
 
 
 
@@ -355,7 +336,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         if((int)(mp.getCurrentPosition()/1000)<3) {
             songposition = songposition - 1;
             if (songposition < 0) {
-                songposition = items.size();
+                songposition = items.size()-1;
                 clickplay(songposition);
             } else {
                 clickplay(songposition);
@@ -434,13 +415,10 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         }
 
 
-     /*   @Override
-        protected void onPostExecute(Integer cantidadProcesados) {
-            //TV_mensaje.setText("DESPUÉS de TERMINAR la descarga. Se han descarcado "+cantidadProcesados+" imágenes. Hilo PRINCIPAL");
-            Log.v(TAG, "DESPUÉS de TERMINAR la descarga. Se han descarcado "+cantidadProcesados+" imágenes. Hilo PRINCIPAL");
 
-            tiempo.setTextColor(Color.GREEN);
-        }*/
+        protected void onPostExecute(Integer cantidadProcesados) {
+
+        }
 
 
      /*   @Override
