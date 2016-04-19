@@ -9,5 +9,7 @@ import java.util.List;
  * Created by nelsonalfo on 18/04/16.
  */
 public interface EarningToWalletTransaction {
+    void addTransferApplier(EarningToWalletTransferApplier transferApplier);
+
     void transferEarningsToEarningWallet(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantTransferEarningsToWalletException;
 }
