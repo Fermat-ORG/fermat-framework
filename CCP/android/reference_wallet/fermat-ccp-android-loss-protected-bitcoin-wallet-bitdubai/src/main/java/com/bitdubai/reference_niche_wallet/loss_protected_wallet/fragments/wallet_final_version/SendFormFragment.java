@@ -587,9 +587,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
 
     }
-
-
-    //TODO: Verificar la configuracion de proteger o no de la perdida de btc
+    //TODO: Check if the setting for protecting the user from spending btc is working
     private void sendCrypto() {
         try {
             if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {
