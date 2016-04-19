@@ -4845,7 +4845,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTabStrip.setTabsIndicateColor("#12aca1");
 
 
-        runtimeTab = new Tab();
+       /* runtimeTab = new Tab();
         runtimeTab.setLabel("Sent");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_SEND);
         runtimeTabStrip.addTab(runtimeTab);
@@ -4853,7 +4853,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTab = new Tab();
         runtimeTab.setLabel("Received");
         runtimeTab.setFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_RECEIVE);
-        runtimeTabStrip.addTab(runtimeTab);
+        runtimeTabStrip.addTab(runtimeTab);*/
 
 
         runtimeTabStrip.setDividerColor(0x72af9c);
@@ -4861,8 +4861,8 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setTabStrip(runtimeTabStrip);
 
         runtimeFragment = new Fragment();
-        runtimeFragment.setType(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_BALANCE.getKey());
-        runtimeActivity.addFragment(Fragments.CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_BALANCE.getKey(), runtimeFragment);
+        runtimeFragment.setType(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_HOME.getKey());
+        runtimeActivity.addFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_HOME.getKey(), runtimeFragment);
 
 
         runtimeFragment = new Fragment();
