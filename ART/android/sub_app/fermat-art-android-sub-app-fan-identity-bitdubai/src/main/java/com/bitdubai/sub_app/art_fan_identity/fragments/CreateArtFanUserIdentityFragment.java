@@ -620,14 +620,12 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try{
-                    List<UUID> UUIDList = null;
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                             getActivity(),
                             android.R.layout.simple_spinner_item,
                             getFanIdentityByPlatform(ArtExternalPlatform.getArtExternalPlatformByLabel(parent.getItemAtPosition(position).toString()))
                     );
                     mFanExternalUser.setAdapter(adapter);
-                    UUIDList = getFanIdentityIdByPlatform(ArtExternalPlatform.getArtExternalPlatformByLabel(parent.getItemAtPosition(position).toString()));
 
                 }catch (Exception e){
 
