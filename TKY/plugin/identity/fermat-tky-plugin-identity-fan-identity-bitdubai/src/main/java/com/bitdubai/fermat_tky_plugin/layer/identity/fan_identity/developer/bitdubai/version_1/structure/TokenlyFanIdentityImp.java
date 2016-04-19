@@ -275,6 +275,7 @@ public class TokenlyFanIdentityImp implements DealsWithPluginFileSystem, DealsWi
         List<String> hardcodedList=new ArrayList<>();
         hardcodedList.add("TatianaMoroz");
         hardcodedList.add("adam");
+        hardcodedList.add("mordorteam");
         return hardcodedList;
         //TODO: this is the real implementation.
         /*if(this.artistsConnectedList==null || this.artistsConnectedList.isEmpty()){
