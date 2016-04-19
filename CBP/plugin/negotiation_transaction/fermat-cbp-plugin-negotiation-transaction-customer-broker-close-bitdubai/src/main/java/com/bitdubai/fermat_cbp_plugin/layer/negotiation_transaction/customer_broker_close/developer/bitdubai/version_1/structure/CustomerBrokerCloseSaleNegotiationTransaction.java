@@ -164,17 +164,14 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
                 customerBrokerSaleNegotiation = negotiationCryptoAdreess.getNegotiationAddCryptoAdreess(customerBrokerSaleNegotiation);
 
                 //SAVE CRYPTO ADREESS OF THE CUSTOMER
-//                this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
+                this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
 
             }
 
-//            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)) {
-//                //SAVE CRYPTO ADREESS OF THE CUSTOMER
-//                this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
-//            }
-
-            //UPDATE NEGOTIATION
-            this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
+            if (negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(),ClauseType.BROKER_PAYMENT_METHOD)) {
+                //SAVE CRYPTO ADREESS OF THE CUSTOMER
+                this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
+            }
 
             //CLOSE NEGOTIATION
             this.customerBrokerSaleNegotiationManager.closeNegotiation(customerBrokerSaleNegotiation);
@@ -219,17 +216,14 @@ public class CustomerBrokerCloseSaleNegotiationTransaction {
             }
             System.out.println(" - Clauses = \n" + changeClause);
 
-//            if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {
-//
-//                //SAVE CRYPTO ADREESS OF THE CUSTOMER
-//                this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
-//
-//            }
+            if(negotiationCryptoAdreess.isCryptoCurrency(customerBrokerSaleNegotiation.getClauses(), ClauseType.BROKER_PAYMENT_METHOD)) {
+
+                //SAVE CRYPTO ADREESS OF THE CUSTOMER
+                this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
+
+            }
 
             System.out.print("\n\n**** 29) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE PURCHASE NEGOTIATION ****\n");
-
-            //UPDATE NEGOTIATION
-            this.customerBrokerSaleNegotiationManager.updateCustomerBrokerSaleNegotiation(customerBrokerSaleNegotiation);
 
             //CLOSE NEGOTIATION
             this.customerBrokerSaleNegotiationManager.closeNegotiation(customerBrokerSaleNegotiation);
