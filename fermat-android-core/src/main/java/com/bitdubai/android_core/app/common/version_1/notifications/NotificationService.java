@@ -112,9 +112,9 @@ public class NotificationService extends Service {
                                 .setVibrate(new long[]{1000, 1000, 1000, 1000, 1000})
                                 .setLights(Color.YELLOW, 3000, 3000);
                     }
-                    NotificationManager notificationManager = (NotificationManager)
-                            getSystemService(NOTIFICATION_SERVICE);
-                    notificationManager.notify(0, builder.build());
+//                    NotificationManager notificationManager = (NotificationManager)
+//                            getSystemService(NOTIFICATION_SERVICE);
+//                    notificationManager.notify(0, builder.build());
                 }
 
 
