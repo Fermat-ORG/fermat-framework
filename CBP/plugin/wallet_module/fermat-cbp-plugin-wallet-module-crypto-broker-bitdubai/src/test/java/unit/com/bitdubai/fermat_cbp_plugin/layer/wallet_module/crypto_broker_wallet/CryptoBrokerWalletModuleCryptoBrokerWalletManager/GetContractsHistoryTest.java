@@ -2,7 +2,7 @@ package unit.com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_broker_wa
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +20,7 @@ import static org.fest.assertions.api.Assertions.assertThat;
 public class GetContractsHistoryTest {
 
     @Mock
-    CryptoBrokerWalletManager walletManager;
+    CryptoBrokerWalletModuleManager walletManager;
 
     @Test
     public void passNullAsParameterShouldReturnAllItems() throws Exception {

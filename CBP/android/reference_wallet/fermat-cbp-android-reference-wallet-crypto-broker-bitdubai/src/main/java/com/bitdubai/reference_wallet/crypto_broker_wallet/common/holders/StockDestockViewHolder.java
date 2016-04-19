@@ -5,7 +5,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
@@ -16,9 +15,9 @@ public class StockDestockViewHolder  extends FermatViewHolder {
     private FermatTextView title;
     private FermatTextView subTitle1;
     private FermatTextView subTitle2;
-    CryptoBrokerWalletManager moduleManager;
+    CryptoBrokerWalletModuleManager moduleManager;
 
-    public StockDestockViewHolder(View itemView,CryptoBrokerWalletManager moduleManager) {
+    public StockDestockViewHolder(View itemView,CryptoBrokerWalletModuleManager moduleManager) {
         super(itemView);
         title = (FermatTextView) itemView.findViewById(R.id.cbw_settings_title);
         subTitle1 = (FermatTextView) itemView.findViewById(R.id.cbw_settings_sub_title1);

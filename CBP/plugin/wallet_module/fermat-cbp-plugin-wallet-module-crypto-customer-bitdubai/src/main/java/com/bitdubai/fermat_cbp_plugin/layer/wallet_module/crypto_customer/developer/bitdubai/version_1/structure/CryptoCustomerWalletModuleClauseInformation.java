@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_cbp_plugin.layer.wallet_module.crypto_customer.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 
@@ -23,7 +25,23 @@ public class CryptoCustomerWalletModuleClauseInformation implements ClauseInform
 
     public CryptoCustomerWalletModuleClauseInformation(Clause clause) {
         this.clauseType = clause.getType();
-        this.value = clause.getValue();
+
+        switch (clause.getType()){
+            case CUSTOMER_PAYMENT_METHOD:
+                try {
+                    this.value = MoneyType.getByCode(clause.getValue()).getFriendlyName();
+                } catch (InvalidParameterException e) {}
+            break;
+            case BROKER_PAYMENT_METHOD:
+                try {
+                    this.value = MoneyType.getByCode(clause.getValue()).getFriendlyName();
+                } catch (InvalidParameterException e) {}
+            break;
+            default:
+                this.value = clause.getValue();
+            break;
+        }
+
         this.status = clause.getStatus();
     }
 

@@ -26,24 +26,17 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
-import com.bitdubai.fermat_cbp_api.all_definition.contract.ContractClause;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Clause;
-import com.bitdubai.fermat_cbp_api.all_definition.negotiation.Negotiation;
 import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.interfaces.CustomerBrokerContractPurchase;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.ContractDetailAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.ContractDetail;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.EmptyCustomerBrokerNegotiationInformation;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
 
 
@@ -57,7 +50,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -70,8 +62,8 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
     private static final String TAG = "ContractDetailFrag";
 
     // Managers
-    private CryptoCustomerWalletManager walletManager;
     private ErrorManager errorManager;
+    private CryptoCustomerWalletModuleManager moduleManager;
 
     //Data
     private List<ContractDetail> contractInformation;
@@ -96,8 +88,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         super.onCreate(savedInstanceState);
 
         try {
-            CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
-            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             //Capture contract data from ContractsTabFragment's onClick event
@@ -150,7 +141,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
         //Configure recyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        recyclerView.setAdapter(new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletManager, this));
+        recyclerView.setAdapter(new ContractDetailAdapter(getActivity(), contractInformation, appSession, moduleManager, this));
 
         negotiationButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,10 +174,10 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
         List<ContractDetail> contractDetails = new ArrayList<>();
         ContractDetail contractDetail;
 
-        if (walletManager != null) {
+        if (moduleManager != null) {
 
             try {
-                CustomerBrokerContractPurchase customerBrokerContractPurchase = walletManager.getCustomerBrokerContractPurchaseByNegotiationId(data.getNegotiationId().toString());
+                CustomerBrokerContractPurchase customerBrokerContractPurchase = moduleManager.getCustomerBrokerContractPurchaseByNegotiationId(data.getNegotiationId().toString());
 
                 String exchangeRate = "MK";
                 String paymentCurrency = "MK";
@@ -197,7 +188,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 String merchandisePaymentMethod = "MK";
 
                 try{
-                    Collection<Clause> clauses = walletManager.getNegotiationClausesFromNegotiationId(data.getNegotiationId());
+                    Collection<Clause> clauses = moduleManager.getNegotiationClausesFromNegotiationId(data.getNegotiationId());
 
                     //Extract info from clauses
                     for(Clause clause : clauses)
@@ -240,10 +231,10 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 }catch(Exception e) {e.printStackTrace();}
 
 
-                long paymentSubmitDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.PAYMENT_SUBMIT, paymentPaymentMethod);
-                long paymentAckDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.PENDING_MERCHANDISE, paymentPaymentMethod);
-                long merchandiseSubmitDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.MERCHANDISE_SUBMIT, merchandisePaymentMethod);
-                long merchandiseAckDate = walletManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.READY_TO_CLOSE, merchandisePaymentMethod);
+                long paymentSubmitDate = moduleManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.PAYMENT_SUBMIT, paymentPaymentMethod);
+                long paymentAckDate = moduleManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.PENDING_MERCHANDISE, paymentPaymentMethod);
+                long merchandiseSubmitDate = moduleManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.MERCHANDISE_SUBMIT, merchandisePaymentMethod);
+                long merchandiseAckDate = moduleManager.getCompletionDateForContractStatus(data.getContractId(), ContractStatus.READY_TO_CLOSE, merchandisePaymentMethod);
 
 
                 ContractStatus contractStatus = customerBrokerContractPurchase.getStatus();

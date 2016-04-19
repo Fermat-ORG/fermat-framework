@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
@@ -21,14 +20,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationBankAccount;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.BankAccountsAdapter;
-import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.LocationsAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.adapters.SingleDeletableItemAdapter;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.BankAccountData;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.session.CryptoCustomerWalletSession;
@@ -55,7 +52,7 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Cr
     private View emptyView;
 
     // Fermat Managers
-    private CryptoCustomerWalletManager walletManager;
+    private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
 
@@ -68,13 +65,12 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Cr
         super.onCreate(savedInstanceState);
 
         try {
-            CryptoCustomerWalletModuleManager moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
-            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             //Delete potential previous configurations made by this wizard page
             //So that they can be reconfigured cleanly
-            walletManager.clearAllBankAccounts();
+            moduleManager.clearAllBankAccounts();
 
             //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
             Object aux = appSession.getData(PresentationDialog.PRESENTATION_SCREEN_ENABLED);
@@ -189,10 +185,10 @@ public class WizardPageSetBankAccountsFragment extends AbstractFermatFragment<Cr
         try {
             for (BankAccountNumber bankAccount : bankAccountList) {
                 BankAccountData bankAccountData = (BankAccountData) bankAccount;
-                NegotiationBankAccount negotiationBankAccount = walletManager.newEmptyNegotiationBankAccount(
+                NegotiationBankAccount negotiationBankAccount = moduleManager.newEmptyNegotiationBankAccount(
                         bankAccountData.toString(), bankAccount.getCurrencyType());
 
-                walletManager.createNewBankAccount(negotiationBankAccount);
+                moduleManager.createNewBankAccount(negotiationBankAccount);
             }
 
 

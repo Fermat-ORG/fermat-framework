@@ -27,6 +27,7 @@ public class SettingsSliderProvisoryData {
         final AndroidCoreModule androidCoreModule = FermatSystemUtils.getAndroidCoreModule();
 
         int appStatusRes = 0;
+        String appStatusName = "";
         try {
             AndroidCoreSettings androidCoreSettings = (AndroidCoreSettings) androidCoreModule.getSettingsManager().loadAndGetSettings(ApplicationConstants.SETTINGS_CORE);
             switch (androidCoreSettings.getAppsStatus()){
@@ -46,17 +47,18 @@ public class SettingsSliderProvisoryData {
                     appStatusRes = R.drawable.icon_alpha_hdpi;
                     break;
             }
+            appStatusName = androidCoreSettings.getAppsStatus().getCode();
         } catch (CantGetSettingsException | SettingsNotFoundException e) {
             appStatusRes =R.drawable.icon_alpha_hdpi;
             // e.printStackTrace();
         }
         
         
-        SettingsItem settingsItemSettings = new SettingsItem(SettingsType.APP_STATUS,appStatusRes,"App Filter","Beta");
+        SettingsItem settingsItemSettings = new SettingsItem(SettingsType.APP_STATUS,appStatusRes,"App Filter",(appStatusName.equals(""))?"Alpha":appStatusName);
 
-        SettingsItem settingsItemRecents = new SettingsItem(SettingsType.RECENTS,R.drawable.recent_buttom_hdpi,"Recents","");
+        SettingsItem settingsItemRecents = new SettingsItem(SettingsType.RECENTS,R.drawable.recent_buttom_hdpi,"Recents Apps","");
 
-        SettingsItem settingsHelp = new SettingsItem(SettingsType.HELP,R.drawable.help_buttom_hdpi,"Help","");
+        SettingsItem settingsHelp = new SettingsItem(SettingsType.HELP,R.drawable.help_buttom_hdpi,"Welcome Help","");
 
 
         list.add(settingsItemFermatNetwork);
