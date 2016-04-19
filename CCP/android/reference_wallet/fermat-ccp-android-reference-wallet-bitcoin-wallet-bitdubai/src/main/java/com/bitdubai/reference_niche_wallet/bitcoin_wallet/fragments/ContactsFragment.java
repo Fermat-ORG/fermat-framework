@@ -344,7 +344,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     }
 
     private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
-        if (isHelpEnabled) {
+       // if (isHelpEnabled) {
             ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), referenceWalletSession, null, checkButton);
             contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
@@ -360,7 +360,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                 }
             });
             contactsTutorialPart1.show();
-        }
+      //  }
     }
 
     private void refreshAdapter() {
