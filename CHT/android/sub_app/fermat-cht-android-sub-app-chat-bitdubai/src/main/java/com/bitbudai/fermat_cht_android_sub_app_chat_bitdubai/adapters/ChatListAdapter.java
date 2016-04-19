@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 //import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ChatListFilter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -21,6 +23,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -43,6 +46,10 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
     ArrayList<Integer> noReadMsgs=new ArrayList<>();
     ArrayList<Bitmap> imgId=new ArrayList<>();
     private ErrorManager errorManager;
+
+    ArrayList<String> filteredData;
+    ArrayList<String> originalData;
+    private String filterString;
     //Typeface tf;
 
     public ChatListAdapter(Context context, ArrayList<String> contactName,
@@ -65,6 +72,8 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
         this.typeMessage = typeMessage;
         this.noReadMsgs = noReadMsgs;
         this.imgId=imgId;
+        this.filteredData = contactName;
+        this.originalData = contactName;
         this.errorManager=errorManager;
     }
 
@@ -134,6 +143,38 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
         this.imgId=imgId;
         notifyDataSetChanged();
     }
+
+    @Override
+    public int getCount() {
+        return filteredData.size();
+    }
+
+    @Override
+    public String getItem(int position) {
+        return filteredData.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    public void setData(ArrayList<String> data) {
+        this.filteredData = data;
+    }
+
+    public Filter getFilter() {
+        return new ChatListFilter(contactName, this);
+    }
+
+    public void setFilterString(String filterString) {
+        this.filterString = filterString;
+    }
+
+    public String getFilterString() {
+        return filterString;
+    }
+
 //    @Override
 //    protected ChatHolder createHolder(View itemView, int type) {
 //        return new ChatHolder(itemView);

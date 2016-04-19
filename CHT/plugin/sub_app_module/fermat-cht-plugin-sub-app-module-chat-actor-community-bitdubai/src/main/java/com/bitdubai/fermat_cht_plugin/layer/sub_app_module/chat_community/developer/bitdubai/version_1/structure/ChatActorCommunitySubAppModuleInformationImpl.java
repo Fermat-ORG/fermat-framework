@@ -52,6 +52,16 @@ public class ChatActorCommunitySubAppModuleInformationImpl implements ChatActorC
         this.connectionId=null;
     }
 
+    public ChatActorCommunitySubAppModuleInformationImpl(ChatActorCommunityInformation record) {
+        this.publicKey = record.getPublicKey();
+        this.alias = record.getAlias();
+        this.image = record.getImage();
+        this.connectionState = record.getConnectionState();
+        this.connectionId = null;
+
+
+    }
+
 
     @Override
     public String getPublicKey() {

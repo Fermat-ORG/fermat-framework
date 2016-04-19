@@ -11,8 +11,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FermatFragm
 
 public enum ChatCommunityFragmentsEnumType implements FermatFragmentsEnumType<ChatCommunityFragmentsEnumType> {
 
-
-
     CHT_SUB_APP_CHAT_COMMUNITY_FRAGMENT("CHTSACCF"),
     CHT_SUB_APP_CHAT_COMMUNITY_CONNECTIONS_FRAGMENT("CHTSACCCF"),
     CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_DETAIL_FRAGMENT("CHTSACCCDF"),
@@ -21,11 +19,6 @@ public enum ChatCommunityFragmentsEnumType implements FermatFragmentsEnumType<Ch
     CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD_FRAGMENT("CHTSACCCWF"),
     CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST_FRAGMENT("CHTSACCCCLF"),
     CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_SETTINGS_FRAGMENT("CHTSACCCSF");
-
-
-
-
-
 
     private String key;
 

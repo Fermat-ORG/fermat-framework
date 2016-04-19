@@ -51,7 +51,6 @@ import com.bitdubai.sub_app.chat_community.common.popups.ErrorConnectingFermatNe
 import com.bitdubai.sub_app.chat_community.common.popups.PresentationChatCommunityDialog;
 import com.bitdubai.sub_app.chat_community.constants.Constants;
 import com.bitdubai.sub_app.chat_community.interfaces.ErrorConnectingFermatNetwork;
-import com.bitdubai.sub_app.chat_community.preference_settings.ChatUserPreferenceSettings;
 import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
 import com.bitdubai.sub_app.chat_community.util.CommonLogger;
 
@@ -151,7 +150,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             chatUserSettings);
                 }
             }
-            mNotificationsCount = moduleManager.getChatActorWaitingYourAcceptanceCount();
+            //mNotificationsCount = moduleManager.getChatActorWaitingYourAcceptanceCount(PublicKey, max, offset);
             new FetchCountTask().execute();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
