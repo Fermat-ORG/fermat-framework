@@ -25,11 +25,13 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.settings.ArtistCommunitySettings;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityInformation;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunityModuleManager;
+import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.interfaces.FanCommunitySelectableIdentity;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.settings.FanCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -170,14 +172,11 @@ public class ConnectionsWorldFragment extends
 
             if(launchActorCreationDialog) {
                 PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION)
+                        .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                         .setBannerRes(R.drawable.banner_fan_community)
                         .setIconRes(R.drawable.fan)
                         .setSubTitle(R.string.art_afc_launch_action_creation_dialog_sub_title)
                         .setBody(R.string.art_afc_launch_action_creation_dialog_body)
-                        .setTextFooter(R.string.art_afc_launch_action_creation_dialog_footer)
-                        .setTextNameLeft(R.string.art_afc_launch_action_creation_name_left)
-                        .setTextNameRight(R.string.art_afc_launch_action_creation_name_right)
                         .build();
                 presentationDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
@@ -292,12 +291,20 @@ public class ConnectionsWorldFragment extends
         List<FanCommunityInformation> dataSet = new ArrayList<>();
 
         try {
-            List<FanCommunityInformation> result = moduleManager.listWorldFan(
-                    moduleManager.getSelectedActorIdentity(), MAX, offset);
-            dataSet.addAll(result);
-            offset = dataSet.size();
+            FanCommunitySelectableIdentity fanCommunitySelectableIdentity =  moduleManager.getSelectedActorIdentity();
+            if(!Validate.isObjectNull(fanCommunitySelectableIdentity)){
+                List<FanCommunityInformation> result = moduleManager.listWorldFan(
+                        fanCommunitySelectableIdentity, MAX, offset);
+                dataSet.addAll(result);
+                offset = dataSet.size();
+            }
+
+        }catch (CantGetSelectedActorIdentityException e){
+            //There are no identities in device
+            //Nothing to do here.
         } catch (Exception e) {
             e.printStackTrace();
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
         }
 
         return dataSet;

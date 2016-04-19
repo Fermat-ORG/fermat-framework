@@ -76,6 +76,8 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
     private       String                                        subAppPublicKey                       ;
     private       SettingsManager<ArtistCommunitySettings>      settingsManager                       ;
 
+    private boolean isDialog = true;
+
 
     public ArtistCommunityManager(final ArtistIdentityManager           artistIdentityManager                 ,
                                   final ArtistActorConnectionManager    artistActorConnectionManager          ,
@@ -559,8 +561,10 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         } catch(CantListArtistIdentitiesException e) { /*Do nothing*/ }
 
         //No registered users in device
-        if(fanaticsIdentitiesInDevice.size() + artistIdentitiesInDevice.size() == 0)
+        if(fanaticsIdentitiesInDevice.size() + artistIdentitiesInDevice.size() == 0 && isDialog){
+            isDialog = false;
             throw new CantGetSelectedActorIdentityException("", null, "", "");
+        }
 
 
 
@@ -595,10 +599,13 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
 
                 return selectedIdentity;
             }
-            else
+            else if(isDialog){
+                isDialog = false;
                 throw new ActorIdentityNotSelectedException("", null, "", "");
+            }
         }
 
+        isDialog = true;
         return null;    }
 
     @Override
