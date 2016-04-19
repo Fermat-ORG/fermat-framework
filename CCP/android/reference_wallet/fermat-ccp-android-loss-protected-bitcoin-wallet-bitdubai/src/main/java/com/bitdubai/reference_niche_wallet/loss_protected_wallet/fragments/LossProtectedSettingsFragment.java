@@ -117,7 +117,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
             List<PreferenceSettingsTextPlusRadioItem> stringsProviders = new ArrayList<PreferenceSettingsTextPlusRadioItem>();
 
-            //get providers list
+            //Get providers list
             List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
 
             int position = 11;
@@ -148,8 +148,6 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
     }
 
     /**
-     * Cuando se elige algun settings va a pasar por acá
-     *
      * @param preferenceSettingsItem
      * @param position
      */
@@ -170,9 +168,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
                 //Exchange Rate provider settings
                 PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
-
-
-                //get providers list
+                //Get providers list
                 List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
 
                 cryptoWallet.setExchangeProvider(providers.get(0).getProviderId());
