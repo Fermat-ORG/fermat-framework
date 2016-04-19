@@ -51,6 +51,8 @@ dependencies {
     compile project(':fermat-osa-addon-android-device-location-bitdubai')
     compile project(':fermat-osa-addon-android-logger-bitdubai')
     compile project(':fermat-osa-addon-android-broadcaster-system-bitdubai')
+    compile project(':fermat-osa-addon-android-hardware')
+
 
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'junit:junit:4.11'

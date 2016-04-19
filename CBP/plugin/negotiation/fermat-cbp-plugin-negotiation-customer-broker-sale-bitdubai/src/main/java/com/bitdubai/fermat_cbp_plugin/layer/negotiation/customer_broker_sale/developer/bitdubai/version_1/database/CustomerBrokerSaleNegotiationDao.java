@@ -122,8 +122,6 @@ public class CustomerBrokerSaleNegotiationDao implements NegotiationClauseManage
                 recordsToDelete.setUUIDValue(CustomerBrokerSaleNegotiationDatabaseConstants.CLAUSES_SALE_NEGOTIATION_ID_COLUMN_NAME, negotiation.getNegotiationId());
                 SaleNegotiationClauseTable.deleteRecord(recordsToDelete);
 
-                System.out.print("\n**** 28.3) MOCK NEGOTIATION TRANSACTION - CUSTOMER BROKER CLOSE - SALE NEGOTIATION - CUSTOMER BROKER CLOSE SALE NEGOTIATION TRANSACTION. IS CRYPTO CURRENCY ****\n" +
-                        "\nClauses Date.");
                 for(Clause _clause : negotiation.getClauses()) {
                     System.out.print("\n - "+_clause.getType()+""+_clause.getValue()+"\n");
                     addNewClause(negotiation.getNegotiationId(), _clause);

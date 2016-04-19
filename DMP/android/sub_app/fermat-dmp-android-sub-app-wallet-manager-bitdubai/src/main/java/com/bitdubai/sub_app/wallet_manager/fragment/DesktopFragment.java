@@ -503,7 +503,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
 //            lstItemsWithIcon.add(itemFolder);
 
 
-          /*  for(int i=0;i<12;i++){
+            for(int i=0;i<12;i++){
                 Item emptyItem = new Item(new EmptyItem(0,i));
                 emptyItem.setIconResource(-1);
                 arrItemsWithoutIcon[i] = emptyItem;
@@ -520,9 +520,9 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                 }
 
             }
-            dataSet.addAll(Arrays.asList(arrItemsWithoutIcon));*/
+            dataSet.addAll(Arrays.asList(arrItemsWithoutIcon));
 
-            dataSet.addAll(lstItemsWithIcon);
+//            dataSet.addAll(lstItemsWithIcon);
 
         } catch (Exception e){
             e.printStackTrace();

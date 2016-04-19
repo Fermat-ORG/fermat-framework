@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
@@ -27,7 +28,7 @@ import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextP
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
+
 
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMessage;
 
@@ -138,6 +139,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
         return list;
     }
+
 
 
     @Override

@@ -1,4 +1,5 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.wizard_pages;
+
 import android.os.Bundle;
 
 import android.util.Log;
@@ -16,19 +17,19 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
+
 /**
  * Created by Lozadaa on 20/01/16.
  */
-public class WizardPageOtherSettingsFragment extends AbstractFermatFragment
-{
+public class WizardPageOtherSettingsFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, ResourceProviderManager> {
     private static final String TAG = "WizardPageOtherSettings";
     private int spreadValue;
     private boolean automaticRestock;
@@ -40,9 +41,8 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment
     private RecyclerView recyclerView;
 
     // Fermat Managers
-    private CryptoBrokerWalletManager walletManager;
+    private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
-
 
 
     public static WizardPageOtherSettingsFragment newInstance() {
@@ -55,20 +55,17 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment
         spreadValue = 0;
         automaticRestock = false;
         try {
-            CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
-            walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             //Delete potential previous configurations made by this wizard page
             //So that they can be reconfigured cleanly
-            walletManager.clearWalletSetting(appSession.getAppPublicKey());
+            moduleManager.clearWalletSetting(appSession.getAppPublicKey());
 
             //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
             Object aux = appSession.getData(PresentationDialog.PRESENTATION_SCREEN_ENABLED);
-            if(aux != null && aux instanceof Boolean)
+            if (aux != null && aux instanceof Boolean)
                 hideHelperDialogs = (boolean) aux;
-
-
 
         } catch (FermatException ex) {
             Log.e(TAG, ex.getMessage(), ex);
@@ -84,7 +81,7 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment
         final FermatTextView spreadTextView = (FermatTextView) layout.findViewById(R.id.cbw_spread_value_text);
         spreadTextView.setText(String.format("%1$s %%", spreadValue));
 
-        if(!hideHelperDialogs) {
+        if (!hideHelperDialogs) {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_crypto_broker)
@@ -136,16 +133,15 @@ public class WizardPageOtherSettingsFragment extends AbstractFermatFragment
     }
 
 
-
     private void saveSettingAndGoNextStep() {
         CryptoBrokerWalletSettingSpread walletSetting = null;
         try {
-            walletSetting = walletManager.newEmptyCryptoBrokerWalletSetting();
+            walletSetting = moduleManager.newEmptyCryptoBrokerWalletSetting();
             walletSetting.setId(null);
             walletSetting.setBrokerPublicKey(appSession.getAppPublicKey());
             walletSetting.setSpread(spreadValue);
             walletSetting.setRestockAutomatic(automaticRestock);
-            walletManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
+            moduleManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
             appSession.setData(CryptoBrokerWalletSession.CONFIGURED_DATA, true);
             // TODO Solo para testing, eliminar despues
             changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_HOME, appSession.getAppPublicKey());
