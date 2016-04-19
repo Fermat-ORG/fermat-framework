@@ -7,6 +7,9 @@ import android.view.animation.TranslateAnimation;
 
 import com.bitdubai.fermat_android_api.engine.ElementsWithAnimation;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by mati on 2015.11.23..
  */
