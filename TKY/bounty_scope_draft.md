@@ -102,7 +102,7 @@ Only fill the underlined spaces that apply.
 
 7- The team agrees to complete the implementation on the following conditions: 
 
-- **Implementation due date:** All the features will be finished before **01/06/2016**. 
+- **Implementation due date:** All the features will be finished before **16/05/2016**. 
  
 - **Implementation collateral deposit:** The team agrees to deposit the amount of **2500** tokens, as a collateral to be lost if this part project is not approved before the due date.
  
@@ -118,7 +118,7 @@ Only fill the underlined spaces that apply.
 
 16- The team agrees to complete the beta testing on the following conditions:
 
-- **Beta testing due date:** Beta testing will be passed before **13/06/2016**. After this date, the beta testing bounty will be awarded to the @beta-testing-team. 
+- **Beta testing due date:** Beta testing will be passed before **29/05/2016**. After this date, the beta testing bounty will be awarded to the @beta-testing-team. 
  
 - **Beta testing collateral deposit:** The team agrees to deposit the amount of **0** tokens, as a collateral to be lost if this part of the project is not approved before the due date.
  
