@@ -11,13 +11,13 @@ import java.util.UUID;
  */
 public class ChatConnectionInformation {
 
-    private final UUID connectionId;
-    private final String senderPublicKey;
-    private final Actors senderActorType;
-    private final String senderAlias;
-    private final byte[] senderImage;
-    private final String destinationPublicKey;
-    private final long sendingTime;
+    private UUID connectionId;
+    private String senderPublicKey;
+    private Actors senderActorType;
+    private String senderAlias;
+    private byte[] senderImage;
+    private String destinationPublicKey;
+    private long sendingTime;
 
     public ChatConnectionInformation(final UUID connectionId,
                                      final String senderPublicKey,

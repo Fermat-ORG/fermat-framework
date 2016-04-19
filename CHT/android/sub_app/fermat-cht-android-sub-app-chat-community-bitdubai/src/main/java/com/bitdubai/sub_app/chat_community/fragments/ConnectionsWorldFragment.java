@@ -150,7 +150,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             chatUserSettings);
                 }
             }
-            mNotificationsCount = moduleManager.getChatActorWaitingYourAcceptanceCount(PublicKey, max, offset);
+            //mNotificationsCount = moduleManager.getChatActorWaitingYourAcceptanceCount(PublicKey, max, offset);
             new FetchCountTask().execute();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
