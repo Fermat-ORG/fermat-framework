@@ -11,8 +11,8 @@ import android.os.Messenger;
 import android.os.RemoteException;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.common.version_1.communication.CommunicationMessages;
-import com.bitdubai.android_core.app.common.version_1.communication.CommunicationService;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationService;
 
 import java.lang.ref.WeakReference;
 

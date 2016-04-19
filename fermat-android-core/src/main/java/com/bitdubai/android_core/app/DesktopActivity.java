@@ -22,6 +22,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.AppCon
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.Activity;
@@ -376,7 +377,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
                 SubApp subAppNavigationStructure = getSubAppRuntimeMiddleware().getSubAppByPublicKey(installedSubApp.getAppPublicKey());
 
-                //if(subAppNavigationStructure.getPlatform() != Platforms.CRYPTO_BROKER_PLATFORM) {
+                if(subAppNavigationStructure.getPlatform() != Platforms.CRYPTO_BROKER_PLATFORM || subAppNavigationStructure.getPlatform() != Platforms.WALLET_PRODUCTION_AND_DISTRIBUTION) {
                     intent = new Intent(this, AppActivity.class);
                     intent.putExtra(ApplicationConstants.INSTALLED_FERMAT_APP, installedSubApp);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -384,7 +385,9 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                     finish();
                     startActivity(intent);
                     overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                //}
+                }else{
+                    Toast.makeText(this,"App in develop :)",Toast.LENGTH_SHORT).show();
+                }
 
             }
         }catch (Exception e){
