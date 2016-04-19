@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.WindowManager;
 
+import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
@@ -138,10 +139,10 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
         return list;
     }
 
-    @Override
-    public void dialogOptionSelected(String item, int position) {
-
-    }
+//    @Override
+//    public void dialogOptionSelected(String item, int position) {
+//
+//    }
 
     @Override
     public void optionSelected(PreferenceSettingsItem preferenceSettingsItem, int position) {
