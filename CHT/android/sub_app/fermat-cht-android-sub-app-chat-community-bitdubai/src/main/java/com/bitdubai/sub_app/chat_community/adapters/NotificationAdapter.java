@@ -19,40 +19,40 @@ import java.util.List;
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 13/04/16.
  * @version 1.0
  */
-public class NotificationAdapter{
-        //extends FermatAdapter<ChatActorCommunityInformation, NotificationHolder>
-        // {
+public class NotificationAdapter
+        extends FermatAdapter<ChatActorCommunityInformation, NotificationHolder>
+         {
 
-//    public NotificationAdapter(Context context, List<ChatActorCommunityInformation> lst) {
-//        super(context, lst);
-//    }
-//
-//    @Override
-//    protected NotificationAdapter createHolder(View itemView, int type) {
-//        return new NotificationAdapter(itemView);
-//    }
-//
-//    @Override
-//    protected int getCardViewResource() {
-//        return R.layout.cht_comm_notification_item;
-//    }
-//
-//    @Override
-//    protected void bindHolder(NotificationHolder holder, ChatActorCommunityInformation data, int position) {
-//        if (data.getActorPublickey() != null) {
-//            holder.userName.setText(data.getActorAlias());
-//            if (data.getActorImage() != null && data.getActorImage().length > 0) {
-//                Bitmap bitmap = BitmapFactory.decodeByteArray(data.getActorImage(), 0,
-//                        data.getActorImage().length);
-//                bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
-//                holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
-//            }
-//        }
-//    }
-//
-//    public int getSize() {
-//        if (dataSet != null)
-//            return dataSet.size();
-//        return 0;
-//    }
+    public NotificationAdapter(Context context, List<ChatActorCommunityInformation> lst) {
+        super(context, lst);
+    }
+
+    @Override
+    protected NotificationHolder createHolder(View itemView, int type) {
+        return new NotificationHolder(itemView);
+    }
+
+    @Override
+    protected int getCardViewResource() {
+        return R.layout.cht_comm_notification_item;
+    }
+
+    @Override
+    protected void bindHolder(NotificationHolder holder, ChatActorCommunityInformation data, int position) {
+        if (data.getPublicKey() != null) {
+            holder.userName.setText(data.getAlias());
+            if (data.getImage() != null && data.getImage().length > 0) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0,
+                        data.getImage().length);
+                bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
+                holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
+            }
+        }
+    }
+
+    public int getSize() {
+        if (dataSet != null)
+            return dataSet.size();
+        return 0;
+    }
 }

@@ -145,7 +145,14 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
 
     @Override
     public int getCount() {
-        return filteredData.size();
+        if (contactinfo != null) {
+            if(filteredData.size()<contactinfo.size()) {
+                return filteredData.size();
+            }else{
+                return contactinfo.size();}
+        } else {
+            return 0;
+        }
     }
 
     @Override

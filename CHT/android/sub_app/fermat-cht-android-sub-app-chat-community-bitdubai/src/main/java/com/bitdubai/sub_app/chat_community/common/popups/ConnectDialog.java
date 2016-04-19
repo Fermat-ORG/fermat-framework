@@ -121,12 +121,7 @@ public class ConnectDialog extends FermatDialog<ChatUserSubAppSession, SubAppRes
                     getSession().getModuleManager()
                             .requestConnectionToChatActor(identity, chatUserInformation);
 //                            .askIntraUserForAcceptance(chatUserInformation.getName(),
-//                                    chatUserInformation.getPhrase(),
-//                                    chatUserInformation.getPublicKey(),
-//                                    chatUserInformation.getProfileImage(),
-//                                    identity.getProfileImage(),
-//                                    identity.getPublicKey(),
-//                                    identity.getAlias());
+
                     Intent broadcast = new Intent(Constants.LOCAL_BROADCAST_CHANNEL);
                     broadcast.putExtra(Constants.BROADCAST_CONNECTED_UPDATE, true);
                     sendLocalBroadcast(broadcast);

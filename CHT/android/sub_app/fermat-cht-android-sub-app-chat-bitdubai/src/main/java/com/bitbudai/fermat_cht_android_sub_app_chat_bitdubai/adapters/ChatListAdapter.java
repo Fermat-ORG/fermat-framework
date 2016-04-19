@@ -144,7 +144,14 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
 
     @Override
     public int getCount() {
-        return filteredData.size();
+        if (contactName != null) {
+            if(filteredData.size()<contactName.size()) {
+                return filteredData.size();
+            }else{
+                return contactName.size();}
+        } else {
+            return 0;
+        }
     }
 
     @Override
