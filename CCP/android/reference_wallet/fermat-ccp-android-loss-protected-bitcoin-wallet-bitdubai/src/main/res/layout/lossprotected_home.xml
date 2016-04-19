@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
@@ -23,18 +25,43 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/available_balance_text"
-                android:textSize="14sp"
+                android:text="@string/real_balance_text"
+                android:textSize="16sp"
                 android:id="@+id/txt_type_balance"
                 android:textColor="#FFF"/>
-
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:id="@+id/txt_balance_amount"
-                android:textSize="16sp"
-                android:text="14.5201 BTC"
-                android:textColor="#fff" />
+                android:layout_height="wrap_content"
+                android:text="@string/touch_to_change_text"
+                android:textSize="10sp"
+                android:id="@+id/txt_touch_to_change"
+                android:textColor="#ccc"
+                android:textStyle="italic"
+                app:typeface="ROBOTO_REGULAR"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:id="@+id/txt_balance_amount"
+                    android:textSize="24sp"
+                    android:text="14.5201"
+                    android:textColor="#fff" />
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="2dp"
+                    android:id="@+id/txt_balance_amount_type"
+                    android:textSize="16sp"
+                    android:text="BTC"
+                    android:textColor="#fff" />
+            </LinearLayout>
+
 
         </LinearLayout>
 
@@ -54,7 +81,7 @@
                 android:text="1 BTC - 400 USD"
                 android:id="@+id/txt_exchange_rate"
                 android:textColor="#fff"
-                android:textSize="14sp"
+                android:textSize="16sp"
                 />
 
         </LinearLayout>
@@ -63,7 +90,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="109dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/bg_blue_gradient_color"
         android:paddingRight="16dp"
@@ -89,18 +116,21 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="18dp">
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="Roboto"
                     android:textSize="16sp"
                     android:textColor="#fff"
-                    android:text="Today: " />
+                    android:text="Today: "/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -110,6 +140,24 @@
                     android:id="@+id/txt_date_home"
                     android:text="Dec 16, 2016"/>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="end">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/earning_icon" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily=""
+                    android:textSize="24sp"
+                    android:textColor="#fff"
+                    android:id="@+id/txt_amount_lost_or_earn"
+                    android:text="$5 earning"/>
+            </LinearLayout>
 
 
 
@@ -117,5 +165,10 @@
 
 
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/home_background"></LinearLayout>
 
 </LinearLayout>

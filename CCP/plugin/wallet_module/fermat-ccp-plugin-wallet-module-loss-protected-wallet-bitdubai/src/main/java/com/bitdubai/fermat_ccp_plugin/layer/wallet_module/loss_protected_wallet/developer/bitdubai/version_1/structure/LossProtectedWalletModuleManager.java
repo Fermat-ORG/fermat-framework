@@ -239,6 +239,13 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     }
 
     @Override
+    public double getEarningAndLostsWallet(String walletPublicKey, BlockchainNetworkType blockchainNetworkType) {
+
+
+        return 0;
+    }
+
+    @Override
     public List<LossProtectedWalletContact> listWalletContacts(String walletPublicKey,String intraUserLoggedInPublicKey) throws CantGetAllLossProtectedWalletContactsException {
         try {
 
