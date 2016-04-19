@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStepStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.models.StepItemGetter;
 
@@ -21,7 +21,7 @@ import java.text.ParseException;
 public class AmountToBuyStepViewHolder extends StepViewHolder
         implements TextWatcher, ExchangeRateStepViewHolder.OnExchangeValueChangeListener {
 
-    private CryptoCustomerWalletManager walletManager;
+    private CryptoCustomerWalletModuleManager walletManager;
     private RecyclerView.Adapter adapter;
 
     private final DecimalFormat decimalFormat;
@@ -39,7 +39,7 @@ public class AmountToBuyStepViewHolder extends StepViewHolder
     private String currencyToPay;
 
 
-    public AmountToBuyStepViewHolder(RecyclerView.Adapter adapter, View itemView, CryptoCustomerWalletManager walletManager) {
+    public AmountToBuyStepViewHolder(RecyclerView.Adapter adapter, View itemView, CryptoCustomerWalletModuleManager walletManager) {
         super(itemView, (StepItemGetter) adapter);
 
         this.adapter = adapter;

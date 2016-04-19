@@ -31,7 +31,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_customer.interfaces.CryptoCustomerIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -71,7 +70,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
     private RecyclerView recyclerView;
     private StartNegotiationAdapter adapter;
 
-    private CryptoCustomerWalletManager walletManager;
+    private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
     private EmptyCustomerBrokerNegotiationInformation negotiationInfo;
     private List<MerchandiseExchangeRate> quotes;
@@ -87,8 +86,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
         super.onCreate(savedInstanceState);
 
         try {
-            CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
-            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
             //NEGOTIATION INFORMATION
@@ -186,7 +184,7 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
 
                     clauses = getClause(mapClauses);
 
-                    if (walletManager.startNegotiation(customerPublicKey, brokerPublicKey, clauses)) {
+                    if (moduleManager.startNegotiation(customerPublicKey, brokerPublicKey, clauses)) {
                         Toast.makeText(getActivity(), "Send negotiation. ", Toast.LENGTH_LONG).show();
 //                        Toast.makeText(getActivity(), "Send negotiation. " + getClauseTest(mapClauses) + " CUSTOMER_PUBLICKEY: " + customerPublicKey + " BROKER_PUBLICKEY: " + brokerPublicKey, Toast.LENGTH_LONG).show();
                         changeActivity(Activities.CBP_CRYPTO_CUSTOMER_WALLET_HOME, this.appSession.getAppPublicKey());
@@ -293,8 +291,8 @@ public class StartNegotiationActivityFragment extends AbstractFermatFragment<Cry
             if (brokerIdentity != null)
                 negotiationInfo.setBroker(brokerIdentity);
 
-//            final CryptoCustomerIdentity customerIdentity = walletManager.getAssociatedIdentity();
-            final CryptoCustomerIdentity customerIdentity = walletManager.getAssociatedIdentity(appSession.getAppPublicKey());
+//            final CryptoCustomerIdentity customerIdentity = moduleManager.getAssociatedIdentity();
+            final CryptoCustomerIdentity customerIdentity = moduleManager.getAssociatedIdentity(appSession.getAppPublicKey());
             if (customerIdentity != null)
                 negotiationInfo.setCustomer(customerIdentity);
 

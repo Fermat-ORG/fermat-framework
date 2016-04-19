@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  */
 public class CantGetExtraDataActorException extends FermatException {
 
-    public static final String DEFAULT_MESSAGE = "CAN'T GET EXTRA DATA ACTOR";
+    public static final String DEFAULT_MESSAGE = "CAN'T GET ACTOR EXTRA DATA";
 
     /**
      * This is the constructor that every inherited FermatException must implement

@@ -8,7 +8,7 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
@@ -59,7 +59,7 @@ final public class NegotiationWrapper {
         final long actualTimeInMillis = Calendar.getInstance().getTimeInMillis();
 
         try {
-            CryptoBrokerWalletManager walletManager = appSession.getModuleManager().getCryptoBrokerWallet(appSession.getAppPublicKey());
+            CryptoBrokerWalletModuleManager moduleManager = appSession.getModuleManager();
 
             if (clauses.get(CUSTOMER_DATE_TIME_TO_DELIVER) == null)
                 addClause(CUSTOMER_DATE_TIME_TO_DELIVER, Long.toString(actualTimeInMillis));
@@ -69,17 +69,17 @@ final public class NegotiationWrapper {
 
             if (clauses.get(CUSTOMER_PAYMENT_METHOD) == null) {
                 final String currencyToReceive = clauses.get(BROKER_CURRENCY).getValue();
-                final List<MoneyType> paymentMethods = walletManager.getPaymentMethods(currencyToReceive, appSession.getAppPublicKey());
+                final List<MoneyType> paymentMethods = moduleManager.getPaymentMethods(currencyToReceive, appSession.getAppPublicKey());
                 final MoneyType paymentMethod = paymentMethods.get(0);
 
                 addClause(CUSTOMER_PAYMENT_METHOD, paymentMethod.getCode());
 
                 if (paymentMethod == BANK) {
-                    List<String> bankAccounts = walletManager.getAccounts(currencyToReceive, appSession.getAppPublicKey());
+                    List<String> bankAccounts = moduleManager.getAccounts(currencyToReceive, appSession.getAppPublicKey());
                     addClause(BROKER_BANK_ACCOUNT, bankAccounts.isEmpty() ? "" : bankAccounts.get(0));
 
                 } else if (paymentMethod == CASH_ON_HAND || paymentMethod == CASH_DELIVERY) {
-                    ArrayList<NegotiationLocations> locations = Lists.newArrayList(walletManager.getAllLocations(SALE));
+                    ArrayList<NegotiationLocations> locations = Lists.newArrayList(moduleManager.getAllLocations(SALE));
                     addClause(BROKER_PLACE_TO_DELIVER, locations.isEmpty() ? "" : locations.get(0).getLocation());
                 }else {
                     addClause(BROKER_CRYPTO_ADDRESS, "");

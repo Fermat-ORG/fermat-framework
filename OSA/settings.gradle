@@ -15,6 +15,11 @@ project(':fermat-osa-api').projectDir = new File('OSA/library/api/fermat-osa-api
 include ':fermat-osa-addon-android-database-system-bitdubai'
 project(':fermat-osa-addon-android-database-system-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-database-system-bitdubai')
 
+
+include ':fermat-osa-addon-android-hardware'
+project(':fermat-osa-addon-android-hardware').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-hardware')
+
+
 // Milestone 1 project:
 include ':fermat-osa-addon-android-file-system-bitdubai'
 project(':fermat-osa-addon-android-file-system-bitdubai').projectDir = new File('OSA/addon/android/fermat-osa-addon-android-file-system-bitdubai')
@@ -39,6 +44,7 @@ project(':fermat-osa-addon-android-broadcaster-system-bitdubai').projectDir = ne
 
 include ':bitcoin_exchange_widget'
 project(':bitcoin_exchange_widget').projectDir = new File('OSA/addon/android/widgets/bitcoin_exchange_widget')
+
 
 // OSA Projects (Linux)
 /*

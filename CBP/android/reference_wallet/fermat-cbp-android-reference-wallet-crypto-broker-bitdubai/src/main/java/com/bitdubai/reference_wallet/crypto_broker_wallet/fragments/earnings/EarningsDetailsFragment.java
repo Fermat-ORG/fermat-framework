@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -88,8 +87,6 @@ public class EarningsDetailsFragment extends AbstractFermatFragment<CryptoBroker
     public void bindData(EarningsPair earningsPair, TimeFrequency frequency) {
         this.earningsPair = earningsPair;
         this.frequency = frequency;
-
-        final Currency earningCurrency = this.earningsPair.getEarningCurrency();
 
         final ErrorManager errorManager = appSession.getErrorManager();
         try {

@@ -18,7 +18,6 @@ import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -47,7 +46,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
     private View emptyView;
 
     // Fermat Managers
-    private CryptoCustomerWalletManager walletManager;
+    private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
 
@@ -60,13 +59,11 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
         super.onCreate(savedInstanceState);
 
         try {
-            CryptoCustomerWalletModuleManager moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
-            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
+            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            //Delete potential previous configurations made by this wizard page
-            //So that they can be reconfigured cleanly
-            walletManager.clearLocations();
+            //Delete potential previous configurations made by this wizard page so that they can be reconfigured cleanly
+            moduleManager.clearLocations();
 
 
             //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
@@ -183,7 +180,7 @@ public class WizardPageSetLocationsFragment extends AbstractFermatFragment imple
     private void saveSettingAndGoNextStep() {
         try {
             for (String location : locationList) {
-                walletManager.createNewLocation(location, appSession.getAppPublicKey());
+                moduleManager.createNewLocation(location, appSession.getAppPublicKey());
             }
 
         } catch (FermatException ex) {

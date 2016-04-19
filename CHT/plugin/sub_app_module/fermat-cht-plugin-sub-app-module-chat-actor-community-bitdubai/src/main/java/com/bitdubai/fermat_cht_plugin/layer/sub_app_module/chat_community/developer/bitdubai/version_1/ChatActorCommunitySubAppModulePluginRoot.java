@@ -1,6 +1,8 @@
 package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.ActorConnectionNotFoundException;
 import com.bitdubai.fermat_api.layer.actor_connection.common.exceptions.CantDisconnectFromActorException;
@@ -43,6 +45,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure.ChatActorCommunityManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 
@@ -52,6 +55,7 @@ import java.util.UUID;
 
 /**
  * Created by Eleazar (eorono@protonmail.com) on 2/4/2016.
+ * Edited by Miguel Rincon 18/04/2016
  */
 
 public class ChatActorCommunitySubAppModulePluginRoot extends AbstractModule<ChatActorCommunitySettings, ChatActorCommunitySelectableIdentity> {
@@ -96,14 +100,11 @@ public class ChatActorCommunitySubAppModulePluginRoot extends AbstractModule<Cha
             System.out.println("******* Init Chat Sup App Module Actor Connection ******");
 
             this.serviceStatus = ServiceStatus.STARTED;
-
         } catch (Exception exception) {
-
-            throw new CantStartPluginException(
-                    exception,
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, exception);
+            throw new CantStartPluginException(CantStartPluginException.DEFAULT_MESSAGE, FermatException.wrapException(exception),
                     null,
-                    null
-            );
+                    null);
         }
     }
 

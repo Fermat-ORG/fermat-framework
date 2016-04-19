@@ -2,13 +2,14 @@ package com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfac
 
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by franklin on 03/12/15.
  * Updated by Nelson Ramirez on 09/02/16.
  */
-public interface CryptoCustomerWalletProviderSetting {
+public interface CryptoCustomerWalletProviderSetting extends Serializable {
     //TODO: Documentar y manejo de excepciones
     UUID getId();
 
