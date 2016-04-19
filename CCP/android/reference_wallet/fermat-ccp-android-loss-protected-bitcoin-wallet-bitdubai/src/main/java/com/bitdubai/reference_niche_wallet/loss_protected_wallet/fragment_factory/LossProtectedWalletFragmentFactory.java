@@ -47,7 +47,7 @@ public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<Lo
                     currentFragment = ReceiveTransactionFragment2.newInstance();
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_SEND:
-                    currentFragment = HomeFragment.newInstance(); //RequestHomePaymentFragment.newInstance();
+                    currentFragment = SendTransactionFragment2.newInstance(); //RequestHomePaymentFragment.newInstance();
                     break;
 
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_TRANSACTIONS:
