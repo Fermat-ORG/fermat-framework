@@ -127,7 +127,7 @@ public class ConnectionOtherProfileFragment extends
             else
                 bitmap = BitmapFactory.decodeResource(
                         getResources(),
-                        R.drawable.profile_image);
+                        R.drawable.afc_profile_image);
 
             bitmap = Bitmap.createScaledBitmap(bitmap, 110, 110, true);
             userProfileAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));

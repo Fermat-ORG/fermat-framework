@@ -71,6 +71,8 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
 
     private       String                              subAppPublicKey                           ;
 
+    private boolean isDialog = true;
+
     public FanCommunityManager(final ArtistIdentityManager artistIdentityManager,
                                           final FanActorConnectionManager fanActorConnectionManager,
                                           final FanManager fanActorNetworkServiceManager,
@@ -424,9 +426,10 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
         } catch(CantListArtistIdentitiesException e) { /*Do nothing*/ }
 
         //No registered users in device
-        if(fanaticsIdentitiesInDevice.size() + artistIdentitiesInDevice.size() == 0)
+        if(fanaticsIdentitiesInDevice.size() + artistIdentitiesInDevice.size() == 0 && isDialog){
+            isDialog = false;
             throw new CantGetSelectedActorIdentityException("", null, "", "");
-
+        }
 
 
         //If appSettings exists, get its selectedActorIdentityPublicKey property
@@ -460,10 +463,13 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
 
                 return selectedIdentity;
             }
-            else
+            else if(isDialog){
+                isDialog = false;
                 throw new ActorIdentityNotSelectedException("", null, "", "");
+            }
         }
 
+        isDialog = true;
         return null;
     }
 
