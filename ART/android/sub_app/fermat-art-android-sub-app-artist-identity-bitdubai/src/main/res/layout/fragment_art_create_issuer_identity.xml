@@ -103,11 +103,11 @@
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="114dp" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:paddingTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                >
                 <Spinner
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -117,9 +117,17 @@
                     android:textColor="#000000"
 
                     />
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/UserIdentity"
+                    android:spinnerMode="dropdown"
+                    android:background="@color/cardview_dark_background"
+                    android:textColor="#000000"
+                    />
 
                 <!--android:entries="@array/externalPlatforms"/>-->
-            </LinearLayout>
+            </RelativeLayout>
         </RelativeLayout>
 
     </LinearLayout>
