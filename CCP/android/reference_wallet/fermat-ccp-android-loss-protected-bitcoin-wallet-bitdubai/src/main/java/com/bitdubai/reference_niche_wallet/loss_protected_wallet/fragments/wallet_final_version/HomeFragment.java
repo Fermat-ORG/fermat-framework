@@ -254,6 +254,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     private void setUp(LayoutInflater inflater){
         try {
             setUpHeader(inflater);
+            setUpChart(inflater);
             //setUpDonut(inflater);
 
         }catch (Exception e){
@@ -272,10 +273,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             txt_type_balance        = (TextView) rootView.findViewById(R.id.txt_type_balance);
             txt_touch_to_change     = (TextView) rootView.findViewById(R.id.txt_touch_to_change);
             txt_exchange_rate       = (TextView) rootView.findViewById(R.id.txt_exchange_rate);
-            txt_earnOrLost          = (TextView) rootView.findViewById(R.id.txt_amount_lost_or_earn);
-            earnOrLostImage         = (ImageView) rootView.findViewById(R.id.earnOrLostImage);
-            txt_date_home           = (TextView) rootView.findViewById(R.id.txt_date_home);
-
+    
             //show Exchange Market Rate
             getAndShowMarketExchangeRateData(rootView);
 
@@ -321,6 +319,24 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 balance = moduleManager.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
 
             txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, lossProtectedWalletSession.getTypeAmount()));
+
+
+        }catch (Exception e){
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void setUpChart(LayoutInflater inflater){
+
+        try {
+
+            //Select all header Element
+            txt_earnOrLost          = (TextView) rootView.findViewById(R.id.txt_amount_lost_or_earn);
+            earnOrLostImage         = (ImageView) rootView.findViewById(R.id.earnOrLostImage);
+            txt_date_home           = (TextView) rootView.findViewById(R.id.txt_date_home);
+
 
             //set Earning or Losts Values
             double total = 0;
