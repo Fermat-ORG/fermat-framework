@@ -4081,7 +4081,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setColor("#ffffff");
 
         statusBar = new StatusBar();
-        statusBar.setColor("#ffffff");
+        statusBar.setColor("#000000");
         runtimeActivity.setStatusBar(statusBar);
         runtimeSubApp.addActivity(runtimeActivity);
         runtimeSubApp.changeActualStartActivity(Activities.ART_MUSIC_PLAYER_MAIN_ACTIVITY.getCode());

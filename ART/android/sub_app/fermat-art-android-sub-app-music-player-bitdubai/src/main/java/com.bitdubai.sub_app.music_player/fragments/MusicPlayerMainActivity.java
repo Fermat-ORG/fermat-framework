@@ -236,7 +236,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
 
             if(items.size()>0) {
-                File tempMp3 = File.createTempFile("i_know_now", "mp3", view.getContext().getCacheDir());
+                File tempMp3 = File.createTempFile("tempfermatmusic", "mp3", view.getContext().getCacheDir());
                 tempMp3.deleteOnExit();
                 FileOutputStream fos = new FileOutputStream(tempMp3);
                 fos.write(musicPlayermoduleManager.getSongWithBytes(items.get(position).getSong_id()).getSongBytes());
@@ -248,12 +248,10 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
                     mp.reset();
                 }
 
-                songPlayerThread = new ThreadSong(false);
-                songPlayerThread.execute();
 
                 FileInputStream fis = new FileInputStream(tempMp3);
                 mp.setDataSource(fis.getFD());
-
+                tempMp3.delete();
 
                 //  Toast.makeText(view.getContext(), items.get(position).getSong_name(), Toast.LENGTH_SHORT).show();
                 songposition = position;
@@ -262,12 +260,13 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
                 mp.prepare();
 
-                //     System.out.println("ART_MP_duration:" + mp.getDuration());
+                System.out.println("ART_MP_duration:" + mp.getDuration() / 1000);
 
                 pb.setMax((int) (mp.getDuration() / 1000));
 
+                songPlayerThread = new ThreadSong(false);
+                songPlayerThread.execute();
 
-                mp.start();
 
             }
 
@@ -307,6 +306,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             mp.stop();
             pb.setProgress(0);
             tiempo.setText("0:00");
+            songPlayerThread.cancelmusicplayer=true;
         } catch (IllegalStateException e) {
             Log.e(TAG, "Unable to play audio queue do to exception: " + e.getMessage(), e);
         }
@@ -346,17 +346,18 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     }
 
 
-    public class ThreadSong extends AsyncTask<Void, Float, Void> {
+    public class ThreadSong extends AsyncTask<Void, Float, Boolean> {
         private boolean cancelmusicplayer;
-        private boolean finish=false;
         public ThreadSong(boolean cancelmusicplayer) {this.cancelmusicplayer = cancelmusicplayer;}
 
 
         @Override
-        protected void onPreExecute() {}
+        protected void onPreExecute() {
+            mp.start();
+        }
 
         @Override
-        protected Void doInBackground(Void... withNotUse) {
+        protected Boolean doInBackground(Void... withNotUse) {
 
             float progreso = 0.0f;
             while (true) {
@@ -372,21 +373,16 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
                     progreso = mp.getCurrentPosition() / 1000;
 
                     publishProgress(progreso);
-                    if(mp.getCurrentPosition()==mp.getDuration()){
-                        finish=true;
-                        System.out.println("ART_THIS IS THE END");
-                    }
+
 
                     if (cancelmusicplayer) {
                         cancel(true);
                     }
                 }
-                if(finish){
-                    System.out.println("ART_GO NEXT");
-                    nextsong();
-                }
+
 
             }
+
 
         }
 
@@ -396,6 +392,11 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             Log.v(TAG, "songtime:"+porcentajeProgreso[0]+"");
 
             pb.setProgress( Math.round(porcentajeProgreso[0]) );
+            if((mp.getCurrentPosition()/1000)>=(mp.getDuration()/1000)-1){
+                System.out.println("ART_THIS IS THE END");
+                nextsong();
+            }
+
         }
 
         String crono(float tiempo){
@@ -422,10 +423,10 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         }
 
 
+/*
+        protected void onPostExecute(Boolean cantidadProcesados) {
 
-        protected void onPostExecute(Integer cantidadProcesados) {
-
-        }
+        }*/
 
 
      /*   @Override
