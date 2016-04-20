@@ -13,7 +13,6 @@ import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantListFanIden
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantUpdateFanIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.FanIdentityAlreadyExistsException;
 import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 
 import java.util.HashMap;
 import java.util.List;

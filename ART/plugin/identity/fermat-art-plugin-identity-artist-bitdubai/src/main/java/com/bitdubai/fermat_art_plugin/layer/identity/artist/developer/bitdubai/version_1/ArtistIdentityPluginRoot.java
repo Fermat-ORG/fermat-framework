@@ -134,11 +134,11 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
         try {
 
             tokenlyArtistIdentityManager.createArtistIdentity(alias, image, password, externalPlatformTokenly, exposureLevelTokenly, artistAcceptConnectionsTypeTokenly);
-            HashMap<ExternalPlatform, HashMap<UUID,String>> externalIdentites = listExternalIdentitiesFromCurrentDeviceUser();
-            Iterator<Map.Entry<ExternalPlatform, HashMap<UUID, String>>> entries = externalIdentites.entrySet().iterator();
+            HashMap<ArtExternalPlatform, HashMap<UUID,String>> externalIdentites = listExternalIdentitiesFromCurrentDeviceUser();
+            Iterator<Map.Entry<ArtExternalPlatform, HashMap<UUID, String>>> entries = externalIdentites.entrySet().iterator();
             UUID externalIdentityID = null;
             while (entries.hasNext()) {
-                Map.Entry<ExternalPlatform, HashMap<UUID, String>> entry = entries.next();
+                Map.Entry<ArtExternalPlatform, HashMap<UUID, String>> entry = entries.next();
                 HashMap<UUID, String> artists = entry.getValue();
                 Iterator<Map.Entry<UUID, String>> entiesSet = artists.entrySet().iterator();
                 while(entiesSet.hasNext()){
@@ -188,15 +188,15 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
     }
 
     @Override
-    public HashMap<ExternalPlatform, HashMap<UUID, String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
+    public HashMap<ArtExternalPlatform, HashMap<UUID, String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
 
         /*
             We'll return a HashMap based on the external platform containing another hashmap with the user and the id to that platform
          */
-        HashMap<ExternalPlatform, HashMap<UUID,String>> externalArtistIdentities = new HashMap<>();
+        HashMap<ArtExternalPlatform, HashMap<UUID,String>> externalArtistIdentities = new HashMap<>();
         HashMap<UUID,String> externalArtist = new HashMap<>();
-        for (ExternalPlatform externalPlatform:
-             ExternalPlatform.values()) {
+        for (ArtExternalPlatform externalPlatform:
+             ArtExternalPlatform.values()) {
             //Future platform will need to be added manually to the switch
             switch (externalPlatform){
                 case TOKENLY:

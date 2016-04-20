@@ -2,6 +2,7 @@ package com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist;
 
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHideIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
@@ -12,7 +13,6 @@ import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtis
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +37,7 @@ public interface ArtistIdentityManagerModule extends ModuleManager<ArtistIdentit
      * @return
      * @throws CantListArtistIdentitiesException
      */
-    HashMap<ExternalPlatform,HashMap<UUID,String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException;
+    HashMap<ArtExternalPlatform,HashMap<UUID,String>> listExternalIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException;
 
     /**
      * Return an Object with the basic data from the linked identity and its respectible

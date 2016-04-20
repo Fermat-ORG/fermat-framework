@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_art_api.all_definition.interfaces;
 
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 
 import java.util.UUID;
 

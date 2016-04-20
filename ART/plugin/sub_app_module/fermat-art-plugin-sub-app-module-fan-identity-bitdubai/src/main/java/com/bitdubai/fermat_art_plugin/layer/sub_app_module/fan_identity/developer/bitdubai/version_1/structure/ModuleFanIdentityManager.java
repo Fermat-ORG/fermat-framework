@@ -18,7 +18,6 @@ import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.FanaticIdentity
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentityManagerModule;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Fan.FanIdentitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 
 import java.io.Serializable;
 import java.util.HashMap;
