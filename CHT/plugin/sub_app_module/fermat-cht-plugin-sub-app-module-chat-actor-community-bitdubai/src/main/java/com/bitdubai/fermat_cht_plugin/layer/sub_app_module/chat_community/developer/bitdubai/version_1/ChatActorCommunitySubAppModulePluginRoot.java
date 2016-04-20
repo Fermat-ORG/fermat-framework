@@ -62,15 +62,15 @@ public class ChatActorCommunitySubAppModulePluginRoot extends AbstractModule<Cha
     @NeededAddonReference (platform = Platforms.OPERATIVE_SYSTEM_API  , layer = Layers.SYSTEM               , addon  = Addons .PLUGIN_FILE_SYSTEM)
     private PluginFileSystem pluginFileSystem;
 
-    @NeededPluginReference(platform = Platforms.CHAT_ACTOR_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CHAT_ACTOR_NETWORK_SERVICE  )
+    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CHAT_ACTOR_CONNECTION)
+    private ChatActorConnectionManager chatActorConnectionManager;
+
+    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CHAT_ACTOR_NETWORK_SERVICE  )
     private ChatManager chatActorNetworkServiceManager;
 
-    @NeededPluginReference(platform = Platforms.CHAT_ACTOR_PLATFORM, layer = Layers.IDENTITY             , plugin = Plugins.CHAT_IDENTITY)
+    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.IDENTITY             , plugin = Plugins.CHAT_IDENTITY)
     private ChatIdentityManager chatIdentityManager;
 
-
-    @NeededPluginReference(platform = Platforms.CHAT_ACTOR_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CHAT_ACTOR_CONNECTION)
-    private ChatActorConnectionManager chatActorConnectionManager;
 
     ChatActorCommunityManager fermatManager;
 
@@ -92,6 +92,8 @@ public class ChatActorCommunitySubAppModulePluginRoot extends AbstractModule<Cha
                     pluginId,
                     getPluginVersionReference()
             );
+
+            System.out.println("******* Init Chat Sup App Module Actor Connection ******");
 
             this.serviceStatus = ServiceStatus.STARTED;
 

@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -72,6 +71,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
         View layout = inflater.inflate(R.layout.cht_wizard_broadcast_one_step, container, false);
          final RadioButton radioA = (RadioButton) layout.findViewById(R.id.radioButton);
          final RadioButton radioB = (RadioButton) layout.findViewById(R.id.radioButton2);
+
          /*radioA.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
@@ -106,9 +106,9 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
              public void onClick(View v) {
                  if(radioA.isChecked() || radioB.isChecked())
                      if(radioA.isChecked())
-                     changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL);
+                     changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL,appSession.getAppPublicKey());
                      else
-                     changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL);
+                     changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL,appSession.getAppPublicKey());
                  else
                      Toast.makeText(getActivity(), "Please select at least one option", Toast.LENGTH_SHORT).show();
              }

@@ -20,10 +20,9 @@ public class SupAppModuleLayer extends AbstractLayer {
     public void start() throws CantStartLayerException {
 
         try {
-
-            registerPlugin(new ChatSupAppModulePluginSubsystem());
-            registerPlugin(new ChatSupAppIdentityModulePluginSubsystem());
             registerPlugin(new ChatActorCommunityModulePluginSubsystem());
+            registerPlugin(new ChatSupAppIdentityModulePluginSubsystem());
+            registerPlugin(new ChatSupAppModulePluginSubsystem());
 
         } catch (CantRegisterPluginException e) {
 

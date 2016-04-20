@@ -144,11 +144,15 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
      */
     private void initViews(View layout) {
         actualizable = true;
-        mBrokerName = (EditText) layout.findViewById(R.id.aliasEdit);
+        mBrokerName = (EditText) layout.findViewById(R.id.editTextName);
         final Button botonG = (Button) layout.findViewById(R.id.cht_button);
         mBrokerImage = (ImageView) layout.findViewById(R.id.cht_image);
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
         Bitmap bitmap = null;
+        if (chatIdentitySettings.isHomeTutorialDialogEnabled() == true)
+        {
+            setUpDialog();
+        }
         try {
             if(ExistIdentity() == false) {
                 botonG.setOnClickListener(new View.OnClickListener() {
@@ -158,7 +162,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         createNewIdentityInBackDevice("onClick");
                     }
                 });
-                setUpDialog();
                 mBrokerName.requestFocus();
                 mBrokerName.performClick();
                 mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -222,6 +225,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         botonG.setVisibility(View.VISIBLE);
                     }
                 });
+                botonG.setText("Save Changes");
                 botonG.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -276,22 +280,15 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        try {
-            if(ExistIdentity() == false) {
-                menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
-
-                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            }else {
-                menu.add(0, MENU_ADD_ACTION, 0, "help").setIcon(R.drawable.ic_action_add)
-                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            }
-        } catch (CHTException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-        }
+        //menu.add(0, MENU_ADD_ACTION, 0, "help").setIcon(R.drawable.ic_action_add)
+        //        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     public void setUpDialog(){
+        try{
         PresentationDialog pd = new PresentationDialog.Builder(getActivity(), Session)
                 .setSubTitle(R.string.cht_chat_identity_subtitle)
                 .setBody(R.string.cht_chat_identity_body)
@@ -301,6 +298,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 .setIsCheckEnabled(true)
                 .setTextFooter(R.string.cht_chat_footer).build();
         pd.show();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT_IDENTITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

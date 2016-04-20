@@ -73,9 +73,9 @@ import bitdubai.version_1.exceptions.CantPersistWalletSkinException;
 import bitdubai.version_1.exceptions.CantUpdateWalletNameException;
 import bitdubai.version_1.structure.AppManagerMiddlewareInstallationProcess;
 import bitdubai.version_1.structure.AppManagerMiddlewareInstalledWallet;
-import bitdubai.version_1.structure.database.AppManagerMiddlewareDao;
-import bitdubai.version_1.structure.database.AppManagerMiddlewareDatabaseConstants;
-import bitdubai.version_1.structure.database.AppManagerMiddlewareDatabaseFactory;
+import bitdubai.version_1.structure.database.WalletManagerMiddlewareDao;
+import bitdubai.version_1.structure.database.WalletManagerMiddlewareDatabaseConstants;
+import bitdubai.version_1.structure.database.WalletManagerMiddlewareDatabaseFactory;
 
 /**
  * That plugin produces the specific installation of the wallet on the user device
@@ -132,7 +132,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
             /**
              * I'll first get de installed wallet with walletIdInTheDevice params (public key)
              */
-            AppManagerMiddlewareDao AppManagerDao = new AppManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
+            WalletManagerMiddlewareDao AppManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
 
             InstalledWallet installedWallet = AppManagerDao.getInstalledWallet(walletIdInTheDevice);
             /**
@@ -186,7 +186,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
     public List<DeveloperDatabaseTableRecord> getDatabaseTableContent(DeveloperObjectFactory developerObjectFactory, DeveloperDatabase developerDatabase, DeveloperDatabaseTable developerDatabaseTable) {
         Database database;
         try {
-            database = this.pluginDatabaseSystem.openDatabase(pluginId, AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
+            database = this.pluginDatabaseSystem.openDatabase(pluginId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_TABLE_NAME);
             return AppManagerMiddlewareDeveloperDatabaseFactory.getDatabaseTableContent(developerObjectFactory, database, developerDatabaseTable);
         }catch (CantOpenDatabaseException cantOpenDatabaseException){
             /**
@@ -214,7 +214,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
          */
         try {
 
-            database = pluginDatabaseSystem.openDatabase(pluginId, AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE);
+            database = pluginDatabaseSystem.openDatabase(pluginId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE);
 
         } catch (CantOpenDatabaseException cantOpenDatabaseException) {
             try {
@@ -254,7 +254,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
 
         try{
 
-            AppManagerMiddlewareDao AppManagerDao = new AppManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
+            WalletManagerMiddlewareDao AppManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
 
             installedWallets = AppManagerDao.getInstalledWallets();
         }
@@ -417,7 +417,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
             /**
              * Get installed wallet info
              */
-            AppManagerMiddlewareDao AppManagerDao = new AppManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
+            WalletManagerMiddlewareDao AppManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
 
             InstalledWallet installedWallet = AppManagerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
 
@@ -458,7 +458,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
             /**
              * Get installed wallet info
              */
-            AppManagerMiddlewareDao AppManagerDao = new AppManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
+            WalletManagerMiddlewareDao AppManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
 
             InstalledWallet installedWallet = AppManagerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
 
@@ -523,7 +523,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
 
         try{
 
-            AppManagerMiddlewareDao walletMangerDao = new AppManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
+            WalletManagerMiddlewareDao walletMangerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
             /**
              * Get installed wallet info
              */
@@ -564,7 +564,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
             /**
              * Get installed wallet information
              */
-            AppManagerMiddlewareDao walletMangerDao = new AppManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
+            WalletManagerMiddlewareDao walletMangerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
 
 
             InstalledWallet installedWallet = walletMangerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
@@ -606,7 +606,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
             /**
              * Get installed wallet information
              */
-            AppManagerMiddlewareDao walletMangerDao = new AppManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
+            WalletManagerMiddlewareDao walletMangerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
 
             InstalledWallet installedWallet = walletMangerDao.getInstalledWallet(walletIdInThisDevice);
             /**
@@ -644,7 +644,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
     public void removeWallet(UUID walletIdInTheDevice) throws CantRemoveWalletException{
         try
         {
-            AppManagerMiddlewareDao walletDao = new AppManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
+            WalletManagerMiddlewareDao walletDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
 
             walletDao.deleteWallet(walletIdInTheDevice);
 
@@ -669,7 +669,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
     public void renameWallet(UUID walletIdInTheDevice, String newName) throws CantRenameWalletException{
         try
         {
-            AppManagerMiddlewareDao walletDao = new AppManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
+            WalletManagerMiddlewareDao walletDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem,pluginId);
             walletDao.changeWalletName(walletIdInTheDevice, newName);
 
         } catch (CantUpdateWalletNameException | CantExecuteDatabaseOperationException e){
@@ -689,7 +689,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
     public InstalledWallet getInstalledWallet(String walletPublicKey) throws CantCreateNewWalletException {
 
         try{
-            AppManagerMiddlewareDao AppManagerMiddlewareDao = new AppManagerMiddlewareDao(pluginDatabaseSystem,pluginId);
+            WalletManagerMiddlewareDao AppManagerMiddlewareDao = new WalletManagerMiddlewareDao(pluginDatabaseSystem,pluginId);
             return AppManagerMiddlewareDao.getInstalledWallet(walletPublicKey);
 
         } catch (CantGetInstalledWalletsException | CantExecuteDatabaseOperationException e) {
@@ -719,7 +719,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
     }
 
     private void createAppManagerMiddlewareDatabase() throws CantCreateDatabaseException {
-        AppManagerMiddlewareDatabaseFactory databaseFactory = new AppManagerMiddlewareDatabaseFactory(this.pluginDatabaseSystem);
-        database = databaseFactory.createDatabase(pluginId, AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE);
+        WalletManagerMiddlewareDatabaseFactory databaseFactory = new WalletManagerMiddlewareDatabaseFactory(this.pluginDatabaseSystem);
+        database = databaseFactory.createDatabase(pluginId, WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE);
     }
 }

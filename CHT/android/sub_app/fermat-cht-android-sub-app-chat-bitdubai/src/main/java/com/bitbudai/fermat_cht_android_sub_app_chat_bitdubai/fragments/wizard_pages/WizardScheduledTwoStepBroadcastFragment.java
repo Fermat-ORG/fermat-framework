@@ -27,7 +27,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleMan
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import java.sql.Time;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -98,6 +98,7 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
                 });
             }
         });
+
         final Spinner timeSpinner = (Spinner) layout.findViewById(R.id.hora);
         dateSpinner.setDropDownWidth(0);
         DateFormat dff = new SimpleDateFormat("HH:mm:ss");
@@ -155,7 +156,7 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
                 saveSettingAndGoNextStep();
                 break;
             case android.R.id.home:
-                changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL);
+                changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL,appSession.getAppPublicKey());
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -163,7 +164,7 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
 
     private void saveSettingAndGoNextStep() {
         //TODO: AÑADIR SAVESETTINGS
-        changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
+        changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST,appSession.getAppPublicKey());
 
     }
 

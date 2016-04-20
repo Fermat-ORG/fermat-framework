@@ -13,7 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Cant
 import java.util.ArrayList;
 import java.util.List;
 
-import bitdubai.version_1.structure.database.AppManagerMiddlewareDatabaseConstants;
+import bitdubai.version_1.structure.database.WalletManagerMiddlewareDatabaseConstants;
 
 /**
  * Created by natalia on 24/07/15.
@@ -33,7 +33,7 @@ public class AppManagerMiddlewareDeveloperDatabaseFactory {
          * I only have one database on my plugin. I will return its name.
          */
         List<DeveloperDatabase> databases = new ArrayList<DeveloperDatabase>();
-        databases.add(developerObjectFactory.getNewDeveloperDatabase(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE, pluginId));
+        databases.add(developerObjectFactory.getNewDeveloperDatabase(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_DATABASE, pluginId));
         return databases;
     }
 
@@ -46,26 +46,26 @@ public class AppManagerMiddlewareDeveloperDatabaseFactory {
          */
 
         List<String> AppManagerMiddlewareTableColumns = new ArrayList<>();
-        AppManagerMiddlewareTableColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME);
-        AppManagerMiddlewareTableColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PRIVATE_KEY_COLUMN_NAME);
-        AppManagerMiddlewareTableColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
-        AppManagerMiddlewareTableColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME);
-        AppManagerMiddlewareTableColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATEGORY_COLUMN_NAME);
-        AppManagerMiddlewareTableColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAME_COLUMN_NAME);
-        AppManagerMiddlewareTableColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PLATFORM_IDENTIFIER_COLUMN_NAME);
-        AppManagerMiddlewareTableColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_ICON_NAME_COLUMN_NAME);
-        AppManagerMiddlewareTableColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_VERSION_COLUMN_NAME);
-        AppManagerMiddlewareTableColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_TYPE_COLUMN_NAME);
-        AppManagerMiddlewareTableColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_SIZE_COLUMN_NAME);
-        AppManagerMiddlewareTableColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_DENSITY_COLUMN_NAME);
-        AppManagerMiddlewareTableColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME);
-        AppManagerMiddlewareTableColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME);
-        AppManagerMiddlewareTableColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
+        AppManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PUBLIC_KEY_COLUMN_NAME);
+        AppManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PRIVATE_KEY_COLUMN_NAME);
+        AppManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
+        AppManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME);
+        AppManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_CATEGORY_COLUMN_NAME);
+        AppManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAME_COLUMN_NAME);
+        AppManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_PLATFORM_IDENTIFIER_COLUMN_NAME);
+        AppManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_ICON_NAME_COLUMN_NAME);
+        AppManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_VERSION_COLUMN_NAME);
+        AppManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_TYPE_COLUMN_NAME);
+        AppManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_SIZE_COLUMN_NAME);
+        AppManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_SCREEN_DENSITY_COLUMN_NAME);
+        AppManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_NAVIGATION_VERSION_COLUMN_NAME);
+        AppManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME);
+        AppManagerMiddlewareTableColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME);
 
         /**
          * Wallets table
          */
-        DeveloperDatabaseTable  WalletTable = developerObjectFactory.getNewDeveloperDatabaseTable(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME, AppManagerMiddlewareTableColumns);
+        DeveloperDatabaseTable  WalletTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME, AppManagerMiddlewareTableColumns);
         tables.add(WalletTable);
 
 
@@ -73,16 +73,16 @@ public class AppManagerMiddlewareDeveloperDatabaseFactory {
          * LanguageColumns table
          */
         List<String> AppManagerMiddlewareTableLanguageColumns = new ArrayList<>();
-        AppManagerMiddlewareTableLanguageColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_ID_COLUMN_NAME);
-        AppManagerMiddlewareTableLanguageColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_LABEL_COLUMN_NAME);
-        AppManagerMiddlewareTableLanguageColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_NAME_COLUMN_NAME);
-        AppManagerMiddlewareTableLanguageColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_WALLET_CATALOG_ID_COLUMN_NAME);
-        AppManagerMiddlewareTableLanguageColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_VERSION_COLUMN_NAME);
+        AppManagerMiddlewareTableLanguageColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_ID_COLUMN_NAME);
+        AppManagerMiddlewareTableLanguageColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_LABEL_COLUMN_NAME);
+        AppManagerMiddlewareTableLanguageColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_NAME_COLUMN_NAME);
+        AppManagerMiddlewareTableLanguageColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_WALLET_CATALOG_ID_COLUMN_NAME);
+        AppManagerMiddlewareTableLanguageColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_LANGUAGE_VERSION_COLUMN_NAME);
 
         /**
          * language table
          */
-        DeveloperDatabaseTable  languageTable = developerObjectFactory.getNewDeveloperDatabaseTable(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME, AppManagerMiddlewareTableLanguageColumns);
+        DeveloperDatabaseTable  languageTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_LANGUAGES_TABLE_TABLE_NAME, AppManagerMiddlewareTableLanguageColumns);
         tables.add(languageTable);
 
         /**
@@ -90,17 +90,17 @@ public class AppManagerMiddlewareDeveloperDatabaseFactory {
          */
 
         List<String> AppManagerMiddlewareTableSkinColumns = new ArrayList<>();
-        AppManagerMiddlewareTableSkinColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_ID_COLUMN_NAME);
-        AppManagerMiddlewareTableSkinColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME);
-        AppManagerMiddlewareTableSkinColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_NAME_COLUMN_NAME);
-        AppManagerMiddlewareTableSkinColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_PREVIEW_IMAGE_COLUMN_NAME);
-        AppManagerMiddlewareTableSkinColumns.add(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_VERSION_COLUMN_NAME);
+        AppManagerMiddlewareTableSkinColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_ID_COLUMN_NAME);
+        AppManagerMiddlewareTableSkinColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_WALLET_CATALOG_ID_COLUMN_NAME);
+        AppManagerMiddlewareTableSkinColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_NAME_COLUMN_NAME);
+        AppManagerMiddlewareTableSkinColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_PREVIEW_IMAGE_COLUMN_NAME);
+        AppManagerMiddlewareTableSkinColumns.add(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_SKIN_VERSION_COLUMN_NAME);
 
         /**
          * Skin table
          */
 
-        DeveloperDatabaseTable  cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME, AppManagerMiddlewareTableSkinColumns);
+        DeveloperDatabaseTable  cryptoTransactionsTable = developerObjectFactory.getNewDeveloperDatabaseTable(WalletManagerMiddlewareDatabaseConstants.WALLET_MANAGER_SKINS_TABLE_TABLE_NAME, AppManagerMiddlewareTableSkinColumns);
         tables.add(cryptoTransactionsTable);
 
 
