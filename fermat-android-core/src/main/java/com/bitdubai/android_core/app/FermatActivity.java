@@ -64,6 +64,7 @@ import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.LogReader;
 import com.bitdubai.android_core.app.common.version_1.util.MainLayoutHelper;
 import com.bitdubai.android_core.app.common.version_1.util.ServiceCallback;
+import com.bitdubai.android_core.app.common.version_1.util.SharedMemory;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
 import com.bitdubai.fermat.R;
@@ -85,6 +86,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.AndroidCoreManager;
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.FermatStates;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
@@ -214,6 +216,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected ExecutorService executor;
 
 
+
+
     /**
      * Called when the activity is first created
      *
@@ -278,8 +282,8 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getApplicationContext(), "Oooops! recovering from system error",
-                    LENGTH_LONG).show();
+//            makeText(getApplicationContext(), "Oooops! recovering from system error",
+//                    LENGTH_LONG).show();
         }
 
         return super.onCreateOptionsMenu(menu);
@@ -355,7 +359,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
            // Log.i("FERMAT ACTIVITY loadUI", "FIN " + System.currentTimeMillis());
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getApplicationContext(), "Oooops! recovering from system error",
+            makeText(getApplicationContext(), "Recovering from system error",
                     LENGTH_LONG).show();
             handleExceptionAndRestart();
         }
@@ -1057,7 +1061,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
             onRestart();
         } catch (Exception e) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
-            makeText(getApplicationContext(), "Oooops! recovering from system error",
+            makeText(getApplicationContext(), "Recovering from system error",
                     LENGTH_LONG).show();
         }
     }
@@ -1105,7 +1109,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, FermatException.wrapException(e));
 
-            makeText(getApplicationContext(), "Oooops! recovering from system error",
+            makeText(getApplicationContext(), "Recovering from system error",
                     LENGTH_LONG).show();
         }
     }
@@ -1244,7 +1248,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
         } catch (Exception ex) {
             getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(ex));
-            makeText(getApplicationContext(), "Oooops! recovering from system error", LENGTH_SHORT).show();
+            makeText(getApplicationContext(), "Recovering from system error", LENGTH_SHORT).show();
             handleExceptionAndRestart();
         }
     }
@@ -1357,30 +1361,37 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
     @Override
     protected void onDestroy() {
-        wizards = null;
-        Intent intent = new Intent(this,NotificationService.class);
-        stopService(intent);
+        try {
+            wizards = null;
+            Intent intent = new Intent(this, NotificationService.class);
+            stopService(intent);
 
-        //navigationDrawerFragment.onDetach();
+            //navigationDrawerFragment.onDetach();
 
-        if(runtimeStructureManager!=null){
-            runtimeStructureManager.clear();
-        }
+            if (runtimeStructureManager != null) {
+                runtimeStructureManager.clear();
+            }
 
-        try{
-            broadcastManager.stop();
-            AndroidCoreUtils.getInstance().clear(broadcastManager);
+            try {
+                broadcastManager.stop();
+                AndroidCoreUtils.getInstance().clear(broadcastManager);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
+            /**
+             * stop every service
+             */
+            //ApplicationSession.getInstance().getServicesHelpers().unbindServices();
+
+            resetThisActivity();
+
+            executor.shutdownNow();
+            super.onDestroy();
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        /**
-         * stop every service
-         */
-        //ApplicationSession.getInstance().getServicesHelpers().unbindServices();
-
-        resetThisActivity();
-        super.onDestroy();
     }
 
     protected void hideBottonIcons(){
@@ -1747,6 +1758,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
     protected void handleExceptionAndRestart(){
         Intent intent = new Intent(this,StartActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private ServiceCallback getServiceCallback(){
@@ -1807,4 +1819,11 @@ public abstract class FermatActivity extends AppCompatActivity implements
     }
 
 
+    public void setAppStatus(AppsStatus appStatus) {
+        SharedMemory.getInstance().changeAppStatus(appStatus);
+    }
+
+    public AppsStatus getAppStatus(){
+        return SharedMemory.getInstance().getAppStatus();
+    }
 }

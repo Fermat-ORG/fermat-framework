@@ -1,6 +1,7 @@
 package com.bitdubai.android_core.app.common.version_1.provisory;
 
 import com.bitdubai.fermat.R;
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
@@ -34,7 +35,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.SETTINGS.getCode(),
                 "settings",
                 new Version(1,0,0),
-                null);
+                null, AppsStatus.DEV);
 
         Item item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.icon_settings_menu);
@@ -60,7 +61,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.CCP_IDENTITY.getCode(),
                 "intra_user_identity_sub_app",
                 new Version(1,0,0),
-                Platforms.CRYPTO_CURRENCY_PLATFORM);
+                Platforms.CRYPTO_CURRENCY_PLATFORM, AppsStatus.ALPHA);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.intra_user_identity_xxhdpi);
@@ -76,7 +77,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.DAP_IDENTITY_ISSUER.getCode(),
                 "sub-app-asset-identity-issuer",
                 new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM);
+                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.asset_issuer_identity);
@@ -90,7 +91,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.DAP_IDENTITY_USER.getCode(),
                 "sub-app-asset-identity-user",
                 new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM);
+                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.asset_user_identity);
@@ -105,7 +106,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.DAP_IDENTITY_REDEEM.getCode(),
                 "sub-app-asset-identity-redeem-point",
                 new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM);
+                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.redeem_point_identity);
@@ -121,7 +122,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.CBP_BROKER_IDENTITY.getCode(),
                 "sub_app_crypto_broker_identity",
                 new Version(1, 0, 0),
-                Platforms.CRYPTO_BROKER_PLATFORM);
+                Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.DEV);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.crypto_broker_identity);
@@ -137,7 +138,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.CBP_CUSTOMER_IDENTITY.getCode(),
                 "sub_app_crypto_customer_identity",
                 new Version(1, 0, 0),
-                Platforms.CRYPTO_BROKER_PLATFORM);
+                Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.DEV);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.crypto_customer_identity);
@@ -190,9 +191,9 @@ public class ProvisoryData {
                 SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode(),
                 "sub_app_chat_identity",
                 new Version(1, 0, 0),
-                Platforms.CHAT_PLATFORM);
+                Platforms.CHAT_PLATFORM, AppsStatus.DEV);
         item2 = new Item(installedSubApp);
-        item2.setIconResource(R.drawable.chat_subapp);
+        item2.setIconResource(R.drawable.chat_identity_subapp);
         item2.setPosition(8);
         lstIdentities.add(item2);
 
@@ -233,7 +234,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.CCP_COMMUNITY.getCode(),
                 "intra_user_community_sub_app",
                 new Version(1,0,0),
-                Platforms.CRYPTO_CURRENCY_PLATFORM);
+                Platforms.CRYPTO_CURRENCY_PLATFORM, AppsStatus.DEV);
 
         Item item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.intra_user_community_xxhdpi);
@@ -249,7 +250,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.DAP_COMMUNITY_ISSUER.getCode(),
                 "sub-app-asset-community-issuer",
                 new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM);
+                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.DEV);
 
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.asset_issuer_comunity);
@@ -265,7 +266,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.DAP_COMMUNITY_USER.getCode(),
                 "sub-app-asset-community-user",
                 new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM);
+                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.DEV);
 
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.asset_user_comunity);
@@ -280,7 +281,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.DAP_COMMUNITY_REDEEM.getCode(),
                 "sub-app-asset-community-redeem-point",
                 new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM);
+                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.DEV);
 
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.reddem_point_community);
@@ -296,7 +297,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode(),
                 "sub_app_crypto_broker_community",
                 new Version(1, 0, 0)
-                ,Platforms.CRYPTO_BROKER_PLATFORM);
+                ,Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.DEV);
 
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.crypto_broker_community_final);
@@ -312,7 +313,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode(),
                 "sub_app_crypto_customer_community",
                 new Version(1, 0, 0),
-                Platforms.CRYPTO_BROKER_PLATFORM);
+                Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.DEV);
 
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.crypto_customer_community_final);
@@ -329,7 +330,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
                 "sub_app_art_fan_community",
                 new Version(1, 0, 0),
-                Platforms.ART_PLATFORM);
+                Platforms.ART_PLATFORM, AppsStatus.DEV);
 
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.communities_bar);
@@ -371,7 +372,7 @@ public class ProvisoryData {
                 "App Store",
                 SubAppsPublicKeys.CWP_STORE.getCode(),
                 "wallet_store",new Version(1,0,0),
-                null);
+                null, AppsStatus.DEV);
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.ic_03);
         item2.setPosition(4);

@@ -72,6 +72,26 @@ public class WelcomeWizardFragment extends AbstractFermatFragment implements Vie
 
         radio_group = (RadioGroup) view.findViewById(R.id.radio_group);
         radio_group.check(R.id.radio_first);
+        radio_group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                int itemPos = 0;
+                if (checkedId == R.id.radio_first) {
+                    itemPos = 0;
+                } else if (checkedId == R.id.radio_second) {
+                    itemPos = 1;
+                } else if (checkedId == R.id.radio_third) {
+                    itemPos = 2;
+                }else if (checkedId == R.id.radio_fourth) {
+                    itemPos = 3;
+                }else if (checkedId == R.id.radio_fifth) {
+                    itemPos = 4;
+                }
+                viewPager.setCurrentItem(itemPos);
+                boolean isNext = WelcomeWizardFragment.this.position <= position;
+                WelcomeWizardFragment.this.position = itemPos;
+            }
+        });
 
         viewPager.setPageTransformer(true, new DepthPageTransformer());
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -141,6 +161,9 @@ public class WelcomeWizardFragment extends AbstractFermatFragment implements Vie
                 break;
             case 3:
                 radio_group.check(R.id.radio_fourth);
+                break;
+            case 4:
+                radio_group.check(R.id.radio_fifth);
                 break;
         }
     }
