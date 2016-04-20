@@ -110,16 +110,28 @@
             android:layout_height="104dp"
             android:layout_gravity="center_horizontal">
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/external_platform_label"
+              android:text="External Platform"
+              android:textStyle="bold"/>
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/external_platform_label"
-                android:text="External Platform"
-                android:textColor="#000000"
-                tools:ignore="HardcodedText"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="114dp" />
+                android:id="@+id/exposure_level_label"
+                android:text="Exposure Level"
+                android:textStyle="bold"
+                android:layout_toRightOf="@+id/external_platform_label"
+                android:paddingLeft="15dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/artist_accept_connections_type_label"
+                android:text="Connections Type"
+                android:textStyle="bold"
+                android:layout_toRightOf="@+id/exposure_level_label"
+                android:paddingLeft="15dp"/>
 
             <LinearLayout
                 android:paddingTop="20dp"
