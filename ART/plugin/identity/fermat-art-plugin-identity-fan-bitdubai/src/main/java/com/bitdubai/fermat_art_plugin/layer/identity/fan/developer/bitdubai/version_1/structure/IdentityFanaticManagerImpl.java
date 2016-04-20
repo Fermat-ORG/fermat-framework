@@ -139,15 +139,6 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
         }
     }
 
-    public Fanatic getIdentityFanatic() throws CantGetFanIdentityException {
-        Fanatic Fanatic = null;
-        try {
-            Fanatic = getFanaticIdentityDao().getIdentityFanatic();
-        } catch (CantInitializeFanaticIdentityDatabaseException e) {
-            e.printStackTrace();
-        }
-        return Fanatic;
-    }
     public Fanatic getIdentityFanatic(String publicKey) throws CantGetFanIdentityException {
         Fanatic Fanatic = null;
         try {
@@ -157,7 +148,7 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
         }
         return Fanatic;
     }
-    public Fanatic createNewIdentityArtist(String alias, byte[] profileImage, UUID externalIdentityID) throws CantCreateFanIdentityException {
+    public Fanatic createNewIdentityFanatic(String alias, byte[] profileImage, UUID externalIdentityID) throws CantCreateFanIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -167,6 +158,7 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
 
             getFanaticIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage, externalIdentityID);
 
+            registerIdentitiesANS(publicKey);
             return new FanaticIdentityImp(alias, publicKey, profileImage,externalIdentityID, pluginFileSystem, pluginId);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateFanIdentityException("CAN'T CREATE NEW Fanatic IDENTITY", e, "Error getting current logged in device user", "");
@@ -175,11 +167,14 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
         }
     }
 
-    public void updateIdentityArtist(String alias,String publicKey, byte[] profileImage, UUID externalIdentityID) throws CantUpdateFanIdentityException {
+    public void updateIdentityFanatic(String alias, String publicKey, byte[] profileImage, UUID externalIdentityID) throws CantUpdateFanIdentityException {
         try {
             getFanaticIdentityDao().updateIdentityFanaticUser(publicKey, alias, profileImage, externalIdentityID);
-
+            FanExposingData fanExposingData = new FanExposingData(publicKey,alias,profileImage);
+           fanManager.updateIdentity(fanExposingData);
         } catch (CantInitializeFanaticIdentityDatabaseException e) {
+            e.printStackTrace();
+        } catch (CantExposeIdentityException e) {
             e.printStackTrace();
         }
     }
@@ -265,12 +260,12 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
 
     @Override
     public Fanatic createFanaticIdentity(String alias, byte[] imageBytes, UUID externalIdentityId) throws CantCreateFanIdentityException {
-        return createNewIdentityArtist(alias, imageBytes, externalIdentityId);
+        return createNewIdentityFanatic(alias, imageBytes, externalIdentityId);
     }
 
     @Override
     public void updateFanIdentity(String alias, String publicKey, byte[] imageProfile, UUID externalIdentityID) throws CantUpdateFanIdentityException {
-        updateIdentityArtist(alias, publicKey, imageProfile, externalIdentityID);
+        updateIdentityFanatic(alias, publicKey, imageProfile, externalIdentityID);
     }
 
     @Override

@@ -77,7 +77,7 @@ public final class FanActorNetworkServiceManager implements FanManager {
         this.executorService                    = Executors.newFixedThreadPool(3)   ;
     }
 
-    private ConcurrentHashMap<String, FanExposingData> artistsToExpose;
+    private ConcurrentHashMap<String, FanExposingData> fansToExpose;
 
     @Override
     public final void exposeIdentity(final FanExposingData fan) throws CantExposeIdentityException {
@@ -86,7 +86,7 @@ public final class FanActorNetworkServiceManager implements FanManager {
 
             if (!isRegistered()) {
 
-                addArtistsToExpose(fan);
+                addFansToExpose(fan);
 
             } else {
 
@@ -103,8 +103,8 @@ public final class FanActorNetworkServiceManager implements FanManager {
 
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
 
-                if (artistsToExpose != null && artistsToExpose.containsKey(fan.getPublicKey()))
-                    artistsToExpose.remove(fan.getPublicKey());
+                if (fansToExpose != null && fansToExpose.containsKey(fan.getPublicKey()))
+                    fansToExpose.remove(fan.getPublicKey());
             }
 
         } catch (final CantRegisterComponentException e) {
@@ -155,12 +155,12 @@ public final class FanActorNetworkServiceManager implements FanManager {
         }
     }
 
-    private void addArtistsToExpose(final FanExposingData artistExposingData) {
+    private void addFansToExpose(final FanExposingData fanExposingData) {
 
-        if (artistsToExpose == null)
-            artistsToExpose = new ConcurrentHashMap<>();
+        if (fansToExpose == null)
+            fansToExpose = new ConcurrentHashMap<>();
 
-        artistsToExpose.putIfAbsent(artistExposingData.getPublicKey(), artistExposingData);
+        fansToExpose.putIfAbsent(fanExposingData.getPublicKey(), fanExposingData);
     }
 
     @Override
@@ -190,11 +190,11 @@ public final class FanActorNetworkServiceManager implements FanManager {
 
         this.platformComponentProfile = platformComponentProfile;
 
-        if (platformComponentProfile != null && artistsToExpose != null && !artistsToExpose.isEmpty()) {
+        if (platformComponentProfile != null && fansToExpose != null && !fansToExpose.isEmpty()) {
 
             try {
 
-                this.exposeIdentities(artistsToExpose.values());
+                this.exposeIdentities(fansToExpose.values());
 
             } catch (final CantExposeIdentitiesException e){
 

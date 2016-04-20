@@ -262,6 +262,7 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                         pluginId), );*/
                 list.add(new FanaticIdentityImp(record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
+                        getFanaticProfileImagePrivateKey(record.getStringValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         record.getUUIDValue(FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME),
                         pluginFileSystem,
                         pluginId));
