@@ -4,68 +4,15 @@
     android:layout_height="match_parent"
     android:columnCount="30"
     android:rowCount="31"
-    android:background="#a6a7b0">
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Back"
-        android:id="@+id/back"
-        android:layout_marginStart="35dp"
-        android:layout_alignTop="@+id/play"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Play"
-        android:id="@+id/play"
-        android:layout_alignTop="@+id/forward"
-        android:layout_toEndOf="@+id/back"
-        android:layout_marginLeft="30dp" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="NEXT"
-        android:id="@+id/forward"
-        android:layout_above="@+id/progressBar"
-        android:layout_toEndOf="@+id/play"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="20dp" />
-
-    <SeekBar
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/progressBar"
-        android:backgroundTint="#100f0f"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/back"
-        android:layout_marginBottom="50dp"
-        android:layout_alignEnd="@+id/forward"
-        android:layout_marginRight="40dp" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:text="tiempo"
-        android:textColor="@color/textviewcolor"
-        android:id="@+id/tiempo"
-        android:layout_below="@+id/forward"
-        android:layout_toEndOf="@+id/progressBar"
-        android:paddingStart="20dp"
-        android:layout_alignBottom="@+id/progressBar"
-        android:layout_marginLeft="-50dp" />
+    android:background="#f1f1f1">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/back">
+        android:id="@+id/relativeLayout"
+        android:layout_marginBottom="130dp">
 
         <android.support.v7.widget.RecyclerView
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -74,20 +21,94 @@
             android:layout_height="match_parent"
             android:padding="3dp"
             android:scrollbars="vertical"
-            android:layout_marginBottom="20dp"
+            android:layout_marginBottom="10dp"
             android:background="#e8e8e8" />
 
 
     </RelativeLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:textColor="@color/textviewcolor"
-        android:id="@+id/songname"
-        android:layout_below="@+id/tiempo"
-        android:layout_toEndOf="@+id/back"
-        android:layout_marginLeft="10dp" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false"
+        android:layout_marginTop="380dp"
+        android:background="@drawable/rectangle"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Medium Text"
+            android:textColor="@color/textviewcolor"
+            android:id="@+id/songname"
+            android:layout_below="@+id/tiempo"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="tiempo"
+            android:textColor="@color/textviewcolor"
+            android:id="@+id/tiempo"
+            android:layout_alignBottom="@+id/progressBar"
+            android:layout_marginLeft="320dp"
+            android:layout_marginBottom="8dp" />
+
+        <SeekBar
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:backgroundTint="#100f0f"
+            android:layout_alignParentBottom="true"
+            android:layout_alignStart="@+id/back"
+            android:layout_marginBottom="30dp"
+            android:layout_alignEnd="@+id/forward"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:progressBackgroundTint="#000000" />
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/nextarrow"
+            android:background="@android:color/transparent"
+            android:text="NEXT"
+            android:id="@+id/forward"
+            android:layout_marginLeft="280dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="15dp" />
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/playarrow"
+            android:background="@android:color/transparent"
+            android:text="Play"
+            android:id="@+id/play"
+            android:layout_alignTop="@+id/forward"
+            android:layout_toEndOf="@+id/back"
+            android:layout_marginLeft="95dp" />
+
+        <ImageButton
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/backarrow"
+            android:background="@android:color/transparent"
+            android:text="Back"
+            android:id="@+id/back"
+            android:layout_marginStart="35dp"
+            android:layout_alignTop="@+id/play"
+            android:layout_marginLeft="95dp" />
+    </RelativeLayout>
 </RelativeLayout>

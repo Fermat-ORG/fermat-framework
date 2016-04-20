@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,9 +51,9 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     private ErrorManager errorManager;
 
 
-    Button bplay;
-    Button bbb;
-    Button bff;
+    ImageButton bplay;
+    ImageButton bbb;
+    ImageButton bff;
     SeekBar pb;
     TextView tiempo;
     TextView song;
@@ -122,9 +122,9 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         view=inflater.inflate(R.layout.art_music_player_activity,container,false);
         getActivity().getWindow().setBackgroundDrawableResource(R.drawable.musicplayer_background_viewpager);
-        bplay = (Button) view.findViewById(R.id.play);
-        bbb = (Button) view.findViewById(R.id.back);
-        bff = (Button) view.findViewById(R.id.forward);
+        bplay = (ImageButton) view.findViewById(R.id.play);
+        bbb = (ImageButton) view.findViewById(R.id.back);
+        bff = (ImageButton) view.findViewById(R.id.forward);
         pb=(SeekBar) view.findViewById(R.id.progressBar);
         tiempo=(TextView) view.findViewById((R.id.tiempo));
         recyclerView = (RecyclerView) view.findViewById(R.id.rv);
@@ -235,42 +235,40 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         try {
 
 
-            // create temp file that will hold byte array
-            File tempMp3 = File.createTempFile("i_know_now", "mp3", view.getContext().getCacheDir());
-            tempMp3.deleteOnExit();
-            FileOutputStream fos = new FileOutputStream(tempMp3);
-            fos.write(musicPlayermoduleManager.getSongWithBytes(items.get(position).getSong_id()).getSongBytes());
-            fos.close();
+            if(items.size()>0) {
+                File tempMp3 = File.createTempFile("tempfermatmusic", "mp3", view.getContext().getCacheDir());
+                tempMp3.deleteOnExit();
+                FileOutputStream fos = new FileOutputStream(tempMp3);
+                fos.write(musicPlayermoduleManager.getSongWithBytes(items.get(position).getSong_id()).getSongBytes());
+                fos.close();
 
 
-            if(mp.isPlaying()){
-                stop();
-                mp.reset();
+                if (mp.isPlaying()) {
+                    stop();
+                    mp.reset();
+                }
+
+
+                FileInputStream fis = new FileInputStream(tempMp3);
+                mp.setDataSource(fis.getFD());
+                tempMp3.delete();
+
+                //  Toast.makeText(view.getContext(), items.get(position).getSong_name(), Toast.LENGTH_SHORT).show();
+                songposition = position;
+                song.setText(items.get(position).getSong_name());
+
+
+                mp.prepare();
+
+                System.out.println("ART_MP_duration:" + mp.getDuration() / 1000);
+
+                pb.setMax((int) (mp.getDuration() / 1000));
+
+                songPlayerThread = new ThreadSong(false);
+                songPlayerThread.execute();
+
+
             }
-
-            songPlayerThread = new ThreadSong(false);
-            songPlayerThread.execute();
-
-            FileInputStream fis = new FileInputStream(tempMp3);
-            mp.setDataSource(fis.getFD());
-
-
-          //  Toast.makeText(view.getContext(), items.get(position).getSong_name(), Toast.LENGTH_SHORT).show();
-            songposition=position;
-            song.setText(items.get(position).getSong_name());
-
-
-            mp.prepare();
-
-       //     System.out.println("ART_MP_duration:" + mp.getDuration());
-
-            pb.setMax((int) (mp.getDuration() / 1000));
-
-
-
-
-            mp.start();
-
 
 
         }  catch (IOException e) {
@@ -308,6 +306,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             mp.stop();
             pb.setProgress(0);
             tiempo.setText("0:00");
+            songPlayerThread.cancelmusicplayer=true;
         } catch (IllegalStateException e) {
             Log.e(TAG, "Unable to play audio queue do to exception: " + e.getMessage(), e);
         }
@@ -347,17 +346,18 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     }
 
 
-    public class ThreadSong extends AsyncTask<Void, Float, Void> {
+    public class ThreadSong extends AsyncTask<Void, Float, Boolean> {
         private boolean cancelmusicplayer;
-
         public ThreadSong(boolean cancelmusicplayer) {this.cancelmusicplayer = cancelmusicplayer;}
 
 
         @Override
-        protected void onPreExecute() {}
+        protected void onPreExecute() {
+            mp.start();
+        }
 
         @Override
-        protected Void doInBackground(Void... withNotUse) {
+        protected Boolean doInBackground(Void... withNotUse) {
 
             float progreso = 0.0f;
             while (true) {
@@ -374,12 +374,15 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
                     publishProgress(progreso);
 
+
                     if (cancelmusicplayer) {
                         cancel(true);
                     }
                 }
 
+
             }
+
 
         }
 
@@ -389,6 +392,11 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             Log.v(TAG, "songtime:"+porcentajeProgreso[0]+"");
 
             pb.setProgress( Math.round(porcentajeProgreso[0]) );
+            if((mp.getCurrentPosition()/1000)>=(mp.getDuration()/1000)-1){
+                System.out.println("ART_THIS IS THE END");
+                nextsong();
+            }
+
         }
 
         String crono(float tiempo){
@@ -415,10 +423,10 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         }
 
 
+/*
+        protected void onPostExecute(Boolean cantidadProcesados) {
 
-        protected void onPostExecute(Integer cantidadProcesados) {
-
-        }
+        }*/
 
 
      /*   @Override
