@@ -566,14 +566,6 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private List<String> getFanIdentityByPlatform(ArtExternalPlatform externalPlatform) throws Exception{
         HashMap<UUID, String> fanIdentityByPlatform = null;
         fanIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
-        System.out.println("Platform is : " + externalPlatform + "users are : "+ moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(ArtExternalPlatform.TOKENLY));
-        if(externalPlatform == ArtExternalPlatform.TOKENLY){
-            System.out.println("print this!!!!");
-            System.out.println( moduleManager.listExternalIdentitiesFromCurrentDeviceUser());
-        }else{
-
-            System.out.println("SHIIIITT!!!");
-        }
         Iterator<Map.Entry<UUID, String>> entries2 = fanIdentityByPlatform.entrySet().iterator();
         List<String> identityNameList = new ArrayList<>();
         while(entries2.hasNext()){
@@ -612,10 +604,8 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                             android.R.layout.simple_spinner_item,
                             arraySpinner
                     );
-                    System.out.println("MIERDAAAAAAA");
                     if(parent.getItemAtPosition(position) != 0){
                         arraySpinner.addAll(getFanIdentityByPlatform(ArtExternalPlatform.getArtExternalPlatformByLabel(parent.getItemAtPosition(position).toString())));
-                        System.out.println("### PASA # POR AQUI");
                         adapter = new ArrayAdapter<String>(
                                 getActivity(),
                                 android.R.layout.simple_spinner_item,
@@ -644,7 +634,6 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try{
                     externalPlatformID = getFanIdentityIdByPlatform(ArtExternalPlatform.getArtExternalPlatformByLabel(mFanExternalPlatform.getSelectedItem().toString())).get(position);
-                    System.out.println("Perezila UUID is : "+externalPlatformID);
                 }catch(Exception e){
 
                 }
