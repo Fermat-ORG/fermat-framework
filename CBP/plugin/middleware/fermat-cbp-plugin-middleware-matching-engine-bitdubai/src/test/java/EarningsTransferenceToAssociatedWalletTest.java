@@ -513,7 +513,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
     }
 
     @Test
-    public void givenEarningTransactionsWereExtracted_thenDoNothing() throws FermatException{
+    public void givenEarningTransactionsWereExtracted_thenDoNothing() throws FermatException {
         final String earningWalletPublicKey = WalletsPublicKeys.BNK_BANKING_WALLET.getCode();
         final FiatCurrency earningCurrency = FiatCurrency.ARGENTINE_PESO;
         final FiatCurrency linkedCurrency = FiatCurrency.US_DOLLAR;
