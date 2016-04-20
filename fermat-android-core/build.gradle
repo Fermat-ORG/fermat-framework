@@ -29,10 +29,10 @@ android {
 
     defaultConfig {
         applicationId "org.fermat"
-        minSdkVersion 17
+        minSdkVersion 20
         targetSdkVersion 23
-        versionCode 30
-        versionName "0.64"
+        versionCode 31
+        versionName "0.65"
         multiDexEnabled true
     }
 
@@ -45,6 +45,8 @@ android {
 
     sourceSets {
         main {
+            aidl.srcDirs = ['src/main/java']
+
             res.srcDirs = ['src/main/structured_res/app/shell/version_1',
                            'src/main/res']
             java {

@@ -114,24 +114,29 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
     private void saveFactory(){
         try {
-            PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId,"config","desktop-runtime-config",FilePrivacy.PRIVATE,FileLifeSpan.PERMANENT);
-            pluginTextFile.setContent(Boolean.TRUE.toString());
+            PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "config", "desktop_runtime_config", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            pluginTextFile.setContent("true");
             pluginTextFile.persistToMedia();
         } catch (CantCreateFileException e) {
             e.printStackTrace();
         } catch (CantPersistFileException e) {
             e.printStackTrace();
+        } catch ( Exception e){
+            e.printStackTrace();
         }
     }
 
     private boolean loadConfig(){
+        String dev = null;
         try {
-            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId,"config","desktop-runtime-config",FilePrivacy.PRIVATE,FileLifeSpan.PERMANENT);
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "config", "desktop_runtime_config", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             pluginTextFile.loadFromMedia();
-            return Boolean.getBoolean(pluginTextFile.getContent());
+            dev = pluginTextFile.getContent();
         }catch (Exception e){
-            return false;
+            e.printStackTrace();
+            dev = "false";
         }
+        return dev.equals("true");
 
     }
 
@@ -169,12 +174,20 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 //            lastDesktopObject = desktopObjectType;
 //            return desktopObject;
 //        }
-
-        return lstDesktops.get(desktopObjectPublicKey);
+        DesktopObject desktopObject = null;
+        if(!lstDesktops.isEmpty()){
+            desktopObject = lstDesktops.get(desktopObjectPublicKey);;
+        }else {
+            desktopObject = (DesktopObject) getAppByPublicKey(desktopObjectPublicKey);
+        }
+        return desktopObject;
     }
 
     @Override
     public Map<String,DesktopObject> listDesktops() {
+        if(lstDesktops.size()<2){
+            createToolsDesktop();
+        }
         return lstDesktops;
     }
 
@@ -281,7 +294,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             activity.setFullScreen(true);
             activity.setBackgroundColor("#ffffff");
             activity.setStartFragment(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
-            //runtimeDesktopObject.setStartActivity(Activities.DESKTOP_WIZZARD_WELCOME);
+            runtimeDesktopObject.setStartActivity(Activities.DESKTOP_WIZZARD_WELCOME);
 
             fragment = new Fragment();
             fragment.setType(Fragments.WELCOME_WIZARD_FIRST_SCREEN_FRAGMENT.getKey());
@@ -368,35 +381,7 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
             /**
              * End Desktop CCP
              */
-
-
-            /**
-             * Desktop WPD
-             */
-
-            runtimeDesktopObject = new RuntimeDesktopObject();
-            runtimeDesktopObject.setType("WPD");
-            lstDesktops.put("sub_desktop", runtimeDesktopObject);
-            runtimeDesktopObject.setStartActivity(Activities.WPD_DESKTOP);
-
-            activity = new Activity();
-            /**
-             * set type home
-             */
-            //activity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
-            //activity.setType(Activities.dmp_DESKTOP_HOME);
-            activity.setActivityType("WPD");
-
-            /**
-             * Add home subApps fragment
-             */
-
-            fragment = new Fragment();
-            // dmp_SUB_APP_MANAGER_FRAGMENT
-            fragment.setType("CCPSAMF");
-            activity.addFragment("CCPSAMF", fragment);
-            runtimeDesktopObject.addActivity(activity);
-
+            createToolsDesktop();
 
 
             /**
@@ -499,6 +484,36 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
 
     }
 
+    private void createToolsDesktop() {
+        RuntimeDesktopObject runtimeDesktopObject;
+        Activity activity;
+        Fragment fragment; /**
+         * Desktop WPD
+         */
+
+        runtimeDesktopObject = new RuntimeDesktopObject();
+        runtimeDesktopObject.setType("WPD");
+        lstDesktops.put("sub_desktop", runtimeDesktopObject);
+        runtimeDesktopObject.setStartActivity(Activities.WPD_DESKTOP);
+
+        activity = new Activity();
+        /**
+         * set type home
+         */
+        //activity.setType(Activities.CWP_WALLET_MANAGER_MAIN);
+        //activity.setType(Activities.dmp_DESKTOP_HOME);
+        activity.setActivityType("WPD");
+
+        /**
+         * Add home subApps fragment
+         */
+
+        fragment = new Fragment();
+        // dmp_SUB_APP_MANAGER_FRAGMENT
+        fragment.setType("CCPSAMF");
+        activity.addFragment("CCPSAMF", fragment);
+        runtimeDesktopObject.addActivity(activity);
+    }
 
 
     @Override
@@ -534,10 +549,17 @@ public class DesktopRuntimeEnginePluginRoot extends AbstractPlugin implements De
     @Override
     public FermatStructure getLastApp() {
         FermatStructure fermatStructure = null;
-        if(lastDesktopObject!=null)
-            fermatStructure = lstDesktops.get(lastDesktopObject);
-        else{
-            fermatStructure = lstDesktops.get("main_desktop");
+        if(!lstDesktops.isEmpty()) {
+            if (lastDesktopObject != null)
+                fermatStructure = lstDesktops.get(lastDesktopObject);
+            else {
+                fermatStructure = lstDesktops.get("main_desktop");
+            }
+        }else {
+            fermatStructure = getAppByPublicKey("main_desktop");
+            if(fermatStructure!=null){
+                lstDesktops.put("main_desktop", (DesktopObject) fermatStructure);
+            }
         }
         return fermatStructure;
     }

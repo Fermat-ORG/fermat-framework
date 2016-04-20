@@ -33,7 +33,8 @@
             android:layout_height="match_parent"
             android:id="@+id/checkbox"
             android:layout_gravity="center"
-            android:button="@drawable/checkbox_background"
+            android:checked="false"
+            android:buttonTint="#58595B"
             android:textColor="#58595B"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -58,18 +59,18 @@
         >
 
         <RadioButton
-            android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:button="@drawable/radio_selector"
             android:checked="true"
-            android:background="@drawable/radio_selector"
             android:layout_marginRight="9dp"
             android:id="@+id/radio_first"
             />
 
         <RadioButton
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:background="@drawable/radio_selector"
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:button="@drawable/radio_selector"
             android:checked="false"
             android:layout_marginRight="9dp"
             android:id="@+id/radio_second"
@@ -77,8 +78,9 @@
             />
 
         <RadioButton
-            android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:button="@drawable/radio_selector"
             android:checked="false"
             android:background="@drawable/radio_selector"
             android:layout_marginRight="9dp"
@@ -87,8 +89,9 @@
             />
 
         <RadioButton
-            android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:button="@drawable/radio_selector"
             android:checked="false"
             android:id="@+id/radio_fourth"
             android:layout_marginRight="9dp"
@@ -96,8 +99,9 @@
             />
 
         <RadioButton
-            android:layout_width="8dp"
-            android:layout_height="8dp"
+            android:layout_width="9dp"
+            android:layout_height="9dp"
+            android:button="@drawable/radio_selector"
             android:checked="false"
             android:id="@+id/radio_fifth"
             android:background="@drawable/radio_selector"
