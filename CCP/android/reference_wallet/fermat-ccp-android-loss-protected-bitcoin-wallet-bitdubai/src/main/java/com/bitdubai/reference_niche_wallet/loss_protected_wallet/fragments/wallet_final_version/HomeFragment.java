@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,8 +49,13 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.Wa
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 
+import org.bitcoinj.core.TxConfidenceTable;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import static android.widget.Toast.makeText;
@@ -62,6 +68,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     LossProtectedWalletSession lossProtectedWalletSession;
     SettingsManager<LossProtectedWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
+    String walletPublicKey = "loss_protected_wallet";
     long before = 0;
     long after = 0;
     boolean pressed = false;
@@ -77,6 +84,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     private TextView txt_balance_amount;
     private TextView txt_balance_amount_type;
     private TextView txt_exchange_rate;
+    private TextView txt_earnOrLost;
+    private TextView txt_date_home;
+    private ImageView earnOrLostImage;
     private long balanceAvailable;
     private View rootView;
 
@@ -262,6 +272,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             txt_type_balance        = (TextView) rootView.findViewById(R.id.txt_type_balance);
             txt_touch_to_change     = (TextView) rootView.findViewById(R.id.txt_touch_to_change);
             txt_exchange_rate       = (TextView) rootView.findViewById(R.id.txt_exchange_rate);
+            txt_earnOrLost          = (TextView) rootView.findViewById(R.id.txt_amount_lost_or_earn);
+            earnOrLostImage         = (ImageView) rootView.findViewById(R.id.earnOrLostImage);
+            txt_date_home           = (TextView) rootView.findViewById(R.id.txt_date_home);
 
             //show Exchange Market Rate
             getAndShowMarketExchangeRateData(rootView);
@@ -309,16 +322,29 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, lossProtectedWalletSession.getTypeAmount()));
 
+            //set Earning or Losts Values
+            double total = 0;
+            total = moduleManager.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
+            if (total>=0){
+                txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(total)+" earning");
+                earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
+            }else {
+                txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(total)+" lost");
+                earnOrLostImage.setImageResource(R.drawable.lost_icon);
+            }
+
+            //set Actual Date
+
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM d, yyyy", Locale.US);
+            Date actualDate = new Date();
+            txt_date_home.setText(sdf.format(actualDate));
+
 
         }catch (Exception e){
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), "Oooops! recovering from system error",
                     Toast.LENGTH_SHORT).show();
         }
-    }
-
-    private void earningAndLosts(){
-
     }
 
     private void changeAmountType(){
