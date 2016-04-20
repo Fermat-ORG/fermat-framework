@@ -41,7 +41,7 @@ import bitdubai.version_1.structure.AppManagerMiddlewareInstalledWallet;
 /**
  * Created by natalia on 04/08/15.
  */
-class AppManagerMiddlewareDao {
+public class AppManagerMiddlewareDao {
 
     /**
      * AppManagerMiddlewareDatabaseDao member variables
@@ -152,7 +152,7 @@ class AppManagerMiddlewareDao {
                         databaseTableRecord.getStringValue(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVELOPER_NAME_COLUMN_NAME),
                         databaseTableRecord.getStringValue(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME),
                         BlockchainNetworkType.getByCode( databaseTableRecord.getStringValue(AppManagerMiddlewareDatabaseConstants.WALLET_MANAGER_WALLETS_TABLE_WALLET_BLOCKCHAIN_NETWORK_TYPE_COLUMN_NAME))
-                        );
+                );
             }
 
 
