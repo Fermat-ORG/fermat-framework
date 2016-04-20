@@ -80,11 +80,11 @@ public class LossProtectedWalletFermatAppConnection extends AppConnections<LossP
      try
         {
             SettingsManager<LossProtectedWalletSettings> settingsManager = null;
-            String walletPublicKey = referenceWalletSession.getAppPublicKey();
+
             boolean enabledNotification = true;
             this.referenceWalletSession = (LossProtectedWalletSession)this.getFullyLoadedSession();
             if(referenceWalletSession!=  null) {
-
+                String walletPublicKey = referenceWalletSession.getAppPublicKey();
                 if (referenceWalletSession.getModuleManager() != null) {
                     moduleManager = referenceWalletSession.getModuleManager().getCryptoWallet();
 
