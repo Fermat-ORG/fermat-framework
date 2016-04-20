@@ -134,7 +134,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/external_platform"
                 android:textColor="#000000"
-                android:background="@color/cardview_dark_background"
+                android:background="#A9F5F2"
 
                 android:spinnerMode="dropdown"
                 />
@@ -143,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/exposureLevel"
                 android:textColor="#000000"
-                android:background="@color/cardview_dark_background"
+                android:background="#A9F5F2"
 
                 android:spinnerMode="dropdown"
                 />
@@ -152,7 +152,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/artistAcceptConnectionsType"
                 android:textColor="#000000"
-                android:background="@color/cardview_dark_background"
+                android:background="#A9F5F2"
 
                 android:spinnerMode="dropdown"
                />

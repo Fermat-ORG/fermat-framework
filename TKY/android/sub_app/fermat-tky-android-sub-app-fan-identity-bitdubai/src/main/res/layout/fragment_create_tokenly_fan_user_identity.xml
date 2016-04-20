@@ -131,6 +131,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/external_platform"
                 android:spinnerMode="dropdown"
+                android:background="#A9F5F2"
                 android:layout_centerVertical="true"
                 android:layout_alignParentStart="true" />
 
