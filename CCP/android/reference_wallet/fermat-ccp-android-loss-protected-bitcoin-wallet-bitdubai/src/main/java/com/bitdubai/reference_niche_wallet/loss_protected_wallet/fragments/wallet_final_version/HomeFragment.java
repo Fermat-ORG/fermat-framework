@@ -273,7 +273,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             txt_type_balance        = (TextView) rootView.findViewById(R.id.txt_type_balance);
             txt_touch_to_change     = (TextView) rootView.findViewById(R.id.txt_touch_to_change);
             txt_exchange_rate       = (TextView) rootView.findViewById(R.id.txt_exchange_rate);
-    
+
             //show Exchange Market Rate
             getAndShowMarketExchangeRateData(rootView);
 
