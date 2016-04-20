@@ -130,12 +130,13 @@ public class ConnectionNotificationsFragment
 
     private synchronized ArrayList<ChatActorCommunityInformation> getMoreData() {
         ArrayList<ChatActorCommunityInformation> dataSet = new ArrayList<>();
-//        try {
-            //TODO: create a method getChatUsersWaitingYourAcceptance (moduleManager.getActiveChatUserIdentity().getPublicKey())
-            //dataSet.addAll(moduleManager.getChatUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+                dataSet.addAll(moduleManager.
+                        getChatActorWaitingYourAcceptanceCount(moduleManager.
+                                getSelectedActorIdentity().getPublicKey(), MAX, offset));
+            } catch (Exception e) {
+            e.printStackTrace();
+        }
         return dataSet;
     }
 

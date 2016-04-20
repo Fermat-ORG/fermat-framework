@@ -47,7 +47,7 @@ public class ChatCommunityFermatAppConnection extends AppConnections<ChatUserSub
         return  new PluginVersionReference(
                 Platforms.CHAT_PLATFORM,
                 Layers.SUB_APP_MODULE,
-                Plugins.CHAT_ACTOR_CONNECTION,
+                Plugins.CHAT_COMMUNITY_SUP_APP_MODULE,
                 Developers.BITDUBAI,
                 new Version()
         );

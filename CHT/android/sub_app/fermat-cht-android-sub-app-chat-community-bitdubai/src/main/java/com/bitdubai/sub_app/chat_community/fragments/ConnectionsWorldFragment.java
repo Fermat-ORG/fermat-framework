@@ -40,6 +40,7 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
@@ -220,12 +221,11 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         searchEmptyView = (LinearLayout) rootView.findViewById(R.id.search_empty_view);
         noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
         noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
-//        try {
-            //TODO: check this in module
-//            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-//        } catch (CantGetIntraUsersListException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+        } catch (CantListChatIdentityException e) {
+            e.printStackTrace();
+        }
         if (chatUserSettings.isPresentationHelpEnabled()) {
             showDialogHelp();
         } else {
@@ -306,20 +306,19 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             lstChatUserInformations = (ArrayList<ChatActorCommunityInformation>) result[0];
                             adapter.changeDataSet(lstChatUserInformations);
                             if (lstChatUserInformations.isEmpty()) {
-//                                try {
-//                                    //TODO: the same as before
-//                                    if (!moduleManager.getCacheSuggestionsToContact(MAX, offset).isEmpty()) {
-//                                        lstChatUserInformations
-//                                                .addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-//                                        showEmpty(false, emptyView);
-//                                        showEmpty(false, searchEmptyView);
-//                                    } else {
-//                                        showEmpty(true, emptyView);
-//                                        showEmpty(false, searchEmptyView);
-//                                    }
-//                                } catch (CantGetIntraUsersListException e) {
-//                                    e.printStackTrace();
-//                                }
+                                try {
+                                    if (!moduleManager.getCacheSuggestionsToContact(MAX, offset).isEmpty()) {
+                                        lstChatUserInformations
+                                                .addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+                                        showEmpty(false, emptyView);
+                                        showEmpty(false, searchEmptyView);
+                                    } else {
+                                        showEmpty(true, emptyView);
+                                        showEmpty(false, searchEmptyView);
+                                    }
+                                } catch (CantListChatIdentityException e) {
+                                    e.printStackTrace();
+                                }
 
                             } else {
                                 showEmpty(false, emptyView);
@@ -327,14 +326,14 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             }
                         }
                     } else {
-//                        try {
-//                            showEmpty(false, emptyView);
-//                            showEmpty(false, searchEmptyView);
-//                            lstChatUserInformations
-//                                    .addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-//                        } catch (CantGetIntraUsersListException e) {
-//                            e.printStackTrace();
-//                        }
+                        try {
+                            showEmpty(false, emptyView);
+                            showEmpty(false, searchEmptyView);
+                            lstChatUserInformations
+                                    .addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+                        } catch (CantListChatIdentityException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
 
@@ -514,16 +513,16 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private synchronized List<ChatActorCommunityInformation> getMoreData() {
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
 
-//         try {
+         try {
             //verifico la cache para mostrar los que tenia antes y los nuevos
              List<ChatActorCommunityInformation> userCacheList = new ArrayList<>();
-//             try {
-//                     userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
-//             } catch (CantGetChatUsersListException e) {
-//                 e.printStackTrace();
-//             }
+             try {
+                     userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
+             } catch (CantListChatIdentityException e) {
+                 e.printStackTrace();
+             }
 
-//            List<ChatActorCommunityInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
+           // List<ChatActorCommunityInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
             if(userCacheList.size() == 0)
             {
 //                dataSet.addAll(userList);
@@ -557,11 +556,11 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
             //offset = dataSet.size();
 
-//        } catch (CantGetIntraUsersListException e) {
+//        } catch (CantListChatIdentityException e) {
 //            e.printStackTrace();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return dataSet;
     }
 

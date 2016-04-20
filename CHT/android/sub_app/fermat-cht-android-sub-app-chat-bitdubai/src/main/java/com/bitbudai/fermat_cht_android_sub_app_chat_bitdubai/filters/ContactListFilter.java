@@ -3,21 +3,22 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters;
 import android.widget.Filter;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
 
 import java.util.ArrayList;
 
 /**
  * ContactListFilter
  *
- * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 16/04/16.
+ * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 19/04/16.
  * @version 1.0
  */
-public class ChatListFilter extends Filter {
+public class ContactListFilter extends Filter {
 
     private ArrayList<String> data;
-    private ChatListAdapter adapter;
+    private ContactListAdapter adapter;
 
-    public ChatListFilter(ArrayList<String> data, ChatListAdapter adapter) {
+    public ContactListFilter(ArrayList<String> data, ContactListAdapter adapter) {
         this.data = data;
         this.adapter = adapter;
     }

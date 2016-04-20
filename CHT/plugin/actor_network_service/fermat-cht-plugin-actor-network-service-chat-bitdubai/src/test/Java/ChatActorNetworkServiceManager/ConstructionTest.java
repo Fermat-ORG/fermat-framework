@@ -245,7 +245,7 @@ public class ConstructionTest {
                 this.mCommunicationsClientConnection,
                 this.mChatActorNetworkServiceDao,
                 this.mChatActorNetworkServicePluginRoot,
-                this.mErrorManager,
+                chatActorConnection, this.mErrorManager,
                 this.mPluginVersionReference
         );
         assertThat(chatActorNetworkServiceManager).isNotNull();

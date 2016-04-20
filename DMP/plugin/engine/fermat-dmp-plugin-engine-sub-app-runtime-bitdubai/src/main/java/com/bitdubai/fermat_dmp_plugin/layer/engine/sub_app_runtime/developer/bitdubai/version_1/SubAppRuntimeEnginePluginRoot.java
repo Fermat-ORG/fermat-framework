@@ -3832,8 +3832,9 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         chtComm = new RuntimeSubApp();
         chtComm.setType(SubApps.CHT_COMMUNITY);
         String communityPublicKey = SubAppsPublicKeys.CHT_COMMUNITY.getCode();
+        chtComm.setPlatform(Platforms.CHAT_PLATFORM);
         chtComm.setPublicKey(communityPublicKey);
-        listSubApp.put(chtComm.getPublicKey(), chtComm);
+        //listSubApp.put(chtComm.getPublicKey(), chtComm);
 
         //Activity Explore
         runtimeActivity = new Activity();
@@ -3847,6 +3848,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
+        runtimeTitleBar.setLabel("Chat Users");
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -4019,6 +4021,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setStartFragment(Fragments.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE_FRAGMENT.getKey());
 
         chtComm.addActivity(runtimeActivity);
+        listSubApp.put(chtComm.getPublicKey(), chtComm);
     }
 
     private void createFanCommunitySubAppNavigationStructure() throws InvalidParameterException {

@@ -1,6 +1,5 @@
 package com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.structure;
 
-import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
@@ -8,7 +7,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.ProtocolState;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.RequestType;
@@ -32,6 +36,7 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.ChatActorNetworkServicePluginRoot;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.database.ChatActorNetworkServiceDao;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
+import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantListChatActorCacheUserException;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.messages.InformationMessage;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.messages.RequestMessage;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.exceptions.CantSendMessageException;
@@ -56,6 +61,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
     private final CommunicationsClientConnection communicationsClientConnection;
     private final ChatActorNetworkServiceDao chatActorNetworkServiceDao;
     private final ChatActorNetworkServicePluginRoot pluginRoot;
+
     private final ErrorManager errorManager;
     private final PluginVersionReference pluginVersionReference;
 
@@ -69,12 +75,14 @@ public class ChatActorNetworkServiceManager implements ChatManager {
     public ChatActorNetworkServiceManager(final CommunicationsClientConnection communicationsClientConnection,
                                           final ChatActorNetworkServiceDao chatActorNetworkServiceDao,
                                           final ChatActorNetworkServicePluginRoot pluginRoot,
+
                                           final ErrorManager errorManager,
                                           final PluginVersionReference pluginVersionReference) {
 
         this.communicationsClientConnection = communicationsClientConnection;
         this.chatActorNetworkServiceDao = chatActorNetworkServiceDao;
         this.pluginRoot = pluginRoot;
+
         this.errorManager = errorManager;
         this.pluginVersionReference = pluginVersionReference;
         this.executorService = Executors.newFixedThreadPool(3);
@@ -183,9 +191,24 @@ public class ChatActorNetworkServiceManager implements ChatManager {
     }
 
     @Override
-    public List<ChatActorCommunityInformation> getCacheSuggestionsToContact(int max, int offset) throws ErrorSearchingChatSuggestionsException {
+    public List<ChatActorCommunityInformation> getSuggestionsToContact(String publicKey, int max, int offset) throws ErrorSearchingChatSuggestionsException {
         return null;
     }
+
+
+    @Override
+    public List<ChatActorCommunityInformation> getCacheSuggestionsToContact(int max, int offset) throws ErrorSearchingChatSuggestionsException {
+        try {
+            return chatActorNetworkServiceDao.listChatActorSuggestion(max, offset);
+
+        } catch (CantListChatActorCacheUserException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+
 
     @Override
     public void requestConnection(ChatConnectionInformation chatConnectionInformation) throws CantRequestConnectionException {
@@ -392,15 +415,32 @@ public class ChatActorNetworkServiceManager implements ChatManager {
         }
     }
 
+
+
+
     @Override
-    public ConnectionState getCacheSuggestionsToContact(String publicKey) {
+    public void saveCacheChatUsersSuggestions(List<ChatActorCommunityInformation> listChatUser) throws CantInsertRecordException {
+        try
+        {
+            chatActorNetworkServiceDao.saveChatUserCache(listChatUser);
+        } catch (CantCreateDatabaseException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
+    @Override
+    public List<ChatActorCommunityInformation> getCacheSuggestionsToContact(String publicKey, int max, int offset) throws CantGetChatUserIdentityException {
+        try {
+            return chatActorNetworkServiceDao.listChatActorCache(max, offset);
+
+        } catch (CantListChatActorCacheUserException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
-    @Override
-    public ConnectionState getCacheSuggestionsToContact(String publicKey, int max, int offset) throws CantGetChatUserIdentityException{
-        return null;
-    }
 
     private void sendMessage(final String jsonMessage      ,
                              final String identityPublicKey,

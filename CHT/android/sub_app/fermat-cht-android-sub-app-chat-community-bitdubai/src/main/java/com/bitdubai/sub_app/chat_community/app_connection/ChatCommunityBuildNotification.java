@@ -30,9 +30,9 @@ public class ChatCommunityBuildNotification {
                         //TODO
 //                        IntraWalletUserActor senderActor = null;
 //
-//                        senderActor = moduleManager.getLastNotification(senderActorPublicKey);
-
-                       // notification = new ChatCommunityNotificationPainter("New Connection Request", "A new connection request was received from " + senderActor.getName(), "", "");
+//                        senderActor = moduleManager. .getLastNotification(senderActorPublicKey);
+//
+//                        notification = new ChatCommunityNotificationPainter("New Connection Request", "A new connection request was received from " + senderActor.getName(), "", "");
 
                     }else
                     {
