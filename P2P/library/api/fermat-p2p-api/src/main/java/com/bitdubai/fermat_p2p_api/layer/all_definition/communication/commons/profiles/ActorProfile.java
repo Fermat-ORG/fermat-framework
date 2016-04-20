@@ -6,7 +6,10 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * The Class <code>ActorProfile</code>
@@ -169,8 +172,7 @@ public class ActorProfile extends Profile {
      */
     @Override
     public String toJson() {
-      Gson gson = new Gson();
-      return gson.toJson(this);
+      return getGsonInstance().toJson(this);
     }
 
     /**
@@ -179,7 +181,14 @@ public class ActorProfile extends Profile {
      */
     @Override
     public ActorProfile fromJson(String jsonString) {
-        Gson gson = new Gson();
-        return gson.fromJson(jsonString, this.getClass());
+        return getGsonInstance().fromJson(jsonString, this.getClass());
+    }
+
+    private static Gson getGsonInstance() {
+
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Profile.class, new InterfaceAdapter<Profile>());
+        builder.registerTypeAdapter(Location.class, new InterfaceAdapter<Location>());
+        return builder.create();
     }
 }
