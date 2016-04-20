@@ -155,7 +155,7 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
             String privateKey = keyPair.getPrivateKey();
 
             getArtistIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage,externalIdentityID);
-
+            registerIdentitiesANS(publicKey);
             return new ArtistIdentityImp(alias, publicKey, profileImage,externalIdentityID, pluginFileSystem, pluginId);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateArtistIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", e, "Error getting current logged in device user", "");
@@ -167,8 +167,11 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
     public void updateIdentityArtist(String alias,String publicKey, byte[] profileImage, UUID externalIdentityID) throws CantUpdateArtistIdentityException {
         try {
             getArtistIdentityDao().updateIdentityArtistUser(publicKey, alias, profileImage,externalIdentityID);
-
+            ArtistExposingData artistExposingData = new ArtistExposingData(publicKey,alias,profileImage);
+            artistManager.updateIdentity(artistExposingData);
         } catch (CantInitializeArtistIdentityDatabaseException e) {
+            e.printStackTrace();
+        } catch (CantExposeIdentityException e) {
             e.printStackTrace();
         }
     }
