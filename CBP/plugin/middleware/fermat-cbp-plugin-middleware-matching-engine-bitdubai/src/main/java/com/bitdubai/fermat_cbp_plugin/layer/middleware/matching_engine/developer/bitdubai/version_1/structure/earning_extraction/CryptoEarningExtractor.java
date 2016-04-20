@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantExtractEarningsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractor;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.exceptions.CantCreateCryptoMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.crypto_money_destock.interfaces.CryptoMoneyDestockManager;
@@ -28,18 +27,18 @@ public class CryptoEarningExtractor implements EarningExtractor {
     }
 
     @Override
-    public void applyEarningExtraction(EarningsPair earningsPair, EarningTransaction earningTransaction, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantExtractEarningsException {
+    public void applyEarningExtraction(EarningsPair earningsPair, float amount, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantExtractEarningsException {
         try {
             cryptoMoneyDestockManager.createTransactionDestock(
                     "Actor",
                     CryptoCurrency.getByCode(earningsPair.getEarningCurrency().getCode()),
                     brokerWalletPublicKey,
                     earningWalletPublicKey,
-                    BigDecimal.valueOf(earningTransaction.getAmount()),
+                    BigDecimal.valueOf(amount),
                     MEMO,
                     BigDecimal.ZERO,
                     OriginTransaction.EARNING_EXTRACTION,
-                    earningTransaction.getId().toString(),
+                    earningsPair.getId().toString(),
                     BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
         } catch (CantCreateCryptoMoneyDestockException e) {

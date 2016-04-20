@@ -11,7 +11,7 @@ import java.util.List;
  * Created by nelsonalfo on 19/04/16.
  */
 public interface EarningExtractor {
-    void applyEarningExtraction(EarningsPair earningsPair, EarningTransaction earningTransaction, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantExtractEarningsException;
+    void applyEarningExtraction(EarningsPair earningsPair, float amount, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantExtractEarningsException;
 
     Platforms getPlatform();
 

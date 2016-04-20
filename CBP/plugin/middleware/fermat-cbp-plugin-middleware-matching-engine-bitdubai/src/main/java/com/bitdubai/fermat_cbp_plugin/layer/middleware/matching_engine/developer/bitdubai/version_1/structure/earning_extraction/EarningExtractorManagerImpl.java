@@ -52,27 +52,23 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
         if (earningTransactions == null)
             throw new CantExtractEarningsException("Verifying parameters", "The list of earning cannot be null");
 
-        if(earningExtractors.isEmpty())
+        if (earningExtractors.isEmpty())
             throw new CantExtractEarningsException("Verifying the Earning Extractors", "No Earning Extractors added");
 
         final String earningWalletPublicKey = earningsPair.getEarningsWallet().getPublicKey();
         final Platforms earningWalletPlatform = getEarningWalletPlatform(earningWalletPublicKey, BROKER_WALLET_PUBLIC_KEY);
         if (earningWalletPlatform != null && !earningTransactions.isEmpty()) {
 
+            float earningsAmount = 0;
             for (EarningTransaction earningTransaction : earningTransactions) {
-                try {
-                    final EarningExtractor earningExtractor = earningExtractors.get(earningWalletPlatform);
-                    earningExtractor.applyEarningExtraction(earningsPair, earningTransaction, earningWalletPublicKey, BROKER_WALLET_PUBLIC_KEY);
-                    earningTransaction.markAsExtracted();
+                earningsAmount += earningTransaction.getAmount();
+            }
 
-                } catch (EarningTransactionNotFoundException e) {
-                    throw new CantExtractEarningsException(e, "Trying to get the earning transaction in database to marked as EXTRACTED",
-                            "Verify the earning transaction ID is in database");
+            if (earningsAmount > 0) {
+                markEarningTransactionsAsExtracted(earningTransactions);
 
-                } catch (CantMarkEarningTransactionAsExtractedException e) {
-                    throw new CantExtractEarningsException(e, "Trying to mark the earning transaction has EXTRACTED",
-                            "Verify the stack trace for more info");
-                }
+                final EarningExtractor earningExtractor = earningExtractors.get(earningWalletPlatform);
+                earningExtractor.applyEarningExtraction(earningsPair, earningsAmount, earningWalletPublicKey, BROKER_WALLET_PUBLIC_KEY);
             }
         }
     }
@@ -91,7 +87,7 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
 
     private List<CryptoBrokerWalletAssociatedSetting> getAssociatedWallets(String brokerWalletPublicKey) {
 
-        if(associatedWallets.isEmpty()){
+        if (associatedWallets.isEmpty()) {
             try {
                 CryptoBrokerWallet cryptoBrokerWallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(brokerWalletPublicKey);
                 CryptoBrokerWalletSetting walletSettings = cryptoBrokerWallet.getCryptoWalletSetting();
@@ -102,5 +98,20 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
         }
 
         return associatedWallets;
+    }
+
+    private void markEarningTransactionsAsExtracted(List<EarningTransaction> earningTransactions) throws CantExtractEarningsException {
+        try {
+            for (EarningTransaction earningTransaction : earningTransactions)
+                earningTransaction.markAsExtracted();
+
+        } catch (EarningTransactionNotFoundException e) {
+            throw new CantExtractEarningsException(e,"Trying to get the earning transaction in database to marked as EXTRACTED",
+                    "Verify the earning transaction ID is in database");
+
+        } catch (CantMarkEarningTransactionAsExtractedException e) {
+            throw new CantExtractEarningsException(e,"Trying to mark the earning transaction has EXTRACTED",
+                    "Verify the stack trace for more info");
+        }
     }
 }

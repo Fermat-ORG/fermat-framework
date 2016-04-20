@@ -7,7 +7,6 @@ import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantExtractEarningsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractor;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.exceptions.CantCreateBankMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.bank_money_destock.interfaces.BankMoneyDestockManager;
@@ -31,7 +30,7 @@ public class BankEarningExtractor implements EarningExtractor {
     }
 
     @Override
-    public void applyEarningExtraction(EarningsPair earningsPair, EarningTransaction earningTransaction, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantExtractEarningsException {
+    public void applyEarningExtraction(EarningsPair earningsPair, float amount, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantExtractEarningsException {
         try {
             final Currency earningCurrency = earningsPair.getEarningCurrency();
             final String accountNumber = getAccountNumber(earningCurrency);
@@ -42,11 +41,11 @@ public class BankEarningExtractor implements EarningExtractor {
                     brokerWalletPublicKey,
                     earningWalletPublicKey,
                     accountNumber,
-                    BigDecimal.valueOf(earningTransaction.getAmount()),
+                    BigDecimal.valueOf(amount),
                     MEMO,
                     BigDecimal.ZERO,
                     OriginTransaction.EARNING_EXTRACTION,
-                    earningTransaction.getId().toString());
+                    earningsPair.getId().toString());
 
         } catch (InvalidParameterException e) {
             throw new CantExtractEarningsException(e, "Trying to get the earning currency to make the destock",

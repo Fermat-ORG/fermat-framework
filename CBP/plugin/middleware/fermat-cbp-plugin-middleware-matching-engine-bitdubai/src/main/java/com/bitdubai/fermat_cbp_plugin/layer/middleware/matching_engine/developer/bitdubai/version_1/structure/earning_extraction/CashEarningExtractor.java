@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterE
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantExtractEarningsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractor;
-import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.exceptions.CantCreateCashMoneyDestockException;
 import com.bitdubai.fermat_cbp_api.layer.stock_transactions.cash_money_destock.interfaces.CashMoneyDestockManager;
@@ -24,7 +23,7 @@ public class CashEarningExtractor implements EarningExtractor {
     }
 
     @Override
-    public void applyEarningExtraction(EarningsPair earningsPair, EarningTransaction earningTransaction, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantExtractEarningsException {
+    public void applyEarningExtraction(EarningsPair earningsPair, float amount, String earningWalletPublicKey, String brokerWalletPublicKey) throws CantExtractEarningsException {
         try {
             cashMoneyDestockManager.createTransactionDestock(
                     "Actor",
@@ -32,11 +31,11 @@ public class CashEarningExtractor implements EarningExtractor {
                     brokerWalletPublicKey,
                     earningWalletPublicKey,
                     "Cash Reference",
-                    BigDecimal.valueOf(earningTransaction.getAmount()),
+                    BigDecimal.valueOf(amount),
                     "Transference of Earnings from the Broker Wallet",
                     BigDecimal.ZERO,
                     OriginTransaction.EARNING_EXTRACTION,
-                    earningTransaction.getId().toString());
+                    earningsPair.getId().toString());
 
         } catch (CantCreateCashMoneyDestockException e) {
             throw new CantExtractEarningsException("Cant Transfer the earnings to the Earning Wallet", e,

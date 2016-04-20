@@ -47,6 +47,7 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 
@@ -84,7 +85,6 @@ public class EarningsTransferenceToAssociatedWalletTest {
     @Mock
     CryptoBrokerWalletSetting walletSettings;
 
-    UUID earningsPairId, originTransactionId;
 
     @Mock
     MatchingEngineMiddlewareDao dao;
@@ -98,8 +98,6 @@ public class EarningsTransferenceToAssociatedWalletTest {
         when(cryptoBrokerWallet.getCryptoWalletSetting()).thenReturn(walletSettings);
         when(walletSettings.getCryptoBrokerWalletAssociatedSettings()).thenReturn(associatedWallets);
 
-        earningsPairId = UUID.randomUUID();
-        originTransactionId = UUID.randomUUID();
         doNothing().when(dao).markEarningTransactionAsExtracted(any(UUID.class));
 
         transaction = new EarningExtractorManagerImpl(cryptoBrokerWalletManager);
@@ -125,9 +123,17 @@ public class EarningsTransferenceToAssociatedWalletTest {
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
         earningTransactions.add(new MatchingEngineMiddlewareEarningTransaction(
-                originTransactionId,
+                UUID.randomUUID(),
                 earningCurrency,
                 10.0f,
+                EarningTransactionState.CALCULATED,
+                System.currentTimeMillis(),
+                dao));
+
+        earningTransactions.add(new MatchingEngineMiddlewareEarningTransaction(
+                UUID.randomUUID(),
+                earningCurrency,
+                -5.0f,
                 EarningTransactionState.CALCULATED,
                 System.currentTimeMillis(),
                 dao));
@@ -139,21 +145,24 @@ public class EarningsTransferenceToAssociatedWalletTest {
         EarningTransaction earningTransaction = earningTransactions.get(0);
         assertThat(earningTransaction.getState()).isEqualTo(EarningTransactionState.EXTRACTED);
 
+        earningTransaction = earningTransactions.get(1);
+        assertThat(earningTransaction.getState()).isEqualTo(EarningTransactionState.EXTRACTED);
+
         verify(bankMoneyDestockManager).createTransactionDestock(
                 anyString(),
                 eq(earningCurrency),
                 eq(BROKER_WALLET_PUBLIC_KEY),
                 eq(earningWalletPublicKey),
                 eq(BANK_ACCOUNT_NUMBER_1),
-                eq(BigDecimal.valueOf(10.0f)),
+                eq(BigDecimal.valueOf(5.0f)),
                 anyString(),
                 any(BigDecimal.class),
                 eq(OriginTransaction.EARNING_EXTRACTION),
-                eq(originTransactionId.toString()));
+                eq(earningsPair.getId().toString()));
     }
 
     @Test
-    public void givenEarningsAmountNegative_andEarningWalletIsBank_thenDoNoting() throws FermatException {
+    public void givenEarningsAmountIsNegative_andEarningWalletIsBank_thenMakeBankMoneyDestock() throws FermatException {
         final String earningWalletPublicKey = WalletsPublicKeys.BNK_BANKING_WALLET.getCode();
         final FiatCurrency earningCurrency = FiatCurrency.ARGENTINE_PESO;
         final FiatCurrency linkedCurrency = FiatCurrency.US_DOLLAR;
@@ -169,9 +178,17 @@ public class EarningsTransferenceToAssociatedWalletTest {
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
         earningTransactions.add(new MatchingEngineMiddlewareEarningTransaction(
-                originTransactionId,
+                UUID.randomUUID(),
                 earningCurrency,
-                -10.0f,
+                10.0f,
+                EarningTransactionState.CALCULATED,
+                System.currentTimeMillis(),
+                dao));
+
+        earningTransactions.add(new MatchingEngineMiddlewareEarningTransaction(
+                UUID.randomUUID(),
+                earningCurrency,
+                -15.0f,
                 EarningTransactionState.CALCULATED,
                 System.currentTimeMillis(),
                 dao));
@@ -180,21 +197,17 @@ public class EarningsTransferenceToAssociatedWalletTest {
         transaction.extractEarnings(earningsPair, earningTransactions);
 
         // assertion
-        verify(bankMoneyDestockManager, never()).createTransactionDestock(
-                anyString(),
-                eq(earningCurrency),
-                eq(BROKER_WALLET_PUBLIC_KEY),
-                eq(earningWalletPublicKey),
-                eq(BANK_ACCOUNT_NUMBER_1),
-                eq(BigDecimal.valueOf(-10.0f)),
-                anyString(),
-                any(BigDecimal.class),
-                eq(OriginTransaction.EARNING_EXTRACTION),
-                eq(originTransactionId.toString()));
+        EarningTransaction earningTransaction = earningTransactions.get(0);
+        assertThat(earningTransaction.getState()).isEqualTo(EarningTransactionState.CALCULATED);
+
+        earningTransaction = earningTransactions.get(1);
+        assertThat(earningTransaction.getState()).isEqualTo(EarningTransactionState.CALCULATED);
+
+        verifyZeroInteractions(bankMoneyDestockManager);
     }
 
     @Test
-    public void givenOnePositiveEarningTransaction_andEarningWalletIsCash_thenMakeCashMoneyDestock() throws FermatException {
+    public void givenEarningsAmountIsPositive_andEarningWalletIsCash_thenMakeCashMoneyDestock() throws FermatException {
         final String earningWalletPublicKey = WalletsPublicKeys.CSH_MONEY_WALLET.getCode();
         final FiatCurrency earningCurrency = FiatCurrency.US_DOLLAR;
         final CryptoCurrency linkedCurrency = CryptoCurrency.BITCOIN;
@@ -210,7 +223,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
         earningTransactions.add(new MatchingEngineMiddlewareEarningTransaction(
-                originTransactionId,
+                UUID.randomUUID(),
                 earningCurrency,
                 10,
                 EarningTransactionState.CALCULATED,
@@ -234,11 +247,45 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 anyString(),
                 any(BigDecimal.class),
                 eq(OriginTransaction.EARNING_EXTRACTION),
-                eq(originTransactionId.toString()));
+                eq(earningsPair.getId().toString()));
     }
 
     @Test
-    public void givenOneEarningTransaction_andEarningWalletIsCrypto_thenMakeCryptoMoneyDestock() throws FermatException {
+    public void givenEarningsAmountIsNegative_andEarningWalletIsCash_thenMakeCashMoneyDestock() throws FermatException {
+        final String earningWalletPublicKey = WalletsPublicKeys.CSH_MONEY_WALLET.getCode();
+        final FiatCurrency earningCurrency = FiatCurrency.US_DOLLAR;
+        final CryptoCurrency linkedCurrency = CryptoCurrency.BITCOIN;
+
+        final MatchingEngineMiddlewareEarningsPair earningsPair = new MatchingEngineMiddlewareEarningsPair(
+                UUID.randomUUID(),
+                earningCurrency,
+                linkedCurrency,
+                new WalletReference(earningWalletPublicKey),
+                EarningPairState.ASSOCIATED,
+                dao,
+                new WalletReference(BROKER_WALLET_PUBLIC_KEY));
+
+        final List<EarningTransaction> earningTransactions = new ArrayList<>();
+        earningTransactions.add(new MatchingEngineMiddlewareEarningTransaction(
+                UUID.randomUUID(),
+                earningCurrency,
+                -10,
+                EarningTransactionState.CALCULATED,
+                System.currentTimeMillis(),
+                dao));
+
+        // exercise
+        transaction.extractEarnings(earningsPair, earningTransactions);
+
+        // assertion
+        EarningTransaction earningTransaction = earningTransactions.get(0);
+        assertThat(earningTransaction.getState()).isEqualTo(EarningTransactionState.CALCULATED);
+
+        verifyZeroInteractions(cashMoneyDestockManager);
+    }
+
+    @Test
+    public void givenEarningsAmountIsPositive_andEarningWalletIsCrypto_thenMakeCryptoMoneyDestock() throws FermatException {
         final String earningWalletPublicKey = WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode();
         final FiatCurrency linkedCurrency = FiatCurrency.VENEZUELAN_BOLIVAR;
         final CryptoCurrency earningCurrency = CryptoCurrency.BITCOIN;
@@ -254,7 +301,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
         earningTransactions.add(new MatchingEngineMiddlewareEarningTransaction(
-                originTransactionId,
+                UUID.randomUUID(),
                 earningCurrency,
                 1.0f,
                 EarningTransactionState.CALCULATED,
@@ -277,8 +324,42 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 anyString(),
                 any(BigDecimal.class),
                 eq(OriginTransaction.EARNING_EXTRACTION),
-                eq(originTransactionId.toString()),
+                eq(earningsPair.getId().toString()),
                 eq(BlockchainNetworkType.getDefaultBlockchainNetworkType()));
+    }
+
+    @Test
+    public void givenEarningsAmountIsNegative_andEarningWalletIsCrypto_thenMakeCryptoMoneyDestock() throws FermatException {
+        final String earningWalletPublicKey = WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode();
+        final FiatCurrency linkedCurrency = FiatCurrency.VENEZUELAN_BOLIVAR;
+        final CryptoCurrency earningCurrency = CryptoCurrency.BITCOIN;
+
+        final MatchingEngineMiddlewareEarningsPair earningsPair = new MatchingEngineMiddlewareEarningsPair(
+                UUID.randomUUID(),
+                earningCurrency,
+                linkedCurrency,
+                new WalletReference(earningWalletPublicKey),
+                EarningPairState.ASSOCIATED,
+                dao,
+                new WalletReference(BROKER_WALLET_PUBLIC_KEY));
+
+        final List<EarningTransaction> earningTransactions = new ArrayList<>();
+        earningTransactions.add(new MatchingEngineMiddlewareEarningTransaction(
+                UUID.randomUUID(),
+                earningCurrency,
+                -1.0f,
+                EarningTransactionState.CALCULATED,
+                System.currentTimeMillis(),
+                dao));
+
+        // exercise
+        transaction.extractEarnings(earningsPair, earningTransactions);
+
+        // assertion
+        EarningTransaction earningTransaction = earningTransactions.get(0);
+        assertThat(earningTransaction.getState()).isEqualTo(EarningTransactionState.CALCULATED);
+
+        verifyZeroInteractions(cryptoMoneyDestockManager);
     }
 
     @Test
@@ -312,7 +393,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 anyString(),
                 any(BigDecimal.class),
                 eq(OriginTransaction.EARNING_EXTRACTION),
-                eq(originTransactionId.toString()));
+                eq(earningsPair.getId().toString()));
     }
 
     @Test
@@ -332,7 +413,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
         earningTransactions.add(new MatchingEngineMiddlewareEarningTransaction(
-                originTransactionId,
+                UUID.randomUUID(),
                 earningCurrency,
                 10,
                 EarningTransactionState.CALCULATED,
@@ -360,7 +441,7 @@ public class EarningsTransferenceToAssociatedWalletTest {
 
         final List<EarningTransaction> earningTransactions = new ArrayList<>();
         earningTransactions.add(new MatchingEngineMiddlewareEarningTransaction(
-                originTransactionId,
+                UUID.randomUUID(),
                 earningCurrency,
                 10,
                 EarningTransactionState.CALCULATED,
