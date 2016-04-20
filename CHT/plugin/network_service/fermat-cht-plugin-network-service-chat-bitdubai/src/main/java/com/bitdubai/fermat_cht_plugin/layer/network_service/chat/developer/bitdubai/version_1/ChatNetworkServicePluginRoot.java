@@ -29,6 +29,7 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantCreateNotific
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.CantGetNotificationException;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.NotificationNotFoundException;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
@@ -918,6 +919,8 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             chatMetadataRecord.setProcessed(ChatMetadataRecord.NO_PROCESSED);
             chatMetadataRecord.setSentDate(new Timestamp(currentTime));
             chatMetadataRecord.changeState(protocolState);
+            chatMetadataRecord.setTypeChat(chatMetadata.getTypeChat());
+            chatMetadataRecord.setGroupMembers(chatMetadata.getGroupMembers());
             final String EncodedMsg = EncodeMsjContent.encodeMSjContentChatMetadataTransmit(chatMetadataRecord, chatMetadata.getLocalActorType(), chatMetadata.getRemoteActorType());
 
 
@@ -937,21 +940,41 @@ public class ChatNetworkServicePluginRoot extends AbstractNetworkServiceBase imp
             final PlatformComponentType remoteType = chatMetadataRecord.getRemoteActorType();
             getChatMetadataRecordDAO().createNotification(chatMetadataRecord);
             System.out.println("*** 12345 case 6:send msg in NS layer" + new Timestamp(System.currentTimeMillis()));
-            executorService.submit(new Runnable() {
-                @Override
-                public void run() {
+            if(chatMetadata.getTypeChat().equals(TypeChat.INDIVIDUAL)) {
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
 
-                    try {
-                        sendNewMessage(
-                                getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
-                                getProfileDestinationToRequestConnection(remoteActorPubKey, NetworkServiceType.UNDEFINED, remoteType),
-                                EncodedMsg
-                        );
-                    } catch (CantSendMessageException e) {
-                        e.printStackTrace();
+                        try {
+                            sendNewMessage(
+                                    getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
+                                    getProfileDestinationToRequestConnection(remoteActorPubKey, NetworkServiceType.UNDEFINED, remoteType),
+                                    EncodedMsg
+                            );
+                        } catch (CantSendMessageException e) {
+                            e.printStackTrace();
+                        }
                     }
-                }
-            });
+                });
+            }else if(chatMetadata.getTypeChat().equals(TypeChat.GROUP)){
+                executorService.submit(new Runnable() {
+                    @Override
+                    public void run() {
+
+                        for(GroupMember groupMember : chatMetadata.getGroupMembers()) {
+                            try {
+                                sendNewMessage(
+                                        getProfileSenderToRequestConnection(localActorPubKey, NetworkServiceType.UNDEFINED, senderType),
+                                        getProfileDestinationToRequestConnection(groupMember.getActorPublicKey(), NetworkServiceType.UNDEFINED, remoteType),
+                                        EncodedMsg
+                                );
+                            } catch (CantSendMessageException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                });
+            }
 
         }catch(CantSendChatMessageMetadataException e){
             StringBuilder contextBuffer = new StringBuilder();

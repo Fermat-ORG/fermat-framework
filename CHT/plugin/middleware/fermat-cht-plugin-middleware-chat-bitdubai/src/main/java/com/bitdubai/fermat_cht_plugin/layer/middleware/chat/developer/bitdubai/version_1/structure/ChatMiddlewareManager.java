@@ -942,9 +942,10 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
      */
     private ChatMetadata constructChatMetadata(
             Chat chat,
-            Message message){
-        Timestamp timestamp=new Timestamp(message.getMessageDate().getTime());
-        ChatMetadata chatMetadata=new ChatMetadataRecord(
+            Message message) {
+        ChatMetadata chatMetadata;
+        Timestamp timestamp = new Timestamp(message.getMessageDate().getTime());
+        chatMetadata = new ChatMetadataRecord(
                 chat.getChatId(),
                 chat.getObjectId(),
                 chat.getLocalActorType(),
@@ -957,7 +958,9 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
                 timestamp,
                 message.getMessageId(),
                 message.getMessage(),
-                DistributionStatus.OUTGOING_MSG
+                DistributionStatus.OUTGOING_MSG,
+                chat.getTypeChat(),
+                chat.getGroupMembersAssociated()
         );
         return chatMetadata;
     }

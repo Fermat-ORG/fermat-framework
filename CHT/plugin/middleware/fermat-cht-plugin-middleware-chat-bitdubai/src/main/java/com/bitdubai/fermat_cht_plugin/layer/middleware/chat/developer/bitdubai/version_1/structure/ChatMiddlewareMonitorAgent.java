@@ -810,22 +810,25 @@ public class ChatMiddlewareMonitorAgent implements
     private ChatMetadata constructChatMetadata(
             Chat chat,
             Message message) {
+        ChatMetadata chatMetadata;
         Timestamp timestamp = new Timestamp(message.getMessageDate().getTime());
-        ChatMetadata chatMetadata = new ChatMetadataRecord(
-                chat.getChatId(),
-                chat.getObjectId(),
-                chat.getLocalActorType(),
-                chat.getLocalActorPublicKey(),
-                chat.getRemoteActorType(),
-                chat.getRemoteActorPublicKey(),
-                chat.getChatName(),
-                ChatMessageStatus.READ_CHAT,
-                MessageStatus.SEND,
-                timestamp,
-                message.getMessageId(),
-                message.getMessage(),
-                DistributionStatus.OUTGOING_MSG
-        );
+            chatMetadata = new ChatMetadataRecord(
+                    chat.getChatId(),
+                    chat.getObjectId(),
+                    chat.getLocalActorType(),
+                    chat.getLocalActorPublicKey(),
+                    chat.getRemoteActorType(),
+                    chat.getRemoteActorPublicKey(),
+                    chat.getChatName(),
+                    ChatMessageStatus.READ_CHAT,
+                    MessageStatus.SEND,
+                    timestamp,
+                    message.getMessageId(),
+                    message.getMessage(),
+                    DistributionStatus.OUTGOING_MSG,
+                    chat.getTypeChat(),
+                    chat.getGroupMembersAssociated()
+            );
         return chatMetadata;
     }
 
