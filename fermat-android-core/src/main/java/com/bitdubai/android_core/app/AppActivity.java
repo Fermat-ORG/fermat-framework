@@ -255,7 +255,7 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                     public void run() {
                         try {
                             fermatAppConnection.setActiveIdentity(fermatSession.getModuleManager().getSelectedActorIdentity());
-                            refreshSideMenu(fermatAppConnection);
+                            //refreshSideMenu(fermatAppConnection);
                         } catch (CantGetSelectedActorIdentityException e) {
                             e.printStackTrace();
                         } catch (ActorIdentityNotSelectedException e) {
