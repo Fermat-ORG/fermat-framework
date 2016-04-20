@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.revision1.ArtistIdentityPluginRootTest;
+package com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.ArtistIdentityPluginRootTest;
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
@@ -26,14 +26,6 @@ public class Teststart {
         Assert.assertNotNull(artistIdentityPluginRoot);
 
     }
-
-    /*
-    public void testStartException() throws CantStartPluginException {
-        System.out.println("testStartException");
-        exception.expect(CantStartPluginException.class);
-        exception.expectMessage("Cant start Sub App Artist Identity Module plugin.");
-        artistIdentityPluginRoot.start();
-    }*/
 
     @Test
     public void testStartService() throws CantStartPluginException {

@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.revision1.DeveloperBitDubaiTest;
+package com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.DeveloperBitDubaiTest;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
 import com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.DeveloperBitDubai;
@@ -17,6 +17,7 @@ public class TestgetTimePeriod {
 
     @Before
     public void setUp(){
+        System.out.println("initializing");
         Assert.assertNull(developerBitDubai);
         developerBitDubai = new DeveloperBitDubai();
         Assert.assertNotNull(developerBitDubai);
@@ -24,6 +25,7 @@ public class TestgetTimePeriod {
 
     @Test
     public void testgetTimePeriod(){
+        System.out.println("testgetTimePeriod");
         TimeFrequency actual = developerBitDubai.getTimePeriod();
         TimeFrequency expected = TimeFrequency.MONTHLY;
 

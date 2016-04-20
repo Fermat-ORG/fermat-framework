@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.revision1.DeveloperBitDubaiTest;
+package com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.DeveloperBitDubaiTest;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.DeveloperBitDubai;
@@ -16,6 +16,7 @@ public class TestgetCryptoCurrency {
 
     @Before
     public void setUp(){
+        System.out.println("initializing");
         Assert.assertNull(developerBitDubai);
         developerBitDubai = new DeveloperBitDubai();
         Assert.assertNotNull(developerBitDubai);
@@ -23,6 +24,7 @@ public class TestgetCryptoCurrency {
 
     @Test
     public void testgetCryptoCurrency(){
+        System.out.println("testgetCryptoCurrency");
         CryptoCurrency actual = developerBitDubai.getCryptoCurrency();
         CryptoCurrency expected = CryptoCurrency.BITCOIN;
         Assert.assertNotNull(actual);

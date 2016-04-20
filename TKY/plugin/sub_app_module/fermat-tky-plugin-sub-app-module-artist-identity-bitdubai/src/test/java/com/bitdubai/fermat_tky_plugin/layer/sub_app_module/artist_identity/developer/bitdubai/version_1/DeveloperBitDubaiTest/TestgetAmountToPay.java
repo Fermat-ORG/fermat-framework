@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.revision1.DeveloperBitDubaiTest;
+package com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.DeveloperBitDubaiTest;
 
 import com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.DeveloperBitDubai;
 
@@ -14,6 +14,7 @@ public class TestgetAmountToPay {
 
     @Before
     public void setUp() throws Exception {
+        System.out.println("initializing");
         Assert.assertNull(developerBitDubai);
         developerBitDubai = new DeveloperBitDubai();
         Assert.assertNotNull(developerBitDubai);
@@ -21,6 +22,7 @@ public class TestgetAmountToPay {
 
     @Test
     public void testgetAmountToPay(){
+        System.out.println("testgetAmountToPay");
         int value = developerBitDubai.getAmountToPay();
         int expected = 100;
         Assert.assertNotNull(value);
@@ -30,6 +32,7 @@ public class TestgetAmountToPay {
 
     @Test
     public void testgetAmountToPayfail() {
+        System.out.println("testgetAmountTofail");
         int value = developerBitDubai.getAmountToPay();
         int expected = 200;
         Assert.assertNotEquals(expected,value);
