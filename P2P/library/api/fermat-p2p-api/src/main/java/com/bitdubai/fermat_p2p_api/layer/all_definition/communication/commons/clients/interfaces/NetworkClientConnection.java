@@ -26,7 +26,7 @@ import java.util.Collection;
 public interface NetworkClientConnection {
 
     /**
-     * Through the method <code>registerProfile</code> we can register a profile in the server.
+     * Through the method <code>registerProfile</code> we can register a profile
      * in the server.
      *
      * @param profile  of the component that we're trying to register.
@@ -78,11 +78,9 @@ public interface NetworkClientConnection {
      *
      * @param discoveryQueryParameters helper class to make the query.
      *
-     * @return a list of found profiles.
-     *
      * @throws CantRequestProfileListException if something goes wrong.
      */
-    Collection<Profile> registeredProfileDiscoveryQuery(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestProfileListException;
+    void registeredProfileDiscoveryQuery(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestProfileListException;
 
     /**
      * Through the method <code>actorTraceDiscoveryQuery</code> we can make a discovery query
@@ -90,11 +88,9 @@ public interface NetworkClientConnection {
      *
      * @param discoveryQueryParameters helper class to make the query.
      *
-     * @return a list of found profiles.
-     *
      * @throws CantRequestProfileListException if something goes wrong.
      */
-    Collection<ActorProfile> actorTraceDiscoveryQuery(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestProfileListException;
+    void actorTraceDiscoveryQuery(DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestProfileListException;
 
     /**
      * Through the method <code>isConnected</code> we can verify if the connection object is

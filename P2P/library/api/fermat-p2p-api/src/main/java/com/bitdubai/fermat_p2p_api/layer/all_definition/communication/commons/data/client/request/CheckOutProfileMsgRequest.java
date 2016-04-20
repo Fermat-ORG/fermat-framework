@@ -25,8 +25,8 @@ public class CheckOutProfileMsgRequest extends PackageContent {
      *
      * @param profileToUnRegister
      */
-    public CheckOutProfileMsgRequest(Profile profileToUnRegister, String identityPublicKey) {
-        this.identityPublicKey = identityPublicKey;
+    public CheckOutProfileMsgRequest(Profile profileToUnRegister) {
+        this.identityPublicKey = profileToUnRegister.getIdentityPublicKey();
     }
 
     /**

@@ -189,4 +189,20 @@ public class DiscoveryQueryParameters {
     public Integer getOffset() {
         return offset;
     }
+
+    @Override
+    public String toString() {
+        return "DiscoveryQueryParameters{" +
+                "identityPublicKey='" + identityPublicKey + '\'' +
+                ", alias='" + alias + '\'' +
+                ", name='" + name + '\'' +
+                ", location=" + location +
+                ", distance=" + distance +
+                ", networkServiceType=" + networkServiceType +
+                ", extraData='" + extraData + '\'' +
+                ", offset=" + offset +
+                ", max=" + max +
+                ", actorType='" + actorType + '\'' +
+                '}';
+    }
 }

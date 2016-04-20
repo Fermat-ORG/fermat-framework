@@ -1,42 +1,66 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantCreateNetworkCallException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRequestProfileListException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantUnregisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.ProfileAlreadyRegisteredException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.ProfileNotRegisteredException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces.NetworkClientConnection;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileDiscoveryQueryMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NearNodeListMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantSendPackageException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 
 import org.glassfish.tyrus.client.ClientManager;
 import org.glassfish.tyrus.client.ClientProperties;
 
+import java.io.IOException;
 import java.net.URI;
 
 import javax.websocket.CloseReason;
+import javax.websocket.EncodeException;
 import javax.websocket.Session;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection</code>
  * <p/>
  * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 07/12/15.
+ * Modified by Leon Acosta - (laion.cj91@gmail.com) on 20/04/2016.
  *
+ * @author  lnacosta
  * @version 1.0
- * @since Java JDK 1.7
+ * @since   Java JDK 1.7
  */
-public class NetworkClientCommunicationConnection extends Thread {
+public class NetworkClientCommunicationConnection extends Thread implements NetworkClientConnection {
 
-    private URI                uri            ;
-    private ErrorManager       errorManager   ;
-    private EventManager       eventManager   ;
-    private LocationManager    locationManager;
-    private ECCKeyPair         clientIdentity ;
-    private Session            session        ;
+    private URI                    uri                   ;
+    private ErrorManager           errorManager          ;
+    private EventManager           eventManager          ;
+    private LocationManager        locationManager       ;
+    private ECCKeyPair             clientIdentity        ;
+    private PluginVersionReference pluginVersionReference;
+    private Session                session               ;
 
     /**
      * Represent if it must reconnect to the server
@@ -58,21 +82,24 @@ public class NetworkClientCommunicationConnection extends Thread {
      */
     private String serverIdentity;
 
-    public NetworkClientCommunicationConnection(final URI uri,
-                                                final ErrorManager errorManager,
-                                                final EventManager eventManager,
-                                                final LocationManager locationManager,
-                                                final ECCKeyPair clientIdentity){
-        this.uri             = uri            ;
-        this.errorManager    = errorManager   ;
-        this.eventManager    = eventManager   ;
-        this.locationManager = locationManager;
-        this.clientIdentity  = clientIdentity ;
+    public NetworkClientCommunicationConnection(final URI                    uri                   ,
+                                                final ErrorManager           errorManager          ,
+                                                final EventManager           eventManager          ,
+                                                final LocationManager        locationManager       ,
+                                                final ECCKeyPair             clientIdentity        ,
+                                                final PluginVersionReference pluginVersionReference){
 
-        this.isConnected     = Boolean.FALSE  ;
-        this.tryToReconnect  = Boolean.TRUE   ;
+        this.uri                    = uri                   ;
+        this.errorManager           = errorManager          ;
+        this.eventManager           = eventManager          ;
+        this.locationManager        = locationManager       ;
+        this.clientIdentity         = clientIdentity        ;
+        this.pluginVersionReference = pluginVersionReference;
 
-        this.container       = ClientManager.createClient();
+        this.isConnected            = Boolean.FALSE         ;
+        this.tryToReconnect         = Boolean.TRUE          ;
+
+        this.container              = ClientManager.createClient();
     }
 
     public String getServerIdentity() {
@@ -134,7 +161,7 @@ public class NetworkClientCommunicationConnection extends Thread {
         }
     }
 
-    public void setNotTryToReconnectToCloud(){
+    public void setNotTryToReconnect(){
         tryToReconnect = Boolean.FALSE;
     }
 
@@ -146,9 +173,14 @@ public class NetworkClientCommunicationConnection extends Thread {
         return isConnected;
     }
 
-    private void setCheckInClientRequestProcessor(){
+    @Override
+    public boolean isRegistered() {
 
-        System.out.println("I'm the client and I'm checking me in.");
+        // TODO IMPLEMENT
+        return false;
+    }
+
+    private void setCheckInClientRequestProcessor(){
 
         ClientProfile clientProfile = new ClientProfile();
         clientProfile.setIdentityPublicKey(clientIdentity.getPublicKey());
@@ -162,17 +194,242 @@ public class NetworkClientCommunicationConnection extends Thread {
             e.printStackTrace();
         }
 
-        CheckInProfileMsgRequest profileCheckInMsgRequest = new CheckInProfileMsgRequest(clientProfile);
-        profileCheckInMsgRequest.setMessageContentType(MessageContentType.JSON);
-
         try {
-            session.getBasicRemote().sendObject(Package.createInstance(profileCheckInMsgRequest.toJson(), NetworkServiceType.UNDEFINED, PackageType.CHECK_IN_CLIENT_REQUEST, clientIdentity.getPrivateKey(), serverIdentity));
+            registerProfile(clientProfile);
         }catch (Exception e){
             e.printStackTrace();
-            System.out.println("I'm the client and I had a big error trying to check me in.");
+        }
+    }
+
+    public void getNearbyNodes(final Location location) throws CantRegisterProfileException, ProfileAlreadyRegisteredException {
+
+        NearNodeListMsgRequest nearNodeListMsgRequest = new NearNodeListMsgRequest(location);
+        nearNodeListMsgRequest.setMessageContentType(MessageContentType.JSON);
+
+        try {
+
+            sendPackage(nearNodeListMsgRequest, PackageType.NEAR_NODE_LIST_REQUEST);
+
+        } catch (CantSendPackageException cantSendPackageException) {
+
+            CantRegisterProfileException fermatException = new CantRegisterProfileException(
+                    cantSendPackageException,
+                    "location:" + location,
+                    "Cant send package."
+            );
+
+            errorManager.reportUnexpectedPluginException(
+                    pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    fermatException
+            );
+
+            throw fermatException;
+        }
+    }
+
+    @Override
+    public void registerProfile(final Profile profile) throws CantRegisterProfileException, ProfileAlreadyRegisteredException {
+
+        CheckInProfileMsgRequest profileCheckInMsgRequest = new CheckInProfileMsgRequest(profile);
+        profileCheckInMsgRequest.setMessageContentType(MessageContentType.JSON);
+
+        PackageType packageType;
+
+        if (profile instanceof ActorProfile)
+            packageType = PackageType.CHECK_IN_ACTOR_REQUEST;
+        else if (profile instanceof ClientProfile)
+            packageType = PackageType.CHECK_IN_CLIENT_REQUEST;
+        else if (profile instanceof NetworkServiceProfile)
+            packageType = PackageType.CHECK_IN_NETWORK_SERVICE_REQUEST;
+        else {
+            CantRegisterProfileException fermatException = new CantRegisterProfileException(
+                    "profile:" + profile,
+                    "Unsupported profile type."
+            );
+
+            errorManager.reportUnexpectedPluginException(
+                    pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    fermatException
+            );
+
+            throw fermatException;
         }
 
-        System.out.println("I'm the client and I finally the process of checking me in.");
+        try {
+
+            sendPackage(profileCheckInMsgRequest, packageType);
+
+        } catch (CantSendPackageException cantSendPackageException) {
+
+            CantRegisterProfileException fermatException = new CantRegisterProfileException(
+                    cantSendPackageException,
+                    "profile:" + profile,
+                    "Cant send package."
+            );
+
+            errorManager.reportUnexpectedPluginException(
+                    pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    fermatException
+            );
+
+            throw fermatException;
+        }
+    }
+
+    @Override
+    public void unregisterProfile(final Profile profile) throws CantUnregisterProfileException, ProfileNotRegisteredException {
+
+        CheckOutProfileMsgRequest checkOutProfileMsgRequest = new CheckOutProfileMsgRequest(profile);
+        checkOutProfileMsgRequest.setMessageContentType(MessageContentType.JSON);
+
+        PackageType packageType;
+
+        if (profile instanceof ActorProfile)
+            packageType = PackageType.CHECK_OUT_ACTOR_REQUEST;
+        else if (profile instanceof ClientProfile)
+            packageType = PackageType.CHECK_OUT_CLIENT_REQUEST;
+        else if (profile instanceof NetworkServiceProfile)
+            packageType = PackageType.CHECK_OUT_NETWORK_SERVICE_REQUEST;
+        else {
+            CantUnregisterProfileException fermatException = new CantUnregisterProfileException(
+                    "profile:" + profile,
+                    "Unsupported profile type."
+            );
+
+            errorManager.reportUnexpectedPluginException(
+                    pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    fermatException
+            );
+
+            throw fermatException;
+        }
+
+
+        try {
+
+            sendPackage(checkOutProfileMsgRequest, packageType);
+
+        } catch (CantSendPackageException cantSendPackageException) {
+
+            CantUnregisterProfileException fermatException = new CantUnregisterProfileException(
+                    cantSendPackageException,
+                    "profile:" + profile,
+                    "Cant send package."
+            );
+
+            errorManager.reportUnexpectedPluginException(
+                    pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    fermatException
+            );
+
+            throw fermatException;
+        }
+    }
+
+    @Override
+    public void callNetworkService(final NetworkServiceProfile fromNetworkService,
+                                   final NetworkServiceProfile toNetworkService  ) throws CantCreateNetworkCallException {
+
+    }
+
+    @Override
+    public void callActor(final ActorProfile          fromActor         ,
+                          final ActorProfile          toActor           ,
+                          final NetworkServiceProfile fromNetworkService) throws CantCreateNetworkCallException {
+
+    }
+
+    @Override
+    public void registeredProfileDiscoveryQuery(final DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestProfileListException {
+
+        CheckInProfileDiscoveryQueryMsgRequest checkInProfileDiscoveryQueryMsgRequest = new CheckInProfileDiscoveryQueryMsgRequest(discoveryQueryParameters);
+        checkInProfileDiscoveryQueryMsgRequest.setMessageContentType(MessageContentType.JSON);
+
+        try {
+
+            sendPackage(checkInProfileDiscoveryQueryMsgRequest, PackageType.CHECK_IN_PROFILE_DISCOVERY_QUERY_REQUEST);
+
+        } catch (CantSendPackageException cantSendPackageException) {
+
+            CantRequestProfileListException fermatException = new CantRequestProfileListException(
+                    cantSendPackageException,
+                    "discoveryQueryParameters:" + discoveryQueryParameters,
+                    "Cant send package."
+            );
+
+            errorManager.reportUnexpectedPluginException(
+                    pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    fermatException
+            );
+
+            throw fermatException;
+        }
+    }
+
+    @Override
+    public void actorTraceDiscoveryQuery(final DiscoveryQueryParameters discoveryQueryParameters) throws CantRequestProfileListException {
+
+        CheckInProfileDiscoveryQueryMsgRequest checkInProfileDiscoveryQueryMsgRequest = new CheckInProfileDiscoveryQueryMsgRequest(discoveryQueryParameters);
+        checkInProfileDiscoveryQueryMsgRequest.setMessageContentType(MessageContentType.JSON);
+
+        try {
+
+            sendPackage(checkInProfileDiscoveryQueryMsgRequest, PackageType.ACTOR_TRACE_DISCOVERY_QUERY_REQUEST);
+
+        } catch (CantSendPackageException cantSendPackageException) {
+
+            CantRequestProfileListException fermatException = new CantRequestProfileListException(
+                    cantSendPackageException,
+                    "discoveryQueryParameters:" + discoveryQueryParameters,
+                    "Cant send package."
+            );
+
+            errorManager.reportUnexpectedPluginException(
+                    pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    fermatException
+            );
+
+            throw fermatException;
+        }
+    }
+
+    private void sendPackage(final PackageContent packageContent,
+                             final PackageType    packageType   ) throws CantSendPackageException {
+
+        try {
+            session.getBasicRemote().sendObject(
+                    Package.createInstance(
+                            packageContent.toJson(),
+                            NetworkServiceType.UNDEFINED,
+                            packageType,
+                            clientIdentity.getPrivateKey(),
+                            serverIdentity
+                    )
+            );
+        } catch (IOException | EncodeException exception){
+
+
+            throw new CantSendPackageException(
+                    exception,
+                    "packageContent:"+packageContent,
+                    "Error trying to send the message through the session."
+            );
+
+        } catch (Exception exception) {
+
+            throw new CantSendPackageException(
+                    exception,
+                    "packageContent:"+packageContent,
+                    "Unhandled error trying to send the message through the session."
+            );
+        }
     }
 
 }
