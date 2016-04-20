@@ -10,12 +10,14 @@ import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformCom
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.osa_android.hardware.HardwareManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketCommunicationFactory;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketEncoder;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatPacket;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.FermatPacketType;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.WsCommunicationsTyrusCloudClientChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.util.CloudClientExtraData;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -79,7 +81,20 @@ public class ServerHandshakeRespondTyrusPacketProcessor extends FermatTyrusPacke
         /*
          * Construct a Communications Cloud Client Profile for this component and send and fermat packet type FermatPacketType.COMPONENT_REGISTRATION_REQUEST
          */
-        PlatformComponentProfile communicationsCloudClientProfile = getWsCommunicationsTyrusCloudClientChannel().getWsCommunicationsTyrusCloudClientConnection().constructPlatformComponentProfileFactory(getWsCommunicationsTyrusCloudClientChannel().getClientIdentity().getPublicKey(), "WsCommunicationsCloudClientChannel",  "Web Socket Communications Cloud Client", NetworkServiceType.UNDEFINED, PlatformComponentType.COMMUNICATION_CLOUD_CLIENT, null);
+
+        HardwareManager hardwareManager = getWsCommunicationsTyrusCloudClientChannel().getHardwareManager();
+        CloudClientExtraData cloudClientExtraData = null;
+        if(hardwareManager!=null){
+            cloudClientExtraData = new CloudClientExtraData(hardwareManager.getOperativeSystem(),hardwareManager.getBoard(),hardwareManager.getBrand(),hardwareManager.getDevice());
+        }
+
+        PlatformComponentProfile communicationsCloudClientProfile = getWsCommunicationsTyrusCloudClientChannel().getWsCommunicationsTyrusCloudClientConnection().constructPlatformComponentProfileFactory(
+                getWsCommunicationsTyrusCloudClientChannel().getClientIdentity().getPublicKey(),
+                "WsCommunicationsCloudClientChannel",
+                "Web Socket Communications Cloud Client",
+                NetworkServiceType.UNDEFINED,
+                PlatformComponentType.COMMUNICATION_CLOUD_CLIENT,
+                (hardwareManager!=null)?new Gson().toJson(cloudClientExtraData):null);
         getWsCommunicationsTyrusCloudClientChannel().setPlatformComponentProfile(communicationsCloudClientProfile);
 
         /* ------------------------------------
