@@ -36,6 +36,7 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
+            android:textColor="#000"
             android:id="@+id/editTextContacts"
             android:hint="Type contact name"
             android:textColorHint="#808080"
@@ -57,12 +58,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/fecha"
+            android:textColor="#000"
             android:layout_above="@+id/editTextContacts"
             android:layout_alignStart="@+id/view"
             android:layout_marginBottom="50dp"
             android:layout_alignEnd="@+id/editTextContacts" />
 
         <Spinner
+            android:textColor="#000"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/hora"
@@ -93,6 +96,7 @@
             android:inputType="textPersonName"
             android:hint="Type broadcast name"
             android:ems="10"
+            android:textColor="#000"
             android:id="@+id/editTextNameBroadcast"
             android:textColorHint="#808080"
             android:layout_above="@+id/textView4"
