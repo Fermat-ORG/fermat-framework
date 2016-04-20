@@ -157,4 +157,12 @@ public class TokenlyAPINotAvailableException extends TKYException {
         return httpErrorResponse;
     }
 
+    @Override
+    public String toString() {
+        return "TokenlyAPINotAvailableException{" +
+                "errorCode=" + errorCode +
+                ", httpErrorResponse=" + httpErrorResponse +
+                ", tokenlyApiStatus=" + tokenlyApiStatus +
+                '}';
+    }
 }

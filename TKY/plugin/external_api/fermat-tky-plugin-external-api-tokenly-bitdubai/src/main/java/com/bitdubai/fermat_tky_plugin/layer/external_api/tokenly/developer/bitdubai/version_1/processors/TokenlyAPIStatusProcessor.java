@@ -6,9 +6,6 @@ import com.bitdubai.fermat_tky_api.all_definitions.exceptions.HTTPErrorResponseE
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TokenlyAPINotAvailableException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.RemoteJSonProcessor;
 import com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.config.TokenlyConfiguration;
-import com.google.gson.JsonElement;
-
-import java.util.HashMap;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 19/04/16.
