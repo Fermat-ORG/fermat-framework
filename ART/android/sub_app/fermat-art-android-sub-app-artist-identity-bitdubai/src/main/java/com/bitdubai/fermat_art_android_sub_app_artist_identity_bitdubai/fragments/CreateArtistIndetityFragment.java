@@ -14,6 +14,8 @@ import android.view.Menu;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -25,16 +27,26 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.popups.PresentationArtArtistUserIdentityDialog;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.session.ArtistIdentitySubAppSession;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.util.CommonLogger;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
+import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist.ArtistIdentityManagerModule;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist.ArtistIdentitySettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.sub_app.artist_identity.R;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 
 public class CreateArtistIndetityFragment extends AbstractFermatFragment {
@@ -74,6 +86,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment {
     private boolean authenticationSuccessful = false;
 
     private Handler handler;
+    boolean checked =false;
+
 
     public static CreateArtistIndetityFragment newInstance() {
         return new CreateArtistIndetityFragment();
@@ -118,16 +132,34 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment {
         mArtistExternalUserName.requestFocus();
 
 
+        List<String> arraySpinner = ArtExternalPlatform.getArrayItems();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
 
-/*
-        try {
-            HashMap<ExternalPlatform, HashMap<UUID, String>> s = moduleManager.listExternalIdentitiesFromCurrentDeviceUser();
-            System.out.println(" = s" );
-        } catch (CantListArtistIdentitiesException e) {
-            e.printStackTrace();
-        }
+        mArtistExternalPlatform.setAdapter(adapter);
 
-*/
+
+        mArtistExternalPlatform.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                try {
+
+                  List<String> jj = getArtistIdentityByPlatform(parent.getItemAtPosition(position).toString());
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        //getArtistIdentityByPlatform();
+
 
         mArtistExternalUserName.requestFocus();
         registerForContextMenu(ArtistImage);
@@ -267,6 +299,45 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
         //bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
         return stream.toByteArray();
+    }
+
+
+
+    private void externalPlatformSpinnerListener(){
+
+    }
+
+
+    private  List<String> getArtistIdentityByPlatform(String spinnerChoice) throws Exception{
+
+        ArtExternalPlatform externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(spinnerChoice);
+
+
+
+        HashMap<UUID, String> ArtIdentityByPlatform = null;
+
+
+        if(externalPlatform == ArtExternalPlatform.TOKENLY) {
+            //fanIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(ArtExternalPlatform.TOKENLY);
+        }
+
+
+        ArtIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(ArtExternalPlatform.TOKENLY);
+
+        //HashMap<ArtExternalPlatform, HashMap<UUID, String>> JHashMap = moduleManager.listExternalIdentitiesFromCurrentDeviceUser();
+
+        //fanIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
+
+            Iterator<Map.Entry<UUID, String>> entries2 = ArtIdentityByPlatform.entrySet().iterator();
+        List<String> identityNameList = new ArrayList<>();
+        List<UUID> identityIdList = new ArrayList<>();
+        while(entries2.hasNext()){
+            Map.Entry<UUID, String> entry2 = entries2.next();
+            identityNameList.add(entry2.getValue());
+            identityIdList.add(entry2.getKey());
+        }
+
+        return identityNameList;
     }
 
 
