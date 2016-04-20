@@ -48,9 +48,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.sub_app.wallet_manager.fragment.FermatNetworkSettings;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getAndroidCoreModule;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getCloudClient;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getDesktopRuntimeManager;
@@ -66,7 +63,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
 
     private BottomMenuReveal bottomMenuReveal;
-    private ExecutorService executorService;
 
     /**
      *  Called when the activity is first created
@@ -205,11 +201,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                         }
                     };
 
-                    if(executorService != null)
-                        executorService.shutdown();
-
-                    executorService = Executors.newSingleThreadExecutor();
-                    executorService.submit(threadChangeIP);
+                    executor.submit(threadChangeIP);
 
                 }catch (Exception e){
 
@@ -513,7 +505,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     }
 
 
-    private boolean isHelpEnabled(String appPublicKey){
+    private boolean loadSettings(){
         SettingsManager settingsManager = null;
         AndroidCoreSettings androidCoreSettings = null;
         try {
@@ -525,7 +517,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             androidCoreSettings = new AndroidCoreSettings(AppsStatus.ALPHA);
             androidCoreSettings.setIsPresentationHelpEnabled(true);
             try {
-                settingsManager.persistSettings(appPublicKey,androidCoreSettings);
+                settingsManager.persistSettings(ApplicationConstants.SETTINGS_CORE,androidCoreSettings);
             } catch (CantPersistSettingsException e1) {
                 e1.printStackTrace();
             }
