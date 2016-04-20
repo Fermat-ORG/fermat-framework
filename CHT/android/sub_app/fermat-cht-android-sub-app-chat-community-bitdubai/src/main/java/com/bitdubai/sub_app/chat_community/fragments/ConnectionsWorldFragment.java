@@ -170,7 +170,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         try {
             rootView = inflater.inflate(R.layout.cht_comm_connections_world_fragment, container, false);
             toolbar = getToolbar();
-            toolbar.setTitle("Chat Users");
+            //toolbar.setTitle("Chat Users");
             setUpScreen(inflater);
             searchView = inflater.inflate(R.layout.cht_comm_search_edit_text, null);
             setUpReferences();
@@ -448,7 +448,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                                     menu.findItem(R.id.action_search).setVisible(true);
                                     toolbar = getToolbar();
                                     toolbar.removeView(searchView);
-                                    toolbar.setTitle("Cripto wallet users");
+                                    //toolbar.setTitle("Cripto wallet users");
                                     onRefresh();
                                 }
                             }
@@ -522,42 +522,42 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                  e.printStackTrace();
              }
 
-           // List<ChatActorCommunityInformation> userList = moduleManager.getSuggestionsToContact(MAX, offset);
+            List<ChatActorCommunityInformation> userList = moduleManager.getSuggestionsToContact(moduleManager.getSelectedActorIdentity().getPublicKey() ,MAX, offset);
             if(userCacheList.size() == 0)
             {
-//                dataSet.addAll(userList);
-//                moduleManager.saveCacheChatUsersSuggestions(userList);
+                //dataSet.addAll(userList);
+                //moduleManager. .saveCacheChatUsersSuggestions(userList);
             }
             else
             {
-//                if(userList.size() == 0)
-//                {
-//                    dataSet.addAll(userCacheList);
-//                }
-//                else
-//                {
-//                    for (ChatActorCommunityInformation chatUserCache : userCacheList) {
-//                        boolean exist = false;
-////                        for (ChatActorCommunityInformation chatUser : userList) {
-////                            if(chatUserCache.getActorPublickey().equals(chatUser.getActorPublickey())){
-////                                exist = true;
-////                                break;
-////                            }
-////                        }
-//                        if(!exist)
-//                            userList.add(chatUserCache);
-//                    }
+                if(userList.size() == 0)
+                {
+                    dataSet.addAll(userCacheList);
+                }
+                else
+                {
+                    for (ChatActorCommunityInformation chatUserCache : userCacheList) {
+                        boolean exist = false;
+                        for (ChatActorCommunityInformation chatUser : userList) {
+                            if(chatUserCache.getPublicKey().equals(chatUser.getPublicKey())){
+                                exist = true;
+                                break;
+                            }
+                        }
+                        if(!exist)
+                            userList.add(chatUserCache);
+                    }
                     //guardo el cache
 
-//                    moduleManager.saveCacheChatUsersSuggestions(userList);
-//                    dataSet.addAll(userList);
-//                }
+                    //moduleManager.saveCacheChatUsersSuggestions(userList);
+                    //dataSet.addAll(userList);
+                }
             }
 
             //offset = dataSet.size();
 
-//        } catch (CantListChatIdentityException e) {
-//            e.printStackTrace();
+        } catch (CantListChatIdentityException e) {
+            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
