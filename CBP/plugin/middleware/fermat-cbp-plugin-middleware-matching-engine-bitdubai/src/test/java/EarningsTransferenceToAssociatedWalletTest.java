@@ -45,7 +45,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
@@ -138,6 +137,14 @@ public class EarningsTransferenceToAssociatedWalletTest {
                 System.currentTimeMillis(),
                 dao));
 
+        earningTransactions.add(new MatchingEngineMiddlewareEarningTransaction(
+                UUID.randomUUID(),
+                linkedCurrency,
+                -5.0f,
+                EarningTransactionState.CALCULATED,
+                System.currentTimeMillis(),
+                dao));
+
         // exercise
         transaction.extractEarnings(earningsPair, earningTransactions);
 
@@ -147,6 +154,9 @@ public class EarningsTransferenceToAssociatedWalletTest {
 
         earningTransaction = earningTransactions.get(1);
         assertThat(earningTransaction.getState()).isEqualTo(EarningTransactionState.EXTRACTED);
+
+        earningTransaction = earningTransactions.get(2);
+        assertThat(earningTransaction.getState()).isEqualTo(EarningTransactionState.CALCULATED);
 
         verify(bankMoneyDestockManager).createTransactionDestock(
                 anyString(),
@@ -383,17 +393,53 @@ public class EarningsTransferenceToAssociatedWalletTest {
         transaction.extractEarnings(earningsPair, earningTransactions);
 
         // assertions
-        verify(bankMoneyDestockManager, never()).createTransactionDestock(
-                anyString(),
-                eq(earningCurrency),
-                eq(BROKER_WALLET_PUBLIC_KEY),
-                eq(earningWalletPublicKey),
-                eq(BANK_ACCOUNT_NUMBER_1),
-                eq(BigDecimal.valueOf(10.0f)),
-                anyString(),
-                any(BigDecimal.class),
-                eq(OriginTransaction.EARNING_EXTRACTION),
-                eq(earningsPair.getId().toString()));
+        verifyZeroInteractions(bankMoneyDestockManager);
+    }
+
+    @Test
+    public void givenMatchingEarningTransactions_thenDoNothing() throws FermatException {
+        final String earningWalletPublicKey = WalletsPublicKeys.CSH_MONEY_WALLET.getCode();
+        final FiatCurrency earningCurrency = FiatCurrency.US_DOLLAR;
+        final FiatCurrency otherEarningCurrency = FiatCurrency.ARGENTINE_PESO;
+        final CryptoCurrency linkedCurrency = CryptoCurrency.BITCOIN;
+
+        final MatchingEngineMiddlewareEarningsPair earningsPair = new MatchingEngineMiddlewareEarningsPair(
+                UUID.randomUUID(),
+                earningCurrency,
+                linkedCurrency,
+                new WalletReference(earningWalletPublicKey),
+                EarningPairState.ASSOCIATED,
+                dao,
+                new WalletReference(BROKER_WALLET_PUBLIC_KEY));
+
+        final List<EarningTransaction> earningTransactions = new ArrayList<>();
+        earningTransactions.add(new MatchingEngineMiddlewareEarningTransaction(
+                UUID.randomUUID(),
+                otherEarningCurrency,
+                10,
+                EarningTransactionState.CALCULATED,
+                System.currentTimeMillis(),
+                dao));
+
+        earningTransactions.add(new MatchingEngineMiddlewareEarningTransaction(
+                UUID.randomUUID(),
+                otherEarningCurrency,
+                -1,
+                EarningTransactionState.CALCULATED,
+                System.currentTimeMillis(),
+                dao));
+
+        // exercise
+        transaction.extractEarnings(earningsPair, earningTransactions);
+
+        // assertion
+        EarningTransaction earningTransaction = earningTransactions.get(0);
+        assertThat(earningTransaction.getState()).isEqualTo(EarningTransactionState.CALCULATED);
+
+        earningTransaction = earningTransactions.get(1);
+        assertThat(earningTransaction.getState()).isEqualTo(EarningTransactionState.CALCULATED);
+
+        verifyZeroInteractions(cashMoneyDestockManager);
     }
 
     @Test
@@ -465,70 +511,6 @@ public class EarningsTransferenceToAssociatedWalletTest {
         // assertions
         assertThat(caughtException()).isInstanceOf(CantExtractEarningsException.class);
     }
-//
-//    @Test
-//    public void givenManyEarningTransactionOfSameCurrency_andEarningWalletIsBank_thenMakeBankMoneyDestocks() throws FermatException {
-//        final String earningWalletPublicKey = WalletsPublicKeys.BNK_BANKING_WALLET.getCode();
-//        final String BROKER_WALLET_PUBLIC_KEY = WalletsPublicKeys.CBP_CRYPTO_BROKER_WALLET.getCode();
-//        final FiatCurrency earningCurrency = FiatCurrency.VENEZUELAN_BOLIVAR;
-//        final UUID secondOriginTransactionId = UUID.randomUUID();
-//
-//        final List<EarningTransaction> earningTransactions = new ArrayList<>();
-//        earningTransactions.add(new MatchingEngineMiddlewareEarningTransaction(
-//                originTransactionId,
-//                earningCurrency,
-//                10.0f,
-//                EarningTransactionState.CALCULATED,
-//                System.currentTimeMillis(),
-//                dao));
-//
-//        earningTransactions.add(new MatchingEngineMiddlewareEarningTransaction(
-//                secondOriginTransactionId,
-//                earningCurrency,
-//                20.0f,
-//                EarningTransactionState.CALCULATED,
-//                System.currentTimeMillis(),
-//                dao));
-//
-//        final MatchingEngineMiddlewareEarningsPair earningsPair = new MatchingEngineMiddlewareEarningsPair(
-//                UUID.randomUUID(),
-//                earningCurrency,
-//                FiatCurrency.US_DOLLAR,
-//                new WalletReference(earningWalletPublicKey),
-//                EarningPairState.ASSOCIATED,
-//                dao,
-//                new WalletReference(BROKER_WALLET_PUBLIC_KEY));
-//
-//
-//        // exercise
-//        transaction.extractEarnings(earningsPair, earningTransactions);
-//
-//        // assertions
-//        final InOrder inOrder = inOrder(bankMoneyDestockManager);
-//        inOrder.verify(bankMoneyDestockManager).createTransactionDestock(
-//                anyString(),
-//                eq(earningCurrency),
-//                eq(BROKER_WALLET_PUBLIC_KEY),
-//                eq(earningWalletPublicKey),
-//                eq(BANK_ACCOUNT_NUMBER_2),
-//                eq(BigDecimal.valueOf(10.0f)),
-//                anyString(),
-//                any(BigDecimal.class),
-//                eq(OriginTransaction.EARNING_EXTRACTION),
-//                eq(originTransactionId.toString()));
-//
-//        inOrder.verify(bankMoneyDestockManager).createTransactionDestock(
-//                anyString(),
-//                eq(earningCurrency),
-//                eq(BROKER_WALLET_PUBLIC_KEY),
-//                eq(earningWalletPublicKey),
-//                eq(BANK_ACCOUNT_NUMBER_2),
-//                eq(BigDecimal.valueOf(20.0f)),
-//                anyString(),
-//                any(BigDecimal.class),
-//                eq(OriginTransaction.EARNING_EXTRACTION),
-//                eq(secondOriginTransactionId.toString()));
-//    }
 
     private List<CryptoBrokerWalletAssociatedSetting> getAssociatedWalletsTestData() {
 

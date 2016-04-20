@@ -2,6 +2,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.develope
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
+import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantExtractEarningsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantMarkEarningTransactionAsExtractedException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningTransactionNotFoundException;
@@ -55,17 +56,24 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
         if (earningExtractors.isEmpty())
             throw new CantExtractEarningsException("Verifying the Earning Extractors", "No Earning Extractors added");
 
+        if (earningTransactions.isEmpty())
+            return;
+
+
         final String earningWalletPublicKey = earningsPair.getEarningsWallet().getPublicKey();
         final Platforms earningWalletPlatform = getEarningWalletPlatform(earningWalletPublicKey, BROKER_WALLET_PUBLIC_KEY);
-        if (earningWalletPlatform != null && !earningTransactions.isEmpty()) {
+
+        if (earningWalletPlatform != null) {
+            final Currency earningCurrency = earningsPair.getEarningCurrency();
 
             float earningsAmount = 0;
             for (EarningTransaction earningTransaction : earningTransactions) {
-                earningsAmount += earningTransaction.getAmount();
+                if (earningTransaction.getEarningCurrency() == earningCurrency)
+                    earningsAmount += earningTransaction.getAmount();
             }
 
             if (earningsAmount > 0) {
-                markEarningTransactionsAsExtracted(earningTransactions);
+                markEarningTransactionsAsExtracted(earningTransactions, earningCurrency);
 
                 final EarningExtractor earningExtractor = earningExtractors.get(earningWalletPlatform);
                 earningExtractor.applyEarningExtraction(earningsPair, earningsAmount, earningWalletPublicKey, BROKER_WALLET_PUBLIC_KEY);
@@ -100,17 +108,18 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
         return associatedWallets;
     }
 
-    private void markEarningTransactionsAsExtracted(List<EarningTransaction> earningTransactions) throws CantExtractEarningsException {
+    private void markEarningTransactionsAsExtracted(List<EarningTransaction> earningTransactions, Currency earningCurrency) throws CantExtractEarningsException {
         try {
             for (EarningTransaction earningTransaction : earningTransactions)
-                earningTransaction.markAsExtracted();
+                if (earningTransaction.getEarningCurrency() == earningCurrency)
+                    earningTransaction.markAsExtracted();
 
         } catch (EarningTransactionNotFoundException e) {
-            throw new CantExtractEarningsException(e,"Trying to get the earning transaction in database to marked as EXTRACTED",
+            throw new CantExtractEarningsException(e, "Trying to get the earning transaction in database to marked as EXTRACTED",
                     "Verify the earning transaction ID is in database");
 
         } catch (CantMarkEarningTransactionAsExtractedException e) {
-            throw new CantExtractEarningsException(e,"Trying to mark the earning transaction has EXTRACTED",
+            throw new CantExtractEarningsException(e, "Trying to mark the earning transaction has EXTRACTED",
                     "Verify the stack trace for more info");
         }
     }
