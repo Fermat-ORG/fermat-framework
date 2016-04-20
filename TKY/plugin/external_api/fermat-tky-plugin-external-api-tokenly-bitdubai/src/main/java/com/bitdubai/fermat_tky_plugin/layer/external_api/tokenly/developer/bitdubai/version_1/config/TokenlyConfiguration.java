@@ -33,7 +33,22 @@ public class TokenlyConfiguration {
      */
     public static final String URL_TOKENLY_MUSIC_API_ONE_SONG_BY_AUTHENTICATED_USER = "https://music-stage.tokenly.com/api/v1/music/song/download/";
 
+    /**
+     * Represents the wrong credentials HTTP response code.
+     */
     public static final int TOKENLY_WRONG_CREDENTIALS_HTTP_RESPONSE_CODE = 403;
+
+    /**
+     * Represents the basic URL to call all the albums availables.
+     * In this version is used to check Music API status.
+     */
+    public static final String URL_TOKENLY_MUSIC_ALL_ALBUMS_AVAILABLE = "https://music-stage.tokenly.com/api/v1/music/catalog/albums";
+
+    /**
+     * This represents the developer team username in Tokenly.
+     * In this version is used to check Swapbot API status.
+     */
+    public static final String URL_TOKENLY_SWAPBOT_DEVELOPER_TEAM = "https://swapbot.tokenly.com/api/v1/public/bots?username=mordorteam";
 
     /**
      * This method returns a hashMap with the parameters required by the protected Tokenly API to

@@ -123,7 +123,7 @@ public abstract class RemoteJSonProcessor {
             }
             //Send post request
             httpsURLConnection.setDoOutput(true);
-            if(!urlParameters.isEmpty()){
+            if(urlParameters!=null && !urlParameters.isEmpty()){
                 DataOutputStream dataOutputStream = new DataOutputStream(
                         httpsURLConnection.getOutputStream());
                 dataOutputStream.writeBytes(urlParameters);
@@ -195,7 +195,7 @@ public abstract class RemoteJSonProcessor {
                         parameter.getKey().toString(),
                         parameter.getValue().toString());
             }
-            if(!urlParameters.isEmpty()){
+            if(urlParameters!=null && !urlParameters.isEmpty()){
                 DataOutputStream dataOutputStream = new DataOutputStream(
                         httpsURLConnection.getOutputStream());
                 dataOutputStream.writeBytes(urlParameters);
