@@ -156,7 +156,7 @@ public class FermatAppConnectionManager {
             case "public_key_cht_chat":
                 fermatAppConnection = new ChatFermatAppConnection(activity);
                 break;
-            case "sub_app_cht_community":
+            case "public_key_cht_community":
                 fermatAppConnection = new ChatCommunityFermatAppConnection(activity);
                 break;
             case "public_key_cht_identity_chat":
