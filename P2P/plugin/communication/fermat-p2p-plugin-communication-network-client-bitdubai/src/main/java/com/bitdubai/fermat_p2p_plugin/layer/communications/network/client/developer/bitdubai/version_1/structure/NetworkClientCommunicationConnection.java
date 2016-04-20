@@ -16,10 +16,12 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.cl
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.DiscoveryQueryParameters;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.ActorCallRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileDiscoveryQueryMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckInProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NearNodeListMsgRequest;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.NetworkServiceCallRequest;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ClientProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
@@ -37,6 +39,8 @@ import org.glassfish.tyrus.client.ClientProperties;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.websocket.CloseReason;
 import javax.websocket.EncodeException;
@@ -45,8 +49,7 @@ import javax.websocket.Session;
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.structure.NetworkClientCommunicationConnection</code>
  * <p/>
- * Created by Hendry Rodriguez - (elnegroevaristo@gmail.com) on 07/12/15.
- * Modified by Leon Acosta - (laion.cj91@gmail.com) on 20/04/2016.
+ * Created by Leon Acosta - (laion.cj91@gmail.com) on 14/04/2016.
  *
  * @author  lnacosta
  * @version 1.0
@@ -126,7 +129,7 @@ public class NetworkClientCommunicationConnection extends Thread implements Netw
             public boolean onConnectFailure(Exception exception) {
                 try {
 
-                    //System.out.println("# WsCommunicationsCloudClientConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
+                    //System.out.println("# NetworkClientCommunicationConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
                     // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
                     Thread.sleep(5000);
 
@@ -335,12 +338,105 @@ public class NetworkClientCommunicationConnection extends Thread implements Netw
     public void callNetworkService(final NetworkServiceProfile fromNetworkService,
                                    final NetworkServiceProfile toNetworkService  ) throws CantCreateNetworkCallException {
 
+        System.out.println("NetworkClientCommunicationConnection - requestNetworkCall");
+
+        /*
+         * Validate parameter
+         */
+        if (fromNetworkService == null || toNetworkService == null)
+            throw new IllegalArgumentException("All parameters are required, can not be null");
+
+        if (fromNetworkService.getIdentityPublicKey().equals(toNetworkService.getIdentityPublicKey()))
+            throw new IllegalArgumentException("The fromNetworkService and toNetworkService can not be the same component");
+
+        try{
+
+            List<NetworkServiceProfile> participants = new ArrayList<>();
+            participants.add(fromNetworkService);
+            participants.add(toNetworkService);
+
+            /**
+             * Validate all are the same type and NETWORK_SERVICE
+             */
+            for (NetworkServiceProfile participant: participants) {
+
+                if (participant.getNetworkServiceType() != fromNetworkService.getNetworkServiceType()){
+                    throw new IllegalArgumentException("All the Profile has to be the same type of network service type ");
+                }
+            }
+
+            if (isConnected()){
+                /*
+                 * Send the package to the server
+                 */
+
+                sendPackage(
+                        new NetworkServiceCallRequest(
+                                fromNetworkService,
+                                toNetworkService
+                        ),
+                        PackageType.NETWORK_SERVICE_CALL_REQUEST
+                );
+
+            } else {
+                // TODO .raiseClientConnectionLooseNotificationEvent();
+                throw new Exception("Client Connection is Close");
+            }
+
+        } catch (Exception e){
+            System.out.println("NetworkClientCommunicationConnection: " + e);
+            CantCreateNetworkCallException cantCreateNetworkCallException = new CantCreateNetworkCallException(e, e.getLocalizedMessage(), e.getLocalizedMessage());
+            throw cantCreateNetworkCallException;
+
+        }
     }
 
     @Override
     public void callActor(final ActorProfile          fromActor         ,
                           final ActorProfile          toActor           ,
                           final NetworkServiceProfile fromNetworkService) throws CantCreateNetworkCallException {
+
+        System.out.println("NetworkClientCommunicationConnection - requestNetworkCall");
+
+        /*
+         * Validate parameter
+         */
+        if (fromActor == null || fromNetworkService == null || toActor == null)
+            throw new IllegalArgumentException("All parameters are required, can not be null");
+
+        /*
+         * Validate are the  type NETWORK_SERVICE
+         */
+        if (fromActor.getIdentityPublicKey().equals(toActor.getIdentityPublicKey())){
+            throw new IllegalArgumentException("The fromActor and toActor can not be the same component");
+        }
+
+        try {
+
+            if (isConnected()){
+
+                /*
+                 * Send the package to the server
+                 */
+                sendPackage(
+                        new ActorCallRequest(
+                                fromActor,
+                                fromNetworkService,
+                                toActor
+                        ),
+                        PackageType.ACTOR_CALL_REQUEST
+                );
+
+            }else{
+                //Todo raiseClientConnectionLooseNotificationEvent();
+                throw new Exception("Client Connection is Close");
+            }
+
+        }catch (Exception e){
+            System.out.println("NetworkClientCommunicationConnection: " + e.getStackTrace());
+            CantCreateNetworkCallException cantCreateNetworkCallException = new CantCreateNetworkCallException(e, e.getLocalizedMessage(), e.getLocalizedMessage());
+            throw cantCreateNetworkCallException;
+        }
 
     }
 

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.interfaces;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantSendMessageException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.FermatMessage;
 
@@ -17,7 +18,7 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.contents.Ferm
  * @version 1.0
  * @since   Java JDK 1.7
  */
-public interface NetworkCallChannel<T extends Profile, Z extends Profile> {
+public interface NetworkCallChannel {
 
     /**
      * Through the method <code>sendMessage</code> we can send a message to the counterpart.
@@ -71,14 +72,14 @@ public interface NetworkCallChannel<T extends Profile, Z extends Profile> {
      *
      * @return an instance of the profile.
      */
-    T getRemoteParticipant();
+    Profile getRemoteParticipant();
 
     /**
-     * Through the method <code>getRemoteParticipant</code> we can get the profile
+     * Through the method <code>getRemoteParticipantNetworkService</code> we can get the profile
      * of the parent of the remote participant.
      *
      * @return an instance of the profile.
      */
-    Z getRemoteParticipantParent();
+    NetworkServiceProfile getRemoteParticipantNetworkService();
 
 }

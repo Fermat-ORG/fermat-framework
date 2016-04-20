@@ -38,7 +38,7 @@ public class CheckInActorRespondProcessor extends PackageProcessor {
     @Override
     public void processingPackage(Session session, Package packageReceived) {
 
-        System.out.println("Processing new package received");
+        System.out.println("Processing new package received, packageType: "+packageReceived.getPackageType());
         CheckInProfileMsjRespond checkInProfileMsjRespond = CheckInProfileMsjRespond.parseContent(packageReceived.getContent());
 
         if(checkInProfileMsjRespond.getStatus() == CheckInProfileMsjRespond.STATUS.SUCCESS){

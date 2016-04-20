@@ -38,7 +38,7 @@ public class CheckInProfileDiscoveryQueryRespondProcessor extends PackageProcess
     @Override
     public void processingPackage(Session session, Package packageReceived) {
 
-        System.out.println("Processing new package received");
+        System.out.println("Processing new package received, packageType: "+packageReceived.getPackageType());
         CheckInProfileListMsgRespond checkInProfileListMsgRespond = CheckInProfileListMsgRespond.parseContent(packageReceived.getContent());
 
         if(checkInProfileListMsgRespond.getStatus() == CheckInProfileListMsgRespond.STATUS.SUCCESS){

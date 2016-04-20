@@ -38,7 +38,7 @@ public class NearNodeListRespondProcessor extends PackageProcessor {
     @Override
     public void processingPackage(Session session, Package packageReceived) {
 
-        System.out.println("Processing new package received");
+        System.out.println("Processing new package received, packageType: "+packageReceived.getPackageType());
         NearNodeListMsgRespond nearNodeListMsgRespond = NearNodeListMsgRespond.parseContent(packageReceived.getContent());
 
         if(nearNodeListMsgRespond.getStatus() == NearNodeListMsgRespond.STATUS.SUCCESS){
