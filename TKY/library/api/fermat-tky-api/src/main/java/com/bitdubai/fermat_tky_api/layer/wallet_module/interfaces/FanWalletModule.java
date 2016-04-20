@@ -3,6 +3,8 @@ package com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.SongStatus;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyAPIStatus;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TokenlyAPINotAvailableException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.User;
 import com.bitdubai.fermat_tky_api.layer.external_api.exceptions.CantGetAlbumException;
@@ -201,4 +203,19 @@ public interface FanWalletModule extends ModuleManager<FanWalletPreferenceSettin
      * @throws CantGetSongException
      */
     Song getSongByAuthenticatedUser(MusicUser musicUser, String tokenlySongId) throws CantGetSongException;
+
+    /**
+     * This method checks if the Tokenly Music API is available.
+     * @return
+     * @throws TokenlyAPINotAvailableException
+     */
+    TokenlyAPIStatus getMusicAPIStatus() throws TokenlyAPINotAvailableException;
+
+    /**
+     * This method checks if the Tokenly Swapbot API is available.
+     * @return
+     * @throws TokenlyAPINotAvailableException
+     */
+    TokenlyAPIStatus getSwapBotAPIStatus() throws TokenlyAPINotAvailableException;
+
 }
