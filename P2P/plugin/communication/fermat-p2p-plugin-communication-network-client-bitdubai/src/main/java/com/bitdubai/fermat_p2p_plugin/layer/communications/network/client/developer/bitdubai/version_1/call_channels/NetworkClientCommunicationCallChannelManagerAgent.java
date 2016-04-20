@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.vpn;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.call_channels;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
@@ -19,7 +19,7 @@ import javax.websocket.ClientEndpointConfig;
 import javax.websocket.DeploymentException;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.vpn.NetworkClientCommunicationCallChannelManagerAgent</code>
+ * The Class <code>NetworkClientCommunicationCallChannelManagerAgent</code>
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 20/04/2016.
  *
