@@ -7,11 +7,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
@@ -227,7 +229,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 SubAppsPublicKeys.CCP_COMMUNITY.getCode(),
                 "intra_user_community_sub_app",
                 new Version(1,0,0),
-                Platforms.CRYPTO_CURRENCY_PLATFORM);
+                Platforms.CRYPTO_CURRENCY_PLATFORM, AppsStatus.ALPHA);
 
         installedSubApp.setIconResource(R.drawable.crypto_wallet_user_community);
         installedSubApp.setBanner(R.drawable.wallet_user_community);
@@ -242,7 +244,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 SubAppsPublicKeys.DAP_COMMUNITY_ISSUER.getCode(),
                 "sub-app-asset-community-issuer",
                 new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM);
+                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
 
         installedSubApp.setIconResource(R.drawable.aissuer_community);
         installedSubApp.setBanner(R.drawable.asset_issuer_community);
@@ -257,7 +259,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 SubAppsPublicKeys.DAP_COMMUNITY_USER.getCode(),
                 "sub-app-asset-community-user",
                 new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM);
+                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
 
         installedSubApp.setIconResource(R.drawable.auser_community);
         installedSubApp.setBanner(R.drawable.asset_user_community);
@@ -272,7 +274,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 SubAppsPublicKeys.DAP_COMMUNITY_REDEEM.getCode(),
                 "sub-app-asset-community-redeem-point",
                 new Version(1, 0, 0),
-                Platforms.DIGITAL_ASSET_PLATFORM);
+                Platforms.DIGITAL_ASSET_PLATFORM, AppsStatus.ALPHA);
 
         installedSubApp.setIconResource(R.drawable.r_point_community);
         installedSubApp.setBanner(R.drawable.redeem_community);
@@ -287,7 +289,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 SubAppsPublicKeys.CBP_BROKER_COMMUNITY.getCode(),
                 "sub_app_crypto_broker_community",
                 new Version(1, 0, 0)
-                ,Platforms.CRYPTO_BROKER_PLATFORM);
+                ,Platforms.CRYPTO_BROKER_PLATFORM, AppsStatus.DEV);
 
         installedSubApp.setIconResource(R.drawable.crypto_broker_community);
         installedSubApp.setBanner(R.drawable.broker_community);
@@ -302,7 +304,8 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
                 SubAppsPublicKeys.CBP_CUSTOMER_COMMUNITY.getCode(),
                 "sub_app_crypto_customer_community",
                 new Version(1, 0, 0),
-                Platforms.CRYPTO_BROKER_PLATFORM);
+                Platforms.CRYPTO_BROKER_PLATFORM,
+                AppsStatus.DEV);
 
         installedSubApp.setIconResource(R.drawable.crypto_customer_community);
         installedSubApp.setBanner(R.drawable.customer_community);
@@ -337,6 +340,17 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
         installedSubApp.setIconResource(R.drawable.communities_icon);
         installedSubApp.setBanner(R.drawable.communities_bar);
         installedApps.add(installedSubApp);*/
+
+
+        ArrayList list = new ArrayList();
+        AppsStatus appsStatus = ((FermatActivityManager)getActivity()).getAppStatus();
+
+        for (InstalledApp installedApp : installedApps) {
+            if(installedApp.getAppStatus()==appsStatus){
+                list.add(installedApp);
+            }
+        }
+        installedApps = list;
 
     }
 }
