@@ -331,7 +331,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
 //                    lstItemsWithIcon.add(item);
 //                }
 //            }
-            InstalledApp installedApp = new InstalledApp("Dating","tinder_public_key",new Version(),R.drawable.datting,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
+            InstalledApp installedApp = new InstalledApp("Dating","tinder_public_key",new Version(),R.drawable.datting,0,0, AppsStatus.DEV,null);
 
             lstInstalledApps.add(installedApp);
             Item item = new Item(installedApp);
@@ -339,21 +339,21 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
             item.setPosition(0);
             lstItemsWithIcon.add(item);
 
-            installedApp = new InstalledApp("Jobs","Airbnb_public_key",new Version(),R.drawable.jobs,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
+            installedApp = new InstalledApp("Jobs","Airbnb_public_key",new Version(),R.drawable.jobs,0,0,  AppsStatus.DEV,null);
             lstInstalledApps.add(installedApp);
             item = new Item(installedApp);
             item.setIconResource(R.drawable.jobs);
             item.setPosition(1);
             lstItemsWithIcon.add(item);
 
-            installedApp = new InstalledApp("Market Place","eBay_public_key",new Version(),R.drawable.market_place_icon,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
+            installedApp = new InstalledApp("Market Place","eBay_public_key",new Version(),R.drawable.market_place_icon,0,0,  AppsStatus.DEV,null);
             lstInstalledApps.add(installedApp);
             item = new Item(installedApp);
             item.setIconResource(R.drawable.market_place_icon);
             item.setPosition(2);
             lstItemsWithIcon.add(item);
 
-            installedApp = new InstalledApp("Household","mercado_libre_public_key",new Version(),R.drawable.house_hold,0,0, com.bitdubai.fermat_api.AppsStatus.getDefaultStatus(),null);
+            installedApp = new InstalledApp("Household","mercado_libre_public_key",new Version(),R.drawable.house_hold,0,0,  AppsStatus.DEV,null);
             lstInstalledApps.add(installedApp);
             item = new Item(installedApp);
             item.setIconResource(R.drawable.house_hold);
@@ -361,6 +361,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
             lstItemsWithIcon.add(item);
 
             InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CHT_CHAT, null, null, "chat_sub_app", "Chat", SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), "chat_sub_app", new Version(1, 0, 0), Platforms.CHAT_PLATFORM);
+            installedSubApp.setAppStatus(AppsStatus.ALPHA);
             item = new Item(installedSubApp);
             item.setIconResource(R.drawable.chat_subapp);
             item.setPosition(4);
@@ -379,8 +380,17 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
                 arrItemsWithoutIcon[i] = emptyItem;
             }
 
-            for(Item itemIcon: lstItemsWithIcon){
-                arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
+//            for(Item itemIcon: lstItemsWithIcon){
+//                arrItemsWithoutIcon[itemIcon.getPosition()]= itemIcon;
+//            }
+
+            int pos = 0;
+            for(int i = 0;i<lstItemsWithIcon.size();i++){
+                Item itemIcon = lstItemsWithIcon.get(i);
+                if((itemIcon.getAppStatus() == AppsStatus.ALPHA)){
+                    arrItemsWithoutIcon[pos]= itemIcon;
+                    pos++;
+                }
             }
 
             dataSet.addAll(Arrays.asList(arrItemsWithoutIcon));
@@ -437,6 +447,39 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
     }
 
 
+    private void select(AppsStatus appsStatus){
+        try {
+            List<Item> list = new ArrayList<>();
+            for (Item installedWallet : lstItemsWithIcon) {
+                if(installedWallet.getAppStatus()!=null) {
+                    if(appsStatus.isAppStatusAvailable(installedWallet.getAppStatus())) {
+                        list.add(installedWallet);
+                    }
+                }
+            }
+            Item[] arrItemsWithoutIcon = new Item[12];
+            for (int i = 0; i < 12; i++) {
+                Item emptyItem = new Item(new EmptyItem(0, i));
+                emptyItem.setIconResource(-1);
+                arrItemsWithoutIcon[i] = emptyItem;
+            }
+
+            int j = 0;
+            for (Item itemIcon : list) {
+                arrItemsWithoutIcon[j] = itemIcon;
+                j++;
+            }
+
+            if (recyclerView.getAdapter() != null) {
+                ((DesktopAdapter) recyclerView.getAdapter()).changeDataSet(Arrays.asList(arrItemsWithoutIcon));
+                recyclerView.getAdapter().notifyDataSetChanged();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+
     @Override
     public void onDestroy() {
 
@@ -448,6 +491,18 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
     @Override
     public void onUpdateViewOnUIThread(String code) {
         AppsStatus appsStatus = AppsStatus.getByCode(code);
+        switch (appsStatus){
+            case RELEASE:
+                break;
+            case BETA:
+                break;
+            case ALPHA:
+                break;
+            case DEV:
+                break;
+        }
+
+        select(appsStatus);
         super.onUpdateViewOnUIThread(code);
     }
 

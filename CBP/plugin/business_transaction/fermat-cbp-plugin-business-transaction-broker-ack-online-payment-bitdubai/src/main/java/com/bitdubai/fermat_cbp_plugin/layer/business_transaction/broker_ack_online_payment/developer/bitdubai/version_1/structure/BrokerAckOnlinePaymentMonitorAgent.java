@@ -352,7 +352,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
         }
 
         private void checkPendingMoneyEvents(String eventId) throws IncomingOnlinePaymentException, CantUpdateRecordException {
-            String senderPublicKey;
+            String customerPublickey;
             IncomingMoneyEventWrapper incomingMoneyEventWrapper;
             BusinessTransactionRecord businessTransactionRecord;
             long contractCryptoAmount;
@@ -363,9 +363,9 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
 
             try {
                 incomingMoneyEventWrapper = brokerAckOnlinePaymentBusinessTransactionDao.getIncomingMoneyEventWrapper(eventId);
-                senderPublicKey = incomingMoneyEventWrapper.getSenderPublicKey();
-                //TODO: look a way to get the sender public key
-                businessTransactionRecord = brokerAckOnlinePaymentBusinessTransactionDao.getBusinessTransactionRecordByCustomerPublicKey(senderPublicKey);
+                customerPublickey = incomingMoneyEventWrapper.getReceiverPublicKey();
+
+                businessTransactionRecord = brokerAckOnlinePaymentBusinessTransactionDao.getBusinessTransactionRecordByCustomerPublicKey(customerPublickey);
 
                 if (businessTransactionRecord == null)
                     return; //Case: the contract event is not processed or the incoming money is not link to a contract.
@@ -373,7 +373,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                 contractHash = businessTransactionRecord.getContractHash();
                 incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
                 contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
-
+                //TODO: VER como obtener los montos del contrato y de lo que llega.
                 if (incomingCryptoAmount != contractCryptoAmount) {
                     throw new IncomingOnlinePaymentException("The incoming crypto amount received is " + incomingCryptoAmount +
                             "\nThe amount excepted in contract " + contractHash + "\nis " + contractCryptoAmount);
@@ -458,7 +458,7 @@ public class BrokerAckOnlinePaymentMonitorAgent implements
                             getCustomerBrokerContractSaleForContractId(eventId);
 
                     brokerAckOnlinePaymentBusinessTransactionDao.persistContractInDatabase(customerBrokerContractSale);
-                    brokerAckOnlinePaymentBusinessTransactionDao.updateIncomingEventStatus(eventId, EventStatus.NOTIFIED);
+                    brokerAckOnlinePaymentBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
 
             } catch (CantUpdateRecordException exception) {

@@ -515,12 +515,14 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
                 if(itemIcon.getInterfaceObject() instanceof InstalledWallet){
                     if(((InstalledWallet) itemIcon.getInterfaceObject()).getAppStatus() == AppsStatus.ALPHA){
                         arrItemsWithoutIcon[pos]= itemIcon;
-                        pos++;
+                    pos++;
                     }
                 }
 
             }
             dataSet.addAll(Arrays.asList(arrItemsWithoutIcon));
+
+//            dataSet.addAll(lstItemsWithIcon);
 
         } catch (Exception e){
             e.printStackTrace();

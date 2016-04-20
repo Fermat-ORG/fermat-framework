@@ -19,7 +19,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ExchangeRateStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.NegotiationStep;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.SingleValueStep;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.AmountToBuyStepViewHolder;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders.negotiation_details.DateTimeStepViewHolder;
@@ -47,14 +47,14 @@ public class NegotiationDetailsAdapter extends RecyclerView.Adapter<FermatViewHo
     private FermatSession session;
     private List<NegotiationStep> dataSet;
     private Activity activity;
-    private CryptoCustomerWalletManager walletManager;
+    private CryptoCustomerWalletModuleManager walletManager;
     private FooterViewHolder.OnFooterButtonsClickListener footerListener;
 
     private final CustomerBrokerNegotiationInformation data;
     private ExchangeRateStepViewHolder exchangeRateViewHolder;
     private boolean haveNote;
 
-    public NegotiationDetailsAdapter(Activity activity, FermatSession session, CryptoCustomerWalletManager walletManager, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet) {
+    public NegotiationDetailsAdapter(Activity activity, FermatSession session, CryptoCustomerWalletModuleManager walletManager, CustomerBrokerNegotiationInformation data, List<NegotiationStep> dataSet) {
         this.activity = activity;
         this.session = session;
         this.dataSet = dataSet;

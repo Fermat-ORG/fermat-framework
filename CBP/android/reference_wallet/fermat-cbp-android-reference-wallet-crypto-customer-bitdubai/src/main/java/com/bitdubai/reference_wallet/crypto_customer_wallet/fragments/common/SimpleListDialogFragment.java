@@ -55,6 +55,7 @@ public class SimpleListDialogFragment<T> extends DialogFragment {
             } else if (choice instanceof BankAccountNumber) {
                 BankAccountNumber bankAccount = (BankAccountNumber) choice;
                 data.add(bankAccount.getAlias());
+//                data.add(bankAccount.toString());
 
             } else if (choice instanceof CurrencyExchangeRateProviderManager) {
                 CurrencyExchangeRateProviderManager provider = (CurrencyExchangeRateProviderManager) choice;

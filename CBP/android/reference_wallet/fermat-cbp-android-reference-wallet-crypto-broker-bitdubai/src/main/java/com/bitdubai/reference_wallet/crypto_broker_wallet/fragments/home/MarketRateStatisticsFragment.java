@@ -16,7 +16,6 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
@@ -101,9 +100,8 @@ public class MarketRateStatisticsFragment extends AbstractFermatFragment {
             @Override
             protected Object doInBackground() throws Exception {
                 CryptoBrokerWalletModuleManager moduleManager = session.getModuleManager();
-                CryptoBrokerWalletManager walletManager = moduleManager.getCryptoBrokerWallet(session.getAppPublicKey());
                 List<ExchangeRate> exchangeRates = new ArrayList<>();
-                exchangeRates.addAll(walletManager.getDailyExchangeRatesFromCurrentDate(indexInfo, 7));
+                exchangeRates.addAll(moduleManager.getDailyExchangeRatesFromCurrentDate(indexInfo, 7));
 
                 return exchangeRates;
             }
