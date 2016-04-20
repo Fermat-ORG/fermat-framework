@@ -244,8 +244,6 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
     @Override
     public double getEarningAndLostsWallet(String walletPublicKey, BlockchainNetworkType blockchainNetworkType) {
-
-
         return 0;
     }
 
