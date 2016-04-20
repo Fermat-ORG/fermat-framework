@@ -84,6 +84,7 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
     //private SubAppManager moduleManager;
 
     ArrayList<Item> lstItems;
+    List<Item> lstItemsWithIcon;
 
     private boolean started = false;
 
@@ -293,7 +294,7 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
             lstItems = new ArrayList<>();
 
             //lstInstalledWallet = moduleManager.getUserWallets();
-            List<Item> lstItemsWithIcon = new ArrayList<>();
+            lstItemsWithIcon = new ArrayList<>();
             Item[] arrItemsWithoutIcon = new Item[12];
 
 
@@ -393,12 +394,11 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
     private void select(AppsStatus appsStatus){
         try {
             List<Item> list = new ArrayList<>();
-            for (Item installedWallet : lstItems) {
-                if (installedWallet.getInterfaceObject() instanceof com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp) {
-                    if (appsStatus.isAppStatusAvailable(((InstalledSubApp) installedWallet.getInterfaceObject()).getAppStatus())) {
+            for (Item installedWallet : lstItemsWithIcon) {
+                    if (appsStatus.isAppStatusAvailable(installedWallet.getAppStatus())) {
                         list.add(installedWallet);
                     }
-                }
+
             }
             Item[] arrItemsWithoutIcon = new Item[12];
             for (int i = 0; i < 12; i++) {
