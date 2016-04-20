@@ -153,7 +153,7 @@ public class ComponentDAO {
              * 1 - load the data base to memory with filter
              */
             DatabaseTable connectionTable = getDatabaseTable();
-            connectionTable.addStringFilter(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_SYSTEM_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
+            connectionTable.addStringFilter(SystemMonitorNetworkServiceDatabaseConstants.COMPONENT_ID_COLUMN_NAME, id, DatabaseFilterType.EQUAL);
             connectionTable.loadToMemory();
 
             /*
@@ -264,7 +264,7 @@ public class ComponentDAO {
 
         try {
             DatabaseTable metadataTable = getDatabaseTable();
-            metadataTable.addStringFilter(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_SYSTEM_ID_COLUMN_NAME, entity.getId().toString(), DatabaseFilterType.EQUAL);
+            metadataTable.addStringFilter(SystemMonitorNetworkServiceDatabaseConstants.COMPONENT_ID_COLUMN_NAME, entity.getId().toString(), DatabaseFilterType.EQUAL);
             metadataTable.loadToMemory();
 
             if (metadataTable.getRecords().isEmpty()) throw new RecordsNotFoundException();
@@ -308,7 +308,7 @@ public class ComponentDAO {
     private ComponentProfileInfo constructFrom(DatabaseTableRecord record) throws InvalidParameterException {
 
         ComponentProfileInfo connection = new ComponentProfileInfo(
-                record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN),
+                record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.COMPONENT_ID_COLUMN_NAME),
                 record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.COMPONENT_NAME_COLUMN_NAME),
                 record.getStringValue(SystemMonitorNetworkServiceDatabaseConstants.COMPONENT_TYPE_COLUMN_NAME)
         );
@@ -317,7 +317,7 @@ public class ComponentDAO {
     }
 
     private void setValuesToRecord(DatabaseTableRecord entityRecord, ComponentProfileInfo connection) {
-        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.SYSTEM_DATA_FIRST_KEY_COLUMN, connection.getId());
+        entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.COMPONENT_ID_COLUMN_NAME, connection.getId());
         entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.COMPONENT_NAME_COLUMN_NAME, connection.getName());
         entityRecord.setStringValue(SystemMonitorNetworkServiceDatabaseConstants.COMPONENT_TYPE_COLUMN_NAME, connection.getType());
     }

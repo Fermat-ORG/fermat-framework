@@ -7,8 +7,6 @@ import android.content.DialogInterface;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-
-
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 
@@ -87,7 +85,7 @@ public class WalletUtils {
                 }
             }
         }
-        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        //TODO Return null method - OJO: only informative for visual aid during debug - remove if it bothers
         return null;
     }
 

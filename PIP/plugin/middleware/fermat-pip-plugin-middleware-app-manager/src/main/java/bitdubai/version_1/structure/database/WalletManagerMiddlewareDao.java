@@ -41,7 +41,7 @@ import bitdubai.version_1.structure.AppManagerMiddlewareInstalledWallet;
 /**
  * Created by natalia on 04/08/15.
  */
-public class AppManagerMiddlewareDao {
+class AppManagerMiddlewareDao {
 
     /**
      * AppManagerMiddlewareDatabaseDao member variables

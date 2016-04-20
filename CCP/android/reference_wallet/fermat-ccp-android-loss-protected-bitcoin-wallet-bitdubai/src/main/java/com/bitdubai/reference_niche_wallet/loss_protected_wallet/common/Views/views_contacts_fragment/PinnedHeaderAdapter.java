@@ -22,7 +22,6 @@ import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
-
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletContact;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -216,8 +215,6 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
         return PINNED_HEADER_VISIBLE;
     }
 
-
-    //TODO: ver si lo que cambie aca del toString está bien, estoy casao
     @Override
     public void configurePinnedHeader(View v, int position) {
         try

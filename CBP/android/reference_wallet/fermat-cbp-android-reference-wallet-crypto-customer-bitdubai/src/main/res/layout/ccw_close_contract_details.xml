@@ -55,23 +55,23 @@
         <GridLayout
             android:layout_width="331dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_marginEnd="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="20dp"
             android:columnCount="2"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="36dp">
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/ccw_amount_bought_or_wanted_to_buy_title"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
                 android:layout_gravity="end"
                 android:layout_row="0"
-                android:gravity="start"
+                android:gravity="right"
                 android:textColor="#5f5f5f"
                 android:textSize="17dp"
                 tools:text="@string/ccw_wanted_to_buy"
@@ -81,7 +81,7 @@
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/ccw_amount_bought_or_wanted_to_buy_value"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
                 android:layout_gravity="start"
@@ -95,13 +95,13 @@
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/ccw_contract_details_price_title"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
                 android:layout_gravity="end"
                 android:layout_marginRight="0dp"
                 android:layout_row="1"
-                android:gravity="start"
+                android:gravity="right"
                 android:textColor="#5f5f5f"
                 android:textSize="17dp"
                 android:text="@string/ccw_price"
@@ -110,7 +110,7 @@
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/ccw_contract_details_price_value"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
                 android:layout_gravity="start"
@@ -123,13 +123,13 @@
                 android:textStyle="normal" />
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_column="0"
                 android:layout_gravity="end"
                 android:layout_marginRight="0dp"
                 android:layout_row="2"
-                android:gravity="start"
+                android:gravity="right"
                 android:textColor="#5f5f5f"
                 android:textSize="17dp"
                 android:text="@string/ccw_contract_details_payment_method"
@@ -138,7 +138,7 @@
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:id="@+id/ccw_contract_details_payment_method"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_column="1"
                 android:layout_gravity="start"

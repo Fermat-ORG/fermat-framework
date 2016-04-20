@@ -122,6 +122,7 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:launchMode="singleInstance"
+            android:hardwareAccelerated="true"
             />
 
         <receiver android:name="com.bitdubai.android_core.app.AppLauncherReceiver">
@@ -133,7 +134,7 @@
 
         </receiver>
 
-        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.CommunicationService"
+        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationService"
             android:label="CommService"
             android:exported="true"
             >

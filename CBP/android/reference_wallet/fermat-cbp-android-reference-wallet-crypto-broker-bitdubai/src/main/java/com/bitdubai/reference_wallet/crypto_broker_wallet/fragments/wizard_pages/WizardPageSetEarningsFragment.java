@@ -21,7 +21,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -53,7 +52,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
     private List<EarningsWizardData> earningDataList;
 
     // Fermat Managers
-    private CryptoBrokerWalletManager walletManager;
+    private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
     private EarningsWizardAdapter adapter;
 
@@ -67,8 +66,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
         super.onCreate(savedInstanceState);
 
         try {
-            CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
-            walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
+            moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
             List<String> temp = new ArrayList<>();
@@ -76,12 +74,12 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
 
             //Delete potential previous configurations made by this wizard page
             //So that they can be reconfigured cleanly
-            walletManager.clearEarningPairsFromEarningSettings(appSession.getAppPublicKey());
+            moduleManager.clearEarningPairsFromEarningSettings(appSession.getAppPublicKey());
 
 
             //If PRESENTATION_SCREEN_ENABLED == true, then user does not want to see more help dialogs inside the wizard
             Object aux = appSession.getData(PresentationDialog.PRESENTATION_SCREEN_ENABLED);
-            if(aux != null && aux instanceof Boolean)
+            if (aux != null && aux instanceof Boolean)
                 hideHelperDialogs = (boolean) aux;
 
             List<EarningsWizardData> _earningDataList = createEarningDataList();
@@ -136,7 +134,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
         });
 
 
-        if(!hideHelperDialogs) {
+        if (!hideHelperDialogs) {
             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                     .setBannerRes(R.drawable.banner_crypto_broker)
@@ -166,7 +164,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
 
     private void showWalletsDialog(final EarningsWizardData data, final int position) {
         try {
-            List<InstalledWallet> installedWallets = walletManager.getInstallWallets();
+            List<InstalledWallet> installedWallets = moduleManager.getInstallWallets();
             List<InstalledWallet> filteredList = new ArrayList<>();
 
             final Currency earningCurrency = data.getEarningCurrency();
@@ -176,7 +174,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                 Platforms platform = wallet.getPlatform();
                 switch (platform) {
                     case BANKING_PLATFORM:
-                        List<BankAccountNumber> accounts = walletManager.getAccounts(wallet.getWalletPublicKey());
+                        List<BankAccountNumber> accounts = moduleManager.getAccounts(wallet.getWalletPublicKey());
                         for (BankAccountNumber account : accounts) {
                             FiatCurrency currencyType = account.getCurrencyType();
                             if (currencyType.equals(earningCurrency) || currencyType.equals(linkedCurrency)) {
@@ -186,7 +184,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                         }
                         break;
                     case CASH_PLATFORM:
-                        FiatCurrency cashCurrency = walletManager.getCashCurrency(wallet.getWalletPublicKey());
+                        FiatCurrency cashCurrency = moduleManager.getCashCurrency(wallet.getWalletPublicKey());
                         if (cashCurrency.equals(earningCurrency) || cashCurrency.equals(linkedCurrency))
                             filteredList.add(wallet);
                         break;
@@ -228,7 +226,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
 
     private void showBankAccountsDialog(final InstalledWallet selectedWallet, final EarningsWizardData data, final int position) {
         try {
-            List<BankAccountNumber> accounts = walletManager.getAccounts(selectedWallet.getWalletPublicKey());
+            List<BankAccountNumber> accounts = moduleManager.getAccounts(selectedWallet.getWalletPublicKey());
 
             SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();
             accountsDialog.configure("Select an Account", accounts);
@@ -261,7 +259,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
         for (EarningsWizardData data : earningDataList) {
             if (data.getWalletPublicKey() != null) {
                 try {
-                    walletManager.addEarningsPairToEarningSettings(
+                    moduleManager.addEarningsPairToEarningSettings(
                             data.getEarningCurrency(),
                             data.getLinkedCurrency(),
                             data.getWalletPublicKey(),
@@ -285,7 +283,7 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
         ArrayList<EarningsWizardData> list = new ArrayList<>();
 
         try {
-            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = walletManager.getCryptoBrokerWalletAssociatedSettings(appSession.getAppPublicKey());
+            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = moduleManager.getCryptoBrokerWalletAssociatedSettings(appSession.getAppPublicKey());
 
             for (CryptoBrokerWalletAssociatedSetting associatedWallet1 : associatedWallets) {
                 for (CryptoBrokerWalletAssociatedSetting associatedWallet2 : associatedWallets) {
