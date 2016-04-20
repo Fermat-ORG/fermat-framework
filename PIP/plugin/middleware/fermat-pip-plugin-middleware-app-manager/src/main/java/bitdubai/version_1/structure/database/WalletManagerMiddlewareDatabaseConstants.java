@@ -1,3 +1,4 @@
+
 package bitdubai.version_1.structure.database;
 
 
@@ -11,7 +12,7 @@ package bitdubai.version_1.structure.database;
  * @version 1.0
  * @since Java JDK 1.7
  */
-class AppManagerMiddlewareDatabaseConstants {
+public class AppManagerMiddlewareDatabaseConstants {
 
     public static final String WALLET_MANAGER_WALLETS_DATABASE = "WalletDatabase";
 
@@ -70,4 +71,3 @@ class AppManagerMiddlewareDatabaseConstants {
     public static final String WALLET_MANAGER_LANGUAGES_TABLE_FIRST_KEY_COLUMN = "language_id";
 
 }
-

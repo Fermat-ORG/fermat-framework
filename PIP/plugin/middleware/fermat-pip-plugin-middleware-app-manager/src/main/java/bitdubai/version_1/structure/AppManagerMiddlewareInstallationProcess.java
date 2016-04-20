@@ -21,7 +21,7 @@ import bitdubai.version_1.exceptions.CantGetInstalledWalletsException;
 import bitdubai.version_1.exceptions.CantPersistWalletException;
 import bitdubai.version_1.exceptions.CantPersistWalletLanguageException;
 import bitdubai.version_1.exceptions.CantPersistWalletSkinException;
-import bitdubai.version_1.structure.database.AppManagerMiddlewareDao;
+import bitdubai.version_1.structure.database.WalletManagerMiddlewareDao;
 
 /**
  * The Class <code>com.bitdubai.fermat_dmp_plugin.layer.middleware.wallet_manager.developer.bitdubai.version_1.structure.AppManagerMiddlewareInstallationProcess</code>
@@ -68,7 +68,7 @@ public class AppManagerMiddlewareInstallationProcess implements WalletInstallati
     private boolean isWalletInstalled(UUID walletCatalogueId) throws CantExecuteDatabaseOperationException {
         //Logger LOG = Logger.getGlobal();
         try {
-            AppManagerMiddlewareDao AppManagerDao = new AppManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
+            WalletManagerMiddlewareDao AppManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
             InstalledWallet installedWallet = AppManagerDao.getInstalledWalletByCatalogueId(walletCatalogueId);
             return installedWallet != null;
         } catch (CantExecuteDatabaseOperationException exception) {
@@ -128,7 +128,7 @@ public class AppManagerMiddlewareInstallationProcess implements WalletInstallati
                 /**
                  * Persist wallet info in database
                  */
-                AppManagerMiddlewareDao AppManagerDao = new AppManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
+                WalletManagerMiddlewareDao AppManagerDao = new WalletManagerMiddlewareDao(this.pluginDatabaseSystem, pluginId);
 
                 AppManagerDao.persistWallet(walletPublicKey, walletPrivateKey, deviceUserPublicKey, walletCategory, walletName, walletIconName, walletPlatformIdentifier, walletCatalogueId, walletVersion, developerName, screenSize, navigationStructureVersion, BlockchainNetworkType.getDefaultBlockchainNetworkType());
 
