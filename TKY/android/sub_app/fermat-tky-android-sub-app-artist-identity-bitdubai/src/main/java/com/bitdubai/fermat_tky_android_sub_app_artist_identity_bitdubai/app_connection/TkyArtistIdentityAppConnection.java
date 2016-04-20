@@ -33,21 +33,18 @@ public class TkyArtistIdentityAppConnection extends AppConnections {
 
     @Override
     public NavigationViewPainter getNavigationViewPainter() {
-        System.out.println("aaaa");
 
         return null;
     }
 
     @Override
     public HeaderViewPainter getHeaderViewPainter() {
-        System.out.println("aaaa");
 
         return null;
     }
 
     @Override
     public FooterViewPainter getFooterViewPainter() {
-        System.out.println("aaaa");
 
         return null;
     }
