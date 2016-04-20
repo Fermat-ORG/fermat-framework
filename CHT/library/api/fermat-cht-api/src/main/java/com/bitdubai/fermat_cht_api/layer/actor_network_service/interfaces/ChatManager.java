@@ -3,7 +3,11 @@ package com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
+import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantCancelConnectionRequestException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantConfirmException;
@@ -37,7 +41,9 @@ public interface ChatManager extends FermatManager {
 
     ChatSearch getSearch();
 
-    List<ChatActorCommunityInformation> getCacheSuggestionsToContact( int max, int offset) throws ErrorSearchingChatSuggestionsException;
+    List<ChatActorCommunityInformation> getSuggestionsToContact(String publicKey, int max, int offset) throws ErrorSearchingChatSuggestionsException;
+
+    List<ChatActorCommunityInformation> getCacheSuggestionsToContact(int max, int offset) throws ErrorSearchingChatSuggestionsException;
 
     void requestConnection(final ChatConnectionInformation chatConnectionInformation) throws CantRequestConnectionException;
 
@@ -55,7 +61,10 @@ public interface ChatManager extends FermatManager {
 
     void confirm(final UUID requestId) throws CantConfirmException, ConnectionRequestNotFoundException;
 
-    ConnectionState getCacheSuggestionsToContact(String publicKey);
 
-    ConnectionState getCacheSuggestionsToContact(String publicKey, int max, int ofset) throws CantGetChatUserIdentityException;
+    void saveCacheChatUsersSuggestions(List<ChatActorCommunityInformation> listChatUser) throws CantInsertRecordException;
+
+
+     List<ChatActorCommunityInformation> getCacheSuggestionsToContact(String publicKey, int max, int offset) throws CantGetChatUserIdentityException;
+
 }
