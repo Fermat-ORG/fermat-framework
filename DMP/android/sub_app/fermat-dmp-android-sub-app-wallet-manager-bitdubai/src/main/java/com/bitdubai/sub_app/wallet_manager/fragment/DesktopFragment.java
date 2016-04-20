@@ -514,7 +514,7 @@ public class DesktopFragment extends AbstractDesktopFragment<DesktopSession,SubA
             for(int i = 0;i<lstItemsWithIcon.size();i++){
                 Item itemIcon = lstItemsWithIcon.get(i);
                 if(itemIcon.getInterfaceObject() instanceof InstalledWallet){
-                    if(((InstalledWallet) itemIcon.getInterfaceObject()).getAppStatus() == AppsStatus.ALPHA){
+                    if(((InstalledWallet) itemIcon.getInterfaceObject()).getAppStatus() == getFermatActivityManager().getAppStatus()){
                         arrItemsWithoutIcon[pos]= itemIcon;
                     pos++;
                     }

@@ -337,7 +337,7 @@ public class DesktopSubAppFragment extends AbstractDesktopFragment implements Se
             int pos = 0;
             for(int i = 0;i<lstItemsWithIcon.size();i++){
                 Item itemIcon = lstItemsWithIcon.get(i);
-                if(itemIcon.getAppStatus() == AppsStatus.ALPHA){
+                if(itemIcon.getAppStatus() == getFermatActivityManager().getAppStatus()){
                     arrItemsWithoutIcon[pos]= itemIcon;
                     pos++;
                 }

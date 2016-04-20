@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.enums.FontType;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatActivityManager;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
@@ -343,7 +342,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
 
 
         ArrayList list = new ArrayList();
-        AppsStatus appsStatus = ((FermatActivityManager)getActivity()).getAppStatus();
+        AppsStatus appsStatus = getFermatActivityManager().getAppStatus();
 
         for (InstalledApp installedApp : installedApps) {
             if(installedApp.getAppStatus()==appsStatus){

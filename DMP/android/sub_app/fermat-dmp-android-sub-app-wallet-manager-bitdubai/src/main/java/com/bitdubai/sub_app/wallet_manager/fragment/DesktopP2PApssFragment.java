@@ -376,7 +376,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
             int pos = 0;
             for(int i = 0;i<lstItemsWithIcon.size();i++){
                 Item itemIcon = lstItemsWithIcon.get(i);
-                if((itemIcon.getAppStatus() == AppsStatus.ALPHA)){
+                if((itemIcon.getAppStatus() == getFermatActivityManager().getAppStatus())){
                     arrItemsWithoutIcon[pos]= itemIcon;
                     pos++;
                 }
