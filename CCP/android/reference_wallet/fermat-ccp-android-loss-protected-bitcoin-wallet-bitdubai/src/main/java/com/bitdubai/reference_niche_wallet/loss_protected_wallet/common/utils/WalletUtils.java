@@ -7,8 +7,6 @@ import android.content.DialogInterface;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-
-
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 
@@ -102,6 +100,60 @@ public class WalletUtils {
         });
         // alertDialog.setIcon(R.drawable.icon);
         alertDialog.show();
+    }
+    /**
+     *  Formationg Amount
+     * @param amount
+     * @return
+     */
+    public static String formatAmountString(double amount) {
+        String stringAmount = "";
+
+
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        df.setMinimumFractionDigits(2);
+
+        stringAmount =df.format(amount);//+ " BTC";
+
+        return stringAmount;
+    }
+    /**
+     *  Formationg Amount no decimal
+     * @param amount
+     * @return
+     */
+    public static String formatAmountStringNotDecimal(int amount) {
+        String stringAmount = "";
+
+
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(0);
+        df.setMinimumFractionDigits(0);
+
+        stringAmount =df.format(amount);//+ " BTC";
+
+        return stringAmount;
+    }
+
+
+
+    /**
+     *  Formationg Exchange Rate Amount
+     * @param rateAmount
+     * @return
+     */
+    public static String formatExchangeRateString(double rateAmount) {
+        String stringAmount = "";
+
+
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(2);
+        df.setMinimumFractionDigits(2);
+
+        stringAmount =df.format(rateAmount);//+ " BTC";
+
+        return stringAmount;
     }
 
 }

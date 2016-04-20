@@ -6,6 +6,7 @@ package com.bitdubai.fermat_cbp_api.layer.sub_app_module.crypto_customer_communi
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
  * The interface <code>CryptoCustomerCommunityInformation</code>
  * provides the method to extract information about a crypto customer.
  */
-public interface CryptoCustomerCommunityInformation {
+public interface CryptoCustomerCommunityInformation extends Serializable{
     /**
      * The method <code>getPublicKey</code> returns the public key of the represented crypto broker
      * @return the public key of the crypto broker

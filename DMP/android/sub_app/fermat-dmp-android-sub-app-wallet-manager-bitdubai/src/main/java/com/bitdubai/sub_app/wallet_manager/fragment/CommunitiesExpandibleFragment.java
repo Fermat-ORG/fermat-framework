@@ -40,6 +40,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
     private View rootView;
     private List<GrouperItem> grouperList;
     private List<InstalledApp> installedApps;
+    private boolean isScrolled;
 
 
     public static CommunitiesExpandibleFragment newInstance() {
@@ -81,6 +82,16 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
         ((FermatTextView)layout.findViewById(R.id.txt_title_communities)).setFont(FontType.CAVIAR_DREAMS);
 
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(!isScrolled){
+                    isScrolled = true;
+                    adapter.expandAllParents();
+                }
+            }
+        });
 //        if (intalledAppsList.isEmpty()) {
 //            recyclerView.setVisibility(View.GONE);
 //            emptyListViewsContainer =(LinearLayout) layout.findViewById(R.id.empty);
@@ -295,6 +306,21 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
 
         installedSubApp.setIconResource(R.drawable.crypto_customer_community);
         installedSubApp.setBanner(R.drawable.customer_community);
+        installedApps.add(installedSubApp);
+
+        installedSubApp = new InstalledSubApp(
+                SubApps.CHT_COMMUNITY,
+                null,
+                null,
+                "sub_app_cht_community",
+                "Chat Users",
+                SubAppsPublicKeys.CHT_COMMUNITY.getCode(),
+                "sub_app_cht_community",
+                new Version(1, 0, 0),
+                Platforms.CHAT_PLATFORM);
+
+        installedSubApp.setIconResource(R.drawable.chat_community);
+        installedSubApp.setBanner(R.drawable.chat_banner_community);
         installedApps.add(installedSubApp);
 
         /*installedSubApp = new InstalledSubApp(

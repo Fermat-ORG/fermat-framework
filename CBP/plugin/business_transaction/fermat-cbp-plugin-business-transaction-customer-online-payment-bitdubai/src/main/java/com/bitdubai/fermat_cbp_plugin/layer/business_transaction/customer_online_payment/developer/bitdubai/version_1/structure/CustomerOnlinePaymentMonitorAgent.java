@@ -7,6 +7,7 @@ import com.bitdubai.fermat_api.Plugin;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -371,6 +372,7 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             contractHash,
                             ContractTransactionStatus.CONFIRM_ONLINE_PAYMENT
                     );
+                    raiseIncomingMoneyNotificationEvent(pendingToSubmitConfirmationRecord);
                 }
 
 
@@ -505,6 +507,20 @@ public class CustomerOnlinePaymentMonitorAgent implements
             eventManager.raiseEvent(customerOnlinePaymentConfirmed);
         }
 
+        private void raiseIncomingMoneyNotificationEvent(BusinessTransactionRecord record){
+            FermatEvent fermatEvent = eventManager.getNewEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_MONEY_NOTIFICATION);
+            com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent event = (com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent) fermatEvent;
+            //TODO: quitar el hardcodeo del cryptocurrency para poder negociar con otras monedas.
+            event.setCryptoCurrency(CryptoCurrency.BITCOIN);
+            event.setAmount(record.getCryptoAmount());
+            event.setIntraUserIdentityPublicKey(record.getBrokerPublicKey());
+            event.setWalletPublicKey(record.getCBPWalletPublicKey());
+            event.setActorId(record.getCustomerPublicKey());
+            event.setSource(EventSource.CUSTOMER_ONLINE_PAYMENT);
+            event.setActorType(Actors.CBP_CRYPTO_BROKER);
+            eventManager.raiseEvent(event);
+        }
+
         //TODO: raise an event only in broker side, notifying the incoming online payment. Create the event.
         //TODO: raise an event only in customer side, notifying the reception of an online payment. Create the event.
         private void checkPendingTransaction(
@@ -578,9 +594,11 @@ public class CustomerOnlinePaymentMonitorAgent implements
                             customerOnlinePaymentBusinessTransactionDao.updateContractTransactionStatus(contractHash,ContractTransactionStatus.PENDING_ONLINE_PAYMENT_CONFIRMATION);
                             raisePaymentConfirmationEvent();
 
-                            BusinessTransactionRecord record1=customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(contractHash);
+                            /*BusinessTransactionRecord record1=customerOnlinePaymentBusinessTransactionDao.getCustomerOnlinePaymentRecord(contractHash);
                             record1.setContractTransactionStatus(businessTransactionMetadata.getContractTransactionStatus());
-                            customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(record1);
+                            //TODO:fix this with the incomingintraactor.
+                            record1.setCryptoStatus(CryptoStatus.IRREVERSIBLE);
+                            customerOnlinePaymentBusinessTransactionDao.updateBusinessTransactionRecord(record1);*/
                         }
                         transactionTransmissionManager.confirmReception(record.getTransactionID());
                     }

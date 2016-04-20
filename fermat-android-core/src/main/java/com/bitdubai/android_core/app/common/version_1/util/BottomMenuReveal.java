@@ -21,6 +21,7 @@ import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
 import com.bitdubai.fermat_api.layer.all_definition.callback.AppStatusCallbackChanges;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 
 import java.lang.ref.WeakReference;
 
@@ -208,10 +209,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
                 fermatActivity.get().openRecentsScreen();
                 break;
             case HELP:
-                if(welcomeScreenDialog == null){
-                    welcomeScreenDialog = new WelcomeScrennDialog(fermatActivity.get(),null,null);
-                }
-                welcomeScreenDialog.show();
+                fermatActivity.get().changeActivity(Activities.DESKTOP_WIZZARD_WELCOME.getCode(), null);
                 break;
         }
     }

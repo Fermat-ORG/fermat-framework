@@ -1,7 +1,9 @@
 package com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.structure;
 
+import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.AsymmetricCryptography;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
@@ -21,6 +23,7 @@ import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantUpdateChatIdent
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentityManager;
 import com.bitdubai.fermat_cht_plugin.layer.identity.chat.developer.bitdubai.version_1.database.ChatIdentityDatabaseDao;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLoggedInDeviceUserException;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
@@ -31,6 +34,7 @@ import java.util.UUID;
 
 /**
  * Created by franklin on 30/03/16.
+ * Edited by Miguel Rincon on 19/04/2016
  */
 public class ChatIdentityManagerImpl implements ChatIdentityManager {
 
@@ -70,7 +74,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
         try {
             chatIdentityDatabaseDao = new ChatIdentityDatabaseDao(pluginDatabaseSystem, pluginId, pluginFileSystem);
         } catch (CantOpenDatabaseException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         }
         return chatIdentityDatabaseDao;
     }
@@ -87,9 +91,9 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
             loggedUser = deviceUserManager.getLoggedInDeviceUser();
             return chatIdentityDao().getChatIdentitiesFromCurrentDeviceUser(loggedUser);
         } catch (CantGetLoggedInDeviceUserException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         }catch (CantListIdentitiesException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         }
 
         return null;
@@ -106,7 +110,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
         try {
             return chatIdentityDao().getChatIdentity();
         } catch (CantGetChatUserIdentityException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         }
         return null;
     }
@@ -128,13 +132,13 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
             chatIdentityDao().createNewUser(alias, keyPair.getPublicKey(), keyPair.getPrivateKey(), loggedUser, profileImage);
             registerIdentitiesANS(keyPair.getPublicKey());
         } catch (CantCreateNewDeveloperException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (CantGetLoggedInDeviceUserException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (IdentityNotFoundException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (CantPublishIdentityException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         }
     }
 
@@ -152,11 +156,11 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
             chatIdentityDao().updateChatIdentity(identityPublicKey, identityAlias, profileImage);
             registerIdentitiesANS(identityPublicKey);
         } catch (com.bitdubai.fermat_cht_api.all_definition.exceptions.CantUpdateChatIdentityException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (IdentityNotFoundException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (CantPublishIdentityException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         }
     }
 
@@ -183,15 +187,15 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
                     try {
                         chatManager.exposeIdentity(chatExposingData);
                     } catch (CantExposeIdentityException e) {
-                        e.printStackTrace();
+                        errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
                     }
                 }
             }.start();
 
         } catch (CantGetChatUserIdentityException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         } catch (com.bitdubai.fermat_cht_api.all_definition.exceptions.CantUpdateChatIdentityException e) {
-            e.printStackTrace();
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
         }
     }
 }
