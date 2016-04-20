@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.develope
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantExtractEarningsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantMarkEarningTransactionAsExtractedException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningTransactionNotFoundException;
@@ -68,7 +69,10 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
 
             float earningsAmount = 0;
             for (EarningTransaction earningTransaction : earningTransactions) {
-                if (earningTransaction.getEarningCurrency() == earningCurrency)
+                final EarningTransactionState earningTransactionState = earningTransaction.getState();
+                final Currency earningTransactionCurrency = earningTransaction.getEarningCurrency();
+
+                if (earningTransactionCurrency == earningCurrency && earningTransactionState != EarningTransactionState.EXTRACTED)
                     earningsAmount += earningTransaction.getAmount();
             }
 
