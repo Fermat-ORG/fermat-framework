@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,9 +51,9 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     private ErrorManager errorManager;
 
 
-    Button bplay;
-    Button bbb;
-    Button bff;
+    ImageButton bplay;
+    ImageButton bbb;
+    ImageButton bff;
     SeekBar pb;
     TextView tiempo;
     TextView song;
@@ -122,9 +122,9 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         super.onCreateView(inflater, container, savedInstanceState);
         view=inflater.inflate(R.layout.art_music_player_activity,container,false);
         getActivity().getWindow().setBackgroundDrawableResource(R.drawable.musicplayer_background_viewpager);
-        bplay = (Button) view.findViewById(R.id.play);
-        bbb = (Button) view.findViewById(R.id.back);
-        bff = (Button) view.findViewById(R.id.forward);
+        bplay = (ImageButton) view.findViewById(R.id.play);
+        bbb = (ImageButton) view.findViewById(R.id.back);
+        bff = (ImageButton) view.findViewById(R.id.forward);
         pb=(SeekBar) view.findViewById(R.id.progressBar);
         tiempo=(TextView) view.findViewById((R.id.tiempo));
         recyclerView = (RecyclerView) view.findViewById(R.id.rv);
@@ -235,42 +235,41 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         try {
 
 
-            // create temp file that will hold byte array
-            File tempMp3 = File.createTempFile("i_know_now", "mp3", view.getContext().getCacheDir());
-            tempMp3.deleteOnExit();
-            FileOutputStream fos = new FileOutputStream(tempMp3);
-            fos.write(musicPlayermoduleManager.getSongWithBytes(items.get(position).getSong_id()).getSongBytes());
-            fos.close();
+            if(items.size()>0) {
+                File tempMp3 = File.createTempFile("i_know_now", "mp3", view.getContext().getCacheDir());
+                tempMp3.deleteOnExit();
+                FileOutputStream fos = new FileOutputStream(tempMp3);
+                fos.write(musicPlayermoduleManager.getSongWithBytes(items.get(position).getSong_id()).getSongBytes());
+                fos.close();
 
 
-            if(mp.isPlaying()){
-                stop();
-                mp.reset();
+                if (mp.isPlaying()) {
+                    stop();
+                    mp.reset();
+                }
+
+                songPlayerThread = new ThreadSong(false);
+                songPlayerThread.execute();
+
+                FileInputStream fis = new FileInputStream(tempMp3);
+                mp.setDataSource(fis.getFD());
+
+
+                //  Toast.makeText(view.getContext(), items.get(position).getSong_name(), Toast.LENGTH_SHORT).show();
+                songposition = position;
+                song.setText(items.get(position).getSong_name());
+
+
+                mp.prepare();
+
+                //     System.out.println("ART_MP_duration:" + mp.getDuration());
+
+                pb.setMax((int) (mp.getDuration() / 1000));
+
+
+                mp.start();
+
             }
-
-            songPlayerThread = new ThreadSong(false);
-            songPlayerThread.execute();
-
-            FileInputStream fis = new FileInputStream(tempMp3);
-            mp.setDataSource(fis.getFD());
-
-
-          //  Toast.makeText(view.getContext(), items.get(position).getSong_name(), Toast.LENGTH_SHORT).show();
-            songposition=position;
-            song.setText(items.get(position).getSong_name());
-
-
-            mp.prepare();
-
-       //     System.out.println("ART_MP_duration:" + mp.getDuration());
-
-            pb.setMax((int) (mp.getDuration() / 1000));
-
-
-
-
-            mp.start();
-
 
 
         }  catch (IOException e) {
@@ -349,7 +348,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
     public class ThreadSong extends AsyncTask<Void, Float, Void> {
         private boolean cancelmusicplayer;
-
+        private boolean finish=false;
         public ThreadSong(boolean cancelmusicplayer) {this.cancelmusicplayer = cancelmusicplayer;}
 
 
@@ -373,10 +372,18 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
                     progreso = mp.getCurrentPosition() / 1000;
 
                     publishProgress(progreso);
+                    if(mp.getCurrentPosition()==mp.getDuration()){
+                        finish=true;
+                        System.out.println("ART_THIS IS THE END");
+                    }
 
                     if (cancelmusicplayer) {
                         cancel(true);
                     }
+                }
+                if(finish){
+                    System.out.println("ART_GO NEXT");
+                    nextsong();
                 }
 
             }
