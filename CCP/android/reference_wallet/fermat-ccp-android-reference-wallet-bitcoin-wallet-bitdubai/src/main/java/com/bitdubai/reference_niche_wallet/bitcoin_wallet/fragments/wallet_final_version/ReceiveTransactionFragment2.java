@@ -115,22 +115,24 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
             moduleManager = referenceWalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
-            bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+            if((settingsManager!=null)) {
+                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
 
-            if(bitcoinWalletSettings != null) {
+                if (bitcoinWalletSettings != null) {
+
+                    if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
+                        bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
+                    }
+                    settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+
+                }
+
 
                 if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
                     bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 }
                 settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
-
             }
-
-
-            if(bitcoinWalletSettings.getBlockchainNetworkType()==null){
-                bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-            }
-            settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(),bitcoinWalletSettings);
 
             } catch (Exception ex) {
             if (errorManager != null)
@@ -139,7 +141,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         }
 
         try {
-            blockchainNetworkType = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType();
+            blockchainNetworkType = (settingsManager!=null)?settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).getBlockchainNetworkType():BlockchainNetworkType.getDefaultBlockchainNetworkType();
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {

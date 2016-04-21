@@ -13,6 +13,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -203,7 +204,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
                 bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
 
-                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                if(settingsManager!=null) settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
             }
             else
             {
@@ -218,7 +219,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }
 
             try {
-                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                if(settingsManager!=null) settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -958,7 +959,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                 if (bitcoinWalletSettings.getRunningDailyBalance() == null){
 
-                    runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey(),blockchainNetworkType));
+                    try {
+                        long balance = moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(), blockchainNetworkType);
+
+                        runningDailyBalance.put(currentTime, balance);
+
+                    }catch (Exception e){
+                        Log.e(TAG,"Balance null, please check this, line:"+new Throwable().getStackTrace()[0].getLineNumber());
+                    }
+
                 }
                 else
                 {
@@ -993,7 +1002,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
 
                 bitcoinWalletSettings.setRunningDailyBalance(runningDailyBalance);
-                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                if(settingsManager!=null) {
+                    settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                }else {
+                    Log.e(TAG,"Settings manager null, please check this line:"+new Throwable().getStackTrace()[0].getLineNumber());
+                }
 
             }
         } catch (Exception e) {
