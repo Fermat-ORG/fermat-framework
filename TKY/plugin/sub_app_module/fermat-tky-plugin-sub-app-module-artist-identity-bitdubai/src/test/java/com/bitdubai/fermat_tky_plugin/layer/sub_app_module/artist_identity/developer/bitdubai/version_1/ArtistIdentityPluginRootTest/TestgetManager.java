@@ -27,7 +27,7 @@ public class TestgetManager {
 
 
     @Test
-    public void testManagerInstance() throws CantStartPluginException, TKYException {
+    public void testManagerInstance() throws Exception{
         System.out.println("testManagerInstance");
         artistIdentityPluginRoot.start();
         ModuleManager expected = artistIdentityPluginRoot.getFanIdentityManager();
@@ -45,7 +45,7 @@ public class TestgetManager {
 
 
     @Test
-    public void testManagerNotNull() throws CantStartPluginException {
+    public void testManagerNotNull() throws Exception {
         System.out.println("testManagerNotNull");
         artistIdentityPluginRoot.start();
         ModuleManager moduleManager = artistIdentityPluginRoot.getManager();
