@@ -34,7 +34,7 @@ public class testcreateArtistIdentity {
     }
 
     @Test
-    public void testcreateArtistIdentity() throws ArtistIdentityAlreadyExistsException, CantCreateArtistIdentityException {
+    public void testcreateArtistIdentity() throws Exception {
         System.out.println("testcreateArtistIdentity");
         exception.expect(NullPointerException.class);
         Artist artist =  artistIdentityManager.createArtistIdentity(

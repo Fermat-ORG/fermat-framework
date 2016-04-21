@@ -31,7 +31,7 @@ public class TestgetFanIdentityManager {
     }
 
     @Test
-    public void testgetFanIdentityManager() throws TKYException{
+    public void testgetFanIdentityManager() throws Exception{
         System.out.println("testgetFanIdentityManager");
         artistIdentityManager = artistIdentityPluginRoot.getFanIdentityManager();
         Assert.assertNotNull(artistIdentityManager);

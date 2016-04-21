@@ -31,7 +31,7 @@ public class testlistIdentitiesFromCurrentDeviceUser {
     }
 
     @Test
-    public void testlistIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
+    public void testlistIdentitiesFromCurrentDeviceUser() throws Exception {
         System.out.println("testlistIdentitiesFromCurrentDeviceUser");
         exception.expect(NullPointerException.class);
 

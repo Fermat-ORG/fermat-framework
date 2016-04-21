@@ -28,7 +28,7 @@ public class Teststart {
     }
 
     @Test
-    public void testStartService() throws CantStartPluginException {
+    public void testStartService() throws Exception {
         System.out.println("testStartService");
         artistIdentityPluginRoot.start();
         ServiceStatus actual = artistIdentityPluginRoot.getStatus();

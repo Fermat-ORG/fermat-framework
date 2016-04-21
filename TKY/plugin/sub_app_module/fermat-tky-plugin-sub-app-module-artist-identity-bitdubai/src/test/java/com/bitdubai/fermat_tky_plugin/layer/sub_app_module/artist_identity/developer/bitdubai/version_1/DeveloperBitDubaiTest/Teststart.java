@@ -23,8 +23,11 @@ public class Teststart {
     }
 
     @Test
-    public void testStart() throws CantStartPluginDeveloperException {
+    public void testStart() throws Exception {
         System.out.println("testStart");
         developerBitDubai.start();
+        int actual = developerBitDubai.getClass().getDeclaredMethods().length;
+        int expected = 5;
+        Assert.assertEquals(expected, actual);
     }
 }// end of class
