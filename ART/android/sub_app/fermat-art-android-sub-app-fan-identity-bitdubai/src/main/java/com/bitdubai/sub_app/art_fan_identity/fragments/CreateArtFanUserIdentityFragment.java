@@ -613,7 +613,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                     );
                     if(parent.getItemAtPosition(position) != 0){
                         arraySpinner.addAll(getFanIdentityByPlatform(ArtExternalPlatform.getArtExternalPlatformByLabel(parent.getItemAtPosition(position).toString())));
-                        adapter = new ArrayAdapter<String>(
+                        adapter = new ArrayAdapter<>(
                                 getActivity(),
                                 android.R.layout.simple_spinner_item,
                                 arraySpinner
