@@ -4769,11 +4769,11 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
+       /* runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Logout");
         runtimeMenuItem.setLinkToActivity(Activities.DEVELOP_MODE);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);*/
 
         return runtimeSideMenu;
     }
@@ -5711,11 +5711,11 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
+      /*  runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Logout");
         runtimeMenuItem.setLinkToActivity(Activities.DEVELOP_MODE);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);*/
 
         return runtimeSideMenu;
     }
