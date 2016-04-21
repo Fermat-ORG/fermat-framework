@@ -69,22 +69,22 @@ public class NavigationViewAdapter extends FermatAdapter<MenuItem, NavigationIte
 
                 switch (position) {
                     case 0:
-                        Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_home_fluor : R.drawable.btn_drawer_home_normal).into(holder.getIcon());
+                        Picasso.with(context).load((data.isSelected()) ? R.drawable.home_icon : R.drawable.btn_drawer_home_normal).into(holder.getIcon());
                         break;
                     case 1:
-                        Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_profile_fluor : R.drawable.btn_drawer_profile_normal).into(holder.getIcon());
+                        Picasso.with(context).load((data.isSelected()) ? R.drawable.profile_icon : R.drawable.btn_drawer_profile_normal).into(holder.getIcon());
                         break;
                     case 2:
-                        Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_request_fluor : R.drawable.btn_drawer_request_normal).into(holder.getIcon());
+                        Picasso.with(context).load((data.isSelected()) ? R.drawable.paymentrequest_icon : R.drawable.btn_drawer_request_normal).into(holder.getIcon());
                         if(data.getNotifications()!=0){
                             holder.getBadge().setBackground(new BadgeDrawable.BadgeDrawableBuilder(context).setCount(data.getNotifications()).setTextSize(32).build());
                         }
                         break;
                     case 3:
-                        Picasso.with(context).load((data.isSelected()) ? R.drawable.icon_settings : R.drawable.btn_drawer_settings_normal).into(holder.getIcon());
+                        Picasso.with(context).load((data.isSelected()) ? R.drawable.settings_icon : R.drawable.btn_drawer_settings_normal).into(holder.getIcon());
                         break;
                     case 4:
-                        Picasso.with(context).load((data.isSelected()) ? R.drawable.btn_drawer_icon_logout_fluor : R.drawable.btn_drawer_logout_normal).into(holder.getIcon());
+                        Picasso.with(context).load((data.isSelected()) ? R.drawable.logout_icon : R.drawable.btn_drawer_logout_normal).into(holder.getIcon());
                         break;
                     default:
                         break;
