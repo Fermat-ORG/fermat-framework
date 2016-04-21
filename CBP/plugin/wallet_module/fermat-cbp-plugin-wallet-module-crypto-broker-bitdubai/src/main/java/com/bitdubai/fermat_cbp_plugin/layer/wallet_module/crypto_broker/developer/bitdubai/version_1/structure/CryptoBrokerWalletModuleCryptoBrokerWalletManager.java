@@ -20,6 +20,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantAd
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ActorType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
@@ -213,7 +214,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     private final CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
-    private  SettingsManager<CryptoBrokerWalletPreferenceSettings> settingsManager;
+    private SettingsManager<CryptoBrokerWalletPreferenceSettings> settingsManager;
 
 
     public CryptoBrokerWalletModuleCryptoBrokerWalletManager(WalletManagerManager walletManagerManager,
@@ -778,8 +779,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public void addNewAccount(BankAccountNumber bankAccountNumber, String walletPublicKey) throws CantAddNewAccountException, CantLoadBankMoneyWalletException {
-        bankMoneyWalletManager.loadBankMoneyWallet(walletPublicKey).createBankName(bankAccountNumber.getBankName());
-        bankMoneyWalletManager.loadBankMoneyWallet(walletPublicKey).addNewAccount(bankAccountNumber);
+        final BankMoneyWallet bankMoneyWallet = bankMoneyWalletManager.loadBankMoneyWallet(walletPublicKey);
+
+        if (bankMoneyWallet.getBankName() == null)
+            bankMoneyWallet.createBankName(bankAccountNumber.getBankName());
+        bankMoneyWallet.addNewAccount(bankAccountNumber);
     }
 
     @Override
@@ -1367,7 +1371,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         earningsExtractorManager.extractEarnings(earningsPair, earningTransactions);
     }
 
-    private ContractClauseType getContractClauseType(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,ClauseType paramClauseType) throws CantGetListClauseException {
+    private ContractClauseType getContractClauseType(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation, ClauseType paramClauseType) throws CantGetListClauseException {
         try {
             //I will check if customerBrokerSaleNegotiation is null
             ObjectChecker.checkArgument(customerBrokerSaleNegotiation, "The customerBrokerSaleNegotiation is null");
