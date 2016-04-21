@@ -252,6 +252,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         return ((FermatActivityManager)getActivity()).getRuntimeManager();
     }
 
+    protected final FermatActivityManager getFermatActivityManager(){
+        return ((FermatActivityManager)getActivity());
+    }
+
     protected final AndroidCoreManager getFermatState(){
         return ((FermatStates)getActivity()).getFermatStates();
     }

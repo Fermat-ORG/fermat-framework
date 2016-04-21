@@ -215,8 +215,6 @@ public class PinnedHeaderAdapter extends BaseAdapter implements OnScrollListener
         return PINNED_HEADER_VISIBLE;
     }
 
-
-    //TODO: ver si lo que cambie aca del toString está bien, estoy casao
     @Override
     public void configurePinnedHeader(View v, int position) {
         try

@@ -187,7 +187,8 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                         try {
                             boolean isHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
 
-                            setUpTutorial(isHelpEnabled);
+                            if(isHelpEnabled)
+                              setUpTutorial(true);
                         } catch (CantGetSettingsException e) {
                             e.printStackTrace();
                         } catch (SettingsNotFoundException e) {
@@ -342,9 +343,9 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         refreshAdapter();
     }
 
-    private void setUpTutorial(boolean isHelpEnabled) throws CantGetSettingsException, SettingsNotFoundException {
-        if (isHelpEnabled) {
-            ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), referenceWalletSession, null, settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).isContactsHelpEnabled());
+    private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
+       // if (isHelpEnabled) {
+            ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), referenceWalletSession, null, checkButton);
             contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
@@ -359,7 +360,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                 }
             });
             contactsTutorialPart1.show();
-        }
+      //  }
     }
 
     private void refreshAdapter() {
