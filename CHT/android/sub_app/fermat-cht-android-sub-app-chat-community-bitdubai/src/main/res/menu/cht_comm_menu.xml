@@ -13,7 +13,7 @@
     <item
         android:id="@+id/action_help"
         android:title="Help"
-        android:icon="@drawable/ic_menu_help"
+        android:icon="@drawable/cht_ic_menu_help"
         app:showAsAction="ifRoom|collapseActionView"
         tools:ignore="HardcodedText" />
     <!-- android:icon="@drawable/help_icon"-->

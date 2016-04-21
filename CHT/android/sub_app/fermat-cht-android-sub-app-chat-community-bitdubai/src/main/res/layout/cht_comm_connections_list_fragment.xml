@@ -3,13 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#010c12"
+    android:background="#F9F9F9"
     android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#ffffff" />
+        android:background="#F9F9F9" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="You don't have any"
-                android:textColor="#ffffff"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 tools:ignore="HardcodedText" />
 
@@ -58,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="connections yet"
-                android:textColor="#ffffff"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 tools:ignore="HardcodedText" />
 

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#0072bb"
+    android:background="#ffffff"
     android:orientation="vertical"
     android:paddingLeft="24dp"
     android:paddingRight="24dp">
@@ -18,7 +18,7 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_gravity="center"
-        android:background="#0072bb"
+        android:background="#ffffff"
         tools:ignore="ContentDescription" />
     <!--  android:src="@drawable/ic_nav_connections" -->
 
@@ -27,13 +27,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:background="#0072bb"
-        android:paddingBottom="14dp"
+        android:background="#ffffff"
+        android:paddingBottom="25dp"
         android:paddingLeft="16dp"
-        android:paddingTop="14dp"
+        android:paddingTop="25dp"
         android:text="Home"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
+        android:textColor="#757575"
+        android:textSize="20sp"
         tools:ignore="HardcodedText,RtlHardcoded,RtlSymmetry" />
 
     <View
