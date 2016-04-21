@@ -11,29 +11,33 @@ import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_destoc
 import java.util.List;
 import java.util.UUID;
 
+
 /**
  * Created by franklin on 11/12/15.
  */
 public class StockTransactionCashMoneyDestockFactory {
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
+    private StockTransactionsCashMoneyDestockDatabaseDao dao;
 
     /**
      * Constructor with params.
      *
-     * @param pluginDatabaseSystem  database system reference.
-     * @param pluginId              of this module.
+     * @param pluginDatabaseSystem database system reference.
+     * @param pluginId             of this module.
      */
     public StockTransactionCashMoneyDestockFactory(final PluginDatabaseSystem pluginDatabaseSystem,
                                                    final UUID pluginId) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
-        this.pluginId             = pluginId            ;
+        this.pluginId = pluginId;
     }
 
 
     private StockTransactionsCashMoneyDestockDatabaseDao getStockTransactionCashMoneyDestockDao() {
+        if (dao == null)
+            dao = new StockTransactionsCashMoneyDestockDatabaseDao(pluginDatabaseSystem, pluginId);
 
-        return new StockTransactionsCashMoneyDestockDatabaseDao(pluginDatabaseSystem, pluginId);
+        return dao;
     }
 
     public void saveCashMoneyDestockTransactionData(CashMoneyTransaction cashMoneyTransaction) throws DatabaseOperationException, MissingCashMoneyDestockDataException {
