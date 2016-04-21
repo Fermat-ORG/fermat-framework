@@ -3,11 +3,14 @@ package com.bitdubai.fermat_cht_plugin.layer.middleware.chat.developer.bitdubai.
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
+import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.DistributionStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.interfaces.ChatMetadata;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -28,6 +31,37 @@ public class ChatMetadataRecord implements ChatMetadata {
     UUID messageId;
     String message;
     DistributionStatus distributionStatus;
+    TypeChat typeChat;
+    List<GroupMember> groupMembers;
+
+//    public ChatMetadataRecord(
+//            UUID chatId,
+//            UUID objectId,
+//            PlatformComponentType localActorType,
+//            String localActorPublicKey,
+//            PlatformComponentType remoteActorType,
+//            String remoteActorPublicKey,
+//            String chatName,
+//            ChatMessageStatus chatMessageStatus,
+//            MessageStatus messageStatus,
+//            Timestamp date,
+//            UUID messageId,
+//            String message,
+//            DistributionStatus distributionStatus) {
+//        this.chatId = chatId;
+//        this.objectId = objectId;
+//        this.localActorType = localActorType;
+//        this.localActorPublicKey = localActorPublicKey;
+//        this.remoteActorType = remoteActorType;
+//        this.remoteActorPublicKey = remoteActorPublicKey;
+//        this.chatName = chatName;
+//        this.chatMessageStatus = chatMessageStatus;
+//        this.messageStatus = messageStatus;
+//        this.date = date;
+//        this.messageId = messageId;
+//        this.message = message;
+//        this.distributionStatus = distributionStatus;
+//    }
 
     public ChatMetadataRecord(
             UUID chatId,
@@ -42,7 +76,9 @@ public class ChatMetadataRecord implements ChatMetadata {
             Timestamp date,
             UUID messageId,
             String message,
-            DistributionStatus distributionStatus) {
+            DistributionStatus distributionStatus,
+            TypeChat typeChat,
+            List<GroupMember> groupMembers) {
         this.chatId = chatId;
         this.objectId = objectId;
         this.localActorType = localActorType;
@@ -56,6 +92,8 @@ public class ChatMetadataRecord implements ChatMetadata {
         this.messageId = messageId;
         this.message = message;
         this.distributionStatus = distributionStatus;
+        this.typeChat = typeChat;
+        this.groupMembers = groupMembers;
     }
 
 
@@ -121,6 +159,16 @@ public class ChatMetadataRecord implements ChatMetadata {
     @Override
     public DistributionStatus getDistributionStatus() {
         return this.distributionStatus;
+    }
+
+    @Override
+    public TypeChat getTypeChat() {
+        return typeChat;
+    }
+
+    @Override
+    public List<GroupMember> getGroupMembers() {
+        return groupMembers;
     }
 
     @Override

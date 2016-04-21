@@ -126,13 +126,11 @@ public class ChatListFragment extends AbstractFermatFragment{
     ArrayList<String> typeMessage=new ArrayList<>();
     ArrayList<Integer> noReadMsgs=new ArrayList<>();
     ArrayList<Bitmap> imgId=new ArrayList<>();
-    //TextView text;
     View layout;
     PresentationDialog presentationDialog;
     private Toolbar toolbar;
     private Bitmap contactIcon;
     private BitmapDrawable contactIconCircular;
-    private int size;
     ImageView noData;
 
     public static ChatListFragment newInstance() {
@@ -395,40 +393,35 @@ public class ChatListFragment extends AbstractFermatFragment{
         menu.clear();
         //try {
            //if(chatManager.isIdentityDevice() != false) {
-               // Inflate the menu items
-               inflater.inflate(R.menu.chat_list_menu, menu);
-               // Locate the search item
-               MenuItem searchItem = menu.findItem(R.id.menu_search);
-               searchView = (SearchView) searchItem.getActionView();
-               searchView.setQueryHint(getResources().getString(R.string.search_hint));
-               searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                   @Override
-                   public boolean onQueryTextSubmit(String s) {
-                       return false;
-                   }
+       // Inflate the menu items
+       inflater.inflate(R.menu.chat_list_menu, menu);
+       // Locate the search item
+       MenuItem searchItem = menu.findItem(R.id.menu_search);
+       searchView = (SearchView) searchItem.getActionView();
+       searchView.setQueryHint(getResources().getString(R.string.search_hint));
+       searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+           @Override
+           public boolean onQueryTextSubmit(String s) {
+               return false;
+           }
 
-                   @Override
-                   public boolean onQueryTextChange(String s) {
-                       if (s.equals(searchView.getQuery().toString())) {
-                           adapter.getFilter().filter(s);
-                       }
-                       return false;
-                   }
-               });
-               if (chatSession.getData("filterString") != null) {
-                   String filterString = (String) chatSession.getData("filterString");
-                   if (filterString.length() > 0) {
-                       searchView.setQuery(filterString, true);
-                       searchView.setIconified(false);
-                   }
+           @Override
+           public boolean onQueryTextChange(String s) {
+               if (s.equals(searchView.getQuery().toString())) {
+                   adapter.getFilter().filter(s);
                }
-           //}
-           menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
-                   .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-        //} catch (CantGetChatUserIdentityException e) {
-        //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        //}
+               return false;
+           }
+       });
+       if (chatSession.getData("filterString") != null) {
+           String filterString = (String) chatSession.getData("filterString");
+           if (filterString.length() > 0) {
+               searchView.setQuery(filterString, true);
+               searchView.setIconified(false);
+           }
+       }
+       menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+               .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
@@ -438,7 +431,6 @@ public class ChatListFragment extends AbstractFermatFragment{
             setUpHelpChat(false);
         }
         if (id == R.id.menu_search) {
-            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
             return true;
         }
         if (id == R.id.menu_open_chat) {
@@ -450,8 +442,8 @@ public class ChatListFragment extends AbstractFermatFragment{
             return true;
         }
         if (id == R.id.menu_create_broadcasting) {
-            changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL);
-           return true;
+            changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL, appSession.getAppPublicKey());
+            return true;
         }
         if (id == R.id.menu_delete_all_chats) {
             try {
@@ -480,10 +472,7 @@ public class ChatListFragment extends AbstractFermatFragment{
             }
             return true;
         }
-        /*if (id == R.id.menu_switch_profile) {
-            changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
-            return true;
-        }*/
+
         if (id == R.id.menu_error_report) {
             changeActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());
             return true;

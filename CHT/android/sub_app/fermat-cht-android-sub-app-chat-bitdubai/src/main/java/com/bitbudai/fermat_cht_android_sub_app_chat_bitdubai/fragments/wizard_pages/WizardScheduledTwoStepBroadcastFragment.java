@@ -13,21 +13,24 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.DialogGetDatePicker;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.DialogGetTimePicker;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import java.sql.Time;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -45,6 +48,8 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
     private ChatManager walletManager;
     private ErrorManager errorManager;
     String DateSelect,TimeSelect;
+    private SettingsManager<ChatSettings> settingsManager;
+    private ChatPreferenceSettings chatSettings;
     ArrayList<String> datelist = new ArrayList<String>();
     ArrayList<String> timelist = new ArrayList<String>();
     public static WizardTwoStepBroadcastFragment newInstance() {
@@ -62,6 +67,24 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
         }
         errorManager = appSession.getErrorManager();
+        //Obtain chatSettings  or create new chat settings if first time opening chat platform
+        chatSettings = null;
+        try {
+            chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+        } catch (Exception e) {
+            chatSettings = null;
+        }
+
+        if (chatSettings == null) {
+            chatSettings = new ChatPreferenceSettings();
+            chatSettings.setIsPresentationHelpEnabled(true);
+            try {
+                moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
+            } catch (Exception e) {
+                if (errorManager != null)
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+        }
         Toolbar toolbar = getToolbar();
         toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
 
@@ -98,6 +121,7 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
                 });
             }
         });
+
         final Spinner timeSpinner = (Spinner) layout.findViewById(R.id.hora);
         dateSpinner.setDropDownWidth(0);
         DateFormat dff = new SimpleDateFormat("HH:mm:ss");
@@ -128,21 +152,25 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
     }
 
     public void ShowDialogWelcome(){
-        PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                .setBody(R.string.cht_chat_body_broadcast_step_one)
-                .setSubTitle(R.string.cht_chat_subtitle_broadcast_step_one)
-                .setTextFooter(R.string.cht_chat_footer_broadcast_step_one)
-                .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                .setBannerRes(R.drawable.cht_banner)
-                .setIconRes(R.drawable.chat_subapp)
-                .build();
-        presentationDialog.show();
+        try {
+            PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                    .setBody(R.string.cht_chat_body_broadcast_step_one)
+                    .setSubTitle(R.string.cht_chat_subtitle_broadcast_step_one)
+                    .setTextFooter(R.string.cht_chat_footer_broadcast_step_one)
+                    .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                    .setBannerRes(R.drawable.cht_banner)
+                    .setIconRes(R.drawable.chat_subapp)
+                    .build();
+            presentationDialog.show();
+        }catch (Exception e){
+
+        }
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        menu.add(0, ChtConstants.CHT_BROADCAST_NEXT_STEP, 0, "Create")
-                .setTitle("Create")
+        menu.add(0, ChtConstants.CHT_BROADCAST_NEXT_STEP, 0, "CREATE")
+                .setTitle("CREATE")
                 .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
     }
@@ -155,7 +183,7 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
                 saveSettingAndGoNextStep();
                 break;
             case android.R.id.home:
-                changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL);
+                changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL,appSession.getAppPublicKey());
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -163,7 +191,7 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
 
     private void saveSettingAndGoNextStep() {
         //TODO: AÑADIR SAVESETTINGS
-        changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
+        changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST,appSession.getAppPublicKey());
 
     }
 

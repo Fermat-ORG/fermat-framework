@@ -53,9 +53,9 @@ import java.util.List;
  */
 @SuppressWarnings({"FieldCanBeLocal", "unused"})
 public class ConnectionNotificationsFragment
-        extends AbstractFermatFragment {
-//        implements SwipeRefreshLayout.OnRefreshListener,
-//        FermatListItemListeners<ChatUserSubAppSession> {
+        extends AbstractFermatFragment
+        implements SwipeRefreshLayout.OnRefreshListener,
+        FermatListItemListeners<ChatActorCommunityInformation> {
 
     public static final String CHAT_USER_SELECTED = "chat_user";
     private static final int MAX = 20;
@@ -130,12 +130,13 @@ public class ConnectionNotificationsFragment
 
     private synchronized ArrayList<ChatActorCommunityInformation> getMoreData() {
         ArrayList<ChatActorCommunityInformation> dataSet = new ArrayList<>();
-//        try {
-            //TODO: create a method getChatUsersWaitingYourAcceptance (moduleManager.getActiveChatUserIdentity().getPublicKey())
-            //dataSet.addAll(moduleManager.getChatUsersWaitingYourAcceptance(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
+        try {
+                dataSet.addAll(moduleManager.
+                        getChatActorWaitingYourAcceptanceCount(moduleManager.
+                                getSelectedActorIdentity().getPublicKey(), MAX, offset));
+            } catch (Exception e) {
+            e.printStackTrace();
+        }
         return dataSet;
     }
 
@@ -198,36 +199,36 @@ public class ConnectionNotificationsFragment
         }
     }
 
-//    @Override
-//    public void onItemClickListener(ChatActorCommunityInformation data, int position) {
-//        try {
-//            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),
-//                    chatUserSubAppSession,null, data,
-//                    moduleManager.getSelectedActorIdentity());// .getActiveChatUserIdentity());
-//            notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                @Override
-//                public void onDismiss(DialogInterface dialog) {
-//                    Object o = appSession.getData(SessionConstants.NOTIFICATION_ACCEPTED);
-//                    try {
-//                        if ((Boolean) o) {
-//                            onRefresh();
-//                            appSession.removeData(SessionConstants.NOTIFICATION_ACCEPTED);
-//                        }
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                        onRefresh();
-//                    }
-//                }
-//            });
-//            notificationAcceptDialog.show();
-//
-//        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    @Override
+    public void onItemClickListener(ChatActorCommunityInformation data, int position) {
+        try {
+            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(),
+                    chatUserSubAppSession,null, data,
+                    moduleManager.getSelectedActorIdentity());// .getActiveChatUserIdentity());
+            notificationAcceptDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    Object o = appSession.getData(SessionConstants.NOTIFICATION_ACCEPTED);
+                    try {
+                        if ((Boolean) o) {
+                            onRefresh();
+                            appSession.removeData(SessionConstants.NOTIFICATION_ACCEPTED);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        onRefresh();
+                    }
+                }
+            });
+            notificationAcceptDialog.show();
 
-//    @Override
-//    public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {}
+        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onLongItemClickListener(ChatActorCommunityInformation data, int position) {}
 
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),

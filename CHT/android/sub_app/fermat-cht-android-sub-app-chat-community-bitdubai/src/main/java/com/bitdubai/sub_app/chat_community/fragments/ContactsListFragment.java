@@ -21,7 +21,10 @@ import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -167,12 +170,13 @@ public class ContactsListFragment extends AbstractFermatFragment
 
     private synchronized List<ChatActorCommunityInformation> getMoreData() {
         List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
-        //TODO: check in module
-//        try {
-//            dataSet.addAll(moduleManager.getAllChatUsers(moduleManager.getActiveChatUserIdentity().getPublicKey(), MAX, offset));
-//        } catch (CantGetChatUsersListException | CantGetActiveLoginIdentityException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            dataSet.addAll(moduleManager.listAllConnectedChatActor(moduleManager.getSelectedActorIdentity(), MAX, offset));
+        } catch (CantGetSelectedActorIdentityException
+                | ActorIdentityNotSelectedException
+                | CantListChatActorException e) {
+            e.printStackTrace();
+        }
         return dataSet;
     }
 

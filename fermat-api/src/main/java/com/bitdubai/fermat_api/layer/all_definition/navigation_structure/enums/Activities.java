@@ -804,17 +804,17 @@ public enum Activities implements FermatEnum {
             case "CHTOSER":
                 return Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT;
             case "CHTSACC":
-                return Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTIONS;
+                return CHT_SUB_APP_CHAT_COMMUNITY_CONNECTIONS;
             case "CHTSACCCL":
-                return Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST;
+                return CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST;
             case "CHTSACCCW":
-                return Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD;
+                return CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD;
             case "CHTSACCCOP":
-                return Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE;
+                return CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE;
             case "CHTSACCCN":
-                return Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS;
+                return CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS;
             case "CHTSACCCS":
-                return Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_SETTINGS;
+                return CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_SETTINGS;
 
             case "BNKBMWAA":
                 return BNK_BANK_MONEY_WALLET_ADD_ACCOUNT;

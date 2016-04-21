@@ -100,11 +100,6 @@ public class AcceptDialog extends FermatDialog<ChatUserSubAppSession,
                 if (chatUserInformation != null && identity != null) {
                     getSession().getModuleManager()
                      .acceptChatActor(chatUserInformation.getConnectionId());
-
-//                            .acceptIntraUser(identity.getPublicKey(),
-//                            chatUserInformation.getName(),
-//                            chatUserInformation.getPublicKey(),
-//                            chatUserInformation.getProfileImage());
                     getSession().setData(SessionConstants.NOTIFICATION_ACCEPTED,Boolean.TRUE);
                     Toast.makeText(getContext(),
                             chatUserInformation.getAlias() + " Accepted connection request",
@@ -127,10 +122,6 @@ public class AcceptDialog extends FermatDialog<ChatUserSubAppSession,
                 if (chatUserInformation != null && identity != null) {
                     getSession().getModuleManager()
                         .denyChatConnection(chatUserInformation.getConnectionId());
-
-                    //       .denyConnection(identity.getPublicKey(),
-                    // intraUserInformation.getPublicKey());
-
                 }else {
                     super.toastDefaultError();
                 }

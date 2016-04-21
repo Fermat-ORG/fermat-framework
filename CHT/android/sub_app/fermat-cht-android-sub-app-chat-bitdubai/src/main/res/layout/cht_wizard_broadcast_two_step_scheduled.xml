@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:divider="?android:dividerHorizontal"
+    android:showDividers="middle">
 
 
     <RelativeLayout
@@ -34,11 +36,12 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
+            android:textColor="#000"
             android:id="@+id/editTextContacts"
             android:hint="Type contact name"
-            android:layout_marginTop="44dp"
+            android:textColorHint="#808080"
             android:layout_below="@+id/textView"
-            android:layout_alignEnd="@+id/textView3" />
+            android:layout_alignStart="@+id/textView" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -48,20 +51,21 @@
             android:id="@+id/textView3"
             android:layout_gravity="center_horizontal"
             android:textColor="#6d6d6d"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="49dp" />
+            android:layout_below="@+id/view"
+            android:layout_centerHorizontal="true" />
 
         <Spinner
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/fecha"
+            android:textColor="#000"
             android:layout_above="@+id/editTextContacts"
             android:layout_alignStart="@+id/view"
             android:layout_marginBottom="50dp"
             android:layout_alignEnd="@+id/editTextContacts" />
 
         <Spinner
+            android:textColor="#000"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/hora"
@@ -77,17 +81,27 @@
             android:id="@+id/textView4"
             android:layout_above="@+id/fecha"
             android:layout_alignStart="@+id/fecha" />
+        <TextView
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="220dp"
+            android:layout_height="1dp"
+            android:id="@+id/textView5"
+            android:textColor="@color/gray_1"
+            android:layout_below="@+id/radioButton"
+            android:layout_centerHorizontal="true" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:hint="Type broadcast name"
-            android:layout_marginTop="25dp"
             android:ems="10"
+            android:textColor="#000"
             android:id="@+id/editTextNameBroadcast"
-            android:layout_below="@+id/textView3"
-            android:layout_alignEnd="@+id/textView3" />
+            android:textColorHint="#808080"
+            android:layout_above="@+id/textView4"
+            android:layout_alignStart="@+id/textView4"
+            android:layout_alignEnd="@+id/view" />
 
     </RelativeLayout>
 </LinearLayout>
