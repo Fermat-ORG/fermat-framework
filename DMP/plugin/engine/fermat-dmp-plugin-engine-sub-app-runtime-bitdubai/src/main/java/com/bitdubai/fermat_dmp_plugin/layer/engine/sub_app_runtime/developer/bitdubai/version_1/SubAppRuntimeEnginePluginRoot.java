@@ -3843,7 +3843,8 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeSideMenu.setBackgroundColor("#FFFFFF");
 
         runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Chat Users");
+        runtimeMenuItem.setLabel("Chat Community");
+        runtimeMenuItem.setIcon("cht_ic_home");
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
         runtimeMenuItem.setLinkToActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
@@ -3860,18 +3861,24 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
+        runtimeMenuItem = new MenuItem();
+        runtimeMenuItem.setLabel("Go to Chat");
+        runtimeMenuItem.setLinkToActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
+        runtimeMenuItem.setAppLinkPublicKey(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+
         //Activity Explore
         runtimeActivity = new Activity();
         runtimeActivity.setType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
         chtComm.changeActualStartActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
-        runtimeActivity.setColor("#FF0B46F0");
+        //runtimeActivity.setColor("#FF0B46F0");
         runtimeActivity.setBackgroundColor("F9F9F9");
 
         runtimeActivity.setStatusBar(statusBar);
 
         runtimeTitleBar = new TitleBar();
-        runtimeTitleBar.setLabel("Chat Users");
+        runtimeTitleBar.setLabel("Chat Community");
         runtimeTitleBar.setLabelSize(20);
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setIsTitleTextStatic(true);
@@ -3892,7 +3899,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
-        runtimeActivity.setColor("#FF0B46F0");
+        //runtimeActivity.setColor("#FF0B46F0");
         runtimeActivity.setBackgroundColor("F9F9F9");
 
         runtimeActivity.setStatusBar(statusBar);
@@ -3919,7 +3926,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
-        runtimeActivity.setColor("#FF0B46F0");
+        //runtimeActivity.setColor("#FF0B46F0");
         runtimeActivity.setBackgroundColor("F9F9F9");
 
         runtimeActivity.setStatusBar(statusBar);
@@ -3946,7 +3953,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
-        runtimeActivity.setColor("#FF0B46F0");
+        //runtimeActivity.setColor("#FF0B46F0");
         runtimeActivity.setBackgroundColor("F9F9F9");
 
         runtimeActivity.setStatusBar(statusBar);

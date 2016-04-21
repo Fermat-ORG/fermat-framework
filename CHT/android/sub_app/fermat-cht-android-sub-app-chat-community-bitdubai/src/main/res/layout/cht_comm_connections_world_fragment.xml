@@ -3,34 +3,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#010c12"
-    android:gravity="center"
+    android:background="#F9F9F9"
     android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#ffffff" />
+        android:background="#F9F9F9" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="2dp"
-            android:paddingEnd="1dp"
-            android:paddingLeft="1dp"
-            android:paddingRight="1dp"
-            android:paddingStart="1dp">
+            android:layout_height="match_parent">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/gridView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="0.5dp"
+                android:divider="@drawable/cht_list_divider"
                 tools:listitem="@layout/cht_comm_world_item" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
 
+    <!--Empty view-->
     <LinearLayout
         android:id="@+id/search_empty_view"
         android:layout_width="match_parent"
@@ -51,7 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="User search don't"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
@@ -59,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="have results"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
@@ -71,6 +66,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
+        android:background="#F9F9F9"
         android:visibility="gone">
 
         <ImageView
@@ -85,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="There are no users"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
@@ -93,7 +89,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="available"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
@@ -104,6 +100,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:background="#F9F9F9"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -119,7 +116,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="You are not"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
@@ -127,7 +124,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="connected to "
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
@@ -135,7 +132,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="the Fermat Network"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
@@ -145,6 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
+        android:background="#F9F9F9"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -160,7 +158,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="The access to the"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
@@ -168,7 +166,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Fermat Network"
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
@@ -176,7 +174,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="is disabled."
-            android:textColor="#ffffff"
+            android:textColor="#000000"
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 

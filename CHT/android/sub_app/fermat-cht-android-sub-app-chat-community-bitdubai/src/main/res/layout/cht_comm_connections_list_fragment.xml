@@ -3,17 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#010c12"
+    android:background="#F9F9F9"
     android:orientation="vertical">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#ffffff" />
+        android:background="#F9F9F9" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#F9F9F9"
         tools:ignore="UselessParent">
 
 
@@ -26,7 +27,8 @@
                 android:id="@+id/my_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/cht_comm_connection_list_item" />
+                tools:listitem="@layout/cht_comm_connection_list_item"
+                android:divider="@drawable/cht_list_divider" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <!--Empty view-->
@@ -36,6 +38,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
+            android:background="#F9F9F9"
             android:visibility="gone">
 
             <ImageView
@@ -50,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="You don't have any"
-                android:textColor="#ffffff"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 tools:ignore="HardcodedText" />
 
@@ -58,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="connections yet"
-                android:textColor="#ffffff"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 tools:ignore="HardcodedText" />
 
