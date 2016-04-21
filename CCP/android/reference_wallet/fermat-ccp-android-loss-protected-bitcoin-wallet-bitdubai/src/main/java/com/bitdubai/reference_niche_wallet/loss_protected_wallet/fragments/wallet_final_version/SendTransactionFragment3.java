@@ -281,28 +281,8 @@ public class SendTransactionFragment3 extends FermatWalletListFragment<LossProte
         this.referenceWalletSession = referenceWalletSession;
     }
 
-    //TODO: check this and everything else that it is not needed anymore.
     @Override
     public void onClick(View v) {
-        try {
-            LossProtectedPaymentRequest paymentRequest = referenceWalletSession.getLastRequestSelected();
-            int id = v.getId();
-            if(id == R.id.btn_refuse_request){
-
-                cryptoWallet.refuseRequest(paymentRequest.getRequestId());
-                Toast.makeText(getActivity(),"Denegado",Toast.LENGTH_SHORT).show();
-            }
-            else if ( id == R.id.btn_accept_request){
-                cryptoWallet.approveRequest(paymentRequest.getRequestId(),referenceWalletSession.getIntraUserModuleManager().getPublicKey());
-                Toast.makeText(getActivity(),"Aceptado",Toast.LENGTH_SHORT).show();
-            }
-
-        } catch (Exception e) {
-            WalletUtils.showMessage(getActivity(), "Cant Accept or Denied Send Payment Exception- " + e.getMessage());
-        }
 
     }
-
-
-
 }

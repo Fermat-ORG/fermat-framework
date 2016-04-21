@@ -170,7 +170,7 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         }else {
 //            ModuleManager moduleManager = null;
 //            try {
-//                moduleManager = ApplicationSession.getInstance().getClientSideBrokerService().getModuleManager(fermatAppConnection.getPluginVersionReference());
+//                moduleManager = ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference());
 //            } catch (CantCreateProxyException e) {
 //                e.printStackTrace();
 //            }

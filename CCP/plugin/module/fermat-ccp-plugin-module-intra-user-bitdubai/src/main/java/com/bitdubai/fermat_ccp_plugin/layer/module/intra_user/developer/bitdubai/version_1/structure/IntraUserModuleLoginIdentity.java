@@ -2,6 +2,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitduba
 
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserLoginIdentity;
 
+import java.io.Serializable;
+
 /**
  * The class <code>com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleLoginIdentity</code>
  * is the implementation of IntraUserLoginIdentity interface.
@@ -9,7 +11,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserL
  *
  * Created by natalia on 11/08/15.
  */
-public class IntraUserModuleLoginIdentity implements IntraUserLoginIdentity {
+public class IntraUserModuleLoginIdentity implements IntraUserLoginIdentity,Serializable {
 
     private String alias;
     private String publicKey;

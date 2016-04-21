@@ -271,7 +271,8 @@ public class BitcoinWalletBasicWalletDao {
 
 
             if ( transactionType == TransactionType.CREDIT){
-                bitcoinWalletTable.clearAllFilters();
+               // bitcoinWalletTable.clearAllFilters();
+
                 bitcoinWalletTable.addFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
                 bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
@@ -283,7 +284,7 @@ public class BitcoinWalletBasicWalletDao {
                 return createTransactionList(bitcoinWalletTable.getRecords());
             }
             if ( transactionType == TransactionType.DEBIT){
-                bitcoinWalletTable.clearAllFilters();
+               // bitcoinWalletTable.clearAllFilters();
                 bitcoinWalletTable.addFilterOrder(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_TIME_STAMP_COLUMN_NAME, DatabaseFilterOrder.DESCENDING);
 
                 bitcoinWalletTable.addStringFilter(BitcoinWalletDatabaseConstants.BITCOIN_WALLET_TABLE_BALANCE_TYPE_COLUMN_NAME, balanceType.getCode(), DatabaseFilterType.EQUAL);
