@@ -27,7 +27,7 @@
         android:textColor="#000000"
         android:textSize="20dip" />
     <TextView
-        android:id="@+id/connection_state"
+        android:id="@+id/connection_state_user"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/community_name"

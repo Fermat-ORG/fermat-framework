@@ -3865,7 +3865,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
         chtComm.changeActualStartActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD.getCode());
-        runtimeActivity.setColor("#FF0B46F0");
+        //runtimeActivity.setColor("#FF0B46F0");
         runtimeActivity.setBackgroundColor("F9F9F9");
 
         runtimeActivity.setStatusBar(statusBar);
@@ -3892,7 +3892,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_CONTACTS_LIST.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
-        runtimeActivity.setColor("#FF0B46F0");
+        //runtimeActivity.setColor("#FF0B46F0");
         runtimeActivity.setBackgroundColor("F9F9F9");
 
         runtimeActivity.setStatusBar(statusBar);
@@ -3919,7 +3919,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
-        runtimeActivity.setColor("#FF0B46F0");
+        //runtimeActivity.setColor("#FF0B46F0");
         runtimeActivity.setBackgroundColor("F9F9F9");
 
         runtimeActivity.setStatusBar(statusBar);
@@ -3946,7 +3946,7 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeActivity.setActivityType(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_OTHER_PROFILE.getCode());
         runtimeActivity.setBackActivity(Activities.CHT_SUB_APP_CHAT_COMMUNITY_CONNECTION_WORLD);
         runtimeActivity.setBackPublicKey(communityPublicKey);
-        runtimeActivity.setColor("#FF0B46F0");
+        //runtimeActivity.setColor("#FF0B46F0");
         runtimeActivity.setBackgroundColor("F9F9F9");
 
         runtimeActivity.setStatusBar(statusBar);
