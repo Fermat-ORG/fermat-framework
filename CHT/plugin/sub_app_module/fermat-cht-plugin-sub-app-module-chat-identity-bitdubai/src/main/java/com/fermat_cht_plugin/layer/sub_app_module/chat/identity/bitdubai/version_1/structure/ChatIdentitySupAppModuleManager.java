@@ -54,8 +54,8 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
     }
 
     @Override
-    public void createNewIdentityChat(String alias, byte[] profileImage) throws CantCreateNewChatIdentityException {
-        chatIdentityManager.createNewIdentityChat(alias, profileImage);
+    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city) throws CantCreateNewChatIdentityException {
+        chatIdentityManager.createNewIdentityChat(alias, profileImage, country, state, city);
     }
 
     /**
@@ -67,8 +67,8 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
      * @throws CantUpdateChatIdentityException
      */
     @Override
-    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateChatIdentityException {
-        chatIdentityManager.updateIdentityChat(identityPublicKey, identityAlias, profileImage);
+    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city) throws CantUpdateChatIdentityException {
+        chatIdentityManager.updateIdentityChat(identityPublicKey, identityAlias, profileImage, country, state, city);
     }
 
     /**
@@ -118,7 +118,7 @@ public class ChatIdentitySupAppModuleManager implements ChatIdentityModuleManage
      */
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        chatIdentityManager.createNewIdentityChat(name, profile_img);
+        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null);
     }
 
     @Override
