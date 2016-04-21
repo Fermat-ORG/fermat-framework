@@ -29,8 +29,10 @@ import com.bitdubai.fermat_art_api.all_definition.events.enums.EventType;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanExposingData;
 import com.bitdubai.fermat_art_api.layer.identity.fan.exceptions.CantCreateFanIdentityException;
@@ -147,6 +149,7 @@ public class FanaticPluginRoot extends AbstractPlugin implements
             eventManager.addListener(updatesListener);
             listenersAdded.add(updatesListener);
 
+            exposeIdentities();
             System.out.println("############\n ART IDENTITY Fanatic STARTED\n");
             //testCreateArtist();
             //testAskForConnection();
@@ -164,6 +167,25 @@ public class FanaticPluginRoot extends AbstractPlugin implements
                 artistActorNetWorkServiceManager,
                 identityFanaticManager,
                 tokenlyFanIdentityManager);
+    }
+
+    private void exposeIdentities(){
+        ArrayList<FanExposingData> artistExposingDatas = new ArrayList<>();
+        try {
+            for (Fanatic fan :
+                    identityFanaticManager.listIdentitiesFromCurrentDeviceUser()) {
+                artistExposingDatas.add(new FanExposingData(
+                        fan.getPublicKey(),
+                        fan.getAlias(),
+                        fan.getProfileImage()
+                ));
+            }
+            fanManager.exposeIdentities(artistExposingDatas);
+        } catch (CantListFanIdentitiesException e) {
+            e.printStackTrace();
+        } catch (CantExposeIdentitiesException e) {
+            e.printStackTrace();
+        }
     }
 
     private void testCreateArtist(){

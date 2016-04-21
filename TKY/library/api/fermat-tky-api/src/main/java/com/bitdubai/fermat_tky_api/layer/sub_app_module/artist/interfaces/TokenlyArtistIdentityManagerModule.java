@@ -5,7 +5,9 @@ import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ArtistAcceptConnectionsType;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExposureLevel;
 import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
+import com.bitdubai.fermat_tky_api.all_definitions.enums.TokenlyAPIStatus;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TokenlyAPINotAvailableException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
 import com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
@@ -22,7 +24,10 @@ import java.util.UUID;
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/17/16.
  */
-public interface TokenlyArtistIdentityManagerModule extends ModuleManager<TokenlyArtistPreferenceSettings,ActiveActorIdentityInformation> {
+public interface TokenlyArtistIdentityManagerModule extends
+        ModuleManager<
+                TokenlyArtistPreferenceSettings,
+                ActiveActorIdentityInformation> {
     /**
      * Through the method <code>listIdentitiesFromCurrentDeviceUser</code> we can get all the artist
      * identities linked to the current logged device user.
@@ -30,7 +35,6 @@ public interface TokenlyArtistIdentityManagerModule extends ModuleManager<Tokenl
      * @throws CantListArtistIdentitiesException
      */
     List<Artist> listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException;
-
 
     /**
      *
@@ -87,4 +91,11 @@ public interface TokenlyArtistIdentityManagerModule extends ModuleManager<Tokenl
     Artist getArtistIdentity(UUID publicKey) throws
             CantGetArtistIdentityException,
             IdentityNotFoundException;
+
+    /**
+     * This method checks if the Tokenly Music API is available.
+     * @return
+     * @throws TokenlyAPINotAvailableException
+     */
+    TokenlyAPIStatus getMusicAPIStatus() throws TokenlyAPINotAvailableException;
 }
