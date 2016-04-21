@@ -444,7 +444,8 @@ public class WalletContactsMiddlewareDao {
 
                 long unixTime = System.currentTimeMillis() / 1000L;
 
-                record.setUUIDValue  (WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CONTACT_ID_COLUMN_NAME     , contactId                                  );
+                    record.setUUIDValue  (WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_ID_COLUMN_NAME     , UUID.randomUUID()                                  );
+                    record.setUUIDValue  (WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CONTACT_ID_COLUMN_NAME     , contactId                                  );
                 record.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME, cryptoAddress.getAddress());
                 record.setStringValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME, cryptoAddress.getCryptoCurrency().getCode());
                 record.setLongValue(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_TIME_STAMP_COLUMN_NAME, unixTime);

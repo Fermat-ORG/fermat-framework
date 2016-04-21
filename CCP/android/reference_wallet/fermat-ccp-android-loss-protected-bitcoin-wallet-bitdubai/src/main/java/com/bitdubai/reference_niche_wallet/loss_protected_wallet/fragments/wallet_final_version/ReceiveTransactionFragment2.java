@@ -331,7 +331,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
 
     @Override
     public void onItemClickListener(LossProtectedWalletTransaction data, int position) {
-        //TODO abrir actividad de detalle de contrato abierto
+        //TODO: open detail contact activity.
     }
 
     @Override

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -36,6 +37,7 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
 
     public static final int TYPE_PRESENTATION =1;
     public static final int TYPE_PRESENTATION_WITHOUT_IDENTITIES =2;
+    private static final String TAG = "WelcomeWallet";
 
     private final Activity activity;
     private final int type;
@@ -184,9 +186,13 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         if(checkbox_not_show.isChecked()){
             SettingsManager<BitcoinWalletSettings> settingsManager = getSession().getModuleManager().getSettingsManager();
             try {
-                BitcoinWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
-                bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
-                settingsManager.persistSettings(getSession().getAppPublicKey(),bitcoinWalletSettings);
+                if(settingsManager!=null) {
+                    BitcoinWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
+                    bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
+                    settingsManager.persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
+                }else{
+                    Log.e(TAG,"Settings manager null, please check this line:"+new Throwable().getStackTrace()[0].getLineNumber());
+                }
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
             } catch (SettingsNotFoundException e) {
