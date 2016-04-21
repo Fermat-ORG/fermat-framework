@@ -234,9 +234,10 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         }
                         if(clause.getType() == ClauseType.BROKER_CURRENCY_QUANTITY)
                             paymentAmount = clause.getValue();
-                        if(clause.getType() == ClauseType.BROKER_PAYMENT_METHOD)
+                        if(clause.getType() == ClauseType.BROKER_PAYMENT_METHOD){
                             merchandisePaymentMethod  = MoneyType.getByCode(clause.getValue()).getFriendlyName();
                             paymentMethodType= MoneyType.getByCode(clause.getValue());
+                        }
                         if(clause.getType() == ClauseType.CUSTOMER_CURRENCY) {
                             try {
                                 if (FiatCurrency.codeExists(clause.getValue()))
@@ -249,9 +250,10 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                         }
                         if(clause.getType() == ClauseType.CUSTOMER_CURRENCY_QUANTITY)
                             merchandiseAmount = clause.getValue();
-                        if(clause.getType() == ClauseType.CUSTOMER_PAYMENT_METHOD)
+                        if(clause.getType() == ClauseType.CUSTOMER_PAYMENT_METHOD){
                             paymentPaymentMethod = MoneyType.getByCode(clause.getValue()).getFriendlyName();
                             paymentMethodType= MoneyType.getByCode(clause.getValue());
+                        }
                     }
 
                 }catch(Exception e) {e.printStackTrace();}

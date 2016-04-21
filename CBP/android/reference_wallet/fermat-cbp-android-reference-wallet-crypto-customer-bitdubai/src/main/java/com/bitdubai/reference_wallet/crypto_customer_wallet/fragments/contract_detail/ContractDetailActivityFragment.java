@@ -186,7 +186,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
                 String merchandiseCurrency = "MK";
                 String merchandiseAmount = "-1";
                 String merchandisePaymentMethod = "MK";
-
+                MoneyType paymentMethodType = MoneyType.BANK;
                 try{
                     Collection<Clause> clauses = moduleManager.getNegotiationClausesFromNegotiationId(data.getNegotiationId());
 
