@@ -163,7 +163,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+
         try {
             rootView = super.onCreateView(inflater, container, savedInstanceState);
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
