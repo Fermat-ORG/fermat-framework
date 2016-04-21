@@ -23,7 +23,7 @@ import java.util.UUID;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AppManagerMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSystem {
+class AppManagerMiddlewareDatabaseFactory implements DealsWithPluginDatabaseSystem {
 
     /**
      * DealsWithPluginDatabaseSystem Interface member variables.

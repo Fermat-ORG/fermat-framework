@@ -11,7 +11,7 @@ package bitdubai.version_1.structure.database;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class AppManagerMiddlewareDatabaseConstants {
+class AppManagerMiddlewareDatabaseConstants {
 
     public static final String WALLET_MANAGER_WALLETS_DATABASE = "WalletDatabase";
 

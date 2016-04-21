@@ -134,6 +134,8 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
             public void uncaughtException(Thread thread, Throwable e) {
                 e.printStackTrace();
                 handleUncaughtException(thread, e);
+                ACRA.getErrorReporter().handleSilentException(e);
+                ACRA.getErrorReporter().handleException(e);
             }
         });
 
@@ -199,26 +201,19 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     }
 
     public boolean isFermatOpen() {
-
         int pId = android.os.Process.myPid();
-
         ActivityManager activityManager = (ActivityManager) this
                 .getSystemService(ACTIVITY_SERVICE);
-
         List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager
                 .getRunningAppProcesses();
         for (int idx = 0; idx < procInfos.size(); idx++) {
             ActivityManager.RunningAppProcessInfo process = procInfos.get(idx);
             String processName = process.processName;
-
-//            Log.i(TAG, (idx + 1) + "."
-//                    +processName + "\n");
             if(pId != process.pid) {
                 if (processName.equals("org.fermat")) {
                     return true;
                 }
             }
-
         }
         return false;
     }
