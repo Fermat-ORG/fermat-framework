@@ -1,6 +1,11 @@
 package com.fermat_cht_plugin.layer.sub_app_module.chat.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
+import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
+import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateSelfIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteContactConnectionException;
@@ -41,7 +46,9 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -51,15 +58,23 @@ import java.util.UUID;
  * Created by franklin on 06/01/16.
  * Updated by Jose Cardozo josejcb (josejcb89@gmail.com) on 16/03/16.
  */
-public class ChatSupAppModuleManager implements ChatManager {
+public class ChatSupAppModuleManager implements ChatManager, Serializable {
 
     private final MiddlewareChatManager middlewareChatManager;
     private final ChatIdentityManager chatIdentityManager;
+    private SettingsManager<ChatPreferenceSettings> settingsManager;
+    private final PluginFileSystem pluginFileSystem;
+    private final UUID pluginId;
 
-    public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager, ChatIdentityManager chatIdentityManager)
+    public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager,
+                                   ChatIdentityManager chatIdentityManager,
+                                   PluginFileSystem pluginFileSystem,
+                                   UUID pluginId)
     {
         this.middlewareChatManager = middlewareChatManager;
         this.chatIdentityManager   = chatIdentityManager;
+        this.pluginFileSystem      = pluginFileSystem                         ;
+        this.pluginId              = pluginId                                 ;
     }
 
     @Override
@@ -207,5 +222,58 @@ public class ChatSupAppModuleManager implements ChatManager {
         {
             middlewareChatManager.deleteMessage(message);
         }
+    }
+
+    /**
+     * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified
+     * settings class parametrized.
+     *
+     * @return a new instance of the settings manager for the specified fermat settings object.
+     */
+    @Override
+    public SettingsManager<ChatPreferenceSettings> getSettingsManager() {
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
+    }
+
+    /**
+     * Through the method <code>getSelectedActorIdentity</code> we can get the selected actor identity.
+     *
+     * @return an instance of the selected actor identity.
+     * @throws CantGetSelectedActorIdentityException if something goes wrong.
+     * @throws ActorIdentityNotSelectedException     if there's no actor identity selected.
+     */
+    @Override
+    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
+        return null;
+    }
+
+    /**
+     * Create identity
+     *
+     * @param name
+     * @param phrase
+     * @param profile_img
+     */
+    @Override
+    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+        chatIdentityManager.createNewIdentityChat(name, profile_img);
+    }
+
+    @Override
+    public void setAppPublicKey(String publicKey) {
+
+    }
+
+    @Override
+    public int[] getMenuNotifications() {
+        return new int[0];
     }
 }
