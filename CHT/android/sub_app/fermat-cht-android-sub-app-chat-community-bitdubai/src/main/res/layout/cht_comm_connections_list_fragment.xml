@@ -14,6 +14,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#F9F9F9"
         tools:ignore="UselessParent">
 
 
@@ -26,7 +27,8 @@
                 android:id="@+id/my_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:listitem="@layout/cht_comm_connection_list_item" />
+                tools:listitem="@layout/cht_comm_connection_list_item"
+                android:divider="@drawable/cht_list_divider" />
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <!--Empty view-->
@@ -36,6 +38,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
+            android:background="#F9F9F9"
             android:visibility="gone">
 
             <ImageView
