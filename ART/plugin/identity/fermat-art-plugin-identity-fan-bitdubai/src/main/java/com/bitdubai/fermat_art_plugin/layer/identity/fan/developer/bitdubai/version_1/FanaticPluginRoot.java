@@ -219,7 +219,7 @@ public class FanaticPluginRoot extends AbstractPlugin implements
 
             Fanatic Fanatic = null;
             if(externalIdentityID != null){
-                Fanatic = identityFanaticManager.createFanaticIdentity(alias, image, externalIdentityID);
+                Fanatic = identityFanaticManager.createFanaticIdentity(alias, image, externalIdentityID, ArtExternalPlatform.TOKENLY);
                 fanManager.exposeIdentity(new FanExposingData(Fanatic.getPublicKey(),Fanatic.getAlias(),Fanatic.getProfileImage()));
                 ArtIdentity artIdentity = identityFanaticManager.getLinkedIdentity(Fanatic.getPublicKey());
                 System.out.println("artIdentity = " + artIdentity.toString());

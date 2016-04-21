@@ -544,7 +544,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         if(externalPlatformID != null){
             moduleManager.createFanaticIdentity(
                     fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,
-                    externalPlatformID) ;
+                    externalPlatformID, externalPlatform) ;
         }else{
 
         }
@@ -557,7 +557,8 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                 fanExternalName,
                 identitySelected.getPublicKey(),
                 identitySelected.getProfileImage(),
-                identitySelected.getExternalIdentityID());
+                identitySelected.getExternalIdentityID(),
+                externalPlatform);
     }
 
     private void updateIdentityImage(
@@ -567,7 +568,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                 fanExternalName,
                 identitySelected.getPublicKey(),
                 fanImageByteArray,
-                identitySelected.getExternalIdentityID());
+                identitySelected.getExternalIdentityID(),externalPlatform);
     }
     private List<String> getFanIdentityByPlatform(ArtExternalPlatform externalPlatform) throws Exception{
         HashMap<UUID, String> fanIdentityByPlatform = null;
