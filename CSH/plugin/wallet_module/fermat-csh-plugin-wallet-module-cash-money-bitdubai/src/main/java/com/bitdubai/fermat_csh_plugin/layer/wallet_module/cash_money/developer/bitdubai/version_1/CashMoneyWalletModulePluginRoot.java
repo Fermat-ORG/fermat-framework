@@ -255,7 +255,7 @@ public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWal
     }
 
     @Override
-    public ModuleManager<CashMoneyWalletPreferenceSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
+    public CashMoneyWalletModuleManager getModuleManager() throws CantGetModuleManagerException {
         return this;
     }
 
