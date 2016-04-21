@@ -12,6 +12,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextV
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -267,7 +268,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                             textDescription.setText("You receive:");
                             textDescriptionDate.setVisibility(View.INVISIBLE);
                             itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
-                            if (FiatCurrency.codeExists(itemInfo.getPaymentOrMerchandiseCurrencyCode())) {
+                            if (itemInfo.getPaymentMethodType() != MoneyType.CRYPTO) {
                                 confirmButton.setText("Confirm");
                                 confirmButton.setVisibility(View.VISIBLE);
                             }
