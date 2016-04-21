@@ -15,15 +15,12 @@ import com.bitdubai.reference_wallet.fan_wallet.common.models.FollowingItems;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 /**
  * Created by Miguel Payarez on 16/03/16.
  */
 public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.ViewHolder> {
 
     private List<FollowingItems> item=new ArrayList<>();
-    private RecyclerView mRecyclerView;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView image;
@@ -39,7 +36,6 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.View
         }
 
     }
-
 
     public FollowingAdapter(List<FollowingItems> item){this.item.addAll(item);}
 

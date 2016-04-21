@@ -407,7 +407,8 @@ public class TokenlyWalletManager implements SongWalletTokenlyManager {
             throw new CantDownloadSongException(
                     e,
                     "Downloading song by id:"+songId,
-                    "Cannot get the song from external API");
+                    "Cannot get the song from external API",
+                    e);
         } catch (CancelDownloadException e) {
             throw new CantDownloadSongException(
                     e,

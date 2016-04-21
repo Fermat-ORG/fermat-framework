@@ -27,6 +27,7 @@ import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHideIdentityExc
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.all_definition.interfaces.ArtIdentity;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
@@ -114,12 +115,33 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
                     this.deviceUserManager,
                     this.artistManager);
 
+            exposeIdentities();
+
             System.out.println("############\n ART IDENTITY ARTIST STARTED\n");
             //testCreateArtist();
             //testAskForConnection();
         } catch (Exception e) {
             errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             throw new CantStartPluginException(e, Plugins.ARTIST_IDENTITY);
+        }
+    }
+
+    private void exposeIdentities(){
+        ArrayList<ArtistExposingData> artistExposingDatas = new ArrayList<>();
+        try {
+            for (Artist artist :
+                    listIdentitiesFromCurrentDeviceUser()) {
+                artistExposingDatas.add(new ArtistExposingData(
+                        artist.getPublicKey(),
+                        artist.getAlias(),
+                        artist.getProfileImage()
+                ));
+            }
+            artistManager.exposeIdentities(artistExposingDatas);
+        } catch (CantListArtistIdentitiesException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
+        } catch (CantExposeIdentitiesException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.ARTIST_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
         }
     }
 

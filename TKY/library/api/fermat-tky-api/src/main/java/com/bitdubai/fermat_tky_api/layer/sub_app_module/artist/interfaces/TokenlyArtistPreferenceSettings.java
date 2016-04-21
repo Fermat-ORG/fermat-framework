@@ -13,6 +13,7 @@ import java.util.UUID;
 /**
  * Created by Juan Sulbaran sulbaranja@gmail.com on 23/03/16.
  */
+
 public class TokenlyArtistPreferenceSettings implements FermatSettings {
 
     private boolean isHomeTutorialDialogEnabled;

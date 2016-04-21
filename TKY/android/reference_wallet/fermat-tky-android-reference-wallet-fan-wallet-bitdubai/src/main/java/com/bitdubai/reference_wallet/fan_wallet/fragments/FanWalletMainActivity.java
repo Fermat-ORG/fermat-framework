@@ -1,6 +1,5 @@
 package com.bitdubai.reference_wallet.fan_wallet.fragments;
 
-
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
-import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -30,8 +28,6 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
 
     View view;
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -43,7 +39,10 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
             System.out.println("HERE START FAN WALLET");
 
             try {
-                    fanWalletSettings =  fanwalletSession.getModuleManager().getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                    fanWalletSettings =  fanwalletSession
+                            .getModuleManager()
+                            .getSettingsManager()
+                            .loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 fanWalletSettings = null;
             }
@@ -52,19 +51,26 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
                 fanWalletSettings = new FanWalletPreferenceSettings();
                 fanWalletSettings.setIsPresentationHelpEnabled(true);
                 try {
-                    fanwalletSession.getModuleManager().getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
+                    fanwalletSession
+                            .getModuleManager()
+                            .getSettingsManager()
+                            .persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
                 } catch (Exception e) {
-                    errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                    errorManager.reportUnexpectedWalletException(
+                            Wallets.TKY_FAN_WALLET,
+                            UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                            e);
                 }
             }
 
 
         } catch (Exception e) {
             if (errorManager != null)
-                errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                errorManager.reportUnexpectedWalletException(
+                        Wallets.TKY_FAN_WALLET,
+                        UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT,
+                        e);
         }
-
-
 
     }
 
@@ -83,17 +89,9 @@ public class FanWalletMainActivity extends AbstractFermatFragment  {
         configureToolbar();
         getActivity().getWindow().setBackgroundDrawableResource(R.drawable.fanwallet_background_viewpager);
 
-
         return view;
 
     }
-
-
-
-
-
-
-
 
  /*   private class MyPagerAdapter extends FragmentStatePagerAdapter {
 

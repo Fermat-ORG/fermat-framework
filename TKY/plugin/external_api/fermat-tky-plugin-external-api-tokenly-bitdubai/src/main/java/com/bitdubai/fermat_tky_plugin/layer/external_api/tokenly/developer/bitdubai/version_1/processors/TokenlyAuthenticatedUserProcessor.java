@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_tky_plugin.layer.external_api.tokenly.developer.bitdubai.version_1.processors;
 
+import com.bitdubai.fermat_tky_api.all_definitions.enums.HTTPErrorResponse;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.CantGetJSonObjectException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.HTTPErrorResponseException;
 import com.bitdubai.fermat_tky_api.all_definitions.exceptions.WrongTokenlyUserCredentialsException;
@@ -61,12 +62,18 @@ public abstract class TokenlyAuthenticatedUserProcessor extends AbstractTokenlyP
                                 "Code:"+errorCode+" - " +
                                 "Message:"+e.getErrorMessage());
             }
+            String errorMessage = e.getErrorMessage();
+            HTTPErrorResponse httpErrorResponse = e.getHttpErrorResponse();
             throw new CantGetUserException(
                     e,
                     "\"Authenticating the user \"+username",
                     "Get an error response - " +
                             "Code:"+errorCode+" - " +
-                            "Message:"+e.getErrorMessage());
+                            "Message:"+errorMessage,
+                    errorMessage,
+                    errorCode,
+                    httpErrorResponse
+                    );
         }
     }
 
