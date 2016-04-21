@@ -131,13 +131,13 @@
                 android:text="Connections Type"
                 android:textStyle="bold"
                 android:layout_toRightOf="@+id/exposure_level_label"
+
                 android:paddingLeft="15dp"/>
 
             <LinearLayout
                 android:paddingTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
                 android:orientation="horizontal"
 
                 >
@@ -146,7 +146,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/external_platform"
                 android:textColor="#000000"
-                android:background="#A9F5F2"
+                android:background="#0080FF"
+                android:popupBackground="#0080FF"
 
                 android:spinnerMode="dropdown"
                 />
@@ -155,7 +156,10 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/exposureLevel"
                 android:textColor="#000000"
-                android:background="#A9F5F2"
+                android:background="#0080FF"
+                android:popupBackground="#0080FF"
+
+                android:paddingLeft="15dp"
 
                 android:spinnerMode="dropdown"
                 />
@@ -164,7 +168,10 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/artistAcceptConnectionsType"
                 android:textColor="#000000"
-                android:background="#A9F5F2"
+                android:background="#0080FF"
+                android:popupBackground="#0080FF"
+                android:paddingStart="30dp"
+                android:layout_alignParentRight="true"
 
                 android:spinnerMode="dropdown"
                />
