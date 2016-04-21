@@ -212,7 +212,17 @@ public class CommunicationServerService extends Service {
                         Log.i(TAG,"Method return type: "+ m.getReturnType());
                         s =  m.invoke(moduleManager, null);
                     } else{
-                        m = clazz.getMethod(method,classes);
+                        try{
+                            m = clazz.getMethod(method,classes);
+                        }catch (NoSuchMethodException e){
+                            for(Class interfaces : clazz.getInterfaces()){
+                                try {
+                                    m = interfaces.getMethod(method, classes);
+                                }catch (NoSuchMethodException e1){
+                                    Log.e(TAG,"metodo no encontrado");
+                                }
+                            }
+                        }
                         Log.i(TAG,"Method: "+ m.getName());
                         Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
                         Log.i(TAG,"Method return type: "+ m.getReturnType());

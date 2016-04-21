@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -20,7 +19,6 @@ import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
@@ -184,20 +182,17 @@ public class PresentationBitcoinWalletDialog extends FermatDialog<ReferenceWalle
         if(type!=TYPE_PRESENTATION)
         if(checkButton == checkbox_not_show.isChecked()  || checkButton == !checkbox_not_show.isChecked())
         if(checkbox_not_show.isChecked()){
-            SettingsManager<BitcoinWalletSettings> settingsManager = getSession().getModuleManager().getSettingsManager();
             try {
-                if(settingsManager!=null) {
-                    BitcoinWalletSettings bitcoinWalletSettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
+                    BitcoinWalletSettings bitcoinWalletSettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
                     bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
-                    settingsManager.persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
-                }else{
-                    Log.e(TAG,"Settings manager null, please check this line:"+new Throwable().getStackTrace()[0].getLineNumber());
-                }
+                    getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), bitcoinWalletSettings);
             } catch (CantGetSettingsException e) {
                 e.printStackTrace();
             } catch (SettingsNotFoundException e) {
                 e.printStackTrace();
             } catch (CantPersistSettingsException e) {
+                e.printStackTrace();
+            } catch (Exception e){
                 e.printStackTrace();
             }
         }
