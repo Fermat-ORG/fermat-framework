@@ -264,8 +264,8 @@ public class CommunitiesFragment extends FermatWalletListFragment<InstalledApp> 
                 SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
                 "sub_app_art_fan_community",
                 new Version(1, 0, 0),
-                Platforms.PLATFORM_ART);
-                Platforms.ART_PLATFORM, AppsStatus.DEV);
+                Platforms.PLATFORM_ART,
+                AppsStatus.ALPHA);
 
         installedSubApp.setIconResource(R.drawable.communities_bar);
         data.add(installedSubApp);

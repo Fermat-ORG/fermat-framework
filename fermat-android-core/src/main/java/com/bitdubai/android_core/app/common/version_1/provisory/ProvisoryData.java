@@ -153,7 +153,9 @@ public class ProvisoryData {
                 "Tokenly Fan",
                 "sub_app_tky_fan_create_identity",
                 "tky_fan_sub_app",
-                new Version(1,0,0),Platforms.TOKENLY);
+                new Version(1,0,0),
+                Platforms.TOKENLY,
+                AppsStatus.ALPHA);
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.tokenly_fan);
         item2.setPosition(6);
@@ -169,7 +171,8 @@ public class ProvisoryData {
                 SubAppsPublicKeys.TKY_ARTIST_IDENTITY.getCode(),
                 "sub_app_tky_artist_identity",
                 new Version(1, 0, 0),
-                Platforms.TOKENLY);
+                Platforms.TOKENLY,
+                AppsStatus.ALPHA);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.bitcoin_icon);
@@ -205,7 +208,8 @@ public class ProvisoryData {
                 SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
                 "sub_app_art_artist_identity",
                 new Version(1, 0, 0),
-                Platforms.TOKENLY);
+                Platforms.PLATFORM_ART,
+                AppsStatus.ALPHA);
 
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.icon_bitcoin_network_active);
@@ -221,7 +225,8 @@ public class ProvisoryData {
                 SubAppsPublicKeys.ART_FAN_IDENTITY.getCode(),
                 "sub_app_art_fan_identity",
                 new Version(1,0,0),
-                Platforms.PLATFORM_ART);
+                Platforms.PLATFORM_ART,
+                AppsStatus.ALPHA);
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.artist);
         item2.setPosition(10);
@@ -343,8 +348,8 @@ public class ProvisoryData {
                 SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
                 "sub_app_art_fan_community",
                 new Version(1, 0, 0),
-                Platforms.ART_PLATFORM, AppsStatus.DEV);
-                Platforms.PLATFORM_ART);
+                Platforms.PLATFORM_ART,
+                AppsStatus.DEV);
 
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.communities_bar);
@@ -360,7 +365,8 @@ public class ProvisoryData {
                 SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode(),
                 "sub_app_art_artist_community",
                 new Version(1, 0, 0),
-                Platforms.PLATFORM_ART);
+                Platforms.PLATFORM_ART,
+                AppsStatus.ALPHA);
 
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.artist_banner);
