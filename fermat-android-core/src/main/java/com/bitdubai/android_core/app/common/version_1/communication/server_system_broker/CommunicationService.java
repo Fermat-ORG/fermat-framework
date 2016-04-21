@@ -1,4 +1,4 @@
-package com.bitdubai.android_core.app.common.version_1.communication;
+package com.bitdubai.android_core.app.common.version_1.communication.server_system_broker;
 
 import android.app.Service;
 import android.content.Intent;

@@ -53,7 +53,6 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.on
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.SessionConstant;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -116,13 +115,11 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
 
         lossProtectedWalletSession = (LossProtectedWalletSession)appSession;
 
-        lstTransaction = new ArrayList<LossProtectedWalletTransaction>();
+        lstTransaction = new ArrayList<>();
         try {
             moduleManager = lossProtectedWalletSession.getModuleManager();
 
             cryptoWallet = moduleManager.getCryptoWallet();
-
-            //lstTransactionRequest = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
 
             getExecutor().execute(new Runnable() {
                 @Override
@@ -166,6 +163,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         try {
             rootView = super.onCreateView(inflater, container, savedInstanceState);
             RecyclerView.ItemDecoration itemDecoration = new DividerItemDecoration(getActivity(), R.drawable.divider_shape);
@@ -214,7 +212,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-            lstTransaction = new ArrayList<LossProtectedWalletTransaction>();
+            lstTransaction = new ArrayList<>();
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             lossProtectedWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
@@ -289,7 +287,7 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
                     lossProtectedWalletSession.getAppPublicKey(),
                     intraUserPk,
                     blockchainNetworkType,
-                    20, 0);
+                    20, offset);
 
         } catch (Exception e) {
             lossProtectedWalletSession.getErrorManager().reportUnexpectedSubAppException(SubApps.CWP_WALLET_STORE,
@@ -314,12 +312,6 @@ public class ChunckValuesHistoryFragment extends FermatWalletListFragment<LossPr
         }
      }
 
-    /**
-     * On Long item Click Listener
-     *
-     * @param data
-     * @param position
-     */
     @Override
     public void onLongItemClickListener(LossProtectedWalletTransaction data, int position) {
 

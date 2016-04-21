@@ -16,9 +16,9 @@ import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.common.version_1.communication.CommunicationDataKeys;
-import com.bitdubai.android_core.app.common.version_1.communication.CommunicationMessages;
-import com.bitdubai.android_core.app.common.version_1.communication.CommunicationService;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationDataKeys;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationService;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.FermatServiceNotConnectedException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;

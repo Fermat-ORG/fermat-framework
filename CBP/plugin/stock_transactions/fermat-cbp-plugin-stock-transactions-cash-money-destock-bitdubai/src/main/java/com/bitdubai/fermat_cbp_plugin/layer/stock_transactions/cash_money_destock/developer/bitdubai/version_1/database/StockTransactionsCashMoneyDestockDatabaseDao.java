@@ -99,7 +99,7 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
         return table.getRecords().isEmpty();
     }
 
-    private List<DatabaseTableRecord> getCashMoneyRestockData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
+    private List<DatabaseTableRecord> getCashMoneyDestockData(DatabaseTableFilter filter) throws CantLoadTableToMemoryException {
         DatabaseTable table = getDatabaseTable(StockTransactionsCashMoneyDestockDatabaseConstants.CASH_MONEY_DESTOCK_TABLE_NAME);
 
         if (filter != null)
@@ -167,27 +167,22 @@ public class StockTransactionsCashMoneyDestockDatabaseDao {
         }
     }
 
-    public List<CashMoneyTransaction> getCashMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException
-    {
-        Database database = null;
+    public List<CashMoneyTransaction> getCashMoneyTransactionList(DatabaseTableFilter filter) throws DatabaseOperationException, InvalidParameterException {
         try {
-            database = openDatabase();
+            openDatabase();
             List<CashMoneyTransaction> cashMoneyTransactions = new ArrayList<>();
-            // I will add the Asset Factory information from the database
-            for (DatabaseTableRecord cashMoneyRestockRecord : getCashMoneyRestockData(filter)) {
-                final CashMoneyTransaction cashMoneyTransaction = getCashMoneyDestockTransaction(cashMoneyRestockRecord);
 
+            final List<DatabaseTableRecord> cashMoneyDestockData = getCashMoneyDestockData(filter);
+            for (DatabaseTableRecord cashMoneyRestockRecord : cashMoneyDestockData) {
+                final CashMoneyTransaction cashMoneyTransaction = getCashMoneyDestockTransaction(cashMoneyRestockRecord);
                 cashMoneyTransactions.add(cashMoneyTransaction);
             }
-
-            database.closeDatabase();
 
             return cashMoneyTransactions;
         }
         catch (Exception e) {
-            if (database != null)
-                database.closeDatabase();
-            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e, "error trying to get Bank Money Restock Transaction from the database with filter: " + filter.toString(), null);
+            throw new DatabaseOperationException(DatabaseOperationException.DEFAULT_MESSAGE, e,
+                    "error trying to get Bank Money Restock Transaction from the database with filter: " + filter.toString(), null);
         }
     }
 }
