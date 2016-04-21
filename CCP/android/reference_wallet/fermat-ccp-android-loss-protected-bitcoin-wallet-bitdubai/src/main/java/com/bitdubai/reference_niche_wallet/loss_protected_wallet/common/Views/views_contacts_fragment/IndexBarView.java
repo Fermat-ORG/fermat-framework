@@ -80,7 +80,7 @@ public class IndexBarView extends View {
             }else if( object instanceof CryptoWalletWalletContact){
                 section = ((CryptoWalletWalletContact) listItems.get(secIndex)).getActorName();
             }else{
-                section = "algo malo pasó";
+                section = "Something went wrong";
             }
             contactIndexTable.put(section, secIndex);
         }
