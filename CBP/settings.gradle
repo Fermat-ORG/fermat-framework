@@ -51,10 +51,6 @@ project(':fermat-cbp-plugin-actor-network-service-crypto-customer-bitdubai').pro
 include ':fermat-cbp-plugin-network-service-negotiation-transmission-bitdubai'
 project(':fermat-cbp-plugin-network-service-negotiation-transmission-bitdubai').projectDir = new File('CBP/plugin/network_service/fermat-cbp-plugin-network-service-negotiation-transmission-bitdubai')
 
-//Agent
-include ':fermat-cbp-plugin-agent-crypto-broker-bitdubai'
-project(':fermat-cbp-plugin-agent-crypto-broker-bitdubai').projectDir = new File('CBP/plugin/agent/fermat-cbp-plugin-agent-crypto-broker-bitdubai')
-
 //User level transactions
 include ':fermat-cbp-plugin-user-level-business-transaction-customer-broker-purchase-bitdubai'
 project(':fermat-cbp-plugin-user-level-business-transaction-customer-broker-purchase-bitdubai').projectDir = new File('CBP/plugin/user_level_business_transaction/fermat-cbp-plugin-user-level-business-transaction-customer-broker-purchase-bitdubai')
@@ -112,12 +108,6 @@ project(':fermat-cbp-plugin-contract-customer-broker-purchase-bitdubai').project
 include ':fermat-cbp-plugin-contract-customer-broker-sale-bitdubai'
 project(':fermat-cbp-plugin-contract-customer-broker-sale-bitdubai').projectDir = new File('CBP/plugin/contract/fermat-cbp-plugin-contract-customer-broker-sale-bitdubai')
 
-//Desktop Module
-include ':fermat-cbp-plugin-desktop-module-sub-app-manager-bitdubai'
-project(':fermat-cbp-plugin-desktop-module-sub-app-manager-bitdubai').projectDir = new File('CBP/plugin/desktop_module/fermat-cbp-plugin-desktop-module-sub-app-manager-bitdubai')
-include ':fermat-cbp-plugin-desktop-module-wallet-manager-bitdubai'
-project(':fermat-cbp-plugin-desktop-module-wallet-manager-bitdubai').projectDir = new File('CBP/plugin/desktop_module/fermat-cbp-plugin-desktop-module-wallet-manager-bitdubai')
-
 //Identity
 include ':fermat-cbp-plugin-identity-crypto-broker-bitdubai'
 project(':fermat-cbp-plugin-identity-crypto-broker-bitdubai').projectDir = new File('CBP/plugin/identity/fermat-cbp-plugin-identity-crypto-broker-bitdubai')
@@ -127,8 +117,6 @@ project(':fermat-cbp-plugin-identity-crypto-customer-bitdubai').projectDir = new
 //Middleware
 include ':fermat-cbp-plugin-middleware-crypto-broker-wallet-identity-bitdubai'
 project(':fermat-cbp-plugin-middleware-crypto-broker-wallet-identity-bitdubai').projectDir = new File('CBP/plugin/middleware/fermat-cbp-plugin-middleware-crypto-broker-wallet-identity-bitdubai')
-include ':fermat-cbp-plugin-middleware-customers-bitdubai'
-project(':fermat-cbp-plugin-middleware-customers-bitdubai').projectDir = new File('CBP/plugin/middleware/fermat-cbp-plugin-middleware-customers-bitdubai')
 include ':fermat-cbp-plugin-middleware-sub-app-manager-bitdubai'
 project(':fermat-cbp-plugin-middleware-sub-app-manager-bitdubai').projectDir = new File('CBP/plugin/middleware/fermat-cbp-plugin-middleware-sub-app-manager-bitdubai')
 include ':fermat-cbp-plugin-middleware-wallet-manager-bitdubai'
@@ -142,12 +130,6 @@ project(':fermat-cbp-plugin-negotiation-customer-broker-purchase-bitdubai').proj
 include ':fermat-cbp-plugin-negotiation-customer-broker-sale-bitdubai'
 project(':fermat-cbp-plugin-negotiation-customer-broker-sale-bitdubai').projectDir = new File('CBP/plugin/negotiation/fermat-cbp-plugin-negotiation-customer-broker-sale-bitdubai')
 
-//Request
-include ':fermat-cbp-plugin-request-customer-broker-purchase-bitdubai'
-project(':fermat-cbp-plugin-request-customer-broker-purchase-bitdubai').projectDir = new File('CBP/plugin/request/fermat-cbp-plugin-request-customer-broker-purchase-bitdubai')
-include ':fermat-cbp-plugin-request-customer-broker-sale-bitdubai'
-project(':fermat-cbp-plugin-request-customer-broker-sale-bitdubai').projectDir = new File('CBP/plugin/request/fermat-cbp-plugin-request-customer-broker-sale-bitdubai')
-
 //Sub App Module
 include ':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai'
 project(':fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai').projectDir = new File('CBP/plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-broker-identity-bitdubai')
@@ -157,8 +139,7 @@ include ':fermat-cbp-plugin-sub-app-module-crypto-customer-community-bitdubai'
 project(':fermat-cbp-plugin-sub-app-module-crypto-customer-community-bitdubai').projectDir = new File('CBP/plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-customer-community-bitdubai')
 include ':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai'
 project(':fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai').projectDir = new File('CBP/plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-crypto-customer-identity-bitdubai')
-include ':fermat-cbp-plugin-sub-app-module-customers-bitdubai'
-project(':fermat-cbp-plugin-sub-app-module-customers-bitdubai').projectDir = new File('CBP/plugin/sub_app_module/fermat-cbp-plugin-sub-app-module-customers-bitdubai')
+
 
 //Wallet
 

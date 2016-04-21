@@ -40,6 +40,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
     private View rootView;
     private List<GrouperItem> grouperList;
     private List<InstalledApp> installedApps;
+    private boolean isScrolled;
 
 
     public static CommunitiesExpandibleFragment newInstance() {
@@ -81,6 +82,16 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
         ((FermatTextView)layout.findViewById(R.id.txt_title_communities)).setFont(FontType.CAVIAR_DREAMS);
 
 
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(!isScrolled){
+                    isScrolled = true;
+                    adapter.expandAllParents();
+                }
+            }
+        });
 //        if (intalledAppsList.isEmpty()) {
 //            recyclerView.setVisibility(View.GONE);
 //            emptyListViewsContainer =(LinearLayout) layout.findViewById(R.id.empty);

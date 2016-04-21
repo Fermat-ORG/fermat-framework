@@ -6,7 +6,6 @@ import android.view.View;
 
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.ChunckValuesDetailItemViewHolder;
@@ -49,7 +48,7 @@ public class ChunckValuesDetailAdapter extends FermatAdapter<BitcoinLossProtecte
     @Override
     protected void bindHolder(ChunckValuesDetailItemViewHolder holder, BitcoinLossProtectedWalletSpend data, int position) {
         //Get date and set a FormatDate for Data value
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy HH:mm", Locale.US);
         holder.getDate().setText(sdf.format(data.getTimestamp()));
 
         holder.getAmountBalance().setText(formatAmountString(data.getAmount())+" BTC");

@@ -14,7 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_api.layer.modules.interfaces.FermatSettings;
+import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
@@ -101,7 +101,6 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.Custome
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.IndexInfoSummary;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.MerchandiseExchangeRate;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantClearCryptoCustomerWalletSettingException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetAssociatedCryptoCustomerIdentityException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoBrokerListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetCryptoCustomerIdentityListException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CantGetProvidersCurrentExchangeRatesException;
@@ -112,7 +111,7 @@ import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exception
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.CouldNotUpdateNegotiationException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.exceptions.IdentityAssociatedNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.BrokerIdentityBusinessInfo;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletPreferenceSettings;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.settings.CryptoCustomerWalletProviderSetting;
@@ -147,8 +146,7 @@ import java.util.UUID;
  * Created by nelson on 11/11/15.
  * Modified by Franklin Marcano 30/12/15
  */
-public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements CryptoCustomerWalletManager {
-    public static final String PATH_DIRECTORY = "cbpwallet/setting";
+public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements CryptoCustomerWalletModuleManager {
 
     private final WalletManagerManager walletManagerManager;
     private final CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager;
@@ -160,8 +158,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     private final CustomerBrokerCloseManager customerBrokerCloseManager;
     private final CurrencyExchangeProviderFilterManager currencyExchangeProviderFilterManager;
     private final ActorExtraDataManager actorExtraDataManager;
-    private String merchandise = null, typeOfPayment = null, paymentCurrency = null;
-    private float amount = 0, exchangeRateAmount = 0;
     private final CustomerOnlinePaymentManager customerOnlinePaymentManager;
     private final CustomerOfflinePaymentManager customerOfflinePaymentManager;
     private final CustomerAckOnlineMerchandiseManager customerAckOnlineMerchandiseManager;
@@ -171,11 +167,16 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     private final BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager;
     private final BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager;
     private final BitcoinWalletManager bitcoinWalletManager;
-
-    private final SettingsManager<CryptoCustomerWalletPreferenceSettings> settingsManager;
-
-    private final ErrorManager errorManager;
     private final PluginVersionReference pluginVersionReference;
+    private final ErrorManager errorManager;
+    private final PluginFileSystem pluginFileSystem;
+    private final UUID pluginId;
+
+    private  SettingsManager<CryptoCustomerWalletPreferenceSettings> settingsManager;
+    private String merchandise = null;
+    private String typeOfPayment = null;
+    private String paymentCurrency = null;
+
 
     /*
     *Constructor with Parameters
@@ -198,11 +199,11 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
                                                                  BrokerAckOfflinePaymentManager brokerAckOfflinePaymentManager,
                                                                  BrokerSubmitOnlineMerchandiseManager brokerSubmitOnlineMerchandiseManager,
                                                                  BrokerSubmitOfflineMerchandiseManager brokerSubmitOfflineMerchandiseManager,
-                                                                 SettingsManager<CryptoCustomerWalletPreferenceSettings> settingsManager,
                                                                  BitcoinWalletManager bitcoinWalletManager,
-
                                                                  final ErrorManager errorManager,
-                                                                 final PluginVersionReference pluginVersionReference) {
+                                                                 final PluginVersionReference pluginVersionReference,
+                                                                 PluginFileSystem pluginFileSystem,
+                                                                 UUID pluginId) {
         this.walletManagerManager = walletManagerManager;
         this.cryptoBrokerActorConnectionManager = cryptoBrokerActorConnectionManager;
         this.customerBrokerPurchaseNegotiationManager = customerBrokerPurchaseNegotiationManager;
@@ -222,11 +223,10 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
         this.brokerSubmitOnlineMerchandiseManager = brokerSubmitOnlineMerchandiseManager;
         this.brokerSubmitOfflineMerchandiseManager = brokerSubmitOfflineMerchandiseManager;
         this.bitcoinWalletManager = bitcoinWalletManager;
-
-        this.settingsManager = settingsManager;
-
         this.errorManager = errorManager;
         this.pluginVersionReference = pluginVersionReference;
+        this.pluginFileSystem = pluginFileSystem;
+        this.pluginId = pluginId;
     }
 
     @Override
@@ -768,11 +768,6 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     }
 
     @Override
-    public CryptoCustomerIdentity getAssociatedIdentity() throws CantGetAssociatedCryptoCustomerIdentityException {
-        return null;
-    }
-
-    @Override
     public boolean isWalletConfigured(String customerWalletPublicKey) throws CantGetSettingsException, SettingsNotFoundException {
         CryptoCustomerWalletPreferenceSettings walletSettings = settingsManager.loadAndGetSettings(customerWalletPublicKey);
         return walletSettings.isWalletConfigured();
@@ -1156,7 +1151,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
     /**
      * This method returns the currency type from a contract
      *
-     * @param customerBrokerContractPurchase
+     * @param contractPurchase
      * @param contractDetailType
      *
      * @return
@@ -1165,11 +1160,11 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
      */
     @Override
     public MoneyType getCurrencyTypeFromContract(
-            CustomerBrokerContractPurchase customerBrokerContractPurchase,
+            CustomerBrokerContractPurchase contractPurchase,
             ContractDetailType contractDetailType) throws
             CantGetListPurchaseNegotiationsException {
         try {
-            String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
+            String negotiationId = contractPurchase.getNegotiatiotId();
             CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation =
                     customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(
                             UUID.fromString(negotiationId));
@@ -1215,7 +1210,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             //I need to discover the payment type (online or offline)
             String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
             CustomerBrokerPurchaseNegotiation negotiation = customerBrokerPurchaseNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
-            ContractClauseType contractClauseType = getContractClauseType(negotiation);
+            ContractClauseType contractClauseType = getContractClauseType(negotiation,ClauseType.CUSTOMER_PAYMENT_METHOD);
 
             if (contractClauseType.equals(ContractClauseType.CRYPTO_TRANSFER)) { //Case: sending online payment
                 //TODO: here we need to get the CCP Wallet public key to send BTC to the customer, when the settings are finished, please, implement how to get the CCP Wallet public key here. Thanks.
@@ -1246,7 +1241,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
      * @throws CantGetListClauseException
      */
     private ContractClauseType getContractClauseType(
-            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation) throws
+            CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation,ClauseType paramClauseType ) throws
             CantGetListClauseException {
         try {
             //I will check if customerBrokerPurchaseNegotiation is null
@@ -1257,7 +1252,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             ClauseType clauseType;
             for (Clause clause : clauses) {
                 clauseType = clause.getType();
-                if (clauseType.equals(ClauseType.CUSTOMER_PAYMENT_METHOD)) {
+                if (clauseType.equals(paramClauseType)) {
                     return ContractClauseType.getByCode(clause.getValue());
                 }
             }
@@ -1301,7 +1296,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
             /*//TODO: remove this mock
             customerBrokerPurchaseNegotiation = new PurchaseNegotiationOfflineMock();*/
             ContractClauseType contractClauseType = getContractClauseType(
-                    customerBrokerPurchaseNegotiation);
+                    customerBrokerPurchaseNegotiation,ClauseType.BROKER_PAYMENT_METHOD);
             /**
              * Case: ack crypto merchandise.
              */
@@ -1509,8 +1504,16 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
     }*/
     @Override
-    public SettingsManager<FermatSettings> getSettingsManager() {
-        return null;
+    public SettingsManager<CryptoCustomerWalletPreferenceSettings> getSettingsManager() {
+        if (this.settingsManager != null)
+            return this.settingsManager;
+
+        this.settingsManager = new SettingsManager<>(
+                pluginFileSystem,
+                pluginId
+        );
+
+        return this.settingsManager;
     }
 
     @Override
@@ -1520,7 +1523,7 @@ public class CryptoCustomerWalletModuleCryptoCustomerWalletManager implements Cr
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-
+        cryptoCustomerIdentityManager.createCryptoCustomerIdentity(name, profile_img);
     }
 
     @Override

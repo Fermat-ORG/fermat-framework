@@ -5,6 +5,7 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapterImproved;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
@@ -218,7 +219,7 @@ public class ClosedNegotiationDetailsAdapter extends FermatAdapterImproved<Claus
     
     private ClauseInformation getBrokerPaymentMethodDetail(Map<ClauseType, ClauseInformation> clauses) {
         final ClauseInformation paymentMethod = clauses.get(ClauseType.CUSTOMER_PAYMENT_METHOD);
-        
+
         if (paymentMethod != null) {
             String currencyType = paymentMethod.getValue();
             if (currencyType != null) {

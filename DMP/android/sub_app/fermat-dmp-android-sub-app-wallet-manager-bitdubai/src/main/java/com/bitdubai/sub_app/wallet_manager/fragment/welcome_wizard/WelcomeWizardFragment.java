@@ -142,6 +142,9 @@ public class WelcomeWizardFragment extends AbstractFermatFragment implements Vie
             case 3:
                 radio_group.check(R.id.radio_fourth);
                 break;
+            case 4:
+                radio_group.check(R.id.radio_fifth);
+                break;
         }
     }
 

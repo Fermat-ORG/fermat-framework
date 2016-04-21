@@ -39,7 +39,7 @@
                 android:gravity="center"
                 android:textAllCaps="true"
                 android:textColor="#1271A7"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:text="Single Choice Item"/>
 
             <View
@@ -79,7 +79,7 @@
                     android:paddingTop="4dp"
                     android:textAllCaps="false"
                     android:textColor="#222"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     tools:text="C.C. Sambil Maracaibo, Piso 2, Local 5A, al lado de Farmatodo"
                     android:layout_alignParentBottom="false"
                     android:gravity="left" />

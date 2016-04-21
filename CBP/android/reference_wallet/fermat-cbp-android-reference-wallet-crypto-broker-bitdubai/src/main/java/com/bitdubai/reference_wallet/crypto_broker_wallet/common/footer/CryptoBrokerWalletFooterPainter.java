@@ -16,7 +16,7 @@ import com.bitdubai.fermat_android_api.engine.FooterViewPainter;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
@@ -119,7 +119,7 @@ public class CryptoBrokerWalletFooterPainter implements FooterViewPainter, ViewP
         ErrorManager errorManager = session.getErrorManager();
 
         try {
-            CryptoBrokerWalletManager walletManager = session.getModuleManager().getCryptoBrokerWallet(session.getAppPublicKey());
+            CryptoBrokerWalletModuleManager walletManager = session.getModuleManager();
             List<CryptoBrokerWalletAssociatedSetting> associatedWallets = walletManager.getCryptoBrokerWalletAssociatedSettings(session.getAppPublicKey());
 
             for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
