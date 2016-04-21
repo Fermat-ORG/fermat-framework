@@ -8,7 +8,11 @@ package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers;
 
 
 import java.io.UnsupportedEncodingException;
+import java.security.KeyPair;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.FermatCipher</code>
@@ -19,6 +23,36 @@ import java.security.PublicKey;
  * @since Java JDK 1.7
  */
 public interface FermatCipher {
+
+    /**
+     * Represent the UTF8_CHARSET
+     */
+    String UTF8_CHARSET = "UTF-8";
+
+    /**
+     * Represent the ALGORITHM
+     */
+    String ALGORITHM = "RSA";
+
+    /**
+     * Represent the DIGEST_SHA1
+     */
+    String DIGEST_SHA1 = "SHA1withRSA";
+
+    /**
+     * Represent the DIGEST_SHA1PRNG
+     */
+    String DIGEST_SHA1PRNG = "SHA1PRNG";
+
+    /**
+     * Represent the CURVE
+     */
+    String CURVE = "secp256k1";
+
+    /**
+     * Represent the KEY_SIZE
+     */
+    int KEY_SIZE = 512;
 
     /**
      * Convert the byte array into a string
@@ -39,6 +73,42 @@ public interface FermatCipher {
     byte[] decode(String data) throws UnsupportedEncodingException;
 
     /**
+     * Generate a new key pair
+     *
+     * @return KeyPair
+     * @throws Exception
+     */
+    KeyPair generateKeyPair() throws Exception;
+
+    /**
+     * Read a public key object from string key base64 encode
+     *
+     * @param keyStr
+     * @return PublicKey
+     * @throws Exception
+     */
+    PublicKey readPublicKey(String keyStr) throws Exception;
+
+    /**
+     * Read a private key object from string key base64 encode
+     *
+     * @param keyStr
+     * @return PrivateKey
+     * @throws Exception
+     */
+    PrivateKey readPrivateKey(String keyStr) throws Exception;
+
+    /**
+     * Create a public key derivable from private key
+     *
+     * @param privateKey
+     * @return String
+     * @throws InvalidKeySpecException
+     * @throws NoSuchAlgorithmException
+     */
+    String createPublicKeyFromPrivateKey(PrivateKey privateKey) throws InvalidKeySpecException, NoSuchAlgorithmException;
+
+    /**
      *  Method that encrypt a plaint text and return a
      *  encrypted string
      *
@@ -57,14 +127,5 @@ public interface FermatCipher {
      * @return String
      */
     String decrypt(String privateKey, String encryptedTex) throws Exception;
-
-    /**
-     * Method that get a PublicKey object from string base 64
-     *
-     * @param keyStringBase64
-     * @return PublicKey
-     * @throws Exception
-     */
-    PublicKey getPublicKeyFromString(String keyStringBase64) throws Exception;
 
 }

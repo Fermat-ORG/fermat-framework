@@ -7,21 +7,34 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers;
 
 
-import org.bouncycastle.asn1.pkcs.RSAPublicKey;
 import org.bouncycastle.crypto.AsymmetricBlockCipher;
 import org.bouncycastle.crypto.encodings.PKCS1Encoding;
 import org.bouncycastle.crypto.engines.RSAEngine;
 import org.bouncycastle.crypto.params.AsymmetricKeyParameter;
 import org.bouncycastle.crypto.util.PrivateKeyFactory;
 import org.bouncycastle.crypto.util.PublicKeyFactory;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.encoders.Base64;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.security.Security;
+import java.security.spec.ECGenParameterSpec;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 
 
 /**
@@ -33,6 +46,87 @@ import java.security.spec.RSAPublicKeySpec;
  * @since Java JDK 1.7
  */
 public class FermatBouncyCastleCipher implements FermatCipher {
+
+    static {
+        Security.addProvider(new BouncyCastleProvider());
+        Security.insertProviderAt(new BouncyCastleProvider(), 1);
+    }
+
+    /**
+     * Represent the keyFactory
+     */
+    private KeyFactory keyFactory;
+
+    /**
+     * Represent the keyPairGenerator
+     */
+    private KeyPairGenerator keyPairGenerator;
+
+    /**
+     * Constructor
+     * @throws NoSuchProviderException
+     * @throws NoSuchAlgorithmException
+     */
+    public FermatBouncyCastleCipher() throws NoSuchProviderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        keyFactory       = KeyFactory.getInstance(ALGORITHM, BouncyCastleProvider.PROVIDER_NAME);
+        keyPairGenerator = KeyPairGenerator.getInstance(ALGORITHM, BouncyCastleProvider.PROVIDER_NAME);
+        keyPairGenerator.initialize(KEY_SIZE, SecureRandom.getInstance(DIGEST_SHA1PRNG));
+    }
+
+    /**
+     * (non-javadoc)
+     * @see FermatCipher#generateKeyPair()
+     */
+    @Override
+    public KeyPair generateKeyPair() throws Exception {
+
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+        return keyPair;
+    }
+
+    /**
+     * (non-javadoc)
+     * @see FermatCipher#readPublicKey(String)
+     */
+    @Override
+    public PublicKey readPublicKey(String keyStr) throws Exception {
+
+        X509EncodedKeySpec x509ks = new X509EncodedKeySpec(this.decode(keyStr));
+        return keyFactory.generatePublic(x509ks);
+    }
+
+    /**
+     * (non-javadoc)
+     * @see FermatCipher#readPrivateKey(String)
+     */
+    @Override
+    public PrivateKey readPrivateKey(String keyStr) throws Exception {
+
+        PKCS8EncodedKeySpec p8ks = new PKCS8EncodedKeySpec(decode(keyStr));
+        return keyFactory.generatePrivate(p8ks);
+
+    }
+
+    /**
+     * (non-javadoc)
+     * @see FermatCipher#createPublicKeyFromPrivateKey(PrivateKey)
+     */
+    @Override
+    public String createPublicKeyFromPrivateKey(PrivateKey privateKey) throws InvalidKeySpecException, NoSuchAlgorithmException {
+
+        KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM);
+        RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(privateKey, RSAPrivateKeySpec.class);
+        RSAPublicKeySpec keySpec = new RSAPublicKeySpec(privateKeySpec.getModulus(), BigInteger.valueOf(65537));
+        PublicKey publicKey = keyFactory.generatePublic(keySpec);
+        return encode(publicKey.getEncoded());
+
+       /* ECPrivateKeySpec ecPrivateKeySpec =  keyFactory.getKeySpec(privateKey, ECPrivateKeySpec.class);
+        java.security.spec.ECPoint w = new java.security.spec.ECPoint(ecPrivateKeySpec.getParams().getGenerator().getAffineX(), ecPrivateKeySpec.getParams().getGenerator().getAffineY());
+        ECPublicKeySpec ecPublicKeySpec = new ECPublicKeySpec(w, ecPrivateKeySpec.getParams());
+        PublicKey publicKey = keyFactory.generatePublic(ecPublicKeySpec);
+        return encode(publicKey.getEncoded());*/
+    }
+
 
     /**
      * (non-javadoc)
@@ -48,7 +142,7 @@ public class FermatBouncyCastleCipher implements FermatCipher {
         asymmetricBlockCipher = new PKCS1Encoding(asymmetricBlockCipher);
         asymmetricBlockCipher.init(true, publicKey);
 
-        byte[] messageBytes = plaintTex.getBytes("UTF-8");
+        byte[] messageBytes = plaintTex.getBytes(UTF8_CHARSET);
 
         int i = 0;
         int blockSize = asymmetricBlockCipher.getInputBlockSize();
@@ -92,31 +186,9 @@ public class FermatBouncyCastleCipher implements FermatCipher {
             i += asymmetricBlockCipher.getInputBlockSize();
         }
 
-        return new String(decryptedMsj.toString().getBytes(), "UTF-8");
+        return new String(decryptedMsj.toString().getBytes(), UTF8_CHARSET);
 
     }
-
-    /**
-     * (non-javadoc)
-     * @see FermatCipher#encrypt(String, String)
-     */
-    public PublicKey getPublicKeyFromString(String keyStringBase64) throws Exception{
-
-        byte[] publicKeyBytes = decode(keyStringBase64);
-        byte[] exponentByte   = decode("AQAB");
-        RSAPublicKeySpec pubKeySpec = new RSAPublicKeySpec(new BigInteger(publicKeyBytes), new BigInteger(exponentByte));
-        BigInteger modulus = pubKeySpec.getModulus();
-        BigInteger publicExponent = pubKeySpec.getPublicExponent();
-        RSAPublicKeySpec keySpec = new RSAPublicKeySpec(modulus, publicExponent);
-        KeyFactory kf = KeyFactory.getInstance("RSA");
-        PublicKey generatedPublic = kf.generatePublic(keySpec);
-        System.out.printf("Modulus: %X%n", modulus);
-        System.out.printf("Public exponent: %d ... 17? Why?%n", publicExponent); // 17? OK.
-        System.out.printf("See, Java class result: %s, is RSAPublicKey: %b%n", generatedPublic.getClass().getName(), generatedPublic instanceof RSAPublicKey);
-
-        return generatedPublic;
-    }
-
 
     /**
      * (non-javadoc)
@@ -132,7 +204,7 @@ public class FermatBouncyCastleCipher implements FermatCipher {
      * @see FermatCipher#decode(String)
      */
     public byte[] decode(String data) throws UnsupportedEncodingException {
-        return Base64.decode(data.getBytes("UTF-8"));
+        return Base64.decode(data.getBytes(UTF8_CHARSET));
     }
 
 }

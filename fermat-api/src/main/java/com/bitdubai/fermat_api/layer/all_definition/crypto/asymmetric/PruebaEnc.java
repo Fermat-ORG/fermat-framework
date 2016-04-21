@@ -6,7 +6,23 @@
  */
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 import com.google.common.base.Stopwatch;
+
+import org.bouncycastle.util.encoders.Base64;
+
+import java.security.KeyFactory;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.EncodedKeySpec;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 
 /**
  * The Class <code>com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.PruebaEnc</code>
@@ -20,19 +36,45 @@ public class PruebaEnc {
 
     public static void main(String [] args){
 
+        AsymmetricCryptography.getFermatCipher();
 
         try {
-
             Stopwatch stopwatch = Stopwatch.createStarted();
+
+            // Generate a 126-bit Digital Signature Algorithm (ECDH) key pair
+           // generateKeys("ECDH", 126);
+
+            // Generate a 1024-bit Digital Signature Algorithm (DSA) key pair
+          //  generateKeys("DSA", 1024);
+
+            // Generate a 576-bit DH key pair
+            //generateKeys("DH", 576);
+
+            // Generate a 1024-bit RSA key pair
+            //generateKeys("RSA", 1024);
 
             //String msj = "Hello world!";
             String msj = "You need to find a way to reduce compilation times when developing source code in our development environment (Android-Studio) to also have efficiency and effectiveness when working on the development and testing of code, there are currently members of fermat that have a high compilation time, the overall average is 2-5 minutes compilation about, some members have more time about 15-30 minutes and if this time is shared among all members of fermat it is a very large idle time when compiling and testing development.";
             //System.out.println("msj = " + msj);
 
+            /*
+
+                 -----------------------------------------------
+privateKey : MIGNAgEAMBAGByqGSM49AgEGBSuBBAAKBHYwdAIBAQQgPDcJOlICwNYa6ebip/KszH4qKR1MotOms4U1aI3B1SCgBwYFK4EEAAqhRANCAAQpg8ZpHggJ7F1/gczvL1WQJYJsVI4NqcYFlCm8L//lBKpi9gG4JHn0U+UNJqr+ru+37xqYW2aSNmC7MW8z4oXf
+ -----------------------------------------------
+publicKey : MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKBWxb4F5hIOtp3JqPEZV2k+/wOEQio/Re0SKaFVBmcR9CP+xDUuA==
+
+
+             */
+
+
+            //KeyPair eccKeyPair = AsymmetricCryptography.createNewKeyPair();
             ECCKeyPair eccKeyPair = new ECCKeyPair();
-            System.out.println("publicKey : " + eccKeyPair.getPublicKey());
             System.out.println(" ----------------------------------------------- ");
             System.out.println("privateKey : " + eccKeyPair.getPrivateKey());
+            System.out.println(" ----------------------------------------------- ");
+            System.out.println("publicKey : " + eccKeyPair.getPublicKey());
+            System.out.println(" ----------------------------------------------- ");
 
             String encryptedData = AsymmetricCryptography.encryptMessagePublicKey(msj, eccKeyPair.getPublicKey());
 
@@ -52,19 +94,19 @@ public class PruebaEnc {
 
             System.out.println(stopwatch.stop());
 
-         /*     KeyPair keyPair = AsymmetricCryptography.createNewKeyPair();
+        /*     KeyPair keyPair = AsymmetricCryptography.createNewKeyPair();
             String hexPk = AsymmetricCryptography.getFermatCipher().convertHexString(keyPair.getPublic().getEncoded());
 
             System.out.println("HEX = "+hexPk);
 
 
-            System.out.println("HEX2 = "+AsymmetricCryptography.getFermatCipher().getPublicKeyFromString(hexPk)); */
+            System.out.println("HEX2 = "+AsymmetricCryptography.getFermatCipher().getPublicKeyFromString(hexPk));
 
 
            // AsymmetricCryptography.getFermatCipher().getPublicKeyFromString(hexPk);
 
 
-        /*    byte [] raw  = keyPair.getPrivate().getEncoded();
+           byte [] raw  = keyPair.getPrivate().getEncoded();
 
             Stopwatch stopwatch1 = Stopwatch.createStarted();
             AsymmetricCryptography.getFermatCipher().convertHexString(raw);
@@ -103,39 +145,52 @@ public class PruebaEnc {
 
     }
 
-    static final String HEXES = "0123456789ABCDEF";
+    private static void generateKeys(String keyAlgorithm, int numBits) {
 
+        try {
+            // Get the public/private key pair
+            KeyPairGenerator keyGen = KeyPairGenerator.getInstance(keyAlgorithm);
+            keyGen.initialize(numBits);
+            java.security.KeyPair keyPair = keyGen.genKeyPair();
+            PrivateKey privateKey = keyPair.getPrivate();
+            PublicKey publicKey = keyPair.getPublic();
 
-    public static String getHex( byte [] raw ) {
-        if ( raw == null ) {
-            return null;
+            System.out.println("\n" + "Generating key/value pair using " + privateKey.getAlgorithm() + " algorithm");
+
+            // Get the bytes of the public and private keys
+            byte[] privateKeyBytes = privateKey.getEncoded();
+            byte[] publicKeyBytes = publicKey.getEncoded();
+
+            // Get the formats of the encoded bytes
+            String formatPrivate = privateKey.getFormat(); // PKCS#8
+            String formatPublic = publicKey.getFormat(); // X.509
+
+            System.out.println("Private Key : " + AsymmetricCryptography.getFermatCipher().encode((privateKeyBytes)));
+            System.out.println("formatPrivate : " + formatPrivate);
+            System.out.println("Public Key : " + AsymmetricCryptography.getFermatCipher().encode((publicKeyBytes)));
+            System.out.println("formatPublic : " + formatPublic);
+
+            // The bytes can be converted back to public and private key objects
+            KeyFactory keyFactory = KeyFactory.getInstance(keyAlgorithm);
+            EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
+            PrivateKey privateKey2 = keyFactory.generatePrivate(privateKeySpec);
+
+            EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
+            PublicKey publicKey2 = keyFactory.generatePublic(publicKeySpec);
+
+            // The original and new keys are the same
+            System.out.println("  Are both private keys equal? " + privateKey.equals(privateKey2));
+            System.out.println("  Are both public keys equal? " + publicKey.equals(publicKey2));
+        } catch (InvalidKeySpecException specException) {
+            System.out.println("Exception");
+            System.out.println("Invalid Key Spec Exception");
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("Exception");
+            System.out.println("No such algorithm: " + keyAlgorithm);
         }
-        final StringBuilder hex = new StringBuilder( 2 * raw.length );
-        for ( final byte b : raw ) {
-            hex.append(HEXES.charAt((b & 0xF0) >> 4)).append(HEXES.charAt((b & 0x0F)));
-        }
-        return hex.toString();
+
     }
 
-    final protected static char[] hexArray = "0123456789ABCDEF".toCharArray();
-    public static String bytesToHex(byte[] bytes) {
-        char[] hexChars = new char[bytes.length * 2];
-        for ( int j = 0; j < bytes.length; j++ ) {
-            int v = bytes[j] & 0xFF;
-            hexChars[j * 2] = hexArray[v >>> 4];
-            hexChars[j * 2 + 1] = hexArray[v & 0x0F];
-        }
-        return new String(hexChars);
-    }
 
-    public static byte[] hexStringToByteArray(String s) {
-        int len = s.length();
-        byte[] data = new byte[len / 2];
-        for (int i = 0; i < len; i += 2) {
-            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                    + Character.digit(s.charAt(i+1), 16));
-        }
-        return data;
-    }
 
 }

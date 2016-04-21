@@ -6,107 +6,61 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.Fe
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.FermatSpongyCastleCipher;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
 
-import org.bouncycastle.asn1.ASN1Object;
-import org.bouncycastle.asn1.eac.RSAPublicKey;
-import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
-import org.bouncycastle.jcajce.provider.asymmetric.rsa.BCRSAPublicKey;
-import org.spongycastle.asn1.ASN1Sequence;
-
-import java.math.BigInteger;
-import java.nio.charset.Charset;
-import java.security.KeyFactory;
-import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
-import java.security.Provider;
 import java.security.PublicKey;
-import java.security.SecureRandom;
-import java.security.Security;
 import java.security.Signature;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.RSAPrivateKeySpec;
-import java.security.spec.RSAPublicKeySpec;
-import java.util.Arrays;
 
 public class AsymmetricCryptography {
 
     /**
-     * Represent the UTF8_CHARSET
-     */
-    private static final Charset UTF8_CHARSET = Charset.forName("UTF-8");
-
-    /**
-	 * Represent the RSA_ALGORITHM
-	 */
-	private static final String RSA_ALGORITHM = "RSA";
-
-    /**
-     * Represent the DIGEST_SHA1
-     */
-    static final String DIGEST_SHA1 = "SHA1withRSA";
-
-    /**
-     * Represent the KEY_SIZE
-     */
-    private static final int KEY_SIZE = 1024;
-
-    /**
      * Represent the OS
      */
-    private final static String OS = System.getProperty("os.name");
+    static String OS;
 
     /**
      * Represent the fermatCipher
      */
-    private final static FermatCipher fermatCipher = getFermatCipher();
+    private FermatCipher fermatCipher;
 
     /**
-     * Configure the Security Provider
+     * Represent the instance
      */
-    static {
-        Security.insertProviderAt(getSecurityProvider(), 1);
+    final static private AsymmetricCryptography instance = new AsymmetricCryptography();
+
+    /**
+     * Constructor
+     */
+    private AsymmetricCryptography(){
+        super();
+
+        try {
+            OS = System.getProperty("os.name");
+
+            if (OS.equals("Linux")){
+
+                System.out.println("SecurityProvider Loaded = "+ org.bouncycastle.jce.provider.BouncyCastleProvider.PROVIDER_NAME);
+                fermatCipher = new FermatBouncyCastleCipher();
+
+            }else {
+
+                System.out.println("SecurityProvider Loaded = "+ org.bouncycastle.jce.provider.BouncyCastleProvider.PROVIDER_NAME);
+                fermatCipher =  new FermatSpongyCastleCipher();
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
+
 
     /**
      * Get the FermatCipher
      * @return FermatCipher
      */
     public static FermatCipher getFermatCipher(){
-        if (OS.equals("Linux")){
-            return  new FermatBouncyCastleCipher();
-        }else {
-            return new FermatSpongyCastleCipher();
-        }
-    }
-
-    /**
-     * Get the Security provider
-     * @return Provider
-     */
-    private static Provider getSecurityProvider(){
-        if (OS.equals("Linux")){
-            return  new org.bouncycastle.jce.provider.BouncyCastleProvider();
-        }else {
-            return new org.bouncycastle.jce.provider.BouncyCastleProvider();
-        }
-    }
-
-    /**
-     * Create a key pair whit RSA algorithm
-     * @return KeyPair
-     */
-    public static java.security.KeyPair createNewKeyPair(){
-
-        try {
-
-            SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-            KeyPairGenerator generator = KeyPairGenerator.getInstance(RSA_ALGORITHM, getSecurityProvider().getName());
-            generator.initialize(KEY_SIZE, random);
-            return generator.generateKeyPair();
-
-        }catch (Exception e){
-            throw new IllegalArgumentException(e);
-        }
-
+        return instance.fermatCipher;
     }
 
     /**
@@ -116,12 +70,7 @@ public class AsymmetricCryptography {
      * @throws Exception
      */
     public static PrivateKey getPrivateKeyFromString(String keyStringBase64) throws Exception {
-        byte[] clear = getFermatCipher().decode(keyStringBase64);
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(clear);
-        KeyFactory fact = KeyFactory.getInstance(RSA_ALGORITHM);
-        PrivateKey privateKey = fact.generatePrivate(keySpec);
-        Arrays.fill(clear, (byte) 0);
-        return privateKey;
+        return getFermatCipher().readPrivateKey(keyStringBase64);
     }
 
     /**
@@ -131,8 +80,7 @@ public class AsymmetricCryptography {
      * @throws Exception
      */
     public static PublicKey getPublicKeyFromString(String keyStringBase64) throws Exception {
-
-        return getFermatCipher().getPublicKeyFromString(keyStringBase64);
+        return getFermatCipher().readPublicKey(keyStringBase64);
     }
 
     /**
@@ -143,7 +91,7 @@ public class AsymmetricCryptography {
 
         try {
 
-            java.security.KeyPair keyPair = createNewKeyPair();
+            java.security.KeyPair keyPair = getFermatCipher().generateKeyPair();
             return getFermatCipher().encode(keyPair.getPrivate().getEncoded());
 
         }catch (Exception e){
@@ -162,13 +110,9 @@ public class AsymmetricCryptography {
     public static String derivePublicKey(final String privateKeyString) throws IllegalArgumentException {
 
         try {
-            checkStringArgument(privateKeyString);
 
-            KeyFactory keyFactory = KeyFactory.getInstance(RSA_ALGORITHM);
-            RSAPrivateKeySpec privateKeySpec = keyFactory.getKeySpec(getPrivateKeyFromString(privateKeyString), RSAPrivateKeySpec.class);
-            RSAPublicKeySpec keySpec = new RSAPublicKeySpec(privateKeySpec.getModulus(), BigInteger.valueOf(65537));
-            PublicKey publicKey = keyFactory.generatePublic(keySpec);
-            return getFermatCipher().encode(publicKey.getEncoded());
+            checkStringArgument(privateKeyString);
+            return getFermatCipher().createPublicKeyFromPrivateKey(getFermatCipher().readPrivateKey(privateKeyString));
 
         }catch (Exception e){
             e.printStackTrace();
@@ -191,9 +135,9 @@ public class AsymmetricCryptography {
 
         try {
 
-            Signature signature = Signature.getInstance(DIGEST_SHA1);
+            Signature signature = Signature.getInstance(FermatCipher.DIGEST_SHA1);
             signature.initSign(getPrivateKeyFromString(privateKey));
-            signature.update(fermatCipher.decode(message));
+            signature.update(getFermatCipher().decode(message));
             return getFermatCipher().encode(signature.sign());
 
         }catch (Exception e) {
@@ -222,9 +166,9 @@ public class AsymmetricCryptography {
 
         try {
 
-            Signature signer = Signature.getInstance(DIGEST_SHA1);
+            Signature signer = Signature.getInstance(FermatCipher.DIGEST_SHA1);
             signer.initVerify(getPublicKeyFromString(publicKey));
-            signer.update(fermatCipher.decode(encryptedMessage));
+            signer.update(getFermatCipher().decode(encryptedMessage));
             return (signer.verify(getFermatCipher().decode(signatureString)));
 
         } catch (Exception e){
@@ -248,7 +192,7 @@ public class AsymmetricCryptography {
 
             checkStringArgument(plainMessage);
             checkStringArgument(publicKey);
-            return fermatCipher.encrypt(publicKey, plainMessage);
+            return getFermatCipher().encrypt(publicKey, plainMessage);
 
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
@@ -270,7 +214,7 @@ public class AsymmetricCryptography {
 
             checkStringArgument(encryptedMessage);
             checkStringArgument(privateKey);
-           return fermatCipher.decrypt(privateKey, encryptedMessage);
+           return getFermatCipher().decrypt(privateKey, encryptedMessage);
 
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
@@ -297,7 +241,7 @@ public class AsymmetricCryptography {
 
         try {
 
-            java.security.KeyPair keyPair = createNewKeyPair();
+            java.security.KeyPair keyPair = getFermatCipher().generateKeyPair();
             return new ECCKeyPair(getFermatCipher().encode(keyPair.getPrivate().getEncoded()), getFermatCipher().encode(keyPair.getPublic().getEncoded()));
 
         }catch (Exception e){
