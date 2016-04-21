@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.design.widget.TabLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -55,7 +56,7 @@ import static com.bitdubai.android_core.app.common.version_1.util.system.FermatS
 public class AppActivity extends FermatActivity implements FermatScreenSwapper {
 
 
-
+    private static final String TAG = "AppActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -319,7 +320,22 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
         try {
             FermatStructure fermatStructure = ApplicationSession.getInstance().getAppManager().getLastAppStructure();
             lastActivity = fermatStructure.getLastActivity();
-            nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
+            try {
+                nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
+            }catch (Exception e){
+                e.printStackTrace();
+                Log.e(TAG, "changeActivity error, Avisarle a Mati con este log:");
+                Log.e(TAG,"FermatStructure PK: "+fermatStructure.getPublicKey());
+                Log.e(TAG,"lastActivity: "+lastActivity);
+                Log.e(TAG,"nextActivity code: "+activityName);
+                try {
+                    //TODO: this is only because i am tired, remember to delete this.
+                    fermatStructure = ApplicationSession.getInstance().getAppManager().getAppStructure(appBackPublicKey);
+                    nextActivity = fermatStructure.getActivity(Activities.getValueFromString(activityName));
+                }catch (Exception e1){
+                    handleExceptionAndRestart();
+                }
+            }
             if (!nextActivity.equals(lastActivity)) {
                 resetThisActivity();
                 Intent intent = getIntent(); //new Intent(this,LoadingScreenActivity.class);
@@ -336,10 +352,11 @@ public class AppActivity extends FermatActivity implements FermatScreenSwapper {
                 onBackPressed();
             else {
                 getErrorManager().reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, new IllegalArgumentException("Error in changeActivity"));
-                Toast.makeText(getApplicationContext(), "Oooops! recovering from system error", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Recovering from system error", Toast.LENGTH_LONG).show();
+                handleExceptionAndRestart();
             }
         } catch (Throwable throwable) {
-            Toast.makeText(getApplicationContext(), "Oooops! recovering from system error. Throwable", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Recovering from system error. Throwable", Toast.LENGTH_LONG).show();
             throwable.printStackTrace();
         }
 
