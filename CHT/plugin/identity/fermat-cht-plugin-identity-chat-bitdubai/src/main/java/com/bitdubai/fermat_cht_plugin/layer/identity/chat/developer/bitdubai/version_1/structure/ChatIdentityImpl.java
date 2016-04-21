@@ -31,6 +31,9 @@ public class ChatIdentityImpl implements DealsWithPluginFileSystem, DealsWithPlu
     private String publicKey;
     private byte[] profileImage;
     private String privateKey;
+    private String country;
+    private String state;
+    private String city;
 
     /**
      * DealsWithPluginFileSystem Interface member variables.
@@ -62,19 +65,25 @@ public class ChatIdentityImpl implements DealsWithPluginFileSystem, DealsWithPlu
     /**
      * Constructor
      */
-    public ChatIdentityImpl(String alias, String publicKey, String privateKey, byte[] profileImage, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public ChatIdentityImpl(String alias, String publicKey, String privateKey, byte[] profileImage, PluginFileSystem pluginFileSystem, UUID pluginId, String country, String state, String city) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.privateKey = privateKey;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        this.country = country;
+        this.state = state;
+        this.city = city;
     }
 
-    public ChatIdentityImpl(String alias, String publicKey, byte[] profileImage) {
+    public ChatIdentityImpl(String alias, String publicKey, byte[] profileImage, String country, String state, String city) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
+        this.country = country;
+        this.state = state;
+        this.city = city;
     }
 
     public ChatIdentityImpl() {
@@ -152,5 +161,35 @@ public class ChatIdentityImpl implements DealsWithPluginFileSystem, DealsWithPlu
     @Override
     public boolean getIsPaymetForChat() {
         return false;
+    }
+
+    /**
+     * This method return String with Country
+     *
+     * @return the String
+     */
+    @Override
+    public String getCountry() {
+        return this.country;
+    }
+
+    /**
+     * This method return String with State
+     *
+     * @return the String
+     */
+    @Override
+    public String getState() {
+        return this.state;
+    }
+
+    /**
+     * This method return String with City
+     *
+     * @return the String
+     */
+    @Override
+    public String getCity() {
+        return this.city;
     }
 }
