@@ -8,18 +8,18 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientBrokerService;
-import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerService;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerServiceAIDL;
 
 import java.lang.ref.WeakReference;
 
 /**
  * Created by Matias Furszyfer on 2016.04.05..
  */
-public class ClientSideBrokerServiceHelper {
+public class ClientSideBrokerServiceHelperAidle {
 
     private WeakReference<Context> contextWeakReference;
 
-    public ClientSideBrokerServiceHelper(Context contextWeakReference) {
+    public ClientSideBrokerServiceHelperAidle(Context contextWeakReference) {
         this.contextWeakReference = new WeakReference<Context>(contextWeakReference);
     }
 
@@ -27,7 +27,7 @@ public class ClientSideBrokerServiceHelper {
      * AppsManagerService
      */
     private boolean clientSideBrokerBoundService;
-    private ClientSystemBrokerService clientSystemBrokerService;
+    private ClientSystemBrokerServiceAIDL clientSystemBrokerService;
 
     /** Defines callbacks for service binding, passed to bindService() */
     private ServiceConnection clientBrokerServiceConnection = new ServiceConnection() {
@@ -35,7 +35,7 @@ public class ClientSideBrokerServiceHelper {
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance
-            clientSystemBrokerService = ((ClientSystemBrokerService.LocalBinder) service).getService();
+            clientSystemBrokerService = ((ClientSystemBrokerServiceAIDL.LocalBinder) service).getService();
             clientSideBrokerBoundService = true;
         }
 
@@ -47,7 +47,7 @@ public class ClientSideBrokerServiceHelper {
 
     public void clientSideBrokerBoundService() {
         if (!clientSideBrokerBoundService) {
-            Intent intent = new Intent(contextWeakReference.get(), ClientSystemBrokerService.class);
+            Intent intent = new Intent(contextWeakReference.get(), ClientSystemBrokerServiceAIDL.class);
             //startService(intent);
             contextWeakReference.get().bindService(intent, clientBrokerServiceConnection, Context.BIND_AUTO_CREATE);
         }

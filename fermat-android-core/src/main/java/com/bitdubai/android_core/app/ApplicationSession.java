@@ -9,7 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService;
-import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerService;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientBrokerService;
 import com.bitdubai.android_core.app.common.version_1.notifications.NotificationService;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.android_core.app.common.version_1.util.services_helpers.ServicesHelpers;
@@ -134,7 +134,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
             public void uncaughtException(Thread thread, Throwable e) {
                 e.printStackTrace();
                 handleUncaughtException(thread, e);
-                ACRA.getErrorReporter().handleSilentException(e);
+//                ACRA.getErrorReporter().handleSilentException(e);
                 ACRA.getErrorReporter().handleException(e);
             }
         });
@@ -177,7 +177,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         return getServicesHelpers().getNotificationService();
     }
 
-    public ClientSystemBrokerService getClientSideBrokerService(){
+    public ClientBrokerService getClientSideBrokerService(){
         return getServicesHelpers().getClientSideBrokerService();
     }
 

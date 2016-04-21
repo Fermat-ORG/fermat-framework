@@ -2,8 +2,6 @@ package com.bitdubai.android_core.app.common.version_1.communication.server_syst
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import com.bitdubai.fermat_api.module_object_creator.FermatModuleObject;
-import com.bitdubai.fermat_api.module_object_creator.FermatModuleObjectInterface;
 
 import java.io.Serializable;
 
@@ -12,15 +10,16 @@ import java.io.Serializable;
  */
 public class FermatModuleObjectWrapper implements Parcelable {
 
-    private FermatModuleObjectInterface object;
+    private Serializable object;
 
-    public FermatModuleObjectWrapper(FermatModuleObject object) {
+    public FermatModuleObjectWrapper(Serializable object) {
         this.object = object;
     }
 
     protected FermatModuleObjectWrapper(Parcel in) {
         Serializable moduleObjectSerializable = in.readSerializable();
-        this.object = new FermatModuleObject(moduleObjectSerializable);
+//        this.object = new FermatModuleObject(moduleObjectSerializable);
+        this.object = moduleObjectSerializable;
     }
 
     public static final Creator<FermatModuleObjectWrapper> CREATOR = new Creator<FermatModuleObjectWrapper>() {
@@ -47,6 +46,18 @@ public class FermatModuleObjectWrapper implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeSerializable(object.writeToSerializable());
+        try{
+            dest.writeSerializable(object);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public String toString() {
+        String o = (object!=null)?object.toString():"null";
+        return "FermatModuleObjectWrapper{" +
+                "object=" +o+
+                '}';
     }
 }

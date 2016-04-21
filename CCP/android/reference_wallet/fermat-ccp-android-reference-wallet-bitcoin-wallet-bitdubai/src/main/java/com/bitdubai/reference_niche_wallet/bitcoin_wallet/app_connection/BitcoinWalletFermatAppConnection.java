@@ -14,6 +14,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.BitcoinWalletSettings;
@@ -90,7 +91,7 @@ public class BitcoinWalletFermatAppConnection extends AppConnections<ReferenceWa
 
 
                 if (enabledNotification)
-                    return BitcoinWalletBuildNotificationPainter.getNotification(moduleManager, code, referenceWalletSession.getAppPublicKey());
+                    return BitcoinWalletBuildNotificationPainter.getNotification(moduleManager, code, Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN.getCode());
                 else
                     return new BitcoinWalletNotificationPainter("", "", "", "", false,referenceWalletSession.getAppPublicKey());
 
