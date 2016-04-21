@@ -25,7 +25,6 @@ public class TestgetManager {
 
     }
 
-
     @Test
     public void testManagerInstance() throws Exception{
         System.out.println("testManagerInstance");
@@ -42,7 +41,6 @@ public class TestgetManager {
         ModuleManager moduleManager = artistIdentityPluginRoot.getManager();
         Assert.assertNull(moduleManager);
     }
-
 
     @Test
     public void testManagerNotNull() throws Exception {

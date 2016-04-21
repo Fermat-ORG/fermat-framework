@@ -13,7 +13,6 @@ import org.junit.Test;
 public class TestgetCryptoCurrency {
     private DeveloperBitDubai developerBitDubai;
 
-
     @Before
     public void setUp(){
         System.out.println("initializing");
@@ -32,4 +31,4 @@ public class TestgetCryptoCurrency {
         Assert.assertEquals(expected,actual);
     }
 
-}
+}// end of class

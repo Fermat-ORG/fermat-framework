@@ -39,6 +39,6 @@ public class testlistIdentitiesFromCurrentDeviceUser {
         Assert.assertNull(artists);
         Assert.assertTrue(artists.isEmpty());
 
-
     }
+
 }// end of class

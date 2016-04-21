@@ -46,6 +46,6 @@ public class testcreateArtistIdentity {
                 ArtistAcceptConnectionsType.DEFAULT_ARTIST_ACCEPT_CONNECTION_TYPE);
 
         Assert.assertNull(artist);
-
     }
-}
+
+}// end of class

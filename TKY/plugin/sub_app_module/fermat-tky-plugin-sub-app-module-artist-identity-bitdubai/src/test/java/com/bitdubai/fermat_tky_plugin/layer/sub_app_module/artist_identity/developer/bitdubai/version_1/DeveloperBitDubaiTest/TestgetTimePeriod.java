@@ -33,4 +33,5 @@ public class TestgetTimePeriod {
         Assert.assertNotNull(expected);
         Assert.assertEquals(expected, actual);
         }
-}
+
+}// end of class
