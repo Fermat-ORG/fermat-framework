@@ -363,7 +363,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
             item.setPosition(4);
             lstItemsWithIcon.add(item);
 
-            installedSubApp = new InstalledSubApp(SubApps.ART_MUSIC_PLAYER, null, null, "music_player_sub_app", "Music Player", SubAppsPublicKeys.ART_MUSIC_PLAYER.getCode(), "music_player_sub_app", new Version(1, 0, 0), Platforms.PLATFORM_ART);
+            installedSubApp = new InstalledSubApp(SubApps.ART_MUSIC_PLAYER, null, null, "music_player_sub_app", "Music Player", SubAppsPublicKeys.ART_MUSIC_PLAYER.getCode(), "music_player_sub_app", new Version(1, 0, 0), Platforms.PLATFORM_ART, AppsStatus.ALPHA);
             installedSubApp.setAppStatus(AppsStatus.ALPHA);
             item = new Item(installedSubApp);
             item.setIconResource(R.drawable.musicplayer);
