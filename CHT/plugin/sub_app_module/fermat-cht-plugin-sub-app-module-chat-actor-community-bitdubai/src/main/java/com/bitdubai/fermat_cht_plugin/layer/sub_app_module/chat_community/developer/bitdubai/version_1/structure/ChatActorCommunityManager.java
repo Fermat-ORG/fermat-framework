@@ -24,6 +24,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.Settings
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
@@ -464,6 +465,11 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
             }
         }
         return actorList;
+    }
+
+    @Override
+    public void saveCacheChatUsersSuggestions(List<ChatActorCommunityInformation> listChatUser) throws CantInsertRecordException {
+        chatActorNetworkServiceManager.saveCacheChatUsersSuggestions(listChatUser);
     }
 
     @Override

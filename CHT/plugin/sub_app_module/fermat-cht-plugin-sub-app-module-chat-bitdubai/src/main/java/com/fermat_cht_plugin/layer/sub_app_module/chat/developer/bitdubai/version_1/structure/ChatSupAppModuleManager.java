@@ -47,6 +47,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.MiddlewareChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -65,16 +66,19 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
     private SettingsManager<ChatPreferenceSettings> settingsManager;
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
+    private final com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager chatActorNetworkServiceManager;
 
     public ChatSupAppModuleManager(MiddlewareChatManager middlewareChatManager,
                                    ChatIdentityManager chatIdentityManager,
                                    PluginFileSystem pluginFileSystem,
+                                   com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager chatActorNetworkServiceManager,
                                    UUID pluginId)
     {
-        this.middlewareChatManager = middlewareChatManager;
-        this.chatIdentityManager   = chatIdentityManager;
-        this.pluginFileSystem      = pluginFileSystem                         ;
-        this.pluginId              = pluginId                                 ;
+        this.middlewareChatManager          = middlewareChatManager         ;
+        this.chatIdentityManager            = chatIdentityManager           ;
+        this.pluginFileSystem               = pluginFileSystem              ;
+        this.chatActorNetworkServiceManager = chatActorNetworkServiceManager;
+        this.pluginId              = pluginId                               ;
     }
 
     @Override
@@ -185,6 +189,12 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
     @Override
     public List<ChatIdentity> getIdentityChatUsersFromCurrentDeviceUser() throws CantListChatIdentityException {
         return chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
+    }
+
+    @Override
+    public ChatActorCommunitySearch getChatActorSearch() {
+        return new ChatActorCommunitySubAppModuleSearch(chatActorNetworkServiceManager) {
+        };
     }
 
     /**

@@ -68,12 +68,15 @@ public class ChatSupAppModulePluginRoot extends AbstractModule<ChatPreferenceSet
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.IDENTITY, plugin = Plugins.CHAT_IDENTITY)
     private ChatIdentityManager chatIdentityManager;
 
+    @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.ACTOR_NETWORK_SERVICE, plugin = Plugins.CHAT_ACTOR_NETWORK_SERVICE  )
+    private com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager chatActorNetworkServiceManager;
+
     @Override
     public void start(){
         /**
          * Init the plugin manager
          */
-        chatManager=new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager, pluginFileSystem, pluginId);
+        chatManager=new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager, pluginFileSystem, chatActorNetworkServiceManager, pluginId);
 
         System.out.println("******* Init Chat Sup App Module Chat ******");
     }
@@ -81,7 +84,7 @@ public class ChatSupAppModulePluginRoot extends AbstractModule<ChatPreferenceSet
     @Override
     public ModuleManager<ChatPreferenceSettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
         if (chatManager == null)
-            chatManager=new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager, pluginFileSystem, pluginId);
+            chatManager=new ChatSupAppModuleManager(chatMiddlewareManager, chatIdentityManager, pluginFileSystem, chatActorNetworkServiceManager, pluginId);
         return chatManager;
     }
 }

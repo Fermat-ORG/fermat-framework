@@ -15,6 +15,7 @@ import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIden
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatActorWaitingException;
@@ -88,6 +89,8 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager <Ch
                                                                                 final int offset) throws CantListChatActorException;
 
     List<ChatActorCommunityInformation> getChatActorWaitingYourAcceptanceCount(String publicKey, int max, int offset) throws CantGetChatActorWaitingException;
+
+    void saveCacheChatUsersSuggestions(List<ChatActorCommunityInformation> listChatUser) throws CantInsertRecordException;
 
     ConnectionState getActorConnectionState(String publicKey) throws CantValidateActorConnectionStateException;
     @Override

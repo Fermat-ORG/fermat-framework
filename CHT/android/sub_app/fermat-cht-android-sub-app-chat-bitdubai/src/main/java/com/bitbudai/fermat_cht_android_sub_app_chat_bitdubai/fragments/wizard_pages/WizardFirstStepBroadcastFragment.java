@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.wizard_p
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -9,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Toast;
@@ -62,6 +62,24 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
          errorManager = appSession.getErrorManager();
      toolbar = getToolbar();
      toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
+     //Obtain chatSettings  or create new chat settings if first time opening chat platform
+     chatSettings = null;
+     try {
+         chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+     } catch (Exception e) {
+         chatSettings = null;
+     }
+
+     if (chatSettings == null) {
+         chatSettings = new ChatPreferenceSettings();
+         chatSettings.setIsPresentationHelpEnabled(true);
+         try {
+             moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
+         } catch (Exception e) {
+             if (errorManager != null)
+                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+         }
+     }
     }
 
 
@@ -72,6 +90,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
         View layout = inflater.inflate(R.layout.cht_wizard_broadcast_one_step, container, false);
          final RadioButton radioA = (RadioButton) layout.findViewById(R.id.radioButton);
          final RadioButton radioB = (RadioButton) layout.findViewById(R.id.radioButton2);
+
          /*radioA.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
@@ -104,28 +123,35 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
          cbutton.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View v) {
-                 if(radioA.isChecked() || radioB.isChecked())
-                     if(radioA.isChecked())
-                     changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL);
-                     else
-                     changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL);
-                 else
-                     Toast.makeText(getActivity(), "Please select at least one option", Toast.LENGTH_SHORT).show();
+                 if(radioA.isChecked() || radioB.isChecked()) {
+                     if (radioA.isChecked()) {
+                         changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL, appSession.getAppPublicKey());
+                         Log.i("ChangeActivity", "To the Wizard Two Simple");
+                     }
+                     if (radioB.isChecked()) {
+                         changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_SCHEDULED_DETAIL, appSession.getAppPublicKey());
+                         Log.i("ChangeActivity", "To the Wizard Two Scheduled");
+                     }
+                 } else Toast.makeText(getActivity(), "Please select at least one option", Toast.LENGTH_SHORT).show();
              }
          });
      return layout;
      }
 
      public void ShowDialogWelcome(){
-         PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
-                 .setBody(R.string.cht_chat_body_broadcast_step_one)
-                 .setSubTitle(R.string.cht_chat_subtitle_broadcast_step_one)
-                 .setTextFooter(R.string.cht_chat_footer_broadcast_step_one)
-                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                 .setBannerRes(R.drawable.cht_banner)
-                 .setIconRes(R.drawable.chat_subapp)
-                 .build();
-         presentationDialog.show();
+         try {
+             PresentationDialog presentationDialog = new PresentationDialog.Builder(getActivity(), appSession)
+                     .setBody(R.string.cht_chat_body_broadcast_step_one)
+                     .setSubTitle(R.string.cht_chat_subtitle_broadcast_step_one)
+                     .setTextFooter(R.string.cht_chat_footer_broadcast_step_one)
+                     .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
+                     .setBannerRes(R.drawable.cht_banner)
+                     .setIconRes(R.drawable.chat_subapp)
+                     .build();
+             presentationDialog.show();
+         }catch(Exception e){
+
+         }
      }
 
      @Override
@@ -150,10 +176,6 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
          return super.onOptionsItemSelected(item);
      }
 
-     private void saveSettingAndGoNextStep() {
-             //TODO: TEMPORAL SOLO PARA PRUEBAS AÑADIR SAVE SETTINGS
-             changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_TWO_DETAIL);
-     }
 
 
  }

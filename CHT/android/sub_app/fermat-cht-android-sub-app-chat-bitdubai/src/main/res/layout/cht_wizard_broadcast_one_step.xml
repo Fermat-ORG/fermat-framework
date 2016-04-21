@@ -44,8 +44,11 @@
             android:text="BROADCAST SCHEDULED"
             android:id="@+id/radioButton2"
             android:textColor="#808080"
+            android:textColorHint="#000"
+
             android:layout_alignTop="@+id/textView5"
-            android:layout_alignStart="@+id/radioButton" />
+            android:layout_alignStart="@+id/radioButton"
+            android:checked="false" />
 
         <Button
             android:layout_width="120dp"
