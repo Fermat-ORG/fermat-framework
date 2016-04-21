@@ -24,7 +24,6 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ClauseInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -63,13 +62,10 @@ public class ClosedNegotiationDetailsFragment extends AbstractFermatFragment<Cry
         
         try {
             final CryptoCustomerWalletModuleManager moduleManager = appSession.getModuleManager();
-            final CryptoCustomerWalletManager walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
             errorManager = appSession.getErrorManager();
             
-            negotiationInfo = walletManager.getNegotiationInformation(appSession.getNegotiationId());
+            negotiationInfo = moduleManager.getNegotiationInformation(appSession.getNegotiationId());
 
-            // negotiationInfo = TestData.getOpenNegotiations(NegotiationStatus.WAITING_FOR_BROKER).get(0);
-            
         } catch (Exception ex) {
             // TODO: Just for test purposes
             negotiationInfo = TestData.getOpenNegotiations(NegotiationStatus.WAITING_FOR_BROKER).get(0);

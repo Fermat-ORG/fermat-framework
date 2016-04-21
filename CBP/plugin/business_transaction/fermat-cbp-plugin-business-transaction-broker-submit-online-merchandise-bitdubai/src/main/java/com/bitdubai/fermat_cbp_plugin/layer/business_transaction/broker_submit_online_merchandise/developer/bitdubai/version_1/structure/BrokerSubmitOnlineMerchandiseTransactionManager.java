@@ -60,7 +60,7 @@ public class BrokerSubmitOnlineMerchandiseTransactionManager implements BrokerSu
     CustomerBrokerSaleNegotiationManager customerBrokerSaleNegotiationManager;
 
     /**
-     * Represents the CryptoBrokerWalletManager
+     * Represents the CryptoBrokerWalletModuleManager
      */
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 

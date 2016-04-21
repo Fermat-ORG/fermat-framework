@@ -6,8 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.ContractDetailViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.ContractDetail;
@@ -29,7 +28,7 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
     private Context context;
     private List<ContractDetail> dataSet;
     private CryptoBrokerWalletSession walletSession;
-    private CryptoBrokerWalletManager walletManager;
+    private CryptoBrokerWalletModuleManager walletManager;
     private ContractDetailActivityFragment fragment;
 
 
@@ -38,7 +37,7 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
             Context context,
             List<ContractDetail> dataSet,
             CryptoBrokerWalletSession session,
-            CryptoBrokerWalletManager walletManager,
+            CryptoBrokerWalletModuleManager walletManager,
             ContractDetailActivityFragment fragment) {
         this.context=context;
         this.dataSet=dataSet;

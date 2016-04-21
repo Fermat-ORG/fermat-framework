@@ -20,7 +20,6 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.Crypt
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -47,7 +46,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
 
     private static final String TAG = "BrokerNavigationView";
 
-    private CryptoBrokerWalletManager walletManager;
+    private CryptoBrokerWalletModuleManager moduleManager;
     private CryptoBrokerWalletSession session;
     private CryptoBrokerIdentity actorIdentity;
     private WeakReference<Context> activity;
@@ -61,9 +60,8 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
         errorManager = session.getErrorManager();
 
         try {
-            final CryptoBrokerWalletModuleManager moduleManager = session.getModuleManager();
-            walletManager = moduleManager.getCryptoBrokerWallet(session.getAppPublicKey());
-            actorIdentity = walletManager.getAssociatedIdentity(session.getAppPublicKey());
+            moduleManager = session.getModuleManager();
+            actorIdentity = this.moduleManager.getAssociatedIdentity(session.getAppPublicKey());
 
         } catch (FermatException ex) {
             if (errorManager == null)
@@ -145,12 +143,12 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
         List<NavViewFooterItem> stockItems = new ArrayList<>();
 
         try {
-            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = walletManager.getCryptoBrokerWalletAssociatedSettings(session.getAppPublicKey());
+            List<CryptoBrokerWalletAssociatedSetting> associatedWallets = moduleManager.getCryptoBrokerWalletAssociatedSettings(session.getAppPublicKey());
             numberFormat = DecimalFormat.getInstance();
 
             for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
                 Currency currency = associatedWallet.getMerchandise();
-                float balance = walletManager.getAvailableBalance(currency, session.getAppPublicKey());
+                float balance = moduleManager.getAvailableBalance(currency, session.getAppPublicKey());
 
                 stockItems.add(new NavViewFooterItem(currency.getFriendlyName(), numberFormat.format(balance)));
             }
@@ -174,7 +172,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
         ArrayList<NavViewFooterItem> earningsItems = new ArrayList<>();
 
         try {
-            final List<EarningsPair> earningsPairs = walletManager.getEarningsPairs(session.getAppPublicKey());
+            final List<EarningsPair> earningsPairs = moduleManager.getEarningsPairs(session.getAppPublicKey());
             for (EarningsPair earningsPair : earningsPairs) {
                 final String linkedCurrency = earningsPair.getLinkedCurrency().getCode();
                 final String earningCurrency = earningsPair.getEarningCurrency().getCode();

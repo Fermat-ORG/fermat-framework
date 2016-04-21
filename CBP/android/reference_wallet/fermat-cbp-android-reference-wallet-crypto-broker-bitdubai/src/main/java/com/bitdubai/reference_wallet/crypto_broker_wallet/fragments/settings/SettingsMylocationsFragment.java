@@ -18,11 +18,10 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
 import com.bitdubai.fermat_cbp_api.layer.negotiation.customer_broker_sale.exceptions.CantDeleteLocationSaleException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -34,12 +33,13 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWa
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
+
 
 /**
  * Created by memo on 06/01/16.
  */
-public class SettingsMylocationsFragment extends AbstractFermatFragment implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<String> {
+public class SettingsMylocationsFragment extends AbstractFermatFragment<CryptoBrokerWalletSession, ResourceProviderManager>
+        implements SingleDeletableItemAdapter.OnDeleteButtonClickedListener<String> {
 
     // Constants
     private static final String TAG = "settingsMyLocations";
@@ -54,7 +54,7 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
     private View emptyView;
 
     // Fermat Managers
-    private CryptoBrokerWalletManager walletManager;
+    private CryptoBrokerWalletModuleManager walletManager;
     private ErrorManager errorManager;
 
 
@@ -67,8 +67,7 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
         super.onCreate(savedInstanceState);
 
         try {
-            CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
-            walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
+            walletManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
 

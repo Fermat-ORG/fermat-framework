@@ -5,6 +5,7 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.Earnin
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantChangeEarningsWalletException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
@@ -13,7 +14,7 @@ import java.util.UUID;
  * <p/>
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 28/01/2016.
  */
-public interface EarningsPair {
+public interface EarningsPair extends Serializable {
 
     /**
      * @return the id of the earning pair.

@@ -5,16 +5,17 @@ import com.bitdubai.fermat_api.CantStopAgentException;
 import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableFilter;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_cbp_api.all_definition.business_transaction.CryptoMoneyTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
+import com.bitdubai.fermat_cbp_api.all_definition.wallet.StockBalance;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantAddCreditCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CantGetStockCryptoBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.exceptions.CryptoBrokerWalletNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWallet;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.exceptions.DatabaseOperationException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.exceptions.MissingCryptoMoneyRestockDataException;
@@ -159,8 +160,8 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent extends FermatAgent
     private void doTheMainTask() {
         try {
             // I define the filter to null for all
-            DatabaseTableFilter filter = null;
-            for (CryptoMoneyTransaction cryptoMoneyTransaction : stockTransactionCryptoMoneyRestockFactory.getCryptoMoneyTransactionList(filter)) {
+            for (CryptoMoneyTransaction cryptoMoneyTransaction : stockTransactionCryptoMoneyRestockFactory.getCryptoMoneyTransactionList(null)) {
+
                 switch (cryptoMoneyTransaction.getTransactionStatus()) {
                     //TODO: Hacer un case que vea el status REJECTED para reversar la operacion en la wallet, si es credito se hace un debito, si debito se hace un credito
                     case INIT_TRANSACTION:
@@ -199,9 +200,25 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent extends FermatAgent
                         CryptoTransactionStatus cryptoTransactionStatus = cryptoUnholdTransactionManager.getCryptoUnholdTransactionStatus(cryptoMoneyTransaction.getTransactionId());
                         if (Objects.equals(CryptoTransactionStatus.CONFIRMED.getCode(), cryptoTransactionStatus.getCode())) {
                             cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.COMPLETED);
-                            WalletTransactionWrapper walletTransactionRecord = new WalletTransactionWrapper(
 
-                                    cryptoMoneyTransaction.getTransactionId(),
+                            WalletTransactionWrapper walletTransactionRecordBook = new WalletTransactionWrapper(
+                                    UUID.randomUUID(),
+                                    cryptoMoneyTransaction.getCryptoCurrency(),
+                                    BalanceType.BOOK,
+                                    TransactionType.CREDIT,
+                                    MoneyType.CRYPTO,
+                                    cryptoMoneyTransaction.getCbpWalletPublicKey(),
+                                    cryptoMoneyTransaction.getActorPublicKey(),
+                                    cryptoMoneyTransaction.getAmount(),
+                                    new Date().getTime() / 1000,
+                                    cryptoMoneyTransaction.getConcept(),
+                                    cryptoMoneyTransaction.getPriceReference(),
+                                    cryptoMoneyTransaction.getOriginTransaction(),
+                                    cryptoMoneyTransaction.getOriginTransactionId(),
+                                    false);
+
+                            WalletTransactionWrapper walletTransactionRecordAvailable = new WalletTransactionWrapper(
+                                    UUID.randomUUID(),
                                     cryptoMoneyTransaction.getCryptoCurrency(),
                                     BalanceType.AVAILABLE,
                                     TransactionType.CREDIT,
@@ -216,10 +233,12 @@ public class StockTransactionsCryptoMoneyRestockMonitorAgent extends FermatAgent
                                     cryptoMoneyTransaction.getOriginTransactionId(),
                                     false);
 
-                            //TODO:Solo para testear
-                            cryptoMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest");
-                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.BOOK);
-                            cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey()).getStockBalance().credit(walletTransactionRecord, BalanceType.AVAILABLE);
+                            cryptoMoneyTransaction.setCbpWalletPublicKey("walletPublicKeyTest"); //TODO:Solo para testear
+                            final CryptoBrokerWallet cryptoBrokerWallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(cryptoMoneyTransaction.getCbpWalletPublicKey());
+                            final StockBalance stockBalance = cryptoBrokerWallet.getStockBalance();
+
+                            stockBalance.credit(walletTransactionRecordBook, BalanceType.BOOK);
+                            stockBalance.credit(walletTransactionRecordAvailable, BalanceType.AVAILABLE);
 
                             cryptoMoneyTransaction.setTransactionStatus(TransactionStatusRestockDestock.IN_WALLET);
                             stockTransactionCryptoMoneyRestockFactory.saveCryptoMoneyRestockTransactionData(cryptoMoneyTransaction);

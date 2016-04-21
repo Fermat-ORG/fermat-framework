@@ -103,7 +103,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
     private IntraUserSubAppSession intraUserSubAppSession;
     private String searchName;
     private LinearLayout emptyView;
-    private ArrayList<IntraUserInformation> lstIntraUserInformations;
+    private ArrayList<IntraUserInformation> lstIntraUserInformations = new ArrayList<>();
     private List<IntraUserInformation> dataSet = new ArrayList<>();
     private android.support.v7.widget.Toolbar toolbar;
     private EditText searchEditText;
@@ -561,9 +561,13 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                         if(!exist)
                             userList.add(intraUserCache);
                     }
-                    //guardo el cache
+                    //save cache records
+                    try {
+                        moduleManager.saveCacheIntraUsersSuggestions(userList);
+                    } catch (CantGetIntraUsersListException e) {
+                        e.printStackTrace();
+                    }
 
-                    moduleManager.saveCacheIntraUsersSuggestions(userList);
                     dataSet.addAll(userList);
                 }
             }

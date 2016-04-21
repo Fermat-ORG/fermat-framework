@@ -72,6 +72,9 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
     @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.PLUGIN_FILE_SYSTEM)
     protected PluginFileSystem pluginFileSystem;
+//
+//    @NeededAddonReference(platform = Platforms.OPERATIVE_SYSTEM_API, layer = Layers.SYSTEM, addon = Addons.HARDWARE)
+//    protected HardwareManager hardwareManager;
 
 
     private static WsCommunicationsCloudClientPluginRoot instance = new WsCommunicationsCloudClientPluginRoot();

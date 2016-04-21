@@ -4,10 +4,10 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.Fer
 import com.bitdubai.fermat_cbp_api.all_definition.identity.ActorIdentity;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantClearBrokerIdentityWalletRelationshipException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantCreateNewBrokerIdentityWalletRelationshipException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetRelationBetweenBrokerIdentityAndBrokerWalletException;
 
 import java.util.Collection;
-import java.util.UUID;
+
 
 /**
  * Created by Angel 17-11-15
@@ -36,24 +36,24 @@ public interface CryptoBrokerActorManager extends FermatManager {
     /**
      *
      * @return
-     * @throws CantGetListBrokerIdentityWalletRelationshipException
+     * @throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException
      */
-    Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship() throws CantGetListBrokerIdentityWalletRelationshipException;
+    Collection<BrokerIdentityWalletRelationship> getAllBrokerIdentityWalletRelationship() throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException;
 
     /**
      *
      * @param publicKey
      * @return
-     * @throws CantGetListBrokerIdentityWalletRelationshipException
+     * @throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException
      */
-    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetListBrokerIdentityWalletRelationshipException;
+    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByIdentity(String publicKey) throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException;
 
     /**
      *
      * @param walletPublicKey
      * @return
-     * @throws CantGetListBrokerIdentityWalletRelationshipException
+     * @throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException
      */
-    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetListBrokerIdentityWalletRelationshipException;
+    BrokerIdentityWalletRelationship getBrokerIdentityWalletRelationshipByWallet(String walletPublicKey) throws CantGetRelationBetweenBrokerIdentityAndBrokerWalletException;
 
 }

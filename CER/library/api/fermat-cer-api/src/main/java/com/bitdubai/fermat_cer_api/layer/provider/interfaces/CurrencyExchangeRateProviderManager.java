@@ -7,6 +7,7 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetExchangeRate
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.CantGetProviderInfoException;
 import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrencyPairException;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.UUID;
@@ -14,7 +15,7 @@ import java.util.UUID;
 /**
  * Created by Alejandro Bicelis on 12/7/2015.
  */
-public interface CurrencyExchangeRateProviderManager extends FermatManager {
+public interface CurrencyExchangeRateProviderManager extends FermatManager, Serializable {
 
     /**
      * Returns the name of the provider
