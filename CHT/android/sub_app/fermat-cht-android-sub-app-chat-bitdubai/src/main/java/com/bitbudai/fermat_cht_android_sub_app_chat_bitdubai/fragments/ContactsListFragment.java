@@ -245,36 +245,38 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         try {
             //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
             List <Contact> con=  null;//chatManager.getContacts();
-            int size = con.size();
-            if (size > 0) {
-                for (int i=0;i<size;i++){
-                    contactname.add(con.get(i).getAlias());
-                    contactid.add(con.get(i).getContactId());
-                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
-                    BitmapDrawable bmd = new BitmapDrawable(bytes);
-                    contacticon.add(bmd.getBitmap());
+            if(con==null){
+                int size = con.size();
+                if (size > 0) {
+                    for (int i=0;i<size;i++){
+                        contactname.add(con.get(i).getAlias());
+                        contactid.add(con.get(i).getContactId());
+                        ByteArrayInputStream bytes = new ByteArrayInputStream(con.get(i).getProfileImage());
+                        BitmapDrawable bmd = new BitmapDrawable(bytes);
+                        contacticon.add(bmd.getBitmap());
+                    }
+                    //text.setVisibility(View.GONE);
+                    noData.setVisibility(View.GONE);
+                }else{
+                    //Comentar, solo para pruebas
+    //                ContactImpl cadded=new ContactImpl();
+    //                cadded.setContactId(UUID.randomUUID());
+    //                cadded.setAlias("josejcb");
+    //                cadded.setRemoteActorPublicKey("jose");
+    //                cadded.setRemoteActorType(PlatformComponentType.ACTOR_ASSET_USER);
+    //                String dateString = "30/09/2014";
+    //                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    //                Date date = sdf.parse(dateString);
+    //                long startDate = date.getTime();
+    //                cadded.setCreationDate(startDate);
+    //                cadded.setRemoteName("No hay nadie conectado");
+    //                chatManager.saveContact(cadded);
+                    //Fin Comentar
+                    //text.setVisibility(View.VISIBLE);
+                    noData.setVisibility(View.VISIBLE);
+                    //text.setText(" ");
+                    //text.setBackgroundResource(R.drawable.cht_empty_contacts_background);
                 }
-                //text.setVisibility(View.GONE);
-                noData.setVisibility(View.GONE);
-            }else{
-                //Comentar, solo para pruebas
-//                ContactImpl cadded=new ContactImpl();
-//                cadded.setContactId(UUID.randomUUID());
-//                cadded.setAlias("josejcb");
-//                cadded.setRemoteActorPublicKey("jose");
-//                cadded.setRemoteActorType(PlatformComponentType.ACTOR_ASSET_USER);
-//                String dateString = "30/09/2014";
-//                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-//                Date date = sdf.parse(dateString);
-//                long startDate = date.getTime();
-//                cadded.setCreationDate(startDate);
-//                cadded.setRemoteName("No hay nadie conectado");
-//                chatManager.saveContact(cadded);
-                //Fin Comentar
-                //text.setVisibility(View.VISIBLE);
-                noData.setVisibility(View.VISIBLE);
-                //text.setText(" ");
-                //text.setBackgroundResource(R.drawable.cht_empty_contacts_background);
             }
         }catch (Exception e){
             if (errorManager != null)

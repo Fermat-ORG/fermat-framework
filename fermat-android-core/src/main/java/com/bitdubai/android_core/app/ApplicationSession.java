@@ -9,7 +9,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService;
-import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerService;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientBrokerService;
 import com.bitdubai.android_core.app.common.version_1.notifications.NotificationService;
 import com.bitdubai.android_core.app.common.version_1.util.mail.YourOwnSender;
 import com.bitdubai.android_core.app.common.version_1.util.services_helpers.ServicesHelpers;
@@ -134,6 +134,8 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
             public void uncaughtException(Thread thread, Throwable e) {
                 e.printStackTrace();
                 handleUncaughtException(thread, e);
+//                ACRA.getErrorReporter().handleSilentException(e);
+                ACRA.getErrorReporter().handleException(e);
             }
         });
 
@@ -175,7 +177,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
         return getServicesHelpers().getNotificationService();
     }
 
-    public ClientSystemBrokerService getClientSideBrokerService(){
+    public ClientBrokerService getClientSideBrokerService(){
         return getServicesHelpers().getClientSideBrokerService();
     }
 
@@ -199,26 +201,19 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
     }
 
     public boolean isFermatOpen() {
-
         int pId = android.os.Process.myPid();
-
         ActivityManager activityManager = (ActivityManager) this
                 .getSystemService(ACTIVITY_SERVICE);
-
         List<ActivityManager.RunningAppProcessInfo> procInfos = activityManager
                 .getRunningAppProcesses();
         for (int idx = 0; idx < procInfos.size(); idx++) {
             ActivityManager.RunningAppProcessInfo process = procInfos.get(idx);
             String processName = process.processName;
-
-//            Log.i(TAG, (idx + 1) + "."
-//                    +processName + "\n");
             if(pId != process.pid) {
                 if (processName.equals("org.fermat")) {
                     return true;
                 }
             }
-
         }
         return false;
     }

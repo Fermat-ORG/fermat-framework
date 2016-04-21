@@ -84,7 +84,7 @@ public class GrouperViewHolder extends ParentViewHolder {
                 contactName = cryptoWalletTransaction.getInvolvedActor().getName();
             }
 
-        //TODO Ver porque se cae cuando el contacto tiene algunos bytes
+        //TODO: check why the app fails when the photo has some bytes.
         try {
             if (photo != null) {
 //            contactIcon.setImageDrawable(ImagesUtils.getRoundedBitmap(res,photo));
@@ -105,7 +105,7 @@ public class GrouperViewHolder extends ParentViewHolder {
         txt_time.setText(sdf.format(cryptoWalletTransaction.getTimestamp()) + " hs");
         txt_total_number_transactions.setText(String.valueOf(childCount)+ " records");
 
-        //TODO me falta el total
+        //TODO: total is required
         //txt_total_balance.setText();
     }
 

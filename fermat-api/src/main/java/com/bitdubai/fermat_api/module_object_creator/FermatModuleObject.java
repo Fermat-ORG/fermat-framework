@@ -5,10 +5,19 @@ import java.io.Serializable;
 /**
  * Created by mati on 2016.04.18..
  */
-public class FermatModuleObject<O> implements FermatModuleObjectInterface{
+public class FermatModuleObject<O> implements FermatModuleObjectInterface,Serializable{
+
+    int id;
+    String name;
+
 
     public FermatModuleObject(Serializable creator) {
         creator(creator);
+    }
+
+    public FermatModuleObject(int id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     @Override
@@ -24,5 +33,13 @@ public class FermatModuleObject<O> implements FermatModuleObjectInterface{
     @Override
     public Serializable writeToSerializable() {
         return null;
+    }
+
+    @Override
+    public String toString() {
+        return "FermatModuleObject{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

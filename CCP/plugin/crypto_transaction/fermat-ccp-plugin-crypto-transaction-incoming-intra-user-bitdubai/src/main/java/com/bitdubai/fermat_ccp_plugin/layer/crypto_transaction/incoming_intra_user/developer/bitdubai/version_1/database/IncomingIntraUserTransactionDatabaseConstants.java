@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_ccp_plugin.layer.crypto_transaction.incoming_intra_user.developer.bitdubai.version_1.database;
 
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseDataType;
+
 /**
  * The Class <code>IncomingIntraUserTransactionDatabaseConstants</code>
  * keeps constants the column names of the database.<p/>
@@ -33,6 +35,9 @@ public class IncomingIntraUserTransactionDatabaseConstants {
     static final String INCOMING_INTRA_USER_REGISTRY_PROTOCOL_STATUS_COLUMN_NAME    = "protocol_status";
     static final String INCOMING_INTRA_USER_REGISTRY_TRANSACTION_STATUS_COLUMN_NAME = "transaction_status";
     static final String INCOMING_INTRA_USER_REGISTRY_TIMESTAMP_COLUMN_NAME          = "timestamp";
+    static final String INCOMING_INTRA_USER_REGISTRY_NETWORK_TYPE = "BlockchainNetworkType";
+
+
 
     static final String INCOMING_INTRA_USER_REGISTRY_FIRST_KEY_COLUMN = "id";
 
