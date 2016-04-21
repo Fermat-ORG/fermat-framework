@@ -41,6 +41,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Group;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySearch;
 
 import java.util.HashMap;
 import java.util.List;
@@ -93,6 +94,7 @@ public interface ChatManager extends ModuleManager<ChatPreferenceSettings, Activ
 
     List<ChatIdentity> getIdentityChatUsersFromCurrentDeviceUser() throws CantListChatIdentityException;
 
+    ChatActorCommunitySearch getChatActorSearch();
 
     /**
      * This method sends the message through the Chat Network Service
