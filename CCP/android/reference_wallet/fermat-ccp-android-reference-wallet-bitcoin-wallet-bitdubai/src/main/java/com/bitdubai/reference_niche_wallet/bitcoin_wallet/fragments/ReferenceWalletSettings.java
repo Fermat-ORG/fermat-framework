@@ -103,9 +103,9 @@ public class ReferenceWalletSettings extends FermatPreferenceFragment<ReferenceW
             list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", dataDialog));
 
 
-            list.add(new PreferenceSettingsLinkText(9, "Send Error Report", ""));
+            list.add(new PreferenceSettingsLinkText(9, "Send Error Report", "",15,Color.GRAY));
 
-            list.add(new PreferenceSettingsLinkText(10, "Export Private key ", ""));
+            list.add(new PreferenceSettingsLinkText(10, "Export Private key ", "",15,Color.GRAY));
 
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
