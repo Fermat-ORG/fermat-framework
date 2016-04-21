@@ -72,6 +72,9 @@ public class ChatIdentityDatabaseFactory {
             table.addColumn(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME,                  DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(ChatIdentityDatabaseConstants.CHAT_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, DatabaseDataType.STRING, 255, Boolean.FALSE);
             table.addColumn(ChatIdentityDatabaseConstants.CHAT_EXPOSURE_LEVEL_COLUMN_NAME,         DatabaseDataType.STRING,  10, Boolean.FALSE);
+            table.addColumn(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME,                DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME,                  DatabaseDataType.STRING, 100, Boolean.FALSE);
+            table.addColumn(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME,                   DatabaseDataType.STRING, 100, Boolean.FALSE);
 
             table.addIndex(ChatIdentityDatabaseConstants.CHAT_FIRST_KEY_COLUMN);
 
