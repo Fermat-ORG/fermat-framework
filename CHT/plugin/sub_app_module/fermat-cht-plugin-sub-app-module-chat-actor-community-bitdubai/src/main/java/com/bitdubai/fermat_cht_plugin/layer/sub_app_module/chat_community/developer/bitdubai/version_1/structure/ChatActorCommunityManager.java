@@ -560,7 +560,26 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+        chatIdentityManager.createNewIdentityChat(name, profile_img, "country", "state", "city");
 
+
+        //Try to get appSettings
+        ChatActorCommunitySettings appSettings = null;
+        try {
+            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+        }catch (Exception e){ appSettings = null; }
+
+
+        //If appSettings exist
+        if(appSettings != null){
+            appSettings.setLastSelectedActorType(Actors.CHT_CHAT_ACTOR);
+
+            try {
+                this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+            }catch (CantPersistSettingsException e){
+                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            }
+        }
     }
 
 
