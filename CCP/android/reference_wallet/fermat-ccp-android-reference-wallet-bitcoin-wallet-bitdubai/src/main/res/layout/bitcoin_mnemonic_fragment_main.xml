@@ -1,46 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#fff">
 
-    <RelativeLayout
-        android:id="@+id/header"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@color/accent_material_dark">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="#fff">
 
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:adjustViewBounds="true"
-            android:id="@+id/image_view_profile"
-            android:scaleType="centerCrop"
-
-            tools:ignore="ContentDescription" />
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/account_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
-            android:shadowColor="#000"
-            android:shadowDy="10"
-            android:shadowRadius="8"
-            android:text="@string/matias_furszyfer_text"
-            android:textColor="#4f4f4f"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:typeface="ROBOTO_REGULAR"/>
-
-    </RelativeLayout>
 
     <ScrollView
         android:id="@+id/body"
@@ -58,7 +25,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/name_text"
+                android:text="Mnemonic Text"
                 android:textColor="#12aca1"
                 android:layout_marginLeft="20dp"
                 android:textSize="12sp"
@@ -74,7 +41,7 @@
                 android:paddingRight="7dip">
 
                 <EditText
-                    android:id="@+id/edit_text_name"
+                    android:id="@+id/txt_mnemonic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="left"
@@ -86,11 +53,14 @@
                     android:textColorHint="#4f4f4f"
                     android:textSize="16sp"
                     android:textStyle="normal"
-                    android:text="@string/matias_furszyfer_text"
+                    android:text=""
                     android:layout_weight="0.54"
-                    android:inputType="numberDecimal"
                     android:state_selected = "true"
-                    android:background="@null" />
+                    android:background="@null"
+                    android:clickable="false"
+                    android:cursorVisible="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"/>
 
             </LinearLayout>
 
@@ -102,7 +72,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/address_text"
+                android:text="E-mail to Send Private key"
                 android:textSize="12sp"
                 android:textColor="#12aca1"
                 android:layout_marginLeft="16dp"
@@ -119,7 +89,7 @@
                 android:paddingRight="7dip"
                 android:id="@+id/linear_notes">
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:id="@+id/text_view_address"
+                    android:id="@+id/text_mail"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:gravity="center_vertical"
@@ -133,48 +103,17 @@
                     android:paddingBottom="7dip"
                     android:layout_gravity="end"
                     android:state_selected = "false"
-                    android:text="@string/waiting_text"
+                    android:text=""
                     app:typeface="ROBOTO_REGULAR"
                     android:layout_weight="1"
                     android:background="@null"/>
 
-                <ImageView
-                    android:layout_width="38dp"
-                    android:padding="3dp"
-                    android:layout_height="32dp"
-                    android:layout_weight="0.7"
-                    android:visibility="visible"
-                    android:id="@+id/img_update"
-                    android:src="@drawable/ic_contact_update"/>
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="0.5dp"
                 android:background="#bbccc7"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/linear_layout_extra_user_receive"
-                android:paddingLeft="10dp"
-                android:paddingTop="10dp"
-                android:dividerPadding="7dp">
-
-                <ImageView
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/ic_contact_share"/>
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/share_address_text"
-                    android:gravity="center_vertical"
-                    android:layout_marginLeft="7dp"
-                    android:textColor="#12aca1"/>
-
-            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -188,21 +127,6 @@
                 >
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:id="@+id/receive_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_action_send_now_grey"
-                    android:padding="3dp"
-                    android:clickable="true"
-                    android:text="@string/request_text"
-                    android:background="#12aca1"
-                    android:textColor="#fff"
-                    android:layout_weight="1"
-                    android:layout_marginRight="8dp"
-                    />
-
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/send_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -210,7 +134,7 @@
                     android:src="@drawable/ic_action_send_now_grey"
                     android:padding="3dp"
                     android:clickable="true"
-                    android:text="@string/send_text"
+                    android:text="Send Mail"
                     android:background="#1173aa"
                     android:textColor="#fff"
                     android:layout_weight="1"
@@ -222,5 +146,6 @@
         </LinearLayout>
 
     </ScrollView>
+
 
 </LinearLayout>
