@@ -167,7 +167,7 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
             ECCKeyPair keyPair = new ECCKeyPair();
-            String publicKey = keyPair.getPublicKey();
+            final String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
             getFanaticIdentityDao().createNewUser(
@@ -179,7 +179,17 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
                     externalIdentityID,
                     artExternalPlatform);
 
-            registerIdentitiesANS(publicKey);
+            Thread registerToAns = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        registerIdentitiesANS(publicKey);
+                    }catch (Exception e){
+
+                    }
+                }},"Artist Identity register ANS");
+            registerToAns.start();
+
             return new FanaticIdentityImp(
                     alias,
                     publicKey,
@@ -217,11 +227,19 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
                     profileImage,
                     externalIdentityID,
                     artExternalPlatform);
-            FanExposingData fanExposingData = new FanExposingData(publicKey,alias,profileImage);
-           fanManager.updateIdentity(fanExposingData);
+            final FanExposingData fanExposingData = new FanExposingData(publicKey,alias,profileImage);
+            Thread updateToAns = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        fanManager.updateIdentity(fanExposingData);
+                    }catch (Exception e){
+
+                    }
+                }},"Artist Identity update ANS");
+            updateToAns.start();
+
         } catch (CantInitializeFanaticIdentityDatabaseException e) {
-            e.printStackTrace();
-        } catch (CantExposeIdentityException e) {
             e.printStackTrace();
         }
     }

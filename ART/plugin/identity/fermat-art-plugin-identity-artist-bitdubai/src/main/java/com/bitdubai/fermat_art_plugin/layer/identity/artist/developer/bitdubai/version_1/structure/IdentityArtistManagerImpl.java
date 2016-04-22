@@ -158,7 +158,7 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
             ECCKeyPair keyPair = new ECCKeyPair();
-            String publicKey = keyPair.getPublicKey();
+            final String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
             getArtistIdentityDao().createNewUser(
@@ -169,7 +169,17 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
                     profileImage,
                     externalIdentityID,
                     artExternalPlatform);
-            registerIdentitiesANS(publicKey);
+
+            Thread registerToAns = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        registerIdentitiesANS(publicKey);
+                    }catch (Exception e){
+
+                    }
+                }},"Artist Identity register ANS");
+            registerToAns.start();
             return new ArtistIdentityImp(
                     alias,
                     publicKey,
@@ -198,11 +208,20 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
                     profileImage,
                     externalIdentityID,
                     artExternalPlatform);
-            ArtistExposingData artistExposingData = new ArtistExposingData(publicKey,alias,profileImage);
-            artistManager.updateIdentity(artistExposingData);
+            final ArtistExposingData artistExposingData = new ArtistExposingData(publicKey,alias,profileImage);
+
+            Thread registerToAns = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        artistManager.updateIdentity(artistExposingData);
+                    }catch (Exception e){
+
+                    }
+                }},"Artist Identity update ANS");
+            registerToAns.start();
+
         } catch (CantInitializeArtistIdentityDatabaseException e) {
-            e.printStackTrace();
-        } catch (CantExposeIdentityException e) {
             e.printStackTrace();
         }
     }

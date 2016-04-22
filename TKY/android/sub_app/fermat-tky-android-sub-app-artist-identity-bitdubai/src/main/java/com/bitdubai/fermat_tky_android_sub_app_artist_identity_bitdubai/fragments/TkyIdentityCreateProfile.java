@@ -99,6 +99,7 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
     private boolean authenticationSuccessful = false;
+    private boolean isWaitingForResponse = false;
 
     private Handler handler;
 
@@ -240,35 +241,41 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
 
                 int resultKey = 0;
                 try {
-                    resultKey = createNewIdentity();
+                    if(!isWaitingForResponse){
+                        resultKey = createNewIdentity();
+                        switch (resultKey) {
+                            case CREATE_IDENTITY_SUCCESS:
+                                if (!isUpdate) {
+                                    //Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
+                                }
+                                break;
+                            case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
+                                Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
+                                break;
+                            case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
+                                Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
+                                break;
+                            case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
+                                Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
+                                break;
+                        }
+                    }else
+                        Toast.makeText(getActivity(), "Waiting for Tokenly API response, please wait.", Toast.LENGTH_SHORT).show();
                 } catch (InvalidParameterException e) {
                     e.printStackTrace();
                 }
-                switch (resultKey) {
-                    case CREATE_IDENTITY_SUCCESS:
-//                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
-                        if (!isUpdate) {
-                            //Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
-                        Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
-                        break;
-                    case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
-                        Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
-                        break;
-                    case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
-                        Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
-                        break;
-                }
+
 
             }
         });
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
     private void setUpIdentity() {
         try {
 
@@ -483,11 +490,13 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
             this.exposureLevel = exposureLevel;
             this.artistAcceptConnectionsType = artistAcceptConnectionsType;
             authenticationSuccessful = true;
+            isWaitingForResponse = true;
         }
 
         @Override
         protected void onPostExecute(Object result) {
 
+            isWaitingForResponse = false;
             if(!authenticationSuccessful){
                 //I'll launch a toast
                 Toast.makeText(
@@ -497,8 +506,10 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
             }
             if(isUpdate){
                 Toast.makeText(getActivity(), "Identity updated", Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
             }else{
                 Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
             }
 
         }
