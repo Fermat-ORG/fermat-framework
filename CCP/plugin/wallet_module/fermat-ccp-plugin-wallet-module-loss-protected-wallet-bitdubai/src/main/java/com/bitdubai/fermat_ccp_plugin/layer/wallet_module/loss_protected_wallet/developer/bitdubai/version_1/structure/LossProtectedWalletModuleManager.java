@@ -938,7 +938,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
             BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
 
-            bitcoinLossProtectedWalletSpendList = bitcoinWalletWallet.listTransactionsSpending(transactionId);
+          //  bitcoinLossProtectedWalletSpendList = bitcoinWalletWallet.listTransactionsSpending(transactionId);
 
 
             if (bitcoinLossProtectedWalletSpendList.size()==0) {
@@ -968,34 +968,33 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                     }
                 };
 
+                BitcoinLossProtectedWalletSpend spendingLsit2 = new BitcoinLossProtectedWalletSpend() {
+                    @Override
+                    public UUID getSpendId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getAmount() {return (long)0.8;}
+
+                    @Override
+                    public double getExchangeRate() {return 427.14;}
+                };
+
                 bitcoinLossProtectedWalletSpendList.add(spendingLsit);
+                bitcoinLossProtectedWalletSpendList.add(spendingLsit2);
 
             }
-
-            BitcoinLossProtectedWalletSpend spendingLsit = new BitcoinLossProtectedWalletSpend() {
-                @Override
-                public UUID getSpendId() {
-                    return UUID.randomUUID();
-                }
-
-                @Override
-                public UUID getTransactionId() {
-                    return UUID.randomUUID();
-                }
-
-                @Override
-                public long getTimestamp() {
-                    return 0;
-                }
-
-                @Override
-                public long getAmount() {return (long)0.8;}
-
-                @Override
-                public double getExchangeRate() {return 427.14;}
-            };
-
-            bitcoinLossProtectedWalletSpendList.add(spendingLsit);
 
             return bitcoinLossProtectedWalletSpendList;
 
