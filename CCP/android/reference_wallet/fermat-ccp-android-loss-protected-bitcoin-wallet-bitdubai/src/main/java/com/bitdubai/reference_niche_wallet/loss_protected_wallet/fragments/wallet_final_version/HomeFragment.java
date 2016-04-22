@@ -452,7 +452,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         final int size = spendingList.size();
         for (int i = 0; i < size; i++) {
             BitcoinLossProtectedWalletSpend listSpendig = spendingList.get(i);
-            entryList.add(new Entry((float) listSpendig.getEarningOrLost(), i));
+            //entryList.add(new Entry((float) listSpendig.getEarningOrLost(), i));
             xValues.add(String.valueOf(i));
         }
 
