@@ -34,7 +34,7 @@ public class CryptoBrokerWalletSettingImpl implements CryptoBrokerWalletSetting 
         this.plugin = plugin;
         this.pluginFileSystem = pluginFileSystem;
         this.errorManager = errorManager;
-        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database);
+        cryptoBrokerWalletDatabaseDao = new CryptoBrokerWalletDatabaseDao(this.database, this.errorManager);
         cryptoBrokerWalletDatabaseDao.setPlugin(this.plugin);
         cryptoBrokerWalletDatabaseDao.setPluginFileSystem(this.pluginFileSystem);
     }

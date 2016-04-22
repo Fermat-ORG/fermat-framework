@@ -12,5 +12,5 @@ import java.util.List;
 public interface EarningExtractorManager extends FermatManager {
     void addEarningExtractor(EarningExtractor transferApplier);
 
-    void extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantExtractEarningsException;
+    boolean extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantExtractEarningsException;
 }

@@ -1366,9 +1366,9 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public void extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantExtractEarningsException {
+    public boolean extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantExtractEarningsException {
         final EarningExtractorManager earningsExtractorManager = matchingEngineManager.getEarningsExtractorManager();
-        earningsExtractorManager.extractEarnings(earningsPair, earningTransactions);
+        return earningsExtractorManager.extractEarnings(earningsPair, earningTransactions);
     }
 
     private ContractClauseType getContractClauseType(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation, ClauseType paramClauseType) throws CantGetListClauseException {

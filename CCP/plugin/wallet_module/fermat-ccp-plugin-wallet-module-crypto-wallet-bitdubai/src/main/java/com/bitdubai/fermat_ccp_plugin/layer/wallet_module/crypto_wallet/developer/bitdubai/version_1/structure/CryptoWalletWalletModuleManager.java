@@ -10,9 +10,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
 import com.bitdubai.fermat_api.layer.core.PluginInfo;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.CantLoadWalletsException;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -138,7 +141,7 @@ import java.util.UUID;
  * @since Java JDK 1.7
  */
 @PluginInfo(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.WALLET_MODULE, plugin = Plugins.CRYPTO_WALLET)
-public class CryptoWalletWalletModuleManager implements CryptoWallet,Serializable {
+public class CryptoWalletWalletModuleManager extends ModuleManagerImpl<BitcoinWalletSettings> implements CryptoWallet,Serializable {
 
     private final BitcoinWalletManager           bitcoinWalletManager          ;
     private final CryptoAddressBookManager       cryptoAddressBookManager      ;
@@ -168,6 +171,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,Serializabl
                                            final OutgoingExtraUserManager outgoingExtraUserManager,
                                            final OutgoingIntraActorManager outgoingIntraActorManager,
                                            final WalletContactsManager walletContactsManager, UUID pluginId, PluginFileSystem pluginFileSystem) {
+        super(pluginFileSystem,pluginId);
 
         this.bitcoinWalletManager           = bitcoinWalletManager          ;
         this.cryptoAddressBookManager       = cryptoAddressBookManager      ;
@@ -499,7 +503,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,Serializabl
             } catch (com.bitdubai.fermat_ccp_api.layer.middleware.wallet_contacts.exceptions.WalletContactNotFoundException e) {
                 String actorPublicKey = createActor(actorAlias, actorType, photo);
                 HashMap<BlockchainNetworkType,CryptoAddress>  cryptoAddresses = new HashMap<>();
-                cryptoAddresses.put(blockchainNetworkType,receivedCryptoAddress);
+                cryptoAddresses.put(blockchainNetworkType, receivedCryptoAddress);
                 WalletContactRecord walletContactRecord = walletContactsRegistry.createWalletContact(
                         actorPublicKey,
                         actorAlias,
@@ -1460,7 +1464,7 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,Serializabl
 
     @Override
     public void createIntraUser(String name, String phrase, byte[] image) throws CantCreateNewIntraWalletUserException {
-        intraWalletUserIdentityManager.createNewIntraWalletUser(name,phrase,image);
+        intraWalletUserIdentityManager.createNewIntraWalletUser(name, phrase, image);
     }
 
 
@@ -1485,21 +1489,6 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,Serializabl
         return sdf.format(date);
     }
 
-    private SettingsManager<BitcoinWalletSettings> settingsManager;
-    @Override
-    public SettingsManager<BitcoinWalletSettings> getSettingsManager() {
-        System.out.println("Settings manager 1: "+ String.valueOf(settingsManager!=null) );
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-        System.out.println("Settings manager 2: "+ String.valueOf(settingsManager!=null) );
-
-        return this.settingsManager;
-    }
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
@@ -1529,5 +1518,13 @@ public class CryptoWalletWalletModuleManager implements CryptoWallet,Serializabl
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    public final void persistSettings(String publicKey,final BitcoinWalletSettings settings) throws CantPersistSettingsException {
+        getSettingsManager().persistSettings(publicKey, settings);
+    }
+
+    public final BitcoinWalletSettings loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException {
+        return getSettingsManager().loadAndGetSettings(publicKey);
     }
 }
