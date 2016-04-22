@@ -442,17 +442,17 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     /**
      * Get the LineData for the chart based on the ExchangeRate list
      *
-     * @param exchangeRates the exchange rate list
+     * @param spendingList the exchange rate list
      * @return the ListData object
      */
-    private LineData getData(List<BitcoinLossProtectedWalletSpend> exchangeRates) {
+    private LineData getData(List<BitcoinLossProtectedWalletSpend> spendingList) {
         ArrayList<Entry> entryList = new ArrayList<>();
         ArrayList<String> xValues = new ArrayList<>();
 
-        final int size = exchangeRates.size();
+        final int size = spendingList.size();
         for (int i = 0; i < size; i++) {
-            BitcoinLossProtectedWalletSpend exchangeRate = exchangeRates.get(i);
-            entryList.add(new Entry((float) exchangeRate.getExchangeRate(), i));
+            BitcoinLossProtectedWalletSpend listSpendig = spendingList.get(i);
+            //entryList.add(new Entry((float) listSpendig.getEarningOrLost(), i));
             xValues.add(String.valueOf(i));
         }
 
@@ -461,6 +461,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         dataSet.setDrawCircles(false);
         dataSet.setLineWidth(2.0f);
         dataSet.setDrawValues(false);
+        dataSet.setDrawCubic(false);
+        dataSet.setValueFormatter(new LargeValueFormatter());
+
 
         return new LineData(xValues, dataSet);
     }
@@ -602,6 +605,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                     //get available balance to actual exchange rate
 
                     lossProtectedWalletSession.setActualExchangeRate(rate.getPurchasePrice());
+
                     updateBalances();
 
                 }
