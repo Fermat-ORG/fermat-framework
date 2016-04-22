@@ -176,8 +176,6 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             @Override
             public void onClick(View v) {
                 play();
-                songPlayerThread = new ThreadSong(false);
-                songPlayerThread.execute();
 
             }
         });
@@ -243,7 +241,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
                 fos.close();
 
 
-                if (mp.isPlaying()) {
+                if (mp.isPlaying() || pause) {
                     stop();
                     mp.reset();
                 }
@@ -306,7 +304,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             mp.stop();
             pb.setProgress(0);
             tiempo.setText("0:00");
-            songPlayerThread.cancelmusicplayer=true;
+     //       songPlayerThread.cancelmusicplayer=true;
         } catch (IllegalStateException e) {
             Log.e(TAG, "Unable to play audio queue do to exception: " + e.getMessage(), e);
         }
@@ -314,9 +312,11 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
 
     void init(){
-        pb.setProgress(0);
-        tiempo.setText("");
-        song.setText("");
+        if(!mp.isPlaying() || pause) {
+            pb.setProgress(0);
+            tiempo.setText("");
+            song.setText("");
+        }
         loadmysong();
     }
 
@@ -392,6 +392,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             Log.v(TAG, "songtime:"+porcentajeProgreso[0]+"");
 
             pb.setProgress( Math.round(porcentajeProgreso[0]) );
+
             if((mp.getCurrentPosition()/1000)>=(mp.getDuration()/1000)-1){
                 System.out.println("ART_THIS IS THE END");
                 nextsong();
@@ -399,27 +400,27 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
         }
 
-        String crono(float tiempo){
-            float horas,minutos;
-            int segundos;
-            String conteo;
-            minutos=tiempo/60;
-            if(minutos>0){
-                segundos=(int)tiempo-(int)(tiempo/60)*60;
-                if(segundos<10){
-                    conteo=String.valueOf((int)(minutos))+":0"+segundos;
+        String crono(float time){
+            float hour,min;
+            int seg;
+            String count;
+            min=time/60;
+            if(min>0){
+                seg=(int)time-(int)(time/60)*60;
+                if(seg<10){
+                    count=String.valueOf((int)(min))+":0"+seg;
                 }else{
-                    conteo=String.valueOf((int)(minutos))+":"+segundos;
+                    count=String.valueOf((int)(min))+":"+seg;
                 }
             }else{
-                if(tiempo<10){
-                    conteo="0:0"+(int)tiempo;
+                if(time<10){
+                    count="0:0"+(int)time;
                 }else{
-                    conteo="0:"+(int)tiempo;
+                    count="0:"+(int)time;
                 }
 
             }
-            return conteo;
+            return count;
         }
 
 

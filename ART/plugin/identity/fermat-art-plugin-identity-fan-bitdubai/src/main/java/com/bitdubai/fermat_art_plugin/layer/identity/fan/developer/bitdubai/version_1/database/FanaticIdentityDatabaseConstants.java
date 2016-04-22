@@ -17,6 +17,7 @@ public class FanaticIdentityDatabaseConstants {
     public static final String FANATIC_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME = "device_user_public_key";
     public static final String FANATIC_IDENTITY_ALIAS_COLUMN_NAME = "alias";
     public static final String FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME = "external_identity_id";
+    public static final String FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME = "external_platform";
 
     public static final String FANATIC_IDENTITY_FIRST_KEY_COLUMN = FANATIC_IDENTITY_PUBLIC_KEY_COLUMN_NAME;
 

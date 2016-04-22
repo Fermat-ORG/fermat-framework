@@ -28,6 +28,7 @@ public class AppStatusListener implements AppStatusCallbackChanges {
 
     @Override
     public void appSoftwareStatusChanges(AppsStatus appsStatus) {
+        activityWeakReference.get().setAppStatus(appsStatus);
         for (AbstractFermatFragment fragment : activityWeakReference.get().getScreenAdapter().getLstCurrentFragments()) {
             try {
                 fragment.onUpdateViewUIThred(appsStatus.getCode());
@@ -54,6 +55,7 @@ public class AppStatusListener implements AppStatusCallbackChanges {
         }
 
         fermatTextViewWeakReference.get().setText(appsStatus.getCode());
+
     }
 
     public void clear() {
