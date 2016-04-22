@@ -20,8 +20,6 @@ public interface BitcoinLossProtectedWalletSpend  extends Serializable{
 
     double getExchangeRate();
 
-    double getEarningOrLost();
-
 }
 
 
