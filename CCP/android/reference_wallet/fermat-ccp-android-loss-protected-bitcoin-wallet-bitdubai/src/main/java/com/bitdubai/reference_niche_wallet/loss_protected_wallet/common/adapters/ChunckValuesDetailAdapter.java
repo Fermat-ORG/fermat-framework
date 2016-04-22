@@ -48,7 +48,7 @@ public class ChunckValuesDetailAdapter extends FermatAdapter<BitcoinLossProtecte
     @Override
     protected void bindHolder(ChunckValuesDetailItemViewHolder holder, BitcoinLossProtectedWalletSpend data, int position) {
         //Get date and set a FormatDate for Data value
-        SimpleDateFormat sdf = new SimpleDateFormat("MMMM dd, yyyy HH:mm", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy", Locale.US);
         holder.getDate().setText(sdf.format(data.getTimestamp()));
 
         holder.getAmountBalance().setText(formatAmountString(data.getAmount())+" BTC");
