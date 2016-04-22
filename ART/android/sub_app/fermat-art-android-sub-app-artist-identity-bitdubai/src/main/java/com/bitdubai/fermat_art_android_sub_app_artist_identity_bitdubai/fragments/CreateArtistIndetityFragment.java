@@ -4,14 +4,22 @@ package com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.fragmen
  * Created by edicson on 23/03/16.
  */
 
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -25,20 +33,28 @@ import android.widget.Toast;
 
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
+import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
+import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
-import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.popups.PresentationArtArtistUserIdentityDialog;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.session.ArtistIdentitySubAppSession;
+import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.session.SessionConstants;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.util.CommonLogger;
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
-import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantListArtistIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.interfaces.Artist;
+import com.bitdubai.fermat_art_api.layer.identity.fan.interfaces.Fanatic;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist.ArtistIdentityManagerModule;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.identity.Artist.ArtistIdentitySettings;
+import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
-import com.bitdubai.fermat_tky_api.all_definitions.enums.ExternalPlatform;
 import com.bitdubai.sub_app.artist_identity.R;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
@@ -48,12 +64,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import static android.widget.Toast.LENGTH_LONG;
+import static android.widget.Toast.makeText;
 
-public class CreateArtistIndetityFragment extends AbstractFermatFragment {
+
+public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistIdentitySubAppSession,SubAppResourcesProviderManager> {
 
 
 
-    private static final String TAG = "CreateTokenlyArtistIdentity";
+    private static final String TAG = "CreateArtArtistIdentity";
     private static final int CREATE_IDENTITY_FAIL_MODULE_IS_NULL = 0;
     private static final int CREATE_IDENTITY_FAIL_NO_VALID_DATA = 1;
     private static final int CREATE_IDENTITY_FAIL_MODULE_EXCEPTION = 2;
@@ -65,26 +84,25 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment {
     private static final int CONTEXT_MENU_CAMERA = 1;
     private static final int CONTEXT_MENU_GALLERY = 2;
     private ArtistIdentitySubAppSession artistIdentitySubAppSession;
-    private byte[] ArtistImageByteArray;
+    private byte[] artistImageByteArray;
     private ArtistIdentityManagerModule moduleManager;
     private ErrorManager errorManager;
     private Button createButton;
-    private EditText mArtistExternalUserName;
-    private ImageView ArtistImage;
+    private EditText mArtistUserName;
+    private ImageView artistImage;
     private RelativeLayout relativeLayout;
     private Menu menuHelp;
     private Artist identitySelected;
     private boolean isUpdate = false;
     private EditText mArtistExternalPassword;
     private Spinner mArtistExternalPlatform;
-    private Spinner MexposureLevel;
-    private Spinner MartistAcceptConnectionsType;
+    private Spinner mArtistExternalName;
     private SettingsManager<ArtistIdentitySettings> settingsManager;
     private ArtistIdentitySettings artArtistPreferenceSettings = null;
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
     private boolean authenticationSuccessful = false;
-
+    private UUID externalPlatformID;
     private Handler handler;
     boolean checked =false;
 
@@ -97,78 +115,141 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        try{
+            moduleManager = appSession.getModuleManager();
+            errorManager = appSession.getErrorManager();
+            setHasOptionsMenu(false);
+            settingsManager = appSession.getModuleManager().
+                    getSettingsManager();
 
+            try {
+                if (appSession.getAppPublicKey()!= null){
+                    artArtistPreferenceSettings = settingsManager.loadAndGetSettings(
+                            appSession.getAppPublicKey());
+                }else{
+                    artArtistPreferenceSettings = settingsManager.loadAndGetSettings("public_key_art_artist_identity");
+                }
 
+            } catch (Exception e) {
+                artArtistPreferenceSettings = null;
+            }
+
+            if (artArtistPreferenceSettings == null) {
+                artArtistPreferenceSettings = new ArtistIdentitySettings();
+                artArtistPreferenceSettings.setIsPresentationHelpEnabled(false);
+                if(settingsManager != null){
+                    if (appSession.getAppPublicKey()!=null){
+                        settingsManager.persistSettings(
+                                appSession.getAppPublicKey(), artArtistPreferenceSettings);
+                    }else{
+                        settingsManager.persistSettings("public_key_art_artist_identity", artArtistPreferenceSettings);
+                    }
+                }
+            }
+        }catch (Exception e){
+            errorManager.reportUnexpectedSubAppException(
+                    SubApps.ART_ARTIST_IDENTITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT,
+                    e);
+        }
 
     }
-
-
-
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootLayout = inflater.inflate(R.layout.fragment_art_create_issuer_identity, container, false);
+        View rootLayout = inflater.inflate(R.layout.fragment_art_create_artist_identity, container, false);
        initViews(rootLayout);
-      //  setUpIdentity();
+        setUpIdentity();
 
         return rootLayout;
     }
 
+    private void setUpIdentity() {
+        try {
+            identitySelected = (Artist) appSession.getData(
+                    SessionConstants.IDENTITY_SELECTED);
 
+            if (identitySelected != null) {
+                loadIdentity();
+            } else {
+                List<Artist> lst = moduleManager.listIdentitiesFromCurrentDeviceUser();
+                if(!lst.isEmpty()){
+                    identitySelected = lst.get(0);
+                }
+                if (identitySelected != null) {
+                    loadIdentity();
+                    isUpdate = true;
+                    createButton.setText("Save changes");
+                }
+            }
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(
+                    SubApps.ART_ARTIST_IDENTITY,
+                    UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT,
+                    e);
+        }
+    }
+    private void loadIdentity(){
+        //System.out.println("Image is : " + identitySelected.getProfileImage());
+        if (identitySelected.getProfileImage() != null) {
+            Bitmap bitmap = null;
+            if (identitySelected.getProfileImage().length > 0) {
+                bitmap = BitmapFactory.decodeByteArray(
+                        identitySelected.getProfileImage(),
+                        0,
+                        identitySelected.getProfileImage().length);
+            } else {
+                bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.afi_profile_male);
+            }
+            bitmap = Bitmap.createScaledBitmap(bitmap, 100, 100, true);
+            artistImageByteArray = toByteArray(bitmap);
+            artistImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+        }
+        mArtistUserName.setText(identitySelected.getAlias());
+        List<String> arraySpinner = new ArrayList<>();
+        arraySpinner.add("Select a Platform...");
+        arraySpinner.addAll(ArtExternalPlatform.getArrayItems());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
+        mArtistExternalPlatform.setAdapter(adapter);
+        ArtExternalPlatform[] externalPlatforms = ArtExternalPlatform.values();
+//        for (int i=0; i<externalPlatforms.length;i++){
+//            if(externalPlatforms[i].getCode().equals(
+//                    identitySelected.getExternalPlatform().getCode())){
+//                mArtistExternalPlatform.setSelection(i);
+//                break;
+//            }
+//        }
+    }
     private void initViews(View layout) {
-        createButton = (Button) layout.findViewById(R.id.create_tokenly_Artist_identity);
-        mArtistExternalUserName = (EditText) layout.findViewById(R.id.external_username);
-        //mArtistExternalPassword = (EditText) layout.findViewById(R.id.tokenly_access_password);
-        ArtistImage =  (ImageView) layout.findViewById(R.id.tokenly_Artist_image);
-        mArtistExternalPlatform = (Spinner) layout.findViewById(R.id.external_platform);
-        //MexposureLevel = (Spinner) layout.findViewById(R.id.exposureLevel);
-        //MartistAcceptConnectionsType = (Spinner) layout.findViewById(R.id.artistAcceptConnectionsType);
-        relativeLayout = (RelativeLayout) layout.findViewById(R.id.user_image);
+        createButton = (Button) layout.findViewById(R.id.create_art_artist_identity);
+        mArtistUserName = (EditText) layout.findViewById(R.id.aai_username);
+        artistImage =  (ImageView) layout.findViewById(R.id.aai_artist_image);
+        mArtistExternalPlatform = (Spinner) layout.findViewById(R.id.aai_external_platform);
+        mArtistExternalName = (Spinner) layout.findViewById(R.id.aai_userIdentityName);
+        relativeLayout = (RelativeLayout) layout.findViewById(R.id.aai_layout_user_image);
         createButton.setText((!isUpdate) ? "Create" : "Update");
-        mArtistExternalUserName.requestFocus();
+        mArtistUserName.requestFocus();
 
 
-        List<String> arraySpinner = ArtExternalPlatform.getArrayItems();
+        List<String> arraySpinner = new ArrayList<>();
+        arraySpinner.addAll(ArtExternalPlatform.getArrayItems());
+        arraySpinner.add("Select a Platform...");
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
 
         mArtistExternalPlatform.setAdapter(adapter);
+        externalPlatformSpinnerListener();
+        externalUserSpinnerListener();
+        mArtistUserName.requestFocus();
+        registerForContextMenu(artistImage);
 
-
-        mArtistExternalPlatform.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-                try {
-
-                  List<String> jj = getArtistIdentityByPlatform(parent.getItemAtPosition(position).toString());
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        //getArtistIdentityByPlatform();
-
-
-        mArtistExternalUserName.requestFocus();
-        registerForContextMenu(ArtistImage);
-
-        ArtistImage.setOnClickListener(new View.OnClickListener() {
+        artistImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CommonLogger.debug(TAG, "Entrando en ArtImage.setOnClickListener");
-                getActivity().openContextMenu(ArtistImage);
+                getActivity().openContextMenu(artistImage);
             }
         });
 
@@ -189,8 +270,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment {
                     case CREATE_IDENTITY_SUCCESS:
 //                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
                         if (!isUpdate) {
-                            //Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
-                            Toast.makeText(getActivity(), "Not Yet Ready", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
                         } else {
                             Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
                         }
@@ -211,61 +291,23 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment {
         });
     }
 
-
-
-
-
-
     private int createNewIdentity() throws InvalidParameterException {
-
-        String ArtistExternalName = mArtistExternalUserName.getText().toString();
-        //String ArtistPassword = "";
-
-        /*
-        if (!mArtistExternalPassword.getText().toString().isEmpty()){
-            ArtistPassword = mArtistExternalPassword.getText().toString();
-        }
-        */
-
-
-        /*
-        ExternalPlatform externalPlatform = ExternalPlatform.DEFAULT_EXTERNAL_PLATFORM;
-        if(mArtistExternalPlatform.isSelected()){
-            externalPlatform = ExternalPlatform.getExternalPlatformByLabel(mArtistExternalPlatform.getSelectedItem().toString());
-        }
-
-        ExposureLevel  exposureLevel = ExposureLevel.DEFAULT_EXPOSURE_LEVEL;
-        if(MexposureLevel.isSelected()){
-            exposureLevel = ExposureLevel.getByCode(MexposureLevel.getSelectedItem().toString());
-        }
-
-        ArtistAcceptConnectionsType artistAcceptConnectionsType = ArtistAcceptConnectionsType.AUTOMATIC;
-        if(MartistAcceptConnectionsType.isSelected()){
-            artistAcceptConnectionsType = ArtistAcceptConnectionsType.getByCode(MartistAcceptConnectionsType.getSelectedItem().toString());
-        }
-*/
-        boolean dataIsValid = validateIdentityData(ArtistExternalName,  ArtistImageByteArray);
-
-
-/*
-        if (dataIsValid) {
-            if (moduleManager != null) {
-                try {
-                    if (!isUpdate) {
-                        moduleManager.createArtistIdentity(ArtistExternalName, (ArtistImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : ArtistImageByteArray, UUID.fromString()) ;
-                        //new ManageIdentity(ArtistExternalName,ArtistPassword,externalPlatform,exposureLevel,artistAcceptConnectionsType, ManageIdentity.CREATE_IDENTITY).execute();
-
+        String artistName = mArtistUserName.getText().toString();
+        boolean dataIsValid = validateIdentityData(
+                artistName,
+                artistImageByteArray);
+        if(dataIsValid){
+            if(moduleManager != null){
+                try{
+                    if(!isUpdate){
+                        moduleManager.createArtistIdentity(artistName,artistImageByteArray,(externalPlatformID == null) ? null : externalPlatformID);
+                    }else{
+                        if(updateProfileImage)
+                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),artistImageByteArray,(externalPlatformID == null) ? null : externalPlatformID);
+                        else
+                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),identitySelected.getProfileImage(),(externalPlatformID == null) ? null : externalPlatformID);
                     }
-                    else
-                    if(updateProfileImage)
-                        //moduleManager.updateFanIdentity(fanExternalName, fanPassword, identitySelected.getId(), identitySelected.getPublicKey(), fanImageByteArray, externalPlatform);
-                       // new ManageIdentity(ArtistExternalName,ArtistPassword,externalPlatform, exposureLevel,artistAcceptConnectionsType, ManageIdentity.UPDATE_IMAGE_IDENTITY).execute();
-                    else
-                        //moduleManager.updateFanIdentity(fanExternalName,fanPassword,identitySelected.getId(), identitySelected.getPublicKey(), identitySelected.getProfileImage(),externalPlatform);
-                        //new ManageIdentity(ArtistExternalName,ArtistPassword,externalPlatform,exposureLevel,artistAcceptConnectionsType,  ManageIdentity.UPDATE_IDENTITY).execute();
-                }
-
-                catch (Exception e){
+                }catch (Exception e){
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                     e.printStackTrace();
                 }
@@ -273,10 +315,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment {
             }
             return CREATE_IDENTITY_FAIL_MODULE_IS_NULL;
         }
-
         return CREATE_IDENTITY_FAIL_NO_VALID_DATA;
-*/
-    return CREATE_IDENTITY_SUCCESS;
     }
 
 
@@ -288,8 +327,6 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment {
             return false;
         if (ArtistImageBytes.length > 0)
             return true;
-//        if(externalPlatform != null)
-//            return  true;
         return true;
     }
 
@@ -304,42 +341,222 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment {
 
 
     private void externalPlatformSpinnerListener(){
+        mArtistExternalName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                try{
+                    List<String> arraySpinner = new ArrayList<>();
+                    arraySpinner.add("Select an Identity...");
+                    ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                            getActivity(),
+                            android.R.layout.simple_spinner_item,
+                            arraySpinner
+                    );
+                    if(parent.getItemAtPosition(position) != 0){
+                        arraySpinner.addAll(getArtistIdentityByPlatform(ArtExternalPlatform.getArtExternalPlatformByLabel(parent.getItemAtPosition(position).toString())));
+                        adapter = new ArrayAdapter<>(
+                                getActivity(),
+                                android.R.layout.simple_spinner_item,
+                                arraySpinner
+                        );
 
+                    }
+
+                    mArtistExternalName.setAdapter(adapter);
+
+                }catch (Exception e){
+                    errorManager.reportUnexpectedSubAppException(
+                            SubApps.ART_ARTIST_IDENTITY,
+                            UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT,
+                            e);
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
 
-    private  List<String> getArtistIdentityByPlatform(String spinnerChoice) throws Exception{
-
-        ArtExternalPlatform externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(spinnerChoice);
-
-
-
-        HashMap<UUID, String> ArtIdentityByPlatform = null;
-
-
-        if(externalPlatform == ArtExternalPlatform.TOKENLY) {
-            //fanIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(ArtExternalPlatform.TOKENLY);
-        }
-
-
-        ArtIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(ArtExternalPlatform.TOKENLY);
-
-        //HashMap<ArtExternalPlatform, HashMap<UUID, String>> JHashMap = moduleManager.listExternalIdentitiesFromCurrentDeviceUser();
-
-        //fanIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
-
-            Iterator<Map.Entry<UUID, String>> entries2 = ArtIdentityByPlatform.entrySet().iterator();
+    private List<String> getArtistIdentityByPlatform(ArtExternalPlatform externalPlatform) throws Exception{
+        HashMap<UUID, String> artistIdentityByPlatform = null;
+        artistIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
+        Iterator<Map.Entry<UUID, String>> entries2 = artistIdentityByPlatform.entrySet().iterator();
         List<String> identityNameList = new ArrayList<>();
-        List<UUID> identityIdList = new ArrayList<>();
         while(entries2.hasNext()){
             Map.Entry<UUID, String> entry2 = entries2.next();
             identityNameList.add(entry2.getValue());
-            identityIdList.add(entry2.getKey());
         }
 
         return identityNameList;
     }
 
+    private List<UUID> getArtistIdentityIdByPlatform(ArtExternalPlatform externalPlatform) throws Exception{
+        HashMap<UUID, String> artistIdentityByPlatform = null;
+        artistIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
+
+
+        Iterator<Map.Entry<UUID, String>> entries2 = artistIdentityByPlatform.entrySet().iterator();
+        List<UUID> identityIdList = new ArrayList<>();
+        while(entries2.hasNext()){
+            Map.Entry<UUID, String> entry2 = entries2.next();
+            identityIdList.add(entry2.getKey());
+
+        }
+
+        return identityIdList;
+    }
+    private void externalUserSpinnerListener(){
+        mArtistExternalName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    externalPlatformID = getArtistIdentityIdByPlatform(ArtExternalPlatform.getArtExternalPlatformByLabel(mArtistExternalName.getSelectedItem().toString())).get(position);
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedSubAppException(
+                            SubApps.ART_ARTIST_IDENTITY,
+                            UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT,
+                            e);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    /**
+     * Bitmap to byte[]
+     *
+     * @param bitmap Bitmap
+     * @return byte array
+     */
+    private byte[] toByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        return stream.toByteArray();
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    private void loadImageFromGallery() {
+        Intent loadImageIntent = new Intent(
+                Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(loadImageIntent, REQUEST_LOAD_IMAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            Bitmap imageBitmap = null;
+            ImageView pictureView = artistImage;
+            contextMenuInUse = true;
+            switch (requestCode) {
+                case REQUEST_IMAGE_CAPTURE:
+                    Bundle extras = data.getExtras();
+                    imageBitmap = (Bitmap) extras.get("data");
+                    updateProfileImage = true;
+                    break;
+                case REQUEST_LOAD_IMAGE:
+                    Uri selectedImage = data.getData();
+                    try {
+                        if (isAttached) {
+                            ContentResolver contentResolver = getActivity().getContentResolver();
+                            imageBitmap = MediaStore.Images.Media.getBitmap(contentResolver, selectedImage);
+                            imageBitmap = Bitmap.createScaledBitmap(imageBitmap, pictureView.getWidth(), pictureView.getHeight(), true);
+                            artistImageByteArray = toByteArray(imageBitmap);
+                            updateProfileImage = true;
+                            Picasso.with(getActivity()).load(selectedImage).transform(new CircleTransform()).into(artistImage);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error loading the picture", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+            }
+            if (pictureView != null && imageBitmap != null)
+                pictureView.setImageDrawable(
+                        ImagesUtils.getRoundedBitmap(
+                                getResources(), imageBitmap));
+        }
+    }
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo menuInfo) {
+        menu.setHeaderTitle("Choose mode");
+        menu.setHeaderIcon(getActivity().getResources().getDrawable(R.drawable.ic_camera_green));
+        menu.add(Menu.NONE, CONTEXT_MENU_CAMERA, Menu.NONE, "Camera");
+        menu.add(Menu.NONE, CONTEXT_MENU_GALLERY, Menu.NONE, "Gallery");
+
+        super.onCreateContextMenu(menu, view, menuInfo);
+    }
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        if(!contextMenuInUse) {
+            switch (item.getItemId()) {
+                case CONTEXT_MENU_CAMERA:
+                    dispatchTakePictureIntent();
+                    contextMenuInUse = true;
+                    return true;
+                case CONTEXT_MENU_GALLERY:
+                    loadImageFromGallery();
+                    contextMenuInUse = true;
+                    return true;
+            }
+        }
+        return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        try {
+            menu.add(1, 99, 1, "help").setIcon(R.drawable.help_icon)
+                    .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+
+            final MenuItem action_help = menu.findItem(R.id.action_help);
+            menu.findItem(R.id.action_help).setVisible(true);
+            action_help.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    menu.findItem(R.id.action_help).setVisible(false);
+                    return false;
+                }
+            });
+
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        try {
+            int id = item.getItemId();
+
+            if (id == 99){
+
+            }
+
+
+        } catch (Exception e) {
+            errorManager.reportUnexpectedUIException(
+                    UISource.ACTIVITY,
+                    UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! recovering from system error",
+                    LENGTH_LONG).show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
 
 
