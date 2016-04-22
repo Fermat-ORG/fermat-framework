@@ -1,6 +1,5 @@
 package com.bitdubai.sub_app.chat_community.fragments;
 
-
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -41,6 +40,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantGetChtActorSearchResult;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
@@ -132,7 +132,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
             moduleManager = chatUserSubAppSession.getModuleManager();
             errorManager = appSession.getErrorManager();
-
             settingsManager = chatUserSubAppSession.getModuleManager().getSettingsManager();
             //TODO: SETTINGS OF ACTOR LAYER
             try {
@@ -222,8 +221,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
         noNetworkView = (LinearLayout) rootView.findViewById(R.id.no_connection_view);
         noFermatNetworkView = (LinearLayout) rootView.findViewById(R.id.no_fermat_connection_view);
         try {
-            dataSet.addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-        } catch (CantListChatIdentityException e) {
+            dataSet.addAll(moduleManager.getChatActorSearch().getResult());//.getCacheSuggestionsToContact(MAX, offset));****
+        } catch (CantGetChtActorSearchResult e) {
             e.printStackTrace();
         }
         if (chatUserSettings.isPresentationHelpEnabled()) {
@@ -307,16 +306,16 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             adapter.changeDataSet(lstChatUserInformations);
                             if (lstChatUserInformations.isEmpty()) {
                                 try {
-                                    if (!moduleManager.getCacheSuggestionsToContact(MAX, offset).isEmpty()) {
+                                    if (!moduleManager.getChatActorSearch().getResult().isEmpty()) {//moduleManager.getCacheSuggestionsToContact(MAX, offset)
                                         lstChatUserInformations
-                                                .addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
+                                                .addAll(moduleManager.getChatActorSearch().getResult());//getCacheSuggestionsToContact(MAX, offset));
                                         showEmpty(false, emptyView);
                                         showEmpty(false, searchEmptyView);
                                     } else {
                                         showEmpty(true, emptyView);
                                         showEmpty(false, searchEmptyView);
                                     }
-                                } catch (CantListChatIdentityException e) {
+                                } catch (CantGetChtActorSearchResult e) {
                                     e.printStackTrace();
                                 }
 
@@ -330,8 +329,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             showEmpty(false, emptyView);
                             showEmpty(false, searchEmptyView);
                             lstChatUserInformations
-                                    .addAll(moduleManager.getCacheSuggestionsToContact(MAX, offset));
-                        } catch (CantListChatIdentityException e) {
+                                    .addAll(moduleManager.getChatActorSearch().getResult());//getCacheSuggestionsToContact(MAX, offset));
+                        } catch (CantGetChtActorSearchResult e) {
                             e.printStackTrace();
                         }
                     }
@@ -461,7 +460,6 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                     return false;
                 }
             });
-
         } catch (Exception e) {
 
         }
@@ -517,8 +515,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             //verifico la cache para mostrar los que tenia antes y los nuevos
              List<ChatActorCommunityInformation> userCacheList = new ArrayList<>();
              try {
-                     userCacheList = moduleManager.getCacheSuggestionsToContact(MAX, offset);
-             } catch (CantListChatIdentityException e) {
+                     userCacheList = moduleManager.getChatActorSearch().getResult(); //getCacheSuggestionsToContact(MAX, offset);
+             } catch (CantGetChtActorSearchResult e) {
                  e.printStackTrace();
              }
 
