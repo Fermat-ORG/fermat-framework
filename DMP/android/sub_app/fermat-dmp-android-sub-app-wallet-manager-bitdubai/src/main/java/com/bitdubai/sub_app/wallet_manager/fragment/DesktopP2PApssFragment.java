@@ -31,6 +31,7 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
+import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResources;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -408,7 +409,36 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
 
     @Override
     public void onHolderItemClickListener(Item data, int position) {
-
+        //TODO: I put this here to test our Music player sub app. Manuel
+        try {
+            switch (data.getType()) {
+                case SUB_APP:
+                    if (((InstalledSubApp) data.getInterfaceObject()).getSubAppType().equals(SubApps.Scanner)) {
+                        Toast.makeText(getActivity(), "Coming soon", Toast.LENGTH_SHORT).show();
+                    } else selectSubApp((InstalledSubApp) data.getInterfaceObject());
+                    break;
+                case WALLET:
+                    selectWallet((InstalledWallet) data.getInterfaceObject());
+                    break;
+                case EMPTY:
+                    break;
+                case FOLDER:
+//                    FolderDialog folderDialog = new FolderDialog(getActivity(),R.style.AppThemeDialog,desktopSession,null,data.getName(),((FermatFolder)data.getInterfaceObject()).getLstFolderItems(),this);
+////                    folderDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+////                    folderDialog.getWindow().setFormat(PixelFormat.TRANSLUCENT);
+////                    WindowManager.LayoutParams lp = folderDialog.getWindow().getAttributes();
+////                    lp.dimAmount=0.0f; // Dim level. 0.0 - no dim, 1.0 - completely opaque
+////                    folderDialog.getWindow().setAttributes(lp);
+//                    folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//                    folderDialog.show();
+                    break;
+                default:
+                    break;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        //TODO: End of experimental code. Manuel.
     }
 
 
