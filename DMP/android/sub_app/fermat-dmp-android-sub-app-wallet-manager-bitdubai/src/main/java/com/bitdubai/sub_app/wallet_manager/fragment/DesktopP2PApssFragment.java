@@ -1,7 +1,6 @@
 package com.bitdubai.sub_app.wallet_manager.fragment;
 
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -32,8 +31,6 @@ import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.desktop.Item;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
-import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
-import com.bitdubai.fermat_api.layer.interface_objects.FermatFolder;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResources;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -43,7 +40,6 @@ import com.bitdubai.sub_app.wallet_manager.adapter.DesktopAdapter;
 import com.bitdubai.sub_app.wallet_manager.commons.EmptyItem;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.OnStartDragListener;
 import com.bitdubai.sub_app.wallet_manager.commons.helpers.SimpleItemTouchHelperCallback;
-import com.bitdubai.sub_app.wallet_manager.popup.FolderDialog;
 import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
 import com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp;
 
@@ -360,7 +356,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
             item.setPosition(3);
             lstItemsWithIcon.add(item);
 
-            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CHT_CHAT, null, null, "chat_sub_app", "Chat", SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), "chat_sub_app", new Version(1, 0, 0), Platforms.CHAT_PLATFORM);
+            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CHT_CHAT, null, null, "chat_sub_app", "Chat", SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), "chat_sub_app", new Version(1, 0, 0), Platforms.CHAT_PLATFORM, AppsStatus.DEV);
             installedSubApp.setAppStatus(AppsStatus.ALPHA);
             item = new Item(installedSubApp);
             item.setIconResource(R.drawable.chat_subapp);
@@ -380,7 +376,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
             int pos = 0;
             for(int i = 0;i<lstItemsWithIcon.size();i++){
                 Item itemIcon = lstItemsWithIcon.get(i);
-                if((itemIcon.getAppStatus() == AppsStatus.ALPHA)){
+                if((itemIcon.getAppStatus() == getFermatActivityManager().getAppStatus())){
                     arrItemsWithoutIcon[pos]= itemIcon;
                     pos++;
                 }
@@ -404,39 +400,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
 
     @Override
     public void onHolderItemClickListener(Item data, int position) {
-        try {
-            switch (data.getType()) {
-                case SUB_APP:
-                    if(((InstalledSubApp)data.getInterfaceObject()).getSubAppType().equals(SubApps.Scanner)){
-                        Toast.makeText(getActivity(),"Coming soon",Toast.LENGTH_SHORT).show();
-                    } else{
-                        selectSubApp((InstalledSubApp) data.getInterfaceObject());
-                    }
-                    break;
-                case WALLET:
-                    selectWallet((InstalledWallet) data.getInterfaceObject());
-                    break;
-                case EMPTY:
-                    break;
-                case FOLDER:
-                    FolderDialog folderDialog = new FolderDialog(getActivity(),R.style.AppThemeDialog,appSession,null,data.getName(),((FermatFolder)data.getInterfaceObject()).getLstFolderItems(),this);
-//                    folderDialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-//                    folderDialog.getWindow().setFormat(PixelFormat.TRANSLUCENT);
-//                    WindowManager.LayoutParams lp = folderDialog.getWindow().getAttributes();
-//                    lp.dimAmount=0.0f; // Dim level. 0.0 - no dim, 1.0 - completely opaque
-//                    folderDialog.getWindow().setAttributes(lp);
-                    folderDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-                    folderDialog.show();
-                    break;
-                case P2P_APP:
-                    selectApp((InstalledApp) data.getInterfaceObject());
-                    break;
-                default:
-                    break;
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+
     }
 
 
