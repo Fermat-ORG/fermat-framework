@@ -12,6 +12,7 @@ import com.bitdubai.fermat_osa_android_core.layer.system.platform_file_system.Pl
 import com.bitdubai.fermat_osa_android_core.layer.system.plugin_broadcaster.PluginBroadcasterSystemAddonSubsystem;
 import com.bitdubai.fermat_osa_android_core.layer.system.plugin_database_system.PluginDatabaseSystemAddonSubsystem;
 import com.bitdubai.fermat_osa_android_core.layer.system.plugin_file_system.PluginFileSystemAddonSubsystem;
+import com.bitdubai.fermat_osa_android_core.layer.system.plugin_hardware.PluginHardwareAddonSubsystem;
 
 /**
  * Created by Leon Acosta - (laion.cj91@gmail.com) on 27/10/2015.
@@ -44,6 +45,7 @@ public class SystemLayer extends AbstractLayer {
             registerAddon(new PlatformFileSystemAddonSubsystem());
             registerAddon(new PluginFileSystemAddonSubsystem());
             registerAddon(new PluginBroadcasterSystemAddonSubsystem(androidCoreUtils));
+            registerAddon(new PluginHardwareAddonSubsystem());
 
         } catch(CantRegisterAddonException e) {
 

@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserModuleManager;
 import com.bitdubai.sub_app.intra_user_community.fragmentFactory.IntraUserFragmentFactory;
@@ -67,10 +68,10 @@ public class CryptoWalletUserCommunityFermatAppConnection extends AppConnections
     public NotificationPainter getNotificationPainter(String code){
         try
         {
-            this.intraUserSubAppSession = (IntraUserSubAppSession)this.getSession();
+            this.intraUserSubAppSession = this.getFullyLoadedSession();
             if(intraUserSubAppSession!=  null)
                moduleManager = intraUserSubAppSession.getModuleManager();
-            return CryptoWalletUserCommunityBuildNotification.getNotification(moduleManager,code);
+            return CryptoWalletUserCommunityBuildNotification.getNotification(moduleManager,code, Activities.CCP_SUB_APP_INTRA_USER_COMMUNITY_CONNECTION_NOTIFICATIONS.getCode());
         }
         catch(Exception e)
         {

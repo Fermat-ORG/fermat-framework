@@ -1,11 +1,9 @@
-# Fermat CSH Plugin Wallet Cash Money
+# Fermat CSH Plugin - Cash Money Wallet
+Manage the Cash balance of a User (normally a Crypto Broker)
 
-Gestiona el balance efectivo del Crypto Broker.
-
-## Caracteristicas
-* Representa la situacion financiera en efectivo para un momento determinado
-* Calcula el activo, el pasivo y el capital de las actividades bancarias del autor.
+## Characteristics
+* Represent the financial situation in cash for a given moment
+* Calculate the active, the passive and the capital monetary activities of the User
 
 ## Developer
-
 **bitDubai** - [http://bitdubai.com/](http://bitdubai.com/)

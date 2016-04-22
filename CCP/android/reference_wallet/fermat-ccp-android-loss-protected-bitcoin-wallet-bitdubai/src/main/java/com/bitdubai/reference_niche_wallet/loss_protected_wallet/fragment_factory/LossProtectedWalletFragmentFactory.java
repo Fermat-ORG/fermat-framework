@@ -8,7 +8,9 @@ import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.Conta
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.ContactsFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.LossProtectedSettingsFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.AddConnectionFragment;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.ChunckValuesDetailFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.ChunckValuesHistoryFragment;
+import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.HomeFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.NoIdentityFragment;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.ReceiveTransactionFragment2;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.fragments.wallet_final_version.ReceiveTransactionFragment3;
@@ -39,13 +41,15 @@ public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<Lo
                 /**
                  * Executing fragments for BITCOIN REQUESTED.
                  */
+                case CCP_BITCOIN_LOSS_PROTECTED_WALLET_HOME:
+                    currentFragment = HomeFragment.newInstance();
+                    break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_RECEIVE:
                     currentFragment = ReceiveTransactionFragment2.newInstance();
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_SEND:
-                    currentFragment =SendTransactionFragment2.newInstance(); //RequestHomePaymentFragment.newInstance();
+                    currentFragment = SendTransactionFragment2.newInstance(); //RequestHomePaymentFragment.newInstance();
                     break;
-
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_TRANSACTIONS:
                     break;
                 case CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_CONTACTS:
@@ -111,7 +115,7 @@ public class LossProtectedWalletFragmentFactory extends FermatFragmentFactory<Lo
                     break;
 
                 case CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUES_DETAIL_FRAGMENT:
-
+                    currentFragment = ChunckValuesDetailFragment.newInstance();
                     break;
                 default:
                     throw new FragmentNotFoundException("Fragment not found", new Exception(), fragments.getKey(), "Swith failed");

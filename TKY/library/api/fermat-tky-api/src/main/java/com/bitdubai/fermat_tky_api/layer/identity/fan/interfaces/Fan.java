@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces;
 
+import com.bitdubai.fermat_tky_api.all_definitions.exceptions.ObjectNotSetException;
 import com.bitdubai.fermat_tky_api.all_definitions.interfaces.Identity;
 
 import java.util.List;
@@ -24,7 +25,20 @@ public interface Fan extends Identity {
     /**
      * This method persist the username in the fan identity.
      * @param userName
+     * @throws ObjectNotSetException
      */
-    void addNewArtistConnected(String  userName);
+    void addNewArtistConnected(String  userName) throws ObjectNotSetException;
+
+    /**
+     * This method returns the XML String representation from the Artist Connected List.
+     * @return
+     */
+    public String getArtistsConnectedStringList();
+
+    /**
+     * This method sets the artist connected list from a XML String.
+     * @param xmlStringList
+     */
+    void addArtistConnectedList(String xmlStringList);
 
 }

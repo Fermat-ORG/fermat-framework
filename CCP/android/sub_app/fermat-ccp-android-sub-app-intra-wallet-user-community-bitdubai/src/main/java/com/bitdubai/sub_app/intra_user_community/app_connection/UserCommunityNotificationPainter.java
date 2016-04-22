@@ -13,15 +13,18 @@ public class UserCommunityNotificationPainter implements NotificationPainter{
     private String textBody;
     private String image;
     private RemoteViews remoteViews;
+    private String codeReturn;
+
 
     //constructor
 
-    public UserCommunityNotificationPainter(String title, String textBody, String image, String viewCode)
+    public UserCommunityNotificationPainter(String title, String textBody, String image, String viewCode,String codeReturn)
     {
         this.title    = title;
         this.textBody = textBody;
         this.image    = image;
         remoteViews = null;
+        this.codeReturn = codeReturn;
 
 
     }
@@ -53,7 +56,7 @@ public class UserCommunityNotificationPainter implements NotificationPainter{
 
     @Override
     public String getActivityCodeResult() {
-        return null;
+        return  this.codeReturn ;
     }
 
     @Override

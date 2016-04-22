@@ -3,10 +3,6 @@ package com.bitdubai.reference_niche_wallet.loss_protected_wallet.app_connection
 import com.bitdubai.fermat_android_api.engine.NotificationPainter;
 import com.bitdubai.fermat_ccp_api.all_definition.util.WalletUtils;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListReceivePaymentRequestException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.exceptions.CantListTransactionsException;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWallet;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.CryptoWalletTransaction;
-import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.PaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedPaymentRequest;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
@@ -18,7 +14,7 @@ import java.util.UUID;
  */
 public class LossProtectedWalletBuildNotificationPainter {
 
-    public static NotificationPainter getNotification(LossProtectedWallet moduleManager,String code,String walletPublicKey)
+    public static NotificationPainter getNotification(LossProtectedWallet moduleManager,String code,String resultCode)
     {
         NotificationPainter notification = null;
         try {
@@ -36,22 +32,22 @@ public class LossProtectedWalletBuildNotificationPainter {
                     case "TRANSACTIONARRIVE":
                         if(moduleManager != null){
                             loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
-                                transaction= moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey,loggedIntraUserPublicKey);
+                                transaction= moduleManager.getTransaction(UUID.fromString(transactionId), resultCode,loggedIntraUserPublicKey);
 
-                            notification = new LossProtectedWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","",true,resultCode);
 
                         }else{
-                            notification = new LossProtectedWalletNotificationPainter("Received money", "BTC Arrived","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Received money", "BTC Arrived","","",true,resultCode);
                         }
                         break;
                     case "TRANSACTION_REVERSE":
                         if(moduleManager != null) {
                             loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
-                            transaction = moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey, loggedIntraUserPublicKey);
-                            notification = new LossProtectedWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC could not be completed.", "", "",true);
+                            transaction = moduleManager.getTransaction(UUID.fromString(transactionId), resultCode, loggedIntraUserPublicKey);
+                            notification = new LossProtectedWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC could not be completed.", "", "",true,resultCode);
                         }else
                         {
-                            notification = new LossProtectedWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Sent Transaction reversed","Your last Sending could not be completed.","","",true,resultCode);
                         }
                         break;
 
@@ -60,33 +56,33 @@ public class LossProtectedWalletBuildNotificationPainter {
                         if(moduleManager != null){
 
                             paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                            notification = new LossProtectedWalletNotificationPainter("Received new Payment Request","You have received a Payment Request, for" + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Received new Payment Request","You have received a Payment Request, for" + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC","","",true,resultCode);
                         }
                         else
                         {
-                            notification = new LossProtectedWalletNotificationPainter("Received new Payment Request","You have received a new Payment Request.","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Received new Payment Request","You have received a new Payment Request.","","",true,resultCode);
                         }
                         break;
 
                     case "PAYMENTDENIED":
                         if(moduleManager != null){
                             paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                            notification = new LossProtectedWalletNotificationPainter("Payment Request deny","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was deny.","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Payment Request deny","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was deny.","","",true,resultCode);
                         }
                         else
                         {
-                            notification = new LossProtectedWalletNotificationPainter("Payment Request deny","Your Payment Request was deny.","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Payment Request deny","Your Payment Request was deny.","","",true,resultCode);
                         }
                         break;
 
                     case "PAYMENTERROR":
                         if(moduleManager != null){
                             paymentRequest = moduleManager.getPaymentRequest(UUID.fromString(transactionId));
-                            notification = new LossProtectedWalletNotificationPainter("Payment Request reverted","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was reverted.","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Payment Request reverted","Your Payment Request, for " + WalletUtils.formatBalanceString(paymentRequest.getAmount()) + " BTC was reverted.","","",true,resultCode);
                         }
                         else
                         {
-                            notification = new LossProtectedWalletNotificationPainter("Payment Request reverted","Your Last Payment Request was reverted.","","",true);
+                            notification = new LossProtectedWalletNotificationPainter("Payment Request reverted","Your Last Payment Request was reverted.","","",true,resultCode);
                         }
                         break;
 

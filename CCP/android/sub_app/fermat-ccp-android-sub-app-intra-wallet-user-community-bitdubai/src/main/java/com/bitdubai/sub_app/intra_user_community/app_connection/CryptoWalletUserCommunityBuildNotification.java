@@ -10,7 +10,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserM
  */
 public class CryptoWalletUserCommunityBuildNotification {
 
-    public static NotificationPainter getNotification(IntraUserModuleManager moduleManager, String code)
+    public static NotificationPainter getNotification(IntraUserModuleManager moduleManager, String code, String appPublicKey)
     {
         NotificationPainter notification = null;
         try {
@@ -24,14 +24,16 @@ public class CryptoWalletUserCommunityBuildNotification {
                     if(moduleManager != null) {
                         //find last notification by sender actor public key
                         IntraWalletUserActor senderActor = null;
-
+                        String actor= "";
                             senderActor = moduleManager.getLastNotification(senderActorPublicKey);
+                        if (senderActor != null)
+                            actor = "from  " + senderActor.getName();
 
-                        notification = new UserCommunityNotificationPainter("New Connection Request", "A new connection request was received from " + senderActor.getName(), "", "");
+                        notification = new UserCommunityNotificationPainter("New Connection Request", "A new connection request was received " + actor, "", "",appPublicKey);
 
                     }else
                     {
-                        notification = new UserCommunityNotificationPainter("New Connection Request", "A new connection request was received.", "", "");
+                        notification = new UserCommunityNotificationPainter("New Connection Request", "A new connection request was received.", "", "",appPublicKey);
                     }
                     break;
                 case "CONNECTIONACCEPT":
@@ -39,14 +41,16 @@ public class CryptoWalletUserCommunityBuildNotification {
                     if(moduleManager != null) {
                         //find last notification by sender actor public key
                         IntraWalletUserActor senderActor = null;
-
+                        String actor= "";
                         senderActor = moduleManager.getLastNotification(senderActorPublicKey);
 
-                        notification = new UserCommunityNotificationPainter("Connection Request", "Your connection request was accepted to " + senderActor.getName(), "", "");
+                        if (senderActor != null)
+                            actor = " to " + senderActor.getName();
+                        notification = new UserCommunityNotificationPainter("Connection Request", "Your connection request was accepted" + actor, "", "",appPublicKey);
 
                     }else
                     {
-                        notification = new UserCommunityNotificationPainter("Connection Request Accepted", "Your connection request was accepted.", "", "");
+                        notification = new UserCommunityNotificationPainter("Connection Request Accepted", "Your connection request was accepted.", "", "",appPublicKey);
                     }
                     break;
 

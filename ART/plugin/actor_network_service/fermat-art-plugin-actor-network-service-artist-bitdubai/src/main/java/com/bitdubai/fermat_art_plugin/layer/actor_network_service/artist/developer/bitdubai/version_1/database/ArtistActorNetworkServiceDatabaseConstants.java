@@ -36,5 +36,31 @@ public final class ArtistActorNetworkServiceDatabaseConstants {
 
     public static final String CONNECTION_NEWS_FIRST_KEY_COLUMN                    = "request_id"              ;
 
+    /**
+     * Information Request database table definition.
+     */
+    public static final String INFORMATION_REQUEST_TABLE_NAME                           = "information_request";
+
+    public static final String INFORMATION_REQUEST_REQUEST_ID_COLUMN_NAME               = "request_id"              ;
+    public static final String INFORMATION_REQUEST_REQUESTER_PUBLIC_KEY_COLUMN_NAME     = "requester_public_key"    ;
+    public static final String INFORMATION_REQUEST_REQUESTER_ACTOR_TYPE_COLUMN_NAME     = "requester_actor_type"    ;
+    public static final String INFORMATION_REQUEST_ARTIST_PUBLIC_KEY_COLUMN_NAME        = "artist_public_key";
+    public static final String INFORMATION_REQUEST_UPDATE_TIME_COLUMN_NAME              = "update_time"             ;
+    public static final String INFORMATION_REQUEST_TYPE_COLUMN_NAME                     = "type"                    ;
+    public static final String INFORMATION_REQUEST_STATE_COLUMN_NAME                    = "state"                   ;
+
+    public static final String INFORMATION_REQUEST_FIRST_KEY_COLUMN                     = "request_id"              ;
+
+    /**
+     * INFORMATION database table definition.
+     */
+    public static final String INFORMATION_TABLE_NAME                                   = "information"             ;
+
+    public static final String INFORMATION_REQUEST_ID_COLUMN_NAME                       = "request_id"              ; // RELATION WITH INFORMATION REQUEST TABLE.
+    public static final String INFORMATION_EXTERNAL_PLATFORM_COLUMN_NAME                = "external_platform"       ;
+    public static final String INFORMATION_EXTERNAL_USERNAME_COLUMN_NAME                = "merchandise_type"        ;
+
+    public static final String INFORMATION_FIRST_KEY_COLUMN                             = "request_id"              ;
+
 
 }

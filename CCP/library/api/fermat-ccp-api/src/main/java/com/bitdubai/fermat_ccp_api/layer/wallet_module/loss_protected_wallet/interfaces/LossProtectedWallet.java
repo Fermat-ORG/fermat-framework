@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.TransactionType;
+import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.exceptions.CantLoadWalletException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
@@ -65,6 +66,19 @@ import java.util.concurrent.BlockingDeque;
  * @version 1.0
  */
 public interface LossProtectedWallet extends Serializable {
+
+    /**
+     * Calculate Earnings or Losts.
+     *
+     * @param walletPublicKey public key of the wallet in which we are working.
+     * @param blockchainNetworkType Represents the different Network Types available in Fermat.
+     *
+     * @return a double with Losts or Earnings
+     *
+     * @throws
+     */
+
+    double getEarningAndLostsWallet(String walletPublicKey,BlockchainNetworkType blockchainNetworkType);
 
     /**
      * List all wallet contact related to an specific wallet.
@@ -474,7 +488,7 @@ public interface LossProtectedWallet extends Serializable {
      * @return
      * @throws CantListLossProtectedSpendingException
      */
-    List<BitcoinLossProtectedWalletSpend> listSpendingBlocksValue(String walletPublicKey,UUID transactionId) throws CantListLossProtectedSpendingException;
+    List<BitcoinLossProtectedWalletSpend> listSpendingBlocksValue(String walletPublicKey,UUID transactionId) throws CantListLossProtectedSpendingException, CantLoadWalletException;
 
     /**
      * Throw the method <code>setTransactionDescription</code> you can add or change a description for an existent transaction.

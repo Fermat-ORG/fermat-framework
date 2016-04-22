@@ -170,7 +170,7 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         }else {
 //            ModuleManager moduleManager = null;
 //            try {
-//                moduleManager = ApplicationSession.getInstance().getClientSideBrokerService().getModuleManager(fermatAppConnection.getPluginVersionReference());
+//                moduleManager = ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(fermatAppConnection.getPluginVersionReference());
 //            } catch (CantCreateProxyException e) {
 //                e.printStackTrace();
 //            }
@@ -230,11 +230,16 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
     @Override
     public void clearRuntime() {
-        if(getWalletRuntimeManager().getLastWallet() != null)
-            getWalletRuntimeManager().getLastWallet().clear();
+        try {
+            if (getWalletRuntimeManager().getLastWallet() != null)
+                getWalletRuntimeManager().getLastWallet().clear();
 
-        if(getSubAppRuntimeMiddleware().getLastApp() != null)
-            getSubAppRuntimeMiddleware().getLastApp().clear();
+            if (getSubAppRuntimeMiddleware().getLastApp() != null)
+                getSubAppRuntimeMiddleware().getLastApp().clear();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**

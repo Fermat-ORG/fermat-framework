@@ -48,14 +48,6 @@ project(':fermat-dap-plugin-sub-app-module-redeem-point-community').projectDir =
 include ':fermat-dap-plugin-middleware-asset-factory'
 project(':fermat-dap-plugin-middleware-asset-factory').projectDir = new File('DAP/plugin/middleware/fermat-dap-plugin-middleware-asset-factory')
 
-// negotiation transaction
-include ':fermat-dap-plugin-negotiation-transaction-direct-sell-negotiation'
-project(':fermat-dap-plugin-negotiation-transaction-direct-sell-negotiation').projectDir = new File('DAP/plugin/negotiation_transaction/fermat-dap-plugin-negotiation-transaction-direct-sell-negotiation')
-
-// business transaction
-include ':fermat-dap-plugin-business-transaction-asset-direct-sell'
-project(':fermat-dap-plugin-business-transaction-asset-direct-sell').projectDir = new File('DAP/plugin/business_transaction/fermat-dap-plugin-business-transaction-asset-direct-sell')
-
 // digital asset transaction
 include ':fermat-dap-plugin-digital-asset-transaction-asset-issuing'
 project(':fermat-dap-plugin-digital-asset-transaction-asset-issuing').projectDir = new File('DAP/plugin/digital_asset_transaction/fermat-dap-plugin-digital-asset-transaction-asset-issuing')

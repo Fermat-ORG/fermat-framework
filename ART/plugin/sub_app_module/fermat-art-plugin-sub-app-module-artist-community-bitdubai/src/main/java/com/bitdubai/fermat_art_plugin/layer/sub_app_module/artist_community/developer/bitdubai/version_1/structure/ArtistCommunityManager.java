@@ -54,6 +54,7 @@ import com.bitdubai.fermat_art_api.layer.sub_app_module.community.fan.exceptions
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -61,7 +62,7 @@ import java.util.UUID;
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/23/16.
  */
-public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManager {
+public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManager,Serializable {
 
     private final ArtistIdentityManager                         artistIdentityManager                 ;
     private final ArtistActorConnectionManager                  artistActorConnectionManager          ;

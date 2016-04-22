@@ -140,7 +140,7 @@ public class MainActivityFragment extends FermatListFragment<WalletStoreListItem
 
         presentationDialog = new PresentationDialog.Builder(getActivity(), appSession).
                 setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES).
-                setBannerRes(R.drawable.app_store_banner).
+                setBannerRes(R.drawable.banner_app_store).
                 setSubTitle(R.string.presentation_dialog_subtitle_app_store_list).
                 setBody(R.string.presentation_dialog_body_app_store_list).
                 build();

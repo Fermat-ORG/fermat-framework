@@ -21,13 +21,14 @@ import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.in
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.session.LossProtectedWalletSession;
 import com.mati.fermat_preference_settings.drawer.FermatPreferenceFragment;
 import com.mati.fermat_preference_settings.drawer.interfaces.PreferenceSettingsItem;
-import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsOpenDialogText;
 import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsSwithItem;
+import com.mati.fermat_preference_settings.drawer.models.PreferenceSettingsTextPlusRadioItem;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 
 import static com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils.showMessage;
 
@@ -42,6 +43,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
     private LossProtectedWallet cryptoWallet;
     SettingsManager<LossProtectedWalletSettings> settingsManager;
     private LossProtectedWalletSettings bitcoinWalletSettings = null;
+    private String previousSelectedItem = "RegTest";
 
     public static LossProtectedSettingsFragment newInstance() {
         return new LossProtectedSettingsFragment();
@@ -80,17 +82,33 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
             list.add(new PreferenceSettingsSwithItem(2,"Enabled Loss Protected",bitcoinWalletSettings.getNotificationEnabled()));
 
+            if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
+                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
 
-            if (bitcoinWalletSettings.getBlockchainNetworkType()!=null)
-            blockchainNetworkType =  bitcoinWalletSettings.getBlockchainNetworkType();
+                switch (blockchainNetworkType) {
+                    case PRODUCTION:
+                        previousSelectedItem = "MainNet";
+                        break;
+                    case REG_TEST:
+                        previousSelectedItem = "RegTest";
+                        break;
+                    case TEST_NET:
+                        previousSelectedItem = "TestNet";
+                        break;
+                }
 
-        List<PreferenceSettingsTextPlusRadioItem> strings = new ArrayList<PreferenceSettingsTextPlusRadioItem>();
+            }
 
-        strings.add(new PreferenceSettingsTextPlusRadioItem(6,"MainNet",(blockchainNetworkType.equals(BlockchainNetworkType.PRODUCTION)) ? true : false));
-        strings.add(new PreferenceSettingsTextPlusRadioItem(7,"TestNet",(blockchainNetworkType.equals(BlockchainNetworkType.TEST_NET)) ? true : false));
-        strings.add(new PreferenceSettingsTextPlusRadioItem(8,"RegTest",(blockchainNetworkType.equals(BlockchainNetworkType.REG_TEST)) ? true : false));
 
-        list.add(new PreferenceSettingsOpenDialogText(5,"Select Network",strings));
+            final Bundle dataDialog = new Bundle();
+            dataDialog.putInt("items", R.array.items);
+            dataDialog.putString("positive_button_text", getResources().getString(R.string.ok_label));
+            dataDialog.putString("negative_button_text", getResources().getString(R.string.cancel_label));
+            dataDialog.putString("title", getResources().getString(R.string.title_label));
+            dataDialog.putString("mode", "single_option");
+            dataDialog.putString("previous_selected_item", previousSelectedItem);
+            list.add(new PreferenceSettingsOpenDialogText(5, "Select Network", dataDialog));
+
 
             //Exchange Rate Provider
 
@@ -99,7 +117,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
             List<PreferenceSettingsTextPlusRadioItem> stringsProviders = new ArrayList<PreferenceSettingsTextPlusRadioItem>();
 
-            //get providers list
+            //Get providers list
             List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
 
             int position = 11;
@@ -122,9 +140,14 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
         return list;
     }
 
+
+
+    @Override
+    public void optionSelected(PreferenceSettingsItem preferenceSettingsItem, int position) {
+
+    }
+
     /**
-     * Cuando se elige algun settings va a pasar por acá
-     *
      * @param preferenceSettingsItem
      * @param position
      */
@@ -143,52 +166,9 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
             bitcoinWalletSettings.setIsPresentationHelpEnabled(false);
 
 
-            if (preferenceSettingsItem.getId() == 5){
-                //blockchainNetworkType settings
-                PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
-                BlockchainNetworkType blockchainNetworkType = null;
-
-                switch (preferenceSettingsTextPlusRadioItem.getText()) {
-
-                    case "MainNet":
-                        blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
-
-                        break;
-
-                    case "TestNet":
-                        blockchainNetworkType = BlockchainNetworkType.TEST_NET;
-                        break;
-
-                    case "RegTest":
-                        blockchainNetworkType = BlockchainNetworkType.REG_TEST;
-                        break;
-
-                    default:
-                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-                        break;
-
-                }
-
-                preferenceSettingsTextPlusRadioItem.setIsRadioTouched(true);
-
-                System.out.println("SETTING SELECTED IS " + preferenceSettingsTextPlusRadioItem.getText());
-                System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
-
-                if (blockchainNetworkType == null) {
-                    if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
-                        blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
-                    } else {
-                        blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
-                    }
-                }
-
-                bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);   }
-            else {
                 //Exchange Rate provider settings
                 PreferenceSettingsTextPlusRadioItem preferenceSettingsTextPlusRadioItem = (PreferenceSettingsTextPlusRadioItem) preferenceSettingsItem;
-
-
-                //get providers list
+                //Get providers list
                 List<CurrencyExchangeRateProviderManager> providers = new ArrayList(cryptoWallet.getExchangeRateProviderManagers());
 
                 cryptoWallet.setExchangeProvider(providers.get(0).getProviderId());
@@ -198,7 +178,7 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
                     if(provider.getProviderName().equals(preferenceSettingsTextPlusRadioItem.getText()))
                         cryptoWallet.setExchangeProvider(provider.getProviderId());
                 }
-            }
+
 
             try {
                 settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
@@ -211,10 +191,11 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
     }
 
     @Override
+    public void onSettingsTouched(String item, int position) {}
+
+    @Override
     public void onSettingsChanged(PreferenceSettingsItem preferenceSettingsItem, int position, boolean isChecked) {
-
         try {
-
             try {
                 bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
             } catch (CantGetSettingsException e) {
@@ -246,6 +227,53 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
 
 
     @Override
+    public void dialogOptionSelected(String item, int position) {
+
+
+        BlockchainNetworkType blockchainNetworkType;
+
+        switch (item) {
+
+            case "MainNet":
+                blockchainNetworkType = BlockchainNetworkType.PRODUCTION;
+
+                break;
+
+            case "TestNet":
+                blockchainNetworkType = BlockchainNetworkType.TEST_NET;
+                break;
+
+            case "RegTest":
+                blockchainNetworkType = BlockchainNetworkType.REG_TEST;
+                break;
+
+            default:
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+                break;
+
+        }
+
+        System.out.println("NETWORK TYPE TO BE SAVED IS  " + blockchainNetworkType.getCode());
+
+        if (blockchainNetworkType == null) {
+            if (bitcoinWalletSettings.getBlockchainNetworkType() != null) {
+                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
+            } else {
+                blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
+            }
+        }
+
+        bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
+
+
+        try {
+            settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+        } catch (CantPersistSettingsException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public int getBackgroundColor() {
         return Color.WHITE;
     }
@@ -254,6 +282,4 @@ public class LossProtectedSettingsFragment extends FermatPreferenceFragment<Loss
     public int getBackgroundAlpha() {
         return 95;
     }
-
-
 }

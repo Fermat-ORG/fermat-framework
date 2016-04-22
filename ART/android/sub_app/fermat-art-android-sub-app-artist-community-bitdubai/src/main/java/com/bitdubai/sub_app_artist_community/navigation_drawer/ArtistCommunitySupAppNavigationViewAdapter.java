@@ -5,7 +5,7 @@ import android.view.View;
 
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem;
-import com.bitdubai.reference_wallet.artist_community.R;
+import com.bitdubai.sub_app.artist_community.R;
 
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
@@ -28,7 +28,7 @@ public class ArtistCommunitySupAppNavigationViewAdapter extends FermatAdapter<Me
      */
     @Override
     protected int getCardViewResource() {
-        return R.layout.afc_row_navigation_drawer_community_content;
+        return R.layout.aac_row_navigation_drawer_community_content;
     }
 
     /**
