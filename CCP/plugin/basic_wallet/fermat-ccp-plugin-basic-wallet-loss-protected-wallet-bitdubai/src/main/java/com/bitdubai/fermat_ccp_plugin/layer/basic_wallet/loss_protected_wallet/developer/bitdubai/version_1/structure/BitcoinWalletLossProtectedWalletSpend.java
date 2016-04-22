@@ -14,20 +14,20 @@ public class BitcoinWalletLossProtectedWalletSpend implements BitcoinLossProtect
     private final long amount;
     private final long timeStamp;
     private final double exchangeRate;
+    private final double earnOrLost;
 
 
-    public BitcoinWalletLossProtectedWalletSpend(UUID spendId,UUID transactionId,long amount,long timeStamp,double exchangeRate )
+    public BitcoinWalletLossProtectedWalletSpend(UUID spendId,UUID transactionId,long amount,long timeStamp,double exchangeRate, double earnOrLost)
     {
        this.spendId = spendId;
        this.transactionId = transactionId;
        this.amount = amount;
        this.timeStamp =  timeStamp;
        this.exchangeRate = exchangeRate;
+       this.earnOrLost = earnOrLost;
     }
     @Override
-    public UUID getSpendId() {
-        return  this.spendId;
-    }
+    public UUID getSpendId() {return  this.spendId;}
 
     @Override
     public UUID getTransactionId() {
@@ -40,10 +40,12 @@ public class BitcoinWalletLossProtectedWalletSpend implements BitcoinLossProtect
     }
 
     @Override
-    public long getAmount() {
-        return this.amount;
-    }
+    public long getAmount() { return this.amount; }
 
     @Override
-    public double getExchangeRate() {return exchangeRate;}
+    public double getExchangeRate() {return this.exchangeRate;}
+
+    @Override
+    public double getEarningOrLost() {return this.earnOrLost;}
+
 }
