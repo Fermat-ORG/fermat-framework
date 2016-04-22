@@ -169,7 +169,9 @@ public class PresentationChatCommunityDialog extends FermatDialog<ChatUserSubApp
                         ChatActorCommunitySettings chatUserCommunitySettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
                         chatUserCommunitySettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
                         settingsManager.persistSettings(getSession().getAppPublicKey(),chatUserCommunitySettings);
-                    } catch (CantGetSettingsException | SettingsNotFoundException | CantPersistSettingsException e) {
+                    } catch (CantGetSettingsException
+                            | SettingsNotFoundException
+                            | CantPersistSettingsException e) {
                         e.printStackTrace();
                     }
                 }

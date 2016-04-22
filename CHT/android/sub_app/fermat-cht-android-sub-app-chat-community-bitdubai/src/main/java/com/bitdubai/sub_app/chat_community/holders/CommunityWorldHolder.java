@@ -16,7 +16,7 @@ import com.bitdubai.sub_app.chat_community.R;
  */
 public class CommunityWorldHolder extends FermatViewHolder {
 
-    public SquareImageView thumbnail;
+    public ImageView thumbnail;//SquareImageView
     public FermatTextView name;
     public ImageView connectionState;
     public FermatTextView row_connection_state;
@@ -30,7 +30,7 @@ public class CommunityWorldHolder extends FermatViewHolder {
         super(itemView);
         //connectionState = (ImageView) itemView.findViewById(R.id.connection_state);
         row_connection_state = (FermatTextView) itemView.findViewById(R.id.connection_state_user);
-        thumbnail = (SquareImageView) itemView.findViewById(R.id.profile_image);
+        thumbnail = (ImageView) itemView.findViewById(R.id.profile_image);
         name = (FermatTextView) itemView.findViewById(R.id.community_name);
     }
 }

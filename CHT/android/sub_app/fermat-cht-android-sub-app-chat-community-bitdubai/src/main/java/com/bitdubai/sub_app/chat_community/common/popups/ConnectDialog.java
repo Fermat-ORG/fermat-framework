@@ -131,16 +131,10 @@ public class ConnectDialog extends FermatDialog<ChatUserSubAppSession, SubAppRes
                     super.toastDefaultError();
                 }
                 dismiss();
-            } catch (CantRequestActorConnectionException e) {
-                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                super.toastDefaultError();
-            } catch (ActorChatTypeNotSupportedException e) {
-                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                super.toastDefaultError();
-            } catch (ActorChatConnectionAlreadyRequestesException e) {
-                getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
-                super.toastDefaultError();
-            } catch (ConnectionAlreadyRequestedException e) {
+            } catch (CantRequestActorConnectionException
+                    | ActorChatTypeNotSupportedException
+                    | ActorChatConnectionAlreadyRequestesException
+                    |ConnectionAlreadyRequestedException e) {
                 getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                 super.toastDefaultError();
             }

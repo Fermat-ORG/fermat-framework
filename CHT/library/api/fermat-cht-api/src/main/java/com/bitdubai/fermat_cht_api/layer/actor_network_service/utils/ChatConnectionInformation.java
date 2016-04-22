@@ -40,6 +40,17 @@ public class ChatConnectionInformation {
 
     }
 
+    public ChatConnectionInformation(String A, String stringValue, byte[] image, long longValue, ConnectionState byCode, String stringValue1) {
+
+
+
+
+
+
+
+
+    }
+
 
     /**
      * @return a string representing the public key.
