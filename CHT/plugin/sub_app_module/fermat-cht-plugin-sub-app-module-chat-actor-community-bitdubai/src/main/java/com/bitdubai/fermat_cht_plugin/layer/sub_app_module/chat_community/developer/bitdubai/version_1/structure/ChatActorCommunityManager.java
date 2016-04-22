@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
@@ -514,7 +515,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         //Try to get appSettings
         ChatActorCommunitySettings appSettings = null;
         try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+            appSettings = this.getSettingsManager().loadAndGetSettings(SubAppsPublicKeys.CHT_COMMUNITY.getCode()); //this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
         }catch (Exception e){
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
             return null;
@@ -523,6 +524,9 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         List<ChatIdentity> IdentitiesInDevice = new ArrayList<>();
         try{
             IdentitiesInDevice = chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
+            //TODO:Revisar como asignar estos valores deben ser seteados al entrar a la comunidad setear los settings necesario
+            appSettings.setLastSelectedIdentityPublicKey(IdentitiesInDevice.get(0).getPublicKey());
+            appSettings.setLastSelectedActorType(IdentitiesInDevice.get(0).getActorType());
         } catch(CantListChatIdentityException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             /*Do nothing*/
@@ -560,7 +564,26 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
+        chatIdentityManager.createNewIdentityChat(name, profile_img, "country", "state", "city");
 
+
+        //Try to get appSettings
+        ChatActorCommunitySettings appSettings = null;
+        try {
+            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
+        }catch (Exception e){ appSettings = null; }
+
+
+        //If appSettings exist
+        if(appSettings != null){
+            appSettings.setLastSelectedActorType(Actors.CHT_CHAT_ACTOR);
+
+            try {
+                this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
+            }catch (CantPersistSettingsException e){
+                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            }
+        }
     }
 
 

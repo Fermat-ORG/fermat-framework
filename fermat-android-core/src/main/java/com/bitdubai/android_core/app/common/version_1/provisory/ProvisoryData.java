@@ -191,7 +191,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.CHT_CHAT_IDENTITY.getCode(),
                 "sub_app_chat_identity",
                 new Version(1, 0, 0),
-                Platforms.CHAT_PLATFORM, AppsStatus.DEV);
+                Platforms.CHAT_PLATFORM, AppsStatus.ALPHA);
         item2 = new Item(installedSubApp);
         item2.setIconResource(R.drawable.chat_identity_subapp);
         item2.setPosition(8);
@@ -348,7 +348,7 @@ public class ProvisoryData {
                 SubAppsPublicKeys.CHT_COMMUNITY.getCode(),
                 "sub_app_cht_community",
                 new Version(1, 0, 0),
-                Platforms.CHAT_PLATFORM, AppsStatus.DEV);
+                Platforms.CHAT_PLATFORM, AppsStatus.ALPHA);
 
         item1 = new Item(installedSubApp);
         item1.setIconResource(R.drawable.chat_banner_community);
