@@ -741,7 +741,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         List<BusinessTransactionRecord> businessTransactionRecordList =new ArrayList<>();
         BusinessTransactionRecord businessTransactionRecord;
         for(String contractHash : pendingContractHash){
-            businessTransactionRecord = getCustomerBusinessTransactionRecord(contractHash);
+            businessTransactionRecord = getBrokerBusinessTransactionRecord(contractHash);
             businessTransactionRecordList.add(businessTransactionRecord);
         }
         return businessTransactionRecordList;
