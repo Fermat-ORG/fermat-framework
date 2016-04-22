@@ -39,6 +39,7 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.util.Validate;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.session.ArtistIdentitySubAppSession;
 import com.bitdubai.fermat_art_android_sub_app_artist_identity_bitdubai.session.SessionConstants;
@@ -234,8 +235,8 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
 
         List<String> arraySpinner = new ArrayList<>();
-        arraySpinner.addAll(ArtExternalPlatform.getArrayItems());
         arraySpinner.add("Select a Platform...");
+        arraySpinner.addAll(ArtExternalPlatform.getArrayItems());
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
 
@@ -293,6 +294,11 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
     private int createNewIdentity() throws InvalidParameterException {
         String artistName = mArtistUserName.getText().toString();
+        ArtExternalPlatform externalPlatform = ArtExternalPlatform.getDefaultExternalPlatform();
+        if(mArtistExternalPlatform.isSelected()){
+            externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
+                    mArtistExternalPlatform.getSelectedItem().toString());
+        }
         boolean dataIsValid = validateIdentityData(
                 artistName,
                 artistImageByteArray);
@@ -300,12 +306,12 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             if(moduleManager != null){
                 try{
                     if(!isUpdate){
-                        moduleManager.createArtistIdentity(artistName,artistImageByteArray,(externalPlatformID == null) ? null : externalPlatformID);
+                        moduleManager.createArtistIdentity(artistName,artistImageByteArray,(externalPlatformID == null) ? null : externalPlatformID,externalPlatform);
                     }else{
                         if(updateProfileImage)
-                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),artistImageByteArray,(externalPlatformID == null) ? null : externalPlatformID);
+                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),artistImageByteArray,(externalPlatformID == null) ? null : externalPlatformID,externalPlatform);
                         else
-                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),identitySelected.getProfileImage(),(externalPlatformID == null) ? null : externalPlatformID);
+                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),identitySelected.getProfileImage(),(externalPlatformID == null) ? null : externalPlatformID,externalPlatform);
                     }
                 }catch (Exception e){
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
@@ -341,10 +347,10 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
 
     private void externalPlatformSpinnerListener(){
-        mArtistExternalName.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mArtistExternalPlatform.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                try{
+                try {
                     List<String> arraySpinner = new ArrayList<>();
                     arraySpinner.add("Select an Identity...");
                     ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -352,7 +358,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
                             android.R.layout.simple_spinner_item,
                             arraySpinner
                     );
-                    if(parent.getItemAtPosition(position) != 0){
+                    if (parent.getItemAtPosition(position) != 0) {
                         arraySpinner.addAll(getArtistIdentityByPlatform(ArtExternalPlatform.getArtExternalPlatformByLabel(parent.getItemAtPosition(position).toString())));
                         adapter = new ArrayAdapter<>(
                                 getActivity(),
@@ -364,13 +370,14 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
                     mArtistExternalName.setAdapter(adapter);
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(
                             SubApps.ART_ARTIST_IDENTITY,
                             UnexpectedSubAppExceptionSeverity.DISABLES_THIS_FRAGMENT,
                             e);
                 }
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
 
@@ -380,30 +387,27 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
 
 
     private List<String> getArtistIdentityByPlatform(ArtExternalPlatform externalPlatform) throws Exception{
-        HashMap<UUID, String> artistIdentityByPlatform = null;
-        artistIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
-        Iterator<Map.Entry<UUID, String>> entries2 = artistIdentityByPlatform.entrySet().iterator();
+        HashMap<UUID, String> artistIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
         List<String> identityNameList = new ArrayList<>();
-        while(entries2.hasNext()){
-            Map.Entry<UUID, String> entry2 = entries2.next();
-            identityNameList.add(entry2.getValue());
+        if(!Validate.isObjectNull(artistIdentityByPlatform)){
+            for (Map.Entry<UUID, String> entry2 : artistIdentityByPlatform.entrySet()) {
+                identityNameList.add(entry2.getValue());
+            }
         }
 
         return identityNameList;
     }
 
     private List<UUID> getArtistIdentityIdByPlatform(ArtExternalPlatform externalPlatform) throws Exception{
-        HashMap<UUID, String> artistIdentityByPlatform = null;
-        artistIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
-
-
-        Iterator<Map.Entry<UUID, String>> entries2 = artistIdentityByPlatform.entrySet().iterator();
+        HashMap<UUID, String> artistIdentityByPlatform =  moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
         List<UUID> identityIdList = new ArrayList<>();
-        while(entries2.hasNext()){
-            Map.Entry<UUID, String> entry2 = entries2.next();
-            identityIdList.add(entry2.getKey());
+        if(!Validate.isObjectNull(artistIdentityByPlatform)){
+            for (Map.Entry<UUID, String> entry2 : artistIdentityByPlatform.entrySet()) {
+                identityIdList.add(entry2.getKey());
 
+            }
         }
+
 
         return identityIdList;
     }
@@ -412,7 +416,9 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    externalPlatformID = getArtistIdentityIdByPlatform(ArtExternalPlatform.getArtExternalPlatformByLabel(mArtistExternalName.getSelectedItem().toString())).get(position);
+                    externalPlatformID = getArtistIdentityIdByPlatform(ArtExternalPlatform.getArtExternalPlatformByLabel(mArtistExternalPlatform.getSelectedItem().toString())).get(position);
+                }catch (IndexOutOfBoundsException e){
+                    //Nothing to do here
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(
                             SubApps.ART_ARTIST_IDENTITY,
