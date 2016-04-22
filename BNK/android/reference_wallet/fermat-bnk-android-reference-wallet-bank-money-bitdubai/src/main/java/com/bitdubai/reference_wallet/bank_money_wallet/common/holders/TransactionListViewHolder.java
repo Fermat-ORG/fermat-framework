@@ -82,13 +82,31 @@ public class TransactionListViewHolder extends FermatViewHolder {
         if(itemInfo.getTransactionType() == TransactionType.CREDIT) {
 
             depositItemsVisible();
+            depositText.setText("DEPOSIT");
             depositAmount.setText(String.valueOf(itemInfo.getAmount()));
             depositDate.setText(DateUtils.getRelativeTimeSpanString(itemInfo.getTimestamp()).toString());
             depositMemo.setText(itemInfo.getMemo());
         }
-        else {
+        if(itemInfo.getTransactionType() == TransactionType.UNHOLD) {
+
+            depositItemsVisible();
+            depositText.setText("UNHOLD");
+            depositAmount.setText(String.valueOf(itemInfo.getAmount()));
+            depositDate.setText(DateUtils.getRelativeTimeSpanString(itemInfo.getTimestamp()).toString());
+            depositMemo.setText(itemInfo.getMemo());
+        }
+        if(itemInfo.getTransactionType() == TransactionType.HOLD) {
 
             withdrawalItemsVisible();
+            withdrawalText.setText("HOLD");
+            withdrawalAmount.setText(String.valueOf(itemInfo.getAmount()));
+            withdrawalDate.setText(DateUtils.getRelativeTimeSpanString(itemInfo.getTimestamp()).toString());
+            withdrawalMemo.setText(itemInfo.getMemo());
+        }
+        if(itemInfo.getTransactionType() == TransactionType.DEBIT) {
+
+            withdrawalItemsVisible();
+            withdrawalText.setText("WITHDRAWAL");
             withdrawalAmount.setText(String.valueOf(itemInfo.getAmount()));
             withdrawalDate.setText(DateUtils.getRelativeTimeSpanString(itemInfo.getTimestamp()).toString());
             withdrawalMemo.setText(itemInfo.getMemo());

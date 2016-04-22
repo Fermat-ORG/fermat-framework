@@ -741,7 +741,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
         List<BusinessTransactionRecord> businessTransactionRecordList =new ArrayList<>();
         BusinessTransactionRecord businessTransactionRecord;
         for(String contractHash : pendingContractHash){
-            businessTransactionRecord = getCustomerBusinessTransactionRecord(contractHash);
+            businessTransactionRecord = getBrokerBusinessTransactionRecord(contractHash);
             businessTransactionRecordList.add(businessTransactionRecord);
         }
         return businessTransactionRecordList;
@@ -771,7 +771,7 @@ public class BrokerSubmitOnlineMerchandiseBusinessTransactionDao {
 
             businessTransactionRecord.setCustomerPublicKey(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                     SUBMIT_ONLINE_MERCHANDISE_CUSTOMER_PUBLIC_KEY_COLUMN_NAME));
-            businessTransactionRecord.setTransactionHash(contractHash);
+            businessTransactionRecord.setTransactionHash(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.SUBMIT_ONLINE_MERCHANDISE_TRANSACTION_HASH_COLUMN_NAME));
 
             businessTransactionRecord.setBrokerPublicKey(record.getStringValue(BrokerSubmitOnlineMerchandiseBusinessTransactionDatabaseConstants.
                     SUBMIT_ONLINE_MERCHANDISE_BROKER_PUBLIC_KEY_COLUMN_NAME));
