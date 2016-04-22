@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bitdubai.android_fermat_ccp_wallet_bitcoin.R;
@@ -58,11 +59,12 @@ public class MnemonicFragment extends AbstractFermatFragment {
         
         
 
-        View view = inflater.inflate(R.layout.bitcoin_mnemonic_fragment_main.xml,container,false);
+        View view = inflater.inflate(R.layout.bitcoin_mnemonic_fragment_main,container,false);
 
-        FermatTextView txt_mnemonic = (FermatTextView)view.findViewById(R.id.txt_mnemonic);
-       final FermatTextView mail = (FermatTextView ) view.findViewById(R.id.text_mail);
+        final EditText txt_mnemonic = (EditText)view.findViewById(R.id.txt_mnemonic);
+       final EditText mail = (EditText ) view.findViewById(R.id.text_mail);
         FermatButton send_button= (FermatButton)view.findViewById(R.id.send_button);
+        final EditText encriptKey = (EditText ) view.findViewById(R.id.text_key);
 
 
         try {
@@ -83,6 +85,13 @@ public class MnemonicFragment extends AbstractFermatFragment {
             @Override
             public void onClick(View v) {
                //send mail
+                //encript mnemonic text to send by mail
+                try {
+                    sendMail(mail.getText().toString(), txt_mnemonic.getText().toString());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
             }
         });
         return view;

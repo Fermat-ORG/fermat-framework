@@ -87,8 +87,8 @@
                 android:orientation="horizontal"
                 android:paddingTop="3dip"
                 android:paddingRight="7dip"
-                android:id="@+id/linear_notes">
-                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/linear_mail">
+                <EditText
                     android:id="@+id/text_mail"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
@@ -104,7 +104,45 @@
                     android:layout_gravity="end"
                     android:state_selected = "false"
                     android:text=""
-                    app:typeface="ROBOTO_REGULAR"
+                    android:layout_weight="1"
+                    android:background="@null"/>
+
+            </LinearLayout>
+
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Key To Encrypt Mnemonic Text"
+                android:textSize="12sp"
+                android:textColor="#12aca1"
+                android:layout_marginLeft="16dp"
+                app:typeface="ROBOTO_REGULAR"
+                android:paddingTop="12dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="7dip"
+                android:paddingBottom="3dip"
+                android:orientation="horizontal"
+                android:paddingTop="3dip"
+                android:paddingRight="7dip"
+                android:id="@+id/linear_key">
+                <EditText
+                    android:id="@+id/text_key"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:gravity="center_vertical"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+                    android:textColor="#4f4f4f"
+                    android:textColorHint="#4f4f4f"
+                    android:paddingTop="7dip"
+                    android:paddingLeft="14dip"
+                    android:paddingRight="14dip"
+                    android:paddingBottom="7dip"
+                    android:layout_gravity="end"
+                    android:state_selected = "false"
+                    android:text=""
                     android:layout_weight="1"
                     android:background="@null"/>
 
