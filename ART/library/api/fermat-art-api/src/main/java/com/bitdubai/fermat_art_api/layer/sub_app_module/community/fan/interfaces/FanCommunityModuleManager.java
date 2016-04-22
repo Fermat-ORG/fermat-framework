@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ActorConnectionAlreadyRequestedException;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.community.artist.exceptions.ActorTypeNotSupportedException;
@@ -205,7 +206,12 @@ public interface FanCommunityModuleManager extends
     @Override
     void createIdentity(String name, String phrase, byte[] profile_img) throws Exception;
 
-    void createFanaticIdentity(String name, String phrase, byte[] profile_img,UUID externalIdentityID) throws Exception;
+    void createFanaticIdentity(
+            String name,
+            String phrase,
+            byte[] profile_img,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform) throws Exception;
 
 
     @Override

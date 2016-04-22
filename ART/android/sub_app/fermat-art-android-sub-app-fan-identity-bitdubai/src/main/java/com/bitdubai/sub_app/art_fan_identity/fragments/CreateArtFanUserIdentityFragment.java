@@ -198,6 +198,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         return stream.toByteArray();
     }
     private void loadIdentity(){
+        //System.out.println("Image is : " + identitySelected.getProfileImage());
         if (identitySelected.getProfileImage() != null) {
             Bitmap bitmap = null;
             if (identitySelected.getProfileImage().length > 0) {
@@ -219,13 +220,13 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
         mFanExternalPlatform.setAdapter(adapter);
         ArtExternalPlatform[] externalPlatforms = ArtExternalPlatform.values();
-        for (int i=0; i<externalPlatforms.length;i++){
+        /*for (int i=0; i<externalPlatforms.length;i++){
             if(externalPlatforms[i].getCode().equals(
                     identitySelected.getExternalPlatform().getCode())){
                 mFanExternalPlatform.setSelection(i);
                 break;
             }
-        }
+        }*/
     }
     /**
      * Initialize the views from this fragment
@@ -296,6 +297,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
                     mFanExternalPlatform.getSelectedItem().toString());
         }
+        fanImageByteArray = convertImage(R.drawable.ic_profile_male);
         boolean dataIsValid = validateIdentityData(
                 fanExternalName,
                 fanImageByteArray,
@@ -364,10 +366,12 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             ArtExternalPlatform externalPlatform) {
         if (fanExternalName.isEmpty())
             return false;
-        if (fanImageBytes == null)
+        if (externalPlatformID==null)
+            return false;
+        /*if (fanImageBytes == null)
             return false;
         if (fanImageBytes.length > 0)
-            return true;
+            return true;*/
 //        if(externalPlatform != null)
 //            return  true;
         return true;
@@ -540,7 +544,9 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         if(externalPlatformID != null){
             moduleManager.createFanaticIdentity(
                     fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,
-                    externalPlatformID) ;
+                    externalPlatformID, externalPlatform) ;
+        }else{
+
         }
     }
 
@@ -551,7 +557,8 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                 fanExternalName,
                 identitySelected.getPublicKey(),
                 identitySelected.getProfileImage(),
-                identitySelected.getExternalIdentityID());
+                identitySelected.getExternalIdentityID(),
+                externalPlatform);
     }
 
     private void updateIdentityImage(
@@ -561,7 +568,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                 fanExternalName,
                 identitySelected.getPublicKey(),
                 fanImageByteArray,
-                identitySelected.getExternalIdentityID());
+                identitySelected.getExternalIdentityID(),externalPlatform);
     }
     private List<String> getFanIdentityByPlatform(ArtExternalPlatform externalPlatform) throws Exception{
         HashMap<UUID, String> fanIdentityByPlatform = null;
@@ -606,7 +613,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                     );
                     if(parent.getItemAtPosition(position) != 0){
                         arraySpinner.addAll(getFanIdentityByPlatform(ArtExternalPlatform.getArtExternalPlatformByLabel(parent.getItemAtPosition(position).toString())));
-                        adapter = new ArrayAdapter<String>(
+                        adapter = new ArrayAdapter<>(
                                 getActivity(),
                                 android.R.layout.simple_spinner_item,
                                 arraySpinner

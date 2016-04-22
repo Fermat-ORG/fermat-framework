@@ -43,12 +43,19 @@ public class ArtistIdentityImp implements DealsWithPluginFileSystem, DealsWithPl
      * @param pluginFileSystem
      * @param pluginId
      */
-    public ArtistIdentityImp(String alias, String publicKey, UUID externalIdentityID, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public ArtistIdentityImp(
+            String alias,
+            String publicKey,
+            UUID externalIdentityID,
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId,
+            ArtExternalPlatform artExternalPlatform) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.externalIdentityID = externalIdentityID;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        this.externalPlatform = artExternalPlatform;
     }
 
     /**
@@ -58,11 +65,17 @@ public class ArtistIdentityImp implements DealsWithPluginFileSystem, DealsWithPl
      * @param imageProfile
      * @param externalIdentityID
      */
-    public ArtistIdentityImp(String alias, String publicKey, byte[] imageProfile, UUID externalIdentityID) {
+    public ArtistIdentityImp(
+            String alias,
+            String publicKey,
+            byte[] imageProfile,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.imageProfile = imageProfile;
         this.externalIdentityID = externalIdentityID;
+        this.externalPlatform = artExternalPlatform;
     }
 
     /**
@@ -74,16 +87,29 @@ public class ArtistIdentityImp implements DealsWithPluginFileSystem, DealsWithPl
      * @param pluginFileSystem
      * @param pluginId
      */
-    public ArtistIdentityImp(String alias, String publicKey, byte[] imageProfile,UUID externalIdentityID, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public ArtistIdentityImp(
+            String alias,
+            String publicKey,
+            byte[] imageProfile,
+            UUID externalIdentityID,
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId,
+            ArtExternalPlatform artExternalPlatform) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.imageProfile = imageProfile;
         this.externalIdentityID = externalIdentityID;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        this.externalPlatform = artExternalPlatform;
     }
 
-    public ArtistIdentityImp(String publicKey, byte[] imageProfile, String alias, UUID externalIdentityID, ArtExternalPlatform externalPlatform) {
+    public ArtistIdentityImp(
+            String publicKey,
+            byte[] imageProfile,
+            String alias,
+            UUID externalIdentityID,
+            ArtExternalPlatform externalPlatform) {
         this.publicKey = publicKey;
         this.imageProfile = imageProfile;
         this.alias = alias;

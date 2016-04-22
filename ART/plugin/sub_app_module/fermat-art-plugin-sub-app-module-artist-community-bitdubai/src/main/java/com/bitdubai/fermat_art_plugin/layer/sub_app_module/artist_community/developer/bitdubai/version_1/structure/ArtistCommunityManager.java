@@ -21,6 +21,7 @@ import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityI
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantPublishIdentityException;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.IdentityNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_connection.artist.interfaces.ArtistActorConnectionManager;
@@ -454,13 +455,19 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         return ConnectionState.DISCONNECTED_LOCALLY;    }
 
     @Override
-    public void createArtistIdentity(String name, String phrase, byte[] profile_img, UUID externalIdentityID) throws Exception {
+    public void createArtistIdentity(
+            String name,
+            String phrase,
+            byte[] profile_img,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform) throws Exception {
         String createdPublicKey = null;
 
         if(name.equals("Fan"))
         {
             try{
-                final Fanatic createdIdentity = fanaticIdentityManager.createFanaticIdentity(name, profile_img,externalIdentityID);
+                //TODO: I'll set Tokenly, for now, only for fix compilation. Manuel
+                final Fanatic createdIdentity = fanaticIdentityManager.createFanaticIdentity(name, profile_img,externalIdentityID, ArtExternalPlatform.TOKENLY);
                 createdPublicKey = createdIdentity.getPublicKey();
                 new Thread() {
                     @Override
@@ -480,7 +487,11 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         else if( name.equals("Artist"))
         {
             try{
-                final Artist createdIdentity = artistIdentityManager.createArtistIdentity(name, profile_img, externalIdentityID);
+                final Artist createdIdentity = artistIdentityManager.createArtistIdentity(
+                        name,
+                        profile_img,
+                        externalIdentityID,
+                        artExternalPlatform);
                 createdPublicKey = createdIdentity.getPublicKey();
 
                 new Thread() {

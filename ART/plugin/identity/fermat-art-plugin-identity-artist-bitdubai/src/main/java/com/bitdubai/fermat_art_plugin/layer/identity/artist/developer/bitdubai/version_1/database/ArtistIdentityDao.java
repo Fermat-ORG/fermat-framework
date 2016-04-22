@@ -23,6 +23,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantLoadFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantUpdateArtistIdentityException;
@@ -60,7 +61,10 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
      * @param pluginDatabaseSystem DealsWithPluginDatabaseSystem
      */
 
-    public ArtistIdentityDao(PluginDatabaseSystem pluginDatabaseSystem, PluginFileSystem pluginFileSystem, UUID pluginId) throws CantInitializeArtistIdentityDatabaseException {
+    public ArtistIdentityDao(
+            PluginDatabaseSystem pluginDatabaseSystem,
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId) throws CantInitializeArtistIdentityDatabaseException {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
@@ -131,9 +135,9 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
     }
 
     /**
-     * first i persist private key on a file
-     * second i insert the record in database
-     * third i save the profile image file
+     * first I persist private key on a file
+     * second I insert the record in database
+     * third I save the profile image file
      *
      * @param alias
      * @param publicKey
@@ -143,11 +147,21 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
      * @param externalIdentityID
      * @throws CantCreateArtistIdentityException
      */
-    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage, UUID externalIdentityID) throws CantCreateArtistIdentityException {
+    public void createNewUser(
+            String alias,
+            String publicKey,
+            String privateKey,
+            DeviceUser deviceUser,
+            byte[] profileImage,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform) throws CantCreateArtistIdentityException {
 
         try {
             if (aliasExists(alias)) {
-                throw new CantCreateArtistIdentityException("Cant create new Redeem Point Identity, alias exists.", "Redeem Point Identity", "Cant create new Redeem Point, alias exists.");
+                throw new CantCreateArtistIdentityException(
+                        "Cant create new Artist Identity, alias exists.",
+                        "Artist Identity",
+                        "Cant create new Artist Identity, alias exists.");
             }
 
             persistNewUserPrivateKeysFile(publicKey, privateKey);
@@ -155,10 +169,21 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             DatabaseTable table = this.database.getTable(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_TABLE_NAME);
             DatabaseTableRecord record = table.getEmptyRecord();
 
-            record.setStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey);
-            record.setStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME, alias);
-            record.setStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
-            record.setUUIDValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME, externalIdentityID);
+            record.setStringValue(
+                    ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                    publicKey);
+            record.setStringValue(
+                    ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME,
+                    alias);
+            record.setStringValue(
+                    ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME,
+                    deviceUser.getPublicKey());
+            record.setUUIDValue(
+                    ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME,
+                    externalIdentityID);
+            record.setStringValue(
+                    ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
+                    artExternalPlatform.getCode());
 
             table.insertRecord(record);
 
@@ -167,21 +192,36 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
 
         } catch (CantInsertRecordException e) {
             // Cant insert record.
-            throw new CantCreateArtistIdentityException(e.getMessage(), e, "Redeem Point Identity", "Cant create new Redeem Point, insert database problems.");
+            throw new CantCreateArtistIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Artist Identity",
+                    "Cant create new Artist identity, insert database problems.");
 
         } catch (CantPersistPrivateKeyException e) {
             // Cant insert record.
-            throw new CantCreateArtistIdentityException(e.getMessage(), e, "ARedeem Point Identity", "Cant create new Redeem Point, persist private key error.");
+            throw new CantCreateArtistIdentityException(
+                    e.getMessage(),
+                    e, "Artist Identity Identity",
+                    "Cant create new Artist, persist private key error.");
 
         } catch (Exception e) {
             // Failure unknown.
 
-            throw new CantCreateArtistIdentityException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Identity", "Cant create new Redeem Point, unknown failure.");
+            throw new CantCreateArtistIdentityException(
+                    e.getMessage(),
+                    FermatException.wrapException(e),
+                    "Artist Identity",
+                    "Cant create new Artist Identity, unknown failure.");
         }
     }
 
-    public void updateIdentityArtistUser(String publicKey, String alias, byte[] profileImage,
-                                         UUID externalIdentityID) throws CantUpdateArtistIdentityException {
+    public void updateIdentityArtistUser(
+            String publicKey,
+            String alias,
+            byte[] profileImage,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform) throws CantUpdateArtistIdentityException {
         try {
             /**
              * 1) Get the table.
@@ -192,7 +232,10 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 /**
                  * Table not found.
                  */
-                throw new CantUpdateArtistIdentityException("Cant get Redeem Point Identity list, table not found.", "Redeem Point Identity", "Cant get Redeem Point identity list, table not found.");
+                throw new CantUpdateArtistIdentityException(
+                        "Cant get Artist Identity list, table not found.",
+                        "Artist Identity",
+                        "Cant get Artist identity list, table not found.");
             }
 
             // 2) Find the Intra users.
@@ -203,9 +246,18 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             // 3) Get Intra users.
             for (DatabaseTableRecord record : table.getRecords()) {
                 //set new values
-                record.setStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME, publicKey);
-                record.setStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME, alias);
-                record.setUUIDValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME, externalIdentityID);
+                record.setStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                        publicKey);
+                record.setStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME,
+                        alias);
+                record.setUUIDValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME,
+                        externalIdentityID);
+                record.setStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
+                        artExternalPlatform.getCode());
 
                 table.updateRecord(record);
             }
@@ -214,11 +266,23 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 persistNewUserProfileImage(publicKey, profileImage);
 
         } catch (CantUpdateRecordException e) {
-            throw new CantUpdateArtistIdentityException(e.getMessage(), e, "Redeem Point Identity", "Cant update Redeem Point Identity, database problems.");
+            throw new CantUpdateArtistIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Artist Identity",
+                    "Cant update Artist Identity, database problems.");
         } catch (CantPersistProfileImageException e) {
-            throw new CantUpdateArtistIdentityException(e.getMessage(), e, "Redeem Point Identity", "Cant update Redeem Point Identity, persist image error.");
+            throw new CantUpdateArtistIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Artist Identity",
+                    "Cant update Artist Identity, persist image error.");
         } catch (Exception e) {
-            throw new CantUpdateArtistIdentityException(e.getMessage(), FermatException.wrapException(e), "Redeem Point Identity", "Cant update Redeem Point Identity, unknown failure.");
+            throw new CantUpdateArtistIdentityException(
+                    e.getMessage(),
+                    FermatException.wrapException(e),
+                    "Artist Identity",
+                    "Cant update Artist Identity, unknown failure.");
         }
     }
 
@@ -241,7 +305,10 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 /**
                  * Table not found.
                  */
-                throw new CantUpdateArtistIdentityException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
+                throw new CantUpdateArtistIdentityException(
+                        "Cant get Artist identity list, table not found.",
+                        "Artist Identity",
+                        "Cant get Artist identity list, table not found.");
             }
 
 
@@ -260,17 +327,43 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                         getArtistProfileImagePrivateKey(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         pluginFileSystem,
                         pluginId), );*/
+                UUID externalIdentityId;
+                String externalIdentityString = record.getStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME);
+                        if(externalIdentityString==null || externalIdentityString.isEmpty()){
+                            externalIdentityId=null;
+                        } else {
+                            externalIdentityId = UUID.fromString(externalIdentityString);
+                        }
+                //External platform
+                ArtExternalPlatform externalPlatform;
+                String externalPlatformString = record.getStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
+                        if(externalPlatformString==null || externalIdentityString.isEmpty()){
+                            externalPlatform = ArtExternalPlatform.UNDEFINED;
+                        } else{
+                            externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
+                        }
                 list.add(new ArtistIdentityImp(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getArtistProfileImagePrivateKey(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
-                        record.getUUIDValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME),
+                        externalIdentityId,
                         pluginFileSystem,
-                        pluginId));
+                        pluginId,
+                        externalPlatform));
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantListArtistIdentitiesException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_TABLE_NAME + " table in memory.");
+            throw new CantListArtistIdentitiesException(
+                    e.getMessage(),
+                    e,
+                    "Artist Identity",
+                    "Cant load " + ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
-            throw new CantListArtistIdentitiesException(e.getMessage(), FermatException.wrapException(e), "Asset Redeem Point Identity", "Cant get Asset Issuer identity list, unknown failure.");
+            throw new CantListArtistIdentitiesException(
+                    e.getMessage(),
+                    FermatException.wrapException(e),
+                    "Artist Identity",
+                    "Cant get Artist identity list, unknown failure.");
         }
 
         // Return the list values.
@@ -295,7 +388,10 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 /**
                  * Table not found.
                  */
-                throw new CantUpdateArtistIdentityException("Cant get Asset Issuer identity list, table not found.", "Asset IssuerIdentity", "Cant get Intra User identity list, table not found.");
+                throw new CantUpdateArtistIdentityException(
+                        "Cant get Artist identity list, table not found.",
+                        "Artist Identity",
+                        "Cant get Artist identity list, table not found.");
             }
 
 
@@ -313,19 +409,44 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getArtistProfileImagePrivateKey(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME)));*/
+                UUID externalIdentityId;
+                String externalIdentityString = record.getStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME);
+                if(externalIdentityString==null || externalIdentityString.isEmpty()){
+                    externalIdentityId=null;
+                } else {
+                    externalIdentityId = UUID.fromString(externalIdentityString);
+                }
+                //External platform
+                ArtExternalPlatform externalPlatform;
+                String externalPlatformString = record.getStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
+                if(externalPlatformString==null || externalIdentityString.isEmpty()){
+                    externalPlatform = ArtExternalPlatform.UNDEFINED;
+                } else{
+                    externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
+                }
                 artist = new ArtistIdentityImp(
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getArtistProfileImagePrivateKey(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
-                        record.getUUIDValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME),
+                        externalIdentityId,
                         pluginFileSystem,
-                        pluginId);
+                        pluginId,
+                        externalPlatform);
 
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetArtistIdentityException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_TABLE_NAME + " table in memory.");
+            throw new CantGetArtistIdentityException(
+                    e.getMessage(),
+                    e, "Artist Identity",
+                    "Cant load " + ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
-            throw new CantGetArtistIdentityException(e.getMessage(), FermatException.wrapException(e), "Asset Redeem Point Identity", "Cant get Asset Redeem Point identity list, unknown failure.");
+            throw new CantGetArtistIdentityException(
+                    e.getMessage(),
+                    FermatException.wrapException(e),
+                    "Artist Identity",
+                    "Cant get Artist identity list, unknown failure.");
         }
 
         // Return the list values.
@@ -367,19 +488,45 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getArtistProfileImagePrivateKey(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME)));*/
+                UUID externalIdentityId;
+                String externalIdentityString = record.getStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME);
+                if(externalIdentityString==null || externalIdentityString.isEmpty()){
+                    externalIdentityId=null;
+                } else {
+                    externalIdentityId = UUID.fromString(externalIdentityString);
+                }
+                //External platform
+                ArtExternalPlatform externalPlatform;
+                String externalPlatformString = record.getStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
+                if(externalPlatformString==null || externalIdentityString.isEmpty()){
+                    externalPlatform = ArtExternalPlatform.UNDEFINED;
+                } else{
+                    externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
+                }
                 artist = new ArtistIdentityImp(
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getArtistProfileImagePrivateKey(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
-                        record.getUUIDValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME),
+                        externalIdentityId,
                         pluginFileSystem,
-                        pluginId);
+                        pluginId,
+                        externalPlatform);
 
             }
         } catch (CantLoadTableToMemoryException e) {
-            throw new CantGetArtistIdentityException(e.getMessage(), e, "Asset Redeem Point Identity", "Cant load " + ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_TABLE_NAME + " table in memory.");
+            throw new CantGetArtistIdentityException(
+                    e.getMessage(),
+                    e,
+                    "Artist Identity",
+                    "Cant load " + ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_TABLE_NAME + " table in memory.");
         } catch (Exception e) {
-            throw new CantGetArtistIdentityException(e.getMessage(), FermatException.wrapException(e), "Asset Redeem Point Identity", "Cant get Asset Redeem Point identity list, unknown failure.");
+            throw new CantGetArtistIdentityException(
+                    e.getMessage(),
+                    FermatException.wrapException(e),
+                    "Artist Identity",
+                    "Cant get Artist identity list, unknown failure.");
         }
 
         // Return the list values.
@@ -478,7 +625,9 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             table = this.database.getTable(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_TABLE_NAME);
 
             if (table == null) {
-                throw new CantUpdateArtistIdentityException("Cant check if alias exists", "Asset Issuer Identity", "");
+                throw new CantUpdateArtistIdentityException(
+                        "Cant check if alias exists",
+                        "Artist Identity", "");
             }
 
             table.addStringFilter(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME, alias, DatabaseFilterType.EQUAL);
@@ -488,10 +637,18 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
 
 
         } catch (CantLoadTableToMemoryException em) {
-            throw new CantCreateArtistIdentityException(em.getMessage(), em, "Asset Issuer  Identity", "Cant load " + ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_TABLE_NAME + " table in memory.");
+            throw new CantCreateArtistIdentityException(
+                    em.getMessage(),
+                    em,
+                    "Artist Identity",
+                    "Cant load " + ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_TABLE_NAME + " table in memory.");
 
         } catch (Exception e) {
-            throw new CantCreateArtistIdentityException(e.getMessage(), FermatException.wrapException(e), "Asset Issuer  Identity", "unknown failure.");
+            throw new CantCreateArtistIdentityException(
+                    e.getMessage(),
+                    FermatException.wrapException(e),
+                    "Artist Identity",
+                    "unknown failure.");
         }
     }
 

@@ -17,8 +17,16 @@ public interface NotificationPainter {
 
     int getIcon();
 
+    /**
+     * Set Activity code to open when click notification, code from Activities enum
+     * @return string code activity
+     */
     String getActivityCodeResult();
-//set enabled notification property
+
+    /**
+     * set enabled notification property, to show or not show
+     * @return
+     */
     boolean showNotification();
 
 }

@@ -44,12 +44,19 @@ public class FanaticIdentityImp implements DealsWithPluginFileSystem, DealsWithP
      * @param pluginFileSystem
      * @param pluginId
      */
-    public FanaticIdentityImp(String alias, String publicKey, UUID externalIdentityID, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public FanaticIdentityImp(
+            String alias,
+            String publicKey,
+            UUID externalIdentityID,
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId,
+            ArtExternalPlatform artExternalPlatform) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.externalIdentityID = externalIdentityID;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        this.externalPlatform = artExternalPlatform;
     }
 
     /**
@@ -59,11 +66,17 @@ public class FanaticIdentityImp implements DealsWithPluginFileSystem, DealsWithP
      * @param imageProfile
      * @param externalIdentityID
      */
-    public FanaticIdentityImp(String alias, String publicKey, byte[] imageProfile, UUID externalIdentityID) {
+    public FanaticIdentityImp(
+            String alias,
+            String publicKey,
+            byte[] imageProfile,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.imageProfile = imageProfile;
         this.externalIdentityID = externalIdentityID;
+        this.externalPlatform = artExternalPlatform;
     }
 
     /**
@@ -75,16 +88,37 @@ public class FanaticIdentityImp implements DealsWithPluginFileSystem, DealsWithP
      * @param pluginFileSystem
      * @param pluginId
      */
-    public FanaticIdentityImp(String alias, String publicKey, byte[] imageProfile, UUID externalIdentityID, PluginFileSystem pluginFileSystem, UUID pluginId) {
+    public FanaticIdentityImp(
+            String alias,
+            String publicKey,
+            byte[] imageProfile,
+            UUID externalIdentityID,
+            PluginFileSystem pluginFileSystem,
+            UUID pluginId,
+            ArtExternalPlatform artExternalPlatform) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.imageProfile = imageProfile;
         this.externalIdentityID = externalIdentityID;
         this.pluginFileSystem = pluginFileSystem;
         this.pluginId = pluginId;
+        this.externalPlatform = artExternalPlatform;
     }
 
-    public FanaticIdentityImp(String publicKey, byte[] imageProfile, String alias, UUID externalIdentityID, ArtExternalPlatform externalPlatform) {
+    /**
+     * Default constructor with parameters
+     * @param publicKey
+     * @param imageProfile
+     * @param alias
+     * @param externalIdentityID
+     * @param externalPlatform
+     */
+    public FanaticIdentityImp(
+            String publicKey,
+            byte[] imageProfile,
+            String alias,
+            UUID externalIdentityID,
+            ArtExternalPlatform externalPlatform) {
         this.publicKey = publicKey;
         this.imageProfile = imageProfile;
         this.alias = alias;

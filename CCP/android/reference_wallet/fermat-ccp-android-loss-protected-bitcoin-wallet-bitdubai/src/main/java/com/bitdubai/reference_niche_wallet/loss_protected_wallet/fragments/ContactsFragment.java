@@ -162,7 +162,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
             cryptoWallet = cryptoWalletManager.getCryptoWallet();
         } catch (CantGetCryptoLossProtectedWalletException e) {
             errorManager.reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            WalletUtils.showMessage(getActivity(), "Unexpected error get Contact list - " + e.getMessage());
+            WalletUtils.showMessage(getActivity(), "Unexpected error getting Contact list - " + e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -188,7 +188,8 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                         try {
                             boolean isHelpEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).isContactsHelpEnabled();
 
-                            setUpTutorial(isHelpEnabled);
+                            if (isHelpEnabled)
+                                setUpTutorial(true);
                         } catch (CantGetSettingsException e) {
                             e.printStackTrace();
                         } catch (SettingsNotFoundException e) {
@@ -334,9 +335,9 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
         refreshAdapter();
     }
 
-    private void setUpTutorial(boolean isHelpEnabled) throws CantGetSettingsException, SettingsNotFoundException {
-        if (isHelpEnabled) {
-            ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), referenceWalletSession, null, settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).isContactsHelpEnabled());
+    private void setUpTutorial(boolean checkButton) throws CantGetSettingsException, SettingsNotFoundException {
+        //if (isHelpEnabled) {
+            ContactsTutorialPart1V2 contactsTutorialPart1 = new ContactsTutorialPart1V2(getActivity(), referenceWalletSession, null, checkButton);
             contactsTutorialPart1.setOnDismissListener(new DialogInterface.OnDismissListener() {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
@@ -351,7 +352,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                 }
             });
             contactsTutorialPart1.show();
-        }
+       // }
     }
 
     private void refreshAdapter() {
@@ -492,7 +493,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
                 } catch (Exception ex) {
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, ex);
-                    WalletUtils.showMessage(getActivity(), "Unexpected error get Contact Detalil - " + ex.getMessage());
+                    WalletUtils.showMessage(getActivity(), "Unexpected error getting Contact Detalil - " + ex.getMessage());
                 }
             }
         });
@@ -555,10 +556,10 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//TODO obtener la [a posicion del scroll antes de hacer populate
+//TODO: get scroll position before populating
         //if (isScrolled) {
         //new Populate().execute((ArrayList<CryptoWalletWalletContact>) mItems);
-        //TODO setear la posicion obtenida despues de hacer el populate
+        //TODO: set obtained position after populating
         //   mListView.scrollTo(0, mListSectionPos.size() - firstVisibleItem);
 //        }
     }
@@ -794,7 +795,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
                     }
 
                 }
-            //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+            //TODO Return null method - OJO: only informative for visual aid during debug - remove if it bothers
             return null;
         }
 

@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.util.BottomMenuReveal;
 import com.bitdubai.fermat.R;
@@ -43,13 +44,11 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
+import com.bitdubai.fermat_api.module_object_creator.FermatModuleObject;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
 import com.bitdubai.sub_app.wallet_manager.fragment.FermatNetworkSettings;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getAndroidCoreModule;
 import static com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils.getCloudClient;
@@ -66,7 +65,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
 
     private BottomMenuReveal bottomMenuReveal;
-    private ExecutorService executorService;
 
     /**
      *  Called when the activity is first created
@@ -205,11 +203,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
                         }
                     };
 
-                    if(executorService != null)
-                        executorService.shutdown();
-
-                    executorService = Executors.newSingleThreadExecutor();
-                    executorService.submit(threadChangeIP);
+                    executor.submit(threadChangeIP);
 
                 }catch (Exception e){
 
@@ -480,6 +474,26 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 
                     loadBasicUI(activity, fermatAppConnection);
 
+                    findViewById(R.id.serviceBroker).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            FermatModuleObjectWrapper[] parameters = new FermatModuleObjectWrapper[3];
+
+                            FermatModuleObject fermatModuleObject = new FermatModuleObject(1,"manty");
+                            FermatModuleObject fermatModuleObject1 = new FermatModuleObject(1,"ewa");
+                            FermatModuleObject fermatModuleObject2 = new FermatModuleObject(1,"asd");
+
+                            FermatModuleObjectWrapper fermatModuleObjectWrapper = new FermatModuleObjectWrapper(fermatModuleObject);
+                            parameters[0] = fermatModuleObjectWrapper;
+                            fermatModuleObjectWrapper = new FermatModuleObjectWrapper(fermatModuleObject1);
+                            parameters[1] = fermatModuleObjectWrapper;
+                            fermatModuleObjectWrapper = new FermatModuleObjectWrapper(fermatModuleObject2);
+                            parameters[2] = fermatModuleObjectWrapper;
+
+                            ApplicationSession.getInstance().getClientSideBrokerService().sendMessage(null,null,null,getClass().getMethods()[0],new Object[]{fermatModuleObject,fermatModuleObject1,fermatModuleObject2});
+                        }
+                    });
+
                     if (activity.getType() == Activities.CCP_DESKTOP) {
                         showWizard(WizardTypes.DESKTOP_WELCOME_WIZARD.getKey());
                         findViewById(R.id.reveal_bottom_container).setVisibility(View.VISIBLE);
@@ -513,7 +527,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
     }
 
 
-    private boolean isHelpEnabled(String appPublicKey){
+    private boolean loadSettings(){
         SettingsManager settingsManager = null;
         AndroidCoreSettings androidCoreSettings = null;
         try {
@@ -525,7 +539,7 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
             androidCoreSettings = new AndroidCoreSettings(AppsStatus.ALPHA);
             androidCoreSettings.setIsPresentationHelpEnabled(true);
             try {
-                settingsManager.persistSettings(appPublicKey,androidCoreSettings);
+                settingsManager.persistSettings(ApplicationConstants.SETTINGS_CORE,androidCoreSettings);
             } catch (CantPersistSettingsException e1) {
                 e1.printStackTrace();
             }

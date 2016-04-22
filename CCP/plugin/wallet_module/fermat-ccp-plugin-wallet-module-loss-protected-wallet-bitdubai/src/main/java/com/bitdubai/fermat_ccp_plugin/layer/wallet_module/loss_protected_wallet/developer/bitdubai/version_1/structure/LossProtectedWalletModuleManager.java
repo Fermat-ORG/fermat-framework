@@ -10,10 +10,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
@@ -45,7 +41,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exce
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantSaveExchangeProviderIdException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSettings;
+
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionSummary;
@@ -240,6 +236,13 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
             throw new CantInitializeLossProtectedWalletManagerException(e, "", "Unhandled error.");
         }
+    }
+
+    @Override
+    public double getEarningAndLostsWallet(String walletPublicKey, BlockchainNetworkType blockchainNetworkType) {
+
+
+        return 0;
     }
 
     @Override
@@ -895,7 +898,11 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         List<BitcoinLossProtectedWalletSpend> bitcoinLossProtectedWalletSpendList = new ArrayList<>();
 
         try {
-            List<BitcoinLossProtectedWalletSpend> bitcoinLossProtectedWalletSpendList1 = new ArrayList<>();
+
+            BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+
+            bitcoinLossProtectedWalletSpendList = bitcoinWalletWallet.listTransactionsSpending(transactionId);
+
 
             if (bitcoinLossProtectedWalletSpendList.size()==0) {
 

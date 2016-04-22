@@ -57,7 +57,8 @@ public interface ArtistIdentityManagerModule extends ModuleManager<ArtistIdentit
     Artist createArtistIdentity(
             final String alias,
             final byte[] imageBytes,
-            final UUID externalIdentityID) throws
+            final UUID externalIdentityID,
+            final ArtExternalPlatform artExternalPlatform) throws
             CantCreateArtistIdentityException,
             ArtistIdentityAlreadyExistsException;
     /**
@@ -69,8 +70,10 @@ public interface ArtistIdentityManagerModule extends ModuleManager<ArtistIdentit
      * @throws CantUpdateArtistIdentityException
      */
     void updateArtistIdentity(
-            String alias,String publicKey, byte[] profileImage,
-            UUID externalIdentityID) throws
+            String alias,String publicKey,
+            byte[] profileImage,
+            UUID externalIdentityID,
+            final ArtExternalPlatform artExternalPlatform) throws
             CantUpdateArtistIdentityException;
 
     /**

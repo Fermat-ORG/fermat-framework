@@ -148,7 +148,21 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
         }
         return Fanatic;
     }
-    public Fanatic createNewIdentityFanatic(String alias, byte[] profileImage, UUID externalIdentityID) throws CantCreateFanIdentityException {
+
+    /**
+     * This method creates a new Fan Identity
+     * @param alias
+     * @param profileImage
+     * @param externalIdentityID
+     * @param artExternalPlatform
+     * @return
+     * @throws CantCreateFanIdentityException
+     */
+    public Fanatic createNewIdentityFanatic(
+            String alias,
+            byte[] profileImage,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform) throws CantCreateFanIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -156,10 +170,24 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
             String publicKey = keyPair.getPublicKey();
             String privateKey = keyPair.getPrivateKey();
 
-            getFanaticIdentityDao().createNewUser(alias, publicKey, privateKey, loggedUser, profileImage, externalIdentityID);
+            getFanaticIdentityDao().createNewUser(
+                    alias,
+                    publicKey,
+                    privateKey,
+                    loggedUser,
+                    profileImage,
+                    externalIdentityID,
+                    artExternalPlatform);
 
             registerIdentitiesANS(publicKey);
-            return new FanaticIdentityImp(alias, publicKey, profileImage,externalIdentityID, pluginFileSystem, pluginId);
+            return new FanaticIdentityImp(
+                    alias,
+                    publicKey,
+                    profileImage,
+                    externalIdentityID,
+                    pluginFileSystem,
+                    pluginId,
+                    artExternalPlatform);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateFanIdentityException("CAN'T CREATE NEW Fanatic IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {
@@ -167,9 +195,28 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
         }
     }
 
-    public void updateIdentityFanatic(String alias, String publicKey, byte[] profileImage, UUID externalIdentityID) throws CantUpdateFanIdentityException {
+    /**
+     * This method updates the Fan identity
+     * @param alias
+     * @param publicKey
+     * @param profileImage
+     * @param externalIdentityID
+     * @param artExternalPlatform
+     * @throws CantUpdateFanIdentityException
+     */
+    public void updateIdentityFanatic(
+            String alias,
+            String publicKey,
+            byte[] profileImage,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform) throws CantUpdateFanIdentityException {
         try {
-            getFanaticIdentityDao().updateIdentityFanaticUser(publicKey, alias, profileImage, externalIdentityID);
+            getFanaticIdentityDao().updateIdentityFanaticUser(
+                    publicKey,
+                    alias,
+                    profileImage,
+                    externalIdentityID,
+                    artExternalPlatform);
             FanExposingData fanExposingData = new FanExposingData(publicKey,alias,profileImage);
            fanManager.updateIdentity(fanExposingData);
         } catch (CantInitializeFanaticIdentityDatabaseException e) {
@@ -257,24 +304,52 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
         return artIdentity;
     }
 
-
+    /**
+     * Through the method <code>createFanaticIdentity</code> you can create a new Fan identity.
+     * @param alias
+     * @param imageBytes
+     * @param externalIdentityId
+     * @param artExternalPlatform
+     * @return
+     * @throws CantCreateFanIdentityException
+     */
     @Override
-    public Fanatic createFanaticIdentity(String alias, byte[] imageBytes, UUID externalIdentityId) throws CantCreateFanIdentityException {
-        return createNewIdentityFanatic(alias, imageBytes, externalIdentityId);
+    public Fanatic createFanaticIdentity(
+            String alias,
+            byte[] imageBytes,
+            UUID externalIdentityId,
+            ArtExternalPlatform artExternalPlatform) throws CantCreateFanIdentityException {
+        return createNewIdentityFanatic(alias, imageBytes, externalIdentityId,artExternalPlatform);
+    }
+
+    /**
+     * This method updates the fan identity
+     * @param alias
+     * @param publicKey
+     * @param imageProfile
+     * @param externalIdentityID
+     * @param artExternalPlatform
+     * @throws CantUpdateFanIdentityException
+     */
+    @Override
+    public void updateFanIdentity(
+            String alias,
+            String publicKey,
+            byte[] imageProfile,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform) throws CantUpdateFanIdentityException {
+        updateIdentityFanatic(alias, publicKey, imageProfile, externalIdentityID, artExternalPlatform);
     }
 
     @Override
-    public void updateFanIdentity(String alias, String publicKey, byte[] imageProfile, UUID externalIdentityID) throws CantUpdateFanIdentityException {
-        updateIdentityFanatic(alias, publicKey, imageProfile, externalIdentityID);
-    }
-
-    @Override
-    public Fanatic getFanIdentity(String publicKey) throws CantGetFanIdentityException, IdentityNotFoundException {
+    public Fanatic getFanIdentity(String publicKey)
+            throws CantGetFanIdentityException, IdentityNotFoundException {
         return getIdentityFanatic(publicKey);
     }
 
     @Override
-    public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
+    public void publishIdentity(String publicKey)
+            throws CantPublishIdentityException, IdentityNotFoundException {
         registerIdentitiesANS(publicKey);
     }
 }
