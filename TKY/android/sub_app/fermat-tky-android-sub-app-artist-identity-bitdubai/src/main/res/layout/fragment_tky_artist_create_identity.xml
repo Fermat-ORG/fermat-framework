@@ -111,22 +111,34 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp">
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+          <TextView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:id="@+id/external_platform_label"
+              android:text="External Platform"
+              android:textStyle="bold"/>
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/external_platform_label"
-                android:text="External Platform"
-                android:textColor="#000000"
-                tools:ignore="HardcodedText"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="114dp" />
+                android:id="@+id/exposure_level_label"
+                android:text="Exposure Level"
+                android:textStyle="bold"
+                android:layout_toRightOf="@+id/external_platform_label"
+                android:paddingLeft="15dp"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/artist_accept_connections_type_label"
+                android:text="Connections Type"
+                android:textStyle="bold"
+                android:layout_toRightOf="@+id/exposure_level_label"
+
+                android:paddingLeft="15dp"/>
 
             <LinearLayout
                 android:paddingTop="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textColor="#000000"
                 android:orientation="horizontal"
 
                 >
@@ -135,7 +147,8 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/external_platform"
                 android:textColor="#000000"
-                android:background="@color/cardview_dark_background"
+                android:background="#0080FF"
+                android:popupBackground="#0080FF"
 
                 android:spinnerMode="dropdown"
                 />
@@ -144,7 +157,10 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/exposureLevel"
                 android:textColor="#000000"
-                android:background="@color/cardview_dark_background"
+                android:background="#0080FF"
+                android:popupBackground="#0080FF"
+
+                android:paddingLeft="15dp"
 
                 android:spinnerMode="dropdown"
                 />
@@ -153,7 +169,10 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/artistAcceptConnectionsType"
                 android:textColor="#000000"
-                android:background="@color/cardview_dark_background"
+                android:background="#0080FF"
+                android:popupBackground="#0080FF"
+                android:paddingStart="30dp"
+                android:layout_alignParentRight="true"
 
                 android:spinnerMode="dropdown"
                />

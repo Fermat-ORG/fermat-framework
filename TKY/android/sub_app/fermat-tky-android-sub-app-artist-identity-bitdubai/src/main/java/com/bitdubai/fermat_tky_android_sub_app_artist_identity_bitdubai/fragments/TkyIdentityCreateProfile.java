@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -99,6 +101,7 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
     private boolean authenticationSuccessful = false;
 
     private Handler handler;
+
 
 
     public static TkyIdentityCreateProfile newInstance() {
@@ -196,6 +199,16 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
         createButton.setText((!isUpdate) ? "Create" : "Update");
         mArtistExternalUserName.requestFocus();
 
+        TextView text = (TextView) layout.findViewById(R.id.external_platform_label);
+        TextView text2 = (TextView) layout.findViewById(R.id.exposure_level_label);
+        TextView text3 = (TextView) layout.findViewById(R.id.artist_accept_connections_type_label);
+
+        text.setTextColor(Color.parseColor("#000000"));
+        text2.setTextColor(Color.parseColor("#000000"));
+        text3.setTextColor(Color.parseColor("#000000"));
+
+        text.setVisibility(View.GONE);
+        mArtistExternalPlatform.setVisibility(View.GONE);
         List<String> arraySpinner = ExternalPlatform.getArrayItems();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
         mArtistExternalPlatform.setAdapter(adapter);
