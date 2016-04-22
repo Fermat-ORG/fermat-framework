@@ -72,6 +72,8 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
     Map<String,Integer> rela=new HashMap<String,Integer>();
 
+    boolean firstTime=true;
+
     View view;
 
 
@@ -79,12 +81,33 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
         try {
             musicPlayerSession = ((MusicPlayerSession) appSession);
             musicPlayermoduleManager = musicPlayerSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START MUSIC PLAYER");
+
+           /* if(musicPlayerSession.getThreadsong()!=null){
+                System.out.println("ART_ IT IS PLAYING");
+                songPlayerThread=musicPlayerSession.getThreadsong();
+                mp=musicPlayerSession.getMusicPlayer();
+
+                bplay = musicPlayerSession.getBplay();
+                bbb = musicPlayerSession.getBbb();
+                bff = musicPlayerSession.getBff();
+                pb = musicPlayerSession.getPb();
+                tiempo = musicPlayerSession.getTiempo();
+                recyclerView = musicPlayerSession.getRecyclerView();
+                song = musicPlayerSession.getSong();
+
+                view=musicPlayerSession.getView();
+
+                firstTime=false;
+
+                System.out.println("ART_ I CAN LISTEN");
+            }*/
+
+
 
             try {
                 musicPlayerSettings = musicPlayermoduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
@@ -111,6 +134,24 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+
+        musicPlayerSession.setMusicThread(songPlayerThread);
+        musicPlayerSession.setMusicPlayer(mp);
+
+        musicPlayerSession.setBplay(bplay);
+        musicPlayerSession.setBbb(bbb);
+        musicPlayerSession.setBff(bff);
+        musicPlayerSession.setPb(pb);
+        musicPlayerSession.setRecyclerView(recyclerView);
+        musicPlayerSession.setTiempo(tiempo);
+        musicPlayerSession.setSong(song);
+
+        musicPlayerSession.setView(view);
+
+    }
 
     public static MusicPlayerMainActivity newInstance() {
         return new MusicPlayerMainActivity();
@@ -120,84 +161,93 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        view=inflater.inflate(R.layout.art_music_player_activity,container,false);
-        getActivity().getWindow().setBackgroundDrawableResource(R.drawable.musicplayer_background_viewpager);
-        bplay = (ImageButton) view.findViewById(R.id.play);
-        bbb = (ImageButton) view.findViewById(R.id.back);
-        bff = (ImageButton) view.findViewById(R.id.forward);
-        pb=(SeekBar) view.findViewById(R.id.progressBar);
-        tiempo=(TextView) view.findViewById((R.id.tiempo));
-        recyclerView = (RecyclerView) view.findViewById(R.id.rv);
-        song=(TextView)view.findViewById(R.id.songname);
 
 
-
-        pb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(mp.isPlaying() && fromUser){
-                    mp.seekTo(progress*1000);
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
+        if(firstTime) {
+            view=inflater.inflate(R.layout.art_music_player_activity,container,false);
+            getActivity().getWindow().setBackgroundDrawableResource(R.drawable.musicplayer_background_viewpager);
+            bplay = (ImageButton) view.findViewById(R.id.play);
+            bbb = (ImageButton) view.findViewById(R.id.back);
+            bff = (ImageButton) view.findViewById(R.id.forward);
+            pb = (SeekBar) view.findViewById(R.id.progressBar);
+            tiempo = (TextView) view.findViewById((R.id.tiempo));
+            recyclerView = (RecyclerView) view.findViewById(R.id.rv);
+            song = (TextView) view.findViewById(R.id.songname);
 
 
-        recyclerView.setHasFixedSize(true);
-        lManager = new LinearLayoutManager(view.getContext());
-        recyclerView.setLayoutManager(lManager);
-        adapter = new MusicPlayerAdapter(items);
-        recyclerView.setAdapter(adapter);
-
-        init();
-
-        recyclerView.addOnItemTouchListener(
-                new ManageRecyclerviewClickEvent(view.getContext(), new ManageRecyclerviewClickEvent.OnItemClickListener() {
-                    @Override
-
-                    public void onItemClick(View view, int position) {
-                        songposition=position;
-                        clickplay(position);
+            pb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (mp.isPlaying() && fromUser) {
+                        mp.seekTo(progress * 1000);
                     }
-                })
-        );
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
 
 
-        bplay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                play();
+            recyclerView.setHasFixedSize(true);
+            lManager = new LinearLayoutManager(view.getContext());
+            recyclerView.setLayoutManager(lManager);
+            adapter = new MusicPlayerAdapter(items);
+            recyclerView.setAdapter(adapter);
 
-            }
-        });
+            init();
 
-        bff.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+            recyclerView.addOnItemTouchListener(
+                    new ManageRecyclerviewClickEvent(view.getContext(), new ManageRecyclerviewClickEvent.OnItemClickListener() {
+                        @Override
 
-                nextsong();
+                        public void onItemClick(View view, int position) {
+                            songposition = position;
+                            clickplay(position);
+                        }
+                    })
+            );
 
 
-            }
-        });
+            bplay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    play();
 
-        bbb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                }
+            });
 
-                backsong();
+            bff.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
-            }
-        });
+                    nextsong();
+
+
+                }
+            });
+
+            bbb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    backsong();
+
+                }
+            });
+
+
+        }else{
+
+            init();
+
+        }
 
         return view;
     }
@@ -222,8 +272,6 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
         }
     }
-
-
 
 
 
@@ -298,6 +346,8 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         }
 
     }
+
+
 
     private void stop(){
         try {
