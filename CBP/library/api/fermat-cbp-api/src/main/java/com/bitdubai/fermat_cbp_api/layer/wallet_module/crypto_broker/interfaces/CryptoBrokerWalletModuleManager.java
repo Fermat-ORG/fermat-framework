@@ -805,5 +805,5 @@ public interface CryptoBrokerWalletModuleManager extends CBPWalletsModuleManager
      *
      * @throws CantExtractEarningsException
      */
-    void extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantExtractEarningsException;
+    boolean extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantExtractEarningsException;
 }

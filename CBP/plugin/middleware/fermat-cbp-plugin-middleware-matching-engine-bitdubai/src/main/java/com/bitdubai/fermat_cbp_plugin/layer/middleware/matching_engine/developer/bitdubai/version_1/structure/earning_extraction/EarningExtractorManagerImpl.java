@@ -46,7 +46,7 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
     }
 
     @Override
-    public void extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantExtractEarningsException {
+    public boolean extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantExtractEarningsException {
 
         if (earningsPair == null)
             throw new CantExtractEarningsException("Verifying parameters", "The earningsPair parameter cannot be null");
@@ -58,8 +58,7 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
             throw new CantExtractEarningsException("Verifying the Earning Extractors", "No Earning Extractors added");
 
         if (earningTransactions.isEmpty())
-            return;
-
+            return false;
 
         final String earningWalletPublicKey = earningsPair.getEarningsWallet().getPublicKey();
         final Platforms earningWalletPlatform = getEarningWalletPlatform(earningWalletPublicKey, BROKER_WALLET_PUBLIC_KEY);
@@ -69,10 +68,10 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
 
             float earningsAmount = 0;
             for (EarningTransaction earningTransaction : earningTransactions) {
-                final EarningTransactionState earningTransactionState = earningTransaction.getState();
-                final Currency earningTransactionCurrency = earningTransaction.getEarningCurrency();
+                final EarningTransactionState state = earningTransaction.getState();
+                final Currency currency = earningTransaction.getEarningCurrency();
 
-                if (earningTransactionCurrency == earningCurrency && earningTransactionState != EarningTransactionState.EXTRACTED)
+                if (currency == earningCurrency && state != EarningTransactionState.EXTRACTED)
                     earningsAmount += earningTransaction.getAmount();
             }
 
@@ -81,8 +80,12 @@ public class EarningExtractorManagerImpl implements EarningExtractorManager {
 
                 final EarningExtractor earningExtractor = earningExtractors.get(earningWalletPlatform);
                 earningExtractor.applyEarningExtraction(earningsPair, earningsAmount, earningWalletPublicKey, BROKER_WALLET_PUBLIC_KEY);
+
+                return true;
             }
         }
+
+        return false;
     }
 
     private Platforms getEarningWalletPlatform(String earningWalletPublicKey, String brokerWalletPublicKey) {

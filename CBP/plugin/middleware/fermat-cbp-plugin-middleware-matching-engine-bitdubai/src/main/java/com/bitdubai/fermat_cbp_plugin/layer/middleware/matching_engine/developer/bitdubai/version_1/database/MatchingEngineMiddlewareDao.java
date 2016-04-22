@@ -817,15 +817,16 @@ public class MatchingEngineMiddlewareDao {
         );
     }
 
-    public final List<EarningTransaction> listEarningTransactions(final UUID earningsPairId) throws CantListEarningTransactionsException {
+    public final List<EarningTransaction> listEarningTransactions(final UUID earningsPairId, EarningTransactionState state) throws CantListEarningTransactionsException {
 
-        return this.listEarningTransactions(earningsPairId, null, null);
+        return this.listEarningTransactions(earningsPairId, null, null, state);
     }
 
 
     public final List<EarningTransaction> listEarningTransactions(final UUID earningsPairId,
                                                                   final Integer max,
-                                                                  final Integer offset) throws CantListEarningTransactionsException {
+                                                                  final Integer offset,
+                                                                  EarningTransactionState state) throws CantListEarningTransactionsException {
 
         try {
 
@@ -835,6 +836,8 @@ public class MatchingEngineMiddlewareDao {
                 earningsTransactionTable.setFilterTop(max.toString());
             if (offset != null)
                 earningsTransactionTable.setFilterOffSet(offset.toString());
+            if(state != null)
+                earningsTransactionTable.addFermatEnumFilter(EARNING_TRANSACTION_STATE_COLUMN_NAME, state, DatabaseFilterType.EQUAL);
 
             earningsTransactionTable.addUUIDFilter(EARNING_TRANSACTION_EARNING_PAIR_ID_COLUMN_NAME, earningsPairId, DatabaseFilterType.EQUAL);
 
