@@ -341,7 +341,7 @@ public class ChatActorNetworkServiceDao {
     public List<ChatActorCommunityInformation> listChatActorCache(int max, int offset) throws CantListChatActorCacheUserException {
 
         try {
-            DatabaseTable table = this.database.getTable(ChatActorNetworkServiceDatabaseConstants.CONNECTION_CHAT_CACHE_ONLINE);
+            DatabaseTable table = this.database.getTable(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_TABLE_NAME);
 
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));
@@ -367,7 +367,7 @@ public class ChatActorNetworkServiceDao {
     public List<ChatActorCommunityInformation> listChatActorSuggestion(int max, int offset) throws CantListChatActorCacheUserException {
 
         try {
-            DatabaseTable table = this.database.getTable(ChatActorNetworkServiceDatabaseConstants.CONNECTION_CHAT_SUGGESTION_ONLINE);
+            DatabaseTable table = this.database.getTable(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_TABLE_NAME);
 
             table.setFilterOffSet(String.valueOf(offset));
             table.setFilterTop(String.valueOf(max));

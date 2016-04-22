@@ -13,8 +13,6 @@ public class ChatActorNetworkServiceDatabaseConstants {
      * Connection News database table definition.
      */
     public static final String CONNECTION_NEWS_TABLE_NAME                          = "connection_news"         ;
-    public static final String CONNECTION_CHAT_CACHE_ONLINE                        = "chat_cache"              ;
-    public static final String CONNECTION_CHAT_SUGGESTION_ONLINE                   = "chat_suggestion"         ;
     public static final String CONNECTION_NEWS_REQUEST_ID_COLUMN_NAME              = "request_id"              ;
     public static final String CONNECTION_NEWS_SENDER_PUBLIC_KEY_COLUMN_NAME       = "sender_public_key"       ;
     public static final String CONNECTION_NEWS_SENDER_ACTOR_TYPE_COLUMN_NAME       = "sender_actor_type"       ;
