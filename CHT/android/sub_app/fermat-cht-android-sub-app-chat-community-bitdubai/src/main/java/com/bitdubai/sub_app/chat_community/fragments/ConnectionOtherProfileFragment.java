@@ -195,9 +195,8 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                     }
                 });
                 connectDialog.show();
-            } catch ( CantGetSelectedActorIdentityException e) {
-                e.printStackTrace();
-            } catch ( ActorIdentityNotSelectedException e) {
+            } catch ( CantGetSelectedActorIdentityException
+                    | ActorIdentityNotSelectedException e) {
                 e.printStackTrace();
             }
         }
@@ -219,9 +218,8 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                     }
                 });
                 disconnectDialog.show();
-            } catch ( CantGetSelectedActorIdentityException e) {
-                e.printStackTrace();
-            } catch ( ActorIdentityNotSelectedException e) {
+            } catch ( CantGetSelectedActorIdentityException
+                    | ActorIdentityNotSelectedException e) {
                 e.printStackTrace();
             }
         }
@@ -238,9 +236,8 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                 });
                 notificationAcceptDialog.show();
 
-            } catch ( CantGetSelectedActorIdentityException e) {
-                e.printStackTrace();
-            } catch ( ActorIdentityNotSelectedException e) {
+            } catch ( CantGetSelectedActorIdentityException
+                    | ActorIdentityNotSelectedException e) {
                 e.printStackTrace();
             }
         }
