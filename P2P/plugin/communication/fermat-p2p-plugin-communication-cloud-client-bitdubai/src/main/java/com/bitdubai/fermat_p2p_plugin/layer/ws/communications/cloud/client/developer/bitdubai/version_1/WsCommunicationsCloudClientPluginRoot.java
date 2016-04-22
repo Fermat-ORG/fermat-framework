@@ -468,6 +468,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
         }
 
+        //System.out.println("WsCommunicationsCloudClientPluginRoot - clientIdentity.getPublicKey() = "+clientIdentity.getPublicKey());
     }
 
     /**

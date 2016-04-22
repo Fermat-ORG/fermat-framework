@@ -5,17 +5,31 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.Fe
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.FermatCipher;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ciphers.FermatSpongyCastleCipher;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.util.OperatingSystemCheck;
+
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.Security;
 import java.security.Signature;
 
 public class AsymmetricCryptography {
 
-    /**
-     * Represent the OS
-     */
-    static String OS;
+    static {
+
+        if (OperatingSystemCheck.getOperatingSystemType() == OperatingSystemCheck.OperatingSystemType.Android){
+
+            Security.addProvider(new org.spongycastle.jce.provider.BouncyCastleProvider());
+            Security.insertProviderAt(new org.spongycastle.jce.provider.BouncyCastleProvider(), 1);
+
+        }else {
+
+            Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+            Security.insertProviderAt(new org.bouncycastle.jce.provider.BouncyCastleProvider(), 1);
+        }
+
+    }
+
 
     /**
      * Represent the fermatCipher
@@ -34,19 +48,14 @@ public class AsymmetricCryptography {
         super();
 
         try {
-            OS = System.getProperty("os.name");
 
-            if (OS.equals("Linux")){
-
-                System.out.println("SecurityProvider Loaded = "+ org.bouncycastle.jce.provider.BouncyCastleProvider.PROVIDER_NAME);
+            if (OperatingSystemCheck.getOperatingSystemType() == OperatingSystemCheck.OperatingSystemType.Android){
                 fermatCipher = new FermatBouncyCastleCipher();
-
             }else {
-
-                System.out.println("SecurityProvider Loaded = "+ org.bouncycastle.jce.provider.BouncyCastleProvider.PROVIDER_NAME);
                 fermatCipher =  new FermatSpongyCastleCipher();
-
             }
+
+            System.out.println("AsymmetricCryptography - SecurityProvider Loaded = "+ Security.getProviders()[0]);
 
         } catch (Exception e) {
             e.printStackTrace();

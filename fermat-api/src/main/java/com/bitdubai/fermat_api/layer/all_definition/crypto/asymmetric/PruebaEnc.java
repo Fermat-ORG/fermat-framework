@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces.KeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.util.OperatingSystemCheck;
 import com.google.common.base.Stopwatch;
 
 import org.bouncycastle.util.encoders.Base64;
@@ -20,6 +21,8 @@ import java.security.spec.EncodedKeySpec;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
+import java.util.Enumeration;
+import java.util.Properties;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
@@ -39,6 +42,9 @@ public class PruebaEnc {
         AsymmetricCryptography.getFermatCipher();
 
         try {
+
+            //System.getProperties().list(System.out);
+
             Stopwatch stopwatch = Stopwatch.createStarted();
 
             // Generate a 126-bit Digital Signature Algorithm (ECDH) key pair
@@ -68,8 +74,15 @@ publicKey : MFYwEAYHKoZIzj0CAQYFK4EEAAoDQgAEeb5mfvncu6xVoGKVzocLBwKb/NstzijZWfKB
              */
 
 
+            final String ppK = "MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEArnTl+ahNqXN5KeXKTe3zJ9EGMbNXq/K1KKHAUgmLZmQF3GKHX03btsbNrtCnHIf7/FhCTHAXvIohnfCBxqp9rwIDAQABAkBPNIa3Jxj/boxbn9cOM5LaiHWJ+hU7XYmvRWTWOjweg1mwVP8nj2iQBSAtpd7gbs2uPBYhTAnV9JWIGj8ylxmVAiEA4a7zNcMsl/3zmTsrqv+njQmhik64DrxRQ4RywR/Er4UCIQDF5E5FnaOst+Tp+s30o0l+IQrnNraBwSGwcBtjQEqMowIhALN4YjbN2Ceir1aaxHY+ymqRTyJiyWIGhgVQTcWg0tPVAiA6t9GZynqkZzRfUPIHouPNrxRDIvLocVwDtGAMBSmZrQIgMuQuP9SWinc4fg8pjyWlwvUmlvjOlYh/BS80prJVlYo=";
+            ECCKeyPair eccKeyPair = new ECCKeyPair(ppK);
+            PrivateKey privateKey = AsymmetricCryptography.getPrivateKeyFromString(ppK);
+            System.out.println("privateKey : " + privateKey);
+            System.out.println("privateKey encode : " + AsymmetricCryptography.getFermatCipher().encode(privateKey.getEncoded()));
+
+
             //KeyPair eccKeyPair = AsymmetricCryptography.createNewKeyPair();
-            ECCKeyPair eccKeyPair = new ECCKeyPair();
+     /*      ECCKeyPair eccKeyPair = new ECCKeyPair();
             System.out.println(" ----------------------------------------------- ");
             System.out.println("privateKey : " + eccKeyPair.getPrivateKey());
             System.out.println(" ----------------------------------------------- ");
