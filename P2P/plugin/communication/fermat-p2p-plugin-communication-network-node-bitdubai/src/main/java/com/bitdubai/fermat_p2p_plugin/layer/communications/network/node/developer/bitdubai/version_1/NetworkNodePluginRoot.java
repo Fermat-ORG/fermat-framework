@@ -50,7 +50,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-
+import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper;
 import org.apache.commons.configuration.ConfigurationException;
 import org.jboss.logging.Logger;
 
@@ -296,7 +296,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      * Generate the node profile of this
      * node
      */
-    private void generateNodeProfile() throws CantGetCurrentIPAddressException, CantAcquireLocationException {
+    private void generateNodeProfile() throws CantAcquireLocationException {
 
         LOG.info("Generating Node Profile");
 
