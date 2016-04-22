@@ -125,11 +125,11 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
      * @throws CantCreateNewChatIdentityException if something goes wrong.
      */
     @Override
-    public void createNewIdentityChat(String alias, byte[] profileImage) throws CantCreateNewChatIdentityException {
+    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city) throws CantCreateNewChatIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = AsymmetricCryptography.generateECCKeyPair();
-            chatIdentityDao().createNewUser(alias, keyPair.getPublicKey(), keyPair.getPrivateKey(), loggedUser, profileImage);
+            chatIdentityDao().createNewUser(alias, keyPair.getPublicKey(), keyPair.getPrivateKey(), loggedUser, profileImage, country, state, city);
             registerIdentitiesANS(keyPair.getPublicKey());
         } catch (CantCreateNewDeveloperException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
@@ -151,9 +151,9 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
      * @throws CantUpdateChatIdentityException
      */
     @Override
-    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateChatIdentityException {
+    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city) throws CantUpdateChatIdentityException {
         try {
-            chatIdentityDao().updateChatIdentity(identityPublicKey, identityAlias, profileImage);
+            chatIdentityDao().updateChatIdentity(identityPublicKey, identityAlias, profileImage, country, state, city);
             registerIdentitiesANS(identityPublicKey);
         } catch (com.bitdubai.fermat_cht_api.all_definition.exceptions.CantUpdateChatIdentityException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
@@ -179,7 +179,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
     private void registerIdentitiesANS(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
         try {
             ChatIdentity chatIdentity = chatIdentityDao().getChatIdentity();
-            final ChatExposingData chatExposingData = new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage());
+            final ChatExposingData chatExposingData = new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage(), chatIdentity.getCountry(), chatIdentity.getState(), chatIdentity.getCity());
             chatIdentityDao().changeExposureLevel(chatIdentity.getPublicKey(), ExposureLevel.PUBLISH);
             new Thread() {
                 @Override

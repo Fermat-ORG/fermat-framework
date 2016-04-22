@@ -10,14 +10,23 @@ public class ChatExposingData {
     private final String publicKey;
     private final String alias    ;
     private final byte[] image    ;
+    private final String country  ;
+    private final String state    ;
+    private final String city     ;
 
     public ChatExposingData(final String publicKey,
                                     final String alias    ,
-                                    final byte[] image    ) {
+                                    final byte[] image,
+                                    final String country,
+                                    final String state,
+                                    final String city    ) {
 
         this.publicKey = publicKey;
         this.alias     = alias    ;
         this.image     = image    ;
+        this.country   = country;
+        this.state     = state;
+        this.city      = city;
     }
 
     /**
@@ -39,6 +48,18 @@ public class ChatExposingData {
      */
     public final byte[] getImage() {
         return image;
+    }
+
+    public String getCountry() {
+        return this.country;
+    }
+
+    public String getState() {
+        return this.state;
+    }
+
+    public String getCity() {
+        return this.city;
     }
 
     @Override

@@ -33,12 +33,12 @@ public class WalletContactsMiddlewareDatabaseConstants {
      */
     public static final String WALLET_CONTACT_ADDRESSES_TABLE_NAME                  = "wallet_contact_addresses";
 
+    public static final String WALLET_CONTACT_ADDRESSES_ID_COLUMN_NAME              = "address_id"              ;
     public static final String WALLET_CONTACT_ADDRESSES_CONTACT_ID_COLUMN_NAME      = "contact_id"              ;
     public static final String WALLET_CONTACT_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME  = "crypto_address"          ;
     public static final String WALLET_CONTACT_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME = "crypto_currency"         ;
     public static final String WALLET_CONTACT_ADDRESSES_TIME_STAMP_COLUMN_NAME      = "time_stamp"              ;
-
-    public static final String WALLET_CONTACT_ADDRESSES_FIRST_KEY_COLUMN            = "crypto_address"          ;
     public static final String WALLET_CONTACT_ADDRESSES_NETWORK_TYPE                = "network_type"            ;
+    public static final String WALLET_CONTACT_ADDRESSES_FIRST_KEY_COLUMN            = "address_id"          ;
 
 }

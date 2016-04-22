@@ -102,7 +102,7 @@ public class ChatIdentityDatabaseDao {
         return database;
     }
 
-    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage) throws CantCreateNewDeveloperException {
+    public void createNewUser(String alias, String publicKey, String privateKey, DeviceUser deviceUser, byte[] profileImage, String country, String state, String city) throws CantCreateNewDeveloperException {
 
         try {
             if (aliasExists(alias)) {
@@ -117,6 +117,9 @@ public class ChatIdentityDatabaseDao {
             record.setStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME, publicKey);
             record.setStringValue(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME, alias);
             record.setStringValue(ChatIdentityDatabaseConstants.CHAT_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME, deviceUser.getPublicKey());
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME, country);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME, state);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME, city);
 
             table.insertRecord(record);
 
@@ -175,7 +178,7 @@ public class ChatIdentityDatabaseDao {
     }
 
 
-    public void updateChatIdentity(String publicKey, String alias, byte[] profileImage) throws CantUpdateChatIdentityException {
+    public void updateChatIdentity(String publicKey, String alias, byte[] profileImage, String country, String state, String city) throws CantUpdateChatIdentityException {
         try {
             /**
              * 1) Get the table.
@@ -250,7 +253,10 @@ public class ChatIdentityDatabaseDao {
                 chatIdentity = new ChatIdentityImpl(
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME),
                         record.getStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME),
-                        getChatProfileImagePrivateKey(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME)));
+                        getChatProfileImagePrivateKey(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME)),
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME),
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME),
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME));
             }
         } catch (CantLoadTableToMemoryException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
@@ -302,7 +308,10 @@ public class ChatIdentityDatabaseDao {
                         getChatIdentityPrivateKey(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME)),
                         getChatProfileImagePrivateKey(record.getStringValue(ChatIdentityDatabaseConstants.CHAT_PUBLIC_KEY_COLUMN_NAME)),
                         pluginFileSystem,
-                        pluginId));
+                        pluginId,
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME),
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME),
+                        record.getStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME)));
             }
         } catch (CantLoadTableToMemoryException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));

@@ -140,6 +140,9 @@ import java.util.UUID;
         projectColumns.add(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME);
         projectColumns.add(ChatIdentityDatabaseConstants.CHAT_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
         projectColumns.add(ChatIdentityDatabaseConstants.CHAT_EXPOSURE_LEVEL_COLUMN_NAME);
+        projectColumns.add(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME);
+        projectColumns.add(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME);
+        projectColumns.add(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME);
 
         DeveloperDatabaseTable chatIdentityTable = developerObjectFactory.getNewDeveloperDatabaseTable(ChatIdentityDatabaseConstants.CHAT_TABLE_NAME, projectColumns);
         tables.add(chatIdentityTable);

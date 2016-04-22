@@ -295,33 +295,47 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                 String newAmount = "";
                 switch (position) {
                     case 0:
+                        text = "[btc]";
+                        if (!amount.equals("") && amount != null){
+                            if (txtType.equals("[bits]")) {
+                                newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
+                            } else if (txtType.equals("[satoshis]")) {
+                                newAmount = bitcoinConverter.getBTC(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+                        }else{
+                            newAmount = amount;
+                        }
+
+
+                        break;
+                    case 1:
                         text = "[bits]";
-                        if (txtType.equals("[btc]")) {
-                            newAmount = bitcoinConverter.getBitsFromBTC(amount);
-                        } else if (txtType.equals("[satoshis]")) {
-                            newAmount = bitcoinConverter.getBits(amount);
-                        } else {
+                        if (!amount.equals("") && amount != null) {
+                            if (txtType.equals("[btc]")) {
+                                newAmount = bitcoinConverter.getBitsFromBTC(amount);
+                            } else if (txtType.equals("[satoshis]")) {
+                                newAmount = bitcoinConverter.getBits(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+                        }else{
                             newAmount = amount;
                         }
 
                         break;
-                    case 1:
-                        text = "[btc]";
-                        if (txtType.equals("[bits]")) {
-                            newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
-                        } else if (txtType.equals("[satoshis]")) {
-                            newAmount = bitcoinConverter.getBTC(amount);
-                        } else {
-                            newAmount = amount;
-                        }
-                        break;
                     case 2:
                         text = "[satoshis]";
-                        if (txtType.equals("[bits]")) {
-                            newAmount = bitcoinConverter.getSathoshisFromBits(amount);
-                        } else if (txtType.equals("[btc]")) {
-                            newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
-                        } else {
+                        if (!amount.equals("") && amount != null) {
+                            if (txtType.equals("[bits]")) {
+                                newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                            } else if (txtType.equals("[btc]")) {
+                                newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+                        }else{
                             newAmount = amount;
                         }
                         break;

@@ -73,7 +73,8 @@ public class ChatActorNetworkServiceSearch extends ChatSearch {
                     imageByte = null;
 
 
-                chatExposingDataArrayList.add(new ChatExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte));
+                //TODO: Vilchez revisa este metodo que les coloque null a esos valores, porque es parte del extradata pero nose como lo vas a manejar
+                chatExposingDataArrayList.add(new ChatExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte, null, null, null));
             }
 
             return chatExposingDataArrayList;
