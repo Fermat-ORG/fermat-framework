@@ -173,7 +173,7 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
 
             Artist artist = null;
             if(externalIdentityID != null){
-                artist = createArtistIdentity(alias,image,externalIdentityID);
+                artist = createArtistIdentity(alias,image,externalIdentityID, ArtExternalPlatform.TOKENLY);
                 artistManager.exposeIdentity(new ArtistExposingData(artist.getPublicKey(),"El gabo",artist.getProfileImage()));
                 ActorSearch<ArtistExposingData> artistExposingDataActorSearch = artistManager.getSearch();
                 List<ArtistExposingData> artistExposingDatas = artistExposingDataActorSearch.getResult();
@@ -247,7 +247,7 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
     public ArtIdentity getLinkedIdentity(String publicKey) {
         ArtIdentity artIdentity = null;
         try {
-            Artist artist = identityArtistManager.getIdentitArtist(publicKey);
+            Artist artist = identityArtistManager.getIdentityArtist(publicKey);
             if(artist != null){
                 for (ArtExternalPlatform externalPlatform:
                         ArtExternalPlatform.values()) {
@@ -274,18 +274,36 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
 
 
     @Override
-    public Artist createArtistIdentity(String alias, byte[] imageBytes,UUID externalIdentityId) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
-        return identityArtistManager.createNewIdentityArtist(alias,imageBytes,externalIdentityId);
+    public Artist createArtistIdentity(
+            String alias,
+            byte[] imageBytes,
+            UUID externalIdentityId,
+            ArtExternalPlatform artExternalPlatform) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
+        return identityArtistManager.createNewIdentityArtist(
+                alias,
+                imageBytes,
+                externalIdentityId,
+                artExternalPlatform);
     }
 
     @Override
-    public void updateArtistIdentity(String alias, String publicKey, byte[] profileImage, UUID externalIdentityID) throws CantUpdateArtistIdentityException {
-        identityArtistManager.updateIdentityArtist(alias,publicKey,profileImage,externalIdentityID);
+    public void updateArtistIdentity(
+            String alias,
+            String publicKey,
+            byte[] profileImage,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform) throws CantUpdateArtistIdentityException {
+        identityArtistManager.updateIdentityArtist(
+                alias,
+                publicKey,
+                profileImage,
+                externalIdentityID,
+                artExternalPlatform);
     }
 
     @Override
     public Artist getArtistIdentity(String publicKey) throws CantGetArtistIdentityException, IdentityNotFoundException {
-        return identityArtistManager.getIdentitArtist(publicKey);
+        return identityArtistManager.getIdentityArtist(publicKey);
     }
 
     @Override

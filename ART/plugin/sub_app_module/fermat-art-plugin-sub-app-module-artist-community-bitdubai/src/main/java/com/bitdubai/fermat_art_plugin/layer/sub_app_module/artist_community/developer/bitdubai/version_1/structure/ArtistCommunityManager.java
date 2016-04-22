@@ -455,7 +455,12 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         return ConnectionState.DISCONNECTED_LOCALLY;    }
 
     @Override
-    public void createArtistIdentity(String name, String phrase, byte[] profile_img, UUID externalIdentityID) throws Exception {
+    public void createArtistIdentity(
+            String name,
+            String phrase,
+            byte[] profile_img,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform) throws Exception {
         String createdPublicKey = null;
 
         if(name.equals("Fan"))
@@ -482,7 +487,11 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         else if( name.equals("Artist"))
         {
             try{
-                final Artist createdIdentity = artistIdentityManager.createArtistIdentity(name, profile_img, externalIdentityID);
+                final Artist createdIdentity = artistIdentityManager.createArtistIdentity(
+                        name,
+                        profile_img,
+                        externalIdentityID,
+                        artExternalPlatform);
                 createdPublicKey = createdIdentity.getPublicKey();
 
                 new Thread() {

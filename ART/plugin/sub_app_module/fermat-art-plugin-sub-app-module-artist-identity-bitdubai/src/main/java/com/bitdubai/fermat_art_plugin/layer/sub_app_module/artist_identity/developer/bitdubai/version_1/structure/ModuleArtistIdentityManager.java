@@ -64,13 +64,31 @@ public class ModuleArtistIdentityManager implements ArtistIdentityManagerModule,
     }
 
     @Override
-    public Artist createArtistIdentity(String alias, byte[] imageBytes, UUID externalIdentityID) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
-        return artistIdentityManager.createArtistIdentity(alias,imageBytes,externalIdentityID);
+    public Artist createArtistIdentity(
+            String alias,
+            byte[] imageBytes,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
+        return artistIdentityManager.createArtistIdentity(
+                alias,
+                imageBytes,
+                externalIdentityID,
+                artExternalPlatform);
     }
 
     @Override
-    public void updateArtistIdentity(String alias, String publicKey, byte[] profileImage,UUID externalIdentityID) throws CantUpdateArtistIdentityException {
-        artistIdentityManager.updateArtistIdentity(alias, publicKey, profileImage,externalIdentityID);
+    public void updateArtistIdentity(
+            String alias,
+            String publicKey,
+            byte[] profileImage,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform) throws CantUpdateArtistIdentityException {
+        artistIdentityManager.updateArtistIdentity(
+                alias,
+                publicKey,
+                profileImage,
+                externalIdentityID,
+                artExternalPlatform);
     }
 
     @Override

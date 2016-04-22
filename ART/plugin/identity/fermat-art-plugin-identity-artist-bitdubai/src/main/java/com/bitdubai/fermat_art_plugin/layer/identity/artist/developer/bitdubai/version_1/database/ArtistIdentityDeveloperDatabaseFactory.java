@@ -129,6 +129,7 @@ public class ArtistIdentityDeveloperDatabaseFactory implements DealsWithPluginDa
         ArtistUserColumns.add(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME);
         ArtistUserColumns.add(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME);
         ArtistUserColumns.add(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME);
+        ArtistUserColumns.add(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
         /**
          * Table Asset User addition.
          */

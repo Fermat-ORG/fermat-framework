@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionManager;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.interfaces.FanActorConnectionSearch;
 import com.bitdubai.fermat_art_api.layer.actor_connection.fan.utils.FanActorConnection;
@@ -479,11 +480,20 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
     }
 
     @Override
-    public void createFanaticIdentity(String name, String phrase, byte[] profile_img, UUID externalIdentityID) throws Exception {
+    public void createFanaticIdentity(
+            String name,
+            String phrase,
+            byte[] profile_img,
+            UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform) throws Exception {
         String createdPublicKey = null;
 
         try{
-            final Artist createdIdentity = artistIdentityManager.createArtistIdentity(name, profile_img, externalIdentityID);
+            final Artist createdIdentity = artistIdentityManager.createArtistIdentity(
+                    name,
+                    profile_img,
+                    externalIdentityID,
+                    artExternalPlatform);
             createdPublicKey = createdIdentity.getPublicKey();
 
             new Thread() {
