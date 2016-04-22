@@ -180,15 +180,21 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                             FANATIC_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME,
                     deviceUser.getPublicKey());
             //External Identity Id
-            record.setUUIDValue(
-                    FanaticIdentityDatabaseConstants.
-                            FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME,
-                    externalIdentityID);
-            //External Platform
-            record.setStringValue(
-                    FanaticIdentityDatabaseConstants.
-                            FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
-                    artExternalPlatform.getCode());
+            if(externalIdentityID!=null){
+                record.setUUIDValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME,
+                        externalIdentityID);
+            }
+            //External platform
+            if(artExternalPlatform==null){
+                record.setStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
+                        artExternalPlatform.UNDEFINED.getCode());
+            } else {
+                record.setStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
+                        artExternalPlatform.getCode());
+            }
 
             table.insertRecord(record);
 
@@ -261,15 +267,22 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                 record.setStringValue(
                         FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME,
                         alias);
-                record.setUUIDValue(
-                        FanaticIdentityDatabaseConstants
-                                .FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME,
-                        externalIdentityID);
+                //External Id
+                if(externalIdentityID!=null){
+                    record.setUUIDValue(
+                            FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME,
+                            externalIdentityID);
+                }
                 //External platform
-                record.setStringValue(
-                        FanaticIdentityDatabaseConstants
-                                .FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
-                        artExternalPlatform.getCode());
+                if(artExternalPlatform==null){
+                    record.setStringValue(
+                            FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
+                            artExternalPlatform.UNDEFINED.getCode());
+                } else {
+                    record.setStringValue(
+                            FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
+                            artExternalPlatform.getCode());
+                }
 
                 table.updateRecord(record);
             }
@@ -349,7 +362,7 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                 ArtExternalPlatform externalPlatform;
                 String externalPlatformString = record.getStringValue(
                         FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
-                if(externalPlatformString==null || externalIdentityString.isEmpty()){
+                if(externalPlatformString==null || externalPlatformString.isEmpty()){
                     externalPlatform = ArtExternalPlatform.UNDEFINED;
                 } else{
                     externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
@@ -433,7 +446,7 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                 ArtExternalPlatform externalPlatform;
                 String externalPlatformString = record.getStringValue(
                         FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
-                if(externalPlatformString==null || externalIdentityString.isEmpty()){
+                if(externalPlatformString==null || externalPlatformString.isEmpty()){
                     externalPlatform = ArtExternalPlatform.UNDEFINED;
                 } else{
                     externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
@@ -518,7 +531,7 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                 ArtExternalPlatform externalPlatform;
                 String externalPlatformString = record.getStringValue(
                         FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
-                if(externalPlatformString==null || externalIdentityString.isEmpty()){
+                if(externalPlatformString==null || externalPlatformString.isEmpty()){
                     externalPlatform = ArtExternalPlatform.UNDEFINED;
                 } else{
                     externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
