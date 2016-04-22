@@ -23,6 +23,7 @@ public class TokenlyFanIdentityDatabaseConstants {
     public static final String TOKENLY_FAN_IDENTITY_ACCESS_TOKEN_COLUMN_NAME = "tokenly_fan_access_token";
     public static final String TOKENLY_FAN_IDENTITY_EMAIL_COLUMN_NAME = "tokenly_fan_email";
     public static final String TOKENLY_FAN_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME = "tokenly_fan_external_platform";
+    public static final String TOKENLY_FAN_IDENTITY_ARTIST_CONNECTED_LIST_COLUMN_NAME = "artist_connected";
 
     public static final String TOKENLY_FAN_IDENTITY_FIRST_KEY_COLUMN = TOKENLY_FAN_IDENTITY_ID_COLUMN_NAME;
 

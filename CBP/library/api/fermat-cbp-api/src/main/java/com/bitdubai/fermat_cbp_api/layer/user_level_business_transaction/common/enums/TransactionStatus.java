@@ -14,7 +14,8 @@ public enum TransactionStatus implements FermatEnum {
     IN_PAYMENT_SUBMIT("IPSU"),
     IN_MERCHANDISE_SUBMIT("IMSU"),
     IN_PENDING_MERCHANDISE("IPME"),
-    COMPLETED("COMP")
+    COMPLETED("COMP"),
+    CANCELLED("CANC")
     ;
 
     String code;

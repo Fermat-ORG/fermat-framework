@@ -5,9 +5,15 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.interfaces
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
+import com.bitdubai.fermat_cht_api.all_definition.enums.ExposureLevel;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantCreateNewDeveloperException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListIdentitiesException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantPublishIdentityException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.IdentityNotFoundException;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
+import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantCreateNewChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -32,6 +38,7 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
     private final UUID pluginId;
     private ErrorManager errorManager;
     private PluginFileSystem pluginFileSystem;
+    private ChatManager chatManager;
 
     /**
      * Represents the DeviceUserManager
@@ -48,12 +55,14 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
                                                    final UUID pluginId,
                                                    final ErrorManager errorManager,
                                                    final DeviceUserManager deviceUserManager,
-                                                   final PluginFileSystem pluginFileSystem) {
+                                                   final PluginFileSystem pluginFileSystem,
+                                                   final ChatManager chatManager ) {
         this.pluginDatabaseSystem = pluginDatabaseSystem;
         this.pluginId             = pluginId            ;
         this.errorManager         = errorManager        ;
         this.deviceUserManager    = deviceUserManager   ;
         this.pluginFileSystem     = pluginFileSystem    ;
+        this.chatManager          = chatManager         ;
     }
 
     private ChatIdentityDatabaseDao chatIdentityDao(){
@@ -117,9 +126,14 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = AsymmetricCryptography.generateECCKeyPair();
             chatIdentityDao().createNewUser(alias, keyPair.getPublicKey(), keyPair.getPrivateKey(), loggedUser, profileImage);
+            registerIdentitiesANS(keyPair.getPublicKey());
         } catch (CantCreateNewDeveloperException e) {
             e.printStackTrace();
         } catch (CantGetLoggedInDeviceUserException e) {
+            e.printStackTrace();
+        } catch (IdentityNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantPublishIdentityException e) {
             e.printStackTrace();
         }
     }
@@ -136,6 +150,46 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
     public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage) throws CantUpdateChatIdentityException {
         try {
             chatIdentityDao().updateChatIdentity(identityPublicKey, identityAlias, profileImage);
+            registerIdentitiesANS(identityPublicKey);
+        } catch (com.bitdubai.fermat_cht_api.all_definition.exceptions.CantUpdateChatIdentityException e) {
+            e.printStackTrace();
+        } catch (IdentityNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantPublishIdentityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * The method <code>publishIdentity</code> is used to publish a Chat identity.
+     *
+     * @param publicKey
+     * @throws CantPublishIdentityException
+     * @throws IdentityNotFoundException
+     */
+    @Override
+    public void publishIdentity(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
+        registerIdentitiesANS(publicKey);
+    }
+
+    private void registerIdentitiesANS(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
+        try {
+            ChatIdentity chatIdentity = chatIdentityDao().getChatIdentity();
+            final ChatExposingData chatExposingData = new ChatExposingData(chatIdentity.getPublicKey(), chatIdentity.getAlias(), chatIdentity.getImage());
+            chatIdentityDao().changeExposureLevel(chatIdentity.getPublicKey(), ExposureLevel.PUBLISH);
+            new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        chatManager.exposeIdentity(chatExposingData);
+                    } catch (CantExposeIdentityException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }.start();
+
+        } catch (CantGetChatUserIdentityException e) {
+            e.printStackTrace();
         } catch (com.bitdubai.fermat_cht_api.all_definition.exceptions.CantUpdateChatIdentityException e) {
             e.printStackTrace();
         }

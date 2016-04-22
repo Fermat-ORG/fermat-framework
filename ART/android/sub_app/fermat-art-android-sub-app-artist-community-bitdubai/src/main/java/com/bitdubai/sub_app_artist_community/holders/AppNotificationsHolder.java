@@ -5,7 +5,7 @@ import android.widget.ImageView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
-import com.bitdubai.reference_wallet.artist_community.R;
+import com.bitdubai.sub_app.artist_community.R;
 
 /**
  * Created by Gabriel Araujo (gabe_512@hotmail.com) on 08/04/16.
@@ -23,8 +23,8 @@ public class AppNotificationsHolder extends FermatViewHolder {
     public AppNotificationsHolder(View itemView) {
         super(itemView);
 
-        userName = (FermatTextView)itemView.findViewById(R.id.afc_user_name);
-        userAvatar = (ImageView)itemView.findViewById(R.id.afc_imageView_avatar);
+        userName = (FermatTextView)itemView.findViewById(R.id.aac_user_name);
+        userAvatar = (ImageView)itemView.findViewById(R.id.aac_imageView_avatar);
 
     }
 }

@@ -5,7 +5,7 @@ import android.view.View;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
 /**
@@ -13,8 +13,8 @@ import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
  */
 public class SettingsStockManagementMerchandisesViewHolder extends FermatViewHolder{
     private FermatButton merchandiseButton;
-    CryptoBrokerWalletManager walletManager;
-    public SettingsStockManagementMerchandisesViewHolder(View itemView,CryptoBrokerWalletManager walletManager) {
+    CryptoBrokerWalletModuleManager walletManager;
+    public SettingsStockManagementMerchandisesViewHolder(View itemView,CryptoBrokerWalletModuleManager walletManager) {
         super(itemView);
         this.walletManager=walletManager;
         merchandiseButton = (FermatButton) itemView.findViewById(R.id.cbw_earning_currency_pair_button);

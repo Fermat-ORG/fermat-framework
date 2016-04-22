@@ -17,13 +17,14 @@ import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.TokenlyFanIdent
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanIdentityManagerModule;
 import com.bitdubai.fermat_tky_api.layer.sub_app_module.fan.interfaces.TokenlyFanPreferenceSettings;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by Alexander Jimenez (alex_jimenez76@hotmail.com) on 3/15/16.
  */
-public class FanIdentityManager implements TokenlyFanIdentityManagerModule{
+public class FanIdentityManager implements TokenlyFanIdentityManagerModule,Serializable {
     private final ErrorManager errorManager;
     private final TokenlyFanIdentityManager tokenlyFanIdentityManager;
 

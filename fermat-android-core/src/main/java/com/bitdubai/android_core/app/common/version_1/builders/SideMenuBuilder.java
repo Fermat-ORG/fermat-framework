@@ -64,10 +64,13 @@ public class SideMenuBuilder {
         }
         mAdapter.changeDataSet(lstItems);
         mAdapter.setFermatListEventListener(fermatListItemListeners);
-        navigation_recycler_view.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
-        if(itemDecoration!=null){
-            navigation_recycler_view.addItemDecoration(itemDecoration);
+        if(navigation_recycler_view!=null) {
+            navigation_recycler_view.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+            if (itemDecoration != null) {
+                navigation_recycler_view.addItemDecoration(itemDecoration);
+            }
+            navigation_recycler_view.invalidate();
         }
     }
 

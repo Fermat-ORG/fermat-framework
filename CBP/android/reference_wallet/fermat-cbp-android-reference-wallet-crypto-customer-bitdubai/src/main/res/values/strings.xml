@@ -104,10 +104,15 @@
     <string name="ccw_wizard_earning_merchandise_description">You must select a Wallet or Wallets that will work as Merchandise</string>
     <string name="ccw_wizard_earning_merchandise_title">Choose Earning Merchandises</string>
     <string name="ccw_wizard_exchange_rate_providers_title">Bitcoin Wallet and Providers</string>
-    <string name="ccw_wizard_exchange_rate_providers_description">You must select the Currency Exchange Rate Providers for your Merchandises</string>
-    <string name="ccw_wizard_locations_description">You must add at least one location to make your transactions</string>
+    <string name="ccw_wizard_exchange_rate_providers_description">Select a <b>Bitcoin Wallet</b> and at least one <b>Exchange Provider</b> for your Wallet.</string>
+    <string name="ccw_wizard_locations_description">Add at least one <b>location</b>, where transactions <b>made in person by you</b> might take place.</string>
+    <string name="ccw_wizard_bitcoin_wallet_and_providers">Set a <b>Bitcoin Wallet</b> and at least one <b>Exchange Provider</b>.</string>
+    <string name="ccw_select_your_bank_account">Your Bank Accounts</string>
+    <string name="ccw_select_your_bank_account_text">Add <b>bank accounts</b> where Crypto Brokers will deposit your purchased money.</string>
+    <string name="ccw_wizard_set_bank_accounts_description">Add at least one <b>bank account</b>, where <b>deposits from Crypto Brokers</b> will be made.</string>
     <string name="ccw_wizard_stock_merchandise_title">Choose Stock Merchandises</string>
     <string name="ccw_wizard_stock_merchandise_description">You must select a Wallet that work as Merchandise and the spread applied to them</string>
+    <string name="ccw_wizard_not_show_text">Don\'t show any help dialogs</string>
     <string name="ccw_your_bitcoin_wallet">Your Bitcoin Wallet</string>
     <string name="ccw_you_bought">You Bought</string>
     <string name="ccw_your_location">Your Locations</string>
@@ -180,18 +185,32 @@
     <string name="hint">hint</string>
     <string name="title">Title</string>
 
-    <string name="cbw_wizard_merchandise_dialog_body">Custom text support for dialog in the wizard identities help 2</string>
-    <string name="cbw_wizard_merchandise_dialog_footer">To begin, choose an avatar below. You might change it later with any picture and your alias</string>
-    <string name="cbw_wizard_merchandise_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
-    <string name="cbw_wizard_providers_dialog_body">Custom text support for dialog in the wizard identities help 2</string>
-    <string name="cbw_wizard_providers_dialog_footer">To begin, choose an avatar below. You might change it later with any picture and your alias</string>
-    <string name="cbw_wizard_providers_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
-    <string name="cbw_wizard_accounts_dialog_body">Custom text support for dialog in the wizard identities help 2</string>
-    <string name="cbw_wizard_accounts_dialog_footer">To begin, choose an avatar below. You might change it later with any picture and your alias</string>
-    <string name="cbw_wizard_accounts_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
-    <string name="cbw_wizard_locations_dialog_body">Custom text support for dialog in the wizard identities help 2</string>
-    <string name="cbw_wizard_locations_dialog_footer">To begin, choose an avatar below. You might change it later with any picture and your alias</string>
-    <string name="cbw_wizard_locations_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
+
+
+    <!-- Strings for Wizard page dialogs  -->
+
+    <!-- Set Bitcoin Wallet and Providers page -->
+    <string name="ccw_wizard_providers_dialog_sub_title">Welcome to the Customer Wallet wizard!</string>
+    <string name="ccw_wizard_providers_dialog_body">This wizard will help you configure your Customer Wallet so you can use it to purchase money</string>
+    <string name="ccw_wizard_providers_dialog_footer">To begin, choose an avatar below. You may change it later with your picture and alias</string>
+
+    <!-- Set Locations page -->
+    <string name="ccw_wizard_locations_dialog_sub_title">Configure your Locations!</string>
+    <string name="ccw_wizard_locations_dialog_body">This page lets you create locations where transactions might take place.</string>
+
+    <!-- Set Bank accounts page -->
+    <string name="ccw_wizard_accounts_dialog_sub_title">Configure your Bank Accounts!</string>
+    <string name="ccw_wizard_accounts_dialog_body">This page allows you to enter your bank accounts where Crypto Brokers will deposit your purchased money.</string>
+
+
+
+
+
+    <!-- Label these. If unused, delete -->
+    <string name="ccw_wizard_merchandise_dialog_body">Custom text support for dialog in the wizard identities help 2</string>
+    <string name="ccw_wizard_merchandise_dialog_footer">To begin, choose an avatar below. You might change it later with any picture and your alias</string>
+    <string name="ccw_wizard_merchandise_dialog_sub_title">This is a simple wallet for exchange Merchandise.</string>
+
     <string name="ccw_insert_note">Insert Note</string>
     <string name="sending_to_the_broker">Sending to the Broker</string>
 </resources>

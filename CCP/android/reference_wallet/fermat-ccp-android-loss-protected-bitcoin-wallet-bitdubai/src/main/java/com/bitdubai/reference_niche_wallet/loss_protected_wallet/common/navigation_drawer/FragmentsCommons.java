@@ -7,14 +7,12 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.BitmapWorkerTask;
-import com.squareup.picasso.Picasso;
 
 /**
  * Created by Matias Furszyfer on 2015.11.12..
@@ -26,9 +24,9 @@ public class FragmentsCommons {
         View view = inflater.inflate(R.layout.navigation_view_row_first, null, true);
         FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
         try {
-            ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
+           // ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
             if (intraUserLoginIdentity != null) {
-                if (intraUserLoginIdentity.getImage() != null) {
+              /*  if (intraUserLoginIdentity.getImage() != null) {
                     if (intraUserLoginIdentity.getImage().length > 0) {
                         //BitmapFactory.Options options = new BitmapFactory.Options();
                         //options.inScaled = true;
@@ -45,7 +43,7 @@ public class FragmentsCommons {
                         //imageView.setImageBitmap(bitmap);
                     } else
                         Picasso.with(activity).load(R.drawable.ic_profile_male).into(imageView);
-                }
+                }*/
                 fermatTextView.setText(intraUserLoginIdentity.getAlias());
             }else{
                 fermatTextView.setText("");

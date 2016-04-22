@@ -30,7 +30,6 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.int
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
-import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.PaymentRequestHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.adapters.TransactionsHistoryAdapter;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.WalletUtils;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.onRefreshList;
@@ -80,8 +79,8 @@ public class SendTransactionFragment3 extends FermatWalletListFragment<LossProte
      *
      * @return InstalledFragment instance object
      */
-    public static RequestSendHistoryFragment newInstance() {
-        return new RequestSendHistoryFragment();
+    public static SendTransactionFragment3 newInstance() {
+        return new SendTransactionFragment3();
     }
 
     @Override
@@ -92,7 +91,7 @@ public class SendTransactionFragment3 extends FermatWalletListFragment<LossProte
         referenceWalletSession = (LossProtectedWalletSession)appSession;
 
         lst = new ArrayList<LossProtectedWalletTransaction>();
-
+        lst = getMoreDataAsync(FermatRefreshTypes.NEW, 0); // get init data
         getExecutor().execute(new Runnable() {
             @Override
             public void run() {

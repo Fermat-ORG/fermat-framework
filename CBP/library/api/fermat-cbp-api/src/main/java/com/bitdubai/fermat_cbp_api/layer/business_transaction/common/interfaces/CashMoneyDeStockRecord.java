@@ -3,7 +3,6 @@ package com.bitdubai.fermat_cbp_api.layer.business_transaction.common.interfaces
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 
-import java.math.BigDecimal;
 
 /**
  * Created by Manuel Perez (darkpriestrelative@gmail.com) on 22/12/15.
@@ -14,14 +13,13 @@ public class CashMoneyDeStockRecord extends AbstractDeStockRecord {
     String cshWalletPublicKey;
     String cashReference;
 
-    public CashMoneyDeStockRecord(BusinessTransactionRecord businessTransactionRecord){
+    public CashMoneyDeStockRecord(BusinessTransactionRecord businessTransactionRecord) {
 
         this.publicKeyActor = businessTransactionRecord.getBrokerPublicKey();
-        this.fiatCurrency = businessTransactionRecord.getCurrencyType();
+        this.fiatCurrency = businessTransactionRecord.getFiatCurrency();
         this.cbpWalletPublicKey = businessTransactionRecord.getCBPWalletPublicKey();
         this.cshWalletPublicKey = businessTransactionRecord.getExternalWalletPublicKey();
-        //TODO: set the proper cashReference
-        cashReference = businessTransactionRecord.getCurrencyType().getCode();
+        cashReference = businessTransactionRecord.getFiatCurrency().getCode();
         this.amount = parseLongToBigDecimal(businessTransactionRecord.getPaymentAmount());
         this.memo = generateMemo(businessTransactionRecord.getContractHash());
         this.priceReference = businessTransactionRecord.getPriceReference();
@@ -56,7 +54,7 @@ public class CashMoneyDeStockRecord extends AbstractDeStockRecord {
     @Override
     public String toString() {
         return "CashMoneyDeStockRecord{" +
-                abstractToString()+
+                abstractToString() +
                 "fiatCurrency=" + fiatCurrency +
                 ", cshWalletPublicKey='" + cshWalletPublicKey + '\'' +
                 ", cashReference='" + cashReference + '\'' +

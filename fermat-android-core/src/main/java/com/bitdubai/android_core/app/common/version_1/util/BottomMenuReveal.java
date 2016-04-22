@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
 import com.bitdubai.android_core.app.FermatActivity;
 import com.bitdubai.android_core.app.common.version_1.dialogs.WelcomeScrennDialog;
@@ -13,15 +14,14 @@ import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsCa
 import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsItem;
 import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsSlider;
 import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsSliderProvisoryData;
-import com.bitdubai.android_core.app.common.version_1.settings_slider.SettingsType;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusDialog;
 import com.bitdubai.android_core.app.common.version_1.top_settings.AppStatusListener;
 import com.bitdubai.android_core.app.common.version_1.util.system.FermatSystemUtils;
 import com.bitdubai.fermat.R;
-import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
-import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.layer.all_definition.callback.AppStatusCallbackChanges;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 
 import java.lang.ref.WeakReference;
 
@@ -32,12 +32,8 @@ import io.codetail.animation.ViewAnimationUtils;
 /**
  * Created by mati on 2016.03.02..
  */
-public class BottomMenuReveal implements SettingsCallback<SettingsItem>,AppStatusCallbackChanges {
+public class BottomMenuReveal implements SettingsCallback<SettingsItem> {
 
-    /**
-     * Listeners
-     */
-    private AppStatusListener appStatusListener;
 
     /**
      *
@@ -48,6 +44,7 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem>,AppStatu
     private View.OnClickListener onClickListener;
     private SettingsSlider settingsSlider;
     private WelcomeScrennDialog welcomeScreenDialog;
+    private AppStatusCallbackChanges appStatusListener;
 
     public BottomMenuReveal(final ViewGroup mRevealView, final FermatActivity activity) {
         this.hidden = false;
@@ -172,7 +169,6 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem>,AppStatu
 //            // e.printStackTrace();
 //        }
 
-
     }
 
     private void initRecyclerview(){
@@ -194,10 +190,13 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem>,AppStatu
 
 
     @Override
-    public void onItemClickListener(SettingsItem item, int position) {
+    public void onItemClickListener(View view,SettingsItem item, int position,View... views) {
         switch (item.getSettingsType()){
             case APP_STATUS:
-                new AppStatusDialog(fermatActivity.get(), FermatSystemUtils.getAndroidCoreModule(), this).show();
+                if(appStatusListener==null){
+                    appStatusListener = new AppStatusListener(fermatActivity.get(),(ImageButton)view,(FermatTextView)views[0]);
+                }
+                new AppStatusDialog(fermatActivity.get(), FermatSystemUtils.getAndroidCoreModule(), appStatusListener).show();
                 break;
             case FERMAT_NETWORK:
                 //fermatActivity.get().changeActivity(Activities.DESKTOP_SETTING_FERMAT_NETWORK.getCode(), "main_desktop");
@@ -210,43 +209,40 @@ public class BottomMenuReveal implements SettingsCallback<SettingsItem>,AppStatu
                 fermatActivity.get().openRecentsScreen();
                 break;
             case HELP:
-                if(welcomeScreenDialog == null){
-                    welcomeScreenDialog = new WelcomeScrennDialog(fermatActivity.get(),null,null);
-                }
-                welcomeScreenDialog.show();
+                fermatActivity.get().changeActivity(Activities.DESKTOP_WIZZARD_WELCOME.getCode(), null);
                 break;
         }
     }
 
-    @Override
-    public void appSoftwareStatusChanges(AppsStatus appsStatus) {
-        for (AbstractFermatFragment fragment : fermatActivity.get().getScreenAdapter().getLstCurrentFragments()) {
-            //TODO: ver que pasa acá
-            try {
-                fragment.onUpdateViewUIThred(appsStatus.getCode());
-            }catch (Exception e){
-
-            }
-        }
-        int res = 0;
-        switch (appsStatus){
-            case RELEASE:
-                res = R.drawable.relese_icon;
-                break;
-            case BETA:
-                res = R.drawable.beta_icon;
-                break;
-            case ALPHA:
-                res = R.drawable.alfa_icon;
-                break;
-            case DEV:
-                res = R.drawable.developer_icon;
-                break;
-            default:
-                res = R.drawable.relese_icon;
-                break;
-        }
-        settingsSlider.changeIcon(SettingsType.APP_STATUS,res);
-
-    }
+//    @Override
+//    public void appSoftwareStatusChanges(AppsStatus appsStatus) {
+//        for (AbstractFermatFragment fragment : fermatActivity.get().getScreenAdapter().getLstCurrentFragments()) {
+//            //TODO: ver que pasa acá
+//            try {
+//                fragment.onUpdateViewUIThred(appsStatus.getCode());
+//            }catch (Exception e){
+//
+//            }
+//        }
+//        int res = 0;
+//        switch (appsStatus){
+//            case RELEASE:
+//                res = R.drawable.filter_app_hdpi;
+//                break;
+//            case BETA:
+//                res = R.drawable.beta_filter_hdpi;
+//                break;
+//            case ALPHA:
+//                res = R.drawable.alpha_filter_hdpi;
+//                break;
+//            case DEV:
+//                res = R.drawable.filter_develop_hdpi;
+//                break;
+//            default:
+//                res = R.drawable.beta_filter_hdpi;
+//                break;
+//        }
+//        settingsSlider.changeIcon(SettingsType.APP_STATUS,res);
+//
+//    }
 }

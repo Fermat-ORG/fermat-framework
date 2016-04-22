@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ccw_negotiation_details_background"
+    android:background="#444"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/ccw_negotiation_details_gradient_colors"
+        android:background="#1271A7"
         android:paddingBottom="8dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/ccw_customer_image"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginEnd="8dp"
             android:layout_marginRight="8dp"
             android:src="@android:drawable/sym_def_app_icon"
@@ -33,8 +33,8 @@
             android:layout_alignParentTop="true"
             android:layout_toEndOf="@+id/ccw_customer_image"
             android:layout_toRightOf="@+id/ccw_customer_image"
-            android:textColor="@color/ccw_selling_summary"
-            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
             tools:text="Selling 12 BTC"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -44,8 +44,8 @@
             android:layout_below="@+id/ccw_selling_summary"
             android:layout_toEndOf="@+id/ccw_customer_image"
             android:layout_toRightOf="@+id/ccw_customer_image"
-            android:textColor="#fff"
-            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
             tools:text="1 BTC @ 254 USD"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -55,8 +55,8 @@
             android:layout_below="@+id/ccw_buying_exchange_rate"
             android:layout_toEndOf="@+id/ccw_customer_image"
             android:layout_toRightOf="@+id/ccw_customer_image"
-            android:textColor="#b4b4b4"
-            android:textSize="14sp"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
             tools:text="Broker Name"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -66,8 +66,8 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_below="@+id/ccw_broker_name"
-            android:textColor="#fff"
-            android:textSize="12sp"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
             tools:text="03 Feb 2015"/>
 
     </RelativeLayout>
@@ -82,7 +82,7 @@
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:textColor="#fff"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:visibility="gone"
         tools:text="Expiration Date. 03 Feb 2015"/>
 

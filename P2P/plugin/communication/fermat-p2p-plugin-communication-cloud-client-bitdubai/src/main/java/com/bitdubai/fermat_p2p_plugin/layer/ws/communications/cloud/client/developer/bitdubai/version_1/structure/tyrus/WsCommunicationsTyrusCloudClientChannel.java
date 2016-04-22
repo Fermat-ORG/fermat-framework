@@ -11,6 +11,7 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.Asymmetric
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
+import com.bitdubai.fermat_api.layer.osa_android.hardware.HardwareManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.contents.FermatPacketDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.CompleteClientComponentRegistrationNotificationEvent;
@@ -51,6 +52,11 @@ public class WsCommunicationsTyrusCloudClientChannel {
      * DealWithEvents Interface member variables.
      */
     private EventManager eventManager;
+
+    /**
+     * Hardaware
+     */
+    private HardwareManager hardwareManager;
 
     /**
      * Represent the wsCommunicationsCloudClientConnection
@@ -548,4 +554,7 @@ public class WsCommunicationsTyrusCloudClientChannel {
 
     }
 
+    public HardwareManager getHardwareManager() {
+        return hardwareManager;
+    }
 }

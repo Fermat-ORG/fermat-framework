@@ -38,7 +38,6 @@ import com.bitdubai.fermat_tky_api.layer.external_api.interfaces.swapbot.Bot;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.exceptions.CantListFanIdentitiesException;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_api.layer.wallet_module.FanWalletPreferenceSettings;
-import com.bitdubai.fermat_tky_api.layer.wallet_module.interfaces.FanWalletModuleManager;
 import com.bitdubai.reference_wallet.fan_wallet.R;
 import com.bitdubai.reference_wallet.fan_wallet.common.adapters.FollowingAdapter;
 import com.bitdubai.reference_wallet.fan_wallet.common.models.FollowingItems;
@@ -55,7 +54,6 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
     //FermatManager
     private FanWalletSession fanwalletSession;
-    private FanWalletModuleManager fanwalletmoduleManager;
     private FanWalletPreferenceSettings fanWalletSettings;
     private ErrorManager errorManager;
 
@@ -82,12 +80,11 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         super.onCreate(savedInstanceState);
         try {
             fanwalletSession = ((FanWalletSession) appSession);
-            fanwalletmoduleManager = fanwalletSession.getModuleManager();
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START FOLLOWING");
 
             try {
-                fanWalletSettings =  fanwalletmoduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                fanWalletSettings =  fanwalletSession.getModuleManager().getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 fanWalletSettings = null;
             }
@@ -96,7 +93,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
                 fanWalletSettings = new FanWalletPreferenceSettings();
                 fanWalletSettings.setIsPresentationHelpEnabled(true);
                 try {
-                    fanwalletmoduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
+                    fanwalletSession.getModuleManager().getSettingsManager().persistSettings(appSession.getAppPublicKey(), fanWalletSettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedWalletException(Wallets.TKY_FAN_WALLET, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -144,7 +141,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
 
         public void run() {
             try {
-                fanList=fanwalletmoduleManager.getFanWalletModule().listIdentitiesFromCurrentDeviceUser();
+                fanList=fanwalletSession.getModuleManager().listIdentitiesFromCurrentDeviceUser();
                 for(Fan artistUsername:fanList){
                     //artistBot=fanwalletmoduleManager.getFanWalletModule().getBotBySwapbotUsername(artistusername.getUsername());
                     //System.out.println("tky_artistBot:"+artistBot.getLogoImageDetails().originalUrl() +"  +  "+artistBot.getAddress()+"  +  "+artistBot.getName());
@@ -356,7 +353,7 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         @Override
         protected Object doInBackground(Object[] objects) {
             try {
-                artistBot=fanwalletmoduleManager.getFanWalletModule().
+                artistBot=fanwalletSession.getModuleManager().
                         getBotBySwapbotUsername(this.username);
                 System.out.println(
                         "tky_artistBot:"+artistBot.getLogoImageDetails().originalUrl()
