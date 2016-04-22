@@ -517,7 +517,7 @@ public class ChatActorNetworkServiceDao {
     }
 
 
-    public final void createConnectionRequest(final ChatConnectionInformation brokerInformation,
+    public final void createConnectionRequest(final ChatConnectionInformation chatActor,
                                               final ProtocolState                     state            ,
                                               final RequestType                       type             ,
                                               final ConnectionRequestAction           action           ) throws CantRequestConnectionException {
@@ -525,16 +525,16 @@ public class ChatActorNetworkServiceDao {
         try {
 
             final ChatConnectionRequest connectionNew = new ChatConnectionRequest(
-                    brokerInformation.getConnectionId()        ,
-                    brokerInformation.getSenderPublicKey()     ,
-                    brokerInformation.getSenderActorType()     ,
-                    brokerInformation.getSenderAlias()         ,
-                    brokerInformation.getSenderImage()         ,
-                    brokerInformation.getDestinationPublicKey(),
+                    chatActor.getConnectionId()        ,
+                    chatActor.getSenderPublicKey()     ,
+                    chatActor.getSenderActorType()     ,
+                    chatActor.getSenderAlias()         ,
+                    chatActor.getSenderImage()         ,
+                    chatActor.getDestinationPublicKey(),
                     type                                       ,
                     state                                      ,
                     action                                     ,
-                    brokerInformation.getSendingTime()
+                    chatActor.getSendingTime()
             );
 
             final DatabaseTable addressExchangeRequestTable = database.getTable(ChatActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);

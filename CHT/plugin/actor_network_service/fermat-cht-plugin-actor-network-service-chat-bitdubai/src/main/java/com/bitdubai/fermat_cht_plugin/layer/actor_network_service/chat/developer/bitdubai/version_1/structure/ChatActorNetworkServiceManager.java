@@ -9,10 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.Networ
 import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
-import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatUserIdentityException;
-import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
-import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.ConnectionRequestAction;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.ProtocolState;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.enums.RequestType;
@@ -44,6 +41,8 @@ import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.client.Commun
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.exceptions.CantRegisterComponentException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.Collection;
 import java.util.List;
@@ -101,15 +100,13 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
             } else {
 
-                final String imageString = Base64.encodeToString(chatExposingData.getImage(), Base64.DEFAULT);
-
                 final PlatformComponentProfile actorPlatformComponentProfile = communicationsClientConnection.constructPlatformComponentProfileFactory(
                         chatExposingData.getPublicKey(),
                         (chatExposingData.getAlias()),
                         (chatExposingData.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
                         NetworkServiceType.UNDEFINED,
                         PlatformComponentType.ACTOR_CHAT,
-                        imageString
+                        extraDataToJson(chatExposingData)
                 );
 
                 communicationsClientConnection.registerComponentForCommunication(platformComponentProfile.getNetworkServiceType(), actorPlatformComponentProfile);
@@ -535,5 +532,16 @@ public class ChatActorNetworkServiceManager implements ChatManager {
                 ConnectionRequestAction.REQUEST,
                 aer.getSendingTime()
         ).toJson();
+    }
+
+    private String extraDataToJson(ChatExposingData chatExposingData){
+        Gson gson = new Gson();
+        JsonObject jsonObjectContent = new JsonObject();
+        jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.IMG, Base64.encodeToString(chatExposingData.getImage(), Base64.DEFAULT));
+        jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.COUNTRY, chatExposingData.getCountry());
+        jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.STATE, chatExposingData.getState());
+        jsonObjectContent.addProperty(ChatExtraDataJsonAttNames.CITY, chatExposingData.getCity());
+
+        return gson.toJson(jsonObjectContent);
     }
 }
