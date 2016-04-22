@@ -222,7 +222,8 @@ public class ConnectionNotificationsFragment
             });
             notificationAcceptDialog.show();
 
-        } catch (CantGetSelectedActorIdentityException | ActorIdentityNotSelectedException e) {
+        } catch (CantGetSelectedActorIdentityException
+                | ActorIdentityNotSelectedException e) {
             e.printStackTrace();
         }
     }

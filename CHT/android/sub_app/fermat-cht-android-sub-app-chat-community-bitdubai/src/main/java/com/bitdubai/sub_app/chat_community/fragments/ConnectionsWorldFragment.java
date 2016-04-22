@@ -525,8 +525,8 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
             List<ChatActorCommunityInformation> userList = moduleManager.getSuggestionsToContact(moduleManager.getSelectedActorIdentity().getPublicKey() ,MAX, offset);
             if(userCacheList.size() == 0)
             {
-                //dataSet.addAll(userList);
-                //moduleManager. .saveCacheChatUsersSuggestions(userList);
+                dataSet.addAll(userList);
+                moduleManager.saveCacheChatUsersSuggestions(userList);
             }
             else
             {
@@ -548,12 +548,10 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
                             userList.add(chatUserCache);
                     }
                     //guardo el cache
-
-                    //moduleManager.saveCacheChatUsersSuggestions(userList);
-                    //dataSet.addAll(userList);
+                    moduleManager.saveCacheChatUsersSuggestions(userList);
+                    dataSet.addAll(userList);
                 }
             }
-
             //offset = dataSet.size();
 
         } catch (CantListChatIdentityException e) {
