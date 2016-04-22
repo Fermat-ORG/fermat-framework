@@ -75,7 +75,7 @@ public class ChatActorCommunitySubAppModulePluginRoot extends AbstractModule<Cha
     @NeededPluginReference(platform = Platforms.CHAT_PLATFORM, layer = Layers.IDENTITY             , plugin = Plugins.CHAT_IDENTITY)
     private ChatIdentityManager chatIdentityManager;
 
-
+private ChatActorCommunitySettings chatActorCommunitySettings = new ChatActorCommunitySettings();
     ChatActorCommunityManager fermatManager;
 
     public ChatActorCommunitySubAppModulePluginRoot() {
@@ -112,5 +112,13 @@ public class ChatActorCommunitySubAppModulePluginRoot extends AbstractModule<Cha
     @Override
     public ModuleManager<ChatActorCommunitySettings, ChatActorCommunitySelectableIdentity> getModuleManager() throws CantGetModuleManagerException {
         return fermatManager;
+    }
+
+    public ChatActorCommunitySettings getChatActorCommunitySettings() {
+        return chatActorCommunitySettings;
+    }
+
+    public void setChatActorCommunitySettings(ChatActorCommunitySettings chatActorCommunitySettings) {
+        this.chatActorCommunitySettings = chatActorCommunitySettings;
     }
 }
