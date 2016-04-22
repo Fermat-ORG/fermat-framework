@@ -29,6 +29,8 @@ public class ChatActorNetworkServiceDatabaseConstants {
     public static final String CONNECTION_NEWS_FIRST_KEY_COLUMN                    = "request_id"              ;
 
 
+
+
     public static final String CHAT_ACTOR_ONLINE_CACHE_TABLE_NAME = "chat_actor_online_cache"      ;
 
     public static final String CHAT_ACTOR_ONLINE_CACHE_ID_COLUMN_NAME = "id"                            ;
