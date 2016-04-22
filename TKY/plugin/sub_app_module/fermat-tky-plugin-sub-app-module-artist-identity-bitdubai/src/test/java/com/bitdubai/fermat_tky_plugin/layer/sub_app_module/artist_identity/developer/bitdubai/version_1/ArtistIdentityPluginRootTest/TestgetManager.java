@@ -1,8 +1,6 @@
 package com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.ArtistIdentityPluginRootTest;
 
-import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
-import com.bitdubai.fermat_tky_api.all_definitions.exceptions.TKYException;
 import com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.ArtistIdentityPluginRoot;
 
 import org.junit.Assert;
@@ -23,16 +21,6 @@ public class TestgetManager {
         artistIdentityPluginRoot = new ArtistIdentityPluginRoot();
         Assert.assertNotNull(artistIdentityPluginRoot);
 
-    }
-
-    @Test
-    public void testManagerInstance() throws Exception{
-        System.out.println("testManagerInstance");
-        artistIdentityPluginRoot.start();
-        ModuleManager expected = artistIdentityPluginRoot.getFanIdentityManager();
-        ModuleManager actual = artistIdentityPluginRoot.getManager();
-
-        Assert.assertEquals(expected,actual);
     }
 
     @Test

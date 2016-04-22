@@ -5,7 +5,13 @@ import com.bitdubai.fermat_tky_plugin.layer.sub_app_module.fan_identity.develope
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.runners.Parameterized;
+
+import java.lang.reflect.Method;
+import java.util.Collection;
 
 /**
  * Created by MACUARE on 20/04/16.
@@ -13,7 +19,9 @@ import org.junit.Test;
 
 public class testFanIdentityPluginRoot {
     private FanIdentityPluginRoot fanIdentityPluginRoot;
-    private AbstractPlugin abstractPlugin;
+
+    @Rule
+    public ExpectedException exception = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
@@ -24,11 +32,23 @@ public class testFanIdentityPluginRoot {
     }
 
     @Test
-    public void testFanIdentityPluginRoot_() throws Exception {
+    public void testFanIdentityPluginRootContents() throws Exception {
         System.out.println("testFanIdentityPluginRoot");
+        Method methods[] = fanIdentityPluginRoot.getClass().getDeclaredMethods();
+        int actual = methods.length;
+        int expected = 5;
 
+        Assert.assertEquals(expected, actual);
+        Assert.assertNotNull(methods);
+    }
 
-
+    @Test
+    public void testFanIdentityPluginRootException() throws Exception {
+        System.out.println("testFanIdentityPluginRootException");
+        exception.expect(ArrayIndexOutOfBoundsException.class);
+        exception.expectMessage("10");
+        Method methods[] = fanIdentityPluginRoot.getClass().getDeclaredMethods();
+        String name = methods[10].getName();
     }
 
 }//end of class
