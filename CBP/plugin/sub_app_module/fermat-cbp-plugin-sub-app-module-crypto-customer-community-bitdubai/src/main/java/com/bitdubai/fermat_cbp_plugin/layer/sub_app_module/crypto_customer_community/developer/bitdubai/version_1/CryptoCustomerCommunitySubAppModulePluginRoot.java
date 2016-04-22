@@ -70,7 +70,7 @@ public class CryptoCustomerCommunitySubAppModulePluginRoot extends AbstractModul
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CRYPTO_CUSTOMER     )
     private CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
 
-    CryptoCustomerCommunityManager fermatManager;
+    CryptoCustomerCommunityManager moduleManager;
 
 
     public CryptoCustomerCommunitySubAppModulePluginRoot() {
@@ -84,7 +84,7 @@ public class CryptoCustomerCommunitySubAppModulePluginRoot extends AbstractModul
     public void start() throws CantStartPluginException {
 
         try {
-            fermatManager = new CryptoCustomerCommunityManager(
+            moduleManager = new CryptoCustomerCommunityManager(
                     cryptoBrokerIdentityManager,
                     cryptoCustomerActorConnectionManager,
                     cryptoCustomerNetworkServiceManager,
@@ -92,8 +92,7 @@ public class CryptoCustomerCommunitySubAppModulePluginRoot extends AbstractModul
                     errorManager,
                     pluginFileSystem,
                     pluginId,
-                    this.getPluginVersionReference()
-            );
+                    this.getPluginVersionReference());
 
             this.serviceStatus = ServiceStatus.STARTED;
 
@@ -108,12 +107,7 @@ public class CryptoCustomerCommunitySubAppModulePluginRoot extends AbstractModul
     }
 
     @Override
-    public FermatManager getManager() {
-        return fermatManager;
-    }
-
-    @Override
-    public ModuleManager<CryptoCustomerCommunitySettings, ActiveActorIdentityInformation> getModuleManager() throws CantGetModuleManagerException {
-        return fermatManager;
+    public CryptoCustomerCommunityManager getModuleManager() throws CantGetModuleManagerException {
+        return moduleManager;
     }
 }
