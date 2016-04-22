@@ -6,8 +6,11 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
@@ -48,8 +51,21 @@ public class NearNodeListMsgRespond extends MsgRespond {
         return nodes;
     }
 
+    @Override
+    public String toJson() {
+
+        return getGsonInstance().toJson(this, getClass());
+    }
+
     public static NearNodeListMsgRespond parseContent(String content) {
 
-        return new Gson().fromJson(content, NearNodeListMsgRespond.class);
+        return getGsonInstance().fromJson(content, NearNodeListMsgRespond.class);
+    }
+
+    private static Gson getGsonInstance() {
+
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Location.class, new InterfaceAdapter<Location>());
+        return builder.create();
     }
 }

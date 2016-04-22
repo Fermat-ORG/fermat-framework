@@ -7,7 +7,6 @@ apply plugin: 'gradle-one-jar'
 group = "com.bitdubai.fermat.p2p"
 sourceCompatibility = 1.7
 version = '1.6.1'
-mainClassName = 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
 
 configurations {
     deployerJars
@@ -16,12 +15,19 @@ configurations {
 jar {
     manifest {
         attributes 'Implementation-Title': 'fermat-p2p-plugin-communication-cloud-server-bitdubai',
-                   'Implementation-Version': version,
-                   'Main-Class': 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
+                'Implementation-Version': version,
+                'Main-Class': 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
     }
-
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    doFirst {
+        from(
+// configurations.compile.collect { it.isDirectory() ? it : zipTree(it) },
+                configurations.runtime.resolve().collect { it.isDirectory() ? it : zipTree(it) }
+        ) {
+            exclude 'META-INF/MANIFEST.MF'
+            exclude 'META-INF/*.SF'
+            exclude 'META-INF/*.DSA'
+            exclude 'META-INF/*.RSA'
+        }
     }
 }
 
@@ -48,6 +54,7 @@ task serverJar(type: OneJar) {
         from sharedManifest
     }
     mainClass = 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
+    mainClassName = 'com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.WsCommunicationsServerCloudMainRunner'
     archiveName = project.name + '-with-dependencies-' + version + ".jar"
     additionalDir = file('src/main/resources/one-jar.properties')
 

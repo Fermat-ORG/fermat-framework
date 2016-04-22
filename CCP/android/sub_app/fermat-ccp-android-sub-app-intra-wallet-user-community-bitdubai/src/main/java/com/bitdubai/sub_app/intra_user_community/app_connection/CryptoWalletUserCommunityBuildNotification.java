@@ -24,10 +24,12 @@ public class CryptoWalletUserCommunityBuildNotification {
                     if(moduleManager != null) {
                         //find last notification by sender actor public key
                         IntraWalletUserActor senderActor = null;
-
+                        String actor= "";
                             senderActor = moduleManager.getLastNotification(senderActorPublicKey);
+                        if (senderActor != null)
+                            actor = "from  " + senderActor.getName();
 
-                        notification = new UserCommunityNotificationPainter("New Connection Request", "A new connection request was received from " + senderActor.getName(), "", "",appPublicKey);
+                        notification = new UserCommunityNotificationPainter("New Connection Request", "A new connection request was received " + actor, "", "",appPublicKey);
 
                     }else
                     {
@@ -39,10 +41,12 @@ public class CryptoWalletUserCommunityBuildNotification {
                     if(moduleManager != null) {
                         //find last notification by sender actor public key
                         IntraWalletUserActor senderActor = null;
-
+                        String actor= "";
                         senderActor = moduleManager.getLastNotification(senderActorPublicKey);
 
-                        notification = new UserCommunityNotificationPainter("Connection Request", "Your connection request was accepted to " + senderActor.getName(), "", "",appPublicKey);
+                        if (senderActor != null)
+                            actor = " to " + senderActor.getName();
+                        notification = new UserCommunityNotificationPainter("Connection Request", "Your connection request was accepted" + actor, "", "",appPublicKey);
 
                     }else
                     {

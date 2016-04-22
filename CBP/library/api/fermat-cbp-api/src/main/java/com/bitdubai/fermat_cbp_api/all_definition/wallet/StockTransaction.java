@@ -6,13 +6,14 @@ import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionType;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.UUID;
 
 /**
  * Created by jorge on 30-09-2015.
  */
-public interface StockTransaction {
+public interface StockTransaction extends Serializable {
 
     /**
      * The method <code>getTransactionId</code> returns the id of the transaction

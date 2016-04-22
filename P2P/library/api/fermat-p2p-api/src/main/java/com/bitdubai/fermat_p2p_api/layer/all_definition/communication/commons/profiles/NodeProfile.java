@@ -1,13 +1,9 @@
-/*
- * @#NodeProfile.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
-import com.bitdubai.fermat_api.layer.all_definition.location_system.DeviceLocation;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile</code>
@@ -103,18 +99,23 @@ public class NodeProfile extends Profile {
      */
     @Override
     public String toJson() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
+        return getGsonInstance().toJson(this);
     }
 
     /**
      * (no-javadoc)
      * @see Profile#fromJson(String)
      */
-    @Override
     public NodeProfile fromJson(String jsonString) {
-        Gson gson = new Gson();
-        return gson.fromJson(jsonString, this.getClass());
+        return getGsonInstance().fromJson(jsonString, this.getClass());
+    }
+
+    private static Gson getGsonInstance() {
+
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Profile.class, new InterfaceAdapter<Profile>());
+        builder.registerTypeAdapter(Location.class, new InterfaceAdapter<Location>());
+        return builder.create();
     }
 
     @Override

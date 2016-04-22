@@ -1,13 +1,10 @@
-/*
- * @#CheckInProfileListRespondMsg.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.util.List;
 
@@ -47,8 +44,21 @@ public class CheckInProfileListMsgRespond extends MsgRespond {
         return profileList;
     }
 
+    @Override
+    public String toJson() {
+
+        return getGsonInstance().toJson(this, getClass());
+    }
+
     public static CheckInProfileListMsgRespond parseContent(String content) {
 
-        return new Gson().fromJson(content, CheckInProfileListMsgRespond.class);
+        return getGsonInstance().fromJson(content, CheckInProfileListMsgRespond.class);
+    }
+
+    private static Gson getGsonInstance() {
+
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Location.class, new InterfaceAdapter<Location>());
+        return builder.create();
     }
 }

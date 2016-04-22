@@ -2,6 +2,8 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageDecoder;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageEncoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
@@ -37,7 +39,11 @@ import javax.websocket.WebSocketContainer;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@ClientEndpoint(configurator = ClientNodeChannelConfigurator.class )
+@ClientEndpoint(
+        configurator = ClientNodeChannelConfigurator.class ,
+        encoders = {PackageEncoder.class},
+        decoders = {PackageDecoder.class}
+)
 public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndpoint {
 
     /**
@@ -78,7 +84,8 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
      */
     public FermatWebSocketClientNodeChannel(String ip, Integer port){
 
-        try {
+       /* TODO IT IS NOT WORKING
+       try {
 
             URI endpointURI = new URI("ws://"+ip+":"+port);
             WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
@@ -86,7 +93,7 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
 
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }
+        }*/
 
     }
 
