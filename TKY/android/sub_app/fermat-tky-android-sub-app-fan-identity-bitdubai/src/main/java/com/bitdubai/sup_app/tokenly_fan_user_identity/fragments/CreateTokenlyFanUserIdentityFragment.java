@@ -90,6 +90,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
     private boolean authenticationSuccessful = false;
+    private boolean isWaitingForResponse = false;
 
 
     private Handler handler;
@@ -261,21 +262,24 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
                 CommonLogger.debug(TAG, "Entrando en createButton.setOnClickListener");
 
 
-                int resultKey = createNewIdentity();
-                switch (resultKey) {
-                    case CREATE_IDENTITY_SUCCESS:
+                if(!isWaitingForResponse){
+                    int resultKey = createNewIdentity();
+                    switch (resultKey) {
+                        case CREATE_IDENTITY_SUCCESS:
 //                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
-                        break;
-                    case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
-                        Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
-                        break;
-                    case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
-                        Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
-                        break;
-                    case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
-                        Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
-                        break;
-                }
+                            break;
+                        case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
+                            Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
+                            break;
+                        case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
+                            Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
+                            break;
+                        case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
+                            Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
+                            break;
+                    }
+                }else
+                    Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -456,6 +460,10 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
 
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -498,6 +506,7 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             this.externalPlatform = externalPlatform;
             this.identityAction = identityAction;
             authenticationSuccessful = true;
+            isWaitingForResponse = true;
         }
         @Override
         protected void onPostExecute(Object result) {
@@ -514,10 +523,13 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
             }else{
                 if(isUpdate){
                     Toast.makeText(getActivity(), "Identity updated", Toast.LENGTH_SHORT).show();
+                    getActivity().onBackPressed();
                 }else{
                     Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                    getActivity().onBackPressed();
                 }
             }
+            isWaitingForResponse = false;
         }
         @Override
         protected Object doInBackground(Object... arg0) {
