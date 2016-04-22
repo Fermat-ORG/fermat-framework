@@ -335,6 +335,9 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 openNegotiationList = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(openNegotiationList);
+
+                if(openNegotiationList.size() > 0)
+                    FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
             }else {
 
                 FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
