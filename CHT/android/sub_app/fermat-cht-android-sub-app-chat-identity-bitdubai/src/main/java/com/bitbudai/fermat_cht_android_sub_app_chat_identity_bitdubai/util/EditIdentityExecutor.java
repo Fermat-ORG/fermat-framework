@@ -56,7 +56,7 @@ public class EditIdentityExecutor {
 
         try {
             //TODO: Buscar la manera de que esta informacion venga desde android puede ser por la geolocalizacion
-            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, "country", "state", "city");
+            moduleManager.updateIdentityChat(Publickey, identityName, imageInBytes, "country", "state", "city", "available");
 
         } catch (CantUpdateChatIdentityException e) {
             e.printStackTrace();
