@@ -138,9 +138,6 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                 case ERROR:
                 case DENIED_LOCALLY:
                 case DENIED_REMOTELY:
-                default:
-                    connectRequest();
-                    break;
                 case PENDING_LOCALLY_ACCEPTANCE:
                     conectionAccept();
                     break;
