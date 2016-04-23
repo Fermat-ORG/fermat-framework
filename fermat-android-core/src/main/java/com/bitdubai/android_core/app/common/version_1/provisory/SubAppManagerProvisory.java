@@ -100,7 +100,15 @@ public class SubAppManagerProvisory implements SubAppManager {
                 AppsStatus.ALPHA);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
 
-        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(SubApps.ART_MUSIC_PLAYER, null, null, "music_player_sub_app", "Music Player", SubAppsPublicKeys.ART_MUSIC_PLAYER.getCode(), "music_player_sub_app", new Version(1, 0, 0),Platforms.PLATFORM_ART,
+        installedSubApp = new com.bitdubai.sub_app.wallet_manager.structure.provisory_classes.InstalledSubApp(
+                SubApps.ART_MUSIC_PLAYER,
+                null,
+                null,
+                "music_player_sub_app",
+                "Music Player",
+                SubAppsPublicKeys.ART_MUSIC_PLAYER.getCode(),
+                "music_player_sub_app", new Version(1, 0, 0),
+                Platforms.PLATFORM_ART,
                 AppsStatus.ALPHA);
         lstInstalledSubApps.put(installedSubApp.getAppPublicKey(), installedSubApp);
 

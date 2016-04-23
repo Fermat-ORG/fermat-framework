@@ -12,6 +12,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.abstracts.Abstrac
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_art_api.layer.sub_app_module.music_player.MusicPlayerModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.sub_app.music_player.common.adapters.MusicPlayerAdapter;
 import com.bitdubai.sub_app.music_player.fragments.MusicPlayerMainActivity;
 
 /**
@@ -20,6 +21,8 @@ import com.bitdubai.sub_app.music_player.fragments.MusicPlayerMainActivity;
 public class MusicPlayerSession extends AbstractFermatSession<InstalledSubApp,MusicPlayerModuleManager,SubAppResourcesProviderManager> {
     MusicPlayerMainActivity.ThreadSong threadsong=null;
     MediaPlayer mp=null;
+
+    MusicPlayerAdapter adapter;
 
     ImageButton bplay=null;
     ImageButton bbb=null;
@@ -61,5 +64,8 @@ public class MusicPlayerSession extends AbstractFermatSession<InstalledSubApp,Mu
 
     public void setView(View view){this.view=view;}
     public View getView(){return view;}
+
+    public void setAdapter(MusicPlayerAdapter adapter){this.adapter=adapter;}
+    public MusicPlayerAdapter getAdapter(){return adapter;}
 
 }

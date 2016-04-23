@@ -87,7 +87,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             errorManager = appSession.getErrorManager();
             System.out.println("HERE START MUSIC PLAYER");
 
-           /* if(musicPlayerSession.getThreadsong()!=null){
+            if(musicPlayerSession.getThreadsong()!=null){
                 System.out.println("ART_ IT IS PLAYING");
                 songPlayerThread=musicPlayerSession.getThreadsong();
                 mp=musicPlayerSession.getMusicPlayer();
@@ -100,12 +100,14 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
                 recyclerView = musicPlayerSession.getRecyclerView();
                 song = musicPlayerSession.getSong();
 
+                adapter=musicPlayerSession.getAdapter();
+
                 view=musicPlayerSession.getView();
 
                 firstTime=false;
 
                 System.out.println("ART_ I CAN LISTEN");
-            }*/
+            }
 
 
 
@@ -148,6 +150,8 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         musicPlayerSession.setRecyclerView(recyclerView);
         musicPlayerSession.setTiempo(tiempo);
         musicPlayerSession.setSong(song);
+
+        musicPlayerSession.setAdapter(adapter);
 
         musicPlayerSession.setView(view);
 
@@ -247,11 +251,11 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
             init();
 
+
         }
 
         return view;
     }
-
 
 
     void loadmysong(){
@@ -272,7 +276,6 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
         }
     }
-
 
 
     private void clickplay(int position) {
@@ -327,7 +330,6 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     }
 
 
-
     private void play() {
 
         try {
@@ -348,7 +350,6 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
     }
 
 
-
     private void stop(){
         try {
             mp.stop();
@@ -362,13 +363,15 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
 
 
     void init(){
-        if(!mp.isPlaying() || pause) {
+        if((!mp.isPlaying() || pause) && firstTime) {
             pb.setProgress(0);
             tiempo.setText("");
             song.setText("");
         }
+
         loadmysong();
     }
+
 
     private void nextsong(){
         songposition=songposition+1;
@@ -380,6 +383,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
         }
 
     }
+
 
     private void backsong(){
         if((int)(mp.getCurrentPosition()/1000)<3) {
