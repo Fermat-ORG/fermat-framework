@@ -119,38 +119,39 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
         disconnect.setOnClickListener(this);
         accept.setOnClickListener(this);
 
-        if (chatUserInformation.getConnectionState() != null) {
-
-
-            switch (chatUserInformation.getConnectionState()) {
-                case BLOCKED_LOCALLY:
-                case BLOCKED_REMOTELY:
-                case CANCELLED_LOCALLY:
-                case CANCELLED_REMOTELY:
-                    connectionRejected();
-                    break;
-                case CONNECTED:
-                    disconnectRequest();
-                    break;
-                case NO_CONNECTED:
-                case DISCONNECTED_LOCALLY:
-                case DISCONNECTED_REMOTELY:
-                case ERROR:
-                case DENIED_LOCALLY:
-                case DENIED_REMOTELY:
-                case PENDING_LOCALLY_ACCEPTANCE:
-                    conectionAccept();
-                    break;
-                case PENDING_REMOTELY_ACCEPTANCE:
-                    connectionSend();
-                    break;
-            }
-        } else connectRequest();
-
         try {
             userName.setText(chatUserInformation.getAlias());
-            //userStatus.setText(chatUserInformation.getConnectionState().toString());
-            //userStatus.setTextColor(Color.parseColor("#292929"));
+            connectionState=chatUserInformation.getConnectionState();
+            if(connectionState != null) {
+                switch (connectionState) {
+                    case BLOCKED_LOCALLY:
+                    case BLOCKED_REMOTELY:
+                    case CANCELLED_LOCALLY:
+                    case CANCELLED_REMOTELY:
+                        connectionRejected();
+                        break;
+                    case CONNECTED:
+                        disconnectRequest();
+                        break;
+                    case NO_CONNECTED:
+                    case DISCONNECTED_LOCALLY:
+                    case DISCONNECTED_REMOTELY:
+                    case ERROR:
+                    case DENIED_LOCALLY:
+                    case DENIED_REMOTELY:
+                        connectRequest();
+                        break;
+                    case PENDING_LOCALLY_ACCEPTANCE:
+                        conectionAccept();
+                        break;
+                    case PENDING_REMOTELY_ACCEPTANCE:
+                        connectionSend();
+                        break;
+                }
+                userStatus.setText(connectionState.toString());
+                userStatus.setTextColor(Color.parseColor("#292929"));
+            } else connectRequest();
+
             if (chatUserInformation.getImage() != null) {
                 Bitmap bitmap;
                 if (chatUserInformation.getImage().length > 0) {
@@ -259,37 +260,37 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
         try {
             connectionState
                     = moduleManager.getActorConnectionState(chatUserInformation.getPublicKey());
+            if(connectionState!=null)  {
+                switch (connectionState) {
+                    case BLOCKED_LOCALLY:
+                    case BLOCKED_REMOTELY:
+                    case CANCELLED_LOCALLY:
+                    case CANCELLED_REMOTELY:
+                        connectionRejected();
+                        break;
+                    case CONNECTED:
+                        disconnectRequest();
+                        break;
+                    case NO_CONNECTED:
+                    case DISCONNECTED_LOCALLY:
+                    case DISCONNECTED_REMOTELY:
+                    case ERROR:
+                    case DENIED_LOCALLY:
+                    case DENIED_REMOTELY:
+                        connectRequest();
+                        break;
+                    case PENDING_REMOTELY_ACCEPTANCE:
+                        connectionSend();
+                        break;
+                    case PENDING_LOCALLY_ACCEPTANCE:
+                        conectionAccept();
+                        break;
+                }
+            }else  connectRequest();
         } catch (CantValidateActorConnectionStateException e) {
             e.printStackTrace();
         }
-        switch (connectionState) {
-            case BLOCKED_LOCALLY:
-            case BLOCKED_REMOTELY:
-            case CANCELLED_LOCALLY:
-            case CANCELLED_REMOTELY:
-                connectionRejected();
-                break;
-            case CONNECTED:
-                disconnectRequest();
-                break;
-            case NO_CONNECTED:
-            case DISCONNECTED_LOCALLY:
-            case DISCONNECTED_REMOTELY:
-            case ERROR:
-            case DENIED_LOCALLY:
-            case DENIED_REMOTELY:
-                connectRequest();
-                break;
-            case PENDING_REMOTELY_ACCEPTANCE:
-                connectionSend();
-                break;
-
-            case PENDING_LOCALLY_ACCEPTANCE:
-                conectionAccept();
-                break;
-        }
     }
-
 
     private void connectionSend() {
         connectionRequestSend.setVisibility(View.VISIBLE);

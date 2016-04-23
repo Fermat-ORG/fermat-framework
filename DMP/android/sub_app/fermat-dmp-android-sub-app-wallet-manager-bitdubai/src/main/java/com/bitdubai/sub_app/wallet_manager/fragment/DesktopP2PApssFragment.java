@@ -356,7 +356,7 @@ public class DesktopP2PApssFragment extends AbstractDesktopFragment<DesktopSessi
             item.setPosition(3);
             lstItemsWithIcon.add(item);
 
-            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CHT_CHAT, null, null, "chat_sub_app", "Chat", SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), "chat_sub_app", new Version(1, 0, 0), Platforms.CHAT_PLATFORM, AppsStatus.DEV);
+            InstalledSubApp installedSubApp = new InstalledSubApp(SubApps.CHT_CHAT, null, null, "chat_sub_app", "Chat", SubAppsPublicKeys.CHT_OPEN_CHAT.getCode(), "chat_sub_app", new Version(1, 0, 0), Platforms.CHAT_PLATFORM, AppsStatus.ALPHA);
             installedSubApp.setAppStatus(AppsStatus.ALPHA);
             item = new Item(installedSubApp);
             item.setIconResource(R.drawable.chat_subapp);

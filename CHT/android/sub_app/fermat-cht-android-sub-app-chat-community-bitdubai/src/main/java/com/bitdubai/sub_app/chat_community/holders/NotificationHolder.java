@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.chat_community.holders;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
@@ -16,7 +17,7 @@ import com.bitdubai.sub_app.chat_community.R;
 public class NotificationHolder extends FermatViewHolder {
 
     public ImageView userAvatar;
-    public FermatTextView userName;
+    public TextView userName;
 
     /**
      * Constructor
@@ -25,7 +26,7 @@ public class NotificationHolder extends FermatViewHolder {
      */
     public NotificationHolder(View itemView) {
         super(itemView);
-        userName = (FermatTextView) itemView.findViewById(R.id.username);
+        userName = (TextView) itemView.findViewById(R.id.username);
         userAvatar = (ImageView)itemView.findViewById(R.id.imageView_avatar);
 
     }
