@@ -61,7 +61,8 @@ public class CreateChatIdentityExecutor {
 
         try {
             Log.i("CHT CREATE IDENTITY",identityName+imageInBytes);
-            moduleManager.createNewIdentityChat(identityName, imageInBytes);
+            //TODO: Buscar la manera de que esta informacion venga desde android puede ser por la geolocalizacion
+            moduleManager.createNewIdentityChat(identityName, imageInBytes, "country", "state", "city");
 
 
         } catch (CantCreateNewChatIdentityException e) {

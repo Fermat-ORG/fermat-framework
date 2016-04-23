@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+
 import com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -42,7 +43,7 @@ public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fe
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(activity.get());
+            LossProtectedWalletNavigationViewAdapter navigationViewAdapter = new LossProtectedWalletNavigationViewAdapter(activity.get());
             return navigationViewAdapter;
         } catch (Exception e) {
             e.printStackTrace();

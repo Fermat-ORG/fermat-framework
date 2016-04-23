@@ -13,6 +13,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -44,7 +45,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.common.enums.BalanceType;
@@ -102,7 +102,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
     final TransactionType transactionType = TransactionType.DEBIT;
     ReferenceWalletSession referenceWalletSession;
-    SettingsManager<BitcoinWalletSettings> settingsManager;
+//    SettingsManager<BitcoinWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
     long before = 0;
     long after = 0;
@@ -131,6 +131,8 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     final Handler handler = new Handler();
 
     private BitcoinWalletSettings bitcoinWalletSettings = null;
+
+
 
 
     private ExecutorService _executor;
@@ -185,11 +187,10 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 //            }
 
             //get wallet settings
-            settingsManager = referenceWalletSession.getModuleManager().getSettingsManager();
 
 
             try {
-                bitcoinWalletSettings = settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
+                bitcoinWalletSettings = moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey());
             } catch (Exception e) {
                 bitcoinWalletSettings = null;
             }
@@ -203,7 +204,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 blockchainNetworkType = BlockchainNetworkType.getDefaultBlockchainNetworkType();
                 bitcoinWalletSettings.setBlockchainNetworkType(blockchainNetworkType);
 
-                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                if(moduleManager!=null) moduleManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
             }
             else
             {
@@ -218,7 +219,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
             }
 
             try {
-                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                if(moduleManager!=null) moduleManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -699,7 +700,7 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 changeActivity(Activities.CCP_BITCOIN_WALLET_SEND_FORM_ACTIVITY,referenceWalletSession.getAppPublicKey());
                 return true;
             }else if(id == BitcoinWalletConstants.IC_ACTION_HELP_PRESENTATION){
-                setUpPresentation(settingsManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).isPresentationHelpEnabled());
+                setUpPresentation(moduleManager.loadAndGetSettings(referenceWalletSession.getAppPublicKey()).isPresentationHelpEnabled());
                 return true;
             }
 
@@ -781,7 +782,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                 List<CryptoWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
 
-                lstCryptoWalletTransactionsAvailable.addAll(list);
+                if(list!=null) {
+                    lstCryptoWalletTransactionsAvailable.addAll(list);
+                }
 
                 //available_offset = lstCryptoWalletTransactionsAvailable.size();
 
@@ -830,6 +833,14 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
                 openNegotiationList = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(openNegotiationList);
+
+                if(openNegotiationList.size() > 0)
+                    FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
+            }
+            else {
+
+                FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
+
             }
         }
     }
@@ -958,7 +969,15 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                 if (bitcoinWalletSettings.getRunningDailyBalance() == null){
 
-                    runningDailyBalance.put(currentTime,  moduleManager.getBalance(BalanceType.AVAILABLE,referenceWalletSession.getAppPublicKey(),blockchainNetworkType));
+                    try {
+                        long balance = moduleManager.getBalance(BalanceType.AVAILABLE, referenceWalletSession.getAppPublicKey(), blockchainNetworkType);
+
+                        runningDailyBalance.put(currentTime, balance);
+
+                    }catch (Exception e){
+                        Log.e(TAG,"Balance null, please check this, line:"+new Throwable().getStackTrace()[0].getLineNumber());
+                    }
+
                 }
                 else
                 {
@@ -993,7 +1012,11 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
 
                 bitcoinWalletSettings.setRunningDailyBalance(runningDailyBalance);
-                settingsManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                if(moduleManager!=null) {
+                    moduleManager.persistSettings(referenceWalletSession.getAppPublicKey(), bitcoinWalletSettings);
+                }else {
+                    Log.e(TAG,"Settings manager null, please check this line:"+new Throwable().getStackTrace()[0].getLineNumber());
+                }
 
             }
         } catch (Exception e) {

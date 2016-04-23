@@ -7,12 +7,13 @@ import android.content.DialogInterface;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-
-
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.enums.ShowMoneyType;
 
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Matias Furszyfer on 2015.07.22..
@@ -87,7 +88,7 @@ public class WalletUtils {
                 }
             }
         }
-        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        //TODO Return null method - OJO: only informative for visual aid during debug - remove if it bothers
         return null;
     }
 
@@ -113,8 +114,25 @@ public class WalletUtils {
 
 
         DecimalFormat df = new DecimalFormat();
-        df.setMaximumFractionDigits(2);
+        df.setMaximumFractionDigits(5);
         df.setMinimumFractionDigits(2);
+
+        stringAmount =df.format(amount);//+ " BTC";
+
+        return stringAmount;
+    }
+    /**
+     *  Formationg Amount no decimal
+     * @param amount
+     * @return
+     */
+    public static String formatAmountStringNotDecimal(int amount) {
+        String stringAmount = "";
+
+
+        DecimalFormat df = new DecimalFormat();
+        df.setMaximumFractionDigits(0);
+        df.setMinimumFractionDigits(0);
 
         stringAmount =df.format(amount);//+ " BTC";
 
@@ -140,5 +158,6 @@ public class WalletUtils {
 
         return stringAmount;
     }
+
 
 }

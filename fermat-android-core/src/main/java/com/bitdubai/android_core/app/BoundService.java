@@ -9,8 +9,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
-import com.bitdubai.android_core.app.common.version_1.util.task.GetTask;
 import com.bitdubai.android_core.app.common.version_1.util.ServiceCallback;
+import com.bitdubai.android_core.app.common.version_1.util.task.GetTask;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
@@ -59,7 +59,6 @@ public class BoundService extends Service implements FermatWorkerCallBack {
     @Override
     public void onCreate() {
         super.onCreate();
-
         try {
 
             final FermatSystem fermatSystem = ApplicationSession.getInstance().getFermatSystem();
