@@ -95,22 +95,30 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
     @Override
     public List<ChatActorCommunityInformation> listWorldChatActor(ChatActorCommunitySelectableIdentity selectableIdentity, int max, int offset) throws CantListChatActorException, CantGetChtActorSearchResult, CantListActorConnectionsException {
-        List<ChatActorCommunityInformation> worldActorList = null;
-        List<ChatActorConnection> actorConnections = null;
+
+        List<ChatActorCommunityInformation> worldActorList;
+        List<ChatActorConnection> actorConnections;
 
         try{
-         worldActorList = getChatActorSearch().getResult();
-        } catch (CantGetChtActorSearchResult exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
+            worldActorList = getChatActorSearch().getResult();
+        } catch (CantGetChtActorSearchResult e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatActorException(e, "", "Error in listWorldChatActor trying to list world actors");
         }
 
-        try{
-           final ChatLinkedActorIdentity linkedChatActorIdentity = new ChatLinkedActorIdentity(selectableIdentity.getPublicKey(), selectableIdentity.getActorType());
-           final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActorIdentity);
+
+        try {
+
+            final ChatLinkedActorIdentity linkedActorIdentity = new ChatLinkedActorIdentity(selectableIdentity.getPublicKey(), selectableIdentity.getActorType());
+            final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedActorIdentity);
+            //search.addConnectionState(ConnectionState.CONNECTED);
+            //search.addConnectionState(ConnectionState.PENDING_REMOTELY_ACCEPTANCE);
 
             actorConnections = search.getResult(Integer.MAX_VALUE, 0);
-        } catch (CantListActorConnectionsException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE,UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,exception);
+
+        } catch (final CantListActorConnectionsException e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatActorException(e, "", "Error trying to list actor connections.");
         }
 
         ChatActorCommunityInformation worldActor;
@@ -123,28 +131,36 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                     worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(worldActor.getPublicKey(), worldActor.getAlias(), worldActor.getImage(), connectedActor.getConnectionState(), connectedActor.getConnectionId()));
             }
         }
-
         return worldActorList;
     }
+
+
 
     @Override
     public List<ChatActorCommunitySelectableIdentity> listSelectableIdentities() throws CantListChatIdentitiesToSelectException, CantListChatIdentityException {
 
-        List<ChatActorCommunitySelectableIdentity> selectableIdentities = null;
+
         try {
-            selectableIdentities = new ArrayList<>();
+            List<ChatActorCommunitySelectableIdentity> selectableIdentities = new ArrayList<>();
 
             final List<ChatIdentity> chatActorIdentity = chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
 
             for (final ChatIdentity chi : chatActorIdentity)
                 selectableIdentities.add(new ChatActorCommunitySelectableIdentityImpl(chi));
 
+            return selectableIdentities;
 
-        } catch (CantListChatIdentityException exception) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN,exception);
+        } catch (final CantListChatIdentityException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatIdentitiesToSelectException(e, "", "Error in DAO trying to list identities.");
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatIdentitiesToSelectException(e, "", "Unhandled Exception.");
         }
 
-        return selectableIdentities;
+
 
     }
 
@@ -284,7 +300,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
     @Override
     public List<ChatActorCommunityInformation> listAllConnectedChatActor(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {
-        List<ChatActorCommunityInformation> chatActorCommunityInformationList = null;
+
         try{
             final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(
                     selectedIdentity.getPublicKey(),
@@ -297,17 +313,23 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
             final List<ChatActorConnection> actorConnections = search.getResult(max, offset);
 
-             chatActorCommunityInformationList = new ArrayList<>();
+             final   List<ChatActorCommunityInformation> chatActorCommunityInformationList = new ArrayList<>();
 
             for (ChatActorConnection cac : actorConnections)
                 chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
 
+            return chatActorCommunityInformationList;
 
+        }catch (final CantListActorConnectionsException e) {
 
-        } catch (CantListActorConnectionsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatActorException(e, "", "Error trying to list actor connections.");
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatActorException(e, "", "Unhandled Exception.");
         }
-        return chatActorCommunityInformationList;
+
 
       }
 
@@ -350,7 +372,6 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
     @Override
     public List<ChatActorCommunityInformation> listChatActorPendingRemoteAction(ChatActorCommunitySelectableIdentity selectedIdentity, int max, int offset) throws CantListChatActorException {
-        List<ChatActorCommunityInformation> chatActorCommunityInformationList = null;
         try {
             final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(
                     selectedIdentity.getPublicKey(),
@@ -363,23 +384,32 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
             final List<ChatActorConnection> actorConnections = search.getResult(max, offset);
 
-            chatActorCommunityInformationList = new ArrayList<>();
+            final List<ChatActorCommunityInformation> chatActorCommunityInformationList = new ArrayList<>();
 
             for (ChatActorConnection cac : actorConnections)
                 chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
-        } catch(CantListActorConnectionsException e){
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            return chatActorCommunityInformationList;
+        }
+
+        catch (final CantListActorConnectionsException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatActorException(e, "", "Error trying to list actor connections.");
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantListChatActorException(e, "", "Unhandled Exception.");
         }
 
 
-        return chatActorCommunityInformationList;
+
     }
 
     public List<ChatActorCommunityInformation> getChatActorWaitingYourAcceptanceCount(final String PublicKey, int max, int offset) throws CantGetChatActorWaitingException {
-        List<ChatActorCommunityInformation> actorList = null;
+
         try {
             List<ChatActorCommunityInformation> chatActorList;
-            actorList = new ArrayList<>();
+          List<ChatActorCommunityInformation>  actorList = new ArrayList<>();
 
             chatActorList = this.chatActorCommunitySubAppModuleManager.getChatActorWaitingYourAcceptanceCount(PublicKey, max, offset);
 
@@ -393,16 +423,19 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                         record.getConnectionState(),
                         record.getConnectionId())));
 
-
-        } catch (CantGetChatActorWaitingException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_COMMUNITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            try {
-                throw new CantGetChatActorWaitingException("CAN'T GET CHAT ACTOR WAITING THEIR ACCEPTANCE", e, "", "Error on CHAT ACTOR MANAGER");
-            } catch (CantGetChatActorWaitingException e1) {
-                e1.printStackTrace();
-            }
+            return actorList;
         }
-        return actorList;
+
+        catch (final CantGetChatActorWaitingException e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetChatActorWaitingException(e, "", "Error trying to list actor connections.");
+        } catch (final Exception e) {
+
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantGetChatActorWaitingException(e, "", "Unhandled Exception.");
+        }
+
     }
 
 
