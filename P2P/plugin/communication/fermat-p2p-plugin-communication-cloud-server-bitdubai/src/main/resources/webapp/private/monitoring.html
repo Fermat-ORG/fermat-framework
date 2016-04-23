@@ -45,6 +45,7 @@
             <ul class="nav navbar-nav">
                 <li class="active"><a href="../index.html">Home</a></li>
                 <li><a href="#" data-toggle="modal" data-target="#configurationModal" >Configuration</a></li>
+                <li><a href="#" data-toggle="modal" data-target="#platformcloudserverModal" >New Platform Cloud Server</a></li>
                 <li><a href="https://github.com/Fermat-ORG/fermat/blob/master/README-DEV-TEAMS.md#team-members-1" target="_blank">Contact</a></li>
                 <li ng-controller="UserCtrl" ><a href="#" ng-click="logout();">Logout</a></li>
             </ul>
@@ -80,18 +81,18 @@
 
                 <div ng-repeat="info in monitInfo" >
 
-                    <div class="panel panel-primary" ng-repeat="(key, value) in info track by $index" >
+                    <div class="panel panel-primary" ng-repeat="(key, value) in info" >
                         <div class="panel-heading">
                             <h3 class="panel-title">{{key}}</h3>
                         </div>
                         <div class="panel-body">
-                            <p class="list-group" ng-repeat="obj in value">
-                                      <span class="list-group-item" ng-repeat="(key, value) in obj track by $index" style="color:#15151e;">
-
+                            <div ng-repeat="obj in value">
+                                <p class="list-group" ng-repeat="subObj in obj">
+                                          <span class="list-group-item" ng-repeat="(key, value) in subObj" style="color:#15151e;">
                                               <bold>{{key}}:</bold> {{value}}<br/>
-
-                                      </span>
-                            </p>
+                                          </span>
+                                </p>
+                            </div>
 
                         </div>
 
@@ -166,7 +167,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="(key, value) in registeredNetworkServiceDetail track by $index" >
+                    <tr ng-repeat="(key, value) in registeredNetworkServiceDetail" >
                         <td>{{ key }}</td>
                         <td>{{ value }}</td>
                     </tr>
@@ -184,7 +185,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="(key, value) in registerOtherComponentDetail track by $index" >
+                    <tr ng-repeat="(key, value) in registerOtherComponentDetail" >
                         <td>{{ key }}</td>
                         <td>{{ value }}</td>
                     </tr>
@@ -202,7 +203,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr ng-repeat="(key, value) in vpnByNetworkServiceDetails track by $index" >
+                    <tr ng-repeat="(key, value) in vpnByNetworkServiceDetails" >
                         <td>{{ key }}</td>
                         <td>{{ value }}</td>
                     </tr>
@@ -276,6 +277,49 @@
         </div>
     </div>
 
+
+</div>
+
+<div class="modal fade" id="platformcloudserverModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" ng-controller="MonitCtrl" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Configuration PlatformCloudServer</h4>
+            </div>
+
+            <form ng-submit="saveplatformcloudserver()" >
+
+                <div class="modal-body">
+
+                    <fieldset>
+                        <div class="form-group">
+                            <label for="networkservicetype">NetworkServiceType</label>
+                            <select id="networkservicetype" class="form-control"  ng-model="networkservicetype" name="networkservicetype" required>
+                                <option value="ARTIST_ACTOR">ARTIST</option>
+                                <option value="CRYPTO_BROKER">CBP</option>
+                                <option value="INTRA_USER">CCP</option>
+                                <option value="CHAT">CHAT</option>
+                                <option value="ASSET_USER_ACTOR">DAP</option>
+                                <option value="FERMAT_MONITOR">FERMAT-MONITOR</option>
+                            </select>
+                            <label for="ipserver">IP Server</label>
+                            <input type="text" id="ipserver" class="form-control" placeholder="Ip Server" name="ipserver" ng-model="ipserver" required>
+                        </div>
+
+                    </fieldset>
+
+                </div>
+                <div class="modal-footer">
+                    <p class="bg-success" ><span ng-bind="message"></span></p>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" >Save</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
 </div>
 
 <!-- Bootstrap core JavaScript
