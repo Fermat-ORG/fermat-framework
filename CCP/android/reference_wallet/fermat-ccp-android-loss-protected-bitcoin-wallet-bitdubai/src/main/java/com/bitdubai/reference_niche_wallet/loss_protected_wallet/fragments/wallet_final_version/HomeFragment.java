@@ -384,7 +384,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             //chart
 
-           /* ArrayList<Entry> entries = new ArrayList<>();
+           ArrayList<Entry> entries = new ArrayList<>();
             entries.add(new Entry(1, 0));
             entries.add(new Entry(3, 1));
             entries.add(new Entry(15, 2));
@@ -393,6 +393,10 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             entries.add(new Entry(1, 5));
 
             LineDataSet dataset = new LineDataSet(entries,"");
+            dataset.setColor(Color.WHITE); //
+            dataset.setDrawCubic(false);
+            dataset.setValueFormatter(new LargeValueFormatter());
+
 
             ArrayList<String> labels = new ArrayList<String>();
             labels.add("January");
@@ -400,12 +404,10 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             labels.add("March");
             labels.add("April");
             labels.add("May");
-            labels.add("June");*/
+            labels.add("June");
 
-              /* LineData data = new LineData(labels, dataset);
-            dataset.setColor(Color.WHITE); //
-            dataset.setDrawCubic(false);
-            dataset.setValueFormatter(new LargeValueFormatter());*/
+
+
 
             YAxis yAxis = chart.getAxisLeft();
             yAxis.setEnabled(false);
@@ -426,16 +428,16 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
 
             LineData data = getData();
-
+            //LineData data = new LineData(labels, dataset);
 
             data.setValueTextSize(12f);
             data.setValueTextColor(Color.WHITE);
 
             chart.setData(data);
             chart.setDescription("");
-            chart.setDrawGridBackground(false);
+            chart.setDrawGridBackground(true);
             chart.animateY(2000);
-
+            
             chart.setVisibility(View.VISIBLE);
 
 
@@ -447,7 +449,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     }
 
     /**
-     * Get the LineData for the chart based on the ExchangeRate list
+     * Get the LineData for the chart based on the all wallet Spending List
      *
      * @return the ListData object
      */
@@ -465,7 +467,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             if (size > 0) {
                 for (int i = 0; i < size; i++) {
                     BitcoinLossProtectedWalletSpend listSpendig = allWalletSpendingList.get(i);
-                    entryList.add(new Entry((float) listSpendig.getAmount(), i));
+                    entryList.add(new Entry(listSpendig.getAmount(), i));
                     xValues.add(String.valueOf(i));
                 }
                 chart.setVisibility(View.VISIBLE);
@@ -473,6 +475,13 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 chart.setVisibility(View.GONE);
                 noDataInChart.setVisibility(View.VISIBLE);
             }
+
+            LineDataSet dataset = new LineDataSet(entryList, "dataSet");
+            dataset.setColor(Color.WHITE); //
+            dataset.setDrawCubic(false);
+            dataset.setValueFormatter(new LargeValueFormatter());
+
+            return new LineData(xValues, dataset);
 
         } catch (CantListLossProtectedSpendingException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
@@ -484,15 +493,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                     Toast.LENGTH_SHORT).show();
         }
 
-        LineDataSet dataSet = new LineDataSet(entryList, "dataSet");
-        dataSet.setColor(Color.WHITE);
-        dataSet.setDrawCircles(false);
-        dataSet.setLineWidth(2.0f);
-        dataSet.setDrawValues(false);
-        dataSet.setDrawCubic(false);
-        dataSet.setValueFormatter(new LargeValueFormatter());
-
-        return new LineData(xValues, dataSet);
+        return null;
     }
 
 

@@ -896,7 +896,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
             BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
 
-            bitcoinLossProtectedWalletSpendList = bitcoinWalletWallet.listTransactionsSpending(transactionId);
+          //  bitcoinLossProtectedWalletSpendList = bitcoinWalletWallet.listTransactionsSpending(transactionId);
 
 
             if (bitcoinLossProtectedWalletSpendList.size()==0) {
@@ -968,7 +968,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
             BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
 
-            allWalletSpendingList = bitcoinWalletWallet.listAllWalletSpending();
+           // allWalletSpendingList = bitcoinWalletWallet.listAllWalletSpending();
 
 
             if (allWalletSpendingList.size()==0) {
@@ -994,7 +994,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
                     @Override
                     public double getExchangeRate() {
-                        return 422.1;
+                        return 9;
                     }
                 };
 
@@ -1015,10 +1015,10 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                     }
 
                     @Override
-                    public long getAmount() {return (long)0.8;}
+                    public long getAmount() {return (long)9;}
 
                     @Override
-                    public double getExchangeRate() {return 427.14;}
+                    public double getExchangeRate() {return 9;}
                 };
 
                 allWalletSpendingList.add(spendingLsit);
