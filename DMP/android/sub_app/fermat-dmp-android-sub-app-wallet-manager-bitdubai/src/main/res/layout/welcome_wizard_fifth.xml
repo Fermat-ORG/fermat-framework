@@ -39,7 +39,7 @@
             android:layout_marginBottom="7dp"
 
             app:typeface="CAVIAR_DREAMS_BOLD"
-            android:text="To begin and learn the basics please:"
+            android:text="But first learn these basic rules:"
             />
 
 
@@ -134,7 +134,7 @@
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Then go to the Chat Community to connect with some people there."
+                android:text="Then go to the Chat Community to connect with some people."
                 android:layout_weight="1"
                 android:gravity="left"
                 android:textSize="14sp"
