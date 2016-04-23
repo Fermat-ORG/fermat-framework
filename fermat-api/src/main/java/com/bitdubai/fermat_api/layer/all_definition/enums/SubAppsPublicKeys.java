@@ -66,6 +66,7 @@ public enum SubAppsPublicKeys implements FermatEnum {
             //TODO CHT Platform
             case "public_key_cht_chat":                     return CHT_OPEN_CHAT            ;
             case "public_key_cht_identity_chat":             return CHT_CHAT_IDENTITY  ;
+            case "public_key_cht_community":             return CHT_COMMUNITY  ;
             //TODO CBP Platform
             case "sub_app_crypto_broker_identity":          return CBP_BROKER_IDENTITY      ;
             case "sub_app_crypto_customer_identity":        return CBP_CUSTOMER_IDENTITY    ;
