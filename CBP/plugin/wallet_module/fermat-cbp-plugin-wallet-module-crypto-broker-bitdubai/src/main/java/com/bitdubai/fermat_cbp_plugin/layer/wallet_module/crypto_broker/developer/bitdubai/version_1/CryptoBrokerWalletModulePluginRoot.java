@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.enums.WalletsPublicKeys;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
@@ -231,7 +232,7 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
     @Override
     public void start() throws CantStartPluginException {
         super.start();
-        //preConfigureWallet();
+        preConfigureWallet();
     }
 
     @Override
@@ -336,16 +337,16 @@ public class CryptoBrokerWalletModulePluginRoot extends AbstractModule<CryptoBro
                 moduleManager.saveWalletSettingAssociated(associatedWalletSetting, brokerWalletPublicKey);
 
                 // EARNINGS -> BTC/USD - Earning Wallet: Cash USD
-                String earningWalletPublicKey = "cash_wallet";
-                moduleManager.addEarningsPairToEarningSettings(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR, earningWalletPublicKey, brokerWalletPublicKey);
+                moduleManager.addEarningsPairToEarningSettings(CryptoCurrency.BITCOIN, FiatCurrency.US_DOLLAR,
+                        WalletsPublicKeys.CCP_REFERENCE_WALLET.getCode(), brokerWalletPublicKey);
 
                 // EARNINGS -> BTC/ARG - Earning Wallet: Bank ARG
-                earningWalletPublicKey = "banking_wallet";
-                moduleManager.addEarningsPairToEarningSettings(CryptoCurrency.BITCOIN, FiatCurrency.ARGENTINE_PESO, earningWalletPublicKey, brokerWalletPublicKey);
+                moduleManager.addEarningsPairToEarningSettings(FiatCurrency.ARGENTINE_PESO, CryptoCurrency.BITCOIN,
+                        WalletsPublicKeys.BNK_BANKING_WALLET.getCode(), brokerWalletPublicKey);
 
                 // EARNINGS -> ARG/USD - Earning Wallet: Cash USD
-                earningWalletPublicKey = "cash_wallet";
-                moduleManager.addEarningsPairToEarningSettings(FiatCurrency.ARGENTINE_PESO, FiatCurrency.US_DOLLAR, earningWalletPublicKey, brokerWalletPublicKey);
+                moduleManager.addEarningsPairToEarningSettings(FiatCurrency.US_DOLLAR, FiatCurrency.ARGENTINE_PESO,
+                        WalletsPublicKeys.CSH_MONEY_WALLET.getCode(), brokerWalletPublicKey);
 
                 // PROVIDERS -> BTC/USD
                 final List<CurrencyExchangeRateProviderManager> providers = new ArrayList<>();

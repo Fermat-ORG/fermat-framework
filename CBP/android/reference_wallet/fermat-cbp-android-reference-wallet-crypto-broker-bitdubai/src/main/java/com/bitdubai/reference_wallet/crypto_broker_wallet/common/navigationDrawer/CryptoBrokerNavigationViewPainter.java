@@ -154,11 +154,6 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
             }
 
         } catch (Exception ex) {
-
-            stockItems.add(new NavViewFooterItem("Bitcoin", "145.32"));
-            stockItems.add(new NavViewFooterItem("US Dollar", "14.04"));
-            stockItems.add(new NavViewFooterItem("Bolivar", "350,400.25"));
-
             if (errorManager == null)
                 Log.e(TAG, ex.getMessage(), ex);
             else
@@ -182,7 +177,7 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
 
                 final EarningsSearch search = earningsPair.getSearch();
 
-                final List<EarningsDetailData> earningsDetails = EarningsDetailData.generateEarningsDetailData(search.listResults(1, 0), TimeFrequency.DAILY);
+                final List<EarningsDetailData> earningsDetails = EarningsDetailData.generateEarningsDetailData(search.listResults(), TimeFrequency.DAILY);
                 if (!earningsDetails.isEmpty()) {
                     final double amount = earningsDetails.get(0).getAmount();
                     value = numberFormat.format(amount);
@@ -192,10 +187,6 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
             }
 
         } catch (Exception ex) {
-
-            earningsItems.add(new NavViewFooterItem("USD/BTC", "1,400.01"));
-            earningsItems.add(new NavViewFooterItem("VEF/BTC", "350,251.87"));
-
             if (errorManager == null)
                 Log.e(TAG, ex.getMessage(), ex);
             else
