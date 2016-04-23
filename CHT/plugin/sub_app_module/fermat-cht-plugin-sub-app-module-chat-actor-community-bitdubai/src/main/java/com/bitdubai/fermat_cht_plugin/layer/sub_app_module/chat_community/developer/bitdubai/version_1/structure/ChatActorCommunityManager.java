@@ -120,7 +120,10 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
             for(ChatActorConnection connectedActor : actorConnections)
             {
                 if(worldActor.getPublicKey().equals(connectedActor.getPublicKey()))
-                    worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(worldActor.getPublicKey(), worldActor.getAlias(), worldActor.getImage(), connectedActor.getConnectionState(), connectedActor.getConnectionId()));
+                    if (worldActor.getConnectionState() == null)
+                        worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(worldActor.getPublicKey(), worldActor.getAlias(), worldActor.getImage(), ConnectionState.CONNECTED, connectedActor.getConnectionId()));
+                    else
+                        worldActorList.set(i, new ChatActorCommunitySubAppModuleInformationImpl(worldActor.getPublicKey(), worldActor.getAlias(), worldActor.getImage(), connectedActor.getConnectionState(), connectedActor.getConnectionId()));
             }
         }
 
@@ -199,7 +202,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
             final ActorIdentityInformation actorReceiving = new ActorIdentityInformation(
                     chatActorToContact.getPublicKey(),
-                    Actors.CHT_CHAT_ACTOR,
+                    Actors.CHAT,
                     chatActorToContact.getAlias(),
                     chatActorToContact.getImage()
             );

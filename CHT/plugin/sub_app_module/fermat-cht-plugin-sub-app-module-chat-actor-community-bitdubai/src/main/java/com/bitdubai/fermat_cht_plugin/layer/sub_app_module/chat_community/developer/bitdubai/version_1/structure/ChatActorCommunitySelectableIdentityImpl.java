@@ -28,7 +28,7 @@ public class ChatActorCommunitySelectableIdentityImpl implements ChatActorCommun
 
         this.alias     = chatIdentity.getAlias()       ;
         this.publicKey = chatIdentity.getPublicKey()   ;
-        this.actorType = Actors.CHT_CHAT_ACTOR         ;
+        this.actorType = Actors.CHAT         ;
         this.image     = chatIdentity.getImage();
     }
 
