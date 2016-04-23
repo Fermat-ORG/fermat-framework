@@ -71,6 +71,24 @@ public class PluginVersionReference implements Serializable {
                 ((pluginDeveloperReference == null && that.getPluginDeveloperReference() == null) || (pluginDeveloperReference != null && pluginDeveloperReference.equals(that.getPluginDeveloperReference())));
     }
 
+    public Platforms getPlatform(){
+        return pluginDeveloperReference.getPluginReference().getLayerReference().getPlatformReference().getPlatform();
+    }
+
+    public Layers getLayers(){
+        return pluginDeveloperReference.getPluginReference().getLayerReference().getLayer();
+    }
+
+    public FermatPluginsEnum getPlugins(){
+        return pluginDeveloperReference.getPluginReference().getPlugin();
+    }
+
+    public Developers getDeveloper(){
+        return pluginDeveloperReference.getDeveloper();
+
+    }
+
+
     @Override
     public final int hashCode() {
         int c = 0;

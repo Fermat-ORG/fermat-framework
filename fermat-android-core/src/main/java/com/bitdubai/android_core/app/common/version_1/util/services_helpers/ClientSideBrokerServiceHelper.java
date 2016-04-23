@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientBrokerService;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerService;
 
 import java.lang.ref.WeakReference;
@@ -62,7 +63,7 @@ public class ClientSideBrokerServiceHelper {
         }
     }
 
-    public ClientSystemBrokerService getClientSystemBrokerService() {
+    public ClientBrokerService getClientSystemBrokerService() {
         return clientSystemBrokerService;
     }
 

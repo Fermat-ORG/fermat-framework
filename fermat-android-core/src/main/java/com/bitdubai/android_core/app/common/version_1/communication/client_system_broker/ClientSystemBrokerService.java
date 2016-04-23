@@ -16,11 +16,12 @@ import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.bitdubai.android_core.app.common.version_1.communication.CommunicationDataKeys;
-import com.bitdubai.android_core.app.common.version_1.communication.CommunicationMessages;
-import com.bitdubai.android_core.app.common.version_1.communication.CommunicationService;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationDataKeys;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationService;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.FermatServiceNotConnectedException;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 
@@ -35,7 +36,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by Matias Furszyfer on 2016.03.31..
  */
-public class ClientSystemBrokerService extends Service {
+public class ClientSystemBrokerService extends Service implements ClientBrokerService {
 
     private static final String TAG = "ClientBrokerService";
     private static final String KEY = "s";
@@ -313,6 +314,11 @@ public class ClientSystemBrokerService extends Service {
         Log.i(TAG,"creating proxy");
         ProxyInvocationHandler mInvocationHandler = new ProxyInvocationHandler(this,"key",pluginVersionReference);
         return proxyFactory.createModuleManagerProxy(pluginVersionReference,mInvocationHandler);
+    }
+
+    @Override
+    public FermatModuleObjectWrapper sendMessage(PluginVersionReference pluginVersionReference, String responseStr, Object proxy, Method method, Object[] args) {
+        return null;
     }
 
 
