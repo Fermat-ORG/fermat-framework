@@ -1713,7 +1713,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
         yourOwnSender.send(mailUserTo, LogReader.getLog().toString());
     }
 
+    //send mail
 
+    public void sendMailExternal(String mailUserTo, String bodyText) throws Exception {
+        YourOwnSender yourOwnSender = new YourOwnSender(this);
+        yourOwnSender.send(mailUserTo, bodyText);
+    }
 
     @Override
     protected void onStart() {

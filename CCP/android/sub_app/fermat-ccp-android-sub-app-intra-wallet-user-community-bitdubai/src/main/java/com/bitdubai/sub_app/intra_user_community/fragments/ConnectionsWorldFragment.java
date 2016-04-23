@@ -228,7 +228,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     public void showErrorNetworkDialog() {
         ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
-        errorConnectingFermatNetworkDialog.setDescription("You are not connected  /n to the Fermat Network");
+        errorConnectingFermatNetworkDialog.setDescription("You are not connected  \n to the Fermat Network");
         errorConnectingFermatNetworkDialog.setRightButton("Connect", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -246,7 +246,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment implements
 
     public void showErrorFermatNetworkDialog() {
         final ErrorConnectingFermatNetworkDialog errorConnectingFermatNetworkDialog = new ErrorConnectingFermatNetworkDialog(getActivity(), intraUserSubAppSession, null);
-        errorConnectingFermatNetworkDialog.setDescription("The access to the /n Fermat Network is disabled.");
+        errorConnectingFermatNetworkDialog.setDescription("The access to the \\n Fermat Network is disabled.");
         errorConnectingFermatNetworkDialog.setRightButton("Enable", new View.OnClickListener() {
             @Override
             public void onClick(View v) {

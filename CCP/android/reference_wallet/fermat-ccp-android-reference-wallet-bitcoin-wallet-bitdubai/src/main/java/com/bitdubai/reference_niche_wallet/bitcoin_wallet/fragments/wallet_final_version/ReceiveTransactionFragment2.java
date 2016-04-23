@@ -148,7 +148,7 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
         } catch (SettingsNotFoundException e) {
             e.printStackTrace();
         }
-        System.out.println("Network Type"+blockchainNetworkType);
+        System.out.println("Network Type" + blockchainNetworkType);
 
         openNegotiationList = (ArrayList) getMoreDataAsync(FermatRefreshTypes.NEW, 0);
     }
@@ -337,6 +337,12 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
                 openNegotiationList = (ArrayList) result[0];
                 if (adapter != null)
                     adapter.changeDataSet(openNegotiationList);
+
+                if(openNegotiationList.size() > 0)
+                {
+                    recyclerView.setVisibility(View.INVISIBLE);
+                    FermatAnimationsUtils.showEmpty(getActivity(), false, emptyListViewsContainer);
+                }
             }else {
 
                 FermatAnimationsUtils.showEmpty(getActivity(), true, emptyListViewsContainer);
