@@ -66,7 +66,10 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
 
             final List<DatabaseTableRecord> records = actorConnectionsTable.getRecords();
 
-                ChatActorConnection chatActorConnection = buildActorConnectionNewRecord(records.get(0));
+            ChatActorConnection chatActorConnection = null;
+
+            if(records != null && !records.isEmpty())
+                chatActorConnection = buildActorConnectionNewRecord(records.get(0));
 
             return chatActorConnection;
 
