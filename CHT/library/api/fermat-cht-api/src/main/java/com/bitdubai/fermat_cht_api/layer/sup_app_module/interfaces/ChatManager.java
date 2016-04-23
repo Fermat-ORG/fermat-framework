@@ -19,6 +19,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetGroupExcepti
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetOwnIdentitiesException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
@@ -95,6 +96,10 @@ public interface ChatManager extends ModuleManager<ChatPreferenceSettings, Activ
     List<ChatIdentity> getIdentityChatUsersFromCurrentDeviceUser() throws CantListChatIdentityException;
 
     ChatActorCommunitySearch getChatActorSearch();
+
+    List<ChatActorCommunityInformation> listAllConnectedChatActor(final ChatActorCommunitySelectableIdentity selectedIdentity,
+                                                                  final int                                     max             ,
+                                                                  final int                                     offset          ) throws CantListChatActorException;
 
     /**
      * This method sends the message through the Chat Network Service
