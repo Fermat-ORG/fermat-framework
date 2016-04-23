@@ -42,6 +42,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageExcep
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
@@ -124,7 +125,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     ArrayList<String> message=new ArrayList<>();
     ArrayList<String> dateMessage=new ArrayList<>();
     ArrayList<UUID> chatId=new ArrayList<>();
-    ArrayList<UUID> contactId=new ArrayList<>();
+    ArrayList<String> contactId=new ArrayList<>();
     ArrayList<String> status=new ArrayList<>();
     ArrayList<String> typeMessage=new ArrayList<>();
     ArrayList<Integer> noReadMsgs=new ArrayList<>();
@@ -161,39 +162,46 @@ public class ChatListFragment extends AbstractFermatFragment{
                         Message mess = chatManager.getMessageByChatId(chatidtemp);
                         if (mess != null) {
                             noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
-                            contactId.add(mess.getContactId());
+                            contactId.add(chat.getRemoteActorPublicKey());
                             //ChatActorCommunityInformation sf = chatManager.getChatActorbyConnectionId(mess.getContactId());
                             //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-                            Contact cont = null; //chatManager.getContactByContactId(mess.getContactId());
-                            if(cont != null) {
-                                contactName.add(cont.getAlias());
-                                message.add(mess.getMessage());
-                                status.add(mess.getStatus().toString());
-                                typeMessage.add(mess.getType().toString());
-                                long timemess = chat.getLastMessageDate().getTime();
-                                long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
-                                long milliseconds = timemess + nanos;
-                                Date dated = new java.util.Date(milliseconds);
-                                DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                                formatter.setTimeZone(TimeZone.getDefault());
-                                String datef=formatter.format(new java.util.Date(milliseconds));
-                                if (Validate.isDateToday(dated)) {
-                                    formatter = new SimpleDateFormat("HH:mm");
-                                    formatter.setTimeZone(TimeZone.getDefault());
-                                    datef=formatter.format(new java.util.Date(milliseconds));
-                                } else {
-                                    Date old = new Date(datef);
-                                    Date today = new Date();
-                                    long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
-                                    if (dias == 1) {
-                                        datef="YESTERDAY";
+                            //Contact cont = null; //chatManager.getContactByContactId(mess.getContactId());
+                            for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
+                                (ChatActorCommunitySelectableIdentity) chatManager.
+                                getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, offset))
+                            {
+                                if(cont.getPublicKey()==chatSession.getData(ChatSession.CONTACT_DATA)){
+                                    if(cont != null) {
+                                        contactName.add(cont.getAlias());
+                                        message.add(mess.getMessage());
+                                        status.add(mess.getStatus().toString());
+                                        typeMessage.add(mess.getType().toString());
+                                        long timemess = chat.getLastMessageDate().getTime();
+                                        long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
+                                        long milliseconds = timemess + nanos;
+                                        Date dated = new java.util.Date(milliseconds);
+                                        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                                        formatter.setTimeZone(TimeZone.getDefault());
+                                        String datef=formatter.format(new java.util.Date(milliseconds));
+                                        if (Validate.isDateToday(dated)) {
+                                            formatter = new SimpleDateFormat("HH:mm");
+                                            formatter.setTimeZone(TimeZone.getDefault());
+                                            datef=formatter.format(new java.util.Date(milliseconds));
+                                        } else {
+                                            Date old = new Date(datef);
+                                            Date today = new Date();
+                                            long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
+                                            if (dias == 1) {
+                                                datef="YESTERDAY";
+                                            }
+                                        }
+                                        dateMessage.add(datef);
+                                        chatId.add(chatidtemp);
+                                        ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
+                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
+                                        imgId.add(bmd.getBitmap());
                                     }
                                 }
-                                dateMessage.add(datef);
-                                chatId.add(chatidtemp);
-                                ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getProfileImage());
-                                BitmapDrawable bmd = new BitmapDrawable(bytes);
-                                imgId.add(bmd.getBitmap());
                             }
                         }
                     }
@@ -334,7 +342,8 @@ public class ChatListFragment extends AbstractFermatFragment{
                 try{
                     appSession.setData("whocallme", "chatlist");
                     //TODO: metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
-                    appSession.setData(ChatSession.CONTACT_DATA, null);
+                    appSession.setData(ChatSession.CONTACT_DATA, contactId.get(position));
+                    //appSession.setData(ChatSession.CONTACT_DATA, null);
                     //appSession.setData(ChatSession.CONTACT_DATA, chatManager.getChatActorbyConnectionId(contactId.get(position)));
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 //} catch (CantGetContactException e) {
