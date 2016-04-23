@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.chat_community.holders;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.Views.SquareImageView;
@@ -17,9 +18,9 @@ import com.bitdubai.sub_app.chat_community.R;
 public class CommunityWorldHolder extends FermatViewHolder {
 
     public ImageView thumbnail;//SquareImageView
-    public FermatTextView name;
+    public TextView name;
     public ImageView connectionState;
-    public FermatTextView row_connection_state;
+    public TextView row_connection_state;
 
     /**
      * Constructor
@@ -29,8 +30,8 @@ public class CommunityWorldHolder extends FermatViewHolder {
     public CommunityWorldHolder(View itemView) {
         super(itemView);
         //connectionState = (ImageView) itemView.findViewById(R.id.connection_state);
-        row_connection_state = (FermatTextView) itemView.findViewById(R.id.connection_state_user);
+        row_connection_state = (TextView) itemView.findViewById(R.id.connection_state_user);
         thumbnail = (ImageView) itemView.findViewById(R.id.profile_image);
-        name = (FermatTextView) itemView.findViewById(R.id.community_name);
+        name = (TextView) itemView.findViewById(R.id.community_name);
     }
 }

@@ -215,7 +215,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
             final ActorIdentityInformation actorReceiving = new ActorIdentityInformation(
                     chatActorToContact.getPublicKey(),
-                    Actors.CHT_CHAT_ACTOR,
+                    Actors.CHAT,
                     chatActorToContact.getAlias(),
                     chatActorToContact.getImage()
             );
@@ -510,11 +510,11 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
                 ChatActorCommunitySelectableIdentityImpl selectedIdentity = null;
 
-                if(lastSelectedActorType == Actors.CHT_CHAT_ACTOR)
+                if(lastSelectedActorType == Actors.CHAT)
                 {
                     for(ChatIdentity i : IdentitiesInDevice) {
                         if(i.getPublicKey().equals(lastSelectedIdentityPublicKey))
-                            selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CHT_CHAT_ACTOR, i.getAlias(), i.getImage());
+                            selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CHAT, i.getAlias(), i.getImage());
                     }
                 }
                if(selectedIdentity == null)
@@ -543,7 +543,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
         //If appSettings exist
         if(appSettings != null){
-            appSettings.setLastSelectedActorType(Actors.CHT_CHAT_ACTOR);
+            appSettings.setLastSelectedActorType(Actors.CHAT);
 
             try {
                 this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);

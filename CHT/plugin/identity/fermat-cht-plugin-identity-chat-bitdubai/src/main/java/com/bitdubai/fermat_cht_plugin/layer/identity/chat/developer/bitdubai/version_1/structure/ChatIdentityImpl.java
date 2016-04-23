@@ -102,7 +102,7 @@ public class ChatIdentityImpl implements DealsWithPluginFileSystem, DealsWithPlu
 
     @Override
     public Actors getActorType() {
-        return Actors.CHT_CHAT_ACTOR;
+        return Actors.CHAT;
     }
 
     @Override
