@@ -46,7 +46,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.W
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_network.bitcoin.interfaces.BitcoinNetworkConfiguration;
 import com.bitdubai.fermat_ccp_api.all_definition.util.BitcoinConverter;
@@ -121,8 +120,6 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
     private Spinner spinner;
     private FermatTextView txt_type;
     private ImageView spinnerArrow;
-
-    SettingsManager<BitcoinWalletSettings> settingsManager;
     BlockchainNetworkType blockchainNetworkType;
 
 
@@ -136,21 +133,20 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
         bitcoinConverter = new BitcoinConverter();
         setHasOptionsMenu(true);
         try {
-            settingsManager = appSession.getModuleManager().getSettingsManager();
             BitcoinWalletSettings bitcoinWalletSettings = null;
-            bitcoinWalletSettings = settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            bitcoinWalletSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
 
             if(bitcoinWalletSettings != null) {
 
                 if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
                     bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 }
-                settingsManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
 
             }
 
-            blockchainNetworkType = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
-            System.out.println("Network Type"+blockchainNetworkType);
+            blockchainNetworkType = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
+
             cryptoWallet = appSession.getModuleManager();
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -169,7 +165,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
         super.onCreateView(inflater, container, savedInstanceState);
         try {
             rootView = inflater.inflate(R.layout.send_form_base, container, false);
-            NetworkStatus networkStatus =getFermatState().getFermatNetworkStatus();
+            NetworkStatus networkStatus = getFermatNetworkStatus();
             if (networkStatus!= null) {
                 switch (networkStatus) {
                     case CONNECTED:
@@ -219,7 +215,7 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
             public void onClick(View v) {
                 errorConnectingFermatNetworkDialog.dismiss();
                 try {
-                    if (getFermatState().getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
+                    if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
                         Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
                         getActivity().onBackPressed();
                     }

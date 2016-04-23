@@ -164,7 +164,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
         super.onCreateView(inflater, container, savedInstanceState);
         try {
             rootView = inflater.inflate(R.layout.request_form_base, container, false);
-            NetworkStatus networkStatus =getFermatState().getFermatNetworkStatus();
+            NetworkStatus networkStatus = getFermatNetworkStatus();
             if (networkStatus != null) {
                 switch (networkStatus) {
                     case CONNECTED:
@@ -212,7 +212,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
             public void onClick(View v) {
                 errorConnectingFermatNetworkDialog.dismiss();
                 try {
-                    if (getFermatState().getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
+                    if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
                         Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
                         getActivity().onBackPressed();
                     }

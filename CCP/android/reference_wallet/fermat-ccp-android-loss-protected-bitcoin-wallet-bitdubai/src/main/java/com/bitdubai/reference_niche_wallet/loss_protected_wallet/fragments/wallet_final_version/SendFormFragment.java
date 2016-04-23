@@ -174,7 +174,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         super.onCreateView(inflater, container, savedInstanceState);
         try {
             rootView = inflater.inflate(R.layout.send_form_base, container, false);
-            NetworkStatus networkStatus =getFermatState().getFermatNetworkStatus();
+            NetworkStatus networkStatus = getFermatNetworkStatus();
             if (networkStatus!= null) {
                 switch (networkStatus) {
                     case CONNECTED:
@@ -224,7 +224,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
             public void onClick(View v) {
                 errorConnectingFermatNetworkDialog.dismiss();
                 try {
-                    if (getFermatState().getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
+                    if (getFermatNetworkStatus() == NetworkStatus.DISCONNECTED) {
                         Toast.makeText(getActivity(), "Wait a minute please, trying to reconnect...", Toast.LENGTH_SHORT).show();
                         getActivity().onBackPressed();
                     }
@@ -249,8 +249,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
         txt_type = (FermatTextView) rootView.findViewById(R.id.txt_type);
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
-        list.add("Bits");
         list.add("BTC");
+        list.add("Bits");
         list.add("Satoshis");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.list_item_spinner, list);
@@ -265,33 +265,47 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                 String newAmount = "";
                 switch (position) {
                     case 0:
+                        text = "[btc]";
+                        if (!amount.equals("") && amount != null){
+                            if (txtType.equals("[bits]")) {
+                                newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
+                            } else if (txtType.equals("[satoshis]")) {
+                                newAmount = bitcoinConverter.getBTC(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+                        }else{
+                            newAmount = amount;
+                        }
+
+
+                        break;
+                    case 1:
                         text = "[bits]";
-                        if (txtType.equals("[btc]")) {
-                            newAmount = bitcoinConverter.getBitsFromBTC(amount);
-                        } else if (txtType.equals("[satoshis]")) {
-                            newAmount = bitcoinConverter.getBits(amount);
-                        } else {
+                        if (!amount.equals("") && amount != null) {
+                            if (txtType.equals("[btc]")) {
+                                newAmount = bitcoinConverter.getBitsFromBTC(amount);
+                            } else if (txtType.equals("[satoshis]")) {
+                                newAmount = bitcoinConverter.getBits(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+                        }else{
                             newAmount = amount;
                         }
 
                         break;
-                    case 1:
-                        text = "[btc]";
-                        if (txtType.equals("[bits]")) {
-                            newAmount = bitcoinConverter.getBitcoinsFromBits(amount);
-                        } else if (txtType.equals("[satoshis]")) {
-                            newAmount = bitcoinConverter.getBTC(amount);
-                        } else {
-                            newAmount = amount;
-                        }
-                        break;
                     case 2:
                         text = "[satoshis]";
-                        if (txtType.equals("[bits]")) {
-                            newAmount = bitcoinConverter.getSathoshisFromBits(amount);
-                        } else if (txtType.equals("[btc]")) {
-                            newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
-                        } else {
+                        if (!amount.equals("") && amount != null) {
+                            if (txtType.equals("[bits]")) {
+                                newAmount = bitcoinConverter.getSathoshisFromBits(amount);
+                            } else if (txtType.equals("[btc]")) {
+                                newAmount = bitcoinConverter.getSathoshisFromBTC(amount);
+                            } else {
+                                newAmount = amount;
+                            }
+                        }else{
                             newAmount = amount;
                         }
                         break;
@@ -587,9 +601,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
 
     }
-
-
-    //TODO: Verificar la configuracion de proteger o no de la perdida de btc
+    //TODO: Check if the setting for protecting the user from spending btc is working
     private void sendCrypto() {
         try {
             if (cryptoWalletWalletContact.getReceivedCryptoAddress().get(blockchainNetworkType) != null) {

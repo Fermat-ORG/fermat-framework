@@ -4,6 +4,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.develope
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
 
+import java.io.Serializable;
+
 /**
  * The class <code>com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.structure.IntraUserIdentityModule</code>
  * is the implementation of IntraUserModuleIdentity interface.
@@ -11,7 +13,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.I
  *
  * Created by natalia on 05/01/16.
  */
-public class IntraUserIdentity implements IntraUserModuleIdentity {
+public class IntraUserIdentity implements IntraUserModuleIdentity,Serializable {
 
     private String alias;
     private String phrase;

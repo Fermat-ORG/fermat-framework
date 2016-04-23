@@ -39,6 +39,7 @@ public class MnemonicSendDialog extends Dialog implements View.OnClickListener{
         int id = v.getId();
         if(id == R.id.btn_send){
             //encrypt the text with the key and send by email
+
         }else if (id == R.id.btn_cancel){
 
         }

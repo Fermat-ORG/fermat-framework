@@ -47,7 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Matias Furszyfer
+ * Created by Natalia Cortez
  */
 public class AddConnectionFragment extends FermatWalletListFragment<LossProtectedWalletIntraUserActor>
         implements FermatListItemListeners<LossProtectedWalletIntraUserActor>,AddConnectionCallback {
@@ -335,16 +335,7 @@ public class AddConnectionFragment extends FermatWalletListFragment<LossProtecte
                         MAX_USER_SHOW,
                         offset);
             }
-//            if(data.isEmpty()){
-//                if(hnadler!=null) {
-//                    hnadler.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            new ConnectionWithCommunityDialog(getActivity(), referenceWalletSession, null).show();
-//                        }
-//                    });
-//                }
-//            }
+
         }
         catch(Exception e){
             Toast.makeText(getActivity().getApplicationContext(), "Oooops! recovering from system error. Get Intra User List", Toast.LENGTH_SHORT).show();

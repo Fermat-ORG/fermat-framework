@@ -10,16 +10,14 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.enums.VaultType;
 import com.bitdubai.fermat_api.layer.all_definition.money.CryptoAddress;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.transaction_transference_protocol.Specialist;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.exceptions.CantRegisterCryptoAddressBookRecordException;
 import com.bitdubai.fermat_bch_api.layer.crypto_module.crypto_address_book.interfaces.CryptoAddressBookManager;
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.bitcoin_vault.CryptoVaultManager;
 
 import com.bitdubai.fermat_bch_api.layer.crypto_vault.classes.vault_seed.exceptions.CantLoadExistingVaultSeed;
 
+import com.bitdubai.fermat_ccp_api.all_definition.util.WalletUtils;
 import com.bitdubai.fermat_ccp_api.layer.actor.Actor;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantCreateExtraUserException;
 import com.bitdubai.fermat_ccp_api.layer.actor.extra_user.exceptions.CantGetExtraUserException;
@@ -45,7 +43,7 @@ import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exce
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.exceptions.CantSaveExchangeProviderIdException;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletManager;
-import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSettings;
+
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletSpend;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransaction;
 import com.bitdubai.fermat_ccp_api.layer.basic_wallet.loss_protected_wallet.interfaces.BitcoinLossProtectedWalletTransactionSummary;
@@ -240,6 +238,48 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
             throw new CantInitializeLossProtectedWalletManagerException(e, "", "Unhandled error.");
         }
+    }
+
+    @Override
+    public double getEarningOrLostsWallet(String walletPublicKey) {
+
+        double exchangeRate = 0;
+        double amountEarnOrLost = 0;
+        double totalEarnOrLost = 0;
+        try {
+
+            BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+            List<BitcoinLossProtectedWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactions(BalanceType.REAL, TransactionType.CREDIT, 20, 0);
+            List<BitcoinLossProtectedWalletSpend> bitcoinWalletSpendingList = new ArrayList<>();
+
+            for (BitcoinLossProtectedWalletTransaction transactionList: bitcoinWalletTransactionList) {
+
+                bitcoinWalletSpendingList = bitcoinWalletWallet.listTransactionsSpending(transactionList.getTransactionId());
+
+                for (BitcoinLossProtectedWalletSpend spentList:bitcoinWalletSpendingList) {
+
+                        exchangeRate = spentList.getExchangeRate() - transactionList.getExchangeRate();
+
+                        if (spentList.getExchangeRate() >= transactionList.getExchangeRate()){
+
+                            amountEarnOrLost += spentList.getAmount()*exchangeRate;
+                            totalEarnOrLost += amountEarnOrLost/spentList.getExchangeRate();
+
+                        }else{
+
+                            amountEarnOrLost += spentList.getAmount()*exchangeRate;
+                            totalEarnOrLost += amountEarnOrLost/spentList.getExchangeRate();
+                        }
+
+
+                }
+            }
+
+
+        }catch (Exception e){
+
+        }
+        return totalEarnOrLost;
     }
 
     @Override
@@ -895,7 +935,11 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         List<BitcoinLossProtectedWalletSpend> bitcoinLossProtectedWalletSpendList = new ArrayList<>();
 
         try {
-            List<BitcoinLossProtectedWalletSpend> bitcoinLossProtectedWalletSpendList1 = new ArrayList<>();
+
+            BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+
+            bitcoinLossProtectedWalletSpendList = bitcoinWalletWallet.listTransactionsSpending(transactionId);
+
 
             if (bitcoinLossProtectedWalletSpendList.size()==0) {
 
@@ -924,34 +968,33 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                     }
                 };
 
+                BitcoinLossProtectedWalletSpend spendingLsit2 = new BitcoinLossProtectedWalletSpend() {
+                    @Override
+                    public UUID getSpendId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getAmount() {return (long)0.8;}
+
+                    @Override
+                    public double getExchangeRate() {return 427.14;}
+                };
+
                 bitcoinLossProtectedWalletSpendList.add(spendingLsit);
+                bitcoinLossProtectedWalletSpendList.add(spendingLsit2);
 
             }
-
-            BitcoinLossProtectedWalletSpend spendingLsit = new BitcoinLossProtectedWalletSpend() {
-                @Override
-                public UUID getSpendId() {
-                    return UUID.randomUUID();
-                }
-
-                @Override
-                public UUID getTransactionId() {
-                    return UUID.randomUUID();
-                }
-
-                @Override
-                public long getTimestamp() {
-                    return 0;
-                }
-
-                @Override
-                public long getAmount() {return (long)0.8;}
-
-                @Override
-                public double getExchangeRate() {return 427.14;}
-            };
-
-            bitcoinLossProtectedWalletSpendList.add(spendingLsit);
 
             return bitcoinLossProtectedWalletSpendList;
 

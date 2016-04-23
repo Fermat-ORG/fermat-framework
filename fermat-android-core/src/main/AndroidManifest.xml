@@ -134,6 +134,17 @@
 
         </receiver>
 
+        <receiver android:name="com.bitdubai.android_core.app.FermatSystemRunningReceiver">
+
+            <intent-filter>
+                <action android:name="org.fermat.SYSTEM_RUNNING">
+                </action>
+            </intent-filter>
+
+        </receiver>
+
+
+
         <service android:name="com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationService"
             android:label="CommService"
             android:exported="true"
@@ -152,6 +163,10 @@
 
         <service android:name="com.bitdubai.android_core.app.common.version_1.apps_manager.FermatAppsManagerService"/>
         <service android:name="com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerService"/>
+        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.ClientSystemBrokerServiceAIDL"/>
+        <service android:name="com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.aidl.CommunicationServerService"
+            android:process=":commerverSerice"
+            android:exported="true"/>
 
     </application>
 </manifest>
