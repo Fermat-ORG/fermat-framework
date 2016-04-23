@@ -41,7 +41,7 @@
             tools:ignore="ContentDescription" />
         <!-- android:src="@drawable/img_home_empty"-->
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -50,7 +50,7 @@
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="have results"
@@ -76,7 +76,7 @@
             tools:ignore="ContentDescription" />
         <!-- android:src="@drawable/img_home_empty"-->
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -85,7 +85,7 @@
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="available"
@@ -111,7 +111,7 @@
             tools:ignore="ContentDescription" />
         <!-- android:src="@drawable/img_home_no_connection"-->
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -120,7 +120,7 @@
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="connected to "
@@ -128,7 +128,7 @@
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="the Fermat Network"
@@ -153,7 +153,7 @@
             tools:ignore="ContentDescription" />
         <!--android:src="@drawable/img_home_no_connection"-->
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -162,7 +162,7 @@
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Fermat Network"
@@ -170,7 +170,7 @@
             android:textSize="16sp"
             tools:ignore="HardcodedText" />
 
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="is disabled."
