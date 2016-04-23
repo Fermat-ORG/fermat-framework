@@ -119,7 +119,10 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
         disconnect.setOnClickListener(this);
         accept.setOnClickListener(this);
 
-        switch (chatUserInformation.getConnectionState()) {
+        if (chatUserInformation.getConnectionState() != null) {
+
+
+            switch (chatUserInformation.getConnectionState()) {
                 case BLOCKED_LOCALLY:
                 case BLOCKED_REMOTELY:
                 case CANCELLED_LOCALLY:
@@ -135,6 +138,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                 case ERROR:
                 case DENIED_LOCALLY:
                 case DENIED_REMOTELY:
+                default:
                     connectRequest();
                     break;
                 case PENDING_LOCALLY_ACCEPTANCE:
@@ -144,11 +148,12 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                     connectionSend();
                     break;
             }
+        } else connectRequest();
 
         try {
             userName.setText(chatUserInformation.getAlias());
-            userStatus.setText(chatUserInformation.getConnectionState().toString());
-            userStatus.setTextColor(Color.parseColor("#292929"));
+            //userStatus.setText(chatUserInformation.getConnectionState().toString());
+            //userStatus.setTextColor(Color.parseColor("#292929"));
             if (chatUserInformation.getImage() != null) {
                 Bitmap bitmap;
                 if (chatUserInformation.getImage().length > 0) {

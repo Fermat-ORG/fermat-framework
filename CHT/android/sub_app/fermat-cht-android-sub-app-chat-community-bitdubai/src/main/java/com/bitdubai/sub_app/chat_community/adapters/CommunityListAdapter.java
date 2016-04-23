@@ -44,7 +44,7 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
 
     @Override
     protected void bindHolder(CommunityWorldHolder holder, ChatActorCommunityInformation data, int position) {
-        holder.connectionState.setVisibility(View.GONE);
+        /*holder.connectionState.setVisibility(View.GONE);
         ConnectionState connectionState = data.getConnectionState();
         switch (connectionState) {
             case CONNECTED:
@@ -93,12 +93,12 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 if (holder.connectionState.getVisibility() == View.VISIBLE)
                     holder.connectionState.setVisibility(View.GONE);
                 break;
-        }
-        holder.row_connection_state.setText(data.getConnectionState().toString());//data.getState()
+        }*/
+        /*holder.row_connection_state.setText(data.getConnectionState().toString());//data.getState()
         if(data.getConnectionState().toString().equals("Offline"))
             holder.row_connection_state.setTextColor(Color.RED);
         else
-            holder.row_connection_state.setTextColor(Color.WHITE);
+            holder.row_connection_state.setTextColor(Color.WHITE);*/
         holder.name.setText(data.getAlias());
         byte[] profileImage = data.getImage();
         if (profileImage != null && profileImage.length > 0) {
