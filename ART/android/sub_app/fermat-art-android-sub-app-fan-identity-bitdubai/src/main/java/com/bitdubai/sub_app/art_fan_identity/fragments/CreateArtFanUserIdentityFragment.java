@@ -55,7 +55,6 @@ import java.util.UUID;
 
 import com.bitdubai.sub_app.art_fan_identity.popup.PresentationArtFanUserIdentityDialog;
 import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSession;
-import com.bitdubai.sub_app.art_fan_identity.sessions.SessionConstants;
 import com.bitdubai.sub_app.art_fan_identity.util.CommonLogger;
 import com.squareup.picasso.Picasso;
 
@@ -95,7 +94,6 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
     private UUID externalPlatformID;
-    private Handler handler;
 
     public static CreateArtFanUserIdentityFragment newInstance(){
         return new CreateArtFanUserIdentityFragment();
@@ -298,7 +296,9 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
                     mFanExternalPlatform.getSelectedItem().toString());
         }
-        fanImageByteArray = convertImage(R.drawable.ic_profile_male);
+        if(fanImageByteArray==null){
+            fanImageByteArray = convertImage(R.drawable.ic_profile_male);
+        }
         boolean dataIsValid = validateIdentityData(
                 fanExternalName,
                 fanImageByteArray,
@@ -367,14 +367,14 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             ArtExternalPlatform externalPlatform) {
         if (fanExternalName.isEmpty())
             return false;
-        if (externalPlatformID==null)
-            return false;
+        /*if (externalPlatformID==null)
+            return false;*/
         if (fanImageBytes == null)
             return false;
         if (fanImageBytes.length > 0)
             return true;
-        if(externalPlatform != null)
-            return  true;
+        /*if(externalPlatform != null)
+            return  true;*/
         return true;
     }
 
@@ -542,13 +542,9 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             String fanExternalName,
             ArtExternalPlatform externalPlatform) throws
             CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
-        if(externalPlatformID != null){
-            moduleManager.createFanaticIdentity(
-                    fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,
-                    externalPlatformID, externalPlatform) ;
-        }else{
-
-        }
+        moduleManager.createFanaticIdentity(
+                fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,
+                externalPlatformID, externalPlatform) ;
     }
 
     private void updateIdentity(
@@ -647,7 +643,9 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try{
-                    externalPlatformID = getFanIdentityIdByPlatform(ArtExternalPlatform.getArtExternalPlatformByLabel(mFanExternalPlatform.getSelectedItem().toString())).get(position);
+                    externalPlatformID = getFanIdentityIdByPlatform(
+                            ArtExternalPlatform.getArtExternalPlatformByLabel(
+                                    mFanExternalPlatform.getSelectedItem().toString())).get(position);
                 }catch(Exception e){
 
                 }
