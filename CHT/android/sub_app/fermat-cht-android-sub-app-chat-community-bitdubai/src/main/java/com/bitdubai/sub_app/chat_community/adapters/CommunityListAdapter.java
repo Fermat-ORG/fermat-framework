@@ -102,9 +102,10 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
                 holder.row_connection_state.setTextColor(Color.RED);
             else
                 holder.row_connection_state.setTextColor(Color.WHITE);
-        } else
-            holder.connectionState.setVisibility(View.GONE);
-
+        } else {
+            holder.row_connection_state.setVisibility(View.GONE);
+           // holder.connectionState.setVisibility(View.GONE);
+        }
 
 
         holder.name.setText(data.getAlias());

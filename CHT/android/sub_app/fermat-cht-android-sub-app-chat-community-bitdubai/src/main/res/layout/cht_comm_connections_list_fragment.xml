@@ -48,7 +48,7 @@
                 tools:ignore="ContentDescription" />
             <!-- android:background="@drawable/img_home_empty" -->
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -57,7 +57,7 @@
                 android:textSize="16sp"
                 tools:ignore="HardcodedText" />
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="connections yet"
