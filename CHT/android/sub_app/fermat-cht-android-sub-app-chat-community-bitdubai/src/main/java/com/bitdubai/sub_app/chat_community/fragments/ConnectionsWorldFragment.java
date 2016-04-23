@@ -166,7 +166,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ChatUserSub
             rootView = inflater.inflate(R.layout.cht_comm_connections_world_fragment, container, false);
 
             //Set up RecyclerView
-            layoutManager = new GridLayoutManager(getActivity(), 3, LinearLayoutManager.VERTICAL, false);
+            layoutManager = new GridLayoutManager(getActivity(), 1, LinearLayoutManager.VERTICAL, false);
             adapter = new CommunityListAdapter(getActivity(), lstChatUserInformations);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
