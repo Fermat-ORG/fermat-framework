@@ -79,7 +79,6 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
     }
 
     @Override
-
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
             txt_title = (TextView) this.findViewById(R.id.cht_alert_txt_title);
@@ -91,14 +90,12 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                 moduleManager = chatSession.getModuleManager();
                 chatManager = moduleManager.getChatManager();
                 errorManager = getSession().getErrorManager();
-
             } catch (Exception e) {
                 if (errorManager != null)
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
             txt_title.setText(title);
             txt_body.setText(body);
-
         setUpListeners();
     }
 

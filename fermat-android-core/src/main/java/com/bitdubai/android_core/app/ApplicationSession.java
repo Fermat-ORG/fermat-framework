@@ -58,6 +58,7 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
      *  Application state
      */
     public static int applicationState=STATE_NOT_CREATED;
+    private boolean fermatRunning;
 
 
     public static ApplicationSession getInstance(){
@@ -153,6 +154,11 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
             }).start();
         }
 
+//        LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(this);
+//        IntentFilter intentFilter = new IntentFilter();
+//        intentFilter.addAction("org.fermat.SYSTEM_RUNNING");
+//        bManager.registerReceiver(new FermatSystemRunningReceiver(this), intentFilter);
+
 //        new ANRWatchDog().start();
 
         super.onCreate();
@@ -216,5 +222,14 @@ public class ApplicationSession extends MultiDexApplication implements Serializa
             }
         }
         return false;
+    }
+
+    public void setFermatRunning(boolean fermatRunning) {
+        Log.i(TAG,"Fermat running");
+        this.fermatRunning = fermatRunning;
+    }
+
+    public boolean isFermatRunning() {
+        return fermatRunning;
     }
 }
