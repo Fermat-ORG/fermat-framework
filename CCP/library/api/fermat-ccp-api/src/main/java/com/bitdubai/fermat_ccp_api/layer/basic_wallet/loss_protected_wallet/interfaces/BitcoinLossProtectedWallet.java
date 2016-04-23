@@ -153,9 +153,16 @@ public interface BitcoinLossProtectedWallet {
      * @throws CantListSpendingException
      */
      List<BitcoinLossProtectedWalletSpend> listTransactionsSpending(UUID transactionId) throws CantListSpendingException;
+    /**
+     *  Throw the method <code>listAllSpending()</code> return all spending btc information.
+     * @return
+     * @throws CantListSpendingException
+     */
+    List<BitcoinLossProtectedWalletSpend> listAllWalletSpending() throws CantListSpendingException;
 
 
-        /**
+
+    /**
          *
          * @param transactionRecord
          * @param credit

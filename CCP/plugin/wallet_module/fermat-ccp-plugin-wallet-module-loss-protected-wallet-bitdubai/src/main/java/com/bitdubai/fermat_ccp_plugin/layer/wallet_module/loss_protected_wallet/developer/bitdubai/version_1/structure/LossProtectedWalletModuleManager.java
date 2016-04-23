@@ -241,48 +241,6 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     }
 
     @Override
-    public double getEarningOrLostsWallet(String walletPublicKey) {
-
-        double exchangeRate = 0;
-        double amountEarnOrLost = 0;
-        double totalEarnOrLost = 0;
-        try {
-
-            BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
-            List<BitcoinLossProtectedWalletTransaction> bitcoinWalletTransactionList = bitcoinWalletWallet.listTransactions(BalanceType.REAL, TransactionType.CREDIT, 20, 0);
-            List<BitcoinLossProtectedWalletSpend> bitcoinWalletSpendingList = new ArrayList<>();
-
-            for (BitcoinLossProtectedWalletTransaction transactionList: bitcoinWalletTransactionList) {
-
-                bitcoinWalletSpendingList = bitcoinWalletWallet.listTransactionsSpending(transactionList.getTransactionId());
-
-                for (BitcoinLossProtectedWalletSpend spentList:bitcoinWalletSpendingList) {
-
-                        exchangeRate = spentList.getExchangeRate() - transactionList.getExchangeRate();
-
-                        if (spentList.getExchangeRate() >= transactionList.getExchangeRate()){
-
-                            amountEarnOrLost += spentList.getAmount()*exchangeRate;
-                            totalEarnOrLost += amountEarnOrLost/spentList.getExchangeRate();
-
-                        }else{
-
-                            amountEarnOrLost += spentList.getAmount()*exchangeRate;
-                            totalEarnOrLost += amountEarnOrLost/spentList.getExchangeRate();
-                        }
-
-
-                }
-            }
-
-
-        }catch (Exception e){
-
-        }
-        return totalEarnOrLost;
-    }
-
-    @Override
     public List<LossProtectedWalletContact> listWalletContacts(String walletPublicKey,String intraUserLoggedInPublicKey) throws CantGetAllLossProtectedWalletContactsException {
         try {
 
@@ -938,7 +896,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
             BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
 
-          //  bitcoinLossProtectedWalletSpendList = bitcoinWalletWallet.listTransactionsSpending(transactionId);
+            bitcoinLossProtectedWalletSpendList = bitcoinWalletWallet.listTransactionsSpending(transactionId);
 
 
             if (bitcoinLossProtectedWalletSpendList.size()==0) {
@@ -1003,6 +961,77 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
         }
     }
 
+    @Override
+    public List<BitcoinLossProtectedWalletSpend> listAllWalletSpendingValue(String walletPublicKey) throws CantListLossProtectedSpendingException, CantLoadWalletException {
+        List<BitcoinLossProtectedWalletSpend> allWalletSpendingList = new ArrayList<>();
+        try {
+
+            BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
+
+            allWalletSpendingList = bitcoinWalletWallet.listAllWalletSpending();
+
+
+            if (allWalletSpendingList.size()==0) {
+
+                BitcoinLossProtectedWalletSpend spendingLsit = new BitcoinLossProtectedWalletSpend() {
+                    @Override
+                    public UUID getSpendId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getAmount() {return  (long)9.2; }
+
+                    @Override
+                    public double getExchangeRate() {
+                        return 422.1;
+                    }
+                };
+
+                BitcoinLossProtectedWalletSpend spendingLsit2 = new BitcoinLossProtectedWalletSpend() {
+                    @Override
+                    public UUID getSpendId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getAmount() {return (long)0.8;}
+
+                    @Override
+                    public double getExchangeRate() {return 427.14;}
+                };
+
+                allWalletSpendingList.add(spendingLsit);
+                allWalletSpendingList.add(spendingLsit2);
+
+            }
+
+            return allWalletSpendingList;
+
+        } catch(Exception e){
+            throw new CantListLossProtectedSpendingException(CantGetActorLossProtectedTransactionHistoryException.DEFAULT_MESSAGE, FermatException.wrapException(e));
+        }
+    }
 
 
     @Override

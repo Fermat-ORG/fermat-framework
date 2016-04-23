@@ -84,10 +84,13 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
      * Manager
      * */
     private LossProtectedWallet lossProtectedWallet;
+    private LossProtectedWallet moduleManager;
+    private ErrorManager errorManager;
+
     /**
      * DATA
      * */
-    private List<BitcoinLossProtectedWalletSpend> listBitcoinLossProtectedWalletSpend;
+    private List<BitcoinLossProtectedWalletSpend> allWalletSpendingList;
     private BitcoinLossProtectedWalletSpend bitcoinLossProtectedWalletSpend;
     String walletPublicKey = "loss_protected_wallet";
     long before = 0;
@@ -97,8 +100,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     Thread background;
 
     // Fermat Managers
-    private LossProtectedWallet moduleManager;
-    private ErrorManager errorManager;
 
     private TextView txt_type_balance;
     private TextView txt_touch_to_change;
@@ -109,6 +110,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     private TextView txt_date_home;
     private ImageView earnOrLostImage;
     private LineChart chart;
+    private TextView noDataInChart;
     private long balanceAvailable;
     private View rootView;
     private Activity activity;
@@ -133,7 +135,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         setHasOptionsMenu(true);
         try {
             lossProtectedWalletSession = appSession;
-            moduleManager = lossProtectedWalletSession.getModuleManager().getCryptoWallet();
+            lossProtectedWallet = lossProtectedWalletSession.getModuleManager().getCryptoWallet();
             errorManager = appSession.getErrorManager();
 
 
@@ -171,15 +173,15 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             //default Exchange rate Provider
             try {
                 if(moduleManager.getExchangeProvider()==null) {
-                    List<CurrencyExchangeRateProviderManager> providers = new ArrayList(moduleManager.getExchangeRateProviderManagers());
+                    List<CurrencyExchangeRateProviderManager> providers = new ArrayList(lossProtectedWallet.getExchangeRateProviderManagers());
 
                     exchangeProviderId = providers.get(0).getProviderId();
-                    moduleManager.setExchangeProvider(exchangeProviderId);
+                    lossProtectedWallet.setExchangeProvider(exchangeProviderId);
 
                 }
                 else
                 {
-                    exchangeProviderId =moduleManager.getExchangeProvider();
+                    exchangeProviderId =lossProtectedWallet.getExchangeProvider();
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -208,7 +210,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                         getActivity(),
                         lossProtectedWalletSession,
                         null,
-                        (moduleManager.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
+                        (lossProtectedWallet.getActiveIdentities().isEmpty()) ? PresentationBitcoinWalletDialog.TYPE_PRESENTATION : PresentationBitcoinWalletDialog.TYPE_PRESENTATION_WITHOUT_IDENTITIES,
                         checkButton);
 
         presentationBitcoinWalletDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -336,9 +338,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             long balance = 0;
             if (BalanceType.getByCode(lossProtectedWalletSession.getBalanceTypeSelected()).equals(BalanceType.AVAILABLE))
-                balance = moduleManager.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, "0");
+                balance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, "0");
             else
-                balance = moduleManager.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
+                balance = lossProtectedWallet.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
 
             txt_balance_amount.setText(WalletUtils.formatBalanceString(balance, lossProtectedWalletSession.getTypeAmount()));
 
@@ -360,11 +362,12 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             earnOrLostImage         = (ImageView) rootView.findViewById(R.id.earnOrLostImage);
             txt_date_home           = (TextView) rootView.findViewById(R.id.txt_date_home);
             chart                   = (LineChart) rootView.findViewById(R.id.chart);
+            noDataInChart           = (TextView) rootView.findViewById(R.id.noDataInChart);
 
 
             //set Earning or Losts Values
             double total = 0;
-            total = moduleManager.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
+            //total = lossProtectedWallet.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
             if (total>=0){
                 txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(total)+" earning");
                 earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
@@ -381,7 +384,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             //chart
 
-            ArrayList<Entry> entries = new ArrayList<>();
+           /* ArrayList<Entry> entries = new ArrayList<>();
             entries.add(new Entry(1, 0));
             entries.add(new Entry(3, 1));
             entries.add(new Entry(15, 2));
@@ -397,7 +400,12 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             labels.add("March");
             labels.add("April");
             labels.add("May");
-            labels.add("June");
+            labels.add("June");*/
+
+              /* LineData data = new LineData(labels, dataset);
+            dataset.setColor(Color.WHITE); //
+            dataset.setDrawCubic(false);
+            dataset.setValueFormatter(new LargeValueFormatter());*/
 
             YAxis yAxis = chart.getAxisLeft();
             yAxis.setEnabled(false);
@@ -415,10 +423,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             Legend legend = chart.getLegend();
             legend.setEnabled(false);
 
-            LineData data = new LineData(labels, dataset);
-            dataset.setColor(Color.WHITE); //
-            dataset.setDrawCubic(false);
-            dataset.setValueFormatter(new LargeValueFormatter());
+
+
+            LineData data = getData();
 
 
             data.setValueTextSize(12f);
@@ -434,7 +441,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
         }catch (Exception e){
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! recovering from system error",
+            makeText(getActivity(), "Oooops! recovering from system error In Graphic",
                     Toast.LENGTH_SHORT).show();
         }
     }
@@ -442,18 +449,39 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     /**
      * Get the LineData for the chart based on the ExchangeRate list
      *
-     * @param spendingList the exchange rate list
      * @return the ListData object
      */
-    private LineData getData(List<BitcoinLossProtectedWalletSpend> spendingList) {
+    private LineData getData() {
         ArrayList<Entry> entryList = new ArrayList<>();
         ArrayList<String> xValues = new ArrayList<>();
 
-        final int size = spendingList.size();
-        for (int i = 0; i < size; i++) {
-            BitcoinLossProtectedWalletSpend listSpendig = spendingList.get(i);
-            //entryList.add(new Entry((float) listSpendig.getEarningOrLost(), i));
-            xValues.add(String.valueOf(i));
+        try {
+            //Catch all the spending list of the wallet
+            allWalletSpendingList = lossProtectedWallet.listAllWalletSpendingValue(lossProtectedWalletSession.getAppPublicKey());
+            //look for the size number of the list
+            int size = 0;
+            size = allWalletSpendingList.size();
+            //if statement for validate if the list has values
+            if (size > 0) {
+                for (int i = 0; i < size; i++) {
+                    BitcoinLossProtectedWalletSpend listSpendig = allWalletSpendingList.get(i);
+                    entryList.add(new Entry((float) listSpendig.getAmount(), i));
+                    xValues.add(String.valueOf(i));
+                }
+                chart.setVisibility(View.VISIBLE);
+            }else{
+                chart.setVisibility(View.GONE);
+                noDataInChart.setVisibility(View.VISIBLE);
+            }
+
+        } catch (CantListLossProtectedSpendingException e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! Error Exception : CantListLossProtectedSpendingException",
+                    Toast.LENGTH_SHORT).show();
+        } catch (CantLoadWalletException e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! Error Exception : CantLoadWalletException",
+                    Toast.LENGTH_SHORT).show();
         }
 
         LineDataSet dataSet = new LineDataSet(entryList, "dataSet");
@@ -463,7 +491,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         dataSet.setDrawValues(false);
         dataSet.setDrawCubic(false);
         dataSet.setValueFormatter(new LargeValueFormatter());
-
 
         return new LineData(xValues, dataSet);
     }
@@ -588,7 +615,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             @Override
             protected Object doInBackground() throws Exception {
 
-                ExchangeRate rate =  moduleManager.getCurrencyExchange(exchangeProviderId);
+                ExchangeRate rate =  lossProtectedWallet.getCurrencyExchange(exchangeProviderId);
                 return rate;
             }
         };
