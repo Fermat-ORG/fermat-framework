@@ -782,7 +782,9 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
 
                 List<CryptoWalletTransaction> list = moduleManager.listLastActorTransactionsByTransactionType(BalanceType.AVAILABLE, TransactionType.DEBIT, referenceWalletSession.getAppPublicKey(), intraUserPk, blockchainNetworkType, MAX_TRANSACTIONS, 0);
 
-                lstCryptoWalletTransactionsAvailable.addAll(list);
+                if(list!=null) {
+                    lstCryptoWalletTransactionsAvailable.addAll(list);
+                }
 
                 //available_offset = lstCryptoWalletTransactionsAvailable.size();
 
