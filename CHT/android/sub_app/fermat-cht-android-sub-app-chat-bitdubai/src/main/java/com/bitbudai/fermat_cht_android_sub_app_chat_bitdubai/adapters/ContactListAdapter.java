@@ -114,7 +114,7 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
                 @Override
                 public void onClick(View v) {
                     try {
-                        //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                        //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
                         appSession.setData(ChatSession.CONTACT_DATA, contactid.get(pos));
                         //appSession.setData(ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(contactid.get(pos)));
                         mAdapterCallback.onMethodCallback();//solution to access to changeactivity. j

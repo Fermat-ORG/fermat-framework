@@ -33,11 +33,11 @@ public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatModu
 //        return (data != null) ? (Contact) data : null;
 //    }
 //
-//    public ChatUserIdentity getSelectedProfile() {
-//        Object data = getData(PROFILE_DATA);
-//        return (data != null) ? (ChatUserIdentity) data : null;
-//    }
-//
+    public ChatUserIdentity getSelectedProfile() {
+        Object data = getData(PROFILE_DATA);
+        return (data != null) ? (ChatUserIdentity) data : null;
+    }
+
 //    public ContactConnection getSelectedConnection() {
 //        Object data = getData(CONNECTION_DATA);
 //        return (data != null) ? (ContactConnection) data : null;
@@ -48,8 +48,8 @@ public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatModu
         return (data != null) ? (Chat) data : null;
     }
 //
-//    public Contact getSelectedContactToUpdate() {
-//        Object data = getData(CONTACTTOUPDATE_DATA);
-//        return (data != null) ? (Contact) data : null;
-//    }
+    public Contact getSelectedContactToUpdate() {
+        Object data = getData(CONTACTTOUPDATE_DATA);
+        return (data != null) ? (Contact) data : null;
+    }
 }

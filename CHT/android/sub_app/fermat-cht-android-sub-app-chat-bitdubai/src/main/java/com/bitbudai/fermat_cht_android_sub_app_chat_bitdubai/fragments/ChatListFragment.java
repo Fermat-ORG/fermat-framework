@@ -171,36 +171,35 @@ public class ChatListFragment extends AbstractFermatFragment{
                                 getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, offset))
                             {
                                 if(cont.getPublicKey()==chatSession.getData(ChatSession.CONTACT_DATA)){
-                                    if(cont != null) {
-                                        contactName.add(cont.getAlias());
-                                        message.add(mess.getMessage());
-                                        status.add(mess.getStatus().toString());
-                                        typeMessage.add(mess.getType().toString());
-                                        long timemess = chat.getLastMessageDate().getTime();
-                                        long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
-                                        long milliseconds = timemess + nanos;
-                                        Date dated = new java.util.Date(milliseconds);
-                                        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                                    contactName.add(cont.getAlias());
+                                    message.add(mess.getMessage());
+                                    status.add(mess.getStatus().toString());
+                                    typeMessage.add(mess.getType().toString());
+                                    long timemess = chat.getLastMessageDate().getTime();
+                                    long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
+                                    long milliseconds = timemess + nanos;
+                                    Date dated = new java.util.Date(milliseconds);
+                                    DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                                    formatter.setTimeZone(TimeZone.getDefault());
+                                    String datef=formatter.format(new java.util.Date(milliseconds));
+                                    if (Validate.isDateToday(dated)) {
+                                        formatter = new SimpleDateFormat("HH:mm");
                                         formatter.setTimeZone(TimeZone.getDefault());
-                                        String datef=formatter.format(new java.util.Date(milliseconds));
-                                        if (Validate.isDateToday(dated)) {
-                                            formatter = new SimpleDateFormat("HH:mm");
-                                            formatter.setTimeZone(TimeZone.getDefault());
-                                            datef=formatter.format(new java.util.Date(milliseconds));
-                                        } else {
-                                            Date old = new Date(datef);
-                                            Date today = new Date();
-                                            long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
-                                            if (dias == 1) {
-                                                datef="YESTERDAY";
-                                            }
+                                        datef=formatter.format(new java.util.Date(milliseconds));
+                                    } else {
+                                        Date old = new Date(datef);
+                                        Date today = new Date();
+                                        long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
+                                        if (dias == 1) {
+                                            datef="YESTERDAY";
                                         }
-                                        dateMessage.add(datef);
-                                        chatId.add(chatidtemp);
-                                        ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
-                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
-                                        imgId.add(bmd.getBitmap());
                                     }
+                                    dateMessage.add(datef);
+                                    chatId.add(chatidtemp);
+                                    ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
+                                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                                    imgId.add(bmd.getBitmap());
+                                    break;
                                 }
                             }
                         }

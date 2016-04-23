@@ -489,6 +489,7 @@ public class ChatAdapterView extends LinearLayout {
                                  */
                                 chatWasCreate = true;
                                 chatId = newChatId;
+                                break;
                             }
                         }
                     }

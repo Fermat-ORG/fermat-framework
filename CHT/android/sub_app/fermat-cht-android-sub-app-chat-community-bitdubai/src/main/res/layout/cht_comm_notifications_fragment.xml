@@ -35,7 +35,7 @@
             android:id="@+id/empty_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="#010c12"
+            android:background="#F9F9F9"
             android:gravity="center"
             android:orientation="vertical"
             android:visibility="gone">
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="You don't have "
-                android:textColor="#ffffff"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 tools:ignore="HardcodedText" />
 
@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="any notifications yet"
-                android:textColor="#ffffff"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 tools:ignore="HardcodedText" />
 
