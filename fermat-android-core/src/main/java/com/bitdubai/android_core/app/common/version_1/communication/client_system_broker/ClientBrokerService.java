@@ -15,4 +15,5 @@ public interface ClientBrokerService {
 
     Object sendMessage(PluginVersionReference pluginVersionReference, String responseStr, Object proxy, Method method, Object[] args);
 
+    boolean isFermatBackgroundServiceRunning();
 }
