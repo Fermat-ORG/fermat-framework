@@ -311,7 +311,6 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
         installedApps.add(installedSubApp);
 
         installedSubApp = new InstalledSubApp(
-        installedSubApp = new InstalledSubApp(
                 SubApps.CHT_COMMUNITY,
                 null,
                 null,
@@ -327,7 +326,7 @@ public class CommunitiesExpandibleFragment extends FermatWalletExpandableListFra
         installedSubApp.setBanner(R.drawable.chat_banner_community);
         installedApps.add(installedSubApp);
 
-        /*installedSubApp = new InstalledSubApp(
+        installedSubApp = new InstalledSubApp(
                 SubApps.ART_ARTIST_COMMUNITY,
                 null,
                 null,
