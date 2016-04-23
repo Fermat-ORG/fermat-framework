@@ -1,7 +1,10 @@
 package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
+import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
+import com.bitdubai.fermat_api.layer.modules.ModuleManagerImpl;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
@@ -22,24 +25,20 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.I
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
  * Created by mati on 2016.04.11..
  */
-public class IntraUserIdentityModuleManager implements com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager {
+public class IntraUserIdentityModuleManager extends ModuleManagerImpl<IntraUserIdentitySettings> implements com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager {
 
-    private final UUID pluginId;
     private ErrorManager errorManager;
-    private PluginFileSystem pluginFileSystem;
     private IntraWalletUserIdentityManager intraWalletUserIdentityManager;
 
     public IntraUserIdentityModuleManager(UUID pluginId,ErrorManager errorManager, PluginFileSystem pluginFileSystem, IntraWalletUserIdentityManager intraWalletUserIdentityManager) {
+        super(pluginFileSystem,pluginId);
         this.errorManager = errorManager;
-        this.pluginFileSystem = pluginFileSystem;
         this.intraWalletUserIdentityManager = intraWalletUserIdentityManager;
-        this.pluginId = pluginId;
     }
 
     @Override
@@ -114,7 +113,7 @@ public class IntraUserIdentityModuleManager implements com.bitdubai.fermat_ccp_a
 
         try
         {
-            intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias,  phrase, profileImage);
+            intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias, phrase, profileImage);
 
 
         } catch (CantUpdateIdentityException e) {
@@ -146,23 +145,23 @@ public class IntraUserIdentityModuleManager implements com.bitdubai.fermat_ccp_a
 
 
 
-    private SettingsManager<IntraUserIdentitySettings> settingsManager;
-
-    @Override
-    public SettingsManager<IntraUserIdentitySettings> getSettingsManager() {
-        System.out.println("IntraUser module settings manager: "+settingsManager);
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        System.out.println("IntraUser module settings manager is loaded: "+settingsManager.toString());
-
-        return this.settingsManager;
-    }
+//    private SettingsManager<IntraUserIdentitySettings> settingsManager;
+//
+//    @Override
+//    public SettingsManager<IntraUserIdentitySettings> getSettingsManager() {
+//        System.out.println("IntraUser module settings manager: "+settingsManager);
+//        if (this.settingsManager != null)
+//            return this.settingsManager;
+//
+//        this.settingsManager = new SettingsManager<>(
+//                pluginFileSystem,
+//                pluginId
+//        );
+//
+//        System.out.println("IntraUser module settings manager is loaded: "+settingsManager.toString());
+//
+//        return this.settingsManager;
+//    }
 
     @Override
     public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
@@ -190,5 +189,15 @@ public class IntraUserIdentityModuleManager implements com.bitdubai.fermat_ccp_a
     @Override
     public int[] getMenuNotifications() {
         return new int[0];
+    }
+
+    @Override
+    public void persistSettings(String publicKey, IntraUserIdentitySettings settings) throws CantPersistSettingsException {
+        getSettingsManager().persistSettings(publicKey,settings);
+    }
+
+    @Override
+    public IntraUserIdentitySettings loadAndGetSettings(String publicKey) throws CantGetSettingsException, SettingsNotFoundException {
+        return getSettingsManager().loadAndGetSettings(publicKey);
     }
 }

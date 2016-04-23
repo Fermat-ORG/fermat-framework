@@ -1,20 +1,16 @@
 package com.bitdubai.sub_app.intra_user_identity.common.popup;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.widget.CheckBox;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubAppsSession;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.ui.dialogs.FermatDialog;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentitySettings;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
@@ -91,21 +87,20 @@ public class PresentationIntraUserIdentityDialog extends FermatDialog<IntraUserI
 
     private void saveSettings(){
             if(dontShowAgainCheckBox.isChecked()){
-                SettingsManager<IntraUserIdentitySettings> settingsManager = moduleManager.getSettingsManager();
                 try {
                     if(getSession().getAppPublicKey() != null ){
-                        IntraUserIdentitySettings intraUserIdentitySettings = settingsManager.loadAndGetSettings(getSession().getAppPublicKey());
+                        IntraUserIdentitySettings intraUserIdentitySettings = getSession().getModuleManager().loadAndGetSettings(getSession().getAppPublicKey());
                         intraUserIdentitySettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
-                        settingsManager.persistSettings(getSession().getAppPublicKey(),intraUserIdentitySettings);
+                        getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(),intraUserIdentitySettings);
 
                     }else{
                         //TODO: Joaquin: Lo estoy poniendo con un public key hardcoded porque en este punto no posee public key.
-                        IntraUserIdentitySettings intraUserIdentitySettings = settingsManager.loadAndGetSettings("123456789");
+                        IntraUserIdentitySettings intraUserIdentitySettings = getSession().getModuleManager().loadAndGetSettings("123456789");
                         intraUserIdentitySettings.setIsPresentationHelpEnabled(!dontShowAgainCheckBox.isChecked());
                         if (getSession().getAppPublicKey()!=null){
-                            settingsManager.persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
+                            getSession().getModuleManager().persistSettings(getSession().getAppPublicKey(), intraUserIdentitySettings);
                         }else{
-                            settingsManager.persistSettings("123456789", intraUserIdentitySettings);
+                            getSession().getModuleManager().persistSettings("123456789", intraUserIdentitySettings);
                         }
 
                     }

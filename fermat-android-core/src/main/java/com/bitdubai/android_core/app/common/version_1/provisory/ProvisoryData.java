@@ -378,7 +378,7 @@ public class ProvisoryData {
 
         fermatFolder = new FermatFolder("Communities",lstCommunities,1);
         item2 = new Item(fermatFolder);
-        item2.setIconResource(R.drawable.ic_07);
+        item2.setIconResource(R.drawable.fermat_comunities);
         item2.setPosition(3);
         lst.add(item2);
 
