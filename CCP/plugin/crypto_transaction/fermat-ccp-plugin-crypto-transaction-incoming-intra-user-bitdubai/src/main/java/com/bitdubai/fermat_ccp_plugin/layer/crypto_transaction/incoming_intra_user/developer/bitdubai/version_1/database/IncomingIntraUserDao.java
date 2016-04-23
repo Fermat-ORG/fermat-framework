@@ -255,6 +255,9 @@ public class IncomingIntraUserDao {
         databaseTableRecord.setStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_PROTOCOL_STATUS_COLUMN_NAME, protocolStatus.getCode());
 
         databaseTableRecord.setLongValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_EVENTS_RECORDED_TIMESTAMP_COLUMN_NAME, transaction.getTimestamp());
+        databaseTableRecord.setStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_NETWORK_TYPE, transaction.getInformation().getBlockchainNetworkType().getCode());
+
+
     }
 
 
@@ -304,7 +307,7 @@ public class IncomingIntraUserDao {
 
         CryptoTransaction cryptoTransaction = new CryptoTransaction(
                 databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_TRANSACTION_HASH_COLUMN_NAME),
-                BlockchainNetworkType.getDefaultBlockchainNetworkType(), //todo Natalia, acá lo tienen que corregir.
+                BlockchainNetworkType.getByCode(databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_NETWORK_TYPE)),  //  BlockchainNetworkType.getDefaultBlockchainNetworkType()todo Natalia, acá lo tienen que corregir.
                 cryptoAddressFrom,
                 cryptoAddressTo,
                 CryptoCurrency.getByCode(databaseTableRecord.getStringValue(IncomingIntraUserTransactionDatabaseConstants.INCOMING_INTRA_USER_REGISTRY_CRYPTO_CURRENCY_COLUMN_NAME)),

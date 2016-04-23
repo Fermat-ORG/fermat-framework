@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces;
 
+import java.io.Serializable;
+
 /**
  * The interface <code>CryptoWalletIntraUserActor</code>
  * haves all consumable methods of a crypto wallet intra user actor.
@@ -10,7 +12,7 @@ package com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces
  * @version 1.0
  * @since Java JDK 1.7
  */
-public interface CryptoWalletIntraUserActor {
+public interface CryptoWalletIntraUserActor extends Serializable {
 
     /**
      * The method <code>getPublicKey</code> returns the public key of the actor.

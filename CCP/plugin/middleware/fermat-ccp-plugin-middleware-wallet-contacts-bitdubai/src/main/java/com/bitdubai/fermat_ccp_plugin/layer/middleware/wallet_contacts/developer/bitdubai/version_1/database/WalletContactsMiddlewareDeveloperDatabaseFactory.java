@@ -121,6 +121,7 @@ public class WalletContactsMiddlewareDeveloperDatabaseFactory {
          */
         List<String> walletContactAddressesColumns = new ArrayList<>();
 
+        walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_ID_COLUMN_NAME     );
         walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CONTACT_ID_COLUMN_NAME     );
         walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_ADDRESS_COLUMN_NAME );
         walletContactAddressesColumns.add(WalletContactsMiddlewareDatabaseConstants.WALLET_CONTACT_ADDRESSES_CRYPTO_CURRENCY_COLUMN_NAME);

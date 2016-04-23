@@ -275,7 +275,7 @@ public class LossProtectedWalletModulePluginRoot extends AbstractPlugin implemen
 
     @Override
     public int[] getMenuNotifications() {
-        int[] notifications = new int[8];
+        int[] notifications = new int[7];
         try {
             notifications[2] = cryptoPaymentManager.getCryptoPaymentRegistry().listCryptoPaymentRequestsByTypeAndState(appPublicKey, CryptoPaymentState.PENDING_RESPONSE, CryptoPaymentType.RECEIVED,99,0).size();
         } catch (CantListCryptoPaymentRequestsException e) {
