@@ -31,10 +31,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_marginBottom="6dp"
             android:layout_toEndOf="@+id/ccw_customer_image"
             android:layout_toRightOf="@+id/ccw_customer_image"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="20sp"
             tools:text="Selling 12 BTC"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -44,8 +45,9 @@
             android:layout_below="@+id/ccw_selling_summary"
             android:layout_toEndOf="@+id/ccw_customer_image"
             android:layout_toRightOf="@+id/ccw_customer_image"
+            android:layout_marginBottom="-2dp"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="14sp"
             tools:text="1 BTC @ 254 USD"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -55,6 +57,7 @@
             android:layout_below="@+id/ccw_buying_exchange_rate"
             android:layout_toEndOf="@+id/ccw_customer_image"
             android:layout_toRightOf="@+id/ccw_customer_image"
+            android:layout_marginBottom="-2dp"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             tools:text="Broker Name"/>
@@ -67,29 +70,15 @@
             android:layout_alignParentRight="true"
             android:layout_below="@+id/ccw_broker_name"
             android:textColor="#FFFFFF"
-            android:textSize="16sp"
+            android:textSize="12sp"
             tools:text="03 Feb 2015"/>
-
     </RelativeLayout>
-
-    <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-        android:id="@+id/ccw_expiration_date"
-        android:layout_width="match_parent"
-        android:background="#ff3437"
-        android:layout_height="wrap_content"
-        android:paddingTop="3dp"
-        android:paddingBottom="3dp"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:textColor="#fff"
-        android:textSize="16sp"
-        android:visibility="gone"
-        tools:text="Expiration Date. 03 Feb 2015"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/ccw_open_negotiation_details_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#FFF"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="16dp"

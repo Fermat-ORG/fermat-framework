@@ -11,6 +11,8 @@
     <!-- Home transactions -->
     <string name="csh_no_transactions">No transactions yet!</string>
     <string name="csh_transaction_img_desc" translatable="false">transaction_img</string>
+    <string name="csh_hold_transaction_text_caps" translatable="false">HOLD</string>
+    <string name="csh_unhold_transaction_text_caps" translatable="false">UNHOLD</string>
     <string name="csh_withdrawal_transaction_text_caps" translatable="false">WITHDRAWAL</string>
     <string name="csh_withdrawal_transaction_text_btn_caps" translatable="false">WITHDRAW</string>
     <string name="csh_withdrawal_transaction_text" translatable="false">Withdrawal</string>
