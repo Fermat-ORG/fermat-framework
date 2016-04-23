@@ -20,8 +20,11 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.SubApp
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.WizardConfiguration;
 import com.bitdubai.fermat_android_api.ui.inflater.ViewInflater;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWizardActivity;
-import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.FermatStates;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetBitcoinNetworkStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
@@ -240,6 +243,10 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         ((FermatActivityManager)getActivity()).reportError(userTo);
     }
 
+    protected void sendMail(String userTo, String bodyText) throws Exception {
+        ((FermatActivityManager)getActivity()).sendMailExternal(userTo,bodyText);
+    }
+
     protected final void onBack(String activityCodeBack){
         getFermatScreenSwapper().onControlledActivityBack(activityCodeBack);
     }
@@ -256,8 +263,16 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
         return ((FermatActivityManager)getActivity());
     }
 
-    protected final AndroidCoreManager getFermatState(){
-        return ((FermatStates)getActivity()).getFermatStates();
+    protected final NetworkStatus getFermatNetworkStatus() throws CantGetCommunicationNetworkStatusException {
+        return getFermatStates().getFermatNetworkStatus();
+    }
+
+    protected final NetworkStatus getBitcoinNetworkStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBitcoinNetworkStatusException {
+        return getFermatStates().getBitcoinNetworkStatus(blockchainNetworkType);
+    }
+
+    protected final FermatStates getFermatStates(){
+        return  ((FermatStates)getActivity());
     }
 
 

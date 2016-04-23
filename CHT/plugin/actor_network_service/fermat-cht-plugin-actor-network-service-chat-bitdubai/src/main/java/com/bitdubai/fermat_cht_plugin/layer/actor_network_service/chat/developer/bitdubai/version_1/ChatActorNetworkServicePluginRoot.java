@@ -55,7 +55,7 @@ public class ChatActorNetworkServicePluginRoot extends AbstractNetworkServiceBas
                 new PluginVersionReference(new Version()),
                 EventSource.ACTOR_NETWORK_SERVICE_CHAT,
                 PlatformComponentType.NETWORK_SERVICE,
-                NetworkServiceType.CHAT,
+                NetworkServiceType.ACTOR_CHAT,
                 "Chat Actor Network Service",
                 null
         );
