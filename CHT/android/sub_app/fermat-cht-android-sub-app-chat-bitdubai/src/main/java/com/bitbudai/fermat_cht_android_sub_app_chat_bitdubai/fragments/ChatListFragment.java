@@ -126,14 +126,13 @@ public class ChatListFragment extends AbstractFermatFragment{
     ArrayList<String> typeMessage=new ArrayList<>();
     ArrayList<Integer> noReadMsgs=new ArrayList<>();
     ArrayList<Bitmap> imgId=new ArrayList<>();
-    //TextView text;
     View layout;
     PresentationDialog presentationDialog;
     private Toolbar toolbar;
     private Bitmap contactIcon;
     private BitmapDrawable contactIconCircular;
-    private int size;
     ImageView noData;
+
     public static ChatListFragment newInstance() {
         return new ChatListFragment();}
 
@@ -203,7 +202,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     }
 
     @Override
-     public void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         try {
@@ -238,13 +237,13 @@ public class ChatListFragment extends AbstractFermatFragment{
         try {
             //TODO:Cardozo revisar esta logica ya no aplica
             //chatManager.createSelfIdentities();
-            List<ChatUserIdentity> con = null; //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
-            size = con.size();
-            if ((chatSettings.getLocalPlatformComponentType() == null || chatSettings.getLocalPublicKey() == null) && size > 0) {
-
-                ChatUserIdentity profileSelected = null;//TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();//chatManager.getChatUserIdentity(con.get(0).getPublicKey());
-                //chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getPlatformComponentType());
-            }
+//            List<ChatUserIdentity> con = null; //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
+//            size = con.size();
+//            if ((chatSettings.getLocalPlatformComponentType() == null || chatSettings.getLocalPublicKey() == null) && size > 0) {
+//
+//                ChatUserIdentity profileSelected = null;//TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();//chatManager.getChatUserIdentity(con.get(0).getPublicKey());
+//                //chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getPlatformComponentType());
+//            }
             //}catch(CantCreateSelfIdentityException e)
         } catch (Exception e){
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -285,7 +284,6 @@ public class ChatListFragment extends AbstractFermatFragment{
                     .setTextFooter(R.string.cht_chat_footer)
                     .setIsCheckEnabled(checkButton)
                     .build();
-
             presentationDialog.show();
         } catch (Exception e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -395,41 +393,35 @@ public class ChatListFragment extends AbstractFermatFragment{
         menu.clear();
         //try {
            //if(chatManager.isIdentityDevice() != false) {
-               // Inflate the menu items
-               inflater.inflate(R.menu.chat_list_menu, menu);
-               // Locate the search item
-               //MenuItem searchItem = menu.findItem(R.id.menu_search);
+       // Inflate the menu items
+       inflater.inflate(R.menu.chat_list_menu, menu);
+       // Locate the search item
+       MenuItem searchItem = menu.findItem(R.id.menu_search);
+       searchView = (SearchView) searchItem.getActionView();
+       searchView.setQueryHint(getResources().getString(R.string.search_hint));
+       searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+           @Override
+           public boolean onQueryTextSubmit(String s) {
+               return false;
+           }
 
-//               searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-//               searchView.setQueryHint(getResources().getString(R.string.search_hint));
-//               searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//                   @Override
-//                   public boolean onQueryTextSubmit(String s) {
-//                       return false;
-//                   }
-//
-//                   @Override
-//                   public boolean onQueryTextChange(String s) {
-//                       if (s.equals(searchView.getQuery().toString())) {
-//                           adapter.getFilter().filter(s);
-//                       }
-//                       return false;
-//                   }
-//               });
-//               if (chatSession.getData("filterString") != null) {
-//                   String filterString = (String) chatSession.getData("filterString");
-//                   if (filterString.length() > 0) {
-//                       searchView.setQuery(filterString, true);
-//                       searchView.setIconified(false);
-//                   }
-//               }
-           //}
-           menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
-                   .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-        //} catch (CantGetChatUserIdentityException e) {
-        //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        //}
+           @Override
+           public boolean onQueryTextChange(String s) {
+               if (s.equals(searchView.getQuery().toString())) {
+                   adapter.getFilter().filter(s);
+               }
+               return false;
+           }
+       });
+       if (chatSession.getData("filterString") != null) {
+           String filterString = (String) chatSession.getData("filterString");
+           if (filterString.length() > 0) {
+               searchView.setQuery(filterString, true);
+               searchView.setIconified(false);
+           }
+       }
+       menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+               .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     @Override
@@ -439,7 +431,6 @@ public class ChatListFragment extends AbstractFermatFragment{
             setUpHelpChat(false);
         }
         if (id == R.id.menu_search) {
-            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
             return true;
         }
         if (id == R.id.menu_open_chat) {
@@ -451,8 +442,8 @@ public class ChatListFragment extends AbstractFermatFragment{
             return true;
         }
         if (id == R.id.menu_create_broadcasting) {
-            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-           return true;
+            changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL, appSession.getAppPublicKey());
+            return true;
         }
         if (id == R.id.menu_delete_all_chats) {
             try {
@@ -481,10 +472,7 @@ public class ChatListFragment extends AbstractFermatFragment{
             }
             return true;
         }
-        /*if (id == R.id.menu_switch_profile) {
-            changeActivity(Activities.CHT_CHAT_OPEN_PROFILELIST, appSession.getAppPublicKey());
-            return true;
-        }*/
+
         if (id == R.id.menu_error_report) {
             changeActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());
             return true;
