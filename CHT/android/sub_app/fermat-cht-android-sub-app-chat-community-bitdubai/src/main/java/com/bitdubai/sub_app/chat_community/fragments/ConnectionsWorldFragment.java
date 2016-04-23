@@ -174,7 +174,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ChatUserSub
         try {
             rootView = inflater.inflate(R.layout.cht_comm_connections_world_fragment, container, false);
             //Set up RecyclerView
-            layoutManager = new GridLayoutManager( getActivity(), 1, LinearLayoutManager.VERTICAL, false);
+            layoutManager = new GridLayoutManager(getActivity(), 1, LinearLayoutManager.VERTICAL, false);
             adapter = new CommunityListAdapter(getActivity(), lstChatUserInformations);
             adapter.setFermatListEventListener(this);
             recyclerView = (RecyclerView) rootView.findViewById(R.id.gridView);
@@ -580,7 +580,7 @@ public class ConnectionsWorldFragment extends AbstractFermatFragment<ChatUserSub
 //    private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;
 //    private List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
 //    private android.support.v7.widget.Toolbar toolbar;
-//    private EditText searchEditText;private ImageView closeSearch;
+//    private EditText searchEditText;
 //    private List<ChatActorCommunityInformation> dataSetFiltered;
 //    private ImageView closeSearch;
 //    private LinearLayout searchEmptyView;
