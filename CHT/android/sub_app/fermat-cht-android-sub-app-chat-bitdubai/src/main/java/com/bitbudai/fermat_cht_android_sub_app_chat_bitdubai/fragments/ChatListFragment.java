@@ -32,6 +32,8 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsM
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
+import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -39,6 +41,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatExceptio
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
@@ -132,6 +135,8 @@ public class ChatListFragment extends AbstractFermatFragment{
     private Bitmap contactIcon;
     private BitmapDrawable contactIconCircular;
     ImageView noData;
+    private static final int MAX = 20;
+    private int offset = 0;
 
     public static ChatListFragment newInstance() {
         return new ChatListFragment();}
@@ -157,7 +162,9 @@ public class ChatListFragment extends AbstractFermatFragment{
                         if (mess != null) {
                             noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
                             contactId.add(mess.getContactId());
-                            Contact cont = null; //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();//chatManager.getContactByContactId(mess.getContactId());
+                            //ChatActorCommunityInformation sf = chatManager.getChatActorbyConnectionId(mess.getContactId());
+                            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                            Contact cont = null; //chatManager.getContactByContactId(mess.getContactId());
                             if(cont != null) {
                                 contactName.add(cont.getAlias());
                                 message.add(mess.getMessage());
@@ -234,23 +241,13 @@ public class ChatListFragment extends AbstractFermatFragment{
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
         }
-        try {
-            //TODO:Cardozo revisar esta logica ya no aplica
-            //chatManager.createSelfIdentities();
-//            List<ChatUserIdentity> con = null; //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
-//            size = con.size();
-//            if ((chatSettings.getLocalPlatformComponentType() == null || chatSettings.getLocalPublicKey() == null) && size > 0) {
-//
-//                ChatUserIdentity profileSelected = null;//TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();//chatManager.getChatUserIdentity(con.get(0).getPublicKey());
-//                //chatSettings.setProfileSelected(profileSelected.getPublicKey(), profileSelected.getPlatformComponentType());
-//            }
-            //}catch(CantCreateSelfIdentityException e)
-        } catch (Exception e){
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }//catch(CantGetChatUserIdentityException e)
-        //{
-        //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        //}
+//        try {
+//            ChatIdentity chatIdentity = chatManager.getIdentityChatUsersFromCurrentDeviceUser().get(0), MAX, offset);
+//        }catch(CantListChatIdentityException e){
+//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        } catch (Exception e){
+//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        }
 
         // Let this fragment contribute menu items
         setHasOptionsMenu(true);
@@ -305,26 +302,26 @@ public class ChatListFragment extends AbstractFermatFragment{
         {
             setUpHelpChat(false);
         }
-        try {
-            toolbar = getToolbar();
-            if (chatSettings.getLocalPublicKey() != null) {
-                //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
-                ChatUserIdentity localUser = null;//chatManager.getChatUserIdentity(chatSettings.getLocalPublicKey());
-                //toolbar = getToolbar();
-                //getContext().getActionBar().setTitle("");
-                ByteArrayInputStream bytes = new ByteArrayInputStream(localUser.getImage());
-                BitmapDrawable bmd = new BitmapDrawable(bytes);
-                contactIcon =bmd.getBitmap();
-                //toolbar.setTitle(localUser.getAlias());
-                contactIconCircular = new BitmapDrawable( getResources(), Utils.getRoundedShape( contactIcon, 100));//in the future, this image should come from chatmanager
-                toolbar.setLogo(contactIconCircular);
-                //getActivity().getActionBar().setLogo(contactIconCircular);
-            }
-        //}catch (CantGetChatUserIdentityException e){
-         //   errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        } catch (Exception e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
+//        Just if chat is going to allow multiple identities
+// try {
+//            toolbar = getToolbar();
+//            if (chatSettings.getLocalPublicKey() != null) {
+//                ChatIdentity localUser = chatManager.getIdentityChatUsersFromCurrentDeviceUser().get(0), MAX, offset);//ChatUserIdentity localUser = null;//chatManager.getChatUserIdentity(chatSettings.getLocalPublicKey());
+//                //toolbar = getToolbar();
+//                //getContext().getActionBar().setTitle("");
+//                ByteArrayInputStream bytes = new ByteArrayInputStream(localUser.getImage());
+//                BitmapDrawable bmd = new BitmapDrawable(bytes);
+//                contactIcon =bmd.getBitmap();
+//                //toolbar.setTitle(localUser.getAlias());
+//                contactIconCircular = new BitmapDrawable( getResources(), Utils.getRoundedShape( contactIcon, 100));//in the future, this image should come from chatmanager
+//                toolbar.setLogo(contactIconCircular);
+//                //getActivity().getActionBar().setLogo(contactIconCircular);
+//            }
+//        //}catch (CantGetChatUserIdentityException e){
+//         //   errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        } catch (Exception e) {
+//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        }
 
         adapter=new ChatListAdapter(getActivity(), contactName, message, dateMessage, chatId, contactId, status,
                 typeMessage, noReadMsgs, imgId, errorManager);
@@ -336,10 +333,9 @@ public class ChatListFragment extends AbstractFermatFragment{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 try{
                     appSession.setData("whocallme", "chatlist");
-                    //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
-                    //appSession.setData(ChatSession.CONTACT_DATA, chatManager.getContactByContactId(contactId.get(position)));//esto no es necesaio, haces click a un chat
-                    appSession.setData(ChatSession.CONTACT_DATA, null);//esto no es necesaio, haces click a un chat
-                    //appSession.setData(ChatSession.CHAT_DATA, chatManager.getChatByChatId(UUID.fromString(converter.get(3))));//este si hace falta
+                    //TODO: metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
+                    appSession.setData(ChatSession.CONTACT_DATA, null);
+                    //appSession.setData(ChatSession.CONTACT_DATA, chatManager.getChatActorbyConnectionId(contactId.get(position)));
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 //} catch (CantGetContactException e) {
                 //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
