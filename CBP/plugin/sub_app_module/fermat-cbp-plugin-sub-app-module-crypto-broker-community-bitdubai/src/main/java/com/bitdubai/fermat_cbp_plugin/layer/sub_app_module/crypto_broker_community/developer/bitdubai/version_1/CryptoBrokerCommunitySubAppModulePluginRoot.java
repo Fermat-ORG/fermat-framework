@@ -53,8 +53,7 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractModule<
     @NeededPluginReference(platform = Platforms.CRYPTO_BROKER_PLATFORM, layer = Layers.ACTOR_CONNECTION     , plugin = Plugins.CRYPTO_BROKER     )
     private CryptoBrokerActorConnectionManager cryptoBrokerActorConnectionManager;
 
-    CryptoBrokerCommunityManager fermatManager;
-
+    CryptoBrokerCommunityManager moduleManager;
 
     public CryptoBrokerCommunitySubAppModulePluginRoot() {
         super(new PluginVersionReference(new Version()));
@@ -67,7 +66,7 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractModule<
     public void start() throws CantStartPluginException {
 
         try {
-            fermatManager = new CryptoBrokerCommunityManager(
+            moduleManager = new CryptoBrokerCommunityManager(
                     cryptoBrokerIdentityManager,
                     cryptoBrokerActorConnectionManager,
                     cryptoBrokerNetworkServiceManager,
@@ -75,8 +74,7 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractModule<
                     errorManager,
                     pluginFileSystem,
                     pluginId,
-                    this.getPluginVersionReference()
-            );
+                    this.getPluginVersionReference());
 
             this.serviceStatus = ServiceStatus.STARTED;
 
@@ -91,13 +89,8 @@ public class CryptoBrokerCommunitySubAppModulePluginRoot extends AbstractModule<
     }
 
     @Override
-    public FermatManager getManager() {
-        return fermatManager;
-    }
-
-    @Override
-    public ModuleManager<CryptoBrokerCommunitySettings, CryptoBrokerCommunitySelectableIdentity> getModuleManager() throws CantGetModuleManagerException {
-        return fermatManager;
+    public CryptoBrokerCommunityManager getModuleManager() throws CantGetModuleManagerException {
+        return moduleManager;
     }
 
 }
