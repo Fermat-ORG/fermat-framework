@@ -215,7 +215,7 @@ public class ConnectionNotificationsFragment
         try {
             Toast.makeText(getActivity(), "TODO ACCEPT ->", Toast.LENGTH_LONG).show();
             //moduleManager.acceptCryptoBroker(moduleManager.getSelectedActorIdentity(), data.getName(), data.getPublicKey(), data.getProfileImage());
-            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession , appResourcesProviderManager, data, moduleManager.getSelectedActorIdentity());
+            AcceptDialog notificationAcceptDialog = new AcceptDialog(getActivity(), appSession , null, data, moduleManager.getSelectedActorIdentity());
             notificationAcceptDialog.setOnDismissListener(this);
             notificationAcceptDialog.show();
         } catch (CantGetSelectedActorIdentityException|ActorIdentityNotSelectedException e) {
