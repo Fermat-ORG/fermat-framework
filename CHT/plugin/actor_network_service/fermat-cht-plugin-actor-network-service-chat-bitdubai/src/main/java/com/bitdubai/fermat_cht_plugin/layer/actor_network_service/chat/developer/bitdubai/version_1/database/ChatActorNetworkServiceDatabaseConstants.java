@@ -29,17 +29,5 @@ public class ChatActorNetworkServiceDatabaseConstants {
 
 
 
-    public static final String CHAT_ACTOR_ONLINE_CACHE_TABLE_NAME = "chat_actor_online_cache"      ;
-
-    public static final String CHAT_ACTOR_ONLINE_CACHE_ID_COLUMN_NAME = "id"                            ;
-    public static final String CHAT_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME = "actor_public_key"             ;
-    public static final String CHAT_ACTOR_ONLINE_CACHE_ALIAS_COLUMN_NAME = "intra_user_alias"      ;
-    public static final String CHAT_ACTOR_ONLINE_CACHE_PHRASE_COLUMN_NAME = "intra_user_phrase"      ;
-    public static final String CHAT_ACTOR_ONLINE_CACHE_COUNTRY_COLUMN_NAME = "intra_user_country";
-    public static final String CHAT_ACTOR_ONLINE_CACHE_CITY_COLUMN_NAME = "intra_user_city";
-    public static final String CHAT_ACTOR_ONLINE_CACHE_TIMESTAMP_COLUMN_NAME = "cache_date"                ;
-
-                             ;
-
 
 }

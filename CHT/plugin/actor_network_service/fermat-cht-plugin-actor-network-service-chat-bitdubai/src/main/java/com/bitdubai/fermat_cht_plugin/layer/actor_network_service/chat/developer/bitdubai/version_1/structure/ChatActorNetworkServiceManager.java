@@ -187,23 +187,6 @@ public class ChatActorNetworkServiceManager implements ChatManager {
         return new ChatActorNetworkServiceSearch(communicationsClientConnection, errorManager, pluginVersionReference);
     }
 
-    @Override
-    public List<ChatActorCommunityInformation> getSuggestionsToContact(String publicKey, int max, int offset) throws ErrorSearchingChatSuggestionsException {
-        return null;
-    }
-
-
-    @Override
-    public List<ChatActorCommunityInformation> getCacheSuggestionsToContact(int max, int offset) throws ErrorSearchingChatSuggestionsException {
-        try {
-            return chatActorNetworkServiceDao.listChatActorSuggestion(max, offset);
-
-        } catch (CantListChatActorCacheUserException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
 
 
 
@@ -415,28 +398,6 @@ public class ChatActorNetworkServiceManager implements ChatManager {
 
 
 
-    @Override
-    public void saveCacheChatUsersSuggestions(List<ChatActorCommunityInformation> listChatUser) throws CantInsertRecordException {
-        try
-        {
-            chatActorNetworkServiceDao.saveChatUserCache(listChatUser);
-        } catch (CantCreateDatabaseException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-
-    @Override
-    public List<ChatActorCommunityInformation> getCacheSuggestionsToContact(String publicKey, int max, int offset) throws CantGetChatUserIdentityException {
-        try {
-            return chatActorNetworkServiceDao.listChatActorCache(max, offset);
-
-        } catch (CantListChatActorCacheUserException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 
 
     private void sendMessage(final String jsonMessage      ,

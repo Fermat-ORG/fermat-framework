@@ -80,9 +80,6 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager <Ch
 
 
 
-    List<ChatActorCommunityInformation> getSuggestionsToContact(String publicKey, int max, int offset) throws CantListChatIdentityException;
-
-    List<ChatActorCommunityInformation> getCacheSuggestionsToContact(int max, int offset) throws CantListChatIdentityException;
 
     List<ChatActorCommunityInformation> listChatActorPendingRemoteAction(final ChatActorCommunitySelectableIdentity selectedIdentity,
                                                                                 final int max,
@@ -90,7 +87,6 @@ public interface ChatActorCommunitySubAppModuleManager extends ModuleManager <Ch
 
     List<ChatActorCommunityInformation> getChatActorWaitingYourAcceptanceCount(String publicKey, int max, int offset) throws CantGetChatActorWaitingException;
 
-    void saveCacheChatUsersSuggestions(List<ChatActorCommunityInformation> listChatUser) throws CantInsertRecordException;
 
     ConnectionState getActorConnectionState(String publicKey) throws CantValidateActorConnectionStateException;
     @Override

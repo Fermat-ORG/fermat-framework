@@ -41,9 +41,6 @@ public interface ChatManager extends FermatManager {
 
     ChatSearch getSearch();
 
-    List<ChatActorCommunityInformation> getSuggestionsToContact(String publicKey, int max, int offset) throws ErrorSearchingChatSuggestionsException;
-
-    List<ChatActorCommunityInformation> getCacheSuggestionsToContact(int max, int offset) throws ErrorSearchingChatSuggestionsException;
 
     void requestConnection(final ChatConnectionInformation chatConnectionInformation) throws CantRequestConnectionException;
 
@@ -62,9 +59,5 @@ public interface ChatManager extends FermatManager {
     void confirm(final UUID requestId) throws CantConfirmException, ConnectionRequestNotFoundException;
 
 
-    void saveCacheChatUsersSuggestions(List<ChatActorCommunityInformation> listChatUser) throws CantInsertRecordException;
-
-
-     List<ChatActorCommunityInformation> getCacheSuggestionsToContact(String publicKey, int max, int offset) throws CantGetChatUserIdentityException;
 
 }

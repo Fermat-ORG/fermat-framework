@@ -343,71 +343,8 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
 
 
-    @Override
-    public List<ChatActorCommunityInformation> getSuggestionsToContact(String publicKey, int max, int offset) throws CantListChatIdentityException {
-        try {
-
-            List<ChatActorCommunityInformation> chatActorCommunityInformationModuleList = new ArrayList<>();
-
-            List<ChatActorCommunityInformation> chatActorCommunityInformationList = new ArrayList<>();
-            chatActorCommunityInformationList = chatActorNetworkServiceManager.getSuggestionsToContact(publicKey, max, offset);
 
 
-            for (ChatActorCommunityInformation record : chatActorCommunityInformationList) {
-
-                //get connection state status
-                List<ChatActorCommunityInformation> connectionState = this.chatActorNetworkServiceManager.getSuggestionsToContact(record.getPublicKey(), max, offset);
-
-                //return intra user information - if not connected - status return null
-                ChatActorCommunityInformation chatUserInformation = new ChatActorCommunitySubAppModuleInformationImpl(record.getPublicKey(),record.getAlias(),record.getImage(),record.getConnectionState(),record.getConnectionId());
-                chatActorCommunityInformationModuleList.add(chatUserInformation);
-            }
-
-            return chatActorCommunityInformationModuleList;
-        }
-        catch (ErrorSearchingChatSuggestionsException e) {
-            throw new CantListChatIdentityException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
-        }
-        catch (Exception e) {
-            throw new CantListChatIdentityException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
-
-        }
-    }
-
-
-
-    @Override
-    public List<ChatActorCommunityInformation> getCacheSuggestionsToContact(int max, int offset) throws CantListChatIdentityException {
-        try {
-
-            List<ChatActorCommunityInformation> chatActorCommunityInformationModuleList = new ArrayList<>();
-
-            List<ChatActorCommunityInformation> chatActorCommunityInformationList = new ArrayList<>();
-            chatActorCommunityInformationList = chatActorNetworkServiceManager.getCacheSuggestionsToContact(max, offset);
-
-
-            for (ChatActorCommunityInformation record : chatActorCommunityInformationList) {
-
-                //get connection state status
-                List<ChatActorCommunityInformation> connectionState = this.chatActorNetworkServiceManager.getCacheSuggestionsToContact(record.getPublicKey(), max, offset);
-
-                //return intra user information - if not connected - status return null
-                ChatActorCommunityInformation chatUserInformation = new ChatActorCommunitySubAppModuleInformationImpl(record.getPublicKey(),record.getAlias(),record.getImage(),record.getConnectionState(),record.getConnectionId());
-                chatActorCommunityInformationModuleList.add(chatUserInformation);
-            }
-
-            return chatActorCommunityInformationModuleList;
-        }
-        catch (ErrorSearchingChatSuggestionsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantListChatIdentityException("CAN'T GET CACHE SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
-        }
-        catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantListChatIdentityException("CAN'T GET CACHE SUGGESTIONS TO CONTACT",e,"","Unknown Error");
-
-        }
-    }
 
 
 
@@ -468,10 +405,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         return actorList;
     }
 
-    @Override
-    public void saveCacheChatUsersSuggestions(List<ChatActorCommunityInformation> listChatUser) throws CantInsertRecordException {
-        chatActorNetworkServiceManager.saveCacheChatUsersSuggestions(listChatUser);
-    }
+
 
     @Override
     public ConnectionState getActorConnectionState(String publicKey) throws CantValidateActorConnectionStateException {
