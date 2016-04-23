@@ -104,7 +104,7 @@ public class ChatActorNetworkServiceManager implements ChatManager {
                         chatExposingData.getPublicKey(),
                         (chatExposingData.getAlias()),
                         (chatExposingData.getAlias().toLowerCase() + "_" + platformComponentProfile.getName().replace(" ", "_")),
-                        NetworkServiceType.UNDEFINED,
+                        NetworkServiceType.ACTOR_CHAT,
                         PlatformComponentType.ACTOR_CHAT,
                         extraDataToJson(chatExposingData)
                 );

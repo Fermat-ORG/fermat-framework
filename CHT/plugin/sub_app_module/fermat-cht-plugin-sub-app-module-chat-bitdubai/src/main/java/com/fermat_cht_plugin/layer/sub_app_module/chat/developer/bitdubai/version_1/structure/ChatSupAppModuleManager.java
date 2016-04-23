@@ -318,7 +318,7 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
      */
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null);
+        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null, "available");
     }
 
     @Override
