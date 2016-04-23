@@ -15,6 +15,8 @@ public interface FermatActivityManager {
     //esto no va acá
     void reportError(String userTo) throws Exception;
 
+    void sendMailExternal(String userTo,String bodyText) throws Exception;
+
     int notificateProgressBroadcast(FermatBundle bundle);
 
     void goHome();
