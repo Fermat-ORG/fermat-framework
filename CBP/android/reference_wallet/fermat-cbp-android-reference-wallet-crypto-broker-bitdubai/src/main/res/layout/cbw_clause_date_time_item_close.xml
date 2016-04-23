@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
-    android:id="@+id/amount_to_sell_card_view"
+    android:id="@+id/expiration_date_card_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dp"
-    app:cardBackgroundColor="@color/ccw_card_background_status_confirm"
+    app:cardBackgroundColor="#f1f1f1"
     app:cardCornerRadius="4dp"
     app:cardElevation="4dp"
     tools:visibility="visible">
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/ccw_clause_number"
+            android:id="@+id/cbw_clause_number"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_gravity="top|end"
@@ -31,8 +31,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/ccw_card_view_title"
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_card_view_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
@@ -40,58 +40,61 @@
                 android:textAllCaps="true"
                 android:textColor="#1271A7"
                 android:textSize="14sp"
-                android:text="@string/ccw_amount_to_buy"/>
+                tools:text="Negotiation Expiration Date"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#1271A7"/>
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="14dp"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp">
 
-                <TextView
-                    android:id="@+id/ccw_buying_text"
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cbw_date_time_description_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:textSize="14sp"
-                    android:text="@string/buying_text"
-                    android:textColor="@color/description_text_status_confirm"/>
+                    android:textColor="@color/description_text_status_confirm"
+                    tools:text="Expiration Date:"
+                    android:textSize="14sp"/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:id="@+id/ccw_buying_value"
+                    android:id="@+id/cbw_date_value"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:background="@color/ccw_card_background_status_confirm"
-                    android:inputType="numberDecimal"
-                    android:maxWidth="150dp"
-                    android:minWidth="50dp"
-                    android:paddingEnd="8dp"
+                    android:layout_toEndOf="@+id/cbw_date_time_description_text"
+                    android:layout_toRightOf="@+id/cbw_date_time_description_text"
+                    android:background="@color/cbw_card_background_status_confirm"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
-                    android:paddingStart="8dp"
                     android:textAllCaps="false"
                     android:textColor="#222"
                     android:textSize="14sp"
-                    tools:text="556.4"/>
+                    tools:text="04/12/2015"/>
 
-                <TextView
-                    android:id="@+id/ccw_currency_to_buy"
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                    android:id="@+id/cbw_time_value"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
+                    android:layout_toEndOf="@+id/cbw_date_value"
+                    android:layout_toRightOf="@+id/cbw_date_value"
+                    android:background="@color/cbw_card_background_status_confirm"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:textAllCaps="false"
+                    android:textColor="#222"
                     android:textSize="14sp"
-                    android:textColor="@color/text_value_status_confirm"
-                    tools:text="BTC"/>
+                    tools:text="15:30 pm"/>
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -99,13 +102,9 @@
                 android:orientation="vertical"
                 android:minHeight="34dp"
                 android:visibility="gone">
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#2e2e2e2e"/>
 
-                <Button
-                    android:id="@+id/ccw_confirm_button"
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                    android:id="@+id/cbw_confirm_button"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_gravity="end"

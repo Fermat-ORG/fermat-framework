@@ -21,7 +21,7 @@
             android:id="@+id/negotiation_notes_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="15dp"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
             android:layout_marginBottom="5dp"
@@ -45,7 +45,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:layout_marginBottom="25dp"
+            android:layout_marginBottom="15dp"
             android:textColor="#ffffff"
             android:textSize="18sp"
             tools:text="Nos Vemos en el Sambil a las 4:30pm en la feria de la comida, cerca de Farmatodo"/>

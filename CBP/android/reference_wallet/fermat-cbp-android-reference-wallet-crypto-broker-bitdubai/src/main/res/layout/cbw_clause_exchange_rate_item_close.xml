@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView
-    android:id="@+id/ccw_exchange_rate_card_view"
+    android:id="@+id/cbw_exchange_rate_card_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dp"
-    app:cardBackgroundColor="@color/ccw_card_background_status_confirm"
+    app:cardBackgroundColor="@color/cbw_card_background_status_confirm"
     app:cardCornerRadius="4dp"
     app:cardElevation="4dp"
     tools:visibility="visible">
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content">
 
         <ImageView
-            android:id="@+id/ccw_clause_number"
+            android:id="@+id/cbw_clause_number"
             android:layout_width="36dp"
             android:layout_height="36dp"
             android:layout_gravity="top|end"
@@ -31,8 +31,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/ccw_card_view_title"
+            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                android:id="@+id/cbw_card_view_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
@@ -46,15 +46,62 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="#1271A7"/>
-
+            
             <RelativeLayout
-                android:id="@+id/ccw_market_rate_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="16dp">
+                android:layout_margin="16dp"
+                android:visibility="gone">
 
-                <TextView
-                    android:id="@+id/ccw_market_rate_text"
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cbw_exchange_rate_reference_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5dp"
+                    android:text="@string/suggested_exchange_rate"
+                    android:textColor="@color/description_text_status_confirm"
+                    android:textSize="14sp"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cbw_exchange_rate_reference_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/cbw_exchange_rate_reference_text"
+                    android:layout_marginBottom="8dp"
+                    android:textColor="@color/text_value_status_confirm"
+                    android:textSize="16sp"
+                    tools:text="1 BTC / 210 USD"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cbw_market_exchange_rate_reference_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/cbw_exchange_rate_reference_value"
+                    android:layout_marginEnd="5dp"
+                    android:text="@string/market_exchange_rate_text"
+                    android:textColor="@color/description_text_status_confirm"
+                    android:textSize="14sp"/>
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cbw_market_exchange_rate_reference_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@id/cbw_market_exchange_rate_reference_text"
+                    android:textColor="@color/text_value_status_confirm"
+                    android:textSize="16sp"
+                    tools:text="1 BTC / 210 USD"/>
+            </RelativeLayout>
+            
+            <RelativeLayout
+                android:id="@+id/cbw_market_rate_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:visibility="gone">
+
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cbw_market_rate_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="5dp"
@@ -63,13 +110,13 @@
                     android:textColor="@color/description_text_status_confirm"
                     android:textSize="14sp"/>
 
-                <TextView
-                    android:id="@+id/ccw_market_rate_value"
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cbw_market_rate_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/ccw_market_rate_text"
-                    android:layout_toEndOf="@+id/ccw_market_rate_text"
-                    android:layout_toRightOf="@+id/ccw_market_rate_text"
+                    android:layout_alignTop="@+id/cbw_market_rate_text"
+                    android:layout_toEndOf="@+id/cbw_market_rate_text"
+                    android:layout_toRightOf="@+id/cbw_market_rate_text"
                     android:textColor="@color/text_value_status_confirm"
                     android:textSize="14sp"
                     tools:text="1 BTC / 210 USD"/>
@@ -80,8 +127,8 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp">
 
-                <TextView
-                    android:id="@+id/ccw_exchange_rate_text"
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cbw_your_exchange_rate_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -89,34 +136,34 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:text="@string/ccw_your_exchange_rate_title"
+                    android:text="Your Exchange Rate:"
                     android:textColor="@color/description_text_status_confirm"
                     android:textSize="14sp"/>
 
-                <TextView
-                    android:id="@+id/ccw_exchange_rate_value_left_side"
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cbw_your_exchange_rate_value_left_side"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignTop="@+id/ccw_exchange_rate_text"
+                    android:layout_alignTop="@+id/cbw_your_exchange_rate_text"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_toEndOf="@+id/ccw_exchange_rate_text"
-                    android:layout_toRightOf="@+id/ccw_exchange_rate_text"
+                    android:layout_toEndOf="@+id/cbw_your_exchange_rate_text"
+                    android:layout_toRightOf="@+id/cbw_your_exchange_rate_text"
                     android:textColor="@color/text_value_status_confirm"
                     android:textSize="14sp"
                     tools:text="1 USD / "/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                    android:id="@+id/ccw_exchange_rate_value"
+                    android:id="@+id/cbw_your_exchange_rate_value"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_toEndOf="@+id/ccw_exchange_rate_value_left_side"
-                    android:layout_toRightOf="@+id/ccw_exchange_rate_value_left_side"
-                    android:background="@color/ccw_card_background_status_confirm"
+                    android:layout_toEndOf="@+id/cbw_your_exchange_rate_value_left_side"
+                    android:layout_toRightOf="@+id/cbw_your_exchange_rate_value_left_side"
+                    android:background="@color/cbw_card_background_status_confirm"
                     android:inputType="numberDecimal"
                     android:maxWidth="150dp"
                     android:minWidth="50dp"
@@ -129,15 +176,15 @@
                     android:textSize="14sp"
                     tools:text="556.4"/>
 
-                <TextView
-                    android:id="@+id/ccw_exchange_rate_value_right_side"
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:id="@+id/cbw_your_exchange_rate_value_right_side"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:layout_toEndOf="@+id/ccw_exchange_rate_value"
-                    android:layout_toRightOf="@+id/ccw_exchange_rate_value"
+                    android:layout_toEndOf="@+id/cbw_your_exchange_rate_value"
+                    android:layout_toRightOf="@+id/cbw_your_exchange_rate_value"
                     android:textColor="@color/text_value_status_confirm"
                     android:textSize="14sp"
                     tools:text="BTC"/>
@@ -155,8 +202,8 @@
                     android:layout_height="1dp"
                     android:background="#2e2e2e2e"/>
 
-                <Button
-                    android:id="@+id/ccw_confirm_button"
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                    android:id="@+id/cbw_confirm_button"
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
                     android:layout_gravity="end"
