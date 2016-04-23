@@ -319,7 +319,8 @@ public interface LossProtectedWallet extends Serializable {
               String deliveredToActorPublicKey,
               Actors deliveredToActorType,
               ReferenceWallet referenceWallet,
-              BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
+              BlockchainNetworkType blockchainNetworkType,
+              double purchasePrice) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException;
 
 
     void sendToWallet (long cryptoAmount,

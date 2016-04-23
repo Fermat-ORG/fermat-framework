@@ -1501,7 +1501,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
     }
 
     @Override
-    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
+    public void send(long cryptoAmount, CryptoAddress destinationAddress, String notes, String walletPublicKey, String deliveredByActorPublicKey, Actors deliveredByActorType, String deliveredToActorPublicKey, Actors deliveredToActorType,ReferenceWallet referenceWallet, BlockchainNetworkType blockchainNetworkType,double purchasePrice) throws CantSendLossProtectedCryptoException, LossProtectedInsufficientFundsException {
         try {
 
             switch (deliveredToActorType) {
@@ -1512,7 +1512,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                     break;
                 case INTRA_USER:
                     System.out.println("Sending throw outgoing Intra Actor ...");
-                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType);
+                    outgoingIntraActorManager.getTransactionManager().sendCrypto(walletPublicKey, destinationAddress, cryptoAmount, notes, deliveredByActorPublicKey,  deliveredToActorPublicKey,deliveredByActorType, deliveredToActorType,referenceWallet,blockchainNetworkType,purchasePrice);
 
                     break;
             }

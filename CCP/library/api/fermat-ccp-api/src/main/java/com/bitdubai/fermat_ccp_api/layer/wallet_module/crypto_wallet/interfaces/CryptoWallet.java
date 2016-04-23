@@ -310,7 +310,8 @@ public interface CryptoWallet  extends Serializable,ModuleManager,ModuleSettings
               String deliveredToActorPublicKey,
               Actors deliveredToActorType,
               ReferenceWallet referenceWallet,
-              BlockchainNetworkType blockchainNetworkType) throws CantSendCryptoException, InsufficientFundsException;
+              BlockchainNetworkType blockchainNetworkType,
+              double purchasePrice) throws CantSendCryptoException, InsufficientFundsException;
 
 
     /**
