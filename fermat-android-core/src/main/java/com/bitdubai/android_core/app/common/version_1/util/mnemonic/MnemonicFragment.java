@@ -24,7 +24,7 @@ public class MnemonicFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.mnemonic_fragment_main,container,false);
+        View view = inflater.inflate(R.layout.bitcoin_mnemonic_fragment_main,container,false);
 
         FermatTextView txt_mnemonic = (FermatTextView)view.findViewById(R.id.txt_mnemonic);
         txt_mnemonic.setText("mnemonic");

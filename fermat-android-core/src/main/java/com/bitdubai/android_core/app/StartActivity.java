@@ -1,6 +1,9 @@
 package com.bitdubai.android_core.app;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -48,7 +51,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfac
 public class StartActivity extends AppCompatActivity implements  FermatWorkerCallBack /**,ServiceCallback */{
 
 
-
+    private static final String TAG = "StartActivity";
     // Indicate if the app was loaded, for not load again the start activity.
     private static boolean WAS_START_ACTIVITY_LOADED = false;
 
@@ -63,6 +66,9 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
     private BoundService mBoundService;
     boolean mServiceConnected = false;
 
+
+    private StartReceiver startReceiver;
+    private boolean myReceiverIsRegistered;
 
 
     @Override
@@ -81,6 +87,13 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
 
         } catch (Exception e) {
             e.printStackTrace();
+        }
+
+        startReceiver = new StartReceiver();
+
+        if(!myReceiverIsRegistered) {
+            registerReceiver(startReceiver, new IntentFilter("org.fermat.SYSTEM_RUNNING"));
+            myReceiverIsRegistered = true;
         }
 
             // Indicate if the app was loaded, for not load again the start activity.
@@ -141,7 +154,7 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
                 //animation2.setStartOffset(5000);
 
                 //animation2 AnimationListener
-                animation2.setAnimationListener(new Animation.AnimationListener(){
+                animation2.setAnimationListener(new Animation.AnimationListener() {
 
                     @Override
                     public void onAnimationEnd(Animation arg0) {
@@ -167,11 +180,11 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
 
 
 
-
-
                 GetTaskV2 getTask = new GetTaskV2(this,this);
                 getTask.setCallBack(this);
                 getTask.execute();
+
+
             }else if (applicationState == ApplicationSession.STATE_STARTED ){
                 fermatInit();
             }
@@ -179,12 +192,45 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (myReceiverIsRegistered) {
+            unregisterReceiver(startReceiver);
+            myReceiverIsRegistered = false;
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    boolean b = ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().isFermatBackgroundServiceRunning();
+//                    if (b) {
+//                        fermatInit();
+//                    }
+//                }catch (Exception e){
+//                    Log.e(TAG, "error getting client");
+//                }
+//            }
+//        }).start();
+        if(!myReceiverIsRegistered){
+            registerReceiver(startReceiver, new IntentFilter("org.fermat.SYSTEM_RUNNING"));
+            myReceiverIsRegistered = true;
+        }
+        if(ApplicationSession.getInstance().isFermatRunning()){
+            fermatInit();
+        }
+    }
 
     public void handleTouch(View view) {
         fermatInit();
     }
 
-    private boolean fermatInit() {
+    public boolean fermatInit() {
         //Intent intent = new Intent(this, SubAppActivity.class);
         WAS_START_ACTIVITY_LOADED = true;
         Intent intent = new Intent(this, DesktopActivity.class);
@@ -269,36 +315,11 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
     }
 
 
-    /**
-     * Service
-     */
-//    private ServiceConnection mServiceConnection = new ServiceConnection() {
-//
-//        @Override
-//        public void onServiceDisconnected(ComponentName name) {
-//            mServiceConnected = false;
-//        }
-//
-//        @Override
-//        public void onServiceConnected(ComponentName name, IBinder service) {
-//            mBoundService = ((BoundService.LocalBinder)service).getService();
-//            mBoundService.registerCallback(registerCallback());
-//            mServiceConnected = true;
-//            Log.i("APP","service connected");
-//        }
-//    };
-//
-//    private ServiceCallback registerCallback(){
-//        return this;
-//    }
-//
-//
-//    @Override
-//    public void callback(int option) {
-//        if (option==1){
-//            fermatInit();
-//        }else if(option==2){
-//            Toast.makeText(this,"Ooooops, an error occur, please re open the app",Toast.LENGTH_SHORT).show();
-//        }
-//    }
+    private class StartReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            fermatInit();
+        }
+    }
 }

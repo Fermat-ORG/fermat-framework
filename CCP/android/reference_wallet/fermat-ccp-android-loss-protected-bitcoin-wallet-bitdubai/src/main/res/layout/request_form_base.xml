@@ -45,7 +45,7 @@
                         android:layout_width="50dp"
                         android:layout_height="50dp"
                         android:layout_marginLeft="12dp"
-                        tools:src="@drawable/ic_profile_male" />
+                        tools:src="@drawable/profile_image_male_lossp" />
 
                     <FrameLayout
                         android:layout_width="match_parent"
