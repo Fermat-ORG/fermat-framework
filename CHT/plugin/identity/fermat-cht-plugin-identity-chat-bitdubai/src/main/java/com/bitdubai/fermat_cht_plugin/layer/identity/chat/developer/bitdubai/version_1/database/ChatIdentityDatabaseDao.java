@@ -120,7 +120,7 @@ public class ChatIdentityDatabaseDao {
             record.setStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME, country);
             record.setStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME, state);
             record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME, city);
-            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME, state);
+            record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME, connectionState);
 
             table.insertRecord(record);
 
@@ -202,6 +202,10 @@ public class ChatIdentityDatabaseDao {
             for (DatabaseTableRecord record : table.getRecords()) {
                 //set new values
                 record.setStringValue(ChatIdentityDatabaseConstants.CHAT_ALIAS_COLUMN_NAME, alias);
+                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_STATE_COLUMN_NAME, state);
+                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_COUNTRY_COLUMN_NAME, country);
+                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CITY_COLUMN_NAME, city);
+                record.setStringValue(ChatIdentityDatabaseConstants.CHAT_CONNECTION_STATE_COLUMN_NAME, connectionState);
                 table.updateRecord(record);
             }
 
