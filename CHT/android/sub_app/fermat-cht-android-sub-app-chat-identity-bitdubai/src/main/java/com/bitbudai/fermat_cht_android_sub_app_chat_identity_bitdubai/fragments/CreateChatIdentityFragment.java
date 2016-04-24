@@ -145,6 +145,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     private void initViews(View layout) {
         actualizable = true;
         mBrokerName = (EditText) layout.findViewById(R.id.editTextName);
+        mChatConnectionState = (EditText) layout.findViewById(R.id.editTextStatus);
         final Button botonG = (Button) layout.findViewById(R.id.cht_button);
         mBrokerImage = (ImageView) layout.findViewById(R.id.cht_image);
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
