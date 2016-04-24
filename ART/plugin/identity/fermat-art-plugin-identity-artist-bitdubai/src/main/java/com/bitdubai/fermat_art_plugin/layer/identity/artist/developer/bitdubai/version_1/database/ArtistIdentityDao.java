@@ -178,12 +178,23 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             record.setStringValue(
                     ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_DEVICE_USER_PUBLIC_KEY_COLUMN_NAME,
                     deviceUser.getPublicKey());
-            record.setUUIDValue(
-                    ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME,
-                    externalIdentityID);
-            record.setStringValue(
-                    ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
-                    artExternalPlatform.getCode());
+            //External Id
+            if(externalIdentityID!=null){
+                record.setUUIDValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME,
+                        externalIdentityID);
+            }
+            //External platform
+            if(artExternalPlatform==null){
+                record.setStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
+                        artExternalPlatform.UNDEFINED.getCode());
+            } else {
+                record.setStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
+                        artExternalPlatform.getCode());
+            }
+
 
             table.insertRecord(record);
 
@@ -252,12 +263,16 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 record.setStringValue(
                         ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME,
                         alias);
-                record.setUUIDValue(
-                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME,
-                        externalIdentityID);
-                record.setStringValue(
-                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
-                        artExternalPlatform.getCode());
+                //External platform
+                if(artExternalPlatform==null){
+                    record.setStringValue(
+                            ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
+                            artExternalPlatform.UNDEFINED.getCode());
+                } else {
+                    record.setStringValue(
+                            ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
+                            artExternalPlatform.getCode());
+                }
 
                 table.updateRecord(record);
             }
@@ -339,7 +354,7 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 ArtExternalPlatform externalPlatform;
                 String externalPlatformString = record.getStringValue(
                         ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
-                        if(externalPlatformString==null || externalIdentityString.isEmpty()){
+                        if(externalPlatformString==null || externalPlatformString.isEmpty()){
                             externalPlatform = ArtExternalPlatform.UNDEFINED;
                         } else{
                             externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
@@ -421,7 +436,7 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 ArtExternalPlatform externalPlatform;
                 String externalPlatformString = record.getStringValue(
                         ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
-                if(externalPlatformString==null || externalIdentityString.isEmpty()){
+                if(externalPlatformString==null || externalPlatformString.isEmpty()){
                     externalPlatform = ArtExternalPlatform.UNDEFINED;
                 } else{
                     externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
@@ -500,7 +515,7 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 ArtExternalPlatform externalPlatform;
                 String externalPlatformString = record.getStringValue(
                         ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME);
-                if(externalPlatformString==null || externalIdentityString.isEmpty()){
+                if(externalPlatformString==null || externalPlatformString.isEmpty()){
                     externalPlatform = ArtExternalPlatform.UNDEFINED;
                 } else{
                     externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);

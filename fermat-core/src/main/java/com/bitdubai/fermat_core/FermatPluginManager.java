@@ -219,7 +219,9 @@ public final class FermatPluginManager {
                 if (abstractPlugin.getManager() != null)
                     return abstractPlugin.getManager();
                 else
-                    return (FermatManager) abstractPlugin;
+                    return abstractPlugin;
+            }else {
+                return abstractPlugin;
             }
 
 
@@ -232,8 +234,6 @@ public final class FermatPluginManager {
                     "Unhandled exception trying to start the plugin or one of its references."
             );
         }
-
-        return null;
     }
 
     public final void startPluginAndReferences(final AbstractPlugin abstractPlugin) throws CantStartPluginException {

@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -97,8 +99,10 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
     private boolean updateProfileImage = false;
     private boolean contextMenuInUse = false;
     private boolean authenticationSuccessful = false;
+    private boolean isWaitingForResponse = false;
 
     private Handler handler;
+
 
 
     public static TkyIdentityCreateProfile newInstance() {
@@ -196,6 +200,16 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
         createButton.setText((!isUpdate) ? "Create" : "Update");
         mArtistExternalUserName.requestFocus();
 
+        TextView text = (TextView) layout.findViewById(R.id.external_platform_label);
+        TextView text2 = (TextView) layout.findViewById(R.id.exposure_level_label);
+        TextView text3 = (TextView) layout.findViewById(R.id.artist_accept_connections_type_label);
+
+        text.setTextColor(Color.parseColor("#000000"));
+        text2.setTextColor(Color.parseColor("#000000"));
+        text3.setTextColor(Color.parseColor("#000000"));
+
+        text.setVisibility(View.GONE);
+        mArtistExternalPlatform.setVisibility(View.GONE);
         List<String> arraySpinner = ExternalPlatform.getArrayItems();
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
         mArtistExternalPlatform.setAdapter(adapter);
@@ -227,35 +241,41 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
 
                 int resultKey = 0;
                 try {
-                    resultKey = createNewIdentity();
+                    if(!isWaitingForResponse){
+                        resultKey = createNewIdentity();
+                        switch (resultKey) {
+                            case CREATE_IDENTITY_SUCCESS:
+                                if (!isUpdate) {
+                                    //Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    //Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
+                                }
+                                break;
+                            case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
+                                Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
+                                break;
+                            case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
+                                Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
+                                break;
+                            case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
+                                Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
+                                break;
+                        }
+                    }else
+                        Toast.makeText(getActivity(), "Waiting for Tokenly API response, please wait.", Toast.LENGTH_SHORT).show();
                 } catch (InvalidParameterException e) {
                     e.printStackTrace();
                 }
-                switch (resultKey) {
-                    case CREATE_IDENTITY_SUCCESS:
-//                        changeActivity(Activities.CCP_SUB_APP_INTRA_USER_IDENTITY.getCode(), appSession.getAppPublicKey());
-                        if (!isUpdate) {
-                            //Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
-                        }
-                        break;
-                    case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
-                        Toast.makeText(getActivity(), "Error al crear la identidad", Toast.LENGTH_LONG).show();
-                        break;
-                    case CREATE_IDENTITY_FAIL_NO_VALID_DATA:
-                        Toast.makeText(getActivity(), "La data no es valida", Toast.LENGTH_LONG).show();
-                        break;
-                    case CREATE_IDENTITY_FAIL_MODULE_IS_NULL:
-                        Toast.makeText(getActivity(), "No se pudo acceder al module manager, es null", Toast.LENGTH_LONG).show();
-                        break;
-                }
+
 
             }
         });
     }
 
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
     private void setUpIdentity() {
         try {
 
@@ -470,11 +490,13 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
             this.exposureLevel = exposureLevel;
             this.artistAcceptConnectionsType = artistAcceptConnectionsType;
             authenticationSuccessful = true;
+            isWaitingForResponse = true;
         }
 
         @Override
         protected void onPostExecute(Object result) {
 
+            isWaitingForResponse = false;
             if(!authenticationSuccessful){
                 //I'll launch a toast
                 Toast.makeText(
@@ -484,8 +506,10 @@ public class TkyIdentityCreateProfile extends AbstractFermatFragment {
             }
             if(isUpdate){
                 Toast.makeText(getActivity(), "Identity updated", Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
             }else{
                 Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
             }
 
         }

@@ -327,7 +327,9 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
                     mFanExternalPlatform.getSelectedItem().toString());
         }
-        //fanImageByteArray = convertImage(R.drawable.ic_profile_male);
+        if(fanImageByteArray==null){
+            fanImageByteArray = convertImage(R.drawable.ic_profile_male);
+        }
         boolean dataIsValid = validateIdentityData(
                 fanExternalName,
                 fanImageByteArray,
@@ -402,8 +404,8 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             return false;
         if (fanImageBytes.length > 0)
             return true;
-        if(externalPlatform != null)
-            return  true;
+        /*if(externalPlatform != null)
+            return  true;*/
         return true;
     }
 
@@ -607,6 +609,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             }
             return identityNameList;
         }
+
         return identityNameList;
     }
 

@@ -4693,6 +4693,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeActivity.setActivityType(Activities.CCP_BITCOIN_WALLET_OPEN_SEND_ERROR_REPORT.getCode());
         runtimeActivity.setColor("#12aca1");
         runtimeActivity.setBackActivity(Activities.CWP_WALLET_RUNTIME_WALLET_BASIC_WALLET_BITDUBAI_VERSION_1_MAIN);
+        runtimeActivity.setBackPublicKey(publicKey);
 
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
@@ -4769,11 +4770,11 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
+       /* runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Logout");
         runtimeMenuItem.setLinkToActivity(Activities.DEVELOP_MODE);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);*/
 
         return runtimeSideMenu;
     }
@@ -5711,11 +5712,11 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
+      /*  runtimeMenuItem = new MenuItem();
         runtimeMenuItem.setLabel("Logout");
         runtimeMenuItem.setLinkToActivity(Activities.DEVELOP_MODE);
         runtimeMenuItem.setAppLinkPublicKey(publicKey);
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+        runtimeSideMenu.addMenuItem(runtimeMenuItem);*/
 
         return runtimeSideMenu;
     }
