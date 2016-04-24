@@ -174,29 +174,29 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
                 }
                 //changeActivity(Activities.CHT_CHAT_OPEN_CHATLIST, appSession.getAppPublicKey());
                 }else if(AlertType == 2){
-                try {
-                    Contact con = chatSession.getSelectedContact();
-                    //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-                    //chatManager.deleteContact(con);
-                    List<Contact> cont=  null;//chatManager.getContacts();
-                    if (cont.size() > 0) {
-                        for (int i=0;i<cont.size();i++){
-                            contactname.add(cont.get(i).getAlias());
-                            contactid.add(cont.get(i).getContactId());
-                            ByteArrayInputStream bytes = new ByteArrayInputStream(cont.get(i).getProfileImage());
-                            BitmapDrawable bmd = new BitmapDrawable(bytes);
-                            contacticon.add(bmd.getBitmap());
-                        }
-                        final ContactListAdapter adaptador =
-                                new ContactListAdapter(getActivity(), contactname, contacticon, contactid,chatManager,
-                                        moduleManager, errorManager, chatSession, getSession(), null);
-                        adaptador.refreshEvents(contactname, contacticon, contactid);
-                    }
-                //}catch(CantGetContactException e) {
-                //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }catch (Exception e){
-                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
+//                try {
+//                    Contact con = chatSession.getSelectedContact();
+//                    //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+//                    //chatManager.deleteContact(con);
+//                    List<Contact> cont=  null;//chatManager.getContacts();
+//                    if (cont.size() > 0) {
+//                        for (int i=0;i<cont.size();i++){
+//                            contactname.add(cont.get(i).getAlias());
+//                            contactid.add(cont.get(i).getContactId());
+//                            ByteArrayInputStream bytes = new ByteArrayInputStream(cont.get(i).getProfileImage());
+//                            BitmapDrawable bmd = new BitmapDrawable(bytes);
+//                            contacticon.add(bmd.getBitmap());
+//                        }
+//                        final ContactListAdapter adaptador =
+//                                new ContactListAdapter(getActivity(), contactname, contacticon, contactid,chatManager,
+//                                        moduleManager, errorManager, chatSession, getSession(), null);
+//                        adaptador.refreshEvents(contactname, contacticon, contactid);
+//                    }
+//                //}catch(CantGetContactException e) {
+//                //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                }catch (Exception e){
+//                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                }
                 delete_contact = true;
             }else if(AlertType == 3){
                 try {

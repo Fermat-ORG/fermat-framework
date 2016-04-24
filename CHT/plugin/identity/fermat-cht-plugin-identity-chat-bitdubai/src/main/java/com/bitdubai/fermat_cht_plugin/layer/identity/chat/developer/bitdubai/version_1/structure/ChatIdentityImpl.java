@@ -34,6 +34,7 @@ public class ChatIdentityImpl implements DealsWithPluginFileSystem, DealsWithPlu
     private String country;
     private String state;
     private String city;
+    private String connectionState;
 
     /**
      * DealsWithPluginFileSystem Interface member variables.
@@ -65,7 +66,7 @@ public class ChatIdentityImpl implements DealsWithPluginFileSystem, DealsWithPlu
     /**
      * Constructor
      */
-    public ChatIdentityImpl(String alias, String publicKey, String privateKey, byte[] profileImage, PluginFileSystem pluginFileSystem, UUID pluginId, String country, String state, String city) {
+    public ChatIdentityImpl(String alias, String publicKey, String privateKey, byte[] profileImage, PluginFileSystem pluginFileSystem, UUID pluginId, String country, String state, String city, String connectionState) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
@@ -75,15 +76,17 @@ public class ChatIdentityImpl implements DealsWithPluginFileSystem, DealsWithPlu
         this.country = country;
         this.state = state;
         this.city = city;
+        this.connectionState = connectionState;
     }
 
-    public ChatIdentityImpl(String alias, String publicKey, byte[] profileImage, String country, String state, String city) {
+    public ChatIdentityImpl(String alias, String publicKey, byte[] profileImage, String country, String state, String city, String connectionState) {
         this.alias = alias;
         this.publicKey = publicKey;
         this.profileImage = profileImage;
         this.country = country;
         this.state = state;
         this.city = city;
+        this.connectionState = connectionState;
     }
 
     public ChatIdentityImpl() {
@@ -191,5 +194,15 @@ public class ChatIdentityImpl implements DealsWithPluginFileSystem, DealsWithPlu
     @Override
     public String getCity() {
         return this.city;
+    }
+
+    /**
+     * This method return String with ConnectionState
+     *
+     * @return the String
+     */
+    @Override
+    public String getConnectionState() {
+        return null;
     }
 }

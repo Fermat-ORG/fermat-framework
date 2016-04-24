@@ -44,6 +44,8 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.ChatImpl;
 import com.bitdubai.fermat_cht_api.layer.middleware.utils.MessageImpl;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
@@ -88,7 +90,7 @@ public class ChatAdapterView extends LinearLayout {
     private String leftName;
     private String rightName;
     private UUID chatId;
-    private UUID contactId;
+    private String contactId;
     private int background = -1;
     private String remotePk;
     private PlatformComponentType remotePCT;
@@ -128,21 +130,28 @@ public class ChatAdapterView extends LinearLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    void findValues(Contact contact){ //With contact Id find chatId,pkremote,actortype
+    //void findValues(Contact contact){ //With contact Id find chatId,pkremote,actortype
+    void findValues(){ //With contact Id find chatId,pkremote,actortype
         try {
-            if (contact != null){
-                remotePk = contact.getRemoteActorPublicKey();
-                remotePCT = contact.getRemoteActorType();
-                contactId =contact.getContactId();//9a6049ff-e64c-4a13-b579-d0a96c7cbb77
-                ByteArrayInputStream bytes = new ByteArrayInputStream(contact.getProfileImage());
-                BitmapDrawable bmd = new BitmapDrawable(bytes);
-                contactIcon =bmd.getBitmap();
-                leftName=contact.getAlias();
-                Chat cht=chatManager.getChatByRemotePublicKey(remotePk);
-                if(cht!=null)
-                    chatId = cht.getChatId();
-                else chatId=null;
-                //appSession.setData(ChatSession.CONTACT_DATA, null);
+            for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
+                    (ChatActorCommunitySelectableIdentity) chatManager.
+                            getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, 0)) {
+                if (cont.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
+                    if (cont != null) {
+                        remotePk = cont.getPublicKey();
+                        //remotePCT = cont.getRemoteActorType();
+                        contactId = cont.getPublicKey();//9a6049ff-e64c-4a13-b579-d0a96c7cbb77
+                        ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
+                        BitmapDrawable bmd = new BitmapDrawable(bytes);
+                        contactIcon = bmd.getBitmap();
+                        leftName = cont.getAlias();
+                        Chat cht = chatManager.getChatByRemotePublicKey(remotePk);
+                        if (cht != null)
+                            chatId = cht.getChatId();
+                        else chatId = null;
+                        //appSession.setData(ChatSession.CONTACT_DATA, null);
+                    }
+                }
             }
         }catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -154,7 +163,7 @@ public class ChatAdapterView extends LinearLayout {
     public void whatToDo(){
         try {
             //System.out.println("WHOCALME NOW:" + chatSession.getData("whocallme"));
-            findValues(chatSession.getSelectedContact());
+            findValues();
             if (chatSession.getData("whocallme").equals("chatlist")) {
                 //if I choose a chat, this will retrieve the chatId
                 chatWasCreate = true;
@@ -305,7 +314,6 @@ public class ChatAdapterView extends LinearLayout {
         return isKeyboardShown;
     }
 
-
     public void initControls() {
         messagesContainer = (RecyclerView) findViewById(R.id.messagesContainer);
         messagesContainer.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
@@ -413,7 +421,7 @@ public class ChatAdapterView extends LinearLayout {
                         message.setMessageDate(new Timestamp(dv));
                         message.setStatus(MessageStatus.CREATED);
                         message.setType(TypeMessage.OUTGOING);
-                        message.setContactId(contactId);
+                        message.setContactId(null);
                         chatManager.saveMessage(message);
                         sendMessageAsync.execute(message);
                     } else {
@@ -423,61 +431,67 @@ public class ChatAdapterView extends LinearLayout {
                          */
                         //chat.setLocalActorType(PlatformComponentType.ACTOR_ASSET_ISSUER);
                         //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-                        Contact newContact = null;//chatManager.getContactByContactId(
+                        //Contact newContact = null;//chatManager.getContactByContactId(
                                 //contactId);
-                        PlatformComponentType remoteActorType = newContact.getRemoteActorType();
-                        remotePublicKey = newContact.getRemoteActorPublicKey();
-                        chat.setRemoteActorType(remoteActorType);
-                        chat.setRemoteActorPublicKey(remotePublicKey);
-                        Chat chatPrevious = chatManager.getChatByRemotePublicKey(remotePublicKey);
-                        UUID newChatId;
-                        if(chatPrevious != null){
-                            newChatId = chatPrevious.getChatId();
-                        }else{
-                            newChatId = UUID.randomUUID();
-                        }
-                        chat.setChatId(newChatId);
-                        chat.setObjectId(UUID.randomUUID());
-                        chat.setStatus(ChatStatus.VISSIBLE);
-                        chat.setChatName("Chat_" + newContact.getAlias());
-                        chat.setDate(new Timestamp(dv));
-                        chat.setLastMessageDate(new Timestamp(dv));
-                        chat.setTypeChat(TypeChat.INDIVIDUAL);
-                        /**
-                         * Now we got the identities registered in the device.
-                         * To avoid nulls, I'll put default data in chat object
-                         */
-                        chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
-                        chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
-                        if(chatSettings.getLocalPublicKey()!=null && chatSettings.getLocalPlatformComponentType()!=null)
-                        {
-                            chat.setLocalActorPublicKey(chatSettings.getLocalPublicKey());
-                            chat.setLocalActorType(chatSettings.getLocalPlatformComponentType());//chatSettings.getLocalActorType()
-                        }
-                        chatManager.saveChat(chat);
+                        //PlatformComponentType remoteActorType = newContact.getRemoteActorType();
+                        for (ChatActorCommunityInformation newContact: chatManager.listAllConnectedChatActor(
+                                (ChatActorCommunitySelectableIdentity) chatManager.
+                                        getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, 0)) {
+                            if (newContact.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
+                                remotePublicKey = newContact.getPublicKey();
+                                chat.setRemoteActorType(null);//chat.setRemoteActorType(remoteActorType);
+                                chat.setRemoteActorPublicKey(remotePublicKey);
+                                Chat chatPrevious = chatManager.getChatByRemotePublicKey(remotePublicKey);
+                                UUID newChatId;
+                                if (chatPrevious != null) {
+                                    newChatId = chatPrevious.getChatId();
+                                } else {
+                                    newChatId = UUID.randomUUID();
+                                }
+                                chat.setChatId(newChatId);
+                                chat.setObjectId(UUID.randomUUID());
+                                chat.setStatus(ChatStatus.VISSIBLE);
+                                chat.setChatName("Chat_" + newContact.getAlias());
+                                chat.setDate(new Timestamp(dv));
+                                chat.setLastMessageDate(new Timestamp(dv));
+                                chat.setTypeChat(TypeChat.INDIVIDUAL);
+                                /**
+                                 * Now we got the identities registered in the device.
+                                 * To avoid nulls, I'll put default data in chat object
+                                 */
+                                chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
+                                chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
+                                if (chatSettings.getLocalPublicKey() != null && chatSettings.getLocalPlatformComponentType() != null) {
+                                    chat.setLocalActorPublicKey(chatSettings.getLocalPublicKey());
+                                    chat.setLocalActorType(chatSettings.getLocalPlatformComponentType());//chatSettings.getLocalActorType()
+                                }
+                                chatManager.saveChat(chat);
 
-                        message.setChatId(newChatId);
-                        message.setMessageId(UUID.randomUUID());
-                        message.setMessage(messageText);
-                        message.setMessageDate(new Timestamp(dv));
-                        message.setStatus(MessageStatus.CREATED);
-                        message.setType(TypeMessage.OUTGOING);
-                        message.setContactId(contactId);
-                        chatManager.saveMessage(message);
-                        sendMessageAsync.execute(message);//
-                        //If everything goes OK, we save the chat in the fragment session.
-                        chatSession.setData("whocallme", "chatlist");
-                        chatSession.setData(
-                                "contactid",
-                                newContact
+                                message.setChatId(newChatId);
+                                message.setMessageId(UUID.randomUUID());
+                                message.setMessage(messageText);
+                                message.setMessageDate(new Timestamp(dv));
+                                message.setStatus(MessageStatus.CREATED);
+                                message.setType(TypeMessage.OUTGOING);
+                                message.setContactId(null);//message.setContactId(contactId);
+                                chatManager.saveMessage(message);
+                                sendMessageAsync.execute(message);//
+                                //If everything goes OK, we save the chat in the fragment session.
+                                chatSession.setData("whocallme", "chatlist");
+                                chatSession.setData(
+                                        "contactid",
+                                        newContact
                                 );
-                        /**
-                         * This chat was created, so, I will put chatWasCreate as true to avoid
-                         * the multiple chats from this contact. Also I will put the chatId as
-                         * newChatId
-                         */
-                        chatWasCreate = true;
-                        chatId = newChatId;
+                                /**
+                                 * This chat was created, so, I will put chatWasCreate as true to avoid
+                                 * the multiple chats from this contact. Also I will put the chatId as
+                                 * newChatId
+                                 */
+                                chatWasCreate = true;
+                                chatId = newChatId;
+                                break;
+                            }
+                        }
                     }
 
                     ChatMessage chatMessage = new ChatMessage();

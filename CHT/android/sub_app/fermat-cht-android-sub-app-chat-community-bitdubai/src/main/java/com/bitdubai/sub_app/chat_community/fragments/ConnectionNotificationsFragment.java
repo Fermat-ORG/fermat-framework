@@ -121,7 +121,7 @@ public class ConnectionNotificationsFragment
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            rootView.setBackgroundColor(Color.parseColor("#f9f9f9"));
+            //rootView.setBackgroundColor(Color.parseColor("#f9f9f9"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
             onRefresh();
