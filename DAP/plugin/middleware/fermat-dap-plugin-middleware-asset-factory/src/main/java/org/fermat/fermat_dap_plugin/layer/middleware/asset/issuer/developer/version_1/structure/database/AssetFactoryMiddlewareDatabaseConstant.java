@@ -59,22 +59,24 @@ public class AssetFactoryMiddlewareDatabaseConstant {
 
     public static final String ASSET_FACTORY_CONTRACT_TABLE_NAME = "asset_factory_contract";
 
+    public static final String ASSET_FACTORY_CONTRACT_ID_COLUMN = "id";
     public static final String ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN = "asset_public_key";
     public static final String ASSET_FACTORY_CONTRACT_NAME_COLUMN = "name_contract";
-    public static final String ASSET_FACTORY_CONTRACT_VALUE_COLUMN = "value_contrac";
+    public static final String ASSET_FACTORY_CONTRACT_VALUE_COLUMN = "value_contract";
 
-    public static final String ASSET_FACTORY_CONTRACT_FIRST_KEY_COLUMN = ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN;
+    public static final String ASSET_FACTORY_CONTRACT_FIRST_KEY_COLUMN = ASSET_FACTORY_CONTRACT_ID_COLUMN;
 
     /**
      * Asset Factory Identity Issuer database table definition.
      */
     public static final String ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME = "asset_factory_identiy_issuer";
 
+    public static final String ASSET_FACTORY_IDENTITY_ID_COLUMN = "id";
     public static final String ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN = "public_key";
     public static final String ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN = "asset_public_key";
     public static final String ASSET_FACTORY_IDENTITY_ISSUER_NAME_COLUMN = "name";
     public static final String ASSET_FACTORY_IDENTITY_ISSUER_SIGNATURE_COLUMN = "signature";
 
-    public static final String ASSET_FACTORY_IDENTITY_ISSUER_FIRST_KEY_COLUMN = ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN;
+    public static final String ASSET_FACTORY_IDENTITY_ISSUER_FIRST_KEY_COLUMN = ASSET_FACTORY_IDENTITY_ID_COLUMN;
 
 }

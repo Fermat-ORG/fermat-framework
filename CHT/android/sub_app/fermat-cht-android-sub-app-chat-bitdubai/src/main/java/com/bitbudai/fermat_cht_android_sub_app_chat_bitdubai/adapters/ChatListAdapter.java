@@ -6,11 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 //import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.holders.ChatsListHolder;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ChatListFilter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
@@ -21,6 +23,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -43,7 +46,10 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
     ArrayList<Integer> noReadMsgs=new ArrayList<>();
     ArrayList<Bitmap> imgId=new ArrayList<>();
     private ErrorManager errorManager;
-    //Typeface tf;
+
+    ArrayList<String> filteredData;
+    ArrayList<String> originalData;
+    private String filterString;
 
     public ChatListAdapter(Context context, ArrayList<String> contactName,
                            ArrayList message,
@@ -55,7 +61,6 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
                            ArrayList noReadMsgs,
                            ArrayList imgId, ErrorManager errorManager) {
         super(context, R.layout.chat_list_listview, contactName );
-        //tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
         this.contactName = contactName;
         this.message = message;
         this.dateMessage = dateMessage;
@@ -65,6 +70,8 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
         this.typeMessage = typeMessage;
         this.noReadMsgs = noReadMsgs;
         this.imgId=imgId;
+        this.filteredData = contactName;
+        this.originalData = contactName;
         this.errorManager=errorManager;
     }
 
@@ -134,125 +141,42 @@ public class ChatListAdapter extends ArrayAdapter implements Filterable {//publi
         this.imgId=imgId;
         notifyDataSetChanged();
     }
-//    @Override
-//    protected ChatHolder createHolder(View itemView, int type) {
-//        return new ChatHolder(itemView);
-//    }
-//
-//    protected int getCardViewResource() {return R.layout.chats_item;  }
-//
-//    @Override
-//    protected void bindHolder(ChatHolder holder, ChatsList data, int position) {
-//        View convertView = getView();
-//        /*if (convertView == null) {
-//            convertView = inflater.inflate(R.layout.chat_list_item, parent, false);
-//        }*/
-//        LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//
-//        if (data == null) {
-//            convertView = vi.inflate(R.layout.chat_list_item, null);
-//            holder = createHolder(convertView, position);
-//            convertView.setTag(holder);
-//        } else {
-//            holder = (ChatHolder) convertView.getTag();
-//        }
-//
-//        //holder.message_icon_text.setText(data.getId());
-//       /* holder.firstLastName.setText(data.getName());
-//        holder.lastMessage.setText(data.getLastMessage());
-//        holder.contactItemTime.setText(data.getDate());*/
-//
-//    }
-//
-//    public View getView() {
-//
-//        View convertView;
-//        LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        convertView = vi.inflate(R.layout.chats_item, null);
-//
-//        TextView icon = (TextView) convertView.findViewById(R.id.message_icon_text);
-//        TextView firstLastName = (TextView) convertView.findViewById(R.id.firstLastName);
-//        TextView lastMessage = (TextView) convertView.findViewById(R.id.lastMessage);
-//        TextView time = (TextView) convertView.findViewById(R.id.contactItemTime);
-//        TextView notify = (TextView) convertView.findViewById(R.id.chat_notification);
-//
-//        final ImageView imageIcon = (ImageView) convertView.findViewById(R.id.message_icon_image);
-//
-//        imageIcon.setImageResource(R.drawable.cht_ic_placeholder);
-//        lastMessage.setText("");
-//        icon.setText("");
-//
-//        Utils.verifySetBackground(icon, null);
-///*
-//        TdApi.Chat item = getItem(position);
-//        TdApi.ChatInfo info = item.type;
-//        TdApi.MessageText text = null;
-//        TdApi.Message message = item.topMessage;
-//        long timeMls = (long) message.date;
-//        Date date = new Date(timeMls * 1000);
-//        if (message.message instanceof TdApi.MessageText) {
-//            text = (TdApi.MessageText) message.message;
-//            lastMessage.setTextColor(Color.BLACK);
-//            lastMessage.setText(text.textWithSmilesAndUserRefs);
-//        } else {
-//            lastMessage.setTextColor(getContext().getResources().getColor(R.color.content_text_color));
-//            if (message.message instanceof TdApi.MessagePhoto) {
-//                lastMessage.setText(R.string.message_photo);
-//            }
-//            if (message.message instanceof TdApi.MessageAudio) {
-//                lastMessage.setText(R.string.message_audio);
-//            }
-//            if (message.message instanceof TdApi.MessageContact) {
-//                lastMessage.setText(R.string.message_contact);
-//            }
-//            if (message.message instanceof TdApi.MessageDocument) {
-//                lastMessage.setText(R.string.message_document);
-//            }
-//            if (message.message instanceof TdApi.MessageGeoPoint) {
-//                lastMessage.setText(R.string.message_geopoint);
-//            }
-//            if (message.message instanceof TdApi.MessageSticker) {
-//                lastMessage.setText(R.string.message_sticker);
-//            }
-//            if (message.message instanceof TdApi.MessageVideo) {
-//                lastMessage.setText(R.string.message_video);
-//            }
-//            if (message.message instanceof TdApi.MessageUnsupported) {
-//                lastMessage.setText(R.string.message_unknown);
-//            }
-//        }
-//        TdApi.File file = null;
-//        long chatId = item.id;
-//        String userFirstName = "";
-//        String userLastName = "";
-//        if (info.getConstructor() == TdApi.PrivateChatInfo.CONSTRUCTOR) {
-//            TdApi.PrivateChatInfo privateChatInfo = (TdApi.PrivateChatInfo) info;
-//            TdApi.User chatUser = privateChatInfo.user;
-//            file = chatUser.photoBig;
-//            userFirstName = privateChatInfo.user.firstName;
-//            userLastName = privateChatInfo.user.lastName;
-//        }
-//        if (info.getConstructor() == TdApi.GroupChatInfo.CONSTRUCTOR) {
-//            TdApi.GroupChatInfo groupChatInfo = (TdApi.GroupChatInfo) info;
-//            file = groupChatInfo.groupChat.photoBig;
-//            userFirstName = groupChatInfo.groupChat.title;
-//            userLastName = "";
-//        }
-//        if (item.unreadCount != 0) {
-//            notify.setText(String.valueOf(item.unreadCount));
-//            Utils.verifySetBackground(notify, Utils.getShapeDrawable(R.dimen.chat_list_item_notification_size, getContext().getResources().getColor(R.color.message_notify)));
-//        } else {
-//            Utils.verifySetBackground(notify, null);
-//            notify.setText("");
-//        }
-//        Utils.setIcon(file, (int) chatId, userFirstName, userLastName, imageIcon, icon, (Activity) getContext());
-//        firstLastName.setText(userFirstName + " " + userLastName);
-//        time.setText(Utils.getDateFormat(Const.TIME_PATTERN).format(date));
-//*/
-//        return convertView;
-//    }
-//
-//    public void add(ChatsList chats) {
-//        chatsList.add(chats);
-//    }
+
+    @Override
+    public int getCount() {
+        if (contactName != null) {
+            if(filteredData.size()<contactName.size()) {
+                return filteredData.size();
+            }else{
+                return contactName.size();}
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public String getItem(int position) {
+        return filteredData.get(position);
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    public void setData(ArrayList<String> data) {
+        this.filteredData = data;
+    }
+
+    public Filter getFilter() {
+        return new ChatListFilter(contactName, this);
+    }
+
+    public void setFilterString(String filterString) {
+        this.filterString = filterString;
+    }
+
+    public String getFilterString() {
+        return filterString;
+    }
 }

@@ -3,7 +3,7 @@
 <resources>
 
     <string name="app_name">CHT</string>
-    <string name="create">Create Identity</string>
+    <string name="create">CREATE</string>
     <string name="help">Help</string>
     <string name="update">UPDATE</string>
     <string name="activity_contacts_list">Contacts List</string>
