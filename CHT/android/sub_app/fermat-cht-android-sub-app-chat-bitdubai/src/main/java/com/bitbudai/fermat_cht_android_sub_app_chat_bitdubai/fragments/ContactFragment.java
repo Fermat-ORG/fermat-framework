@@ -31,6 +31,8 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -88,10 +90,10 @@ public class ContactFragment extends AbstractFermatFragment {
     // Defines a tag for identifying log entries
     String TAG = "CHT_ContactFragment";
 
-    ArrayList<String> contactname=new ArrayList<String>();
+    ArrayList<String> contactname=new ArrayList<>();
     ArrayList<Bitmap> contacticon=new ArrayList<>();
-    ArrayList<UUID> contactid=new ArrayList<UUID>();
-    ArrayList<String> contactalias =new ArrayList<String>();
+    ArrayList<String> contactid=new ArrayList<>();
+    ArrayList<String> contactalias =new ArrayList<>();
     Contact cont;
     Typeface tf;
 
@@ -113,8 +115,8 @@ public class ContactFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         try {
             chatSession=((ChatSession) appSession);
-            moduleManager= chatSession.getModuleManager();
-            chatManager=moduleManager.getChatManager();
+            chatManager= chatSession.getModuleManager();
+            //chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
@@ -179,31 +181,41 @@ public class ContactFragment extends AbstractFermatFragment {
         View layout = inflater.inflate(R.layout.contact_detail_fragment, container, false);
 
         try {
-            Contact con= chatSession.getSelectedContact();
-            contactname.add(con.getRemoteName());
-            contactid.add(con.getContactId());
-            contactalias.add(con.getAlias());
-            ByteArrayInputStream bytes = new ByteArrayInputStream(con.getProfileImage());
-            BitmapDrawable bmd = new BitmapDrawable(bytes);
-            contacticon.add(bmd.getBitmap());
+            //Contact con= chatSession.getSelectedContact();
 
-            ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "detail", errorManager);
-            FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
-            name.setText(contactalias.get(0));
-            FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
-            id.setText(contactid.get(0).toString());
+            for (ChatActorCommunityInformation con: chatManager.listAllConnectedChatActor(
+                    (ChatActorCommunitySelectableIdentity) chatManager.
+                            getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, 0))
+            {
+                if(con.getPublicKey()==chatSession.getData(ChatSession.CONTACT_DATA)) {
+                    contactname.add(con.getAlias());
 
-            // set circle bitmap
-            ImageView mImage = (ImageView) layout.findViewById(R.id.contact_image);
-            mImage.setImageBitmap(Utils.getCircleBitmap(contacticon.get(0)));
+                    contactid.add(con.getPublicKey());
+                    contactalias.add(con.getAlias());
+                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.getImage());
+                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                    contacticon.add(bmd.getBitmap());
 
-            LinearLayout detalles = (LinearLayout)layout.findViewById(R.id.contact_details_layout);
+                    ContactAdapter adapter = new ContactAdapter(getActivity(), contactname, contactalias, contactid, "detail", errorManager);
+                    FermatTextView name = (FermatTextView) layout.findViewById(R.id.contact_name);
+                    name.setText(contactalias.get(0));
+                    FermatTextView id = (FermatTextView) layout.findViewById(R.id.uuid);
+                    id.setText(contactid.get(0).toString());
 
-            final int adapterCount = adapter.getCount();
+                    // set circle bitmap
+                    ImageView mImage = (ImageView) layout.findViewById(R.id.contact_image);
+                    mImage.setImageBitmap(Utils.getCircleBitmap(contacticon.get(0)));
 
-            for (int i = 0; i < adapterCount; i++) {
-                View item = adapter.getView(i, null, null);
-                detalles.addView(item);
+                    LinearLayout detalles = (LinearLayout) layout.findViewById(R.id.contact_details_layout);
+
+                    final int adapterCount = adapter.getCount();
+
+                    for (int i = 0; i < adapterCount; i++) {
+                        View item = adapter.getView(i, null, null);
+                        detalles.addView(item);
+                    }
+                }
+                break;
             }
         }catch (Exception e){
             if (errorManager != null)
@@ -464,9 +476,17 @@ public class ContactFragment extends AbstractFermatFragment {
         }
         if (item.getItemId() == R.id.menu_edit_contact) {
             try {
-                Contact con = chatSession.getSelectedContact();
+               // Contact con = chatSession.getSelectedContact();
                 //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-                appSession.setData(ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(con.getContactId()));
+                for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
+                        (ChatActorCommunitySelectableIdentity) chatManager.
+                                getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, 0)) {
+                    if (cont.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
+                        appSession.setData(ChatSession.CONTACT_DATA, cont.getPublicKey());
+                        break;
+                        // appSession.setData(ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(con.getContactId()));
+                    }
+                }
                 changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
             //}catch(CantGetContactException e) {
             //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);

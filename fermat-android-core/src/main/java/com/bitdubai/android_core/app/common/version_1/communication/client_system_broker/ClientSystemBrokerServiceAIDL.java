@@ -87,6 +87,18 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         return null;
     }
 
+    @Override
+    public boolean isFermatBackgroundServiceRunning() {
+        try {
+            return iServerBrokerService.isFermatSystemRunning();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public class LocalBinder extends Binder {
 
         public ClientSystemBrokerServiceAIDL getService(){

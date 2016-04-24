@@ -321,5 +321,10 @@ public class ClientSystemBrokerService extends Service implements ClientBrokerSe
         return null;
     }
 
+    @Override
+    public boolean isFermatBackgroundServiceRunning() {
+        return false;
+    }
+
 
 }

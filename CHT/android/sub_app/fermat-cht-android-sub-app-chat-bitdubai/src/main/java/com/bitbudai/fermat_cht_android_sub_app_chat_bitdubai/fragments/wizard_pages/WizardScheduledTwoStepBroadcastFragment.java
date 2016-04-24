@@ -60,12 +60,13 @@ public class WizardScheduledTwoStepBroadcastFragment extends AbstractFermatFragm
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ChatModuleManager moduleManager = ((ChatSession) appSession).getModuleManager();
-        try {
-            walletManager = moduleManager.getChatManager();
-        } catch (CHTException e) {
-            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-        }
+        ChatManager moduleManager = ((ChatSession) appSession).getModuleManager();
+        //TODO:Revisar esto
+//        try {
+//            walletManager = moduleManager.getChatManager();
+//        } catch (CHTException e) {
+//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//        }
         errorManager = appSession.getErrorManager();
         //Obtain chatSettings  or create new chat settings if first time opening chat platform
         chatSettings = null;

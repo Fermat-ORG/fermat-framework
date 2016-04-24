@@ -46,7 +46,7 @@ public class LossProtectedWalletNavigationView extends FermatNavigationViewPaint
                         bitmapWorkerTask.execute(intraUserLoginIdentity.getImage());
 
                     } else
-                        Picasso.with(activity).load(R.drawable.ic_profile_male).into(imageView); //default image by param
+                        Picasso.with(activity).load(R.drawable.profile_image_male_lossp).into(imageView); //default image by param
                 }
                 fermatTextView.setText(intraUserLoginIdentity.getAlias());
             }else{

@@ -278,6 +278,11 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
         }
     }
 
+    @Override
+    public ChatActorCommunitySelectableIdentity newInstanceChatActorCommunitySelectableIdentity(ChatIdentity chatIdentity) {
+        return new ChatActorCommunitySelectableIdentityImpl(chatIdentity.getPublicKey(), chatIdentity.getActorType(), chatIdentity.getAlias(), chatIdentity.getImage());
+    }
+
     /**
      * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified
      * settings class parametrized.
@@ -318,7 +323,7 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
      */
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null);
+        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null, "available");
     }
 
     @Override

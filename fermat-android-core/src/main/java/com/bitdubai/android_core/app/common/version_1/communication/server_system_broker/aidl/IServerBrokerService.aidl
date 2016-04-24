@@ -28,4 +28,7 @@ interface IServerBrokerService {
                 in String method,
                 in FermatModuleObjectWrapper[] parameters
                 );
+
+
+     boolean isFermatSystemRunning();
 }

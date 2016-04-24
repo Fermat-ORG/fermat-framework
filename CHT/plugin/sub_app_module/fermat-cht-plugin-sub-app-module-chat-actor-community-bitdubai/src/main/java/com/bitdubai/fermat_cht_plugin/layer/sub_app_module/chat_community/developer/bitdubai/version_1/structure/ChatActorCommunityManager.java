@@ -531,7 +531,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        chatIdentityManager.createNewIdentityChat(name, profile_img, "country", "state", "city");
+        chatIdentityManager.createNewIdentityChat(name, profile_img, "country", "state", "city", "available");
 
 
         //Try to get appSettings

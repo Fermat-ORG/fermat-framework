@@ -14,8 +14,8 @@ import java.util.UUID;
  */
 public class ModuleManagerImpl<Z extends FermatSettings> {
 
-    private final UUID pluginId;
-    private final PluginFileSystem pluginFileSystem;
+    protected final UUID pluginId;
+    protected final PluginFileSystem pluginFileSystem;
     private SettingsManager<Z> settingsManager;
 
     public ModuleManagerImpl(PluginFileSystem pluginFileSystem, UUID pluginId) {

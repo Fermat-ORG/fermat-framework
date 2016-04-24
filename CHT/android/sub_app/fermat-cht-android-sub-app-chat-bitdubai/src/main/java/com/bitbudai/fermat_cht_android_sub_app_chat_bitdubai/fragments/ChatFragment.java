@@ -63,8 +63,8 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         super.onCreate(savedInstanceState);
         try {
             chatSession = ((ChatSession) appSession);
-            moduleManager = chatSession.getModuleManager();
-            chatManager = moduleManager.getChatManager();
+            chatManager = chatSession.getModuleManager();
+            //chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
 
             //Obtain chatSettings  or create new chat settings if first time opening chat platform
