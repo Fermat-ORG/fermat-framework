@@ -327,9 +327,6 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
                     mFanExternalPlatform.getSelectedItem().toString());
         }
-        if(fanImageByteArray==null){
-            fanImageByteArray = convertImage(R.drawable.ic_profile_male);
-        }
         boolean dataIsValid = validateIdentityData(
                 fanExternalName,
                 fanImageByteArray,
