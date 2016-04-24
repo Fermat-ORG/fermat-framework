@@ -42,7 +42,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
 
     // Fermat Managers
     private ChatManager chatManager;
-    private ChatModuleManager moduleManager;
+    //private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
@@ -70,7 +70,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             //Obtain chatSettings  or create new chat settings if first time opening chat platform
             chatSettings = null;
             try {
-                chatSettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+                chatSettings = chatManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
             } catch (Exception e) {
                 chatSettings = null;
             }
@@ -79,7 +79,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 chatSettings = new ChatPreferenceSettings();
                 chatSettings.setIsPresentationHelpEnabled(true);
                 try {
-                    moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
+                    chatManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatSettings);
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
@@ -123,7 +123,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         adapterView=new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
-                .addModuleManager(moduleManager)
+                .addModuleManager(null)
                 .addErrorManager(errorManager)
                 .addChatSession(chatSession)
                 .addAppSession(appSession)

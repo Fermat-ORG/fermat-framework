@@ -81,7 +81,7 @@ public class ContactFragment extends AbstractFermatFragment {
     // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
     private boolean mIsSearchResultView = false;
     private ChatManager chatManager;
-    private ChatModuleManager moduleManager;
+   // private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private cht_dialog_connections.AdapterCallbackContacts mAdapterCallback;
     private SettingsManager<ChatSettings> settingsManager;

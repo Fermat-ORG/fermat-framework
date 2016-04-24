@@ -157,7 +157,7 @@ public class ActorConnectionEventActions {
             switch (request.getSenderActorType()) {
                 case CHAT:
 
-                    dao.registerActorConnection(actorConnection);
+                    dao.registerChatActorConnection(actorConnection);
 
                     chatNetworkService.confirm(request.getRequestId());
                     break;

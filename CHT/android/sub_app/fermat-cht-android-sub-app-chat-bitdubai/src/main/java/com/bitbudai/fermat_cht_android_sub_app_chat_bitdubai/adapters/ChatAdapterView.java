@@ -134,8 +134,8 @@ public class ChatAdapterView extends LinearLayout {
     void findValues(){ //With contact Id find chatId,pkremote,actortype
         try {
             for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
-                    (ChatActorCommunitySelectableIdentity) chatManager.
-                            getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, 0)) {
+                    chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
+                            getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, 0)) {
                 if (cont.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
                     if (cont != null) {
                         remotePk = cont.getPublicKey();
@@ -435,8 +435,8 @@ public class ChatAdapterView extends LinearLayout {
                                 //contactId);
                         //PlatformComponentType remoteActorType = newContact.getRemoteActorType();
                         for (ChatActorCommunityInformation newContact: chatManager.listAllConnectedChatActor(
-                                (ChatActorCommunitySelectableIdentity) chatManager.
-                                        getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, 0)) {
+                                chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
+                                        getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, 0)) {
                             if (newContact.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
                                 remotePublicKey = newContact.getPublicKey();
                                 chat.setRemoteActorType(null);//chat.setRemoteActorType(remoteActorType);
@@ -459,11 +459,17 @@ public class ChatAdapterView extends LinearLayout {
                                  * Now we got the identities registered in the device.
                                  * To avoid nulls, I'll put default data in chat object
                                  */
+//                                chat.setLocalActorPublicKey(chatManager.
+//                                        getIdentityChatUsersFromCurrentDeviceUser().get(0).getPublicKey());
                                 chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
                                 chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
-                                if (chatSettings.getLocalPublicKey() != null && chatSettings.getLocalPlatformComponentType() != null) {
-                                    chat.setLocalActorPublicKey(chatSettings.getLocalPublicKey());
-                                    chat.setLocalActorType(chatSettings.getLocalPlatformComponentType());//chatSettings.getLocalActorType()
+                                //if (chatSettings.getLocalPublicKey() != null /*&& chatSettings.getLocalPlatformComponentType() != null*/) {
+                                String pKey = chatManager.
+                                        getIdentityChatUsersFromCurrentDeviceUser().get(0).getPublicKey();
+                                if(pKey != null){
+                                    chat.setLocalActorPublicKey(pKey);
+                                    //chat.setLocalActorPublicKey(chatSettings.getLocalPublicKey());
+                                    //chat.setLocalActorType(chatSettings.getLocalPlatformComponentType());//chatSettings.getLocalActorType()
                                 }
                                 chatManager.saveChat(chat);
 

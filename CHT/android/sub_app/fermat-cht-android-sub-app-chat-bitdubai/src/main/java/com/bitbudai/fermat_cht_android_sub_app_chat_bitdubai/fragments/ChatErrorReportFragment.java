@@ -45,7 +45,7 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
 
     // Fermat Managers
     private ChatManager chatManager;
-    private ChatModuleManager moduleManager;
+    //private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
