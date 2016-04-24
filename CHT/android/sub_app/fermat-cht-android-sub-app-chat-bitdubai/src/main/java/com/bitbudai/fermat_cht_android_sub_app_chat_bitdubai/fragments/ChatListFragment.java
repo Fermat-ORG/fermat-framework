@@ -221,8 +221,8 @@ public class ChatListFragment extends AbstractFermatFragment{
 
         try {
             chatSession = ((ChatSession) appSession);
-            moduleManager = chatSession.getModuleManager();
-            chatManager = moduleManager.getChatManager();
+            chatManager = chatSession.getModuleManager();
+            //chatManager = moduleManager.getChatManager();
             //settingsManager = moduleManager.getSettingsManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception e) {

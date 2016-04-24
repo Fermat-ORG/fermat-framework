@@ -87,8 +87,8 @@ public class cht_dialog_yes_no extends FermatDialog  implements View.OnClickList
             btn_no = (Button) this.findViewById(R.id.cht_alert_btn_no);
             try {
                 chatSession = ((com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession) getSession());
-                moduleManager = chatSession.getModuleManager();
-                chatManager = moduleManager.getChatManager();
+                chatManager = chatSession.getModuleManager();
+                //chatManager = moduleManager.getChatManager();
                 errorManager = getSession().getErrorManager();
             } catch (Exception e) {
                 if (errorManager != null)
