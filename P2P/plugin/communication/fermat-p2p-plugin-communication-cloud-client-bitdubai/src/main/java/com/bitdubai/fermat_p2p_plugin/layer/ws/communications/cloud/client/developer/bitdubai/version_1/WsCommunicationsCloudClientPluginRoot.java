@@ -251,7 +251,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                          * Initialize Credentials to Connection to backup Connection AWS
                          */
                         wsCommunicationsTyrusCloudClientConnectionBackup = new WsCommunicationsTyrusCloudClientConnection(uri, eventManager, locationManager, clientIdentity, (WsCommunicationsCloudClientPluginRoot)getInstance(),ServerConf.SERVER_IP_PRODUCTION,ServerConf.DEFAULT_PORT, NetworkServiceType.UNDEFINED);
-                        listServerConfByPlatform = listserverconfbyplatform();
+                        //listServerConfByPlatform = listserverconfbyplatform();
 
                         /*
                          * Try to connect whit the cloud server
@@ -1032,9 +1032,15 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
         Map<NetworkServiceType,String> listserverplatform = null;
 
         // Create a new RestTemplate instance
+        String respond;
         RestTemplate restTemplate = new RestTemplate(true);
-        String respond = restTemplate.getForObject("http://" + wsCommunicationsTyrusCloudClientConnectionBackup.getServerIp() + ":" + wsCommunicationsTyrusCloudClientConnectionBackup.getServerPort() + "/fermat/api/serverplatform/listserverconfbyplatform", String.class);
+        try {
+            respond = restTemplate.getForObject("http://" + wsCommunicationsTyrusCloudClientConnectionBackup.getServerIp() + ":" + wsCommunicationsTyrusCloudClientConnectionBackup.getServerPort() + "/fermat/api/serverplatform/listserverconfbyplatform", String.class);
 
+        }catch (Exception e){
+            e.printStackTrace();
+            respond = null;
+        }
 
         /*
          * if respond have the result list

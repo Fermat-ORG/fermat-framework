@@ -6,11 +6,9 @@
 */
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.webservices;
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.server.developer.bitdubai.version_1.structure.jetty.util.MemoryCache;
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import org.apache.commons.lang.ClassUtils;
@@ -76,7 +74,7 @@ public class ListServerConfByPlatformWebService {
             respond.addProperty("success",Boolean.FALSE);
         }
 
-       return Response.status(200).entity(gson.toJson(respond)).build();
+       return Response.status(200).entity(gson.toJson(respond)).type(MediaType.APPLICATION_JSON).build();
     }
 
 
