@@ -55,7 +55,6 @@ import java.util.UUID;
 
 import com.bitdubai.sub_app.art_fan_identity.popup.PresentationArtFanUserIdentityDialog;
 import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSession;
-import com.bitdubai.sub_app.art_fan_identity.sessions.SessionConstants;
 import com.bitdubai.sub_app.art_fan_identity.util.CommonLogger;
 import com.squareup.picasso.Picasso;
 
@@ -96,6 +95,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private boolean contextMenuInUse = false;
     private UUID externalPlatformID;
     private Handler handler;
+    private boolean updateCheck = false;
 
     public static CreateArtFanUserIdentityFragment newInstance(){
         return new CreateArtFanUserIdentityFragment();
@@ -222,10 +222,39 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         ArtExternalPlatform[] externalPlatforms = ArtExternalPlatform.values();
         for (int i=0; i<externalPlatforms.length;i++){
             if(externalPlatforms[i].getCode().equals(
-                    identitySelected.getExternalPlatform().getCode())){
-                mFanExternalPlatform.setSelection(i+1);
-                System.out.println("########## test : " +mFanExternalPlatform.getSelectedItem());
-                break;
+                    identitySelected.getExternalPlatform().getCode()))
+            {
+                mFanExternalPlatform.setSelection(i + 1);
+                try{
+                    List<UUID> externalIdentityIDList = getFanIdentityIdByPlatform(externalPlatforms[i]);
+                    for (int j=0; i<externalIdentityIDList.size();j++){
+                        if(externalIdentityIDList.get(j).equals(identitySelected.getExternalIdentityID()))
+                        {
+                            List<String> arraySpinner2 = new ArrayList<>();
+                            arraySpinner2.add("Select an Identity...");
+                            ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(
+                                    getActivity(),
+                                    android.R.layout.simple_spinner_item,
+                                    arraySpinner2
+                            );
+                            ArtExternalPlatform externalPlatform = externalPlatforms[i];
+                            if(externalPlatform != null){
+                                arraySpinner2.addAll(getFanIdentityByPlatform(externalPlatform));
+                                adapter2 = new ArrayAdapter<String>(
+                                        getActivity(),
+                                        android.R.layout.simple_spinner_item,
+                                        arraySpinner2
+                                );
+                            }
+                            mFanExternalUser.setAdapter(adapter2);
+                            mFanExternalUser.setSelection(j + 1);
+                            updateCheck = true;
+                            break;
+                        }
+                    }
+                }catch (Exception e){
+
+                }
             }
         }
     }
@@ -298,7 +327,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
                     mFanExternalPlatform.getSelectedItem().toString());
         }
-        fanImageByteArray = convertImage(R.drawable.ic_profile_male);
+        //fanImageByteArray = convertImage(R.drawable.ic_profile_male);
         boolean dataIsValid = validateIdentityData(
                 fanExternalName,
                 fanImageByteArray,
@@ -367,8 +396,8 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             ArtExternalPlatform externalPlatform) {
         if (fanExternalName.isEmpty())
             return false;
-        if (externalPlatformID==null)
-            return false;
+        /*if (externalPlatformID==null)
+            return false;*/
         if (fanImageBytes == null)
             return false;
         if (fanImageBytes.length > 0)
@@ -542,13 +571,9 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             String fanExternalName,
             ArtExternalPlatform externalPlatform) throws
             CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
-        if(externalPlatformID != null){
             moduleManager.createFanaticIdentity(
-                    fanExternalName,(fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,
+                    fanExternalName, (fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,
                     externalPlatformID, externalPlatform) ;
-        }else{
-
-        }
     }
 
     private void updateIdentity(
@@ -572,29 +597,31 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                 identitySelected.getExternalIdentityID(),externalPlatform);
     }
     private List<String> getFanIdentityByPlatform(ArtExternalPlatform externalPlatform) throws Exception{
-        List<String> identityNameList = new ArrayList<>();
         HashMap<UUID, String>fanIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
-        Iterator<Map.Entry<UUID, String>> entries2 = fanIdentityByPlatform.entrySet().iterator();
-        while(entries2.hasNext()){
-            Map.Entry<UUID, String> entry2 = entries2.next();
-            identityNameList.add(entry2.getValue());
+        List<String> identityNameList = new ArrayList<>();
+        if(fanIdentityByPlatform != null){
+            Iterator<Map.Entry<UUID, String>> entries2 = fanIdentityByPlatform.entrySet().iterator();
+            while(entries2.hasNext()){
+                Map.Entry<UUID, String> entry2 = entries2.next();
+                identityNameList.add(entry2.getValue());
+            }
+            return identityNameList;
         }
-
         return identityNameList;
     }
 
     private List<UUID> getFanIdentityIdByPlatform(ArtExternalPlatform externalPlatform) throws Exception{
         HashMap<UUID, String>fanIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
+        List<UUID> identityIdList = new ArrayList<>();
         if(fanIdentityByPlatform != null){
             Iterator<Map.Entry<UUID, String>> entries2 = fanIdentityByPlatform.entrySet().iterator();
-            List<UUID> identityIdList = new ArrayList<>();
             while(entries2.hasNext()){
                 Map.Entry<UUID, String> entry2 = entries2.next();
                 identityIdList.add(entry2.getKey());
             }
             return identityIdList;
         }
-        return null;
+        return identityIdList;
     }
 
     private void externalPlatformSpinnerListener(){
@@ -602,28 +629,36 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try{
-                    if(mFanExternalPlatform.getSelectedItem() != "Select an Identity..."){
-                        List<String> arraySpinner = new ArrayList<>();
-                        arraySpinner.add("Select an Identity...");
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(
-                                getActivity(),
-                                android.R.layout.simple_spinner_item,
-                                arraySpinner
-                        );
-                        ArtExternalPlatform externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(parent.getItemAtPosition(position).toString());
-                        if(externalPlatform != null){
-                            arraySpinner.addAll(getFanIdentityByPlatform(externalPlatform));
-                            adapter = new ArrayAdapter<String>(
+                    externalPlatformID = null;
+                    if(!updateCheck){
+                        boolean asd = !mFanExternalPlatform.getSelectedItem().equals(mFanExternalPlatform.getItemAtPosition(0));
+                            List<String> arraySpinner = new ArrayList<>();
+                            arraySpinner.add("Select an Identity...");
+                            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
                                     getActivity(),
                                     android.R.layout.simple_spinner_item,
                                     arraySpinner
                             );
-                        }
-                        mFanExternalUser.setAdapter(adapter);
+                        if(!mFanExternalPlatform.getSelectedItem().equals(mFanExternalPlatform.getItemAtPosition(0))){
+                            ArtExternalPlatform externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(parent.getItemAtPosition(position).toString());
+                            ///
+                            if(externalPlatform != null){
+                                List<String> identityByPlatformList = getFanIdentityByPlatform(externalPlatform);
+                                if (!identityByPlatformList.isEmpty()) {
+                                    arraySpinner.addAll(identityByPlatformList);
+                                    adapter = new ArrayAdapter<String>(
+                                            getActivity(),
+                                            android.R.layout.simple_spinner_item,
+                                            arraySpinner
+                                    );
+                                }
 
-                        }
+                            }}
+                            mFanExternalUser.setAdapter(adapter);
+                            mFanExternalUser.setSelection(0);
 
-
+                    }
+                    //updateCheck = false;
                 }catch (Exception e){
                     /*List<String> arraySpinner = new ArrayList<>();
                     arraySpinner.add("Select an Identity...");
@@ -633,12 +668,12 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                             arraySpinner
                     );
                     mFanExternalUser.setAdapter(adapter);
-*/
+*/                  Toast.makeText(getActivity(), "Primer Spinner error", Toast.LENGTH_SHORT).show();
+
                 }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                //externalPlatformID = null;
             }
         });
     }
@@ -647,8 +682,21 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try{
-                    externalPlatformID = getFanIdentityIdByPlatform(ArtExternalPlatform.getArtExternalPlatformByLabel(mFanExternalPlatform.getSelectedItem().toString())).get(position);
+                    if(!updateCheck){
+                        if(!mFanExternalUser.getSelectedItem().equals(mFanExternalUser.getItemAtPosition(0))){
+
+                            ArtExternalPlatform artExternalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(mFanExternalPlatform.getSelectedItem().toString());
+                        if(artExternalPlatform !=null){
+                            List<UUID> identityByPlatformList = getFanIdentityIdByPlatform(artExternalPlatform);
+                            if (!identityByPlatformList.isEmpty()) {
+                                externalPlatformID = identityByPlatformList.get(position - 1);
+                            }
+                        }
+                    }
+                    }
+                    updateCheck = false;
                 }catch(Exception e){
+                    Toast.makeText(getActivity(), "Segundo Spinner error", Toast.LENGTH_SHORT).show();
 
                 }
             }
