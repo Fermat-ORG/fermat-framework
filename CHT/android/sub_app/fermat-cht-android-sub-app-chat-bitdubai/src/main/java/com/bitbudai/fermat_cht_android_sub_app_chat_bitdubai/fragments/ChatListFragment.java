@@ -41,6 +41,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatExceptio
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -52,6 +53,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -164,13 +166,13 @@ public class ChatListFragment extends AbstractFermatFragment{
                             noReadMsgs.add(chatManager.getCountMessageByChatId(chatidtemp));
                             contactId.add(chat.getRemoteActorPublicKey());
                             //ChatActorCommunityInformation sf = chatManager.getChatActorbyConnectionId(mess.getContactId());
-                            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                            //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
                             //Contact cont = null; //chatManager.getContactByContactId(mess.getContactId());
                             for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
                                     chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
                                             getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, offset))
                             {
-                                if(cont.getPublicKey()==chatSession.getData(ChatSession.CONTACT_DATA)){
+                                if(cont.getPublicKey()==chat.getRemoteActorPublicKey()){
                                     contactName.add(cont.getAlias());
                                     message.add(mess.getMessage());
                                     status.add(mess.getStatus().toString());
@@ -334,13 +336,20 @@ public class ChatListFragment extends AbstractFermatFragment{
                 typeMessage, noReadMsgs, imgId, errorManager);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
-        registerForContextMenu(list);
+        //registerForContextMenu(list);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 try{
                     appSession.setData("whocallme", "chatlist");
                     //TODO: metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
+                    Contact contact=new ContactImpl();
+                    contact.setRemoteActorPublicKey(contactId.get(position));
+                    contact.setAlias(contactName.get(position));
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    imgId.get(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    contact.setProfileImage(byteArray);
                     appSession.setData(ChatSession.CONTACT_DATA, contactId.get(position));
                     //appSession.setData(ChatSession.CONTACT_DATA, null);
                     //appSession.setData(ChatSession.CONTACT_DATA, chatManager.getChatActorbyConnectionId(contactId.get(position)));
@@ -437,18 +446,18 @@ public class ChatListFragment extends AbstractFermatFragment{
         if (id == R.id.menu_search) {
             return true;
         }
-        if (id == R.id.menu_open_chat) {
-            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-            return true;
-        }
-        if (id == R.id.menu_create_group) {
-            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-            return true;
-        }
-        if (id == R.id.menu_create_broadcasting) {
-            changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL, appSession.getAppPublicKey());
-            return true;
-        }
+//        if (id == R.id.menu_open_chat) {
+//            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+//            return true;
+//        }
+//        if (id == R.id.menu_create_group) {
+//            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+//            return true;
+//        }
+//        if (id == R.id.menu_create_broadcasting) {
+//            changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL, appSession.getAppPublicKey());
+//            return true;
+//        }
         if (id == R.id.menu_delete_all_chats) {
             try {
                 final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);

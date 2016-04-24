@@ -34,6 +34,7 @@ import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.layer.identity.interfaces.ChatIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
@@ -43,6 +44,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.Un
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -244,7 +246,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 null, errorManager, chatSession, appSession, this);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
-        registerForContextMenu(list);
+        //registerForContextMenu(list);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener()/*new AdapterView.OnItemClickListener()*/ {
 
@@ -265,8 +267,15 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
 //                                    getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, offset))
 //                    {
                         //null;//chatManager.getContacts();
-
-                        appSession.setData(ChatSession.CONTACT_DATA, contactid.get(position));//chatManager.getChatActorbyConnectionId(contactid.get(position)));
+                        Contact contact=new ContactImpl();
+                        contact.setRemoteActorPublicKey(contactid.get(position));
+                        contact.setAlias(contactname.get(position));
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        contacticon.get(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        contact.setProfileImage(byteArray);
+                        appSession.setData(ChatSession.CONTACT_DATA, contact);
+                       // appSession.setData(ChatSession.CONTACT_DATA, contactid.get(position));//chatManager.getChatActorbyConnectionId(contactid.get(position)));
 //                    }
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                     // }

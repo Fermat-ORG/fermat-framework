@@ -202,10 +202,10 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
             }
             return true;
         }
-        if (item.getItemId() == R.id.menu_send_chat_email) {
-            //changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
-            return true;
-        }
+//        if (item.getItemId() == R.id.menu_send_chat_email) {
+//            //changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 }
