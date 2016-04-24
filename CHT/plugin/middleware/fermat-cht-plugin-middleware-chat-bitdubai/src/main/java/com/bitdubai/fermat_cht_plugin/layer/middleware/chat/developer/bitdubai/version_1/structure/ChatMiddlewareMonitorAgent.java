@@ -420,8 +420,7 @@ public class ChatMiddlewareMonitorAgent implements
                     saveMessage(chatMetadata);
 
                     //TODO TEST NOTIFICATION TO PIP REVISAR ESTO CREO QUE NO FUNCIONANDO
-                    //broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, BROADCAST_CODE);
-                    //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, BROADCAST_CODE);
+                   
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
 
         } catch (DatabaseOperationException e) {
