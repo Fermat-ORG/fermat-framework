@@ -172,7 +172,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                                     chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
                                             getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, offset))
                             {
-                                if(cont.getPublicKey()==chat.getRemoteActorPublicKey()){
+                                if(cont.getPublicKey().equals(chat.getRemoteActorPublicKey())){
                                     contactName.add(cont.getAlias());
                                     message.add(mess.getMessage());
                                     status.add(mess.getStatus().toString());
