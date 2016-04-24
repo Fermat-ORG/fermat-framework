@@ -137,71 +137,71 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         // Inflate the menu items
-        inflater.inflate(R.menu.chat_menu, menu);
+        //inflater.inflate(R.menu.chat_menu, menu);
         // Locate the search item
-        MenuItem searchItem = menu.findItem(R.id.menu_search);
-        searchView = (SearchView) searchItem.getActionView();
-        searchView.setQueryHint(getResources().getString(R.string.search_hint));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-                if (s.equals(searchView.getQuery().toString())) {
-                    adapter.getFilter().filter(s);
-                }
-                return false;
-            }
-        });
-        if (chatSession.getData("filterString") != null) {
-            String filterString = (String) chatSession.getData("filterString");
-            if (filterString.length() > 0) {
-                searchView.setQuery(filterString, true);
-                searchView.setIconified(false);
-            }
-        }
+//        MenuItem searchItem = menu.findItem(R.id.menu_search);
+//        searchView = (SearchView) searchItem.getActionView();
+//        searchView.setQueryHint(getResources().getString(R.string.search_hint));
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String s) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String s) {
+//                if (s.equals(searchView.getQuery().toString())) {
+//                    adapter.getFilter().filter(s);
+//                }
+//                return false;
+//            }
+//        });
+//        if (chatSession.getData("filterString") != null) {
+//            String filterString = (String) chatSession.getData("filterString");
+//            if (filterString.length() > 0) {
+//                searchView.setQuery(filterString, true);
+//                searchView.setIconified(false);
+//            }
+//        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_search) {
-            return true;
-        }
-        if (item.getItemId() == R.id.menu_block_contact) {
-            //changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
-            return true;
-        }
-        if (item.getItemId() == R.id.menu_clean_chat) {
-            try {
-                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
-                alert.setTextTitle("Clean Chat");
-                alert.setTextBody("Do you want to clean this chat? All messages in here will be erased");
-                alert.setType("delete-chat");
-                alert.show();
-                alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        try {
-                            // Get the info of chat selected from session
-                            Chat chat = chatSession.getSelectedChat();
-                            // Delete chat and refresh view
-                            chatManager.deleteMessagesByChatId(chat.getChatId());
-                            adapterView.refreshEvents();
-                        } catch (CantDeleteMessageException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        }catch (Exception e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        }
-                    }
-                });
-            }catch (Exception e){
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
-            return true;
-        }
+//        if (item.getItemId() == R.id.menu_search) {
+//            return true;
+//        }
+//        if (item.getItemId() == R.id.menu_block_contact) {
+//            //changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
+//            return true;
+//        }
+//        if (item.getItemId() == R.id.menu_clean_chat) {
+//            try {
+//                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+//                alert.setTextTitle("Clean Chat");
+//                alert.setTextBody("Do you want to clean this chat? All messages in here will be erased");
+//                alert.setType("delete-chat");
+//                alert.show();
+//                alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                    @Override
+//                    public void onDismiss(DialogInterface dialog) {
+//                        try {
+//                            // Get the info of chat selected from session
+//                            Chat chat = chatSession.getSelectedChat();
+//                            // Delete chat and refresh view
+//                            chatManager.deleteMessagesByChatId(chat.getChatId());
+//                            adapterView.refreshEvents();
+//                        } catch (CantDeleteMessageException e) {
+//                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                        }catch (Exception e) {
+//                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                        }
+//                    }
+//                });
+//            }catch (Exception e){
+//                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//            }
+//            return true;
+//        }
 //        if (item.getItemId() == R.id.menu_send_chat_email) {
 //            //changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
 //            return true;

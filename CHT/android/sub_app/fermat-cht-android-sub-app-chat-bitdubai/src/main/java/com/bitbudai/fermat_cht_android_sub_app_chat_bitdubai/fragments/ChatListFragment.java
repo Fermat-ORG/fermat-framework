@@ -350,7 +350,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                     imgId.get(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
                     byte[] byteArray = stream.toByteArray();
                     contact.setProfileImage(byteArray);
-                    appSession.setData(ChatSession.CONTACT_DATA, contactId.get(position));
+                    appSession.setData(ChatSession.CONTACT_DATA, contact);
                     //appSession.setData(ChatSession.CONTACT_DATA, null);
                     //appSession.setData(ChatSession.CONTACT_DATA, chatManager.getChatActorbyConnectionId(contactId.get(position)));
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
