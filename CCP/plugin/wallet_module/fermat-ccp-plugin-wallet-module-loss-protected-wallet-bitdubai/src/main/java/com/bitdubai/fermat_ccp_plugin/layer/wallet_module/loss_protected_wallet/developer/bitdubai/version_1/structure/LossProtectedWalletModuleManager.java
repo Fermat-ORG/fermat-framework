@@ -990,11 +990,11 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                     }
 
                     @Override
-                    public long getAmount() {return  (long)9.2; }
+                    public long getAmount() {return  (long)1.2; }
 
                     @Override
                     public double getExchangeRate() {
-                        return 9;
+                        return 422.35;
                     }
                 };
 
@@ -1015,14 +1015,114 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
                     }
 
                     @Override
-                    public long getAmount() {return (long)9;}
+                    public long getAmount() {return (long)1.45;}
 
                     @Override
-                    public double getExchangeRate() {return 9;}
+                    public double getExchangeRate() {return 418.2;}
                 };
+                BitcoinLossProtectedWalletSpend spendingLsit3 = new BitcoinLossProtectedWalletSpend() {
+                    @Override
+                    public UUID getSpendId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getAmount() {return  (long)1.25; }
+
+                    @Override
+                    public double getExchangeRate() {
+                        return 423.35;
+                    }
+                };
+                BitcoinLossProtectedWalletSpend spendingLsit4 = new BitcoinLossProtectedWalletSpend() {
+                    @Override
+                    public UUID getSpendId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getAmount() {return  (long)2.2; }
+
+                    @Override
+                    public double getExchangeRate() {
+                        return 424.3;
+                    }
+                };
+                BitcoinLossProtectedWalletSpend spendingLsit5 = new BitcoinLossProtectedWalletSpend() {
+                    @Override
+                    public UUID getSpendId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getAmount() {return  (long)2.23; }
+
+                    @Override
+                    public double getExchangeRate() {
+                        return 414.25;
+                    }
+                };
+                BitcoinLossProtectedWalletSpend spendingLsit6 = new BitcoinLossProtectedWalletSpend() {
+                    @Override
+                    public UUID getSpendId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public UUID getTransactionId() {
+                        return UUID.randomUUID();
+                    }
+
+                    @Override
+                    public long getTimestamp() {
+                        return 0;
+                    }
+
+                    @Override
+                    public long getAmount() {return  (long)2.5; }
+
+                    @Override
+                    public double getExchangeRate() {
+                        return 419.35;
+                    }
+                };
+
 
                 allWalletSpendingList.add(spendingLsit);
                 allWalletSpendingList.add(spendingLsit2);
+                allWalletSpendingList.add(spendingLsit3);
+                allWalletSpendingList.add(spendingLsit4);
+                allWalletSpendingList.add(spendingLsit5);
 
             }
 

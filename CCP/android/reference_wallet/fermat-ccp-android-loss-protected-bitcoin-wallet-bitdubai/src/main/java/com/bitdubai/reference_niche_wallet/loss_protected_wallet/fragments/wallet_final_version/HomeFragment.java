@@ -39,8 +39,10 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.Los
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetCryptoLossProtectedWalletException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantGetLossProtectedBalanceException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedSpendingException;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.exceptions.CantListLossProtectedTransactionsException;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWallet;
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserIdentity;
+import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletTransaction;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
@@ -61,6 +63,8 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.LargeValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -75,7 +79,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by Gian Barboza on 18/04/16.
  */
-public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSession,ResourceProviderManager> {
+public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSession,ResourceProviderManager> implements OnChartValueSelectedListener {
 
     LossProtectedWalletSession lossProtectedWalletSession;
     SettingsManager<LossProtectedWalletSettings> settingsManager;
@@ -369,10 +373,10 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             double total = 0;
             //total = lossProtectedWallet.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
             if (total>=0){
-                txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(total)+" earning");
+                txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(total)+" earned");
                 earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
             }else {
-                txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(total)+" lost");
+                txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(total)+" losted");
                 earnOrLostImage.setImageResource(R.drawable.lost_icon);
             }
 
@@ -384,9 +388,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             //chart
 
-           ArrayList<Entry> entries = new ArrayList<>();
-            entries.add(new Entry(1, 0));
-            entries.add(new Entry(3, 1));
+         /*  ArrayList<Entry> entries = new ArrayList<>();
+            entries.add(new Entry(9, 0));
+            entries.add(new Entry(10, 1));
             entries.add(new Entry(15, 2));
             entries.add(new Entry(3, 3));
             entries.add(new Entry(-10, 4));
@@ -404,13 +408,34 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             labels.add("March");
             labels.add("April");
             labels.add("May");
-            labels.add("June");
+            labels.add("June");*/
 
+            //Get all wallet spindings from the manager
+            allWalletSpendingList = lossProtectedWallet.listAllWalletSpendingValue(lossProtectedWalletSession.getAppPublicKey());
 
+            LineData data = getData(allWalletSpendingList);
+            //LineData data = new LineData(labels, dataset);
+
+            data.setValueTextSize(12f);
+            data.setValueTextColor(Color.WHITE);
+
+            chart.setData(data);
+            chart.setDescription("");
+            chart.setDrawGridBackground(false);
+            chart.animateY(2000);
+            chart.setTouchEnabled(true);
+            chart.setDragEnabled(false);
+            chart.setScaleEnabled(false);
+            chart.setPinchZoom(false);
+            chart.setDoubleTapToZoomEnabled(true);
+            chart.setHighlightPerDragEnabled(false);
+            chart.setHighlightPerTapEnabled(false);
+            chart.setOnChartValueSelectedListener(this);
 
 
             YAxis yAxis = chart.getAxisLeft();
             yAxis.setEnabled(false);
+            yAxis.setStartAtZero(false);
             yAxis.setAxisMaxValue(30);
             yAxis.setAxisMinValue(-30);
 
@@ -427,21 +452,15 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
 
 
-            LineData data = getData();
-            //LineData data = new LineData(labels, dataset);
-
-            data.setValueTextSize(12f);
-            data.setValueTextColor(Color.WHITE);
-
-            chart.setData(data);
-            chart.setDescription("");
-            chart.setDrawGridBackground(true);
-            chart.animateY(2000);
-            
-            chart.setVisibility(View.VISIBLE);
-
-
-        }catch (Exception e){
+        }catch (CantListLossProtectedSpendingException e) {
+        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+        makeText(getActivity(), "Oooops! Error Exception : CantListLossProtectedSpendingException",
+                Toast.LENGTH_SHORT).show();
+        }catch (CantLoadWalletException e) {
+        errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+        makeText(getActivity(), "Oooops! Error Exception : CantLoadWalletException",
+                Toast.LENGTH_SHORT).show();
+        }catch (Exception e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
             makeText(getActivity(), "Oooops! recovering from system error In Graphic",
                     Toast.LENGTH_SHORT).show();
@@ -453,47 +472,87 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
      *
      * @return the ListData object
      */
-    private LineData getData() {
+    private LineData getData(List<BitcoinLossProtectedWalletSpend> ListSpendigs) {
+
         ArrayList<Entry> entryList = new ArrayList<>();
         ArrayList<String> xValues = new ArrayList<>();
 
-        try {
-            //Catch all the spending list of the wallet
-            allWalletSpendingList = lossProtectedWallet.listAllWalletSpendingValue(lossProtectedWalletSession.getAppPublicKey());
-            //look for the size number of the list
-            int size = 0;
-            size = allWalletSpendingList.size();
-            //if statement for validate if the list has values
-            if (size > 0) {
-                for (int i = 0; i < size; i++) {
-                    BitcoinLossProtectedWalletSpend listSpendig = allWalletSpendingList.get(i);
-                    entryList.add(new Entry(listSpendig.getAmount(), i));
-                    xValues.add(String.valueOf(i));
-                }
-                chart.setVisibility(View.VISIBLE);
-            }else{
-                chart.setVisibility(View.GONE);
-                noDataInChart.setVisibility(View.VISIBLE);
+        //look for the size number of the spendings list
+        int size = ListSpendigs.size();
+
+        //if statement for validate if the list has values
+        if (size > 0) {
+            //loop into the spending transaction
+            for (int i = 0; i < size; i++) {
+
+                BitcoinLossProtectedWalletSpend listSpendig = ListSpendigs.get(i);
+
+                //get the entry value for chart with getEarnOrLostOfSpending method
+                final float valueEntry = getEarnOrLostOfSpending(
+                        listSpendig.getAmount(),
+                        listSpendig.getExchangeRate(),
+                        listSpendig.getTransactionId());
+
+                //Set entries values for the chart
+                entryList.add(new Entry(valueEntry, i));
+                xValues.add(String.valueOf(i));
+            }
+            chart.setVisibility(View.VISIBLE);
+        }else{
+            chart.setVisibility(View.GONE);
+            noDataInChart.setVisibility(View.VISIBLE);
+        }
+
+        LineDataSet dataset = new LineDataSet(entryList, "dataSet");
+        dataset.setColor(Color.WHITE); //
+        dataset.setDrawCubic(false);
+        dataset.setDrawValues(false);
+        dataset.setDrawCircles(false);
+        dataset.setValueFormatter(new LargeValueFormatter());
+
+        return new LineData(xValues, dataset);
+
+    }
+
+    private float getEarnOrLostOfSpending(float spendingAmount,double spendingExchangeRate, UUID transactionId){
+
+        double totalInDollars = 0;
+
+        try{
+
+            //get the intra user login identity
+            LossProtectedWalletIntraUserIdentity intraUserLoginIdentity = lossProtectedWalletSession.getIntraUserModuleManager();
+            String intraUserPk = null;
+            if (intraUserLoginIdentity != null) {
+                intraUserPk = intraUserLoginIdentity.getPublicKey();
             }
 
-            LineDataSet dataset = new LineDataSet(entryList, "dataSet");
-            dataset.setColor(Color.WHITE); //
-            dataset.setDrawCubic(false);
-            dataset.setValueFormatter(new LargeValueFormatter());
+            //Get the transaction of this Spending
+            LossProtectedWalletTransaction transaction = lossProtectedWallet.getTransaction(
+                    transactionId,
+                    lossProtectedWalletSession.getAppPublicKey(),
+                    intraUserPk);
+            //calculate the Earned/Losted in dollars of the spending value
+            totalInDollars = (spendingAmount*spendingExchangeRate)-(spendingAmount * transaction.getExchangeRate());
 
-            return new LineData(xValues, dataset);
+            //return the total
+            return (float) totalInDollars;
 
-        } catch (CantListLossProtectedSpendingException e) {
+        } catch (CantListLossProtectedTransactionsException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! Error Exception : CantListLossProtectedSpendingException",
+            makeText(getActivity(), "Oooops! Error Exception : CantListLossProtectedTransactionsException",
                     Toast.LENGTH_SHORT).show();
-        } catch (CantLoadWalletException e) {
+        } catch (CantListCryptoWalletIntraUserIdentityException e) {
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-            makeText(getActivity(), "Oooops! Error Exception : CantLoadWalletException",
+            makeText(getActivity(), "Oooops! Error Exception : CantListCryptoWalletIntraUserIdentityException",
+                    Toast.LENGTH_SHORT).show();
+        } catch (CantGetCryptoLossProtectedWalletException e) {
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+            makeText(getActivity(), "Oooops! Error Exception : CantGetCryptoLossProtectedWalletException",
                     Toast.LENGTH_SHORT).show();
         }
 
-        return null;
+        return 0;
     }
 
 
@@ -658,5 +717,34 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     }
 
 
+    @Override
+    public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+        if (e != null) {
+            try {
 
+                Log.i("VAL SELECTED",
+                        "Value: " + e.getVal() + ", xIndex: " + e.getXIndex()
+                                + ", DataSet index: " + dataSetIndex);
+
+                //total = lossProtectedWallet.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
+                if (e.getVal()>=0){
+                    txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(e.getVal())+" earned");
+                    earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
+                }else {
+                    txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(e.getVal())+" losted");
+                    earnOrLostImage.setImageResource(R.drawable.lost_icon);
+                }
+                chart.invalidate(); // refresh
+
+            }catch (Exception el){
+                el.getCause();
+            }
+        }
+    }
+
+    @Override
+    public void onNothingSelected() {
+        txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(0)+" earned");
+        earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
+    }
 }
