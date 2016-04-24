@@ -81,7 +81,7 @@ public class ContactFragment extends AbstractFermatFragment {
     // OS versions as search results are shown in-line via Action Bar search from honeycomb onward
     private boolean mIsSearchResultView = false;
     private ChatManager chatManager;
-    private ChatModuleManager moduleManager;
+   // private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private cht_dialog_connections.AdapterCallbackContacts mAdapterCallback;
     private SettingsManager<ChatSettings> settingsManager;
@@ -181,18 +181,18 @@ public class ContactFragment extends AbstractFermatFragment {
         View layout = inflater.inflate(R.layout.contact_detail_fragment, container, false);
 
         try {
-            //Contact con= chatSession.getSelectedContact();
+            Contact con= chatSession.getSelectedContact();
 
-            for (ChatActorCommunityInformation con: chatManager.listAllConnectedChatActor(
-                    (ChatActorCommunitySelectableIdentity) chatManager.
-                            getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, 0))
-            {
-                if(con.getPublicKey()==chatSession.getData(ChatSession.CONTACT_DATA)) {
+//            for (ChatActorCommunityInformation con: chatManager.listAllConnectedChatActor(
+//                    (ChatActorCommunitySelectableIdentity) chatManager.
+//                            getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, 0))
+//            {
+//                if(con.getPublicKey()==chatSession.getData(ChatSession.CONTACT_DATA)) {
                     contactname.add(con.getAlias());
 
-                    contactid.add(con.getPublicKey());
+                    contactid.add(con.getRemoteActorPublicKey());
                     contactalias.add(con.getAlias());
-                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.getImage());
+                    ByteArrayInputStream bytes = new ByteArrayInputStream(con.getProfileImage());
                     BitmapDrawable bmd = new BitmapDrawable(bytes);
                     contacticon.add(bmd.getBitmap());
 
@@ -214,9 +214,9 @@ public class ContactFragment extends AbstractFermatFragment {
                         View item = adapter.getView(i, null, null);
                         detalles.addView(item);
                     }
-                }
-                break;
-            }
+//                }
+//                break;
+//            }
         }catch (Exception e){
             if (errorManager != null)
                 errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -470,52 +470,52 @@ public class ContactFragment extends AbstractFermatFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_block_contact) {
-            //Contact con = chatSession.getSelectedContact();
-            return true;
-        }
-        if (item.getItemId() == R.id.menu_edit_contact) {
-            try {
-               // Contact con = chatSession.getSelectedContact();
-                //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-                for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
-                        (ChatActorCommunitySelectableIdentity) chatManager.
-                                getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, 0)) {
-                    if (cont.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
-                        appSession.setData(ChatSession.CONTACT_DATA, cont.getPublicKey());
-                        break;
-                        // appSession.setData(ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(con.getContactId()));
-                    }
-                }
-                changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
-            //}catch(CantGetContactException e) {
-            //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }catch (Exception e){
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
-            return true;
-        }
-        if (item.getItemId() == R.id.menu_del_contact) {
-            final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,mAdapterCallback);
-            alert.setTextTitle("Delete contact");
-            alert.setTextBody("Do you want to delete this contact?");
-            alert.setType("delete-contact");
-            alert.show();
-            alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                           @Override
-                                           public void onDismiss(DialogInterface dialog) {
-                                               if(alert.getStatusDeleteContact() == true){
-                                                   try {
-                                                       changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST);
-                                                   }catch (Exception e){
-                                                       errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                                                   }
-                                               }
-                                           }
-                                       }
-            );
-            return true;
-        }
+//        if (item.getItemId() == R.id.menu_block_contact) {
+//            //Contact con = chatSession.getSelectedContact();
+//            return true;
+//        }
+//        if (item.getItemId() == R.id.menu_edit_contact) {
+//            try {
+//               // Contact con = chatSession.getSelectedContact();
+//                //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+//                for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
+//                        chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
+//                                getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, 0)) {
+//                    if (cont.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
+//                        appSession.setData(ChatSession.CONTACT_DATA, cont.getPublicKey());
+//                        break;
+//                        // appSession.setData(ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(con.getContactId()));
+//                    }
+//                }
+//                changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
+//            //}catch(CantGetContactException e) {
+//            //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//            }catch (Exception e){
+//                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//            }
+//            return true;
+//        }
+//        if (item.getItemId() == R.id.menu_del_contact) {
+//            final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,mAdapterCallback);
+//            alert.setTextTitle("Delete contact");
+//            alert.setTextBody("Do you want to delete this contact?");
+//            alert.setType("delete-contact");
+//            alert.show();
+//            alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                                           @Override
+//                                           public void onDismiss(DialogInterface dialog) {
+//                                               if(alert.getStatusDeleteContact() == true){
+//                                                   try {
+//                                                       changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST);
+//                                                   }catch (Exception e){
+//                                                       errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                                                   }
+//                                               }
+//                                           }
+//                                       }
+//            );
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 

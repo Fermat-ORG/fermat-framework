@@ -26,7 +26,7 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         android:text="title"
         android:textColor="#000000"
         android:textSize="20dip" />
-    <TextView
+    <!--TextView
         android:id="@+id/status"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
@@ -37,5 +37,5 @@ xmlns:android="http://schemas.android.com/apk/res/android"
         android:maxLines="3"
         android:text="desc"
         android:textColor="#757575"
-        android:textSize="12dip" />
+        android:textSize="12dip" /-->
 </RelativeLayout>
