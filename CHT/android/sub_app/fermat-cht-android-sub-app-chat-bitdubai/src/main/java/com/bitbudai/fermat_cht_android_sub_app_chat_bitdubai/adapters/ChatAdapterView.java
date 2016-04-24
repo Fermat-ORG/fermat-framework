@@ -130,28 +130,25 @@ public class ChatAdapterView extends LinearLayout {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    //void findValues(Contact contact){ //With contact Id find chatId,pkremote,actortype
-    void findValues(){ //With contact Id find chatId,pkremote,actortype
+    //void findValuec(Contact contact){ //With contact Id find chatId,pkremote,actortype
+    void findValues(Contact contact){ //With contact Id find chatId,pkremote,actortype
         try {
-            for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
-                    (ChatActorCommunitySelectableIdentity) chatManager.
-                            getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, 0)) {
-                if (cont.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
-                    if (cont != null) {
-                        remotePk = cont.getPublicKey();
-                        //remotePCT = cont.getRemoteActorType();
-                        contactId = cont.getPublicKey();//9a6049ff-e64c-4a13-b579-d0a96c7cbb77
-                        ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
-                        BitmapDrawable bmd = new BitmapDrawable(bytes);
-                        contactIcon = bmd.getBitmap();
-                        leftName = cont.getAlias();
-                        Chat cht = chatManager.getChatByRemotePublicKey(remotePk);
-                        if (cht != null)
-                            chatId = cht.getChatId();
-                        else chatId = null;
-                        //appSession.setData(ChatSession.CONTACT_DATA, null);
-                    }
-                }
+//            for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
+//                    chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
+//                            getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, 0)) {
+            if(contact!= null){
+                remotePk = contact.getRemoteActorPublicKey();
+                //remotePCT = cont.getRemoteActorType();
+                contactId = contact.getRemoteActorPublicKey();//9a6049ff-e64c-4a13-b579-d0a96c7cbb77
+                ByteArrayInputStream bytes = new ByteArrayInputStream(contact.getProfileImage());
+                BitmapDrawable bmd = new BitmapDrawable(bytes);
+                contactIcon = bmd.getBitmap();
+                leftName = contact.getAlias();
+                Chat cht = chatManager.getChatByRemotePublicKey(remotePk);
+                if (cht != null)
+                    chatId = cht.getChatId();
+                else chatId = null;
+                //appSession.setData(ChatSession.CONTACT_DATA, null);
             }
         }catch (CantGetChatException e) {
             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
@@ -163,7 +160,7 @@ public class ChatAdapterView extends LinearLayout {
     public void whatToDo(){
         try {
             //System.out.println("WHOCALME NOW:" + chatSession.getData("whocallme"));
-            findValues();
+            findValues(chatSession.getSelectedContact());
             if (chatSession.getData("whocallme").equals("chatlist")) {
                 //if I choose a chat, this will retrieve the chatId
                 chatWasCreate = true;
@@ -421,7 +418,7 @@ public class ChatAdapterView extends LinearLayout {
                         message.setMessageDate(new Timestamp(dv));
                         message.setStatus(MessageStatus.CREATED);
                         message.setType(TypeMessage.OUTGOING);
-                        message.setContactId(null);
+                        message.setContactId(UUID.randomUUID());
                         chatManager.saveMessage(message);
                         sendMessageAsync.execute(message);
                     } else {
@@ -434,12 +431,13 @@ public class ChatAdapterView extends LinearLayout {
                         //Contact newContact = null;//chatManager.getContactByContactId(
                                 //contactId);
                         //PlatformComponentType remoteActorType = newContact.getRemoteActorType();
-                        for (ChatActorCommunityInformation newContact: chatManager.listAllConnectedChatActor(
-                                (ChatActorCommunitySelectableIdentity) chatManager.
-                                        getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, 0)) {
-                            if (newContact.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
-                                remotePublicKey = newContact.getPublicKey();
-                                chat.setRemoteActorType(null);//chat.setRemoteActorType(remoteActorType);
+//                        for (ChatActorCommunityInformation newContact: chatManager.listAllConnectedChatActor(
+//                                chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
+//                                        getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, 0)) {
+//                            if (newContact.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
+                        Contact newContact= chatSession.getSelectedContact();
+                        remotePublicKey = newContact.getRemoteActorPublicKey();
+                                chat.setRemoteActorType(PlatformComponentType.ACTOR_CHAT);//chat.setRemoteActorType(remoteActorType);
                                 chat.setRemoteActorPublicKey(remotePublicKey);
                                 Chat chatPrevious = chatManager.getChatByRemotePublicKey(remotePublicKey);
                                 UUID newChatId;
@@ -459,11 +457,18 @@ public class ChatAdapterView extends LinearLayout {
                                  * Now we got the identities registered in the device.
                                  * To avoid nulls, I'll put default data in chat object
                                  */
+//                                chat.setLocalActorPublicKey(chatManager.
+//                                        getIdentityChatUsersFromCurrentDeviceUser().get(0).getPublicKey());
                                 chat.setLocalActorPublicKey(chatManager.getNetworkServicePublicKey());
                                 chat.setLocalActorType(PlatformComponentType.NETWORK_SERVICE);
-                                if (chatSettings.getLocalPublicKey() != null && chatSettings.getLocalPlatformComponentType() != null) {
-                                    chat.setLocalActorPublicKey(chatSettings.getLocalPublicKey());
-                                    chat.setLocalActorType(chatSettings.getLocalPlatformComponentType());//chatSettings.getLocalActorType()
+                                //if (chatSettings.getLocalPublicKey() != null /*&& chatSettings.getLocalPlatformComponentType() != null*/) {
+                                //Asigno pk del usuario y no uso la del NS
+                        String pKey = chatManager.
+                                        getIdentityChatUsersFromCurrentDeviceUser().get(0).getPublicKey();
+                                if(pKey != null){
+                                    chat.setLocalActorPublicKey(pKey);
+                                    //chat.setLocalActorPublicKey(chatSettings.getLocalPublicKey());
+                                    chat.setLocalActorType(PlatformComponentType.ACTOR_CHAT);//chatSettings.getLocalPlatformComponentType()//chatSettings.getLocalActorType()
                                 }
                                 chatManager.saveChat(chat);
 
@@ -473,7 +478,7 @@ public class ChatAdapterView extends LinearLayout {
                                 message.setMessageDate(new Timestamp(dv));
                                 message.setStatus(MessageStatus.CREATED);
                                 message.setType(TypeMessage.OUTGOING);
-                                message.setContactId(null);//message.setContactId(contactId);
+                                message.setContactId(UUID.randomUUID());//message.setContactId(contactId);
                                 chatManager.saveMessage(message);
                                 sendMessageAsync.execute(message);//
                                 //If everything goes OK, we save the chat in the fragment session.
@@ -489,9 +494,8 @@ public class ChatAdapterView extends LinearLayout {
                                  */
                                 chatWasCreate = true;
                                 chatId = newChatId;
-                                break;
-                            }
-                        }
+//                            }
+//                        }
                     }
 
                     ChatMessage chatMessage = new ChatMessage();

@@ -22,6 +22,8 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFra
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 //import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
@@ -34,7 +36,9 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_co
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.chat_community.adapters.NotificationAdapter;
 import com.bitdubai.sub_app.chat_community.session.ChatUserSubAppSession;
@@ -61,6 +65,10 @@ public class ConnectionNotificationsFragment
         implements SwipeRefreshLayout.OnRefreshListener,
         FermatListItemListeners<ChatActorCommunityInformation>, AcceptDialog.OnDismissListener {
 
+    private ChatActorCommunitySubAppModuleManager moduleManager;
+    private ErrorManager errorManager;
+    private SettingsManager<ChatActorCommunitySettings> settingsManager;
+    private ChatUserSubAppSession chatUserSubAppSession;
     public static final String CHAT_USER_SELECTED = "chat_user";
     private static final int MAX = 20;
     protected final String TAG = "ConnectionNotificationsFragment";
@@ -72,12 +80,13 @@ public class ConnectionNotificationsFragment
     private View rootView;
     private NotificationAdapter adapter;
     private LinearLayout emptyView;
-    private ChatActorCommunitySubAppModuleManager moduleManager;
-    private ErrorManager errorManager;
     private int offset = 0;
     private ChatActorCommunityInformation chatUserInformation;
     private List<ChatActorCommunityInformation> lstChatUserInformations;//cryptoBrokerInformationList;
+    private ChatActorCommunitySettings appSettings;
 
+    private boolean launchActorCreationDialog = false;
+    private boolean launchListIdentitiesDialog = false;
     /**
      * Create a new instance of this fragment
      *
@@ -90,12 +99,49 @@ public class ConnectionNotificationsFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        try {
+            setHasOptionsMenu(true);
 
-        // setting up  module
-        chatUserInformation = (ChatActorCommunityInformation) appSession.getData(CHAT_USER_SELECTED);
-        moduleManager = appSession.getModuleManager();
-        errorManager = appSession.getErrorManager();
-        lstChatUserInformations = new ArrayList<>();
+            // setting up  module
+            chatUserInformation = (ChatActorCommunityInformation) appSession.getData(CHAT_USER_SELECTED);
+            chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
+            moduleManager = appSession.getModuleManager();
+            errorManager = appSession.getErrorManager();
+            settingsManager = moduleManager.getSettingsManager();
+            moduleManager.setAppPublicKey(appSession.getAppPublicKey());
+
+            lstChatUserInformations = new ArrayList<>();
+
+            //Obtain Settings or create new Settings if first time opening subApp
+            appSettings = null;
+            try {
+                appSettings = this.settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            }catch (Exception e){ appSettings = null; }
+
+            if(appSettings == null){
+                appSettings = new ChatActorCommunitySettings();
+                appSettings.setIsPresentationHelpEnabled(true);
+                try {
+                    settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            //Check if a default identity is configured
+            try{
+                moduleManager.getSelectedActorIdentity();
+            }catch (CantGetSelectedActorIdentityException e){
+                //There are no identities in device
+                launchActorCreationDialog = true;
+            }catch (ActorIdentityNotSelectedException e){
+                //There are identities in device, but none selected
+                launchListIdentitiesDialog = true;
+            }
+        } catch (Exception ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
+        }
     }
 
 
@@ -121,7 +167,7 @@ public class ConnectionNotificationsFragment
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
 
-            //rootView.setBackgroundColor(Color.parseColor("#f9f9f9"));
+            rootView.setBackgroundColor(Color.parseColor("#F9F9F9"));
             emptyView = (LinearLayout) rootView.findViewById(R.id.empty_view);
 
             onRefresh();

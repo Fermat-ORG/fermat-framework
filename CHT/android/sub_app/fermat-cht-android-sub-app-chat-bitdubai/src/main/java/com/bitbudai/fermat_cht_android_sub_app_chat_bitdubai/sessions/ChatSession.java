@@ -29,11 +29,11 @@ public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatMana
 
     public ChatSession() {}
 
-//    public Contact getSelectedContact() {
-//        Object data = getData(CONTACT_DATA);
-//        return (data != null) ? (Contact) data : null;
-//    }
-//
+    public Contact getSelectedContact() {
+        Object data = getData(CONTACT_DATA);
+        return (data != null) ? (Contact) data : null;
+    }
+
     public ChatUserIdentity getSelectedProfile() {
         Object data = getData(PROFILE_DATA);
         return (data != null) ? (ChatUserIdentity) data : null;

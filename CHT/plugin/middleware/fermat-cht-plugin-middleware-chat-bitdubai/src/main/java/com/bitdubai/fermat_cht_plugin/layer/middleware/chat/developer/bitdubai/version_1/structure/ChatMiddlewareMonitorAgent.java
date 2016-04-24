@@ -419,9 +419,9 @@ public class ChatMiddlewareMonitorAgent implements
 
                     saveMessage(chatMetadata);
 
-                    //TODO TEST NOTIFICATION TO PIP
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, BROADCAST_CODE);
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, BROADCAST_CODE);
+                    //TODO TEST NOTIFICATION TO PIP REVISAR ESTO CREO QUE NO FUNCIONANDO
+                    //broadcaster.publish(BroadcasterType.NOTIFICATION_PROGRESS_SERVICE, BROADCAST_CODE);
+                    //broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, BROADCAST_CODE);
                     broadcaster.publish(BroadcasterType.UPDATE_VIEW, BROADCAST_CODE);
 
         } catch (DatabaseOperationException e) {
@@ -656,7 +656,7 @@ public class ChatMiddlewareMonitorAgent implements
                     chatMetadata,
                     MessageStatus.CREATED,
                     TypeMessage.INCOMMING,
-                    UUID.fromString(actorConnection.getPublicKey())
+                    actorConnection.getConnectionId()//TODO:Revisar esto si afecta el envio ya que el public es un string//UUID.fromString(actorConnection.getPublicKey())
             );
             return message;
         } catch (DatabaseOperationException e) {
