@@ -71,8 +71,10 @@ import static android.widget.Toast.makeText;
  * @version 1.0
  */
 
-public class ConnectionsWorldFragment extends AbstractFermatFragment<ChatUserSubAppSession, SubAppResourcesProviderManager> implements
-        SwipeRefreshLayout.OnRefreshListener, FermatListItemListeners<ChatActorCommunityInformation> {
+public class ConnectionsWorldFragment
+        extends AbstractFermatFragment<ChatUserSubAppSession, SubAppResourcesProviderManager>
+        implements SwipeRefreshLayout.OnRefreshListener,
+        FermatListItemListeners<ChatActorCommunityInformation> {
 
     //Constants
     public static final String CHAT_USER_SELECTED = "chat_user";

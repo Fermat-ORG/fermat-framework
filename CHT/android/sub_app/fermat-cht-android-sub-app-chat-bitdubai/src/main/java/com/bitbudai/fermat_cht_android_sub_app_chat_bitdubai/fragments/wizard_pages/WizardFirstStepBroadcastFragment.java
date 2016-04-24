@@ -53,12 +53,13 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
  @Override
      public void onCreate(Bundle savedInstanceState) {
      super.onCreate(savedInstanceState);
-         ChatModuleManager moduleManager = ((ChatSession) appSession).getModuleManager();
-         try {
-             walletManager = moduleManager.getChatManager();
-         } catch (CHTException e) {
-             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-         }
+     ChatManager moduleManager = ((ChatSession) appSession).getModuleManager();
+     //TODO:Revisar esto
+//         try {
+//             walletManager = moduleManager;
+//         } catch (CHTException e) {
+//             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//         }
          errorManager = appSession.getErrorManager();
      toolbar = getToolbar();
      toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));

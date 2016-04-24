@@ -6,6 +6,7 @@ import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ChatUserIdentity;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.ContactConnection;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
 
@@ -15,7 +16,7 @@ import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubApp
  * @author Jose Cardozo josejcb (josejcb89@gmail.com) on 30/12/15.
  * @version 1.0
  */
-public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatModuleManager,SubAppResourcesProviderManager> {
+public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatManager,SubAppResourcesProviderManager> {
 
     public static final String CONTACT_DATA = "CONTACT_DATA";
     public static final String CONTACTTOUPDATE_DATA = "CONTACTTOUPDATE_DATA";
@@ -28,11 +29,11 @@ public class ChatSession extends AbstractFermatSession<InstalledSubApp, ChatModu
 
     public ChatSession() {}
 
-//    public Contact getSelectedContact() {
-//        Object data = getData(CONTACT_DATA);
-//        return (data != null) ? (Contact) data : null;
-//    }
-//
+    public Contact getSelectedContact() {
+        Object data = getData(CONTACT_DATA);
+        return (data != null) ? (Contact) data : null;
+    }
+
     public ChatUserIdentity getSelectedProfile() {
         Object data = getData(PROFILE_DATA);
         return (data != null) ? (ChatUserIdentity) data : null;

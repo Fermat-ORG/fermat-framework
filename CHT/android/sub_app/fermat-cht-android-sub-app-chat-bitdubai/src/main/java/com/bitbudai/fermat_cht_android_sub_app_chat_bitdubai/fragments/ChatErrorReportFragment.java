@@ -45,7 +45,7 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
 
     // Fermat Managers
     private ChatManager chatManager;
-    private ChatModuleManager moduleManager;
+    //private ChatModuleManager moduleManager;
     private ErrorManager errorManager;
     private SettingsManager<ChatSettings> settingsManager;
     private ChatPreferenceSettings chatSettings;
@@ -65,8 +65,8 @@ public class ChatErrorReportFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         try {
             chatSession = ((ChatSession) appSession);
-            moduleManager = chatSession.getModuleManager();
-            chatManager = moduleManager.getChatManager();
+            chatManager = chatSession.getModuleManager();
+            //chatManager = moduleManager.getChatManager();
             errorManager = appSession.getErrorManager();
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));

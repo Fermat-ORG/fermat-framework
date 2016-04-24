@@ -80,6 +80,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     private static final int CONTEXT_MENU_GALLERY = 2;
     ChatIdentityModuleManager moduleManager;
     private EditText mBrokerName;
+    private EditText mChatConnectionState;
     private ImageView mBrokerImage;
     ErrorManager errorManager;
     private boolean actualizable;
@@ -144,6 +145,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     private void initViews(View layout) {
         actualizable = true;
         mBrokerName = (EditText) layout.findViewById(R.id.editTextName);
+        mChatConnectionState = (EditText) layout.findViewById(R.id.editTextStatus);
         final Button botonG = (Button) layout.findViewById(R.id.cht_button);
         mBrokerImage = (ImageView) layout.findViewById(R.id.cht_image);
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
@@ -207,6 +209,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                  bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
 
                 mBrokerImage.setImageDrawable(ImagesUtils.getRoundedBitmap(getResources(), bitmap));
+                mChatConnectionState.setText(moduleManager.getIdentityChatUser().getConnectionState());
                 textViewChtTitle.setText(moduleManager.getIdentityChatUser().getAlias().toString());
                 mBrokerName.setText(moduleManager.getIdentityChatUser().getAlias().toString());
                 mBrokerName.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.buttonedit, 0);
@@ -344,7 +347,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                     } catch (Exception e) {
                         errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
 
-                        Toast.makeText(getActivity().getApplicationContext(), "Error cargando la imagen", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity().getApplicationContext(), "Error loading the imagen", Toast.LENGTH_SHORT).show();
                     }
                     break;
             }
@@ -363,7 +366,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, moduleManager.getIdentityChatUser().getImage());
+                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, moduleManager.getIdentityChatUser().getImage(), moduleManager.getIdentityChatUser().getConnectionState());
 
                 int resultKey = executor.execute();
                 switch (resultKey) {
@@ -383,7 +386,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
             byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
             EditIdentityExecutor executor = null;
             try {
-                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, moduleManager.getIdentityChatUser().getImage());
+                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, moduleManager.getIdentityChatUser().getImage(), moduleManager.getIdentityChatUser().getConnectionState());
 
                 int resultKey = executor.execute();
                 switch (resultKey) {
@@ -404,6 +407,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
     private void createNewIdentityInBackDevice(String donde) {
         String brokerNameText = mBrokerName.getText().toString();
+        String identityConnectionNameText = mChatConnectionState.getText().toString();
         if (brokerNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
         } else {
@@ -413,7 +417,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
                 CreateChatIdentityExecutor executor = null;
                 try {
-                    executor = new CreateChatIdentityExecutor(Session,brokerNameText, imgInBytes);
+                    executor = new CreateChatIdentityExecutor(Session,brokerNameText, imgInBytes, identityConnectionNameText);
 
                 int resultKey = executor.execute();
                 switch (resultKey) {

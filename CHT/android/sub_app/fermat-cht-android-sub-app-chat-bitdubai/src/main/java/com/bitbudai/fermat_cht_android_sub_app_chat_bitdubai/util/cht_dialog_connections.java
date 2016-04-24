@@ -95,8 +95,8 @@ public class cht_dialog_connections extends FermatDialog<FermatSession, SubAppRe
         super.onCreate(savedInstanceState);
         try{
             chatSession=((com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession) getSession());
-            moduleManager= chatSession.getModuleManager();
-            chatManager=moduleManager.getChatManager();
+            chatManager= chatSession.getModuleManager();
+            //chatManager=moduleManager.getChatManager();
             errorManager=getSession().getErrorManager();
 
         }catch (Exception e)
