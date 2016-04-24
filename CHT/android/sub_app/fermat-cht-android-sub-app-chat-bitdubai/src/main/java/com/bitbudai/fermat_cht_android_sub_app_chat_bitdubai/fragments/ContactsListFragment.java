@@ -209,9 +209,8 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         try {
             List <ChatActorCommunityInformation> con= chatManager
-                    .listAllConnectedChatActor(
-                            (ChatActorCommunitySelectableIdentity) chatManager.
-                                    getIdentityChatUsersFromCurrentDeviceUser().get(0), MAX, offset); //null;//chatManager.getContacts();
+                    .listAllConnectedChatActor(chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
+                            getIdentityChatUsersFromCurrentDeviceUser().get(0)), MAX, offset); //null;//chatManager.getContacts();
             if(con==null){
                 int size = con.size();
                 if (size > 0) {
