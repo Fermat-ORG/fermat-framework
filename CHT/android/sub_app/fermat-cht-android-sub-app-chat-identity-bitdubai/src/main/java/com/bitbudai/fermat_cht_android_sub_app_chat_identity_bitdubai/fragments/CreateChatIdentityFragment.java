@@ -44,6 +44,7 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Country;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
@@ -124,8 +125,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
 
         }
         toolbar = getToolbar();
-        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
-
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -148,6 +147,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         final Button botonG = (Button) layout.findViewById(R.id.cht_button);
         mBrokerImage = (ImageView) layout.findViewById(R.id.cht_image);
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
+
         Bitmap bitmap = null;
         if (chatIdentitySettings.isHomeTutorialDialogEnabled() == true)
         {
@@ -313,9 +313,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 break;
 
                case MENU_ADD_ACTION:
-                   //TODO: AÑADIR!!!
-
-
                    break;
             }
 
