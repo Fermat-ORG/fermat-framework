@@ -27,7 +27,7 @@ public class EditIdentityExecutor {
     private ErrorManager errorManager;
     private ChatIdentity identity;
     private String Publickey;
-    private String identityConnectionState
+    private String identityConnectionState;
     public EditIdentityExecutor(byte[] imageInBytes,String Publickey , String identityName, String identityConnectionState) {
         this.imageInBytes = imageInBytes;
         this.Publickey = Publickey;
