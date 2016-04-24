@@ -195,8 +195,8 @@ public class ContactEditFragment extends AbstractFermatFragment {
             //Contact cont= chatSession.getSelectedContact();
             //TODO: metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
              for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
-                    (ChatActorCommunitySelectableIdentity) chatManager.
-                            getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, 0)) {
+                     chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
+                             getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, 0)) {
                 if (cont.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
                     contactname.add(cont.getAlias());
                     contactid.add(cont.getPublicKey());

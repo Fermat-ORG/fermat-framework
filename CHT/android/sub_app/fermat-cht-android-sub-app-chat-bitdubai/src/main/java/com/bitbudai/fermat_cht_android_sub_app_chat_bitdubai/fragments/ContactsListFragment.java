@@ -211,7 +211,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             List <ChatActorCommunityInformation> con= chatManager
                     .listAllConnectedChatActor(chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
                             getIdentityChatUsersFromCurrentDeviceUser().get(0)), MAX, offset); //null;//chatManager.getContacts();
-            if(con==null){
+            if(con!=null){
                 int size = con.size();
                 if (size > 0) {
                     for (int i=0;i<size;i++){

@@ -167,8 +167,8 @@ public class ChatListFragment extends AbstractFermatFragment{
                             //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
                             //Contact cont = null; //chatManager.getContactByContactId(mess.getContactId());
                             for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
-                                (ChatActorCommunitySelectableIdentity) chatManager.
-                                getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, offset))
+                                    chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
+                                            getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, offset))
                             {
                                 if(cont.getPublicKey()==chatSession.getData(ChatSession.CONTACT_DATA)){
                                     contactName.add(cont.getAlias());

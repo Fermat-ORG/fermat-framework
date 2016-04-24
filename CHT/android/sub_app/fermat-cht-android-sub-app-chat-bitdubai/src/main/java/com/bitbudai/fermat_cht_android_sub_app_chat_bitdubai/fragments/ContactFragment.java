@@ -477,10 +477,10 @@ public class ContactFragment extends AbstractFermatFragment {
         if (item.getItemId() == R.id.menu_edit_contact) {
             try {
                // Contact con = chatSession.getSelectedContact();
-                //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
                 for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
-                        (ChatActorCommunitySelectableIdentity) chatManager.
-                                getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, 0)) {
+                        chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
+                                getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, 0)) {
                     if (cont.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
                         appSession.setData(ChatSession.CONTACT_DATA, cont.getPublicKey());
                         break;
