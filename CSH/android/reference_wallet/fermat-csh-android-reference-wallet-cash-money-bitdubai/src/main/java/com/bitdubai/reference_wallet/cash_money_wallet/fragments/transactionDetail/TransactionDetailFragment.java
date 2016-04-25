@@ -175,9 +175,14 @@ public class TransactionDetailFragment extends AbstractFermatFragment implements
 
     private String getTransactionTypeText(TransactionType transactionType) {
         if (transactionType == TransactionType.DEBIT)
-            return getResources().getString(R.string.csh_withdrawal_transaction_text);
-        else
-            return getResources().getString(R.string.csh_deposit_transaction_text);
+            return getResources().getString(R.string.csh_withdrawal_transaction_text_caps);
+        else if (transactionType == TransactionType.CREDIT)
+            return getResources().getString(R.string.csh_deposit_transaction_text_caps);
+        else if (transactionType == TransactionType.HOLD)
+            return getResources().getString(R.string.csh_hold_transaction_text_caps);
+        else if (transactionType == TransactionType.UNHOLD)
+            return getResources().getString(R.string.csh_unhold_transaction_text_caps);
+        else return "ERROR";
     }
 
 
