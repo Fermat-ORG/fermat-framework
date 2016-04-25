@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces;
 
+import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;
 

@@ -1,7 +1,7 @@
 package unit.CryptoMoneyRestockTransactionImpl;
 
 
-import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.utils.bitdubai.version_1.structure.CryptoMoneyRestockTransactionImpl;
+import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.crypto_money_restock.developer.bitdubai.version_1.structure.CryptoMoneyRestockTransactionImpl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
