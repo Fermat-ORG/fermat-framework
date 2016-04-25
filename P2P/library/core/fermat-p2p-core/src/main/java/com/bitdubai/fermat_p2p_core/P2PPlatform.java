@@ -1,11 +1,19 @@
 package com.bitdubai.fermat_p2p_core;
 
-import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
-import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractLayer;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPlatform;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes.AbstractPluginSubsystem;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartPlatformException;
 import com.bitdubai.fermat_p2p_core.layer.communication.CommunicationsLayer;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * The class <code>com.bitdubai.fermat_p2p_core.P2PPlatform</code>
@@ -35,4 +43,7 @@ public class P2PPlatform extends AbstractPlatform {
             );
         }
     }
+
+
+
 }
