@@ -124,6 +124,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
 
             try {
 
+                exception.printStackTrace();
                 LOG.error(exception.getMessage());
 
                 /*

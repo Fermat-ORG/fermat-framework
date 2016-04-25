@@ -6,12 +6,26 @@
  */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper;
+import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.utils.LocationProvider;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.FermatEmbeddedNodeServer;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.clients.FermatWebSocketClientNodeChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.AddNodeToCatalogMsgRequest;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConstantAttNames;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.SeedServerConf;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 
 import javax.servlet.ServletException;
+import javax.websocket.ContainerProvider;
+import javax.websocket.Session;
+import javax.websocket.WebSocketContainer;
 
 
 /**
@@ -28,7 +42,34 @@ public class Test {
 
         try {
 
-            System.out.println("***********************************************************************");
+
+
+            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("192.168.1.8", 9090);
+
+            ECCKeyPair eccKeyPair = new ECCKeyPair();
+
+            NodeProfile nodeProfile = new NodeProfile();
+            nodeProfile = new NodeProfile();
+            nodeProfile.setIp(IPAddressHelper.getCurrentIPAddress());
+            nodeProfile.setDefaultPort(8080);
+            nodeProfile.setIdentityPublicKey(eccKeyPair.getPublicKey());
+            nodeProfile.setName(ConfigurationManager.getValue(ConfigurationManager.NODE_NAME));
+            nodeProfile.setLocation(LocationProvider.acquireLocationThroughIP());
+
+
+            AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
+            fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
+
+           Thread.currentThread().sleep(30000);
+
+
+            System.out.println("FIN");
+
+
+
+
+
+           /* System.out.println("***********************************************************************");
             System.out.println("* FERMAT - Plugin Network Node - Version 1.0 (2015)                   *");
             System.out.println("* www.fermat.org                                                      *");
             System.out.println("* www.bitDubai.com                                                    *");
@@ -38,7 +79,7 @@ public class Test {
             FermatEmbeddedNodeServer fermatEmbeddedNodeServer = new FermatEmbeddedNodeServer();
             fermatEmbeddedNodeServer.start();
 
-            openUri();
+            openUri();*/
 
         }catch (Exception e){
 
@@ -49,7 +90,7 @@ public class Test {
             System.exit(1);
         }
 
-        System.out.println("Network node started satisfactory...");
+       /* System.out.println("Network node started satisfactory..."); */
     }
 
     /**

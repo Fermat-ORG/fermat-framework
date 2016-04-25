@@ -54,6 +54,7 @@ public abstract class FermatWebSocketChannelEndpoint {
         super();
         this.packageProcessors = new HashMap<>();
         this.daoFactory  = (DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY);
+        this.channelIdentity = new ECCKeyPair();
         initPackageProcessorsRegistration();
     }
 

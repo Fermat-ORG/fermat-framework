@@ -54,7 +54,7 @@ public abstract class PackageProcessor {
      * @param channel
      * @param packageType
      */
-    public PackageProcessor(FermatWebSocketChannelEndpoint channel, PackageType packageType) {
+    public PackageProcessor(final FermatWebSocketChannelEndpoint channel, PackageType packageType) {
         this.channel     = channel;
         this.packageType = packageType;
         this.daoFactory  = (DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY);

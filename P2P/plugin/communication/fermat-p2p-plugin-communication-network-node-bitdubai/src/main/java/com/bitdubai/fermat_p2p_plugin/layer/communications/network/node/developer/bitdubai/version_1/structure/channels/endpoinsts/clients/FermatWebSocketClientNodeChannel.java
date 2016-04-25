@@ -57,6 +57,13 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
     private Session clientConnection;
 
     /**
+     * Constructor
+     */
+    public FermatWebSocketClientNodeChannel(){
+        super();
+    }
+
+    /**
      * Constructor with parameter
      *
      * @param remoteNodeCatalogProfile
@@ -65,7 +72,9 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
 
         try {
 
-            URI endpointURI = new URI("ws://"+remoteNodeCatalogProfile.getIp()+":"+remoteNodeCatalogProfile.getDefaultPort());
+            URI endpointURI = new URI("ws://"+remoteNodeCatalogProfile.getIp()+":"+remoteNodeCatalogProfile.getDefaultPort()+"/fermat/ws/node-channel");
+
+            LOG.info("Trying to connect to "+endpointURI.toString());
             WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
             clientConnection = webSocketContainer.connectToServer(this, endpointURI);
             clientConnection.getUserProperties().put(ConstantAttNames.REMOTE_NODE_CATALOG_PROFILE, remoteNodeCatalogProfile);
@@ -84,16 +93,19 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
      */
     public FermatWebSocketClientNodeChannel(String ip, Integer port){
 
-       /* TODO IT IS NOT WORKING
        try {
 
-            URI endpointURI = new URI("ws://"+ip+":"+port);
+            URI endpointURI = new URI("ws://"+ip+":"+port+"/fermat/ws/node-channel");
+
+           LOG.info("Trying to connect to "+endpointURI.toString());
+
             WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
             clientConnection = webSocketContainer.connectToServer(this, endpointURI);
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
-        }*/
+           e.printStackTrace();
+           // throw new RuntimeException(e);
+        }
 
     }
 
@@ -195,15 +207,20 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
      * Send message
      * @param message
      */
-    public void sendMessage(String message) {
-
-        String channelIdentityPrivateKey = getChannelIdentity().getPrivateKey();
-        String destinationIdentityPublicKey = (String) clientConnection.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
-        Package packageRequest = Package.createInstance(message, NetworkServiceType.UNDEFINED, PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
-
+    public void sendMessage(String message, PackageType packageType) {
 
         if (isConnected()){
+
+            LOG.info("Sending message "+message);
+
+            String channelIdentityPrivateKey = getChannelIdentity().getPrivateKey();
+            String destinationIdentityPublicKey = (String) clientConnection.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
+            Package packageRequest = Package.createInstance(message, NetworkServiceType.UNDEFINED, packageType, channelIdentityPrivateKey, destinationIdentityPublicKey);
             this.clientConnection.getAsyncRemote().sendObject(packageRequest);
+
+        }else {
+
+            LOG.warn("Can't send message, no connected ");
         }
 
     }

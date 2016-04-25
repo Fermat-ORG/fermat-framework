@@ -25,6 +25,7 @@ import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdu
 import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.utils.LocationProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.NetworkNodeManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.FermatEmbeddedNodeServer;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.agents.PropagateActorCatalogAgent;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.agents.PropagateNodeCatalogAgent;
@@ -234,8 +235,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             /*
              * Validate if the node are the seed server
              */
-            if (!iAmSeedServer()){
+            if (iAmSeedServer()){
 
+                LOG.info("i Am Seed Server() = "+iAmSeedServer());
                 fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
 
                 /*
@@ -512,8 +514,14 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     private boolean validateNodeProfileRegisterChange(){
 
-        //TODO: VALIDATION LOGIC
+        String jsonString = ConfigurationManager.getValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE);
+        NodeProfile lastNodeProfileRegister = new NodeProfile().fromJson(jsonString);
+        if (!nodeProfile.equals(lastNodeProfileRegister)){
+            return Boolean.TRUE;
+        }
+
         return Boolean.FALSE;
+
     }
 
     /**
@@ -522,8 +530,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     private void requestRegisterProfileInTheNodeCatalog(){
 
+        LOG.info("Request register profile in the node catalog");
         AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
-        fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson());
+        fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
 
     }
 
@@ -533,8 +542,9 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     private void requestUpdateProfileInTheNodeCatalog(){
 
+        LOG.info("Request update profile in the node catalog");
         UpdateNodeInCatalogMsgRequest updateNodeInCatalogMsgRequest = new UpdateNodeInCatalogMsgRequest(nodeProfile);
-        fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest.toJson());
+        fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest.toJson(), PackageType.UPDATE_NODE_IN_CATALOG_REQUEST);
 
     }
 

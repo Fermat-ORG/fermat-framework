@@ -103,28 +103,37 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
 
         LOG.info(" New connection stablished: " + session.getId());
 
-        /*
-         * Get the node identity
-         */
-        setChannelIdentity((ECCKeyPair) endpointConfig.getUserProperties().get(HeadersAttName.NPKI_ATT_HEADER_NAME));
-        endpointConfig.getUserProperties().remove(HeadersAttName.NPKI_ATT_HEADER_NAME);
+        if (endpointConfig.getUserProperties().containsKey(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME)){
 
-        /*
-         * Get the node public key identity
-         */
-        String npki = (String) endpointConfig.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
+            /*
+             * Get the node identity
+             */
+            setChannelIdentity((ECCKeyPair) endpointConfig.getUserProperties().get(HeadersAttName.NPKI_ATT_HEADER_NAME));
+            endpointConfig.getUserProperties().remove(HeadersAttName.NPKI_ATT_HEADER_NAME);
 
-        /*
-         * Mach the session whit the node public key identity
-         */
-        nodeSessionMemoryCache.add(npki, session);
+            /*
+             * Get the node public key identity
+             */
+            String npki = (String) endpointConfig.getUserProperties().get(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME);
 
-        /*
-         * Create a new NodeConnectionHistory
-         */
-        NodeConnectionHistory nodeConnectionHistory = new NodeConnectionHistory();
-        nodeConnectionHistory.setIdentityPublicKey(npki);
-        nodeConnectionHistory.setStatus(ClientsConnectionHistory.STATUS_SUCCESS);
+            /*
+             * Mach the session whit the node public key identity
+             */
+            nodeSessionMemoryCache.add(npki, session);
+
+            /*
+             * Create a new NodeConnectionHistory
+             */
+            NodeConnectionHistory nodeConnectionHistory = new NodeConnectionHistory();
+            nodeConnectionHistory.setIdentityPublicKey(npki);
+            nodeConnectionHistory.setStatus(ClientsConnectionHistory.STATUS_SUCCESS);
+
+        } else {
+
+            LOG.info("Temporal Node identity public key identity no provide ");
+            session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Temporal Remote Node identity public key identity no provide "));
+        }
+
     }
 
     /**
@@ -135,7 +144,7 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
     @OnMessage
     public void newPackageReceived(Package packageReceived, Session session)  {
 
-        LOG.info("New message Received");
+        LOG.info("New package received");
         LOG.info("Session: " + session.getId() + " packageReceived = " + packageReceived + "");
 
         try {

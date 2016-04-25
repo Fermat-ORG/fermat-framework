@@ -37,8 +37,6 @@ public class NodeProfile extends Profile {
         super();
     }
 
-
-
     /**
      * Gets the value of defaultPort and returns
      *
@@ -110,6 +108,10 @@ public class NodeProfile extends Profile {
         return getGsonInstance().fromJson(jsonString, this.getClass());
     }
 
+    /**
+     * Create a Gson instance
+     * @return Gson
+     */
     private static Gson getGsonInstance() {
 
         GsonBuilder builder = new GsonBuilder();
@@ -125,5 +127,28 @@ public class NodeProfile extends Profile {
                 ", ip='" + ip + '\'' +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof NodeProfile)) return false;
+
+        NodeProfile that = (NodeProfile) o;
+
+        if (!getIdentityPublicKey().equals(that.getIdentityPublicKey())) return false;
+        if ((!getLocation().getAltitude().equals(that.getLocation().getAltitude())) || !getLocation().getLongitude().equals(that.getLocation().getLongitude())) return false;
+        if (!getDefaultPort().equals(that.getDefaultPort())) return false;
+        if (!getIp().equals(that.getIp())) return false;
+        return getName().equals(that.getName());
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getDefaultPort().hashCode();
+        result = 31 * result + getIp().hashCode();
+        result = 31 * result + getName().hashCode();
+        return result;
     }
 }
