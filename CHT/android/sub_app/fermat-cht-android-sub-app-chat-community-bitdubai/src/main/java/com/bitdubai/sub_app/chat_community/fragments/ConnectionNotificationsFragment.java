@@ -165,7 +165,8 @@ public class ConnectionNotificationsFragment
             recyclerView.setHasFixedSize(true);
             adapter = new NotificationAdapter(getActivity(), lstChatUserInformations);
             adapter.setFermatListEventListener(this);
-            rootView.setBackgroundResource(R.drawable.fondo);
+            //rootView.setBackgroundResource(R.drawable.fondo);
+
             recyclerView.setAdapter(adapter);
             noData = (ImageView) rootView.findViewById(R.id.nodata);
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
@@ -289,9 +290,9 @@ public class ConnectionNotificationsFragment
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
         if (show &&
                 (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
-          //  emptyView.setAnimation(anim);
-          //  emptyView.setVisibility(View.VISIBLE);
-            rootView.setBackgroundResource(R.drawable.fondo);
+             emptyView.setAnimation(anim);
+             emptyView.setVisibility(View.VISIBLE);
+            emptyView.setBackgroundResource(R.drawable.fondo);
             noData.setAnimation(anim);
             noDatalabel.setAnimation(anim);
             noData.setVisibility(View.VISIBLE);
@@ -299,12 +300,12 @@ public class ConnectionNotificationsFragment
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
-         //   emptyView.setAnimation(anim);
+            emptyView.setAnimation(anim);
             ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
-            rootView.setBackground(bgcolor);
+            emptyView.setBackground(bgcolor);
             noData.setAnimation(anim);
             noDatalabel.setAnimation(anim);
-         //   emptyView.setVisibility(View.GONE);
+             emptyView.setVisibility(View.GONE);
             noData.setVisibility(View.GONE);
             noDatalabel.setVisibility(View.GONE);
         }
