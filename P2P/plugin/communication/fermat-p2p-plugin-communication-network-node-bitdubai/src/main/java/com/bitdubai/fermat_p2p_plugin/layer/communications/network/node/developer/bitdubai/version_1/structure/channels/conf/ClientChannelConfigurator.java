@@ -42,6 +42,10 @@ public class ClientChannelConfigurator extends ServerEndpointConfig.Configurator
     @Override
     public void modifyHandshake(ServerEndpointConfig serverEndpointConfig, HandshakeRequest handshakeRequest, HandshakeResponse handshakeResponse) {
 
+        for (String key : handshakeRequest.getHeaders().keySet()) {
+            LOG.info(key + " : "+handshakeRequest.getHeaders().get(key));
+        }
+
         /*
          * Validate if the client public key identity come in the header
          */
@@ -72,12 +76,12 @@ public class ClientChannelConfigurator extends ServerEndpointConfig.Configurator
             /*
              * Set the new header attribute
              */
-             handshakeResponse.getHeaders().put(HeadersAttName.NPKI_ATT_HEADER_NAME, value);
+             handshakeResponse.getHeaders().put(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME, value);
 
             /*
              * Pass the identity create to the FermatWebSocketClientChannelServerEndpoint
              */
-             serverEndpointConfig.getUserProperties().put(HeadersAttName.NPKI_ATT_HEADER_NAME, nodeIdentityForSession);
+             serverEndpointConfig.getUserProperties().put(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME, nodeIdentityForSession);
 
         }
 
