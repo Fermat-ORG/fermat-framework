@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
+package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.reponds;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
@@ -7,7 +7,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Mess
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.UpdateNodeInCatalogMsjRespond;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.AddNodeToCatalogMsjRespond;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
 
 import org.jboss.logging.Logger;
@@ -16,27 +16,27 @@ import javax.websocket.CloseReason;
 import javax.websocket.Session;
 
 /**
- * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.UpdateNodeInCatalogRespondProcessor</code>
+ * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.reponds.AddNodeToCatalogRespondProcessor</code>
  * <p/>
  * Created by Roberto Requena - (rart3001@gmail.com) on 04/04/16.
  *
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class UpdateNodeInCatalogRespondProcessor extends PackageProcessor {
+public class AddNodeToCatalogRespondProcessor extends PackageProcessor {
 
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(UpdateNodeInCatalogRespondProcessor.class.getName());
+    private final Logger LOG = Logger.getLogger(AddNodeToCatalogRespondProcessor.class.getName());
 
     /**
      * Constructor with parameter
      *
      * @param channel
      * */
-    public UpdateNodeInCatalogRespondProcessor(FermatWebSocketChannelEndpoint channel) {
-        super(channel, PackageType.UPDATE_NODE_IN_CATALOG_RESPOND);
+    public AddNodeToCatalogRespondProcessor(FermatWebSocketChannelEndpoint channel) {
+        super(channel, PackageType.ADD_NODE_TO_CATALOG_RESPOND);
     }
 
     /**
@@ -52,7 +52,7 @@ public class UpdateNodeInCatalogRespondProcessor extends PackageProcessor {
 
         try {
 
-            UpdateNodeInCatalogMsjRespond messageContent = UpdateNodeInCatalogMsjRespond.parseContent(packageReceived.getContent());
+            AddNodeToCatalogMsjRespond messageContent = AddNodeToCatalogMsjRespond.parseContent(packageReceived.getContent());
 
             /*
              * Create the method call history
@@ -75,9 +75,9 @@ public class UpdateNodeInCatalogRespondProcessor extends PackageProcessor {
                     LOG.info("MsgRespond status "+messageContent.getStatus());
                     LOG.info("MsgRespond details "+messageContent.getDetails());
 
-                    if (!messageContent.getAlreadyExists()){
-                        ConfigurationManager.updateValue(ConfigurationManager.REGISTER_IN_CATALOG, String.valueOf(Boolean.FALSE));
-                        ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, null);
+                    if (messageContent.getAlreadyExists()){
+                        ConfigurationManager.updateValue(ConfigurationManager.REGISTER_IN_CATALOG, String.valueOf(Boolean.TRUE));
+                        ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, messageContent.getNodeProfileAdded().toJson());
                     }
 
                 } else {
@@ -86,15 +86,14 @@ public class UpdateNodeInCatalogRespondProcessor extends PackageProcessor {
                     LOG.info("MsgRespond details "+messageContent.getDetails());
                 }
 
-                session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Finish update node to catalog process"));
+                session.close(new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "Finish add node to catalog process"));
 
             }
-
 
         } catch (Exception exception){
 
             try {
-
+                exception.printStackTrace();
                 LOG.error(exception.getMessage());
                 session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Can't process respond: "+ exception.getMessage()));
 
