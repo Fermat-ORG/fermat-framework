@@ -10,13 +10,13 @@ import java.util.UUID;
 public interface FanCommunityInformation {
     /**
      * This method returns the public key
-     * @return the public key of the crypto broker
+     * @return the public key of the Fan
      */
     String getPublicKey();
 
     /**
      * This method returns the alias     *
-     * @return the name of the crypto broker
+     * @return the name of the Fan
      */
     String getAlias();
 

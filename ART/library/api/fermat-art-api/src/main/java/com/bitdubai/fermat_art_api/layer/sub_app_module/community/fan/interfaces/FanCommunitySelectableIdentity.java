@@ -10,7 +10,7 @@ public interface FanCommunitySelectableIdentity extends ActiveActorIdentityInfor
 
     /**
      * This method allows select an identity to work with.
-     * @return the profile image of the crypto broker
+     * @return the profile image of the Fan
      */
     void select() throws CantSelectIdentityException;
 }

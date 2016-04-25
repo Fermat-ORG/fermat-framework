@@ -311,8 +311,12 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
     }
 
     @Override
-    public void requestConnectionToFan(FanCommunitySelectableIdentity selectedIdentity,
-                                       FanCommunityInformation artistToContact) throws CantRequestConnectionException,ActorConnectionAlreadyRequestedException,ActorTypeNotSupportedException{
+    public void requestConnectionToFan(
+            FanCommunitySelectableIdentity selectedIdentity,
+            FanCommunityInformation artistToContact) throws
+            CantRequestConnectionException,
+            ActorConnectionAlreadyRequestedException,
+            ActorTypeNotSupportedException{
         try {
 
             final ActorIdentityInformation actorSending = new ActorIdentityInformation(
