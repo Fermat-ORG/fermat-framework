@@ -57,7 +57,7 @@ public class ListServerConfByPlatformWebService {
         super();
         this.gson = new Gson();
         this.listServerConfByPlatform = new HashMap<>();
-        putInAlllist();
+        //putInAlllist();
     }
 
     @GET
