@@ -49,7 +49,7 @@ public class AddNodeToCatalogMsgRequest extends PackageContent{
      */
     @Override
     public String toJson() {
-        return GsonProvider.getGson().toJson(this, AddNodeToCatalogMsgRequest.class);
+        return GsonProvider.getGson().toJson(this, getClass());
     }
 
     /**

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.google.gson.Gson;
@@ -48,21 +49,22 @@ public class ActorCallRequest extends PackageContent {
         return actorTo;
     }
 
+    /**
+     * Generate the json representation
+     * @return String
+     */
     @Override
     public String toJson() {
-
-        return getGsonInstance().toJson(this, getClass());
+        return GsonProvider.getGson().toJson(this, getClass());
     }
 
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return PackageContent
+     */
     public static ActorCallRequest parseContent(String content) {
-
-        return getGsonInstance().fromJson(content, ActorCallRequest.class);
-    }
-
-    private static Gson getGsonInstance() {
-
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Location.class, new InterfaceAdapter<Location>());
-        return builder.create();
+        return GsonProvider.getGson().fromJson(content, ActorCallRequest.class);
     }
 }

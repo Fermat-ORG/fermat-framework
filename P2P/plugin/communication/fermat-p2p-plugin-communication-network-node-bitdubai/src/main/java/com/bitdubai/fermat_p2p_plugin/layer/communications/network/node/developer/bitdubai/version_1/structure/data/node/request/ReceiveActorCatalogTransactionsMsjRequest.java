@@ -53,7 +53,7 @@ public class ReceiveActorCatalogTransactionsMsjRequest extends PackageContent {
      */
     @Override
     public String toJson() {
-        return GsonProvider.getGson().toJson(this, ReceiveActorCatalogTransactionsMsjRequest.class);
+        return GsonProvider.getGson().toJson(this, getClass());
     }
 
     /**

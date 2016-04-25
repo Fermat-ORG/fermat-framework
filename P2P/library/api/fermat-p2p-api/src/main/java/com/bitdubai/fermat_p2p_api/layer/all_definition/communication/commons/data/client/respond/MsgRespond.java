@@ -63,14 +63,5 @@ public class MsgRespond extends PackageContent {
         return details;
     }
 
-    public String toJson() {
-
-        Gson gson = new Gson();
-        return gson.toJson(this, getClass());
-    }
-
-    public static PackageContent parseContent(String content) {
-
-        throw new NotImplementedException("You must override this method.");
-    }
+    
 }

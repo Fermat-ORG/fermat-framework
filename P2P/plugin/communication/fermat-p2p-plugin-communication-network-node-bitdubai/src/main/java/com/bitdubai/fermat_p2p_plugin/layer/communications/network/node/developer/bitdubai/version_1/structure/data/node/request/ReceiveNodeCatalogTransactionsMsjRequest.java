@@ -52,7 +52,7 @@ public class ReceiveNodeCatalogTransactionsMsjRequest extends PackageContent {
      */
     @Override
     public String toJson() {
-        return GsonProvider.getGson().toJson(this, ReceiveNodeCatalogTransactionsMsjRequest.class);
+        return GsonProvider.getGson().toJson(this, getClass());
     }
 
     /**

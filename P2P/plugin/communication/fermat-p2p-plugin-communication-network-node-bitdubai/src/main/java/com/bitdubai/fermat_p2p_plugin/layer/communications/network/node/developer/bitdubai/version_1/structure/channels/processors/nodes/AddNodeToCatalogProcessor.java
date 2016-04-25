@@ -20,6 +20,8 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 
 import org.jboss.logging.Logger;
 
+import java.sql.Timestamp;
+
 import javax.websocket.Session;
 
 /**
@@ -69,7 +71,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
             /*
              * Create the method call history
              */
-            methodCallsHistory(getGson().toJson(messageContent.getNodeProfile()), destinationIdentityPublicKey);
+            methodCallsHistory(messageContent.toJson(), destinationIdentityPublicKey);
 
             /*
              * Validate if content type is the correct
@@ -204,6 +206,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
         nodeCatalog.setIdentityPublicKey(nodeProfile.getIdentityPublicKey());
         nodeCatalog.setName(nodeProfile.getName());
         nodeCatalog.setOfflineCounter(0);
+        nodeCatalog.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
 
         //Validate if location are available
         if (nodeProfile.getLocation() != null){
@@ -235,6 +238,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
         transaction.setName(nodeProfile.getName());
         transaction.setTransactionType(NodesCatalogTransaction.ADD_TRANSACTION_TYPE);
         transaction.setHashId(transaction.getHashId());
+        transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
 
         //Validate if location are available
         if (nodeProfile.getLocation() != null){
@@ -266,6 +270,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
         transaction.setName(nodeProfile.getName());
         transaction.setTransactionType(NodesCatalogTransaction.ADD_TRANSACTION_TYPE);
         transaction.setHashId(transaction.getHashId());
+        transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
 
         //Validate if location are available
         if (nodeProfile.getLocation() != null){

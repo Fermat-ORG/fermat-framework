@@ -2,6 +2,7 @@ package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.d
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.google.gson.Gson;
 
 /**
@@ -38,8 +39,22 @@ public class CheckOutProfileMsgRequest extends PackageContent {
         return identityPublicKey;
     }
 
-    public static CheckOutProfileMsgRequest parseContent(String content) {
+    /**
+     * Generate the json representation
+     * @return String
+     */
+    @Override
+    public String toJson() {
+        return GsonProvider.getGson().toJson(this, getClass());
+    }
 
-        return new Gson().fromJson(content, CheckOutProfileMsgRequest.class);
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return PackageContent
+     */
+    public static CheckOutProfileMsgRequest parseContent(String content) {
+        return GsonProvider.getGson().fromJson(content, CheckOutProfileMsgRequest.class);
     }
 }

@@ -85,7 +85,7 @@ public class ReceivedNodeCatalogTransactionsRespondProcessor extends PackageProc
         } catch (Exception exception){
 
             try {
-
+                exception.printStackTrace();
                 LOG.error(exception.getMessage());
                 session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Can't process respond: "+ exception.getMessage()));
 
