@@ -29,6 +29,7 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.ChtConstants;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.Views.PresentationDialog;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
@@ -120,6 +121,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     private ChatPreferenceSettings chatSettings;
     private ChatSession chatSession;
     ChatListAdapter adapter;
+    ChatActorCommunitySelectableIdentity chatIdentity;
     ListView list;
     private SearchView searchView;
     // Defines a tag for identifying log entries
@@ -171,9 +173,8 @@ public class ChatListFragment extends AbstractFermatFragment{
                             //ChatActorCommunityInformation sf = chatManager.getChatActorbyConnectionId(mess.getContactId());
                             //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
                             //Contact cont = null; //chatManager.getContactByContactId(mess.getContactId());
-                            for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
-                                    chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
-                                            getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, offset))
+                            for (ChatActorCommunityInformation cont: chatManager
+                                    .listAllConnectedChatActor(chatIdentity, MAX, offset))
                             {
                                 String pk1=cont.getPublicKey();
                                 String pk2=chat.getRemoteActorPublicKey();
@@ -255,13 +256,22 @@ public class ChatListFragment extends AbstractFermatFragment{
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
         }
-//        try {
-//            ChatIdentity chatIdentity = chatManager.getIdentityChatUsersFromCurrentDeviceUser().get(0), MAX, offset);
-//        }catch(CantListChatIdentityException e){
-//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        } catch (Exception e){
-//            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//        }
+
+        //set local identity
+        try {
+            chatIdentity = chatSettings.getIdentitySelected();
+            if (chatIdentity == null) {
+                chatIdentity = chatManager
+                        .newInstanceChatActorCommunitySelectableIdentity(chatManager
+                                .getIdentityChatUsersFromCurrentDeviceUser().get(0));
+                chatSettings.setIdentitySelected(chatIdentity);
+                chatSettings.setProfileSelected(chatIdentity.getPublicKey(),
+                        PlatformComponentType.ACTOR_CHAT);
+            }
+        } catch (Exception e) {
+                if (errorManager != null)
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
 
         // Let this fragment contribute menu items
         setHasOptionsMenu(true);

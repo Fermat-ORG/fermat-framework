@@ -101,9 +101,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
 
         try {
-             Session = (ChatIdentitySession) appSession;
+            Session = (ChatIdentitySession) appSession;
             moduleManager =  Session.getModuleManager();
-             errorManager = Session.getErrorManager();
+            errorManager = Session.getErrorManager();
 
             chatIdentitySettings = null;
             try {
@@ -295,7 +295,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
                 .setIconRes(R.drawable.chat_identity_subapp)
                 .setBannerRes(R.drawable.banner_identity_chat)
-                .setIsCheckEnabled(true)
+                .setIsCheckEnabled(false)
                 .setTextFooter(R.string.cht_chat_footer).build();
         pd.show();
         } catch (Exception e) {
@@ -371,7 +371,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         if (donde.equalsIgnoreCase("onClick")) {
                             textViewChtTitle.setText(mBrokerName.getText());
                             Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
-                            changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+                            getActivity().onBackPressed();
+                            //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
                         }
                         break;
                 }
@@ -391,7 +392,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         if (donde.equalsIgnoreCase("onClick")) {
                             textViewChtTitle.setText(mBrokerName.getText());
                             Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
-                            changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+                            getActivity().onBackPressed();
+                           // changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
                         }
                         break;
                 }
@@ -425,7 +427,8 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         if (donde.equalsIgnoreCase("onClick")) {
                             textViewChtTitle.setText(mBrokerName.getText().toString());
                             Toast.makeText(getActivity(), "Chat Identity Created.", Toast.LENGTH_LONG).show();
-                            changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+                            getActivity().onBackPressed();
+                            //changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
                         }
                         break;
                 }      } catch (CantGetChatIdentityException e) {

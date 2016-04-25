@@ -18,12 +18,14 @@ import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSessio
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.cht_dialog_yes_no;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
+import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
@@ -48,12 +50,12 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private ChatPreferenceSettings chatSettings;
     private ChatSession chatSession;
     private Toolbar toolbar;
+    ChatActorCommunitySelectableIdentity chatIdentity;
 
     // Defines a tag for identifying log entries
     String TAG="CHT_ChatFragment";
     private ChatAdapterView adapterView;
     private ChatAdapter adapter;
-
     private SearchView searchView;
 
     public static ChatFragment newInstance() { return new ChatFragment(); }
@@ -83,6 +85,22 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 } catch (Exception e) {
                     errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                 }
+            }
+
+            try {
+                chatIdentity = chatSettings.getIdentitySelected();
+                if(chatIdentity==null)
+                {
+                    chatIdentity = chatManager
+                            .newInstanceChatActorCommunitySelectableIdentity(chatManager
+                                    .getIdentityChatUsersFromCurrentDeviceUser().get(0));
+                    chatSettings.setIdentitySelected(chatIdentity);
+                    chatSettings.setProfileSelected(chatIdentity.getPublicKey(),
+                            PlatformComponentType.ACTOR_CHAT);
+                }
+            } catch (Exception e) {
+                if (errorManager != null)
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             }
 
             toolbar = getToolbar();
