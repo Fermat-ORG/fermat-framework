@@ -234,8 +234,9 @@ public class ContactsListFragment
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
         if (show &&
                 (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
-            //emptyView.setAnimation(anim);
-            //emptyView.setVisibility(View.VISIBLE);
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.VISIBLE);
+            emptyView.setBackgroundResource(R.drawable.fondo);
             noData.setAnimation(anim);
             noDatalabel.setAnimation(anim);
             noDatalabel.setVisibility(View.VISIBLE);
@@ -243,10 +244,10 @@ public class ContactsListFragment
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
-            //emptyView.setAnimation(anim);
-            //emptyView.setVisibility(View.GONE);
+            emptyView.setAnimation(anim);
+            emptyView.setVisibility(View.GONE);
             ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
-            rootView.setBackground(bgcolor);
+            emptyView.setBackground(bgcolor);
             noData.setAnimation(anim);
             noDatalabel.setAnimation(anim);
             noDatalabel.setVisibility(View.GONE);
