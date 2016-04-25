@@ -36,6 +36,8 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
      */
     private final Logger LOG = Logger.getLogger(AddNodeToCatalogProcessor.class.getName());
 
+
+
     /**
      * Constructor with parameter
      *

@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.google.gson.Gson;
 
 /**
@@ -60,8 +61,23 @@ public class GetNodeCatalogTransactionsMsjRequest extends PackageContent {
         return max;
     }
 
-    public static GetNodeCatalogTransactionsMsjRequest parseContent(String content) {
-
-        return new Gson().fromJson(content, GetNodeCatalogTransactionsMsjRequest.class);
+    /**
+     * Generate the json representation
+     * @return String
+     */
+    @Override
+    public String toJson() {
+        return GsonProvider.getGson().toJson(this, GetNodeCatalogTransactionsMsjRequest.class);
     }
+
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return PackageContent
+     */
+    public static GetNodeCatalogTransactionsMsjRequest parseContent(String content) {
+        return GsonProvider.getGson().fromJson(content, GetNodeCatalogTransactionsMsjRequest.class);
+    }
+
 }
