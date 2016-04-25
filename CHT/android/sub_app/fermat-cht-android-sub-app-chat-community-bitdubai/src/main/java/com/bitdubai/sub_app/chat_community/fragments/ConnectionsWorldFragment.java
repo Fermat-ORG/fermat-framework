@@ -3,6 +3,7 @@ package com.bitdubai.sub_app.chat_community.fragments;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +27,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -112,7 +114,9 @@ public class ConnectionsWorldFragment
     private android.support.v7.widget.Toolbar toolbar;
     private List<ChatActorCommunityInformation> dataSetFiltered;
     private LinearLayout searchEmptyView;
+    TextView noDatalabel;
     FermatWorker worker;
+    ImageView noData;
     private List<ChatActorCommunityInformation> dataSet = new ArrayList<>();
 
     public static ConnectionsWorldFragment newInstance() {
@@ -183,7 +187,8 @@ public class ConnectionsWorldFragment
             recyclerView.setHasFixedSize(true);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(layoutManager);
-
+            noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
+            noData=(ImageView) rootView.findViewById(R.id.nodata);
             //Set up swipeRefresher
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe);
             swipeRefresh.setOnRefreshListener(this);
@@ -300,15 +305,25 @@ public class ConnectionsWorldFragment
     public void showEmpty(boolean show, View emptyView) {
         Animation anim = AnimationUtils.loadAnimation(getActivity(),
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
-        if (show &&
-                (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.VISIBLE);
+        if (show && (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
+            //emptyView.setAnimation(anim);
+            //emptyView.setVisibility(View.VISIBLE);
+            rootView.setBackgroundResource(R.drawable.fondo);
+            noData.setAnimation(anim);
+            noDatalabel.setAnimation(anim);
+            noData.setVisibility(View.VISIBLE);
+            noDatalabel.setVisibility(View.VISIBLE);
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.GONE);
+            //emptyView.setAnimation(anim);
+            //emptyView.setVisibility(View.GONE);
+            noData.setAnimation(anim);
+            noDatalabel.setAnimation(anim);
+            ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
+            rootView.setBackground(bgcolor);
+            noData.setVisibility(View.GONE);
+            noDatalabel.setVisibility(View.GONE);
         }
     }
 
@@ -454,7 +469,11 @@ public class ConnectionsWorldFragment
                     if(chatUser.getAlias().toLowerCase().contains(charSequence.toString().toLowerCase()))
                         dataSetFiltered.add(chatUser);
                 }
-            } else dataSetFiltered = null;
+            }
+
+            else
+                dataSetFiltered = null;
+
         }
         return dataSetFiltered;
     }

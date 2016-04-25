@@ -1,6 +1,9 @@
 package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -17,6 +20,7 @@ import android.widget.AdapterView;
 import android.widget.AlphabetIndexer;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
@@ -42,6 +46,8 @@ import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleMan
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
+import org.w3c.dom.Text;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -99,6 +105,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
     SwipeRefreshLayout mSwipeRefreshLayout;
     ImageView noData;
     View layout;
+    TextView noDatalabel;
     private static final int MAX = 20;
     private int offset = 0;
     private SearchView searchView;
@@ -210,6 +217,8 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         super.onCreate(savedInstanceState);
         layout = inflater.inflate(R.layout.contact_list_fragment, container, false);
         noData=(ImageView) layout.findViewById(R.id.nodata);
+        noDatalabel = (TextView) layout.findViewById(R.id.nodatalabel);
+        layout.setBackgroundResource(R.drawable.fondo);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         try {
             List <ChatActorCommunityInformation> con= chatManager
@@ -226,8 +235,13 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                         contacticon.add(bmd.getBitmap());
                     }
                     noData.setVisibility(View.GONE);
+                    noDatalabel.setVisibility(View.GONE);
+                    ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
+                    layout.setBackground(bgcolor);
                 }else{
+
                     noData.setVisibility(View.VISIBLE);
+                    noDatalabel.setVisibility(View.VISIBLE);
                 }
             }
         }catch (Exception e){
