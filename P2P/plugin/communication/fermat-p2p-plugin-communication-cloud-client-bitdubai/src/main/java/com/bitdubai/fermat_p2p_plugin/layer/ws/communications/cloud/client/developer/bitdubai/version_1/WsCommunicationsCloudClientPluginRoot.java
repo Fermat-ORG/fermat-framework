@@ -384,8 +384,12 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                 wsCommunicationsTyrusCloudClientConnectionNewUrl = new
                         WsCommunicationsTyrusCloudClientConnection(uriNewUrl, eventManager, locationManager, clientIdentity, (WsCommunicationsCloudClientPluginRoot) getInstance(), "192.168.1.8", 9090, NetworkServiceType.CHAT);
                 listOfWSCommunicationsTyrusCloudClientConnection.put(NetworkServiceType.CHAT, wsCommunicationsTyrusCloudClientConnectionNewUrl);
+                listOfWSCommunicationsTyrusCloudClientConnection.put(NetworkServiceType.ACTOR_CHAT, wsCommunicationsTyrusCloudClientConnectionNewUrl);
+
             }else{
                 listOfWSCommunicationsTyrusCloudClientConnection.put(NetworkServiceType.CHAT, wsCommunicationsTyrusCloudClientConnectionBackup);
+                listOfWSCommunicationsTyrusCloudClientConnection.put(NetworkServiceType.ACTOR_CHAT, wsCommunicationsTyrusCloudClientConnectionBackup);
+
             }
         /* CHAT */
 
@@ -431,6 +435,7 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
 
             /* CHAT */
             listOfWSCommunicationsTyrusCloudClientConnection.put(NetworkServiceType.CHAT, wsCommunicationsTyrusCloudClientConnectionBackup);
+            listOfWSCommunicationsTyrusCloudClientConnection.put(NetworkServiceType.ACTOR_CHAT, wsCommunicationsTyrusCloudClientConnectionBackup);
             /* CHAT */
 
             /* Fermat Monitor */
@@ -694,12 +699,17 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
      */
     @Override
     public CommunicationsClientConnection getCommunicationsCloudClientConnection(NetworkServiceType networkServiceType) {
-        return  listOfWSCommunicationsTyrusCloudClientConnection.get(networkServiceType);
+        if(listOfWSCommunicationsTyrusCloudClientConnection.containsKey(networkServiceType)){
+            return  listOfWSCommunicationsTyrusCloudClientConnection.get(networkServiceType);
+        }else{
+            return wsCommunicationsTyrusCloudClientConnectionBackup;
+        }
+
     }
 
-    public void connectToBackupConnection(NetworkServiceType networkServiceType) throws Exception{
+    public void connectToBackupConnection(NetworkServiceType networkServiceType) throws Exception {
 
-          System.out.println("************************************* Connect To Backup Connection AWS ********************************************");
+        System.out.println("************************************* Connect To Backup Connection AWS ********************************************");
 
 
           switch (networkServiceType){
@@ -727,13 +737,14 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
                   break;
               case CHAT:
                       listOfWSCommunicationsTyrusCloudClientConnection.put(NetworkServiceType.CHAT,wsCommunicationsTyrusCloudClientConnectionBackup);
+                      listOfWSCommunicationsTyrusCloudClientConnection.put(NetworkServiceType.ACTOR_CHAT,wsCommunicationsTyrusCloudClientConnectionBackup);
                   break;
               case FERMAT_MONITOR:
                       listOfWSCommunicationsTyrusCloudClientConnection.put(NetworkServiceType.FERMAT_MONITOR,wsCommunicationsTyrusCloudClientConnectionBackup);
                   break;
               default:
+                  System.out.println("-----------ERROR, defaut connection backupt ns type---------------------------------------");
                   break;
-
           }
 
 //        if(!wsCommunicationsTyrusCloudClientConnectionBackup.isRegister() && !wsCommunicationsTyrusCloudClientConnectionBackup.isConnected()) {
@@ -1045,18 +1056,20 @@ public class WsCommunicationsCloudClientPluginRoot extends AbstractPlugin implem
         /*
          * if respond have the result list
          */
-        if(respond.contains("data")){
+        if(respond!=null) {
+            if (respond.contains("data")) {
 
             /*
             * Decode into a json object
             */
-            JsonParser parser = new JsonParser();
-            JsonObject respondJsonObject = (JsonObject) parser.parse(respond.toString());
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonObject = (JsonObject) parser.parse(respond.toString());
 
-            Gson gson = new Gson();
-            listserverplatform = gson.fromJson(respondJsonObject.get("data").getAsString(), new TypeToken<Map<NetworkServiceType,String>>() {
-            }.getType());
+                Gson gson = new Gson();
+                listserverplatform = gson.fromJson(respondJsonObject.get("data").getAsString(), new TypeToken<Map<NetworkServiceType, String>>() {
+                }.getType());
 
+            }
         }
 
         return listserverplatform;
