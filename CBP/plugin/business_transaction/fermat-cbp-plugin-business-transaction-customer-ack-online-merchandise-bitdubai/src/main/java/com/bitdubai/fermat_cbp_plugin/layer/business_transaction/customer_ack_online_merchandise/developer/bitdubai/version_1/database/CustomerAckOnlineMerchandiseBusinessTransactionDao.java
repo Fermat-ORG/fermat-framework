@@ -637,7 +637,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
             businessTransactionRecord.setTransactionHash(
                     record.getStringValue(
                             CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.
-                                    ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME
+                                    ACK_ONLINE_MERCHANDISE_TRANSACTION_HASH_COLUMN_NAME
                     ));
             businessTransactionRecord.setTransactionId(
                     record.getStringValue(

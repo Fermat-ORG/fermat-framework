@@ -288,17 +288,17 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                 List<BusinessTransactionRecord> pendingToSubmitNotificationList = customerAckOnlineMerchandiseBusinessTransactionDao.
                         getPendingToSubmitNotificationList();
                 for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
-                    contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
+                    contractHash = pendingToSubmitNotificationRecord.getContractHash();
 
                     transactionTransmissionManager.sendContractStatusNotification(
-                            pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
+                            pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
                             ContractTransactionStatus.ONLINE_MERCHANDISE_ACK,
                             Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER);
 
                     customerAckOnlineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash,
                             ContractTransactionStatus.ONLINE_MERCHANDISE_ACK);
@@ -310,16 +310,16 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                 List<BusinessTransactionRecord> pendingToSubmitConfirmationList = customerAckOnlineMerchandiseBusinessTransactionDao.
                         getPendingToSubmitConfirmationList();
                 for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
-                    contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
+                    contractHash = pendingToSubmitConfirmationRecord.getContractHash();
 
                     transactionTransmissionManager.confirmNotificationReception(
-                            pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
+                            pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
                             Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
-                            PlatformComponentType.ACTOR_CRYPTO_BROKER);
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
 
                     customerAckOnlineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash,
                             ContractTransactionStatus.CONFIRM_ONLINE_ACK_MERCHANDISE);
