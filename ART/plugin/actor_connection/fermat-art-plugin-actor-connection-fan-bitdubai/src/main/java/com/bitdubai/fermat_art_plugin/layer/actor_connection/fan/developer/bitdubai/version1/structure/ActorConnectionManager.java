@@ -475,13 +475,19 @@ public class ActorConnectionManager implements FanActorConnectionManager {
                 case PENDING_LOCALLY_ACCEPTANCE:
                     Actors linkedActorType = dao.getLinkedIdentityActorType(connectionId);
                     switch (linkedActorType) {
-                        case CBP_CRYPTO_BROKER:
+                        case ART_ARTIST:
                             artistNetworkService.acceptConnection(connectionId);
                             dao.changeConnectionState(
                                     connectionId,
                                     ConnectionState.CONNECTED
                             );
                             break;
+                        case ART_FAN:
+                            fanNetworkService.acceptConnection(connectionId);
+                            dao.changeConnectionState(
+                                    connectionId,
+                                    ConnectionState.CONNECTED
+                            );
                     }
                     break;
                 default:
