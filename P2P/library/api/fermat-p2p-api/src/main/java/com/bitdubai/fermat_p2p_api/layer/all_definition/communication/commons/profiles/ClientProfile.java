@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -13,7 +14,7 @@ import com.google.gson.GsonBuilder;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ClientProfile extends Profile {
+public class ClientProfile extends Profile<ClientProfile> {
 
     /**
      * Represent the deviceType
@@ -24,7 +25,7 @@ public class ClientProfile extends Profile {
      * Constructor
      */
     public ClientProfile(){
-        super();
+        super(ClientProfile.class);
     }
 
     /**
@@ -46,28 +47,13 @@ public class ClientProfile extends Profile {
     }
 
     /**
-     * (no-javadoc)
-     * @see Profile#toJson()
+     * Get the object
+     *
+     * @param jsonString
+     * @return ClientProfile
      */
-    @Override
-    public String toJson() {
-        return getGsonInstance().toJson(this);
-    }
-
-    /**
-     * (no-javadoc)
-     * @see Profile#fromJson(String)
-     */
-    public ClientProfile fromJson(String jsonString) {
-        return getGsonInstance().fromJson(jsonString, this.getClass());
-    }
-
-    private static Gson getGsonInstance() {
-
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Profile.class, new InterfaceAdapter<Profile>());
-        builder.registerTypeAdapter(Location.class, new InterfaceAdapter<Location>());
-        return builder.create();
+    public static ClientProfile fromJson(String jsonString) {
+        return GsonProvider.getGson().fromJson(jsonString, ClientProfile.class);
     }
 
 }
