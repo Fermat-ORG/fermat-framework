@@ -43,7 +43,7 @@ public class LossProtectedWalletNavigationViewPainter implements com.bitdubai.fe
     @Override
     public FermatAdapter addNavigationViewAdapter() {
         try {
-            NavigationViewAdapter navigationViewAdapter = new NavigationViewAdapter(activity.get());
+            LossProtectedWalletNavigationViewAdapter navigationViewAdapter = new LossProtectedWalletNavigationViewAdapter(activity.get());
             return navigationViewAdapter;
         } catch (Exception e) {
             e.printStackTrace();

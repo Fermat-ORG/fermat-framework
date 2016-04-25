@@ -54,6 +54,8 @@ dependencies {
     compile 'com.google.zxing:android-integration:3.2.0'
     compile 'org.apache.commons:commons-collections4:4.0'
 
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.6'
+
     testCompile 'org.robolectric:robolectric:3.0-rc3'
     testCompile 'junit:junit:4.11'
     testCompile 'org.easytesting:fest-assert-core:2.0M10'

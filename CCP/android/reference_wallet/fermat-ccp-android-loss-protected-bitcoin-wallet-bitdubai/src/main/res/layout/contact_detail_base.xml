@@ -19,7 +19,7 @@
             android:adjustViewBounds="true"
             android:id="@+id/image_view_profile"
             android:scaleType="centerCrop"
-            tools:src="@drawable/celine_profile_picture"
+
             tools:ignore="ContentDescription" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
