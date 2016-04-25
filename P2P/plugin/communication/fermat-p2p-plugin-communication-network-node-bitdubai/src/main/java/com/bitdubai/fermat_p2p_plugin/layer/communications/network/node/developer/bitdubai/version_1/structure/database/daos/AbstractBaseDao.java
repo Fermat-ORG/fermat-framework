@@ -18,6 +18,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.AbstractBaseEntity;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -631,6 +632,34 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
     }
 
     /**
+     * Get the timestamp representation if the value are not null
+     *
+     * @param value
+     * @return Timestamp/null
+     */
+    public Timestamp getTimestampFromLongValue(Long value){
+        if (value != null){
+            return new Timestamp(value);
+        }else {
+            return null;
+        }
+    }
+
+    /**
+     * Get the long value of the timestamp if are not null
+     *
+     * @param timestamp
+     * @return Long/null
+     */
+    public Long getLongValueFromTimestamp(Timestamp timestamp){
+        if (timestamp != null){
+            return timestamp.getTime();
+        }else {
+            return null;
+        }
+    }
+
+    /**
      * Get the TableName value
      *
      * @return TableName
@@ -647,6 +676,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
     protected String getIdTableName() {
         return idTableName;
     }
+
 
     /**
      * Construct a Entity whit the values of the a DatabaseTableRecord pass

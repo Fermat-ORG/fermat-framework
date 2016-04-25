@@ -58,7 +58,7 @@ public class CheckedActorsHistoryDao extends AbstractBaseDao<CheckedActorsHistor
             checkedActorsHistory.setLastLongitude(record.getDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_LAST_LONGITUDE_COLUMN_NAME));
             checkedActorsHistory.setClientIdentityPublicKey(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_CLIENT_IDENTITY_PUBLICKEY_COLUMN_NAME));
             checkedActorsHistory.setExtraData(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_EXTRA_DATA_COLUMN_NAME));
-            checkedActorsHistory.setCheckedTimestamp(new Timestamp(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME)));
+            checkedActorsHistory.setCheckedTimestamp(getTimestampFromLongValue(record.getLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME)));
             checkedActorsHistory.setCheckType(record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_CHECK_TYPE_COLUMN_NAME));
 
         }catch (Exception e){
@@ -91,7 +91,7 @@ public class CheckedActorsHistoryDao extends AbstractBaseDao<CheckedActorsHistor
         databaseTableRecord.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_LAST_LONGITUDE_COLUMN_NAME, entity.getLastLongitude());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_CLIENT_IDENTITY_PUBLICKEY_COLUMN_NAME, entity.getClientIdentityPublicKey());
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_EXTRA_DATA_COLUMN_NAME, entity.getExtraData());
-        databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME, entity.getCheckedTimestamp().getTime());
+        databaseTableRecord.setLongValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME, getLongValueFromTimestamp(entity.getCheckedTimestamp()));
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_ACTORS_HISTORY_CHECK_TYPE_COLUMN_NAME,entity.getCheckType());
 
         return databaseTableRecord;
