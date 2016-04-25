@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
@@ -138,6 +140,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     private Bitmap contactIcon;
     private BitmapDrawable contactIconCircular;
     ImageView noData;
+    TextView noDatalabel;
     private static final int MAX = 20;
     private int offset = 0;
 
@@ -172,7 +175,9 @@ public class ChatListFragment extends AbstractFermatFragment{
                                     chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
                                             getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, offset))
                             {
-                                if(cont.getPublicKey().equals(chat.getRemoteActorPublicKey())){
+                                String pk1=cont.getPublicKey();
+                                String pk2=chat.getRemoteActorPublicKey();
+                                if(pk2.equals(pk1)){
                                     contactName.add(cont.getAlias());
                                     message.add(mess.getMessage());
                                     status.add(mess.getStatus().toString());
@@ -266,9 +271,14 @@ public class ChatListFragment extends AbstractFermatFragment{
         try{
             if(!chatManager.getChats().isEmpty()) {
                 chatlistview();
+                ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
+                layout.setBackground(bgcolor);
                 noData.setVisibility(View.GONE);
+                noDatalabel.setVisibility(View.GONE);
             }else{
+                layout.setBackgroundResource(R.drawable.fondo);
                 noData.setVisibility(View.VISIBLE);
+                noDatalabel.setVisibility(View.VISIBLE);
                 //text.setBackgroundResource(R.drawable.cht_empty_chat_background);
             }
         } catch (CantGetChatException e) {
@@ -305,6 +315,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         //text = (TextView) layout.findViewById(R.id.text);
         noData=(ImageView) layout.findViewById(R.id.nodata);
+        noDatalabel = (TextView) layout.findViewById(R.id.nodatalabel);
         //text.setTypeface(tf, Typeface.NORMAL);
         updatevalues();
         if (chatSettings.isHomeTutorialDialogEnabled() == true)
@@ -350,7 +361,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                     imgId.get(position).compress(Bitmap.CompressFormat.PNG, 100, stream);
                     byte[] byteArray = stream.toByteArray();
                     contact.setProfileImage(byteArray);
-                    appSession.setData(ChatSession.CONTACT_DATA, contactId.get(position));
+                    appSession.setData(ChatSession.CONTACT_DATA, contact);
                     //appSession.setData(ChatSession.CONTACT_DATA, null);
                     //appSession.setData(ChatSession.CONTACT_DATA, chatManager.getChatActorbyConnectionId(contactId.get(position)));
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
@@ -458,33 +469,33 @@ public class ChatListFragment extends AbstractFermatFragment{
 //            changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL, appSession.getAppPublicKey());
 //            return true;
 //        }
-        if (id == R.id.menu_delete_all_chats) {
-            try {
-                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
-                alert.setTextTitle("Delete All Chats");
-                alert.setTextBody("Do you want to delete all chats? All chats will be erased");
-                alert.setType("delete-chat");
-                alert.show();
-                alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        try {
-                            // Delete chats and refresh view
-                            chatManager.deleteChats();
-                            updatevalues();
-                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-                        } catch (CantDeleteChatException e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        }catch (Exception e) {
-                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                        }
-                    }
-                });
-            }catch (Exception e){
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
-            return true;
-        }
+//        if (id == R.id.menu_delete_all_chats) {
+//            try {
+//                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+//                alert.setTextTitle("Delete All Chats");
+//                alert.setTextBody("Do you want to delete all chats? All chats will be erased");
+//                alert.setType("delete-chat");
+//                alert.show();
+//                alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                    @Override
+//                    public void onDismiss(DialogInterface dialog) {
+//                        try {
+//                            // Delete chats and refresh view
+//                            chatManager.deleteChats();
+//                            updatevalues();
+//                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+//                        } catch (CantDeleteChatException e) {
+//                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                        }catch (Exception e) {
+//                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                        }
+//                    }
+//                });
+//            }catch (Exception e){
+//                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//            }
+//            return true;
+//        }
 
         if (id == R.id.menu_error_report) {
             changeActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());

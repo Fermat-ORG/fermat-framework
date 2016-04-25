@@ -4,6 +4,7 @@ package com.bitdubai.sub_app.chat_community.fragments;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -84,7 +87,8 @@ public class ConnectionNotificationsFragment
     private ChatActorCommunityInformation chatUserInformation;
     private List<ChatActorCommunityInformation> lstChatUserInformations;//cryptoBrokerInformationList;
     private ChatActorCommunitySettings appSettings;
-
+    ImageView noData;
+    TextView noDatalabel;
     private boolean launchActorCreationDialog = false;
     private boolean launchListIdentitiesDialog = false;
     /**
@@ -161,8 +165,10 @@ public class ConnectionNotificationsFragment
             recyclerView.setHasFixedSize(true);
             adapter = new NotificationAdapter(getActivity(), lstChatUserInformations);
             adapter.setFermatListEventListener(this);
+            rootView.setBackgroundResource(R.drawable.fondo);
             recyclerView.setAdapter(adapter);
-
+            noData = (ImageView) rootView.findViewById(R.id.nodata);
+            noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipeRefresh);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
@@ -283,13 +289,24 @@ public class ConnectionNotificationsFragment
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
         if (show &&
                 (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.VISIBLE);
+          //  emptyView.setAnimation(anim);
+          //  emptyView.setVisibility(View.VISIBLE);
+            rootView.setBackgroundResource(R.drawable.fondo);
+            noData.setAnimation(anim);
+            noDatalabel.setAnimation(anim);
+            noData.setVisibility(View.VISIBLE);
+            noDatalabel.setVisibility(View.VISIBLE);
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.GONE);
+         //   emptyView.setAnimation(anim);
+            ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
+            rootView.setBackground(bgcolor);
+            noData.setAnimation(anim);
+            noDatalabel.setAnimation(anim);
+         //   emptyView.setVisibility(View.GONE);
+            noData.setVisibility(View.GONE);
+            noDatalabel.setVisibility(View.GONE);
         }
     }
 
