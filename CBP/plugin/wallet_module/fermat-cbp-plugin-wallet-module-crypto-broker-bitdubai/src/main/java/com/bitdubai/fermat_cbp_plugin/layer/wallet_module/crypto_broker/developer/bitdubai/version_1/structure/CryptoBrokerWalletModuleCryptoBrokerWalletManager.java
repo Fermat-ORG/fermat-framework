@@ -20,6 +20,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantAd
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantCalculateBalanceException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.exceptions.CantLoadBankMoneyWalletException;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
+import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWallet;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMoneyWalletManager;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ActorType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ClauseType;
@@ -68,6 +69,7 @@ import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.Crypt
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentityManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantAssociatePairException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantDisassociatePairException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantExtractEarningsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningsPairsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantRegisterEarningsSettingsException;
@@ -75,6 +77,8 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.C
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningsSettingsNotRegisteredException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairAlreadyAssociatedException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.PairNotFoundException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractorManager;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSettings;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
@@ -210,7 +214,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     private final CryptoCustomerActorConnectionManager cryptoCustomerActorConnectionManager;
     private final PluginFileSystem pluginFileSystem;
     private final UUID pluginId;
-    private  SettingsManager<CryptoBrokerWalletPreferenceSettings> settingsManager;
+    private SettingsManager<CryptoBrokerWalletPreferenceSettings> settingsManager;
 
 
     public CryptoBrokerWalletModuleCryptoBrokerWalletManager(WalletManagerManager walletManagerManager,
@@ -775,8 +779,11 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
 
     @Override
     public void addNewAccount(BankAccountNumber bankAccountNumber, String walletPublicKey) throws CantAddNewAccountException, CantLoadBankMoneyWalletException {
-        bankMoneyWalletManager.loadBankMoneyWallet(walletPublicKey).createBankName(bankAccountNumber.getBankName());
-        bankMoneyWalletManager.loadBankMoneyWallet(walletPublicKey).addNewAccount(bankAccountNumber);
+        final BankMoneyWallet bankMoneyWallet = bankMoneyWalletManager.loadBankMoneyWallet(walletPublicKey);
+
+        if (bankMoneyWallet.getBankName() == null)
+            bankMoneyWallet.createBankName(bankAccountNumber.getBankName());
+        bankMoneyWallet.addNewAccount(bankAccountNumber);
     }
 
     @Override
@@ -1358,7 +1365,13 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
         return earningsSettings.listEarningPairs();
     }
 
-    private ContractClauseType getContractClauseType(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation,ClauseType paramClauseType) throws CantGetListClauseException {
+    @Override
+    public boolean extractEarnings(EarningsPair earningsPair, List<EarningTransaction> earningTransactions) throws CantExtractEarningsException {
+        final EarningExtractorManager earningsExtractorManager = matchingEngineManager.getEarningsExtractorManager();
+        return earningsExtractorManager.extractEarnings(earningsPair, earningTransactions);
+    }
+
+    private ContractClauseType getContractClauseType(CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation, ClauseType paramClauseType) throws CantGetListClauseException {
         try {
             //I will check if customerBrokerSaleNegotiation is null
             ObjectChecker.checkArgument(customerBrokerSaleNegotiation, "The customerBrokerSaleNegotiation is null");

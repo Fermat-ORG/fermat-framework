@@ -2,10 +2,11 @@ package unit.CryptoBrokerWalletDatabaseDao;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
-import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
@@ -15,6 +16,8 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoB
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CurrencyMatching;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseConstants;
 import com.bitdubai.fermat_cbp_plugin.layer.wallet.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerWalletDatabaseDao;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +32,9 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.fest.assertions.api.Assertions.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 
@@ -45,6 +51,9 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
     @Mock
     private Database database;
 
+    @Mock
+    ErrorManager errorManager;
+
     List<DatabaseTableRecord> availableSaleRecordsFromTable;
     List<DatabaseTableRecord> creditRecords;
     List<DatabaseTableRecord> debitRecords;
@@ -56,7 +65,7 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
         creditRecords = new ArrayList<>();
         debitRecords = new ArrayList<>();
 
-        cryptoBrokerWalletDatabaseDaoSpy = Mockito.spy(new CryptoBrokerWalletDatabaseDao(database));
+        cryptoBrokerWalletDatabaseDaoSpy = Mockito.spy(new CryptoBrokerWalletDatabaseDao(database, errorManager));
         availableSaleRecordsFromTable = null;
     }
 
@@ -107,7 +116,7 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
     }
 
     @Test
-    public void onNoSaleCreditAndNoSaleDebit_returnEmptyList()
+    public void giveNoSaleCreditAndNoSaleDebit_shouldReturnEmptyList()
             throws CantLoadTableToMemoryException, CantGetTransactionCryptoBrokerWalletMatchingException {
 
         Mockito.doReturn(creditRecords).when(cryptoBrokerWalletDatabaseDaoSpy).getAvailableSaleRecordsFromTable(TransactionType.CREDIT);
@@ -118,7 +127,7 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
     }
 
     @Test
-    public void onNoSaleCreditOrNoSaleDebit_returnEmptyList()
+    public void givenNoSaleCreditOrNoSaleDebit_shouldReturnEmptyList()
             throws CantLoadTableToMemoryException, CantGetTransactionCryptoBrokerWalletMatchingException {
 
         List<CurrencyMatching> currencyMatchings;
@@ -143,7 +152,7 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
     }
 
     @Test
-    public void onOneSaleCreditAndOneSaleDebit_returnOneItem()
+    public void givenOneSaleCreditAndOneSaleDebit_returnOneItem()
             throws CantLoadTableToMemoryException, CantGetTransactionCryptoBrokerWalletMatchingException {
 
         addOneSaleDebit();
@@ -169,7 +178,7 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
     }
 
     @Test
-    public void onManySaleCreditsAndManySaleDebits_returnManyItems()
+    public void givenManySaleCreditsAndManySaleDebits_returnManyItems()
             throws CantLoadTableToMemoryException, CantGetTransactionCryptoBrokerWalletMatchingException {
 
         CurrencyMatching currencyMatching;
@@ -210,7 +219,7 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
     }
 
     @Test
-    public void onOneSaleCreditAndManySaleDebits_returnOneItem()
+    public void givenOneSaleCreditAndManySaleDebits_returnOneItem()
             throws CantLoadTableToMemoryException, CantGetTransactionCryptoBrokerWalletMatchingException {
 
         addOneSaleCredit();
@@ -237,7 +246,7 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
     }
 
     @Test
-    public void onManySaleCreditsAndManySaleDebit_noOriginTransactionID_returnEmptyList()
+    public void givenManySaleCreditsAndManySaleDebit_noOriginTransactionID_returnEmptyList()
             throws CantLoadTableToMemoryException, CantGetTransactionCryptoBrokerWalletMatchingException {
 
         addManySaleCreditsNoTransactionOriginID();
@@ -262,6 +271,101 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
         assertThat(currencyMatchings).isEmpty();
     }
 
+    @Test
+    public void givenACreditAndADebitWithSameCurrency_thenShouldReturnListWithoutThisPair()
+            throws CantLoadTableToMemoryException, CantGetTransactionCryptoBrokerWalletMatchingException {
+
+        debitRecords.add(constructStockWalletTransactionRecord(
+                new CryptoBrokerStockTransactionRecordMock(
+                        UUID.randomUUID(),
+                        CryptoCurrency.BITCOIN,
+                        BalanceType.AVAILABLE,
+                        TransactionType.DEBIT,
+                        MoneyType.CRYPTO,
+                        BROKER_WALLET_PUBLIC_KEY,
+                        BROKER_PUBLIC_KEY,
+                        new BigDecimal(1),
+                        System.currentTimeMillis(),
+                        "test memo debit",
+                        new BigDecimal(5),
+                        OriginTransaction.SALE,
+                        ORIGIN_TRANSACTION_ID_1,
+                        false), 10, 10));
+
+        creditRecords.add(constructStockWalletTransactionRecord(
+                new CryptoBrokerStockTransactionRecordMock(
+                        UUID.randomUUID(),
+                        CryptoCurrency.BITCOIN,
+                        BalanceType.AVAILABLE,
+                        TransactionType.CREDIT,
+                        MoneyType.CRYPTO,
+                        BROKER_WALLET_PUBLIC_KEY,
+                        BROKER_PUBLIC_KEY,
+                        new BigDecimal(1),
+                        System.currentTimeMillis(),
+                        "test memo credit",
+                        new BigDecimal(5),
+                        OriginTransaction.SALE,
+                        ORIGIN_TRANSACTION_ID_1,
+                        false), 10, 10));
+
+        debitRecords.add(constructStockWalletTransactionRecord(
+                new CryptoBrokerStockTransactionRecordMock(
+                        UUID.randomUUID(),
+                        CryptoCurrency.BITCOIN,
+                        BalanceType.AVAILABLE,
+                        TransactionType.DEBIT,
+                        MoneyType.CRYPTO,
+                        BROKER_WALLET_PUBLIC_KEY,
+                        BROKER_PUBLIC_KEY,
+                        new BigDecimal(1),
+                        System.currentTimeMillis(),
+                        "test memo debit",
+                        BigDecimal.ZERO,
+                        OriginTransaction.SALE,
+                        ORIGIN_TRANSACTION_ID_2,
+                        false), 10, 10));
+
+        creditRecords.add(constructStockWalletTransactionRecord(
+                new CryptoBrokerStockTransactionRecordMock(
+                        UUID.randomUUID(),
+                        FiatCurrency.US_DOLLAR,
+                        BalanceType.AVAILABLE,
+                        TransactionType.CREDIT,
+                        MoneyType.BANK,
+                        BROKER_WALLET_PUBLIC_KEY,
+                        BROKER_PUBLIC_KEY,
+                        new BigDecimal(5),
+                        System.currentTimeMillis(),
+                        "test memo credit",
+                        BigDecimal.ZERO,
+                        OriginTransaction.SALE,
+                        ORIGIN_TRANSACTION_ID_2,
+                        false), 10, 10));
+
+        Mockito.doReturn(creditRecords).when(cryptoBrokerWalletDatabaseDaoSpy).getAvailableSaleRecordsFromTable(TransactionType.CREDIT);
+        Mockito.doReturn(debitRecords).when(cryptoBrokerWalletDatabaseDaoSpy).getAvailableSaleRecordsFromTable(TransactionType.DEBIT);
+
+        doNothing().when(errorManager).reportUnexpectedPluginException(eq(Plugins.CRYPTO_BROKER_WALLET),
+                eq(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT), any(InvalidParameterException.class));
+
+        // exercise
+        List<CurrencyMatching> currencyMatchings = cryptoBrokerWalletDatabaseDaoSpy.getCryptoBrokerTransactionCurrencyMatchings();
+
+        // assert
+        assertThat(currencyMatchings).hasSize(1);
+
+        final CurrencyMatching currencyMatching = currencyMatchings.get(0);
+        assertThat(currencyMatching.getOriginTransactionId()).isEqualTo(ORIGIN_TRANSACTION_ID_2);
+        assertThat(currencyMatching.getCurrencyGiving()).isEqualTo(CryptoCurrency.BITCOIN);
+        assertThat(currencyMatching.getCurrencyReceiving()).isEqualTo(FiatCurrency.US_DOLLAR);
+        assertThat(currencyMatching.getAmountGiving()).isEqualTo(1);
+        assertThat(currencyMatching.getAmountReceiving()).isEqualTo(5);
+
+        Mockito.verify(errorManager).reportUnexpectedPluginException(eq(Plugins.CRYPTO_BROKER_WALLET),
+                eq(UnexpectedPluginExceptionSeverity.NOT_IMPORTANT), any(InvalidParameterException.class));
+    }
+
     private void addOneSaleDebit() {
         debitRecords.clear();
 
@@ -270,7 +374,7 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
                         UUID.randomUUID(),
                         CryptoCurrency.BITCOIN,
                         BalanceType.AVAILABLE,
-                        TransactionType.CREDIT,
+                        TransactionType.DEBIT,
                         MoneyType.CRYPTO,
                         BROKER_WALLET_PUBLIC_KEY,
                         BROKER_PUBLIC_KEY,
@@ -479,142 +583,5 @@ public class GetCryptoBrokerTransactionCurrencyMatchingsTest {
         when(record.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_SEEN_COLUMN_NAME)).thenReturn(String.valueOf(stockTransactionRecord.getSeen()));
 
         return record;
-    }
-
-    private class CryptoBrokerStockTransactionRecordMock implements CryptoBrokerStockTransactionRecord {
-        private final UUID transactionId;
-        private final Currency merchandise;
-        private final BalanceType balanceType;
-        private final TransactionType transactionType;
-        private final MoneyType moneyType;
-        private final String walletPublicKey;
-        private final String brokerPublicKey;
-        private final BigDecimal amount;
-        private final long timeStamp;
-        private final String memo;
-        private final BigDecimal priceReference;
-        private final OriginTransaction originTransaction;
-        private String originTransactionId;
-        private boolean seen;
-
-        /**
-         * Constructor for CryptoBrokerStockTransactionRecordMock
-         */
-        public CryptoBrokerStockTransactionRecordMock(UUID transactionId,
-                                                      Currency merchandise,
-                                                      BalanceType balanceType,
-                                                      TransactionType transactionType,
-                                                      MoneyType moneyType,
-                                                      String walletPublicKey,
-                                                      String brokerPublicKey,
-                                                      BigDecimal amount,
-                                                      long timeStamp,
-                                                      String memo,
-                                                      BigDecimal priceReference,
-                                                      OriginTransaction originTransaction,
-                                                      String originTransactionId,
-                                                      boolean seen) {
-
-            this.transactionId = transactionId;
-            this.merchandise = merchandise;
-            this.balanceType = balanceType;
-            this.transactionType = transactionType;
-            this.moneyType = moneyType;
-            this.walletPublicKey = walletPublicKey;
-            this.brokerPublicKey = brokerPublicKey;
-            this.amount = amount;
-            this.timeStamp = timeStamp;
-            this.memo = memo;
-            this.priceReference = priceReference;
-            this.originTransaction = originTransaction;
-            this.originTransactionId = originTransactionId;
-            this.seen = seen;
-        }
-
-        @Override
-        public UUID getTransactionId() {
-            return transactionId;
-        }
-
-        @Override
-        public BalanceType getBalanceType() {
-            return balanceType;
-        }
-
-        @Override
-        public TransactionType getTransactionType() {
-            return transactionType;
-        }
-
-        @Override
-        public MoneyType getMoneyType() {
-            return moneyType;
-        }
-
-        @Override
-        public Currency getMerchandise() {
-            return merchandise;
-        }
-
-        @Override
-        public String getWalletPublicKey() {
-            return walletPublicKey;
-        }
-
-        @Override
-        public String getBrokerPublicKey() {
-            return brokerPublicKey;
-        }
-
-        @Override
-        public BigDecimal getAmount() {
-            return amount;
-        }
-
-        @Override
-        public long getTimestamp() {
-            return timeStamp;
-        }
-
-        @Override
-        public String getMemo() {
-            return memo;
-        }
-
-        @Override
-        public BigDecimal getPriceReference() {
-            return priceReference;
-        }
-
-        @Override
-        public OriginTransaction getOriginTransaction() {
-            return originTransaction;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public String getOriginTransactionId() {
-            return this.originTransactionId;
-        }
-
-        /**
-         * {@inheritDoc}
-         */
-        @Override
-        public boolean getSeen() {
-            return this.seen;
-        }
-
-        @Override
-        public BigDecimal getRunningBookBalance() {
-            return new BigDecimal(0);
-        }
-
-        @Override
-        public BigDecimal getRunningAvailableBalance() {
-            return new BigDecimal(0);
-        }
     }
 }

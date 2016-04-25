@@ -492,7 +492,7 @@ public class CryptoAddressNetworkServicePluginRoot extends AbstractNetworkServic
 
         try {
             for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType()).registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
                 System.out.println("CryptoAddressNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
             }
         }catch (Exception e){

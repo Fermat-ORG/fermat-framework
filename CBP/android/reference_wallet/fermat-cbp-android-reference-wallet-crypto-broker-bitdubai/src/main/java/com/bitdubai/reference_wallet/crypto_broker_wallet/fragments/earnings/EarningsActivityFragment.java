@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,10 +14,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantExtractEarningsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningTransactionsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsPair;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSearch;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
@@ -46,15 +53,16 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
 
     // Data
     private List<EarningsPair> earningsPairs;
+    private EarningsPair selectedEarningsPair;
 
     // Fermat Managers
     private ErrorManager errorManager;
     private CryptoBrokerWalletModuleManager moduleManager;
 
+    private FloatingActionButton floatingActionButton;
     private EarningsCurrencyPairsAdapter currencyPairsAdapter;
     private EarningsDetailsPageAdapter earningDetailsAdapter;
     private ViewPager earningDetailsViewPager;
-
 
     public static EarningsActivityFragment newInstance() {
         return new EarningsActivityFragment();
@@ -92,6 +100,14 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
             currencyPairsAdapter = new EarningsCurrencyPairsAdapter(getActivity(), earningsPairs);
             currencyPairsAdapter.setFermatListEventListener(this);
 
+            floatingActionButton = (FloatingActionButton) layout.findViewById(R.id.cbw_extract_earnings_button);
+            floatingActionButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    extractEarnings();
+                }
+            });
+
             final RecyclerView currencyPairsRecyclerView = (RecyclerView) layout.findViewById(R.id.cbw_earning_currency_pairs_recycler_view);
             currencyPairsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
             currencyPairsRecyclerView.setAdapter(currencyPairsAdapter);
@@ -115,6 +131,9 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
 
     @Override
     public void onItemClickListener(EarningsPair selectedEarningsPair, int position) {
+        this.selectedEarningsPair = selectedEarningsPair;
+        showOrHideExtractEarningsButton(selectedEarningsPair);
+
         currencyPairsAdapter.setSelectedItem(position);
         earningDetailsAdapter.changeDataSet(selectedEarningsPair);
         earningDetailsViewPager.setCurrentItem(0);
@@ -151,5 +170,49 @@ public class EarningsActivityFragment extends AbstractFermatFragment<CryptoBroke
         }
 
         return data;
+    }
+
+    private void showOrHideExtractEarningsButton(EarningsPair selectedEarningsPair) {
+        boolean allExtracted = true;
+
+        try {
+            final EarningsSearch earningsSearch = selectedEarningsPair.getSearch();
+            earningsSearch.setTransactionStateFilter(EarningTransactionState.CALCULATED);
+
+            final List<EarningTransaction> earningTransactions = earningsSearch.listResults();
+            allExtracted = earningTransactions.isEmpty();
+
+        } catch (CantListEarningTransactionsException e) {
+            errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            Toast.makeText(getActivity(), "Sorry. Cant Get the Earnings list", Toast.LENGTH_SHORT).show();
+        }
+
+        if (allExtracted)
+            floatingActionButton.hide();
+        else
+            floatingActionButton.show();
+    }
+
+    private void extractEarnings() {
+        if (selectedEarningsPair != null) {
+            try {
+                final EarningsSearch search = selectedEarningsPair.getSearch();
+                final List<EarningTransaction> earningTransactions = search.listResults();
+                boolean earningsExtracted = moduleManager.extractEarnings(selectedEarningsPair, earningTransactions);
+
+                if(earningsExtracted)
+                    Toast.makeText(getActivity(), "Earnings Extracted!", Toast.LENGTH_SHORT).show();
+
+                showOrHideExtractEarningsButton(selectedEarningsPair);
+
+            } catch (CantExtractEarningsException e) {
+                errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                Toast.makeText(getActivity(), "Sorry. Cant Extract the Earnings", Toast.LENGTH_SHORT).show();
+
+            } catch (Exception e) {
+                errorManager.reportUnexpectedWalletException(CBP_CRYPTO_BROKER_WALLET, DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                Toast.makeText(getActivity(), "Sorry. Unexpected Error", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
