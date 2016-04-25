@@ -65,7 +65,25 @@
                 tools:ignore="HardcodedText" />
 
         </LinearLayout>
-
+        <ImageView
+            android:id="@+id/nodata"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            android:src="@drawable/icon_no_chats"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="No notifications"
+            android:id="@+id/nodatalabel"
+            android:textColor="#D1D3D4"
+            android:textSize="15pt"
+            android:layout_below="@+id/nodata"
+            android:layout_centerHorizontal="true" />
     </RelativeLayout>
 
 </LinearLayout>

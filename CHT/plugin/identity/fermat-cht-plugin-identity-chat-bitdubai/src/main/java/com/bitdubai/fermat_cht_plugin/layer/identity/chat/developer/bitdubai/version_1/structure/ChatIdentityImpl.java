@@ -203,6 +203,6 @@ public class ChatIdentityImpl implements DealsWithPluginFileSystem, DealsWithPlu
      */
     @Override
     public String getConnectionState() {
-        return null;
+        return this.connectionState;
     }
 }

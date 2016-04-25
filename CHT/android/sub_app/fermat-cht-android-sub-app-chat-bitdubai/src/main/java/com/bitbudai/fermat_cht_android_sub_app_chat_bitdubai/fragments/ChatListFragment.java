@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SearchView;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
@@ -138,6 +140,7 @@ public class ChatListFragment extends AbstractFermatFragment{
     private Bitmap contactIcon;
     private BitmapDrawable contactIconCircular;
     ImageView noData;
+    TextView noDatalabel;
     private static final int MAX = 20;
     private int offset = 0;
 
@@ -268,9 +271,14 @@ public class ChatListFragment extends AbstractFermatFragment{
         try{
             if(!chatManager.getChats().isEmpty()) {
                 chatlistview();
+                ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
+                layout.setBackground(bgcolor);
                 noData.setVisibility(View.GONE);
+                noDatalabel.setVisibility(View.GONE);
             }else{
+                layout.setBackgroundResource(R.drawable.fondo);
                 noData.setVisibility(View.VISIBLE);
+                noDatalabel.setVisibility(View.VISIBLE);
                 //text.setBackgroundResource(R.drawable.cht_empty_chat_background);
             }
         } catch (CantGetChatException e) {
@@ -307,6 +315,7 @@ public class ChatListFragment extends AbstractFermatFragment{
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         //text = (TextView) layout.findViewById(R.id.text);
         noData=(ImageView) layout.findViewById(R.id.nodata);
+        noDatalabel = (TextView) layout.findViewById(R.id.nodatalabel);
         //text.setTypeface(tf, Typeface.NORMAL);
         updatevalues();
         if (chatSettings.isHomeTutorialDialogEnabled() == true)
