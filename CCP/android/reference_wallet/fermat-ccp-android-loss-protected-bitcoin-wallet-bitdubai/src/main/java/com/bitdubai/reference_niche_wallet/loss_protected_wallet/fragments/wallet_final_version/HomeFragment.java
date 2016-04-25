@@ -710,10 +710,10 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 //total = lossProtectedWallet.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
                 if (e.getVal()>=0){
 
-                    txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(e.getVal())+" earned");
+                    txt_earnOrLost.setText("$ "+WalletUtils.formatAmountString(e.getVal())+" earned");
                     earnOrLostImage.setImageResource(R.drawable.earning_icon);
                 }else {
-                    txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(e.getVal())+" losted");
+                    txt_earnOrLost.setText("$ "+WalletUtils.formatAmountString(e.getVal())+" losted");
                     earnOrLostImage.setImageResource(R.drawable.lost_icon);
                 }
                 chart.invalidate(); // refresh
@@ -723,6 +723,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             }
         }
     }
+
 
     @Override
     public void onNothingSelected() {
