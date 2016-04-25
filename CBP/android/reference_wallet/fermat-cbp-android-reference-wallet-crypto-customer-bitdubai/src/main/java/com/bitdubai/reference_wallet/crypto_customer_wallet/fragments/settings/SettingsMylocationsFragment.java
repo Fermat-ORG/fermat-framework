@@ -20,9 +20,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationType;
 import com.bitdubai.fermat_cbp_api.all_definition.negotiation.NegotiationLocations;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -53,7 +50,7 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
     private View emptyView;
 
     // Fermat Managers
-    private CryptoCustomerWalletManager walletManager;
+    private CryptoCustomerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
 
 
@@ -66,8 +63,7 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
         super.onCreate(savedInstanceState);
 
         try {
-            CryptoCustomerWalletModuleManager moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
-            walletManager = moduleManager.getCryptoCustomerWallet(appSession.getAppPublicKey());
+            moduleManager = ((CryptoCustomerWalletSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
 
@@ -76,7 +72,7 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
             if(data == null) {
 
                 //Get saved locations from settings
-                Collection<NegotiationLocations> listAux= walletManager.getAllLocations(NegotiationType.PURCHASE);
+                Collection<NegotiationLocations> listAux= moduleManager.getAllLocations(NegotiationType.PURCHASE);
                 for (NegotiationLocations locationAux : listAux){
                     locationList.add(locationAux.getLocation());
                 }
@@ -185,11 +181,11 @@ public class SettingsMylocationsFragment extends AbstractFermatFragment implemen
             appSession.setData(CryptoCustomerWalletSession.LOCATION_LIST, locationList);
 
             //Clear previous locations from settings
-            walletManager.clearLocations();
+            moduleManager.clearLocations();
 
             //Save locations to settings
             for (String location : locationList) {
-                walletManager.createNewLocation(location, appSession.getAppPublicKey());
+                moduleManager.createNewLocation(location, appSession.getAppPublicKey());
             }
 
         } catch (FermatException ex) {

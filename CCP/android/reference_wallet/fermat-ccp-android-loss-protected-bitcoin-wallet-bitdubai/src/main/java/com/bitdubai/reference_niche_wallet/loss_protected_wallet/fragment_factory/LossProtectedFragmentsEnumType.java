@@ -20,6 +20,7 @@ public enum LossProtectedFragmentsEnumType implements FermatFragmentsEnumType<Lo
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_TRANSACTIONS_AVAILABLE("CWRWBTCLPABTA"),
     CWP_WALLET_RUNTIME_WALLET_BITCOIN_LOSS_PROTECTED_ALL_BITDUBAI_CHUNCK_VALUES("CWRWBTCLPABCV"),
 
+    CCP_BITCOIN_LOSS_PROTECTED_WALLET_HOME("CCPBLPWH"),
     CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_SENT("CCPBLPWTS"),
     CCP_BITCOIN_LOSS_PROTECTED_WALLET_TRANSACTIONS_RECEIVED("CCPBLPWTR"),
     CCP_BITCOIN_LOSS_PROTECTED_WALLET_REQUEST_RECEIVED("CCPBLPWRR"),
@@ -55,7 +56,7 @@ public enum LossProtectedFragmentsEnumType implements FermatFragmentsEnumType<Lo
         }
         // throw an IllegalArgumentException or return null
         // throw new IllegalArgumentException("the given number doesn't match any Status.");
-        //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+        //TODO Return null method - OJO: only informative for visual aid during debug - remove if it bothers
         return null;
     }
 

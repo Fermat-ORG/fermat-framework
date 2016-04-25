@@ -39,7 +39,7 @@
                 android:gravity="center"
                 android:textAllCaps="true"
                 android:textColor="#1271A7"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:text="Negotiation Expiration Date"/>
 
             <View
@@ -62,7 +62,7 @@
                     android:layout_marginRight="5dp"
                     android:textColor="@color/description_text_status_confirm"
                     tools:text="Expiration Date:"
-                    android:textSize="18sp"/>
+                    android:textSize="14sp"/>
 
                 <Button
                     android:id="@+id/ccw_date_value"
@@ -72,12 +72,12 @@
                     android:layout_marginRight="5dp"
                     android:layout_toEndOf="@+id/ccw_date_time_description_text"
                     android:layout_toRightOf="@+id/ccw_date_time_description_text"
-                    android:background="#FFF"
+                    android:background="@color/ccw_card_background_status_confirm"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:textAllCaps="false"
                     android:textColor="#222"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     tools:text="04/12/2015"/>
 
                 <Button
@@ -86,12 +86,12 @@
                     android:layout_height="30dp"
                     android:layout_toEndOf="@+id/ccw_date_value"
                     android:layout_toRightOf="@+id/ccw_date_value"
-                    android:background="#FFF"
+                    android:background="@color/ccw_card_background_status_confirm"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:textAllCaps="false"
                     android:textColor="#222"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     tools:text="15:30 pm"/>
 
             </RelativeLayout>

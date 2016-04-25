@@ -65,7 +65,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
     CustomerBrokerSaleNegotiationManager saleNegotiationManager;
 
     /**
-     * Represents the CryptoBrokerWalletManager
+     * Represents the CryptoBrokerWalletModuleManager
      */
     CryptoBrokerWalletManager cryptoBrokerWalletManager;
 
@@ -319,7 +319,7 @@ public class BrokerSubmitOfflineMerchandiseTransactionManager implements BrokerS
             for (Clause clause : clauses) {
                 clauseType = clause.getType();
 
-                if (clauseType == ClauseType.CUSTOMER_CURRENCY_QUANTITY) {
+                if (clauseType == ClauseType.BROKER_CURRENCY_QUANTITY) {
                     brokerAmountDouble = parseToDouble(clause.getValue());
                 }
             }

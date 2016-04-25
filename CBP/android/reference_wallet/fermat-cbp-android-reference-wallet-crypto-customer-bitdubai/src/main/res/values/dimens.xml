@@ -13,4 +13,8 @@
     <dimen name="ccw_market_exchange_rate_layout_height">60dp</dimen>
     <dimen name="ccw_market_exchange_rate_indicator_height">15dp</dimen>
     <dimen name="margin_text">2dp</dimen>
+
+
+    <dimen name="ccw_no_items_width_height">100dp</dimen>
+    <dimen name="ccw_no_items_text">20dp</dimen>
 </resources>

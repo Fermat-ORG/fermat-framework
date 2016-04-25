@@ -1,10 +1,5 @@
 package com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.bar_code_scanner;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -17,6 +12,11 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
 import android.widget.EditText;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 
 public final class IntentIntegrator {
@@ -47,7 +47,7 @@ public final class IntentIntegrator {
           BS_PACKAGE, // Barcode Scanner
           "com.srowen.bs.android", // Barcode Scanner+
           "com.srowen.bs.android.simple" // Barcode Scanner+ Simple
-          // TODO add more -- Puede soportar otras cosas este intent, hay que buscar
+          // TODO add more -- This intent can be applied to different things.
       );
 
   private final Activity activity;
@@ -170,7 +170,7 @@ public final class IntentIntegrator {
     intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
     intentScan.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
     activity.startActivityForResult(intentScan, REQUEST_CODE);
-    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+    //TODO Return null method - OJO: only informative for visual aid during debug - remove if it bothers
     return null;
   }
 
@@ -185,7 +185,7 @@ public final class IntentIntegrator {
         }
       }
     }
-    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+    //TODO Return null method - OJO: only informative for visual aid during debug - remove if it bothers
     return null;
   }
 
@@ -241,7 +241,7 @@ public final class IntentIntegrator {
       }
       return new IntentResult();
     }
-    //TODO METODO CON RETURN NULL - OJO: solo INFORMATIVO de ayuda VISUAL para DEBUG - Eliminar si molesta
+    //TODO Return null method - OJO: only informative for visual aid during debug - remove if it bothers
     return null;
   }
 
@@ -274,8 +274,7 @@ public final class IntentIntegrator {
   }
 
 
-  public class editTextResult implements Parcelable
-  {
+  public class editTextResult implements Parcelable {
     private EditText text;
 
     @Override

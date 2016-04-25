@@ -539,6 +539,41 @@ public class ChatMiddlewareDatabaseDao {
                 transaction.addRecordToUpdate(table, record);
             }
 
+            if (chat.getGroupMembersAssociated() != null)
+            {
+                for (GroupMember groupMember : chat.getGroupMembersAssociated()) {
+                    record = getGroupMemberRecord(groupMember);
+                    filter.setType(DatabaseFilterType.EQUAL);
+                    filter.setValue(groupMember.getGroupMemberId().toString());
+                    filter.setColumn(ChatMiddlewareDatabaseConstants.GROUP_MEMBER_FIRST_KEY_COLUMN);
+
+                    if (isNewRecord(table, filter))
+                        transaction.addRecordToInsert(table, record);
+                    else {
+                        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                        transaction.addRecordToUpdate(table, record);
+                    }
+                }
+            }
+
+            if (chat.getMessagesAsociated() != null)
+            {
+                for (Message message : chat.getMessagesAsociated())
+                {
+                    record = getMessageRecord(message);
+                    filter.setType(DatabaseFilterType.EQUAL);
+                    filter.setValue(message.getMessageId().toString());
+                    filter.setColumn(ChatMiddlewareDatabaseConstants.MESSAGE_FIRST_KEY_COLUMN);
+
+                    if (isNewRecord(table, filter))
+                        transaction.addRecordToInsert(table, record);
+                    else {
+                        table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
+                        transaction.addRecordToUpdate(table, record);
+                    }
+                }
+            }
+
             //I execute the transaction and persist the database side of the chat.
             database.executeTransaction(transaction);
             database.closeDatabase();

@@ -12,7 +12,6 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.transformation.CircleTransform;
 import com.bitdubai.fermat_android_api.ui.util.FermatAnimationsUtils;
-
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.loss_protected_wallet.interfaces.LossProtectedWalletIntraUserActor;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.holders.IntraUserInfoViewHolder;
 import com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.utils.AddConnectionCallback;
@@ -78,30 +77,46 @@ public class AddConnectionsAdapter extends FermatAdapter<LossProtectedWalletIntr
                 addConnectionCallback.setSelected(data, selected);
                 if (selected) {
                     holder.checkbox_connection.setChecked(true);
-                    FermatAnimationsUtils.showEmpty(context, true, holder.checkbox_connection);
+
                     addConnectionCallback.addMenuEnabled();
                     holder.container_data.setBackgroundColor(Color.parseColor("#666666"));
                     holder.container_data.getBackground().setAlpha(50);
 
                 } else {
                     holder.checkbox_connection.setChecked(false);
-                    FermatAnimationsUtils.showEmpty(context, false, holder.checkbox_connection);
+
                     addConnectionCallback.addMenuDisabled();
                     holder.container_data.getBackground().setAlpha(0);
                 }
             }
         });
+
+        holder.checkbox_connection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean selected = !data.isSelected();
+                data.setSelected(selected);
+                addConnectionCallback.setSelected(data, selected);
+                if (selected) {
+                    holder.checkbox_connection.setChecked(true);
+                    addConnectionCallback.addMenuEnabled();
+                    holder.container_data.setBackgroundColor(Color.parseColor("#666666"));
+                    holder.container_data.getBackground().setAlpha(50);
+
+                } else {
+                    holder.checkbox_connection.setChecked(false);
+                    addConnectionCallback.addMenuDisabled();
+                    holder.container_data.getBackground().setAlpha(0);
+                }
+            }
+        });
+
         if(data.isSelected()){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 holder.container_data.setBackground(ContextCompat.getDrawable(context, R.drawable.add_connection_rounded_rectangle_shape));
             }
         }
-        //else{
-            //holder.container_data.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
-        //}
-        holder.checkbox_connection.setChecked(false);
-        holder.checkbox_connection.setEnabled(false);
     }
 
 }

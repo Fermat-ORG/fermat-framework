@@ -11,8 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -22,7 +25,6 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -47,7 +49,6 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
     // Fermat Managers
     private CryptoBrokerWalletModuleManager moduleManager;
-    private CryptoBrokerWalletManager walletManager;
     private ErrorManager errorManager;
 
     private View emptyListViewsContainer;
@@ -65,8 +66,7 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         super.onCreate(savedInstanceState);
 
         try {
-            moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
-            walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
+            moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
         } catch (Exception ex) {
             CommonLogger.exception(TAG, ex.getMessage(), ex);
@@ -92,6 +92,11 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
         emptyListViewsContainer = layout.findViewById(R.id.empty);
+        FermatTextView emptyText = (FermatTextView) layout.findViewById(R.id.cbw_empty_message);
+        ImageView emptyImage = (ImageView) layout.findViewById(R.id.cbw_empty_image);
+        emptyText.setText(R.string.no_new_open_contracts);
+        emptyImage.setImageResource(R.drawable.cbw_no_contracts);
+
         if (openContractList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer.setVisibility(View.VISIBLE);
@@ -163,8 +168,8 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
 
             try {
 
-                waitingForBroker.addAll(moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey()).getContractsWaitingForBroker(10, 0));
-                waitingForCustomer.addAll(moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey()).getContractsWaitingForCustomer(10, 0));
+                waitingForBroker.addAll(moduleManager.getContractsWaitingForBroker(10, 0));
+                waitingForCustomer.addAll(moduleManager.getContractsWaitingForCustomer(10, 0));
 
                 if (!waitingForCustomer.isEmpty() || !waitingForBroker.isEmpty()) {
                     grouperText = getActivity().getString(R.string.waiting_for_you);

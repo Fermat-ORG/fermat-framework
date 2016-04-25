@@ -3,7 +3,7 @@ package com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdu
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetExtraDataActorException;
-import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetListBrokerIdentityWalletRelationshipException;
+import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.exceptions.CantGetRelationBetweenBrokerIdentityAndBrokerWalletException;
 import com.bitdubai.fermat_cbp_api.layer.actor.crypto_broker.interfaces.BrokerIdentityWalletRelationship;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.enums.RequestType;
 import com.bitdubai.fermat_cbp_api.layer.actor_network_service.crypto_broker.exceptions.CantAnswerQuotesRequestException;
@@ -19,13 +19,15 @@ import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoB
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.Quote;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSetting;
 import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.database.CryptoBrokerActorDao;
-import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.exceptions.CantNewsEventException;
+import com.bitdubai.fermat_cbp_plugin.layer.actor.crypto_broker.developer.bitdubai.version_1.exceptions.CantHandleExtraDataRequestEventException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 /**
  * Created by angel on 4/02/16.
@@ -45,7 +47,7 @@ public class ActorBrokerExtraDataEventActions {
             final CryptoBrokerActorDao cryptoBrokerActorDao,
             final ErrorManager errorManager,
             final PluginVersionReference pluginVersionReference
-    ){
+    ) {
         this.cryptoBrokerANSManager = cryptoBrokerANSManager;
         this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
         this.cryptoBrokerActorDao = cryptoBrokerActorDao;
@@ -53,47 +55,68 @@ public class ActorBrokerExtraDataEventActions {
         this.pluginVersionReference = pluginVersionReference;
     }
 
-    public void handleNewsEvent() throws CantNewsEventException {
+    public void handleNewsEvent() throws CantHandleExtraDataRequestEventException {
         List<CryptoBrokerExtraData<CryptoBrokerQuote>> dataNS;
         try {
             dataNS = cryptoBrokerANSManager.listPendingQuotesRequests(RequestType.RECEIVED);
-            if(dataNS != null) {
-                for (CryptoBrokerExtraData<CryptoBrokerQuote> extraDate : dataNS) {
-                    String brokerPublicKey = extraDate.getCryptoBrokerPublicKey();
-                    cryptoBrokerANSManager.answerQuotesRequest(
-                        extraDate.getRequestId(),
-                        System.currentTimeMillis(),
-                        getExtraData(brokerPublicKey)
-                    );
+            if (dataNS != null) {
+                for (CryptoBrokerExtraData<CryptoBrokerQuote> extraData : dataNS) {
+                    final String brokerPublicKey = extraData.getCryptoBrokerPublicKey();
+                    final List<CryptoBrokerQuote> quotes = getQuotes(brokerPublicKey);
+                    final long updateTime = System.currentTimeMillis();
+
+                    cryptoBrokerANSManager.answerQuotesRequest(extraData.getRequestId(), updateTime, quotes);
                 }
             }
+
         } catch (CantListPendingQuotesRequestsException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantNewsEventException(e.getMessage(), e, "", "");
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.
+                    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantHandleExtraDataRequestEventException(e,
+                    "Trying to get the list of quotes request in Network Service database whit state RECEIVED",
+                    "Maybe the DB table is empty or the data is not correctly putted");
+
         } catch (CantGetExtraDataActorException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantNewsEventException(e.getMessage(), e, "", "");
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.
+                    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantHandleExtraDataRequestEventException(e,
+                    "Trying to get the quotes from the Crypto Broker Wallet Plugin database",
+                    "Can be multiple reasons. See the Stack Trace for more info");
+
         } catch (CantAnswerQuotesRequestException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantNewsEventException(e.getMessage(), e, "", "");
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.
+                    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantHandleExtraDataRequestEventException(e,
+                    "Trying to call the Network Service to answer the request of the extra data",
+                    "Can be multiple reasons. Maybe an error occurred trying to update the Request Status. See the Stack Trace for more info");
+
         } catch (QuotesRequestNotFoundException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantNewsEventException(e.getMessage(), e, "", "");
+            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.
+                    DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantHandleExtraDataRequestEventException(e,
+                    "Trying to call the Network Service to answer the request of the extra data",
+                    "Verify the request is in data base or the Request ID is correct. See the Stack Trace for more info");
         }
     }
 
-    public List<CryptoBrokerQuote> getExtraData(String brokerPublicKey) throws CantGetExtraDataActorException {
+    public List<CryptoBrokerQuote> getQuotes(String brokerPublicKey) throws CantGetExtraDataActorException {
         List<CryptoBrokerQuote> quotes = new ArrayList<>();
         try {
-            BrokerIdentityWalletRelationship relationship = this.cryptoBrokerActorDao.getBrokerIdentityWalletRelationshipByIdentity(brokerPublicKey);
-            String wallerPublicKey = relationship.getWallet();
-            CryptoBrokerWallet wallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(wallerPublicKey);
-            List<CryptoBrokerWalletAssociatedSetting> settings = wallet.getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings();
-            for(CryptoBrokerWalletAssociatedSetting setting_1 : settings){
-                Currency merchandise = setting_1.getMerchandise();
-                for(CryptoBrokerWalletAssociatedSetting setting_2 : settings) {
-                    Currency currencyPayment = setting_2.getMerchandise();
-                    if(merchandise != currencyPayment){
+            final BrokerIdentityWalletRelationship relationship = this.cryptoBrokerActorDao.getBrokerIdentityWalletRelationshipByIdentity(brokerPublicKey);
+            final String wallerPublicKey = relationship.getWallet();
+
+            final CryptoBrokerWallet wallet = cryptoBrokerWalletManager.loadCryptoBrokerWallet(wallerPublicKey);
+
+            final CryptoBrokerWalletSetting setting = wallet.getCryptoWalletSetting();
+            final List<CryptoBrokerWalletAssociatedSetting> associatedWallets = setting.getCryptoBrokerWalletAssociatedSettings();
+
+            for (CryptoBrokerWalletAssociatedSetting merchandiseWallet : associatedWallets) {
+                Currency merchandise = merchandiseWallet.getMerchandise();
+
+                for (CryptoBrokerWalletAssociatedSetting paymentWallet : associatedWallets) {
+                    Currency currencyPayment = paymentWallet.getMerchandise();
+
+                    if (merchandise != currencyPayment) {
                         try {
                             Quote quote = wallet.getQuote(merchandise, 1f, currencyPayment);
                             quotes.add(new CryptoBrokerQuote(quote));
@@ -106,14 +129,19 @@ public class ActorBrokerExtraDataEventActions {
             }
 
         } catch (CantGetCryptoBrokerWalletSettingException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetExtraDataActorException(CantGetExtraDataActorException.DEFAULT_MESSAGE, e,
+                    "Trying to get the associated wallets to get its Currencies and iterate over them with the intention of arm a Currency Pair and get the corresponding Quote",
+                    "Verify that are wallets associated in Database");
+
         } catch (CryptoBrokerWalletNotFoundException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
-        } catch (CantGetListBrokerIdentityWalletRelationshipException e) {
-            this.errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            throw new CantGetExtraDataActorException(e.DEFAULT_MESSAGE, e, "", "");
+            throw new CantGetExtraDataActorException(CryptoBrokerWalletNotFoundException.DEFAULT_MESSAGE, e,
+                    "Trying to get a reference to the Crypto Broker Wallet Plugin the get the associated wallets",
+                    "Verify if the plugin started, or is enabled");
+
+        } catch (CantGetRelationBetweenBrokerIdentityAndBrokerWalletException e) {
+            throw new CantGetExtraDataActorException(CantGetRelationBetweenBrokerIdentityAndBrokerWalletException.DEFAULT_MESSAGE, e,
+                    "Trying to get the Broker Wallet's Public Key by the Broker Identity's Public Key to get a reference to the Crypto Broker Wallet Plugin",
+                    "Verify the Broker Identity is really associated with the Crypto Broker Wallet");
         }
 
         return quotes;

@@ -1,22 +1,19 @@
 package com.bitdubai.reference_wallet.crypto_customer_wallet.common.holders;
 
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.holders.FermatViewHolder;
+import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractDetailType;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
-import com.bitdubai.fermat_cbp_api.layer.contract.customer_broker_purchase.exceptions.CantGetListCustomerBrokerContractPurchaseException;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.reference_wallet.crypto_customer_wallet.R;
@@ -43,7 +40,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
 
     //Managers
     ErrorManager errorManager;
-    protected CryptoCustomerWalletManager walletManager;
+    protected CryptoCustomerWalletModuleManager walletManager;
     protected CryptoCustomerWalletSession walletSession;
 
     //Data
@@ -271,7 +268,10 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
                             textDescription.setText("You receive:");
                             textDescriptionDate.setVisibility(View.INVISIBLE);
                             itemView.setBackgroundColor(res.getColor(R.color.card_background_status_confirm));
-                            confirmButton.setVisibility(View.VISIBLE);
+                            if (itemInfo.getPaymentMethodType() != MoneyType.CRYPTO) {
+                                confirmButton.setText("Confirm");
+                                confirmButton.setVisibility(View.VISIBLE);
+                            }
                         }
                         break;
                     default:
@@ -295,7 +295,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
         this.parentFragment=parentFragment;
     }
 
-    public void setWalletModuleManager(CryptoCustomerWalletManager walletManager){
+    public void setWalletModuleManager(CryptoCustomerWalletModuleManager walletManager){
         this.walletManager=walletManager;
     }
 

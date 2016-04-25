@@ -315,9 +315,9 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
                 "",
                 BlockchainNetworkType.getDefaultBlockchainNetworkType()
         );
-                lstInstalledWallet.add(installedWallet);
+        lstInstalledWallet.add(installedWallet);
 
-                installedWallet= new AppManagerMiddlewareInstalledWallet(
+        installedWallet= new AppManagerMiddlewareInstalledWallet(
 
                 WalletCategory.REFERENCE_WALLET, // CATEGORY
                 new ArrayList<InstalledSkin>(),
@@ -470,7 +470,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
 
             /**
              * Save Skin in the Data Base
-              */
+             */
 
             AppManagerDao.persistWalletSkin(walletCatalogueId, skinId, alias, Preview, version);
 
@@ -484,7 +484,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
         } catch (Exception exception){
             throw new CantInstallSkinException("CAN'T INSTALL REQUESTED ON_REVISION",FermatException.wrapException(exception), null, null);
         }
-     }
+    }
 
     /**
      *
@@ -509,7 +509,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
         } catch (Exception e){
             throw new CantFindProcessException("CAN'T FIND PROCESS",FermatException.wrapException(e), null, null);
         }
-     }
+    }
 
 
 
@@ -537,7 +537,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
             /**
              * Call Wallet Resource to uninstall Skin
              */
-           walletResources.uninstallLanguageForWallet(installedWallet.getSkinsId().get(0).getId(), installedWallet.getWalletPublicKey(),installedLanguage.getLanguage().name());
+            walletResources.uninstallLanguageForWallet(installedWallet.getSkinsId().get(0).getId(), installedWallet.getWalletPublicKey(),installedLanguage.getLanguage().name());
 
             walletMangerDao.deleteWalletLanguage(walletCatalogueId, languageId);
 
@@ -577,7 +577,7 @@ public class AppManagerMiddlewarePluginRoot extends AbstractPlugin implements
             /**
              * Conected with Wallet Resource to uninstall resources
              */
-           walletResources.uninstallSkinForWallet(skinId, installedWallet.getWalletPublicKey());
+            walletResources.uninstallSkinForWallet(skinId, installedWallet.getWalletPublicKey());
             /**
              * I delete skin from database
              */

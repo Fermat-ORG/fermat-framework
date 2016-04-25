@@ -164,7 +164,11 @@ public class ConnectionsListFragment extends AbstractFermatFragment implements S
     private synchronized List<IntraUserInformation> getMoreData() {
         List<IntraUserInformation> dataSet = new ArrayList<>();
         try {
-            dataSet.addAll(moduleManager.getAllIntraUsers(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset));
+            List list = moduleManager.getAllIntraUsers(moduleManager.getActiveIntraUserIdentity().getPublicKey(), MAX, offset);
+            if(list!=null){
+                dataSet.addAll(list);
+            }
+
         } catch (CantGetIntraUsersListException | CantGetActiveLoginIdentityException e) {
             e.printStackTrace();
         }

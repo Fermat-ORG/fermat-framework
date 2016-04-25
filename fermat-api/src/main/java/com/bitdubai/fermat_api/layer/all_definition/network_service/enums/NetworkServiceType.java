@@ -20,6 +20,7 @@ public enum NetworkServiceType implements FermatEnum {
      * Network Service prefix or Type sufix are not necessary having in count that the name of the plugin is NETWORK SERVICE TYPE.,
      */
 
+    ACTOR_CHAT                       ("ACHAT"),
     ASSET_USER_ACTOR                 ("AUANS"),
     ASSET_ISSUER_ACTOR               ("AIANS"),
     ASSET_REDEEM_POINT_ACTOR         ("ARPANS"),
@@ -51,6 +52,7 @@ public enum NetworkServiceType implements FermatEnum {
 
         switch (code){
 
+            case "ACHAT"     : return ACTOR_CHAT;
             case "AUANS"     : return ASSET_USER_ACTOR;
             case "AIANS"     : return ASSET_ISSUER_ACTOR;
             case "ARPANS"    : return ASSET_REDEEM_POINT_ACTOR;

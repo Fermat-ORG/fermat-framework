@@ -130,13 +130,10 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 listener.setListener(new CustomDialogFragment.DialogListener() {
                     @Override
                     public void onDialogPositiveClick(DialogFragment dialog) {
-                        System.out.println(getClass().getSimpleName() + "------------------------------ OK button pressed");
                         CustomDialogFragment customDialogFragment = (CustomDialogFragment) dialog;
                         previousSelectedItem = customDialogFragment.getPreviousSelectedItem();
                         getCallback().dialogOptionSelected(previousSelectedItem, 0);
-
-                        System.out.println(getClass().getSimpleName() + "------------------------------ " + previousSelectedItem);
-                    }
+                     }
 
                     @Override
                     public void onDialogNegativeClick(DialogFragment dialog) {
@@ -147,8 +144,7 @@ public class FermatSettingsAdapter extends FermatAdapterImproved<PreferenceSetti
                 settingTextOpenDialogViewHolder.getTextView().setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        System.out.println(getClass().getSimpleName() + "------------------------------ onClick");
-                        //new SettingsDialog(context, getCallback(), preferenceSettingsOpenDialogText.getOptionList()).show();
+                       //new SettingsDialog(context, getCallback(), preferenceSettingsOpenDialogText.getOptionList()).show();
                         dialog.show(fragmentManager, "CustomFragmentDialog");
                     }
                 });

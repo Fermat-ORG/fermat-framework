@@ -39,7 +39,7 @@
                 android:gravity="center"
                 android:textAllCaps="true"
                 android:textColor="#1271A7"
-                android:textSize="18sp"
+                android:textSize="14sp"
                 tools:text="Single Choice Item"/>
 
             <View
@@ -72,14 +72,14 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentStart="true"
                     android:layout_below="@id/ccw_description_text"
-                    android:background="#FFF"
+                    android:background="@color/ccw_card_background_status_confirm"
                     android:paddingBottom="4dp"
                     android:paddingLeft="8dp"
                     android:paddingRight="8dp"
                     android:paddingTop="4dp"
                     android:textAllCaps="false"
                     android:textColor="#222"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     tools:text="C.C. Sambil Maracaibo, Piso 2, Local 5A, al lado de Farmatodo"
                     android:layout_alignParentBottom="false"
                     android:gravity="left" />

@@ -13,17 +13,14 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
-import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.FiatCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
-import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_bnk_api.all_definition.enums.TransactionType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
-import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_wpd_api.layer.wpd_network_service.wallet_resources.interfaces.WalletResourcesProviderManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 
@@ -46,7 +43,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
      * Resources
      */
     private WalletResourcesProviderManager walletResourcesProviderManager;
-    private CryptoBrokerWalletManager cryptoBrokerWalletManager;
+    private CryptoBrokerWalletModuleManager cryptoBrokerWalletModuleManager;
     private Resources resources;
     private TransactionType transactionType;
     private CryptoBrokerWalletAssociatedSetting setting;
@@ -81,11 +78,11 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
      * @param a
      * @param
      */
-    public CreateRestockDestockFragmentDialog(Activity a, com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager cryptoBrokerWalletManager, Resources resources, CryptoBrokerWalletAssociatedSetting setting) {
+    public CreateRestockDestockFragmentDialog(Activity a, CryptoBrokerWalletModuleManager cryptoBrokerWalletModuleManager, Resources resources, CryptoBrokerWalletAssociatedSetting setting) {
         super(a);
         // TODO Auto-generated constructor stub
         this.activity = a;
-        this.cryptoBrokerWalletManager = cryptoBrokerWalletManager;
+        this.cryptoBrokerWalletModuleManager = cryptoBrokerWalletModuleManager;
         this.setting = setting;
         this.resources = resources;
     }
@@ -158,7 +155,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
     private void applyTransaction(String option) {
         try {
 
-            final String memo = "testmemo";
+            String memo;
             String amount = amountText.getText().toString();
 
             if (amount.equals("")) {
@@ -172,29 +169,33 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
             }
             switch (option){
                 case "stock":
+                    memo = "Held funds, used to restock the Broker Wallet";
+
                     //TODO:Nelson falta pasar el price de reference en dolar al momento de hacer el restock/destock new BigDecimal(0)
                     System.out.println("*************REESTOCK DIALOG****************   ["+setting.getPlatform()+"]" );
                     if(Platforms.BANKING_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletManager.createTransactionRestockBank(setting.getBrokerPublicKey(),(FiatCurrency)setting.getMerchandise(),setting.getBrokerPublicKey(),setting.getWalletPublicKey(),setting.getBankAccount(),new BigDecimal(amount),memo, new BigDecimal(0), OriginTransaction.RESTOCK, setting.getBrokerPublicKey());
+                        cryptoBrokerWalletModuleManager.createTransactionRestockBank(setting.getBrokerPublicKey(),(FiatCurrency)setting.getMerchandise(),setting.getBrokerPublicKey(),setting.getWalletPublicKey(),setting.getBankAccount(),new BigDecimal(amount),memo, new BigDecimal(0), OriginTransaction.RESTOCK, setting.getBrokerPublicKey());
                     }
                     if(Platforms.CASH_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletManager.createTransactionRestockCash(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), "TEST CASH REFERENCE", new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.RESTOCK, setting.getBrokerPublicKey());
+                        cryptoBrokerWalletModuleManager.createTransactionRestockCash(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), "TEST CASH REFERENCE", new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.RESTOCK, setting.getBrokerPublicKey());
                     }
                     if(Platforms.CRYPTO_CURRENCY_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletManager.createTransactionRestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.RESTOCK, setting.getBrokerPublicKey(), BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Revisar como vamos a sacar el BlochChainNetworkType
+                        cryptoBrokerWalletModuleManager.createTransactionRestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.RESTOCK, setting.getBrokerPublicKey(), BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Revisar como vamos a sacar el BlochChainNetworkType
                     }
                     dismiss();
                     return;
                 case "destock":
+                    memo = "Unheld funds, destocked from the Broker Wallet";
+
                     System.out.println("*************DESTOCK DIALOG****************  ["+setting.getPlatform()+"]");
                     if(Platforms.BANKING_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletManager.createTransactionDestockBank(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), setting.getBankAccount(), new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey());
+                        cryptoBrokerWalletModuleManager.createTransactionDestockBank(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), setting.getBankAccount(), new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey());
                     }
                     if(Platforms.CASH_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletManager.createTransactionDestockCash(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), "TEST CASH REFERENCE", new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey());
+                        cryptoBrokerWalletModuleManager.createTransactionDestockCash(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), "TEST CASH REFERENCE", new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey());
                     }
                     if(Platforms.CRYPTO_CURRENCY_PLATFORM == setting.getPlatform()){
-                        cryptoBrokerWalletManager.createTransactionDestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey(), BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Revisar como vamos a sacar el BlochChainNetworkType
+                        cryptoBrokerWalletModuleManager.createTransactionDestockCrypto(setting.getBrokerPublicKey(), (CryptoCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey(), BlockchainNetworkType.getDefaultBlockchainNetworkType()); //TODO:Revisar como vamos a sacar el BlochChainNetworkType
                     }
                     dismiss();
                     return;

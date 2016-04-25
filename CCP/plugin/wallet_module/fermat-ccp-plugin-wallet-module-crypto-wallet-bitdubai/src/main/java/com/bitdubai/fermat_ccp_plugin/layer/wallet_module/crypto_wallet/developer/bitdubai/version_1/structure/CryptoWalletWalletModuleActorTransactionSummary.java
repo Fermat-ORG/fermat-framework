@@ -2,6 +2,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.wallet_module.crypto_wallet.develop
 
 import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.ActorTransactionSummary;
 
+import java.io.Serializable;
+
 /**
  * The class <code>CryptoWalletWalletModuleActorTransactionSummary</code>
  * implements the interface ActorTransactionSummary and all its methods.
@@ -10,7 +12,7 @@ import com.bitdubai.fermat_ccp_api.layer.wallet_module.crypto_wallet.interfaces.
  * Modified by Leon Acosta - (laion.cj91@gmail.com) on 18/09/15.
  * @version 1.0
  */
-public class CryptoWalletWalletModuleActorTransactionSummary implements ActorTransactionSummary {
+public class CryptoWalletWalletModuleActorTransactionSummary implements ActorTransactionSummary,Serializable {
 
     private final int   sentTransactionsNumber;
     private final int   receivedTransactionsNumber;
