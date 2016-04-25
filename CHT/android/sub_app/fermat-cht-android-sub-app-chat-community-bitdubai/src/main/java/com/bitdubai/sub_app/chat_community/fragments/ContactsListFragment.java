@@ -142,7 +142,7 @@ public class ContactsListFragment
             adapter = new ContactsListAdapter(getActivity(), lstChatUserInformations);
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
-            rootView.setBackgroundResource(R.drawable.fondo);
+            // rootView.setBackgroundResource(R.drawable.fondo);
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
             noData=(ImageView) rootView.findViewById(R.id.nodata);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
