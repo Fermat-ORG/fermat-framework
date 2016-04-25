@@ -725,7 +725,7 @@ public class CustomerAckOnlineMerchandiseBusinessTransactionDao {
             CantUpdateRecordException {
         try{
             updateRecordStatus(contractHash,
-                    CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CONTRACT_HASH_COLUMN_NAME,
+                    CustomerAckOnlineMerchandiseBusinessTransactionDatabaseConstants.ACK_ONLINE_MERCHANDISE_CONTRACT_TRANSACTION_STATUS_COLUMN_NAME,
                     contractTransactionStatus.getCode());
         } catch (CantUpdateRecordException exception) {
             errorManager.reportUnexpectedPluginException(
