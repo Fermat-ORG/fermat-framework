@@ -17,14 +17,14 @@ public class ServicesHelpers {
     private AppManagerServiceHelper appManagerServiceHelper;
     private NotificationServiceHelper notificationServiceHelper;
     private ClientSideBrokerServiceHelper clientSideBrokerServiceHelper;
-    //private ClientSideBrokerServiceHelperAidle clientSystemBrokerServiceAIDL;
+    private ClientSideBrokerServiceHelperAidle clientSystemBrokerServiceAIDL;
 
 
     public ServicesHelpers(Context contextWeakReference){
         appManagerServiceHelper = new AppManagerServiceHelper(contextWeakReference);
         notificationServiceHelper = new NotificationServiceHelper(contextWeakReference);
         clientSideBrokerServiceHelper = new ClientSideBrokerServiceHelper(contextWeakReference);
-      //  clientSystemBrokerServiceAIDL = new ClientSideBrokerServiceHelperAidle(contextWeakReference);
+        //clientSystemBrokerServiceAIDL = new ClientSideBrokerServiceHelperAidle(contextWeakReference);
     }
 
     public void bindServices(){
@@ -32,7 +32,7 @@ public class ServicesHelpers {
         appManagerServiceHelper.bindAppManagerService();
         notificationServiceHelper.bindNotificationService();
         clientSideBrokerServiceHelper.clientSideBrokerBoundService();
-//        clientSystemBrokerServiceAIDL.clientSideBrokerBoundService();
+        //clientSystemBrokerServiceAIDL.clientSideBrokerBoundService();
     }
 
     public void unbindServices(){
@@ -40,7 +40,7 @@ public class ServicesHelpers {
         appManagerServiceHelper.unbindAppManagerService();
         notificationServiceHelper.unbindNotificationService();
         clientSideBrokerServiceHelper.unbindClientSideBrokerService();
-  //      clientSystemBrokerServiceAIDL.unbindClientSideBrokerService();
+        //clientSystemBrokerServiceAIDL.unbindClientSideBrokerService();
     }
 
     public FermatAppsManagerService getAppManager(){
@@ -64,6 +64,6 @@ public class ServicesHelpers {
 
 
     public ClientBrokerService getClientSideBrokerServiceAIDL() {
-        return null;// clientSystemBrokerServiceAIDL.getClientSystemBrokerService();
+        return clientSystemBrokerServiceAIDL.getClientSystemBrokerService();
     }
 }

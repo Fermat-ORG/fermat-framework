@@ -6,24 +6,37 @@ import android.os.IBinder;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
+import com.bitdubai.android_core.app.ApplicationSession;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
+import com.bitdubai.android_core.app.common.version_1.util.task.GetTask;
+import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetAddonException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Developers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_api.layer.all_definition.resources_structure.enums.ScreenSize;
+import com.bitdubai.fermat_api.layer.all_definition.util.DeviceInfoUtils;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.module_object_creator.FermatModuleObjectInterface;
 import com.bitdubai.fermat_core.FermatSystem;
 import com.bitdubai.fermat_osa_android_core.OSAPlatform;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantSetPlatformInformationException;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
+import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
 
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
@@ -39,7 +52,7 @@ import java.util.concurrent.Future;
 /**
  * Created by mati on 2016.04.18..
  */
-public class CommunicationServerService extends Service {
+public class CommunicationServerService extends Service implements FermatWorkerCallBack {
 
     private static String TAG = "CommunicationServerService";
 
@@ -48,6 +61,8 @@ public class CommunicationServerService extends Service {
      * Clients connected
      */
     private Map<String, Messenger> clients;
+
+    private boolean isFermatSystemRunning = false;
 
     /**
      * Fermat background service
@@ -122,6 +137,13 @@ public class CommunicationServerService extends Service {
 
             return wrapper;
         }
+
+        @Override
+        public boolean isFermatSystemRunning() throws RemoteException {
+            return isFermatSystemRunning;
+        }
+
+
     };
 
 
@@ -147,6 +169,11 @@ public class CommunicationServerService extends Service {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        GetTask getTask = new GetTask(this,this);
+        getTask.setCallBack(this);
+        getTask.execute();
+
         executorService = Executors.newFixedThreadPool(10);
         clients = new HashMap<>();
     }
@@ -206,21 +233,33 @@ public class CommunicationServerService extends Service {
                 //TODO: ver porque puse el moduleManager en el invoque, si daberia id ahí o d
                 try {
                     if(classes==null){
-                        m = clazz.getMethod(method,null);
+                        m = clazz.getDeclaredMethod(method, null);
                         Log.i(TAG,"Method: "+ m.getName());
                         Log.i(TAG,"Method return generic type: "+ m.getGenericReturnType());
                         Log.i(TAG,"Method return type: "+ m.getReturnType());
                         s =  m.invoke(moduleManager, null);
                     } else{
                         try{
-                            m = clazz.getMethod(method,classes);
+                            for(Class c : classes){
+                                Log.i(TAG,"Class to use for parameter: "+ c.getName());
+                            }
+                            m = clazz.getDeclaredMethod(method, classes);
                         }catch (NoSuchMethodException e){
-                            for(Class interfaces : clazz.getInterfaces()){
-                                try {
-                                    m = interfaces.getMethod(method, classes);
-                                }catch (NoSuchMethodException e1){
-                                    Log.e(TAG,"metodo no encontrado");
+                            Log.e(TAG,"Metodo buscando: "+method);
+                            int pos = 0;
+                            for (Method method1 : clazz.getMethods()) {
+                                //Log.e(TAG,pos+": Metodo: "+method1.getName( ));
+                                if(method1.getName().equals(method)){
+                                    for (Class<?> aClass : method1.getParameterTypes()) {
+                                        Log.e(TAG,pos+": Metodo parameters class type: "+aClass.getName());
+                                    }
                                 }
+                            }
+                            for(Method methodInterface : clazz.getDeclaredMethods()){
+                                if(methodInterface.getName().equals(method)){
+                                    m = methodInterface;
+                                }
+
                             }
                         }
                         Log.i(TAG,"Method: "+ m.getName());
@@ -240,6 +279,8 @@ public class CommunicationServerService extends Service {
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (Exception e){
                     e.printStackTrace();
                 }
                 return s;
@@ -275,4 +316,58 @@ public class CommunicationServerService extends Service {
     }
 
 
+    @Override
+    public void onPostExecute(Object... result) {
+        try {
+
+            final FermatSystem fermatSystem = ApplicationSession.getInstance().getFermatSystem();
+
+            PlatformInfoManager platformInfoManager = (PlatformInfoManager) fermatSystem.startAndGetAddon(
+                    new AddonVersionReference(
+                            Platforms.PLUG_INS_PLATFORM,
+                            Layers.PLATFORM_SERVICE,
+                            Addons.PLATFORM_INFO,
+                            Developers.BITDUBAI,
+                            new Version()
+                    )
+            );
+
+            setPlatformDeviceInfo(platformInfoManager);
+        } catch (CantGetAddonException | VersionNotFoundException e) {
+
+            System.out.println(e.toString());
+        }
+
+        // Indicate that app was loaded.
+        isFermatSystemRunning = true;
+        Intent intent = new Intent();
+        intent.setAction("org.fermat.SYSTEM_RUNNING");
+        sendBroadcast(intent);
+    }
+
+    @Override
+    public void onErrorOccurred(Exception ex) {
+
+    }
+
+    private void setPlatformDeviceInfo(PlatformInfoManager platformInfoManager){
+        try {
+            PlatformInfo platformInfo = platformInfoManager.getPlatformInfo();
+            platformInfo.setScreenSize(getScreenSize());
+            platformInfoManager.setPlatformInfo(platformInfo);
+        } catch(
+                CantSetPlatformInformationException | com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptions.CantLoadPlatformInformationException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private ScreenSize getScreenSize(){
+
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
+        return DeviceInfoUtils.toScreenSize(dpHeight, dpWidth);
+
+    }
 }
