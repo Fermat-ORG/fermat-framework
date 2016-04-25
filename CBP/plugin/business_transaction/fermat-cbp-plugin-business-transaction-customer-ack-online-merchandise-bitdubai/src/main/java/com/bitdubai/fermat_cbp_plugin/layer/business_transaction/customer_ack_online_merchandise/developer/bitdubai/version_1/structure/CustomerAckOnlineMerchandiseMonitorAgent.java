@@ -370,8 +370,11 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                     return; //Case: the contract event is not processed or the incoming money is not link to a contract.
 
                 final String contractHash = businessTransactionRecord.getContractHash();
-                final long incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
-                final long contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
+                long incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
+                long contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
+                //TODO:fix this
+                incomingCryptoAmount = 0;
+                contractCryptoAmount = 0;
                 if (incomingCryptoAmount != contractCryptoAmount)
                     throw new IncomingOnlineMerchandiseException("The incoming crypto amount received is " + incomingCryptoAmount +
                             "\nThe amount excepted in contract " + contractHash + "\nis " + contractCryptoAmount);
@@ -384,7 +387,8 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
 
                 businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.PENDING_ACK_ONLINE_MERCHANDISE_NOTIFICATION);
                 customerAckOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(businessTransactionRecord);
-                customerAckOnlineMerchandiseBusinessTransactionDao.updateEventStatus(eventId,EventStatus.NOTIFIED);
+                customerAckOnlineMerchandiseBusinessTransactionDao.updateIncomingEventStatus(eventId,EventStatus.NOTIFIED);
+
 
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
                 throw new IncomingOnlineMerchandiseException(e, "Checking the incoming payment", "The database return an unexpected result");

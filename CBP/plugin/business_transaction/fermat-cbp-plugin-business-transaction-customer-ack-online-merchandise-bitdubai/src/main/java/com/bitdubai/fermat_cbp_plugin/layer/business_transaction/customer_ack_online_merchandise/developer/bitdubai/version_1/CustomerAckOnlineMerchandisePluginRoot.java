@@ -243,7 +243,7 @@ public class CustomerAckOnlineMerchandisePluginRoot extends AbstractPlugin imple
             /**
              * Init monitor Agent
              */
-            
+
             CustomerAckOnlineMerchandiseMonitorAgent customerAckOnlineMerchandiseMonitorAgent=new CustomerAckOnlineMerchandiseMonitorAgent(
                     pluginDatabaseSystem,
                     logManager,
