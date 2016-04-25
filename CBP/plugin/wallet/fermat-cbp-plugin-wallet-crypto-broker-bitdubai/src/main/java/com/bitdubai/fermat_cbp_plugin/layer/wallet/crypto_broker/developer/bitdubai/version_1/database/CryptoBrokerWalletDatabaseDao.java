@@ -66,12 +66,16 @@ import com.bitdubai.fermat_cer_api.layer.provider.exceptions.UnsupportedCurrency
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
 import com.bitdubai.fermat_cer_api.layer.search.exceptions.CantGetProviderException;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+
+import static com.bitdubai.fermat_api.layer.all_definition.enums.Plugins.CRYPTO_BROKER_WALLET;
+import static com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity.NOT_IMPORTANT;
 
 
 /**
@@ -99,9 +103,11 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
     }
 
     private Database database;
+    private ErrorManager errorManager;
 
-    public CryptoBrokerWalletDatabaseDao(Database database) {
+    public CryptoBrokerWalletDatabaseDao(Database database, ErrorManager errorManager) {
         this.database = database;
+        this.errorManager = errorManager;
     }
 
     public List<CurrencyMatching> getCryptoBrokerTransactionCurrencyMatchings() throws CantGetTransactionCryptoBrokerWalletMatchingException {
@@ -119,7 +125,7 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                     String debitOriginTransactionId = debitRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.
                             CRYPTO_BROKER_STOCK_TRANSACTIONS_ORIGIN_TRANSACTION_ID_COLUMN_NAME);
 
-                    if(originTransactionId == null || debitOriginTransactionId == null)
+                    if (originTransactionId == null || debitOriginTransactionId == null)
                         continue;
 
                     if (originTransactionId.equals(debitOriginTransactionId)) {
@@ -128,20 +134,28 @@ public class CryptoBrokerWalletDatabaseDao implements DealsWithPluginFileSystem 
                         currencyCode = debitRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME);
                         moneyTypeCode = debitRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MONEY_TYPE_COLUMN_NAME);
                         final Currency currencyGiving = MoneyType.CRYPTO.getCode().equals(moneyTypeCode) ?
-                                CurrencyHelper.getCurrency(CurrencyTypes.CRYPTO, currencyCode):
+                                CurrencyHelper.getCurrency(CurrencyTypes.CRYPTO, currencyCode) :
                                 CurrencyHelper.getCurrency(CurrencyTypes.FIAT, currencyCode);
 
                         currencyCode = creditRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MERCHANDISE_COLUMN_NAME);
                         moneyTypeCode = creditRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_MONEY_TYPE_COLUMN_NAME);
                         final Currency currencyReceiving = MoneyType.CRYPTO.getCode().equals(moneyTypeCode) ?
-                                CurrencyHelper.getCurrency(CurrencyTypes.CRYPTO, currencyCode):
+                                CurrencyHelper.getCurrency(CurrencyTypes.CRYPTO, currencyCode) :
                                 CurrencyHelper.getCurrency(CurrencyTypes.FIAT, currencyCode);
 
-                        final float amountReceiving = new BigDecimal(creditRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME)).floatValue();
-                        final float amountGiving = new BigDecimal(debitRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME)).floatValue();
+                        if (currencyGiving != currencyReceiving) {
+                            final float amountReceiving = new BigDecimal(creditRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME)).floatValue();
+                            final float amountGiving = new BigDecimal(debitRecord.getStringValue(CryptoBrokerWalletDatabaseConstants.CRYPTO_BROKER_STOCK_TRANSACTIONS_AMOUNT_COLUMN_NAME)).floatValue();
 
-                        final CurrencyMatchingImp currencyMatchingImp = new CurrencyMatchingImp(originTransactionId, currencyGiving, currencyReceiving, amountGiving, amountReceiving);
-                        currencyMatchingList.add(currencyMatchingImp);
+                            final CurrencyMatching currencyMatchingImp = new CurrencyMatchingImp(originTransactionId, currencyGiving, currencyReceiving, amountGiving, amountReceiving);
+                            currencyMatchingList.add(currencyMatchingImp);
+
+                        } else {
+                            errorManager.reportUnexpectedPluginException(CRYPTO_BROKER_WALLET, NOT_IMPORTANT, new InvalidParameterException(
+                                    "Cant create a CurrencyMatching for the given currencies", null,
+                                    "currencyGiving: " + currencyGiving + "\ncurrencyReceiving: " + currencyReceiving,
+                                    "Please verify that the credit and debit transactions are correct in the crypto broker transaction database"));
+                        }
                     }
                 }
             }

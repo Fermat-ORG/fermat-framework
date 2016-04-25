@@ -313,7 +313,7 @@ public class BrokerAckOfflinePaymentTransactionManager implements BrokerAckOffli
             Collection<Clause> clauses = customerBrokerSaleNegotiation.getClauses();
             for (Clause clause : clauses) {
                 ClauseType clauseType = clause.getType();
-                if (clauseType == ClauseType.CUSTOMER_CURRENCY) {
+                if (clauseType == ClauseType.BROKER_CURRENCY) {
                     return FiatCurrency.getByCode(clause.getValue());
                 }
             }

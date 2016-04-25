@@ -361,7 +361,7 @@ public abstract class ActorConnectionDao<Z extends LinkedActorIdentity, T extend
     }
 
     protected DatabaseTableRecord buildDatabaseRecord(final DatabaseTableRecord record         ,
-                                                      final ActorConnection     actorConnection) {
+                                                      final T     actorConnection) {
 
         try {
 

@@ -2,6 +2,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.actor.intra_user.developer.bitdubai
 
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 
+import java.io.Serializable;
+
 /**
  * The Class <code>IntraWalletUserActor</code>
  * is the implementation of ActorIntraUser interface to provides the methods to consult the information of an Intra Wallet User <p/>
@@ -12,7 +14,7 @@ import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionSta
  * @since Java JDK 1.7
  */
 
-public class IntraWalletUserActor implements com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor {
+public class IntraWalletUserActor implements com.bitdubai.fermat_ccp_api.layer.actor.intra_user.interfaces.IntraWalletUserActor,Serializable {
 
     private final String          name            ;
     private final String          publicKey       ;

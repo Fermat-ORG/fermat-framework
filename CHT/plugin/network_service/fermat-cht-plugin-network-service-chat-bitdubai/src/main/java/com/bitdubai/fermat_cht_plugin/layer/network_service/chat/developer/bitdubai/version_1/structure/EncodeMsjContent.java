@@ -57,6 +57,7 @@ public class EncodeMsjContent {
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.MESSAGE_STATUS, chatMetadataRecord.getMessageStatus().toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.TRANSACTION_ID,chatMetadataRecord.getTransactionId().toString());
         jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RESPONSE_TO, chatMetadataRecord.getResponseToNotification());
+        jsonObjectContent.addProperty(ChatTransmissionJsonAttNames.RESPONSE_TO, chatMetadataRecord.getResponseToNotification());
 
         return gson.toJson(jsonObjectContent);
     }
