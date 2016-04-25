@@ -134,6 +134,8 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
 
             }
 
+            LOG.info("Processing finish");
+
 
         } catch (Exception exception){
 
