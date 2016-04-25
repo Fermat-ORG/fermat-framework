@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
-import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.util.BottomMenuReveal;
 import com.bitdubai.fermat.R;
@@ -43,7 +42,6 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_api.layer.dmp_module.sub_app_manager.InstalledSubApp;
 import com.bitdubai.fermat_api.layer.dmp_module.wallet_manager.InstalledWallet;
 import com.bitdubai.fermat_api.layer.engine.runtime.RuntimeManager;
-import com.bitdubai.fermat_api.module_object_creator.FermatModuleObject;
 import com.bitdubai.fermat_pip_api.layer.module.android_core.interfaces.AndroidCoreSettings;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_wpd_api.all_definition.WalletNavigationStructure;
@@ -472,26 +470,6 @@ public class DesktopActivity extends FermatActivity implements FermatScreenSwapp
 //                }else {
 
                     loadBasicUI(activity, fermatAppConnection);
-
-                    findViewById(R.id.serviceBroker).setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            FermatModuleObjectWrapper[] parameters = new FermatModuleObjectWrapper[3];
-
-                            FermatModuleObject fermatModuleObject = new FermatModuleObject(1,"manty");
-                            FermatModuleObject fermatModuleObject1 = new FermatModuleObject(1,"ewa");
-                            FermatModuleObject fermatModuleObject2 = new FermatModuleObject(1,"asd");
-
-                            FermatModuleObjectWrapper fermatModuleObjectWrapper = new FermatModuleObjectWrapper(fermatModuleObject);
-                            parameters[0] = fermatModuleObjectWrapper;
-                            fermatModuleObjectWrapper = new FermatModuleObjectWrapper(fermatModuleObject1);
-                            parameters[1] = fermatModuleObjectWrapper;
-                            fermatModuleObjectWrapper = new FermatModuleObjectWrapper(fermatModuleObject2);
-                            parameters[2] = fermatModuleObjectWrapper;
-
-                            ApplicationSession.getInstance().getClientSideBrokerService().sendMessage(null,null,null,getClass().getMethods()[0],new Object[]{fermatModuleObject,fermatModuleObject1,fermatModuleObject2});
-                        }
-                    });
 
                     if (activity.getType() == Activities.CCP_DESKTOP) {
                         showWizard(WizardTypes.DESKTOP_WELCOME_WIZARD.getKey());
