@@ -6,7 +6,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.Ver
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 
-import java.util.Map;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -32,6 +32,11 @@ public abstract class AbstractPluginDeveloper {
         this.pluginDeveloperReference = pluginDeveloperReference;
 
         this.versions = new ConcurrentHashMap<>();
+    }
+
+
+    public Collection<AbstractPlugin> getVersions() {
+        return versions.values();
     }
 
     /**
