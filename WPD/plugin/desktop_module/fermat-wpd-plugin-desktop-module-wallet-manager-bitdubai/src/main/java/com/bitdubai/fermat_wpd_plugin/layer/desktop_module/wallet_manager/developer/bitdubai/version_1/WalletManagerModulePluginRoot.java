@@ -211,7 +211,7 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
                     //Save wallet id on file
 
                     try {
-                        this.persistWallet(walletPublicKey);
+                        this.persistWallet(lossProtectedwalletPublicKey);
                     } catch (CantPersistWalletException cantPersistWalletException) {
                         throw new CantStartPluginException(cantPersistWalletException, Plugins.BITDUBAI_WPD_WALLET_MANAGER_DESKTOP_MODULE);
 
