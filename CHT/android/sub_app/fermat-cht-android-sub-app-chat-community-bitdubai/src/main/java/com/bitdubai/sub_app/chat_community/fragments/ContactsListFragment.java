@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.chat_community.fragments;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
@@ -72,7 +75,8 @@ public class ContactsListFragment
     private LinearLayout emptyView;
     private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;//cryptoBrokerCommunityInformationArrayList;
     private ChatActorCommunitySettings appSettings;
-
+    TextView noDatalabel;
+    ImageView noData;
     private boolean isRefreshing = false;
     private boolean launchActorCreationDialog = false;
     private boolean launchListIdentitiesDialog = false;
@@ -138,6 +142,9 @@ public class ContactsListFragment
             adapter = new ContactsListAdapter(getActivity(), lstChatUserInformations);
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
+            rootView.setBackgroundResource(R.drawable.fondo);
+            noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
+            noData=(ImageView) rootView.findViewById(R.id.nodata);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
@@ -227,13 +234,23 @@ public class ContactsListFragment
                 show ? android.R.anim.fade_in : android.R.anim.fade_out);
         if (show &&
                 (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.VISIBLE);
+            //emptyView.setAnimation(anim);
+            //emptyView.setVisibility(View.VISIBLE);
+            noData.setAnimation(anim);
+            noDatalabel.setAnimation(anim);
+            noDatalabel.setVisibility(View.VISIBLE);
+            noData.setVisibility(View.VISIBLE);
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
-            emptyView.setAnimation(anim);
-            emptyView.setVisibility(View.GONE);
+            //emptyView.setAnimation(anim);
+            //emptyView.setVisibility(View.GONE);
+            ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
+            rootView.setBackground(bgcolor);
+            noData.setAnimation(anim);
+            noDatalabel.setAnimation(anim);
+            noDatalabel.setVisibility(View.GONE);
+            noData.setVisibility(View.GONE);
         }
     }
 

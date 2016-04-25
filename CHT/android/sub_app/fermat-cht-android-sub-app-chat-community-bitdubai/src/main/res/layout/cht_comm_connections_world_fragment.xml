@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F9F9F9"
     android:orientation="vertical">
 
     <View
@@ -24,7 +23,15 @@
                 tools:listitem="@layout/cht_comm_world_item" />
 
         </android.support.v4.widget.SwipeRefreshLayout>
-
+    <ImageView
+        android:id="@+id/nodata"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:src="@drawable/icon_no_contacts"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
     <!--Empty view-->
     <LinearLayout
         android:id="@+id/search_empty_view"
@@ -179,4 +186,16 @@
             tools:ignore="HardcodedText" />
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="No users available"
+        android:id="@+id/nodatalabel"
+        android:textColor="#D1D3D4"
+        android:textSize="15pt"
+        android:layout_below="@+id/nodata"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>
