@@ -757,7 +757,7 @@ public class BrokerAckOfflinePaymentMonitorAgent implements
 
                 for (Clause clause : clauses) {
                     clauseType = clause.getType();
-                    if (clauseType.getCode().equals(ClauseType.CUSTOMER_CURRENCY.getCode())) {
+                    if (clauseType.getCode().equals(ClauseType.BROKER_CURRENCY.getCode())) {
                         return FiatCurrency.getByCode(clause.getValue());
                     }
                 }

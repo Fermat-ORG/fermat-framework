@@ -3,6 +3,8 @@ package com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.develope
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListInputTransactionsException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantMarkEarningTransactionAsExtractedException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningTransactionNotFoundException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningTransaction;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.InputTransaction;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
@@ -11,6 +13,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.UUID;
+
 
 /**
  * The class <code>com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.MatchingEngineMiddlewareEarningTransaction</code>
@@ -23,32 +26,31 @@ import java.util.UUID;
  */
 public final class MatchingEngineMiddlewareEarningTransaction implements EarningTransaction {
 
-    private final UUID                    id               ;
-    private final Currency                earningCurrency  ;
-    private final float                   amount           ;
-    private       List<InputTransaction>  inputTransactions;
-    private final long                    time             ;
-    private final EarningTransactionState state            ;
-
+    private final UUID id;
+    private final Currency earningCurrency;
+    private final float amount;
+    private final long time;
     private final MatchingEngineMiddlewareDao dao;
+    private final Calendar cal;
 
-    private final Calendar                    cal;
+    private List<InputTransaction> inputTransactions;
+    private EarningTransactionState state;
 
-    public MatchingEngineMiddlewareEarningTransaction(final UUID                        id               ,
-                                                      final Currency                    earningCurrency  ,
-                                                      final float                       amount           ,
-                                                      final EarningTransactionState     state            ,
-                                                      final long                        time             ,
 
-                                                      final MatchingEngineMiddlewareDao dao              ) {
+    public MatchingEngineMiddlewareEarningTransaction(final UUID id,
+                                                      final Currency earningCurrency,
+                                                      final float amount,
+                                                      final EarningTransactionState state,
+                                                      final long time,
+                                                      final MatchingEngineMiddlewareDao dao) {
 
-        this.id                = id               ;
-        this.earningCurrency   = earningCurrency  ;
-        this.amount            = amount           ;
-        this.state             = state            ;
-        this.time              = time             ;
+        this.id = id;
+        this.earningCurrency = earningCurrency;
+        this.amount = amount;
+        this.state = state;
+        this.time = time;
 
-        this.dao               = dao              ;
+        this.dao = dao;
 
         cal = GregorianCalendar.getInstance();
         cal.setTimeInMillis(this.time);
@@ -75,6 +77,12 @@ public final class MatchingEngineMiddlewareEarningTransaction implements Earning
             inputTransactions = dao.listInputsTransactionByEarningTransaction(id);
 
         return inputTransactions;
+    }
+
+    @Override
+    public void markAsExtracted() throws EarningTransactionNotFoundException, CantMarkEarningTransactionAsExtractedException {
+        state = EarningTransactionState.EXTRACTED;
+        dao.markEarningTransactionAsExtracted(id);
     }
 
     @Override

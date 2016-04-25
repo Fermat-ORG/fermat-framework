@@ -125,6 +125,10 @@ public class RuntimeDesktopObject implements DesktopObject {
         }
         try {
             this.startActivity = Activities.getValueFromString(activityCode);
+            //todo: sacar esto
+            if(lastActivity.equals(Activities.DESKTOP_WIZZARD_WELCOME)) {
+                this.lastActivity = Activities.getValueFromString(activityCode);
+            }
         } catch (InvalidParameterException e) {
             throw new IllegalArgumentException(activityCode);
         }

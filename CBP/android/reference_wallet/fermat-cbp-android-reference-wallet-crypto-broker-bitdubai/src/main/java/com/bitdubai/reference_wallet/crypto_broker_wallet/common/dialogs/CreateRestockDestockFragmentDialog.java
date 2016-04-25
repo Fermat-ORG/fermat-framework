@@ -155,7 +155,7 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
     private void applyTransaction(String option) {
         try {
 
-            final String memo = "testmemo";
+            String memo;
             String amount = amountText.getText().toString();
 
             if (amount.equals("")) {
@@ -169,6 +169,8 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
             }
             switch (option){
                 case "stock":
+                    memo = "Held funds, used to restock the Broker Wallet";
+
                     //TODO:Nelson falta pasar el price de reference en dolar al momento de hacer el restock/destock new BigDecimal(0)
                     System.out.println("*************REESTOCK DIALOG****************   ["+setting.getPlatform()+"]" );
                     if(Platforms.BANKING_PLATFORM == setting.getPlatform()){
@@ -183,6 +185,8 @@ public class CreateRestockDestockFragmentDialog extends Dialog implements
                     dismiss();
                     return;
                 case "destock":
+                    memo = "Unheld funds, destocked from the Broker Wallet";
+
                     System.out.println("*************DESTOCK DIALOG****************  ["+setting.getPlatform()+"]");
                     if(Platforms.BANKING_PLATFORM == setting.getPlatform()){
                         cryptoBrokerWalletModuleManager.createTransactionDestockBank(setting.getBrokerPublicKey(), (FiatCurrency) setting.getMerchandise(), setting.getBrokerPublicKey(), setting.getWalletPublicKey(), setting.getBankAccount(), new BigDecimal(amount), memo, new BigDecimal(0), OriginTransaction.DESTOCK, setting.getBrokerPublicKey());
