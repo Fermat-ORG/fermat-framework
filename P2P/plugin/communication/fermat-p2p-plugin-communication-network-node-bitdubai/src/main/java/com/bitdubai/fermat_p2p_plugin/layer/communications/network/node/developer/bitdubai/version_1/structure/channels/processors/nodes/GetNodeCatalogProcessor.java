@@ -67,7 +67,7 @@ public class GetNodeCatalogProcessor extends PackageProcessor {
             /*
              * Validate if content type is the correct
              */
-            if (messageContent.getMessageContentType() == MessageContentType.JSON){
+            if (messageContent.getMessageContentType() == MessageContentType.OBJECT){
 
 
                 nodesCatalogList = loadData(messageContent.getOffset(), messageContent.getMax());

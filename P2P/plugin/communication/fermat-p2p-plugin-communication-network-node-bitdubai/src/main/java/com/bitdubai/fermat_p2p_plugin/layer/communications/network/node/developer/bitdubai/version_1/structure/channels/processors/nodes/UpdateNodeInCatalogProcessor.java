@@ -73,7 +73,7 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
             /*
              * Validate if content type is the correct
              */
-            if (messageContent.getMessageContentType() == MessageContentType.JSON){
+            if (messageContent.getMessageContentType() == MessageContentType.OBJECT){
 
                 /*
                  * Obtain the profile of the node
@@ -108,11 +108,21 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
                     /*
                      * If all ok, respond whit success message
                      */
-                    updateNodeInCatalogMsjRespond = new UpdateNodeInCatalogMsjRespond(CheckInProfileMsjRespond.STATUS.SUCCESS, CheckInProfileMsjRespond.STATUS.SUCCESS.toString(), nodeProfile, Boolean.TRUE);
+                    updateNodeInCatalogMsjRespond = new UpdateNodeInCatalogMsjRespond(UpdateNodeInCatalogMsjRespond.STATUS.SUCCESS, UpdateNodeInCatalogMsjRespond.STATUS.SUCCESS.toString(), nodeProfile, Boolean.TRUE);
 
                 }
 
                 Package packageRespond = Package.createInstance(updateNodeInCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.UPDATE_NODE_IN_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+
+                /*
+                 * Send the respond
+                 */
+                session.getAsyncRemote().sendObject(packageRespond);
+
+            }else {
+
+                updateNodeInCatalogMsjRespond = new UpdateNodeInCatalogMsjRespond(UpdateNodeInCatalogMsjRespond.STATUS.FAIL, "Invalid content type: "+messageContent.getMessageContentType(), nodeProfile, Boolean.FALSE);
+                Package packageRespond = Package.createInstance(updateNodeInCatalogMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.ADD_NODE_TO_CATALOG_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -155,16 +165,23 @@ public class UpdateNodeInCatalogProcessor extends PackageProcessor {
      */
     private boolean exist(NodeProfile nodeProfile) throws CantReadRecordDataBaseException, RecordNotFoundException {
 
-        /*
-         * Search in the data base
-         */
-        NodesCatalog nodesCatalog = getDaoFactory().getNodesCatalogDao().findById(nodeProfile.getIdentityPublicKey());
+        try {
 
-        if (nodesCatalog != null){
-            return Boolean.TRUE;
+            /*
+             * Search in the data base
+             */
+            NodesCatalog nodesCatalog = getDaoFactory().getNodesCatalogDao().findById(nodeProfile.getIdentityPublicKey());
+
+            if (nodesCatalog != null){
+                return Boolean.TRUE;
+            }else {
+                return Boolean.FALSE;
+            }
+
+        }catch (Exception e){
+            LOG.warn(e.getMessage());
+            return Boolean.FALSE;
         }
-
-        return Boolean.FALSE;
 
     }
 
