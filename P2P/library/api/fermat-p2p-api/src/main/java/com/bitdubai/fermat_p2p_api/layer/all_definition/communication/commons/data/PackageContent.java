@@ -24,6 +24,7 @@ public abstract class PackageContent {
      */
     public PackageContent() {
         super();
+        this.messageContentType = MessageContentType.OBJECT;
     }
 
     /**
