@@ -667,7 +667,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                                     cryptoWalletWalletContact.getActorPublicKey(),
                                                     cryptoWalletWalletContact.getActorType(),
                                                     ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                                    blockchainNetworkType
+                                                    blockchainNetworkType,
+                                                    appSession.getActualExchangeRate()
                                             );
                                             Toast.makeText(getActivity(), "Sending...", Toast.LENGTH_SHORT).show();
                                             onBack(null);

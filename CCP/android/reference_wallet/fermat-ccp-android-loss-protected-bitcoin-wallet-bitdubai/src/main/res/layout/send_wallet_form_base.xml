@@ -122,7 +122,7 @@
                         android:layout_marginLeft="16dp"
                         android:paddingTop="12dp"
                         android:text="@string/amount_text"
-                        android:textColor="#12aca1"
+                        android:textColor="#073487"
                         android:textSize="12sp" />
 
                     <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -132,7 +132,7 @@
                         android:layout_marginLeft="5dp"
                         android:paddingTop="12dp"
                         android:text="@string/btc_text"
-                        android:textColor="#12aca1"
+                        android:textColor="#073487"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -178,7 +178,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:src="@drawable/ic_spinner_arrow" />
+                        android:src="@drawable/moreoptions_icon" />
                 </LinearLayout>
 
                 <View
@@ -192,7 +192,7 @@
                     android:layout_marginLeft="16dp"
                     android:paddingTop="12dp"
                     android:text="@string/notes_text"
-                    android:textColor="#12aca1"
+                    android:textColor="#073487"
                     android:textSize="12dp"/>
 
                 <LinearLayout
@@ -242,7 +242,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:background="#1173aa"
+                        android:background="#DC5A0F"
                         android:clickable="true"
                         android:padding="3dp"
                         android:src="@drawable/ic_action_send_now_grey"

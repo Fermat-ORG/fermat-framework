@@ -642,7 +642,8 @@ public class SendFormFragment extends AbstractFermatFragment<ReferenceWalletSess
                                         cryptoWalletWalletContact.getActorPublicKey(),
                                         cryptoWalletWalletContact.getActorType(),
                                         ReferenceWallet.BASIC_WALLET_BITCOIN_WALLET,
-                                        blockchainNetworkType
+                                        blockchainNetworkType,
+                                        0
 
                                         // settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType())
                                 );

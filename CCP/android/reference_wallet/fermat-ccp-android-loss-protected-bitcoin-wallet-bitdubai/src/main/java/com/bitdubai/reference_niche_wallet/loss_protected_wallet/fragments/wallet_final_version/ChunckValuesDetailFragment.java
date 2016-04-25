@@ -180,7 +180,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
 
     private void setUp(LayoutInflater inflater){
         try {
-            setUpHeader(inflater);
+            //setUpHeader(inflater);
             //setUpDonut(inflater);
 
         }catch (Exception e){
