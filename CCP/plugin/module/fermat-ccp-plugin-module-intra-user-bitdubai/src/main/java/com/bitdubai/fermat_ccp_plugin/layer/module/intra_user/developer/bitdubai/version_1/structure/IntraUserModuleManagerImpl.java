@@ -328,10 +328,6 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
     public void askIntraUserForAcceptance(String intraUserToAddName, String intraUserToAddPhrase, String intraUserToAddPublicKey, byte[] OthersProfileImage,byte[] MyProfileImage, String identityPublicKey, String identityAlias) throws CantStartRequestException {
 
         try {
-            /**
-             *Call Actor Intra User to add request connection
-             */
-            this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPhrase, intraUserToAddPublicKey, OthersProfileImage);
 
             /**
              *Call Network Service Intra User to add request connection
@@ -345,6 +341,12 @@ public class IntraUserModuleManagerImpl extends ModuleManagerImpl<IntraUserWalle
                 this.intraUserNertwokServiceManager.acceptIntraUser(identityPublicKey, intraUserToAddPublicKey);
                 System.out.println("The user is connected");
             }
+
+            /**
+             *Call Actor Intra User to add request connection
+             */
+            this.intraWalletUserManager.askIntraWalletUserForAcceptance(identityPublicKey, intraUserToAddName, intraUserToAddPhrase, intraUserToAddPublicKey, OthersProfileImage);
+
 
         } catch (CantCreateIntraWalletUserException e) {
             throw new CantStartRequestException("", e, "", "");
