@@ -94,6 +94,7 @@ public class FanActorConnectionPluginRoot extends AbstractPlugin implements Data
             dao.initializeDatabase();
             final ActorConnectionEventActions eventActions = new ActorConnectionEventActions(
                     artistActorNetworkServiceManager,
+                    fanActorNetworkServiceManager,
                     dao,
                     errorManager,
                     broadcaster,

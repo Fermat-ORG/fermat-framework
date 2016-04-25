@@ -41,7 +41,7 @@ public class ArtistConnectionRequestNewsEventHandler implements FermatEventHandl
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
         if (this.fanActorConnectionPluginRoot.getStatus() == ServiceStatus.STARTED) {
             if (fermatEvent instanceof ArtistConnectionRequestNewsEvent) {
-                actorConnectionEventActions.handleArtistNewsEvent();
+                actorConnectionEventActions.handleArtistNewsEvent(fermatEvent.getSource());
             } else {
                 EventType eventExpected = EventType.ARTIST_CONNECTION_REQUEST_NEWS;
                 String context = "Event received: " + fermatEvent.getEventType().toString() + " - " + fermatEvent.getEventType().getCode()+"\n"+

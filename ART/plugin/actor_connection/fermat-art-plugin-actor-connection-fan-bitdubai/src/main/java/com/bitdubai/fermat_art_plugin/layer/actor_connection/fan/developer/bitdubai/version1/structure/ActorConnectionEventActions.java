@@ -18,6 +18,7 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
 import com.bitdubai.fermat_api.layer.all_definition.enums.SubAppsPublicKeys;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.Broadcaster;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.BroadcasterType;
 import com.bitdubai.fermat_art_api.all_definition.exceptions.CantHandleNewsEventException;
@@ -30,6 +31,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantLi
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.FanManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util.FanConnectionRequest;
 import com.bitdubai.fermat_art_plugin.layer.actor_connection.fan.developer.bitdubai.version1.database.FanActorConnectionDao;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -44,6 +46,7 @@ import java.util.UUID;
 public class ActorConnectionEventActions {
 
     private final ArtistManager artistNetworkService;
+    private final FanManager fanNetworkService;
     private final FanActorConnectionDao dao;
     private final ErrorManager errorManager;
     private final Broadcaster broadcaster;
@@ -59,11 +62,13 @@ public class ActorConnectionEventActions {
      */
     public ActorConnectionEventActions(
             final ArtistManager artistNetworkService,
+            final FanManager fanNetworkService,
             final FanActorConnectionDao dao,
             final ErrorManager errorManager,
             final Broadcaster broadcaster,
             final PluginVersionReference  pluginVersionReference) {
         this.artistNetworkService = artistNetworkService;
+        this.fanNetworkService = fanNetworkService;
         this.dao = dao;
         this.errorManager = errorManager;
         this.broadcaster = broadcaster;
@@ -74,12 +79,26 @@ public class ActorConnectionEventActions {
      * This method handle with artist news event
      * @throws CantHandleNewsEventException
      */
-    public void handleArtistNewsEvent() throws CantHandleNewsEventException {
+    public void handleArtistNewsEvent(EventSource eventSource) throws CantHandleNewsEventException {
         try {
-            final List<ArtistConnectionRequest> list = artistNetworkService.listPendingConnectionNews(
-                    PlatformComponentType.ART_FAN);
-            for (final ArtistConnectionRequest request : list)
-                this.handleRequestConnection(request, Actors.ART_ARTIST);
+            switch (eventSource){
+                case ARTIST_ACTOR_CONNECTION:
+                    final List<ArtistConnectionRequest> artistConnectionRequests = artistNetworkService.listPendingConnectionNews(
+                            PlatformComponentType.ART_FAN);
+                    for (final ArtistConnectionRequest request : artistConnectionRequests)
+                        this.handleArtistRequestConnection(request, Actors.ART_ARTIST);
+                    break;
+                case ACTOR_NETWORK_SERVICE_FAN:
+                    final List<FanConnectionRequest> fanConnectionRequests = fanNetworkService.listPendingConnectionNews(
+                            PlatformComponentType.ART_FAN);
+                    for (final FanConnectionRequest request : fanConnectionRequests)
+                        this.handleFanRequestConnection(request, Actors.ART_FAN);
+                    break;
+                default:
+                    //TODO: throw an exception
+                    break;
+            }
+
         } catch(CantListPendingConnectionRequestsException |
                 CantRequestActorConnectionException |
                 UnsupportedActorTypeException |
@@ -100,7 +119,7 @@ public class ActorConnectionEventActions {
      * @throws UnsupportedActorTypeException
      * @throws ConnectionAlreadyRequestedException
      */
-    public void handleRequestConnection(
+    public void handleArtistRequestConnection(
             final ArtistConnectionRequest request,
             Actors actorType) throws
             CantRequestActorConnectionException,
@@ -131,6 +150,86 @@ public class ActorConnectionEventActions {
         } catch (final ActorConnectionAlreadyExistsException actorConnectionAlreadyExistsException){
             try {
                 artistNetworkService.confirm(request.getRequestId());
+            } catch (Exception e) {
+                errorManager.reportUnexpectedPluginException(
+                        pluginVersionReference,
+                        UnexpectedPluginExceptionSeverity.
+                                DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                        actorConnectionAlreadyExistsException);
+                throw new ConnectionAlreadyRequestedException(
+                        actorConnectionAlreadyExistsException,
+                        "request: "+request,
+                        "The connection was already requested or exists.");
+            }
+        } catch (final CantRegisterActorConnectionException cantRegisterActorConnectionException) {
+            errorManager.reportUnexpectedPluginException(
+                    pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    cantRegisterActorConnectionException);
+            throw new CantRequestActorConnectionException(
+                    cantRegisterActorConnectionException,
+                    "request: "+request,
+                    "Problem registering the actor connection in DAO.");
+        } catch (final CantConfirmException cantConfirmException) {
+            errorManager.reportUnexpectedPluginException(
+                    pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    cantConfirmException);
+            throw new CantRequestActorConnectionException(
+                    cantConfirmException,
+                    "request: "+request,
+                    "Error trying to confirm the connection request through the network service.");
+        } catch (final Exception exception) {
+            errorManager.reportUnexpectedPluginException(
+                    pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN,
+                    exception);
+            throw new CantRequestActorConnectionException(
+                    exception,
+                    "request: "+request,
+                    "Unhandled error.");
+        }
+    }
+
+    /**
+     * This method handles with request connections
+     * @param request
+     * @param actorType
+     * @throws CantRequestActorConnectionException
+     * @throws UnsupportedActorTypeException
+     * @throws ConnectionAlreadyRequestedException
+     */
+    public void handleFanRequestConnection(
+            final FanConnectionRequest request,
+            Actors actorType) throws
+            CantRequestActorConnectionException,
+            UnsupportedActorTypeException       ,
+            ConnectionAlreadyRequestedException {
+        try {
+            final FanLinkedActorIdentity linkedIdentity = new FanLinkedActorIdentity(
+                    request.getDestinationPublicKey(),
+                    actorType
+            );
+            final ConnectionState connectionState = ConnectionState.PENDING_LOCALLY_ACCEPTANCE;
+            final FanActorConnection actorConnection = new FanActorConnection(
+                    request.getRequestId(),
+                    linkedIdentity,
+                    request.getSenderPublicKey(),
+                    request.getSenderAlias(),
+                    request.getSenderImage(),
+                    connectionState,
+                    request.getSentTime(),
+                    request.getSentTime()
+            );
+            dao.registerActorConnection(actorConnection);
+            broadcaster.publish(
+                    BroadcasterType.NOTIFICATION_SERVICE,
+                    SubAppsPublicKeys.ART_FAN_COMMUNITY.getCode(),
+                    FanActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
+            fanNetworkService.confirm(request.getRequestId());
+        } catch (final ActorConnectionAlreadyExistsException actorConnectionAlreadyExistsException){
+            try {
+                fanNetworkService.confirm(request.getRequestId());
             } catch (Exception e) {
                 errorManager.reportUnexpectedPluginException(
                         pluginVersionReference,
