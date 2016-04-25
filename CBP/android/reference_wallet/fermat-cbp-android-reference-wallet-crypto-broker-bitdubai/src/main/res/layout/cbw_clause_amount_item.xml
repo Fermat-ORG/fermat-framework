@@ -9,7 +9,8 @@
     android:layout_marginBottom="16dp"
     app:cardBackgroundColor="@color/cbw_card_background_status_confirm"
     app:cardCornerRadius="4dp"
-    app:cardElevation="4dp">
+    app:cardElevation="4dp"
+    tools:visibility="visible">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -17,12 +18,12 @@
 
         <ImageView
             android:id="@+id/cbw_clause_number"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="bottom|start"
-            android:layout_marginStart="8dp"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="9dp"
             android:scaleType="fitXY"
-            android:src="@drawable/bg_detail_number_02"
+            android:src="@drawable/bg_detail_number_01"
             tools:ignore="contentDescription"/>
 
         <LinearLayout
@@ -34,24 +35,22 @@
                 android:id="@+id/cbw_card_view_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
+                android:layout_margin="16dp"
                 android:gravity="center"
                 android:textAllCaps="true"
-                android:textColor="@color/card_title_color_status_confirm"
+                android:textColor="#1271A7"
+                android:textSize="14sp"
                 tools:text="Amount to Buy"/>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#2e2e2e2e"/>
+                android:background="#1271A7"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="16dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginTop="16dp"
+                android:layout_margin="14dp"
                 android:orientation="horizontal">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -60,15 +59,18 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="5dp"
-                    android:textColor="@color/description_text_status_confirm"
-                    tools:text="Buying"/>
+                    android:layout_marginRight="5dp"
+                    android:textSize="14sp"
+                    android:text="Buying"
+                    android:textColor="@color/description_text_status_confirm"/>
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
                     android:id="@+id/cbw_amount_value"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:layout_marginEnd="5dp"
-                    android:background="@color/option_button_background"
+                    android:layout_marginRight="5dp"
+                    android:background="#DDD"
                     android:inputType="numberDecimal"
                     android:maxWidth="150dp"
                     android:minWidth="50dp"
@@ -77,7 +79,7 @@
                     android:paddingRight="8dp"
                     android:paddingStart="8dp"
                     android:textAllCaps="false"
-                    android:textColor="#fff"
+                    android:textColor="#222"
                     android:textSize="14sp"
                     tools:text="556.4"/>
 
@@ -85,24 +87,31 @@
                     android:id="@+id/cbw_amount_currency"
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
+                    android:textSize="14sp"
                     android:textColor="@color/text_value_status_confirm"
                     tools:text="BTC"/>
 
             </LinearLayout>
 
-            <View
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#2e2e2e2e"/>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:minHeight="34dp">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#1271A7"/>
 
-            <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
-                android:id="@+id/cbw_confirm_button"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_gravity="end"
-                android:layout_margin="8dp"
-                android:text="@string/status_confirm"
-                android:textSize="14sp"/>
+                <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
+                    android:id="@+id/cbw_confirm_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_gravity="end"
+                    android:layout_margin="8dp"
+                    android:text="@string/status_confirm"
+                    android:textSize="14sp"/>
+            </LinearLayout>
         </LinearLayout>
 
     </FrameLayout>

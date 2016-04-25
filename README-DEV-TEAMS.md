@@ -273,11 +273,10 @@ We are putting together a team of talented developers, especially passionate abo
     Skype:   alex_jimenez76
     Github:  https://github.com/alexanderejm
 
-* **Edicson Infante [New Part-Time Developer]**<br/>
+* **Andy Cusatti [New Part-Time Developer]**<br/>
 ---
-    Email:   edicsonjosue18@gmail.com
-    Skype:   live:ejil_18
-    Github:  https://github.com/EdicsonInfante
+    Email:   andyaacm@gmail.com
+    Github:  https://github.com/macuare
     
 This is a team full of manga, anime, comics, sci-fi and Tolkien fans, also we represent the dark side of the force. We would be grateful for any help received, and anyone interested in joining the team will be welcome.
 
