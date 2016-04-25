@@ -21,6 +21,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.Fai
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.FailureUpdateActorNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageReceivedNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.NewNetworkServiceMessageSentNotificationEvent;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.RegisterServerRequestNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionCloseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VPNConnectionLooseNotificationEvent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.events.VpnSuccessReconnectNotificationEvent;
@@ -30,6 +31,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteRequestListComponentRegisteredNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.CompleteUpdateActorNotificationEventListener;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.FailureComponentConnectionRequestNotificationEventListener;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.listeners.RegisterServerRequestNotificationEventListener;
 
 /**
  * The enum <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.P2pEventType</code>
@@ -73,6 +75,15 @@ public enum P2pEventType implements FermatEventEnum {
         }
         public FermatEvent getNewEvent() {
             return new CompleteClientComponentRegistrationNotificationEvent(this);
+        }
+    },
+
+    REGISTER_SERVER_REQUEST_NOTIFICATION("REG_SER_REN"){
+        public FermatEventListener getNewListener(FermatEventMonitor eventMonitor) {
+            return new RegisterServerRequestNotificationEventListener(this, eventMonitor);
+        }
+        public FermatEvent getNewEvent() {
+            return new RegisterServerRequestNotificationEvent(this);
         }
     },
 

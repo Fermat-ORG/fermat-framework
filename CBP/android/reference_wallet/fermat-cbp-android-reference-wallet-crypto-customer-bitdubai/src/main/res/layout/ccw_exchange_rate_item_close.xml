@@ -89,7 +89,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:text="@string/yours_exchange_rate_title"
+                    android:text="@string/ccw_your_exchange_rate_title"
                     android:textColor="@color/description_text_status_confirm"
                     android:textSize="14sp"/>
 
@@ -116,7 +116,7 @@
                     android:layout_marginRight="5dp"
                     android:layout_toEndOf="@+id/ccw_exchange_rate_value_left_side"
                     android:layout_toRightOf="@+id/ccw_exchange_rate_value_left_side"
-                    android:background="#FFF"
+                    android:background="@color/ccw_card_background_status_confirm"
                     android:inputType="numberDecimal"
                     android:maxWidth="150dp"
                     android:minWidth="50dp"

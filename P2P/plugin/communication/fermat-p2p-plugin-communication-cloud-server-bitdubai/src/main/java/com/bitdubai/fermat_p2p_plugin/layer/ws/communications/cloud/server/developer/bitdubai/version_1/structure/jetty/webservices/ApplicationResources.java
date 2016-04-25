@@ -28,7 +28,8 @@ public class ApplicationResources extends Application {
             ComponentRegisteredListWebService.class,
             MonitoringWebService.class,
             UserWebService.class,
-            ConfigurationWebService.class
+            ConfigurationWebService.class,
+            ListServerConfByPlatformWebService.class
     );
 
     @Override
