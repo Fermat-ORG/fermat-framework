@@ -75,6 +75,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import static android.widget.Toast.makeText;
+import static com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R.drawable.earning_icon;
 
 /**
  * Created by Gian Barboza on 18/04/16.
@@ -137,6 +138,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
         try {
             lossProtectedWalletSession = appSession;
             lossProtectedWallet = lossProtectedWalletSession.getModuleManager().getCryptoWallet();
@@ -369,16 +371,16 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             noDataInChart           = (TextView) rootView.findViewById(R.id.noDataInChart);
 
 
-            //set Earning or Losts Values
+            /*//set Earning or Losts Values
             double total = 0;
             //total = lossProtectedWallet.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
             if (total>=0){
                 txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(total)+" earned");
-                earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
+                earnOrLostImage.setBackgroundResource(earning_icon);
             }else {
                 txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(total)+" losted");
                 earnOrLostImage.setImageResource(R.drawable.lost_icon);
-            }
+            }*/
 
             //set Actual Date
 
@@ -386,31 +388,8 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             Date actualDate = new Date();
             txt_date_home.setText(sdf.format(actualDate));
 
-            //chart
 
-         /*  ArrayList<Entry> entries = new ArrayList<>();
-            entries.add(new Entry(9, 0));
-            entries.add(new Entry(10, 1));
-            entries.add(new Entry(15, 2));
-            entries.add(new Entry(3, 3));
-            entries.add(new Entry(-10, 4));
-            entries.add(new Entry(1, 5));
-
-            LineDataSet dataset = new LineDataSet(entries,"");
-            dataset.setColor(Color.WHITE); //
-            dataset.setDrawCubic(false);
-            dataset.setValueFormatter(new LargeValueFormatter());
-
-
-            ArrayList<String> labels = new ArrayList<String>();
-            labels.add("January");
-            labels.add("February");
-            labels.add("March");
-            labels.add("April");
-            labels.add("May");
-            labels.add("June");*/
-
-            //Get all wallet spindings from the manager
+            //Get all wallet spending from the manager
             allWalletSpendingList = lossProtectedWallet.listAllWalletSpendingValue(lossProtectedWalletSession.getAppPublicKey());
 
             LineData data = getData(allWalletSpendingList);
@@ -427,10 +406,11 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
             chart.setDragEnabled(false);
             chart.setScaleEnabled(false);
             chart.setPinchZoom(false);
-            chart.setDoubleTapToZoomEnabled(true);
-            chart.setHighlightPerDragEnabled(false);
-            chart.setHighlightPerTapEnabled(false);
+            chart.setDoubleTapToZoomEnabled(false);
+            chart.setHighlightPerDragEnabled(true);
+            chart.setHighlightPerTapEnabled(true);
             chart.setOnChartValueSelectedListener(this);
+
 
 
             YAxis yAxis = chart.getAxisLeft();
@@ -509,6 +489,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         dataset.setDrawValues(false);
         dataset.setDrawCircles(false);
         dataset.setValueFormatter(new LargeValueFormatter());
+        dataset.setDrawHighlightIndicators(false);
 
         return new LineData(xValues, dataset);
 
@@ -728,8 +709,9 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
                 //total = lossProtectedWallet.getEarningOrLostsWallet(lossProtectedWalletSession.getAppPublicKey());
                 if (e.getVal()>=0){
+
                     txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(e.getVal())+" earned");
-                    earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
+                    earnOrLostImage.setImageResource(R.drawable.earning_icon);
                 }else {
                     txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(e.getVal())+" losted");
                     earnOrLostImage.setImageResource(R.drawable.lost_icon);
@@ -744,7 +726,6 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
     @Override
     public void onNothingSelected() {
-        txt_earnOrLost.setText("B "+WalletUtils.formatAmountString(0)+" earned");
-        earnOrLostImage.setBackgroundResource(R.drawable.earning_icon);
+
     }
 }
