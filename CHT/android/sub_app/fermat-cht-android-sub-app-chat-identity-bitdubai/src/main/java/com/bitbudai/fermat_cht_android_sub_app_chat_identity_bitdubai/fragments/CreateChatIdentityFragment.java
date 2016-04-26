@@ -12,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.sessions.ChatIdentitySession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.settings.ChatIdentitySettings;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CommonLogger;
 import com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor;
 import static com.bitbudai.fermat_cht_android_sub_app_chat_identity_bitdubai.util.CreateChatIdentityExecutor.SUCCESS;
@@ -45,12 +47,15 @@ import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
+import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_identity_bitdubai.R;
 
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CHTException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatIdentityException;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatPreferenceSettings;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityModuleManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.identity.ChatIdentityPreferenceSettings;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.fermat_cht_plugin.layer.sub_app_module.chat.identity.bitdubai.version_1.ChatIdentitySubAppModulePluginRoot;
@@ -82,8 +87,9 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     byte[] fanImageByteArray;
     ChatIdentitySession Session;
     Context context;
-
-    SettingsManager<ChatIdentityPreferenceSettings> settingsManager;
+    Toolbar toolbar;
+    private SettingsManager<ChatIdentitySettings> settingsManager;
+    private ChatIdentityPreferenceSettings chatIdentitySettings;
     public static CreateChatIdentityFragment newInstance() {
         return new CreateChatIdentityFragment();
     }
@@ -96,13 +102,30 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
              Session = (ChatIdentitySession) appSession;
             moduleManager =  Session.getModuleManager();
              errorManager = Session.getErrorManager();
-            setHasOptionsMenu(false);
-          settingsManager = Session.getModuleManager().getSettingsManager();
 
+            chatIdentitySettings = null;
+            try {
+                chatIdentitySettings = moduleManager.getSettingsManager().loadAndGetSettings(appSession.getAppPublicKey());
+            } catch (Exception e) {
+                chatIdentitySettings = null;
+            }
+
+            if (chatIdentitySettings == null) {
+                chatIdentitySettings = new ChatIdentityPreferenceSettings();
+                chatIdentitySettings.setIsPresentationHelpEnabled(true);
+                try {
+                    moduleManager.getSettingsManager().persistSettings(appSession.getAppPublicKey(), chatIdentitySettings);
+                } catch (Exception e) {
+                    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                }
+            }
         }catch (Exception e){
             errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
 
         }
+        toolbar = getToolbar();
+        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -121,11 +144,15 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
      */
     private void initViews(View layout) {
         actualizable = true;
-        mBrokerName = (EditText) layout.findViewById(R.id.aliasEdit);
+        mBrokerName = (EditText) layout.findViewById(R.id.editTextName);
         final Button botonG = (Button) layout.findViewById(R.id.cht_button);
         mBrokerImage = (ImageView) layout.findViewById(R.id.cht_image);
         textViewChtTitle = (TextView) layout.findViewById(R.id.textViewChtTitle);
         Bitmap bitmap = null;
+        if (chatIdentitySettings.isHomeTutorialDialogEnabled() == true)
+        {
+            setUpDialog();
+        }
         try {
             if(ExistIdentity() == false) {
                 botonG.setOnClickListener(new View.OnClickListener() {
@@ -135,7 +162,6 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         createNewIdentityInBackDevice("onClick");
                     }
                 });
-                setUpDialog();
                 mBrokerName.requestFocus();
                 mBrokerName.performClick();
                 mBrokerName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -158,12 +184,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             @Override
                             public void onClick(View v) {
                                 dispatchTakePictureIntent();
+                                dialog.dismiss();
                             }
                         });
                         dialog.findViewById(R.id.img_gallery).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 loadImageFromGallery();
+                                dialog.dismiss();
                             }
                         });
                         dialog.show();
@@ -197,6 +225,7 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                         botonG.setVisibility(View.VISIBLE);
                     }
                 });
+                botonG.setText("Save Changes");
                 botonG.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -221,12 +250,14 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
                             @Override
                             public void onClick(View v) {
                                 dispatchTakePictureIntent();
+                                dialog.dismiss();
                             }
                         });
                         dialog.findViewById(R.id.img_gallery).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
                                 loadImageFromGallery();
+                                dialog.dismiss();
                             }
                         });
                         dialog.show();
@@ -249,34 +280,27 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
     @Override
     public void onCreateOptionsMenu(final Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
+        menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
-        try {
-            if(ExistIdentity() == false) {
-                menu.add(0, MENU_HELP_ACTION, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
-                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-            }else {
-                menu.add(0, MENU_ADD_ACTION, 0, "help").setIcon(R.drawable.ic_action_add)
-                        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-            }
-        } catch (CHTException e) {
-            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
-
-        }
-
-
+        //menu.add(0, MENU_ADD_ACTION, 0, "help").setIcon(R.drawable.ic_action_add)
+        //        .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
     public void setUpDialog(){
-        PresentationDialog pd = new PresentationDialog.Builder(getActivity(), appSession)
+        try{
+        PresentationDialog pd = new PresentationDialog.Builder(getActivity(), Session)
                 .setSubTitle(R.string.cht_chat_identity_subtitle)
                 .setBody(R.string.cht_chat_identity_body)
                 .setTemplateType(PresentationDialog.TemplateType.TYPE_PRESENTATION_WITHOUT_IDENTITIES)
-                .setIconRes(R.drawable.chat_subapp)
+                .setIconRes(R.drawable.chat_identity_subapp)
                 .setBannerRes(R.drawable.banner_identity_chat)
+                .setIsCheckEnabled(true)
                 .setTextFooter(R.string.cht_chat_footer).build();
         pd.show();
+        } catch (Exception e) {
+            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT_IDENTITY, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+        }
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -335,7 +359,30 @@ public class CreateChatIdentityFragment extends AbstractFermatFragment {
         String brokerNameText = mBrokerName.getText().toString();
         if (brokerNameText.trim().equals("")) {
             Toast.makeText(getActivity(), "Please enter a name or alias", Toast.LENGTH_LONG).show();
-        } else {
+        }
+        if (cryptoBrokerBitmap == null) {
+           // Toast.makeText(getActivity(), "You must enter an image", Toast.LENGTH_LONG).show();
+            cryptoBrokerBitmap = BitmapFactory.decodeByteArray(moduleManager.getIdentityChatUser().getImage(), 0, moduleManager.getIdentityChatUser().getImage().length);
+            byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
+            EditIdentityExecutor executor = null;
+            try {
+                executor = new EditIdentityExecutor(Session, moduleManager.getIdentityChatUser().getPublicKey(), brokerNameText, moduleManager.getIdentityChatUser().getImage());
+
+                int resultKey = executor.execute();
+                switch (resultKey) {
+                    case SUCCESS:
+                        if (donde.equalsIgnoreCase("onClick")) {
+                            textViewChtTitle.setText(mBrokerName.getText());
+                            Toast.makeText(getActivity(), "Chat Identity Update.", Toast.LENGTH_LONG).show();
+                            changeActivity(Activities.CHT_CHAT_CREATE_IDENTITY, appSession.getAppPublicKey());
+                        }
+                        break;
+                }
+            } catch (CHTException e) {
+                errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.UNSTABLE, FermatException.wrapException(e));
+
+            }
+        }else {
             byte[] imgInBytes = ImagesUtils.toByteArray(cryptoBrokerBitmap);
             EditIdentityExecutor executor = null;
             try {

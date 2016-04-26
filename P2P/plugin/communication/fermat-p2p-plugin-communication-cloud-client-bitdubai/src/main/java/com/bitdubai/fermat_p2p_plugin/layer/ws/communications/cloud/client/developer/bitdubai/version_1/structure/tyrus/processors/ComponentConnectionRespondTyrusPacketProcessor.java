@@ -78,8 +78,8 @@ public class ComponentConnectionRespondTyrusPacketProcessor extends FermatTyrusP
             /*
              * get the Server ip and port
              */
-            String ServerIp = getWsCommunicationsTyrusCloudClientChannel().getWsCommunicationsTyrusCloudClientConnection().getWsCommunicationsCloudClientPluginRoot().getServerIp();
-            Integer ServerPort = getWsCommunicationsTyrusCloudClientChannel().getWsCommunicationsTyrusCloudClientConnection().getWsCommunicationsCloudClientPluginRoot().getServerPort();
+            String ServerIp = getWsCommunicationsTyrusCloudClientChannel().getWsCommunicationsTyrusCloudClientConnection().getServerIp();
+            Integer ServerPort = getWsCommunicationsTyrusCloudClientChannel().getWsCommunicationsTyrusCloudClientConnection().getServerPort();
 
             vpnServerUri = new URI(ServerConf.WS_PROTOCOL + ServerIp + ":" + ServerPort + vpnServerUri);
 

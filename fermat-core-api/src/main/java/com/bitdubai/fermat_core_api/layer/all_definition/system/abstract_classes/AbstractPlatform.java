@@ -4,6 +4,15 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_class
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractAddonDeveloper;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPluginDeveloper;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDeveloperReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.LayerReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.AddonNotFoundException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterLayerException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartLayerException;
@@ -11,16 +20,10 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantS
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.DeveloperNotFoundException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.LayerNotFoundException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PluginNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.VersionNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonDeveloperReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.AddonVersionReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginDeveloperReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.LayerReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PlatformReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginReference;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -204,6 +207,27 @@ public abstract class AbstractPlatform {
         return platformReference;
     }
 
+    public Collection<AbstractLayer> getLayers() {
+        return layers.values();
+    }
+
     public abstract void start() throws CantStartPlatformException;
 
+    public ArrayList<AbstractPlugin> getPlugins(){
+        ArrayList<AbstractPlugin> abstractPlugins = new ArrayList<>();
+        Iterator<AbstractLayer> iterator = getLayers().iterator();
+        while(iterator.hasNext()){
+            Iterator<AbstractPluginSubsystem> abstractPluginSubsystemIterator = iterator.next().getPlugins().iterator();
+            while(abstractPluginSubsystemIterator.hasNext()){
+                Iterator<AbstractPluginDeveloper> iterator1 = abstractPluginSubsystemIterator.next().getDevelopers().iterator();
+                while (iterator1.hasNext()){
+                    Iterator<AbstractPlugin> iterator2 = iterator1.next().getVersions().iterator();
+                    while (iterator2.hasNext()){
+                        abstractPlugins.add(iterator2.next());
+                    }
+                }
+            }
+        }
+        return abstractPlugins;
+    }
 }

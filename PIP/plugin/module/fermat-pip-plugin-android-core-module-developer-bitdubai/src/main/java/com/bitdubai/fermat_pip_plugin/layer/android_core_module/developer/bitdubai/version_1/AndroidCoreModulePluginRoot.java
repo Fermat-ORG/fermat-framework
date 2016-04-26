@@ -75,7 +75,7 @@ public class AndroidCoreModulePluginRoot extends AbstractModule<AndroidCoreSetti
     @Override
     public NetworkStatus getFermatNetworkStatus() throws CantGetCommunicationNetworkStatusException {
         try {
-            if( this.wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().isConnected())
+            if( this.wsCommunicationsCloudClientManager.isConnected())
                 return NetworkStatus.CONNECTED;
             else
                 return NetworkStatus.DISCONNECTED;

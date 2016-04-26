@@ -353,7 +353,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
     protected void onNetworkServiceRegistered() {
         try {
             for (PlatformComponentProfile platformComponentProfile : actorsToRegisterCache) {
-                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
+                wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType()).registerComponentForCommunication(getNetworkServiceProfile().getNetworkServiceType(), platformComponentProfile);
                 System.out.println("IntraActorNetworkServicePluginRoot - Trying to register to: " + platformComponentProfile.getAlias());
             }
         }catch (Exception e){
@@ -731,7 +731,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
             /* This is for test and example of how to use
                     * Construct the filter
             */
-            DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().constructDiscoveryQueryParamsFactory(
+            DiscoveryQueryParameters discoveryQueryParameters = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType()).constructDiscoveryQueryParamsFactory(
                     PlatformComponentType.ACTOR_INTRA_USER, //PlatformComponentType you want to find
                     NetworkServiceType.UNDEFINED,     //NetworkServiceType you want to find
                     null,                     // alias
@@ -746,7 +746,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
                     null
             );                    // fromOtherNetworkServiceType,    when use this filter apply the identityPublicKey
 
-            List<PlatformComponentProfile> list = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection().requestListComponentRegistered(discoveryQueryParameters);
+            List<PlatformComponentProfile> list = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType()).requestListComponentRegistered(discoveryQueryParameters);
 
             for (PlatformComponentProfile platformComponentProfile : list) {
 
@@ -1160,7 +1160,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
 
         //TODO: deberia cambiaresto para que venga el tipo de actor a registrar
 
-        CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+        CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType());
 
         for (Actor actor : actors) {
 
@@ -1210,7 +1210,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
     public void registrateActor(Actor actor) {
         try {
             if (isRegister()) {
-                final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+                final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType());
 
 
 
@@ -1265,7 +1265,7 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
     public void updateActor(Actor actor) {
         try {
             if (isRegister()) {
-                final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+                final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType());
 
 
                 Gson gson = new Gson();
