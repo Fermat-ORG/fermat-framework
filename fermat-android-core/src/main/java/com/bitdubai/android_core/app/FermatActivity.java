@@ -1661,6 +1661,9 @@ public abstract class FermatActivity extends AppCompatActivity implements
         this.elementsWithAnimation.add(elementsWithAnimation);
     }
 
+    public void removeCollapseAnimation(ElementsWithAnimation elementsWithAnimation){
+        this.elementsWithAnimation.remove(elementsWithAnimation);
+    }
 
 
     /**
