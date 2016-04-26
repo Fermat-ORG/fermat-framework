@@ -214,7 +214,7 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                     e.getMessage(),
                     e,
                     "Fan Identity",
-                    "Cant create new Fan identiyy, persist private key error.");
+                    "Cant create new Fan identity, persist private key error.");
         } catch (Exception e) {
             // Failure unknown.
             throw new CantCreateFanIdentityException(

@@ -271,6 +271,20 @@ public class ActorConnectionEventActions {
         }
     }
 
+    public void handleUpdateEvent(EventSource eventSource) throws CantHandleNewsEventException {
+        switch (eventSource){
+            case ACTOR_NETWORK_SERVICE_ARTIST:
+                handleArtistUpdateEvent();
+                break;
+            case ACTOR_NETWORK_SERVICE_FAN:
+                handleFanUpdateEvent();
+                break;
+            default:
+                //TODO: throw an exception.
+                break;
+        }
+    }
+
     /**
      * This method handles with artist news event exception
      * @throws CantHandleNewsEventException
@@ -293,6 +307,40 @@ public class ActorConnectionEventActions {
                 ActorConnectionNotFoundException |
                 UnexpectedConnectionStateException |
                 CantDisconnectFromActorException e) {
+            throw new CantHandleNewsEventException(
+                    e,
+                    "",
+                    "Error handling Artist News Event.");
+        }
+    }
+
+    /**
+     * This method handles with artist news event exception
+     * @throws CantHandleNewsEventException
+     */
+    public void handleFanUpdateEvent() throws
+            CantHandleNewsEventException {
+        try {
+            final List<FanConnectionRequest> list = fanNetworkService.
+                    listPendingConnectionUpdates();
+            for (final FanConnectionRequest request : list) {
+                if (request.getRequestType() == RequestType.SENT  &&
+                        request.getSenderActorType() == PlatformComponentType.ART_FAN) {
+                    switch (request.getRequestAction()) {
+                        case ACCEPT:
+                            this.handleAcceptConnection(request.getRequestId());
+                            break;
+                        case DISCONNECT:
+                            this.handleDisconnect(request.getRequestId());
+                            break;
+                    }
+                }
+            }
+        } catch(CantListPendingConnectionRequestsException |
+                ActorConnectionNotFoundException |
+                UnexpectedConnectionStateException |
+                CantDisconnectFromActorException |
+                CantAcceptActorConnectionRequestException e) {
             throw new CantHandleNewsEventException(
                     e,
                     "",
