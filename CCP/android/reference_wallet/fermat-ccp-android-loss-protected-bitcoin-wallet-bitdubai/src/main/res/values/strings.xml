@@ -72,7 +72,7 @@
     <string name="reason_text">Reason</string>
     <string name="you_dont_have_requests_text">You don\'t have\n requests</string>
     <string name="send_request_text">Send Request</string>
-    <!-- navigation_row.xml -->
+    <!-- loss_navigation_row.xmlw.xml -->
     <string name="home_text">Home</string>
     <!-- no_odentity_main.xml -->
     <string name="you_need_an_identity_before_you_can_enter_text">You need an identity before\nyou can enter</string>

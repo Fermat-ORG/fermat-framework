@@ -39,7 +39,7 @@
             android:gravity="center_vertical"
             android:padding="10dp"
             android:singleLine="true"
-            android:textColor="#fff"
+            android:textColor="#333333"
             android:textSize="14sp"
             app:typeface="ROBOTO_REGULAR"
             tools:text="Nelson Alfonso Ramirez Noguera" />

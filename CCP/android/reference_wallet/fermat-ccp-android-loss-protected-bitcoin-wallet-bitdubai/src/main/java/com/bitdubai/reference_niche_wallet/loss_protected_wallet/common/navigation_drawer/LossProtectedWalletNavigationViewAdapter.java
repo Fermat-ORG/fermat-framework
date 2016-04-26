@@ -49,7 +49,7 @@ public class LossProtectedWalletNavigationViewAdapter extends FermatAdapter<Menu
      */
     @Override
     protected int getCardViewResource() {
-        return R.layout.navigation_row;
+        return R.layout.loss_navigation_row;
     }
 
     /**
@@ -78,7 +78,7 @@ public class LossProtectedWalletNavigationViewAdapter extends FermatAdapter<Menu
                     Picasso.with(context).load((data.isSelected()) ? R.drawable.profile_icon : R.drawable.profile_icon).into(holder.getIcon());
                     break;
                 case 2:
-                    Picasso.with(context).load((data.isSelected()) ? R.drawable.wallet_icon : R.drawable.wallet_icon).into(holder.getIcon());
+                    Picasso.with(context).load((data.isSelected()) ? R.drawable.sendtowallet_icon : R.drawable.sendtowallet_icon).into(holder.getIcon());
 
                     break;
                 case 3:
