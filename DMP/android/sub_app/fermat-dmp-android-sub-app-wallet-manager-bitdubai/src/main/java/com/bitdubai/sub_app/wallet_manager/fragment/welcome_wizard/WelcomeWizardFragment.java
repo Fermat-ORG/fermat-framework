@@ -22,11 +22,12 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantGetSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.CantPersistSettingsException;
 import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.SettingsNotFoundException;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.dmp_module.DesktopManagerSettings;
+import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 import com.bitdubai.fermat_dmp.wallet_manager.R;
 import com.bitdubai.sub_app.wallet_manager.adapter.WizardPageAdapter;
 import com.bitdubai.sub_app.wallet_manager.commons.wizard.DepthPageTransformer;
+import com.bitdubai.sub_app.wallet_manager.session.DesktopSession;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ import java.util.List;
 /**
  * Created by mati on 2016.04.13..
  */
-public class WelcomeWizardFragment extends AbstractFermatFragment implements View.OnClickListener {
+public class WelcomeWizardFragment extends AbstractFermatFragment<DesktopSession,ResourceProviderManager> implements View.OnClickListener {
 
     ViewPager viewPager;
     WizardPageAdapter wizardPageAdapter;
@@ -43,7 +44,6 @@ public class WelcomeWizardFragment extends AbstractFermatFragment implements Vie
     Button btnGotIt;
     CheckBox checkbox;
     List<AbstractFermatFragment> fragments = new ArrayList<>();
-    private SettingsManager settingsSettingsManager;
     private DesktopManagerSettings appManagerSettings;
     private RadioGroup radio_group;
     private LinearLayout txt_dont_show_me_again;
@@ -212,10 +212,10 @@ public class WelcomeWizardFragment extends AbstractFermatFragment implements Vie
     }
 
     private void saveSettings(boolean isHelpEnabled){
-        settingsSettingsManager = appSession.getModuleManager().getSettingsManager();
+//        settingsSettingsManager = appSession.getModuleManager().getSettingsManager();
 
         try {
-            appManagerSettings = (DesktopManagerSettings) settingsSettingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            appManagerSettings = appSession.getModuleManager().loadAndGetSettings(appSession.getAppPublicKey());
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
@@ -223,7 +223,7 @@ public class WelcomeWizardFragment extends AbstractFermatFragment implements Vie
         }
         appManagerSettings.setIsPresentationHelpEnabled(isHelpEnabled);
         try {
-            settingsSettingsManager.persistSettings(appSession.getAppPublicKey(),appManagerSettings);
+            appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), appManagerSettings);
         } catch (CantPersistSettingsException e1) {
             e1.printStackTrace();
         }
