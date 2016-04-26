@@ -211,7 +211,6 @@ public class IntraActorNetworkServicePluginRoot extends AbstractNetworkServiceBa
 
                     //NOTIFICATION LAUNCH
                     lauchNotification();
-                    broadcaster.publish(BroadcasterType.NOTIFICATION_SERVICE, SubAppsPublicKeys.CCP_COMMUNITY.getCode(),"CONNECTIONREQUEST_" + actorNetworkServiceRecord.getActorSenderPublicKey());
 
                     respondReceiveAndDoneCommunication(actorNetworkServiceRecord);
                     break;
