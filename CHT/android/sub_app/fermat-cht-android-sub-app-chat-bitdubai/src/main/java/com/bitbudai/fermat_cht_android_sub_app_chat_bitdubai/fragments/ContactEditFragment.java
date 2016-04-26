@@ -35,6 +35,8 @@ import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantSaveContactException;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunityInformation;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatActorCommunitySelectableIdentity;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
@@ -88,10 +90,10 @@ public class ContactEditFragment extends AbstractFermatFragment {
     //Defines a tag for identifying log entries
     private static final String TAG = "CHT_ContactEditFragment";
 
-    ArrayList<String> contactname=new ArrayList<String>();
+    ArrayList<String> contactname=new ArrayList<>();
     ArrayList<Bitmap> contacticon=new ArrayList<>();
-    ArrayList<UUID> contactid=new ArrayList<UUID>();
-    ArrayList<String> contactalias =new ArrayList<String>();
+    ArrayList<String> contactid=new ArrayList<>();
+    ArrayList<String> contactalias =new ArrayList<>();
     Contact cont;
     EditText aliasET ;
     Button saveBtn ;
@@ -125,8 +127,8 @@ public class ContactEditFragment extends AbstractFermatFragment {
 
         try {
             chatSession=((ChatSession) appSession);
-            moduleManager= chatSession.getModuleManager();
-            chatManager=moduleManager.getChatManager();
+            chatManager= chatSession.getModuleManager();
+            //chatManager=moduleManager.getChatManager();
             errorManager=appSession.getErrorManager();
             toolbar = getToolbar();
             toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.cht_ic_back_buttom));
@@ -190,26 +192,33 @@ public class ContactEditFragment extends AbstractFermatFragment {
         super.onCreate(savedInstanceState);
         View layout = inflater.inflate(R.layout.contact_edit_fragment, container, false);
         try {
-            Contact con= chatSession.getSelectedContact();
-            contactname.add(con.getRemoteName());
-            contactid.add(con.getContactId());
-            contactalias.add(con.getAlias());
-            ByteArrayInputStream bytes = new ByteArrayInputStream(con.getProfileImage());
-            BitmapDrawable bmd = new BitmapDrawable(bytes);
-            contacticon.add(bmd.getBitmap());
-            ContactAdapter adapter=new ContactAdapter(getActivity(), contactname,  contactalias, contactid, "edit",errorManager);
-            //FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
-            //name.setText(contactname.get(0));
-            //FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
-            //id.setText(contactid.get(0).toString());
+            //Contact cont= chatSession.getSelectedContact();
+            //TODO: metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+             for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
+                     chatManager.newInstanceChatActorCommunitySelectableIdentity(chatManager.
+                             getIdentityChatUsersFromCurrentDeviceUser().get(0)), 2000, 0)) {
+                if (cont.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
+                    contactname.add(cont.getAlias());
+                    contactid.add(cont.getPublicKey());
+                    contactalias.add(cont.getAlias());
+                    ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
+                    BitmapDrawable bmd = new BitmapDrawable(bytes);
+                    contacticon.add(bmd.getBitmap());
+                    ContactAdapter adapter = new ContactAdapter(getActivity(), contactname, contactalias, contactid, "edit", errorManager);
+                    //FermatTextView name =(FermatTextView)layout.findViewById(R.id.contact_name);
+                    //name.setText(contactname.get(0));
+                    //FermatTextView id =(FermatTextView)layout.findViewById(R.id.uuid);
+                    //id.setText(contactid.get(0).toString());
 
-            // create bitmap from resource
-            //Bitmap bm = BitmapFactory.decodeResource(getResources(), contacticon.get(0));
+                    // create bitmap from resource
+                    //Bitmap bm = BitmapFactory.decodeResource(getResources(), contacticon.get(0));
 
-            // set circle bitmap
-            ImageView mImage = (ImageView) layout.findViewById(R.id.contact_image);
-            mImage.setImageBitmap(getCircleBitmap(contacticon.get(0)));
-
+                    // set circle bitmap
+                    ImageView mImage = (ImageView) layout.findViewById(R.id.contact_image);
+                    mImage.setImageBitmap(getCircleBitmap(contacticon.get(0)));
+                    break;
+                }
+            }
             aliasET =(EditText)layout.findViewById(R.id.aliasEdit);
             aliasET.setText(contactalias.get(0));
             saveBtn = (Button) layout.findViewById(R.id.saveContactButton);
@@ -226,27 +235,33 @@ public class ContactEditFragment extends AbstractFermatFragment {
             }
         });
 
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String aliasText = aliasET.getText().toString();
-                if (TextUtils.isEmpty(aliasText)) {
-                    return;
-                }
-                try {
-                    Contact con = chatSession.getSelectedContact();
-                    con.setAlias(aliasText);
-                    //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-                    //chatManager.saveContact(con);
-                    Toast.makeText(getActivity(), "Contact Updated", Toast.LENGTH_SHORT).show();
-                //} catch (CantSaveContactException e) {
-                //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }catch (Exception e){
-                    if (errorManager != null)
-                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-                }
-            }
-        });
+//        saveBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                String aliasText = aliasET.getText().toString();
+//                if (TextUtils.isEmpty(aliasText)) {
+//                    return;
+//                }
+//                try {
+//                    for (ChatActorCommunityInformation cont: chatManager.listAllConnectedChatActor(
+//                            (ChatActorCommunitySelectableIdentity) chatManager.
+//                                    getIdentityChatUsersFromCurrentDeviceUser().get(0), 2000, 0)) {
+//                        if (cont.getPublicKey() == chatSession.getData(ChatSession.CONTACT_DATA)) {
+//                            cont.setAlias(aliasText);
+//                            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+//                            //chatManager.saveContact(con);
+//                            Toast.makeText(getActivity(), "Contact Updated", Toast.LENGTH_SHORT).show();
+//                            //} catch (CantSaveContactException e) {
+//                            //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//
+//                        }
+//                    }
+//                }catch (Exception e){
+//                    if (errorManager != null)
+//                        errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//                }
+//            }
+//        });
 
         return layout;
         //loadDummyHistory();

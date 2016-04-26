@@ -36,11 +36,14 @@ import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.A
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -57,9 +60,9 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
 
 
     List<ContactList> contactsList = new ArrayList<>();
-    ArrayList<String> contactinfo=new ArrayList<String>();
-    ArrayList<Bitmap> contacticon=new ArrayList<Bitmap>();
-    ArrayList<UUID> contactid=new ArrayList<UUID>();
+    ArrayList<String> contactinfo=new ArrayList<>();
+    ArrayList<Bitmap> contacticon=new ArrayList<>();
+    ArrayList<String> contactid=new ArrayList<>();
     private ChatManager chatManager;
     private FermatSession appSession;
     private ErrorManager errorManager;
@@ -114,10 +117,18 @@ public class ContactListAdapter extends ArrayAdapter implements Filterable {//pu
                 @Override
                 public void onClick(View v) {
                     try {
-
-                            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-                            appSession.setData(ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(contactid.get(pos)));
-                            mAdapterCallback.onMethodCallback();//solution to access to changeactivity. j
+                        Contact contact=new ContactImpl();
+                        contact.setRemoteActorPublicKey(contactid.get(pos));
+                        contact.setAlias(contactinfo.get(pos));
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        contacticon.get(pos).compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        contact.setProfileImage(byteArray);
+                        appSession.setData(ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(contactid.get(pos)));
+                        appSession.setData(ChatSession.CONTACT_DATA, contact);
+                        //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                        //appSession.setData(ChatSession.CONTACT_DATA, contactid.get(pos));
+                        mAdapterCallback.onMethodCallback();//solution to access to changeactivity. j
                         //} catch (CantGetContactException e) {
                         //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         } catch (Exception e) {

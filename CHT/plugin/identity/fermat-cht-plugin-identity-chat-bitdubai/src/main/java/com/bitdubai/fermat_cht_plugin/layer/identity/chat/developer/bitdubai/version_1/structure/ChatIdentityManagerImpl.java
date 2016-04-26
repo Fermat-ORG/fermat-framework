@@ -125,11 +125,11 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
      * @throws CantCreateNewChatIdentityException if something goes wrong.
      */
     @Override
-    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city) throws CantCreateNewChatIdentityException {
+    public void createNewIdentityChat(String alias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantCreateNewChatIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
             KeyPair keyPair = AsymmetricCryptography.generateECCKeyPair();
-            chatIdentityDao().createNewUser(alias, keyPair.getPublicKey(), keyPair.getPrivateKey(), loggedUser, profileImage, country, state, city);
+            chatIdentityDao().createNewUser(alias, keyPair.getPublicKey(), keyPair.getPrivateKey(), loggedUser, profileImage, country, state, city, connectionState);
             registerIdentitiesANS(keyPair.getPublicKey());
         } catch (CantCreateNewDeveloperException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));
@@ -151,9 +151,9 @@ public class ChatIdentityManagerImpl implements ChatIdentityManager {
      * @throws CantUpdateChatIdentityException
      */
     @Override
-    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city) throws CantUpdateChatIdentityException {
+    public void updateIdentityChat(String identityPublicKey, String identityAlias, byte[] profileImage, String country, String state, String city, String connectionState) throws CantUpdateChatIdentityException {
         try {
-            chatIdentityDao().updateChatIdentity(identityPublicKey, identityAlias, profileImage, country, state, city);
+            chatIdentityDao().updateChatIdentity(identityPublicKey, identityAlias, profileImage, country, state, city, connectionState);
             registerIdentitiesANS(identityPublicKey);
         } catch (com.bitdubai.fermat_cht_api.all_definition.exceptions.CantUpdateChatIdentityException e) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, FermatException.wrapException(e));

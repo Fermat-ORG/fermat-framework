@@ -46,4 +46,10 @@ public interface ChatIdentity  extends ActiveActorIdentityInformation {
      */
     String getCity();
 
+    /**
+     * This method return String with ConnectionState
+     * @return the String
+     */
+    String getConnectionState();
+
 }
