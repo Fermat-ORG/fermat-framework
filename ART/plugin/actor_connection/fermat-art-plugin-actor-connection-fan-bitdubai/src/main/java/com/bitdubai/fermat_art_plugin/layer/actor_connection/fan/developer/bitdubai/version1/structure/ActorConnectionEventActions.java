@@ -81,16 +81,26 @@ public class ActorConnectionEventActions {
      */
     public void handleArtistNewsEvent(EventSource eventSource) throws CantHandleNewsEventException {
         try {
+            List<ArtistConnectionRequest> artistConnectionRequests;
+            List<FanConnectionRequest> fanConnectionRequests;
             switch (eventSource){
                 case ARTIST_ACTOR_CONNECTION:
-                    final List<ArtistConnectionRequest> artistConnectionRequests = artistNetworkService.listPendingConnectionNews(
+                    artistConnectionRequests = artistNetworkService.listPendingConnectionNews(
                             PlatformComponentType.ART_FAN);
+                    for (final ArtistConnectionRequest request : artistConnectionRequests)
+                        this.handleArtistRequestConnection(request, Actors.ART_ARTIST);
+                    artistConnectionRequests = artistNetworkService.listPendingConnectionNews(
+                            PlatformComponentType.ART_ARTIST);
                     for (final ArtistConnectionRequest request : artistConnectionRequests)
                         this.handleArtistRequestConnection(request, Actors.ART_ARTIST);
                     break;
                 case ACTOR_NETWORK_SERVICE_FAN:
-                    final List<FanConnectionRequest> fanConnectionRequests = fanNetworkService.listPendingConnectionNews(
+                    fanConnectionRequests = fanNetworkService.listPendingConnectionNews(
                             PlatformComponentType.ART_FAN);
+                    for (final FanConnectionRequest request : fanConnectionRequests)
+                        this.handleFanRequestConnection(request, Actors.ART_FAN);
+                    fanConnectionRequests = fanNetworkService.listPendingConnectionNews(
+                            PlatformComponentType.ART_ARTIST);
                     for (final FanConnectionRequest request : fanConnectionRequests)
                         this.handleFanRequestConnection(request, Actors.ART_FAN);
                     break;
