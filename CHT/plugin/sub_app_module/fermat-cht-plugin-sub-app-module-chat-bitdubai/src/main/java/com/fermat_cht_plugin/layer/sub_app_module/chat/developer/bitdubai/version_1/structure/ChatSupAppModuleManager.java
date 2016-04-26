@@ -236,7 +236,7 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
                 chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
 
         } catch (CantListActorConnectionsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
         return chatActorCommunityInformationList;
     }
@@ -276,6 +276,11 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
         {
             middlewareChatManager.deleteMessage(message);
         }
+    }
+
+    @Override
+    public ChatActorCommunitySelectableIdentity newInstanceChatActorCommunitySelectableIdentity(ChatIdentity chatIdentity) {
+        return new ChatActorCommunitySelectableIdentityImpl(chatIdentity.getPublicKey(), chatIdentity.getActorType(), chatIdentity.getAlias(), chatIdentity.getImage());
     }
 
     /**
@@ -318,7 +323,7 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
      */
     @Override
     public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null);
+        chatIdentityManager.createNewIdentityChat(name, profile_img, null, null, null, "available");
     }
 
     @Override
