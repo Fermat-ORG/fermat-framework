@@ -159,7 +159,6 @@ public class DesktopDatabaseTable implements DatabaseTable {
              * I update only the fields marked as modified
              *
              */
-
             for (int i = 0; i < records.size(); ++i) {
                 if (records.get(i).isChange())
                     recordUpdateList.put(records.get(i).getName(), records.get(i).getValue());
