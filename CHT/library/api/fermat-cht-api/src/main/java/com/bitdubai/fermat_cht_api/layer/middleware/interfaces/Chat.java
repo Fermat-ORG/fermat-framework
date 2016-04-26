@@ -57,9 +57,9 @@ public interface Chat {
     TypeChat getTypeChat();
     void setTypeChat(TypeChat typeChat);
 
-    Group getGroupAssociated();
-    void setGroupAssociated(Group group);
-
     List<GroupMember> getGroupMembersAssociated();
     void setGroupMembersAssociated(List<GroupMember> groupMembers);
+
+    boolean getScheduledDelivery();
+    void setScheduledDelivery(boolean scheduledDelivery);
 }

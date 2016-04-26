@@ -13,6 +13,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantPersistFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author lnacosta
  * @version 1.0.0
  */
-public /*abstract */class SettingsManager<Z extends FermatSettings> {
+public /*abstract */class SettingsManager<Z extends FermatSettings> implements Serializable {
 
     private static final String SETTINGS_DIRECTORY_NAME   = "settings";
     private static final String SETTINGS_FILE_NAME_PREFIX = "sFile_"  ;
@@ -154,14 +155,23 @@ public /*abstract */class SettingsManager<Z extends FermatSettings> {
 
             throw new CantGetSettingsException(e, "", "Cant create module settings file exception.");
         } catch( FileNotFoundException e) {
+           throw new SettingsNotFoundException(e, "", "Cant find module settings file exception.");
 
-            throw new SettingsNotFoundException(e, "", "Cant find module settings file exception.");
         }
+
     }
 
     private String buildSettingsFileName(final String publicKey) {
-
         return SETTINGS_FILE_NAME_PREFIX + "_" + publicKey;
     }
+
+    @Override
+    public String toString() {
+        return "SettingsManager{" +
+                "pluginId=" + pluginId +
+                '}';
+    }
+
+
 
 }

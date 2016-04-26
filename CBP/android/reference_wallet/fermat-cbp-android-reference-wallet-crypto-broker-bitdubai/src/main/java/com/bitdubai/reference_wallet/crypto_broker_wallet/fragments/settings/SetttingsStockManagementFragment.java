@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatCheckBox;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
+import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletListFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_api.FermatException;
@@ -23,10 +24,9 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankAccountNumber;
-import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
+import com.bitdubai.fermat_cbp_api.all_definition.constants.CBPBroadcasterConstants;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletAssociatedSetting;
 import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.setting.CryptoBrokerWalletSettingSpread;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -47,7 +47,7 @@ import java.util.Map;
 /**
  * Created by nelson on 22/12/15.
  */
-public class SetttingsStockManagementFragment extends FermatWalletListFragment<CryptoBrokerWalletAssociatedSetting> implements FermatListItemListeners<CryptoBrokerWalletAssociatedSetting>, DialogInterface.OnDismissListener {
+public class SetttingsStockManagementFragment extends FermatWalletListFragment<CryptoBrokerWalletAssociatedSetting> implements FermatListItemListeners<CryptoBrokerWalletAssociatedSetting>, DialogInterface.OnDismissListener,CBPBroadcasterConstants {
 
     // Constants
     private static final String TAG = "SettingsStockManagement";
@@ -61,10 +61,10 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     private List<CryptoBrokerWalletAssociatedSetting> associatedSettings;
     private CryptoBrokerWalletSettingSpread spreadSettings;
     // Fermat Managers
-    private CryptoBrokerWalletManager walletManager;
+    private CryptoBrokerWalletModuleManager moduleManager;
     private ErrorManager errorManager;
     private FermatTextView emptyView;
-
+    private SettingsStockManagementMerchandisesAdapter merchandisesAdapter;
 
     public static SetttingsStockManagementFragment newInstance() {
         return new SetttingsStockManagementFragment();
@@ -82,8 +82,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         bankAccounts = new HashMap<>();
 
         try {
-            CryptoBrokerWalletModuleManager moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
-            walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
+            moduleManager = ((CryptoBrokerWalletSession) appSession).getModuleManager();
             errorManager = appSession.getErrorManager();
 
         } catch (Exception ex) {
@@ -94,9 +93,9 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         }
         try {
             System.out.println("associatedSettings!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            associatedSettings = walletManager.getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");
+            associatedSettings = getMoreDataAsync(FermatRefreshTypes.NEW,0);
             System.out.println("associatedSettings ["+ associatedSettings.size()+"]!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            spreadSettings = walletManager.getCryptoBrokerWalletSpreadSetting("walletPublicKeyTest");
+            spreadSettings = moduleManager.getCryptoBrokerWalletSpreadSetting("walletPublicKeyTest");
         } catch (FermatException ex) {
             Toast.makeText(SetttingsStockManagementFragment.this.getActivity(), "Oops a error occurred...", Toast.LENGTH_SHORT).show();
 
@@ -158,7 +157,8 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
                 changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_SETTINGS, appSession.getAppPublicKey());
             }
         });
-        SettingsStockManagementMerchandisesAdapter merchandisesAdapter = new SettingsStockManagementMerchandisesAdapter(getActivity(),associatedSettings,walletManager);
+        merchandisesAdapter = new SettingsStockManagementMerchandisesAdapter(getActivity(),associatedSettings,moduleManager);
+
         merchandisesAdapter.setFermatListEventListener(this);
         RecyclerView merchandisesRecyclerView = (RecyclerView) layout.findViewById(R.id.cbw_settings_current_merchandises);
         merchandisesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
@@ -254,7 +254,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
 
     private void showWalletsDialog(final Platforms platform) {
         try {
-            List<InstalledWallet> installedWallets = walletManager.getInstallWallets();
+            List<InstalledWallet> installedWallets = moduleManager.getInstallWallets();
             List<InstalledWallet> filteredList = new ArrayList<>();
 
             for (InstalledWallet wallet : installedWallets) {
@@ -298,7 +298,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
 
     private void showBankAccountsDialog(final InstalledWallet selectedWallet) {
         try {
-            List<BankAccountNumber> accounts = walletManager.getAccounts(selectedWallet.getWalletPublicKey());
+            List<BankAccountNumber> accounts = moduleManager.getAccounts(selectedWallet.getWalletPublicKey());
 
             SimpleListDialogFragment<BankAccountNumber> accountsDialog = new SimpleListDialogFragment<>();
             accountsDialog.configure("Select an Account", accounts);
@@ -338,19 +338,19 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     private void saveSettingAndGoNextStep() {
 
         try {
-            CryptoBrokerWalletSettingSpread walletSetting = walletManager.newEmptyCryptoBrokerWalletSetting();
+            CryptoBrokerWalletSettingSpread walletSetting = moduleManager.newEmptyCryptoBrokerWalletSetting();
             walletSetting.setId(null);
             walletSetting.setBrokerPublicKey(appSession.getAppPublicKey());
             walletSetting.setSpread(spreadValue);
             walletSetting.setRestockAutomatic(automaticRestock);
-            walletManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
+            moduleManager.saveWalletSetting(walletSetting, appSession.getAppPublicKey());
 
 
             /*for (InstalledWallet wallet : stockWallets) {
                 String walletPublicKey = wallet.getWalletPublicKey();
                 Platforms platform = wallet.getPlatform();
 
-                CryptoBrokerWalletAssociatedSetting associatedSetting = walletManager.newEmptyCryptoBrokerWalletAssociatedSetting();
+                CryptoBrokerWalletAssociatedSetting associatedSetting = moduleManager.newEmptyCryptoBrokerWalletAssociatedSetting();
                 associatedSetting.setBrokerPublicKey(appSession.getAppPublicKey());
                 associatedSetting.setId(UUID.randomUUID());
                 associatedSetting.setWalletPublicKey(walletPublicKey);
@@ -366,12 +366,12 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
                     associatedSetting.setMerchandise(wallet.getCryptoCurrency());
 
                 } else {
-                    FiatCurrency cashCurrency = walletManager.getCashCurrency(walletPublicKey);
+                    FiatCurrency cashCurrency = moduleManager.getCashCurrency(walletPublicKey);
                     associatedSetting.setMerchandise(cashCurrency);
                     associatedSetting.setMoneyType(MoneyType.CASH_ON_HAND);
                 }
 
-                walletManager.saveWalletSettingAssociated(associatedSetting, appSession.getAppPublicKey());
+                moduleManager.saveWalletSettingAssociated(associatedSetting, appSession.getAppPublicKey());
             }*/
 
         } catch (FermatException ex) {
@@ -392,7 +392,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
 
     /*private void getSettings(){
         try {
-            List<CryptoBrokerWalletAssociatedSetting> associatedSettings = walletManager.getCryptoBrokerWalletAssociatedSettings(this.appSession.getAppPublicKey());
+            List<CryptoBrokerWalletAssociatedSetting> associatedSettings = moduleManager.getCryptoBrokerWalletAssociatedSettings(this.appSession.getAppPublicKey());
 
             for(CryptoBrokerWalletAssociatedSetting setting:associatedSettings){
                 InstalledWallet installedWallet;
@@ -462,7 +462,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     }
 
     private void launchCreateTransactionDialog(CryptoBrokerWalletAssociatedSetting data) {
-        dialog = new CreateRestockDestockFragmentDialog(getActivity(), walletManager, getResources(), data);
+        dialog = new CreateRestockDestockFragmentDialog(getActivity(), moduleManager, getResources(), data);
         dialog.setOnDismissListener(this);
         dialog.show();
     }
@@ -470,7 +470,7 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
     @Override
     public FermatAdapter getAdapter() {
         if(adapter == null){
-            adapter = new StockDestockAdapter(getActivity(), associatedSettings,walletManager);
+            adapter = new StockDestockAdapter(getActivity(), associatedSettings, moduleManager);
             adapter.setFermatListEventListener(this);
         }
         return adapter;
@@ -488,7 +488,8 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-
+        System.out.println("*************ONDISMISS STOCK DIALOG***********************");
+        onRefresh();
     }
 
     @Override
@@ -518,11 +519,17 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
 
     @Override
     public void onPostExecute(Object... result) {
-        /*if (result != null && result.length > 0) {
-            associatedSettings = (ArrayList) result[0];
-            if (adapter != null)
-                adapter.changeDataSet(associatedSettings);
-        }*/
+        isRefreshing = false;
+        if (isAttached) {
+            if (result != null && result.length > 0) {
+                associatedSettings = (ArrayList) result[0];
+                if (adapter != null)
+                    adapter.changeDataSet(associatedSettings);
+                if (merchandisesAdapter !=null){
+                    merchandisesAdapter.changeDataSet(associatedSettings);
+                }
+            }
+        }
     }
 
     @Override
@@ -537,4 +544,24 @@ public class SetttingsStockManagementFragment extends FermatWalletListFragment<C
         }
         return layoutManager;
     }
+
+    @Override
+    public void onUpdateViewOnUIThread(String code) {
+        switch (code){
+            case CBW_OPERATION_DEBIT_OR_CREDIT_UPDATE_VIEW:
+                onRefresh();
+                break;
+        }
+    }
+
+    @Override
+    public List<CryptoBrokerWalletAssociatedSetting> getMoreDataAsync(FermatRefreshTypes refreshType, int pos) {
+        try{
+            return moduleManager.getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");
+        }catch (Exception e){
+            return null;
+        }
+
+    }
+
 }

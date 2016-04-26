@@ -2,9 +2,10 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.develope
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractModule;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededAddonReference;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.annotations.NeededPluginReference;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetModuleManagerException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
 import com.bitdubai.fermat_api.layer.all_definition.developer.LogManagerForDevelopers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
@@ -12,28 +13,12 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
-import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
-import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
-import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
-import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
+import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogLevel;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantCreateNewIntraWalletUserException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantDeleteIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantListIntraWalletUsersException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.exceptions.CantUpdateIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraUserIdentitySettings;
-import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentity;
 import com.bitdubai.fermat_ccp_api.layer.identity.intra_user.interfaces.IntraWalletUserIdentityManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantCreateNewIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantDeleteIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantGetIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantListIntraUsersIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.exceptions.CantUpdateIntraUserIdentityException;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserIdentityModuleManager;
-import com.bitdubai.fermat_ccp_api.layer.module.intra_user_identity.interfaces.IntraUserModuleIdentity;
-import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.structure.IntraUserIdentityModule;
+import com.bitdubai.fermat_ccp_plugin.layer.module.intra_user_identity.developer.bitdubai.version_1.structure.IntraUserIdentityModuleManager;
 import com.bitdubai.fermat_pip_api.layer.actor.exception.CantGetLogTool;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -53,9 +38,8 @@ import java.util.Map;
  * @since Java JDK 1.7
  */
 
-public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
-        LogManagerForDevelopers,
-        IntraUserIdentityModuleManager {
+public class IntraUserIdentityModulePluginRoot extends AbstractModule implements
+        LogManagerForDevelopers{
 
 
     @NeededAddonReference(platform = Platforms.PLUG_INS_PLATFORM, layer = Layers.PLATFORM_SERVICE, addon = Addons.ERROR_MANAGER)
@@ -145,144 +129,8 @@ public class IntraUserIdentityModulePluginRoot extends AbstractPlugin implements
      * IntraUserIdentityModuleManagerInterface implementation.
      */
 
-
-
     @Override
-    public ArrayList<IntraUserModuleIdentity> getAllIntraWalletUsersFromCurrentDeviceUser() throws CantListIntraUsersIdentityException {
-        try {
-
-            ArrayList<IntraUserModuleIdentity> intraUserModuleIdentityList = new ArrayList<>();
-
-            ArrayList<IntraWalletUserIdentity> intraWalletUserIdentityList = intraWalletUserIdentityManager.getAllIntraWalletUsersFromCurrentDeviceUser();
-
-            for (IntraWalletUserIdentity intraUser : intraWalletUserIdentityList) {
-
-                intraUserModuleIdentityList.add(new IntraUserIdentityModule(intraUser.getAlias(),intraUser.getPhrase(),intraUser.getPublicKey(),intraUser.getImage(),intraUser.getActorType()));
-            }
-
-            return intraUserModuleIdentityList;
-
-        } catch (CantListIntraWalletUsersException e) {
-            throw new CantListIntraUsersIdentityException(CantListIntraUsersIdentityException.DEFAULT_MESSAGE,e,"","Identity plugin error");
-        }
-        catch (Exception e) {
-            throw new CantListIntraUsersIdentityException(CantListIntraUsersIdentityException.DEFAULT_MESSAGE,FermatException.wrapException(e),"","Unknown error");
-        }
-    }
-
-    @Override
-    public IntraUserModuleIdentity createNewIntraWalletUser(String alias, String phrase, byte[] profileImage) throws CantCreateNewIntraUserIdentityException {
-        try {
-            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, phrase,  profileImage);
-
-            return new IntraUserIdentityModule( alias,  phrase,intraWalletUserIdentity.getPublicKey(), profileImage,intraWalletUserIdentity.getActorType());
-
-        } catch (CantCreateNewIntraWalletUserException e) {
-            throw new CantCreateNewIntraUserIdentityException(CantCreateNewIntraUserIdentityException.DEFAULT_MESSAGE,e,"","Identity plugin error");
-        }
-        catch (Exception e) {
-            throw new CantCreateNewIntraUserIdentityException(CantCreateNewIntraUserIdentityException.DEFAULT_MESSAGE,FermatException.wrapException(e),"","Unknown error");
-        }
-    }
-
-    @Override
-    public IntraUserModuleIdentity createNewIntraWalletUser(String alias, byte[] profileImage) throws CantCreateNewIntraUserIdentityException {
-        try {
-            IntraWalletUserIdentity intraWalletUserIdentity =  intraWalletUserIdentityManager.createNewIntraWalletUser(alias, profileImage);
-
-            return new IntraUserIdentityModule( alias, "",intraWalletUserIdentity.getPublicKey(), profileImage,intraWalletUserIdentity.getActorType());
-
-        } catch (CantCreateNewIntraWalletUserException e) {
-            throw new CantCreateNewIntraUserIdentityException(CantCreateNewIntraUserIdentityException.DEFAULT_MESSAGE,e,"","Identity plugin error");
-        }
-        catch (Exception e) {
-            throw new CantCreateNewIntraUserIdentityException(CantCreateNewIntraUserIdentityException.DEFAULT_MESSAGE,FermatException.wrapException(e),"","Unknown error");
-        }
-    }
-
-    @Override
-    public boolean hasIntraUserIdentity() throws CantGetIntraUserIdentityException {
-        try {
-            return intraWalletUserIdentityManager.hasIntraUserIdentity();
-
-        } catch (CantListIntraWalletUsersException e) {
-            throw new CantGetIntraUserIdentityException(CantGetIntraUserIdentityException.DEFAULT_MESSAGE,e,"","Identity plugin error");
-        }
-        catch (Exception e) {
-            throw new CantGetIntraUserIdentityException(CantGetIntraUserIdentityException.DEFAULT_MESSAGE,FermatException.wrapException(e),"","Unknown error");
-        }
-
-    }
-
-    @Override
-    public void updateIntraUserIdentity(String identityPublicKey, String identityAlias, String phrase, byte[] profileImage) throws CantUpdateIntraUserIdentityException {
-
-        try
-        {
-            intraWalletUserIdentityManager.updateIntraUserIdentity(identityPublicKey, identityAlias,  phrase, profileImage);
-
-
-        } catch (CantUpdateIdentityException e) {
-            throw new CantUpdateIntraUserIdentityException(CantUpdateIntraUserIdentityException.DEFAULT_MESSAGE,e,"","Identity plugin error");
-        }
-        catch (Exception e) {
-            throw new CantUpdateIntraUserIdentityException(CantUpdateIntraUserIdentityException.DEFAULT_MESSAGE,FermatException.wrapException(e),"","Unknown error");
-        }
-    }
-
-    @Override
-    public void deleteIntraUserIdentity(String identityPublicKey) throws CantDeleteIntraUserIdentityException {
-        try
-        {
-            intraWalletUserIdentityManager.deleteIntraUserIdentity(identityPublicKey);
-        } catch (CantDeleteIdentityException e) {
-            throw new CantDeleteIntraUserIdentityException(CantDeleteIntraUserIdentityException.DEFAULT_MESSAGE,e,"","Identity plugin error");
-        }
-        catch (Exception e) {
-            throw new CantDeleteIntraUserIdentityException(CantDeleteIntraUserIdentityException.DEFAULT_MESSAGE,FermatException.wrapException(e),"","Unknown error");
-        }
-    }
-
-
-
-    /**
-     * SettingsManager implementation.
-     * */
-
-
-
-    private SettingsManager<IntraUserIdentitySettings> settingsManager;
-
-    @Override
-    public SettingsManager<IntraUserIdentitySettings> getSettingsManager() {
-        if (this.settingsManager != null)
-            return this.settingsManager;
-
-        this.settingsManager = new SettingsManager<>(
-                pluginFileSystem,
-                pluginId
-        );
-
-        return this.settingsManager;
-    }
-
-    @Override
-    public ActiveActorIdentityInformation getSelectedActorIdentity() throws CantGetSelectedActorIdentityException, ActorIdentityNotSelectedException {
-        return null;
-    }
-
-    @Override
-    public void createIdentity(String name, String phrase, byte[] profile_img) throws Exception {
-
-    }
-
-    @Override
-    public void setAppPublicKey(String publicKey) {
-
-    }
-
-    @Override
-    public int[] getMenuNotifications() {
-        return new int[0];
+    public ModuleManager getModuleManager() throws CantGetModuleManagerException {
+        return new IntraUserIdentityModuleManager(pluginId,errorManager,pluginFileSystem,intraWalletUserIdentityManager);
     }
 }

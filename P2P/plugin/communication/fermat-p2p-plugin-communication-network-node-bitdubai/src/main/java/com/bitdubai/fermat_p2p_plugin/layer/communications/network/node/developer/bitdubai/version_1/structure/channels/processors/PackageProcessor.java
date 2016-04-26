@@ -1,16 +1,9 @@
-/*
- * @#MessageProcessor.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors;
-
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers.WebSocketChannelServerEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
@@ -19,7 +12,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 
 import javax.websocket.Session;
-
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor</code>
@@ -34,7 +26,7 @@ public abstract class PackageProcessor {
     /**
      * Represent the webSocketChannelServerEndpoint instance with the processor are register
      */
-    private WebSocketChannelServerEndpoint channel;
+    private FermatWebSocketChannelEndpoint channel;
 
     /**
      * Represent the packageType
@@ -62,7 +54,7 @@ public abstract class PackageProcessor {
      * @param channel
      * @param packageType
      */
-    public PackageProcessor(WebSocketChannelServerEndpoint channel, PackageType packageType) {
+    public PackageProcessor(FermatWebSocketChannelEndpoint channel, PackageType packageType) {
         this.channel     = channel;
         this.packageType = packageType;
         this.daoFactory  = (DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY);
@@ -84,7 +76,7 @@ public abstract class PackageProcessor {
      *
      * @return webSocketChannelServerEndpoint
      */
-    public WebSocketChannelServerEndpoint getChannel() {
+    public FermatWebSocketChannelEndpoint getChannel() {
         return channel;
     }
 
@@ -131,7 +123,6 @@ public abstract class PackageProcessor {
 
         getDaoFactory().getMethodCallsHistoryDao().create(methodCallsHistory);
     }
-
 
     /**
      * Method that call to process the message

@@ -1,12 +1,7 @@
-/*
- * @#AbstractProfile.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
  * The Class <code>Profile</code> is
@@ -17,7 +12,7 @@ import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class Profile {
+public abstract class Profile<P extends Profile > {
 
     /**
      * Represent the Identity public key
@@ -30,10 +25,16 @@ public abstract class Profile {
     private Location location;
 
     /**
+     * Represent the profileClass
+     */
+    private Class<P> profileClass;
+
+    /**
      * Constructor
      */
-    public Profile(){
+    public Profile(Class<P> profileClass){
         super();
+        this.profileClass = profileClass;
     }
 
     /**
@@ -77,14 +78,7 @@ public abstract class Profile {
      *
      * @return json string
      */
-    public abstract String toJson();
-
-    /**
-     * Construct this object from json string
-     *
-     * @param string
-     * @return Profile
-     */
-    public abstract Profile fromJson(String string);
-
+    public String toJson(){
+        return GsonProvider.getGson().toJson(this, profileClass);
+    }
 }

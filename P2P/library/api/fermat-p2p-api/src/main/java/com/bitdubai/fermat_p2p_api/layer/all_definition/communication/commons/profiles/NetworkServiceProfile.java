@@ -7,7 +7,11 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * The Class <code>NetworkServiceProfile</code>
@@ -18,7 +22,7 @@ import com.google.gson.Gson;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NetworkServiceProfile extends Profile {
+public class NetworkServiceProfile extends Profile<NetworkServiceProfile> {
 
     /**
      * Represent the networkServiceType
@@ -34,7 +38,7 @@ public class NetworkServiceProfile extends Profile {
      * Constructor
      */
     public NetworkServiceProfile(){
-        super();
+        super(NetworkServiceProfile.class);
     }
 
     /**
@@ -74,24 +78,13 @@ public class NetworkServiceProfile extends Profile {
     }
 
     /**
-     * (no-javadoc)
-     * @see Profile#toJson()
+     * Get the object
+     *
+     * @param jsonString
+     * @return NetworkServiceProfile
      */
-    @Override
-    public String toJson() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
+    public static NetworkServiceProfile fromJson(String jsonString) {
+        return GsonProvider.getGson().fromJson(jsonString, NetworkServiceProfile.class);
     }
-
-    /**
-     * (no-javadoc)
-     * @see Profile#fromJson(String)
-     */
-    @Override
-    public NetworkServiceProfile fromJson(String jsonString) {
-        Gson gson = new Gson();
-        return gson.fromJson(jsonString, this.getClass());
-    }
-
 
 }

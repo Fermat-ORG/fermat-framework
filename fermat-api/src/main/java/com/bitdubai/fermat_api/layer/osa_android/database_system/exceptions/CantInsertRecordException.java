@@ -25,7 +25,7 @@ public class CantInsertRecordException extends DatabaseSystemException {
 	}
 
 	public CantInsertRecordException(final Exception exception) {
-		this(exception.getMessage());
+		this(DEFAULT_MESSAGE, exception);
 		setStackTrace(exception.getStackTrace());
 	}
 

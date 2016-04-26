@@ -1,13 +1,9 @@
-/*
- * @#CheckOutProfileMsgRequest.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
+import com.google.gson.Gson;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest</code>
@@ -30,8 +26,8 @@ public class CheckOutProfileMsgRequest extends PackageContent {
      *
      * @param profileToUnRegister
      */
-    public CheckOutProfileMsgRequest(Profile profileToUnRegister, String identityPublicKey) {
-        this.identityPublicKey = identityPublicKey;
+    public CheckOutProfileMsgRequest(Profile profileToUnRegister) {
+        this.identityPublicKey = profileToUnRegister.getIdentityPublicKey();
     }
 
     /**
@@ -41,5 +37,24 @@ public class CheckOutProfileMsgRequest extends PackageContent {
      */
     public String getIdentityPublicKey() {
         return identityPublicKey;
+    }
+
+    /**
+     * Generate the json representation
+     * @return String
+     */
+    @Override
+    public String toJson() {
+        return GsonProvider.getGson().toJson(this, getClass());
+    }
+
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return PackageContent
+     */
+    public static CheckOutProfileMsgRequest parseContent(String content) {
+        return GsonProvider.getGson().fromJson(content, CheckOutProfileMsgRequest.class);
     }
 }

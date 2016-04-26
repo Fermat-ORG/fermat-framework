@@ -1,11 +1,4 @@
-/*
- * @#NetworkNodePluginRoot.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1;
-
 
 import com.bitdubai.fermat_api.CantStartPluginException;
 import com.bitdubai.fermat_api.layer.all_definition.common.system.abstract_classes.AbstractPlugin;
@@ -28,21 +21,34 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
+import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.exceptions.CantAcquireLocationException;
+import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.utils.LocationProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.NetworkNodeManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.FermatEmbeddedNodeServer;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.agents.PropagateActorCatalogAgent;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.agents.PropagateNodeCatalogAgent;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.clients.FermatWebSocketClientNodeChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.AddNodeToCatalogMsgRequest;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.UpdateNodeInCatalogMsgRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInitializeCommunicationsNetworkNodeP2PDatabaseException;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.SeedServerConf;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
-
+import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper;
+import org.apache.commons.configuration.ConfigurationException;
 import org.jboss.logging.Logger;
 
+import java.io.IOException;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.NetworkNodePluginRoot</code> is
@@ -59,6 +65,16 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      * Represent the LOG
      */
     private static final Logger LOG = Logger.getLogger(NetworkNodePluginRoot.class.getName());
+
+    /**
+     * Represent the IDENTITY_FILE_DIRECTORY
+     */
+    private static final String IDENTITY_FILE_DIRECTORY = "private";
+
+    /**
+     * Represent the IDENTITY_FILE_NAME
+     */
+    private static final String IDENTITY_FILE_NAME      = "nodeIdentity";
 
     /**
      * ErrorManager references definition.
@@ -100,6 +116,16 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     private Database dataBase;
 
     /**
+     * Represent the propagateNodeCatalogAgent
+     */
+    private PropagateNodeCatalogAgent propagateNodeCatalogAgent;
+
+    /**
+     * Represent the propagateActorCatalogAgent
+     */
+    private PropagateActorCatalogAgent propagateActorCatalogAgent;
+
+    /**
      * Represent the communicationsNetworkNodeP2PDatabaseFactory of the node
      */
     private CommunicationsNetworkNodeP2PDatabaseFactory communicationsNetworkNodeP2PDatabaseFactory;
@@ -108,6 +134,21 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      * Represent the fermatEmbeddedNodeServer instance
      */
     private FermatEmbeddedNodeServer fermatEmbeddedNodeServer;
+
+    /**
+     * Represent the fermatWebSocketClientNodeChannel instance
+     */
+    private FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel;
+
+    /**
+     * Represent the nodeProfile
+     */
+    private NodeProfile nodeProfile;
+
+    /**
+     * Represent the server ip
+     */
+    private String serverIp;
 
     /**
      * Constructor
@@ -143,8 +184,23 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              * Initialize the Data Base of the node
              */
             initializeDb();
-
             CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp developerDatabaseFactory = new CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp(pluginDatabaseSystem, pluginId);
+
+            /*
+             * Get the server ip
+             */
+            serverIp = IPAddressHelper.getCurrentIPAddress();
+            LOG.info("Server ip "+serverIp);
+
+            /*
+             * Initialize the configuration file
+             */
+            initializeConfigurationFile();
+
+            /*
+             *  Generate the profile of the node
+             */
+            generateNodeProfile();
 
             /*
              * Create and start the internal server
@@ -157,13 +213,43 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             /*
              * Add references to the node context
              */
-            NodeContext.add(NodeContextItem.DAO_FACTORY                , daoFactory              );
-            NodeContext.add(NodeContextItem.DEVELOPER_DATABASE_FACTORY , developerDatabaseFactory);
+            NodeContext.add(NodeContextItem.DAO_FACTORY, daoFactory);
+            NodeContext.add(NodeContextItem.DEVELOPER_DATABASE_FACTORY, developerDatabaseFactory);
             NodeContext.add(NodeContextItem.ERROR_MANAGER              , errorManager            );
             NodeContext.add(NodeContextItem.EVENT_MANAGER              , eventManager            );
             NodeContext.add(NodeContextItem.FERMAT_EMBEDDED_NODE_SERVER, fermatEmbeddedNodeServer);
             NodeContext.add(NodeContextItem.PLUGIN_DATABASE_SYSTEM     , pluginDatabaseSystem    );
             NodeContext.add(NodeContextItem.PLUGIN_FILE_SYSTEM         , pluginFileSystem        );
+            NodeContext.add(NodeContextItem.PLUGIN_ROOT                , this                    );
+
+            LOG.info("Initialize propagate catalog agents ...");
+            /*
+             * Initialize propagate catalog agents
+             */
+
+            this.propagateNodeCatalogAgent = new PropagateNodeCatalogAgent();
+            this.propagateActorCatalogAgent =  new PropagateActorCatalogAgent();
+            propagateNodeCatalogAgent.start();
+            propagateActorCatalogAgent.start();
+
+            /*
+             * Validate if the node are the seed server
+             */
+            if (iAmSeedServer()){
+
+                LOG.info("i Am Seed Server() = "+iAmSeedServer());
+                fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
+
+                /*
+                 * Validate if the node server profile register has change
+                 */
+                if (validateNodeProfileRegisterChange()){
+                    requestUpdateProfileInTheNodeCatalog();
+                }else {
+                    requestRegisterProfileInTheNodeCatalog();
+                }
+            }
+
 
         } catch (CantInitializeCommunicationsNetworkNodeP2PDatabaseException exception) {
 
@@ -202,6 +288,45 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     }
 
     /**
+     * Generate the node profile of this
+     * node
+     */
+    private void generateNodeProfile() throws CantAcquireLocationException {
+
+        LOG.info("Generating Node Profile");
+
+        nodeProfile = new NodeProfile();
+        nodeProfile.setIp(serverIp);
+        nodeProfile.setDefaultPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
+        nodeProfile.setIdentityPublicKey(identity.getPublicKey());
+        nodeProfile.setName(ConfigurationManager.getValue(ConfigurationManager.NODE_NAME));
+        nodeProfile.setLocation(LocationProvider.acquireLocationThroughIP());
+
+        LOG.info(nodeProfile);
+
+    }
+
+    /**
+     * Initialize the configuration file
+     */
+    private void initializeConfigurationFile() throws ConfigurationException, IOException {
+
+        LOG.info("Starting initializeConfigurationFile()");
+
+        if(ConfigurationManager.isExist()){
+
+            ConfigurationManager.load();
+
+        }else {
+
+            LOG.info("Configuration file don't exit");
+            ConfigurationManager.create(identity.getPublicKey());
+            ConfigurationManager.load();
+        }
+
+    }
+
+    /**
      * This method validate is all required resource are injected into
      * the plugin root by the platform
      *
@@ -212,9 +337,10 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
          /*
          * If all resources are inject
          */
-        if (pluginDatabaseSystem == null ||
-                errorManager == null ||
-                eventManager == null) {
+        if (pluginDatabaseSystem == null         ||
+                errorManager == null             ||
+                    eventManager == null         ||
+                        pluginFileSystem == null ) {
 
             StringBuffer contextBuffer = new StringBuffer();
             contextBuffer.append("Plugin ID: " + pluginId);
@@ -223,7 +349,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
             contextBuffer.append("errorManager: " + errorManager);
             contextBuffer.append(CantStartPluginException.CONTEXT_CONTENT_SEPARATOR);
-            contextBuffer.append("eventManager: " + eventManager);
+            contextBuffer.append("pluginFileSystem: " + pluginFileSystem);
 
             String context = contextBuffer.toString();
             String possibleCause = "No all required resource are injected";
@@ -250,7 +376,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
          /*
           * Load the file with the identity
           */
-            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, "private", "identity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+            PluginTextFile pluginTextFile = pluginFileSystem.getTextFile(pluginId, IDENTITY_FILE_DIRECTORY, IDENTITY_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
             String content = pluginTextFile.getContent();
 
             System.out.println("content = " + content);
@@ -265,7 +391,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              */
             try {
 
-                System.out.println("No previous identity finder - Proceed to create new one");
+                System.out.println("No previous identity found - Proceed to create new one");
 
                 /*
                  * Create the new identity
@@ -278,7 +404,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
                 /*
                  * save into the file
                  */
-                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, "private", "identity", FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
+                PluginTextFile pluginTextFile = pluginFileSystem.createTextFile(pluginId, IDENTITY_FILE_DIRECTORY, IDENTITY_FILE_NAME, FilePrivacy.PRIVATE, FileLifeSpan.PERMANENT);
                 pluginTextFile.setContent(identity.getPrivateKey());
                 pluginTextFile.persistToMedia();
 
@@ -365,6 +491,60 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             this.daoFactory = new DaoFactory(dataBase);
 
         }
+
+    }
+
+    /**
+     * Validate if the node is the seed server
+     *
+     * @return boolean
+     */
+    private boolean iAmSeedServer(){
+
+        if (serverIp.equals(SeedServerConf.DEFAULT_IP)){
+            return Boolean.TRUE;
+        }
+
+        return Boolean.FALSE;
+    }
+
+    /**
+     * Method that validate if the node profile register change
+     * from the registration
+     */
+    private boolean validateNodeProfileRegisterChange(){
+
+        String jsonString = ConfigurationManager.getValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE);
+        NodeProfile lastNodeProfileRegister = new NodeProfile().fromJson(jsonString);
+        if (!nodeProfile.equals(lastNodeProfileRegister)){
+            return Boolean.TRUE;
+        }
+
+        return Boolean.FALSE;
+
+    }
+
+    /**
+     * Method that request to the seed server to register
+     * the profile of this node
+     */
+    private void requestRegisterProfileInTheNodeCatalog(){
+
+        LOG.info("Request register profile in the node catalog");
+        AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
+        fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
+
+    }
+
+    /**
+     * Method that request to the seed server to update
+     * the profile of this node
+     */
+    private void requestUpdateProfileInTheNodeCatalog(){
+
+        LOG.info("Request update profile in the node catalog");
+        UpdateNodeInCatalogMsgRequest updateNodeInCatalogMsgRequest = new UpdateNodeInCatalogMsgRequest(nodeProfile);
+        fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest.toJson(), PackageType.UPDATE_NODE_IN_CATALOG_REQUEST);
 
     }
 

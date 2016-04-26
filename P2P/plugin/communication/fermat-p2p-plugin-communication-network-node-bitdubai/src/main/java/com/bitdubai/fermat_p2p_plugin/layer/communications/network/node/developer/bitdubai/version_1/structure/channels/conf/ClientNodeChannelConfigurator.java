@@ -10,6 +10,8 @@ import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.google.gson.JsonObject;
 
+import org.jboss.logging.Logger;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,11 @@ import javax.websocket.HandshakeResponse;
  */
 public class ClientNodeChannelConfigurator extends ClientEndpointConfig.Configurator {
 
+    /**
+     * Represent the LOG
+     */
+    private final Logger LOG = Logger.getLogger(ClientNodeChannelConfigurator.class.getName());
+
     /*
      * Create a new temporal identity
      */
@@ -35,6 +42,10 @@ public class ClientNodeChannelConfigurator extends ClientEndpointConfig.Configur
 
     @Override
     public void beforeRequest(Map<String, List<String>> headers) {
+
+        for (String key : headers.keySet()) {
+            LOG.info(key + " : "+headers.get(key));
+        }
 
          /*
          * Get json representation

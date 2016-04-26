@@ -1,12 +1,8 @@
-/*
- * @#MessageContent.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
+
+import org.apache.commons.lang.NotImplementedException;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent</code>
@@ -28,6 +24,7 @@ public abstract class PackageContent {
      */
     public PackageContent() {
         super();
+        this.messageContentType = MessageContentType.OBJECT;
     }
 
     /**
@@ -54,5 +51,24 @@ public abstract class PackageContent {
      */
     public void setMessageContentType(MessageContentType messageContentType) {
         this.messageContentType = messageContentType;
+    }
+
+    /**
+     * Generate the json representation
+     * @return String
+     */
+
+    public String toJson() {
+        throw  new NotImplementedException();
+    }
+
+    /**
+     * Get the object
+     *
+     * @param content
+     * @return PackageContent
+     */
+    public static PackageContent parseContent(String content) {
+        throw  new NotImplementedException();
     }
 }

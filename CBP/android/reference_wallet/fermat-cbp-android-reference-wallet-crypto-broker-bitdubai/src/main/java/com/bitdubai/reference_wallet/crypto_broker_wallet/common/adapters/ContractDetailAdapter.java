@@ -6,13 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_customer.interfaces.CryptoCustomerWalletManager;
+import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.R;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.holders.ContractDetailViewHolder;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.common.models.ContractDetail;
 import com.bitdubai.reference_wallet.crypto_broker_wallet.fragments.contract_detail.ContractDetailActivityFragment;
+import com.bitdubai.reference_wallet.crypto_broker_wallet.session.CryptoBrokerWalletSession;
 
 import java.util.List;
 
@@ -28,8 +27,8 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
 
     private Context context;
     private List<ContractDetail> dataSet;
-    private FermatSession session;
-    private CryptoBrokerWalletManager walletManager;
+    private CryptoBrokerWalletSession walletSession;
+    private CryptoBrokerWalletModuleManager walletManager;
     private ContractDetailActivityFragment fragment;
 
 
@@ -37,12 +36,12 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
         public ContractDetailAdapter(
             Context context,
             List<ContractDetail> dataSet,
-            FermatSession session,
-            CryptoBrokerWalletManager walletManager,
+            CryptoBrokerWalletSession session,
+            CryptoBrokerWalletModuleManager walletManager,
             ContractDetailActivityFragment fragment) {
         this.context=context;
         this.dataSet=dataSet;
-        this.session=session;
+        this.walletSession = session;
         this.walletManager=walletManager;
         this.fragment=fragment;
     }
@@ -74,19 +73,21 @@ public class ContractDetailAdapter extends RecyclerView.Adapter<ContractDetailVi
             case TYPE_BROKER:
                 ContractDetail brokerViewHolder= dataSet.get(position);
                 holder.setWalletModuleManager(this.walletManager);
+                holder.setSession(this.walletSession);
                 holder.setParentFragment(
-                        (ContractDetailActivityFragment) this.session.getData(
+                        (ContractDetailActivityFragment) this.walletSession.getData(
                                 "ContractDetailFragment"));
-                holder.setErrorManager(this.session.getErrorManager());
+                holder.setErrorManager(this.walletSession.getErrorManager());
                 holder.bind(brokerViewHolder);
                 break;
             case TYPE_CUSTOMER:
                 ContractDetail customerHolder= dataSet.get(position);
                 holder.setWalletModuleManager(this.walletManager);
+                holder.setSession(this.walletSession);
                 holder.setParentFragment(
-                        (ContractDetailActivityFragment) this.session.getData(
+                        (ContractDetailActivityFragment) this.walletSession.getData(
                                 "ContractDetailFragment"));
-                holder.setErrorManager(this.session.getErrorManager());
+                holder.setErrorManager(this.walletSession.getErrorManager());
                 holder.bind(customerHolder);
                 break;
         }

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artis
 import com.bitdubai.fermat_api.layer.all_definition.common.system.interfaces.FermatManager;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.enums.RequestType;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantAcceptConnectionRequestException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantCancelConnectionRequestException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantConfirmException;
@@ -11,12 +12,15 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantDi
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentitiesException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantExposeIdentityException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingConnectionRequestsException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListPendingInformationRequestsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestConnectionException;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestExternalPlatformInformationException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
 
 import java.util.Collection;
 import java.util.List;
@@ -137,4 +141,27 @@ public interface ArtistManager extends FermatManager{
     List<ArtistConnectionRequest> listPendingConnectionUpdates() throws CantListPendingConnectionRequestsException;
     
     void confirm(final UUID requestId) throws CantConfirmException, ConnectionRequestNotFoundException;
+
+    //Request external platform information methods
+    /**
+     * This method request the ArtArtistExtraData managed by the Artist.
+     * @param requesterPublicKey
+     * @param requesterActorType
+     * @param artistPublicKey
+     * @return
+     * @throws CantRequestExternalPlatformInformationException
+     */
+    ArtArtistExtraData<ArtistExternalPlatformInformation> requestExternalPlatformInformation(
+            String requesterPublicKey,
+            PlatformComponentType requesterActorType,
+            String artistPublicKey) throws CantRequestExternalPlatformInformationException;
+
+    /**
+     * This method returns the pending information request list.
+     * @param requestType SENT or RECEIVED
+     * @return
+     * @throws CantListPendingInformationRequestsException
+     */
+    List<ArtArtistExtraData<ArtistExternalPlatformInformation>> listPendingInformationRequests(
+            RequestType requestType) throws CantListPendingInformationRequestsException;
 }

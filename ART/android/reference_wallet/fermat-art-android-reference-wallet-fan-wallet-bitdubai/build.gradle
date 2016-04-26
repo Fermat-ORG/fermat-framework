@@ -1,15 +1,14 @@
 apply plugin: 'com.android.library'
-apply plugin: 'jacoco'
 android {
+
+    lintOptions {
+        abortOnError false
+    }
 
     useLibrary 'org.apache.http.legacy'
     compileSdkVersion 23
     buildToolsVersion '21.1.2'
 
-
-    lintOptions {
-        abortOnError false
-    }
 
     defaultConfig {
         minSdkVersion 17
@@ -17,29 +16,21 @@ android {
         versionCode 1
         versionName "1.0"
     }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-
-        debug {
-            debuggable true
-            testCoverageEnabled = true
-        }
     }
-
     lintOptions {
         abortOnError false
     }
-
+    dexOptions {
+        incremental true
+    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
         targetCompatibility JavaVersion.VERSION_1_7
-    }
-    dexOptions {
-        incremental true
     }
 }
 dependencies {
@@ -62,42 +53,6 @@ dependencies {
 }
 
 
-
-// Configuracion de JaCoCo
-def jacocoHtmlReport = ""
-task jacocoTestReport(type: JacocoReport, dependsOn: [assemble, "testDebug"]) {
-    group = "Reporting"
-
-    description = "Generate Jacoco coverage reports"
-
-    classDirectories = fileTree(
-            dir: 'build/intermediates/classes/debug',
-            excludes: ['**/R.class',
-                       '**/R$*.class',
-                       '**/*$ViewInjector*.*',
-                       '**/BuildConfig.*',
-                       '**/Manifest*.*']
-    )
-
-    def coverageSourceDirs = [
-            'src/main/java'
-    ]
-
-    additionalSourceDirs = files(coverageSourceDirs)
-    sourceDirectories = files(coverageSourceDirs)
-    executionData = files('build/jacoco/testDebug.exec')
-
-    reports {
-        xml.enabled = true
-        html.enabled = true
-        jacocoHtmlReport = "Code Coverage HTML Report: file://" + html.destination + "/index.html"
-    }
-}
-task testCoverage(dependsOn: jacocoTestReport) << {
-    println jacocoHtmlReport
-}
-tasks.assemble.dependsOn clean
-tasks.assemble.mustRunAfter clean
 repositories {
     maven { url 'https://jitpack.io' }
 }

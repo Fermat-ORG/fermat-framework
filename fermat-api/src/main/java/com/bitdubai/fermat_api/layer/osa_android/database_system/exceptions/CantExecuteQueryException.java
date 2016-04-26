@@ -27,7 +27,7 @@ public class CantExecuteQueryException extends DatabaseSystemException {
 	}
 
 	public CantExecuteQueryException(final Exception exception) {
-		this(exception.getMessage());
+		this(DEFAULT_MESSAGE, exception);
 		setStackTrace(exception.getStackTrace());
 	}
 

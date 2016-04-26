@@ -304,8 +304,8 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
 
         spinner = (Spinner) rootView.findViewById(R.id.spinner);
         List<String> list = new ArrayList<String>();
-        list.add("Bits");
         list.add("BTC");
+        list.add("Bits");
         list.add("Satoshis");
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(getActivity(),
                 R.layout.list_item_spinner, list);
@@ -317,6 +317,9 @@ public class SendFormWalletFragment extends AbstractFermatFragment<LossProtected
                 String text = "";
                 String txtType = txt_type.getText().toString();
                 String amount = editTextAmount.getText().toString();
+                if (amount.equals("")){
+                    amount = "0";
+                }
                 String newAmount = "";
                 switch (position) {
                     case 0:

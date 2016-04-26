@@ -4,12 +4,13 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 
+import java.io.Serializable;
 import java.util.UUID;
 
 /**
  * Created by franklin on 03/12/15.
  */
-public interface CryptoBrokerWalletAssociatedSetting {
+public interface CryptoBrokerWalletAssociatedSetting extends Serializable {
 
     /**
      * The method <code>getId</code> returns the id of the CryptoBrokerWalletAssociatedSetting

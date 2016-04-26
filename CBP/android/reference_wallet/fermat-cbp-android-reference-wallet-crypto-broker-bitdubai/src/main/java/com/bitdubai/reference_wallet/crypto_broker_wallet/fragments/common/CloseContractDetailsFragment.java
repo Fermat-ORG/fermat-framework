@@ -18,13 +18,14 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButto
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.util.BitmapWorkerTask;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Wallets;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.NegotiationStatus;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.ContractBasicInformation;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.common.interfaces.CustomerBrokerNegotiationInformation;
-import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_api.layer.wallet_module.crypto_broker.interfaces.CryptoBrokerWalletModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedWalletExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -104,7 +105,11 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment {
         amountReceivedOrToReceiveValue.setText(String.format("%1$s %2$s", amountToReceive, contractBasicInfo.getPaymentCurrency()));
 
         FermatTextView paymentMethod = (FermatTextView) rootView.findViewById(R.id.cbw_contract_details_payment_method);
-        paymentMethod.setText(contractBasicInfo.getTypeOfPayment());
+        String typeOfPaymentStr = "";
+        try{
+            typeOfPaymentStr = MoneyType.getByCode(contractBasicInfo.getTypeOfPayment()).getFriendlyName();
+        }catch (InvalidParameterException e) {}
+        paymentMethod.setText(typeOfPaymentStr);
 
         LinearLayout cancellationReasonContainer = (LinearLayout) rootView.findViewById(R.id.cbw_cancellation_reason_container);
         if (status.equals(ContractStatus.CANCELLED)) {
@@ -123,8 +128,7 @@ public class CloseContractDetailsFragment extends AbstractFermatFragment {
             public void onClick(View view) {
                 CustomerBrokerNegotiationInformation info;
                 try {
-                    CryptoBrokerWalletManager walletManager = moduleManager.getCryptoBrokerWallet(appSession.getAppPublicKey());
-                    info = walletManager.getNegotiationInformation(contractBasicInfo.getNegotiationId());
+                    info = moduleManager.getNegotiationInformation(contractBasicInfo.getNegotiationId());
                     appSession.setData(CryptoBrokerWalletSession.NEGOTIATION_DATA, info);
                     changeActivity(Activities.CBP_CRYPTO_BROKER_WALLET_CLOSE_NEGOTIATION_DETAILS_CLOSE_CONTRACT, appSession.getAppPublicKey());
 

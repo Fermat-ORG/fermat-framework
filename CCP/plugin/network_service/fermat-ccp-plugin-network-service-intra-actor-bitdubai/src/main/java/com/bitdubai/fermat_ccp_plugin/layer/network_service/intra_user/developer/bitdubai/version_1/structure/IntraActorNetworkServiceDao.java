@@ -64,7 +64,7 @@ public class IntraActorNetworkServiceDao {
              * first delete old cache records
              */
 
-            deleteIntraUserCache();
+           // deleteIntraUserCache();
 
             DatabaseTable table = this.database.getTable(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_TABLE_NAME);
             table.getRecords();
@@ -88,9 +88,6 @@ public class IntraActorNetworkServiceDao {
                     if(table.getRecords().size() > 0) {
                         DatabaseTableRecord record = table.getRecords().get(0);
 
-
-                        record.setUUIDValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_ID_COLUMN_NAME, UUID.randomUUID());
-
                         record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME, intraUserInformation.getPublicKey());
                         record.setStringValue(IntraActorNetworkServiceDataBaseConstants.INTRA_ACTOR_ONLINE_CACHE_ALIAS_COLUMN_NAME, intraUserInformation.getName());
 
@@ -111,7 +108,7 @@ public class IntraActorNetworkServiceDao {
                     }
 
                 }
-                                else
+                else
                 {
                     DatabaseTableRecord record = table.getEmptyRecord();
 
@@ -145,10 +142,7 @@ public class IntraActorNetworkServiceDao {
 
             throw new CantAddIntraWalletCacheUserException(CantAddIntraWalletCacheUserException.DEFAULT_MESSAGE, e, "", "Cant create new intra user cache record, insert database problems.");
 
-        } catch (CantDeleteIntraWalletCacheUserException e) {
-
-            throw new CantAddIntraWalletCacheUserException(CantAddIntraWalletCacheUserException.DEFAULT_MESSAGE, e, "", "Cant create new intra user cache record, insert database problems.");
-       }
+        }
         catch (Exception e) {
             throw new CantAddIntraWalletCacheUserException(CantAddIntraWalletCacheUserException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
         }

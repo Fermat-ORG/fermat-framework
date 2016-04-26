@@ -24,8 +24,10 @@ import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.FermatStates;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.DesktopAppSelector;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatRuntime;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.interfaces.FermatScreenSwapper;
+import com.bitdubai.fermat_api.layer.dmp_module.InstalledApp;
 import com.bitdubai.fermat_api.layer.osa_android.broadcaster.FermatBundle;
 import com.bitdubai.fermat_api.layer.pip_engine.interfaces.ResourceProviderManager;
 
@@ -126,6 +128,24 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     }
 
 
+    protected void selectApp(InstalledApp installedSubApp) throws Exception {
+        destroy();
+        getDesktopAppSelector().selectApp(installedSubApp);
+    }
+
+    private DesktopAppSelector getDesktopAppSelector() throws Exception {
+        if(getActivity() instanceof DesktopAppSelector){
+            return (DesktopAppSelector) getActivity();
+        }
+        throw new Exception("big problem occur");
+    }
+
+    /**
+     * Method used to go to home desktop
+     */
+    protected void home(){
+        ((FermatActivityManager)getActivity()).goHome();
+    }
 
 
     /**
@@ -305,7 +325,6 @@ public abstract class AbstractFermatFragment<S extends FermatSession,R extends R
     public void onDrawerSlide(View drawerView, float offset) {
 
     }
-
 
 
     private ScreenSize getScreenSize(){

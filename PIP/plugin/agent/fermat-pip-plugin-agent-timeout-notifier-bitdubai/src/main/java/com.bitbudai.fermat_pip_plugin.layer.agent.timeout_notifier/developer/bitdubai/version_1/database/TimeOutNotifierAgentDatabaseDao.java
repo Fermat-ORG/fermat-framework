@@ -3,7 +3,6 @@ package com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bi
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.exceptions.CantInitializeTimeOutNotifierAgentDatabaseException;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.exceptions.InconsistentResultObtainedInDatabaseQueryException;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierAgent;
-import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.structure.TimeOutNotifierManager;
 import com.bitbudai.fermat_pip_plugin.layer.agent.timeout_notifier.developer.bitdubai.version_1.utils.FermatActorImpl;
 import com.bitdubai.fermat_api.layer.actor.FermatActor;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
@@ -115,9 +114,20 @@ public class TimeOutNotifierAgentDatabaseDao {
         timeOutNotifierAgent.setEpochStartTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_START_TIME_COLUMN_NAME));
         timeOutNotifierAgent.setEpochEndTime(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_END_TIME_COLUMN_NAME));
         timeOutNotifierAgent.setDuration(agentRecord.getLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_DURATION_COLUMN_NAME));
+
+        //agent status
         try {
             timeOutNotifierAgent.setStatus(AgentStatus.getByCode(agentRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME)));
         } catch (InvalidParameterException e) {
+            e.printStackTrace();
+        }
+
+        // isRead Flag
+        timeOutNotifierAgent.setIsRead(Boolean.valueOf(agentRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_READ_COLUMN_NAME)));
+
+        try {
+            timeOutNotifierAgent.setOwner(getOwner(agentRecord.getStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_OWNER_PUBLICKEY_COLUMN_NAME)));
+        } catch (CantExecuteQueryException e) {
             e.printStackTrace();
         }
 
@@ -147,6 +157,7 @@ public class TimeOutNotifierAgentDatabaseDao {
 
         record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, timeOutNotifierAgent.getStatus().getCode());
         record.setLongValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_LAST_UPDATE_COLUMN_NAME, getCurrentTime());
+        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_READ_COLUMN_NAME, Boolean.toString(timeOutNotifierAgent.isRead()));
 
         return record;
     }
@@ -277,6 +288,12 @@ public class TimeOutNotifierAgentDatabaseDao {
         return loadTimeOutNotifierAgentsFromDatabase(databaseTable);
     }
 
+    public List<TimeOutNotifierAgent> getPendingNotified() throws CantExecuteQueryException {
+
+        return null;
+    }
+
+
     private List<TimeOutNotifierAgent> loadTimeOutNotifierAgentsFromDatabase(DatabaseTable filteredTable) throws CantExecuteQueryException {
         try {
             filteredTable.loadToMemory();
@@ -308,7 +325,14 @@ public class TimeOutNotifierAgentDatabaseDao {
         DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENTS_TABLE_NAME);
         databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.AGENTS_ID_COLUMN_NAME, timeOutNotifierAgent.getUUID(), DatabaseFilterType.EQUAL);
 
-        DatabaseTableRecord record = getRecordFromTimeOutNotifierAgent(timeOutNotifierAgent);
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            thrownCantExecuteQueryException(e, databaseTable.getTableName());
+        }
+
+
+        DatabaseTableRecord record = databaseTable.getRecords().get(0);
         try {
             databaseTable.deleteRecord(record);
         } catch (CantDeleteRecordException e) {
@@ -322,7 +346,7 @@ public class TimeOutNotifierAgentDatabaseDao {
 
     private void removeEventMonitorRecord(UUID uuid) throws CantExecuteQueryException {
         DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_TABLE_NAME);
-        databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.AGENTS_ID_COLUMN_NAME, uuid, DatabaseFilterType.EQUAL);
+        databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_ID_COLUMN_NAME, uuid, DatabaseFilterType.EQUAL);
 
         try {
             databaseTable.loadToMemory();
@@ -359,7 +383,7 @@ public class TimeOutNotifierAgentDatabaseDao {
         }
     }
 
-    public void updateMonitorEventData(UUID agentId) throws CantExecuteQueryException {
+    public int updateMonitorEventData(UUID agentId) throws CantExecuteQueryException {
         DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_TABLE_NAME);
         databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_ID_COLUMN_NAME, agentId, DatabaseFilterType.EQUAL);
 
@@ -370,6 +394,8 @@ public class TimeOutNotifierAgentDatabaseDao {
         }
 
         DatabaseTableRecord record;
+        int numNotifications = 0;
+
         if (databaseTable.getRecords().size() == 0){
             record = databaseTable.getEmptyRecord();
             record.setUUIDValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AGENT_ID_COLUMN_NAME, agentId);
@@ -386,12 +412,56 @@ public class TimeOutNotifierAgentDatabaseDao {
             record = databaseTable.getRecords().get(0);
             int current = record.getIntegerValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME);
             record.setIntegerValue(TimeOutNotifierAgentDatabaseConstants.EVENT_MONITOR_AMOUNT_RAISE_COLUMN_NAME, current+1);
+
+            numNotifications = current+1;
             try {
                 databaseTable.updateRecord(record);
             } catch (CantUpdateRecordException e) {
                 throw new CantExecuteQueryException(e, "Error updating record. " + record.toString(), "Database issue");
             }
         }
+        return numNotifications;
     }
 
+    public void markAsRead(UUID uuid) throws CantExecuteQueryException, InconsistentResultObtainedInDatabaseQueryException {
+        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENTS_TABLE_NAME);
+        databaseTable.addUUIDFilter(TimeOutNotifierAgentDatabaseConstants.AGENTS_ID_COLUMN_NAME, uuid, DatabaseFilterType.EQUAL);
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            thrownCantExecuteQueryException(e, databaseTable.getTableName());
+        }
+
+        if (databaseTable.getRecords().size() != 1)
+            throw new InconsistentResultObtainedInDatabaseQueryException(null, "Can't mark as read a non existing agent. UUID: " + uuid.toString(), "invalid data");
+
+        DatabaseTableRecord record = databaseTable.getRecords().get(0);
+
+        record.setStringValue(TimeOutNotifierAgentDatabaseConstants.AGENTS_READ_COLUMN_NAME, Boolean.TRUE.toString());
+        try {
+            databaseTable.updateRecord(record);
+        } catch (CantUpdateRecordException e) {
+            throw new CantExecuteQueryException(e, "unable to update read flag in record: " + record.toString(), "database error");
+        }
+    }
+
+    public List<TimeOutNotifierAgent> getPendingNotification() throws CantExecuteQueryException {
+        DatabaseTable databaseTable = database.getTable(TimeOutNotifierAgentDatabaseConstants.AGENTS_TABLE_NAME);
+        databaseTable.addStringFilter(TimeOutNotifierAgentDatabaseConstants.AGENTS_READ_COLUMN_NAME, Boolean.FALSE.toString(), DatabaseFilterType.EQUAL);
+        databaseTable.addStringFilter(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, AgentStatus.STARTED.getCode(), DatabaseFilterType.EQUAL);
+
+        List<TimeOutNotifierAgent> timeOutNotifierAgentList = new ArrayList<>();
+
+        try {
+            databaseTable.loadToMemory();
+        } catch (CantLoadTableToMemoryException e) {
+            thrownCantExecuteQueryException(e, databaseTable.getTableName());
+        }
+
+        for (DatabaseTableRecord record : databaseTable.getRecords()){
+            timeOutNotifierAgentList.add(getTimeOutNotifierAgentFromRecord(record));
+        }
+        return timeOutNotifierAgentList;
+    }
 }

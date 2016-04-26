@@ -1,12 +1,10 @@
-/*
- * @#NodeProfile.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile</code>
@@ -16,7 +14,7 @@ import com.google.gson.Gson;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NodeProfile extends Profile {
+public class NodeProfile extends Profile<NodeProfile> {
 
     /**
      * Represent the defaultPort
@@ -37,7 +35,7 @@ public class NodeProfile extends Profile {
      * Constructor
      */
     public NodeProfile(){
-        super();
+        super(NodeProfile.class);
     }
 
     /**
@@ -95,24 +93,56 @@ public class NodeProfile extends Profile {
     }
 
     /**
-     * (no-javadoc)
-     * @see Profile#toJson()
+     * Get the object
+     *
+     * @param jsonString
+     * @return NodeProfile
      */
-    @Override
-    public String toJson() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
+    public static NodeProfile fromJson(String jsonString) {
+        return GsonProvider.getGson().fromJson(jsonString, NodeProfile.class);
     }
 
     /**
-     * (no-javadoc)
-     * @see Profile#fromJson(String)
+     * (non-javadoc)
+     * @see Object#toString()
      */
     @Override
-    public NodeProfile fromJson(String jsonString) {
-        Gson gson = new Gson();
-        return gson.fromJson(jsonString, this.getClass());
+    public String toString() {
+        return "NodeProfile{" +
+                "defaultPort=" + defaultPort +
+                ", ip='" + ip + '\'' +
+                ", name='" + name + '\'' +
+                '}';
     }
 
+    /**
+     * (non-javadoc)
+     * @see Object#equals(Object)
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof NodeProfile)) return false;
 
+        NodeProfile that = (NodeProfile) o;
+
+        if (!getIdentityPublicKey().equals(that.getIdentityPublicKey())) return false;
+        if ((!getLocation().getAltitude().equals(that.getLocation().getAltitude())) || !getLocation().getLongitude().equals(that.getLocation().getLongitude())) return false;
+        if (!getDefaultPort().equals(that.getDefaultPort())) return false;
+        if (!getIp().equals(that.getIp())) return false;
+        return getName().equals(that.getName());
+
+    }
+
+    /**
+     * (non-javadoc)
+     * @see Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        int result = getDefaultPort().hashCode();
+        result = 31 * result + getIp().hashCode();
+        result = 31 * result + getName().hashCode();
+        return result;
+    }
 }

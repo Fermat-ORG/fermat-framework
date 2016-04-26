@@ -54,18 +54,23 @@ public class SideMenuBuilder {
         while(!flag &&  counter<lstItems.size()){
             com.bitdubai.fermat_api.layer.all_definition.navigation_structure.MenuItem menuItem = lstItems.get(counter);
             Activities navActivity = menuItem.getLinkToActivity();
-            if(navActivity.getCode().equals(activityType)){
-                menuItem.setSelected(true);
-                flag=true;
+            if(navActivity!=null) {
+                if (navActivity.getCode().equals(activityType)) {
+                    menuItem.setSelected(true);
+                    flag = true;
+                }
             }
             counter++;
         }
         mAdapter.changeDataSet(lstItems);
         mAdapter.setFermatListEventListener(fermatListItemListeners);
-        navigation_recycler_view.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
-        if(itemDecoration!=null){
-            navigation_recycler_view.addItemDecoration(itemDecoration);
+        if(navigation_recycler_view!=null) {
+            navigation_recycler_view.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+            if (itemDecoration != null) {
+                navigation_recycler_view.addItemDecoration(itemDecoration);
+            }
+            navigation_recycler_view.invalidate();
         }
     }
 

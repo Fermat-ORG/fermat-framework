@@ -19,7 +19,7 @@ public enum NodeContextItem {
     FERMAT_EMBEDDED_NODE_SERVER,
     PLUGIN_DATABASE_SYSTEM     ,
     PLUGIN_FILE_SYSTEM         ,
-
+    PLUGIN_ROOT                ,
     ;
 
 }

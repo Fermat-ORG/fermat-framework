@@ -9,6 +9,9 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
+import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import org.jboss.logging.Logger;
 
@@ -42,20 +45,31 @@ public class NodeChannelConfigurator extends ServerEndpointConfig.Configurator {
     @Override
     public void modifyHandshake(ServerEndpointConfig serverEndpointConfig, HandshakeRequest handshakeRequest, HandshakeResponse handshakeResponse) {
 
+        for (String key : handshakeRequest.getHeaders().keySet()) {
+            LOG.info(key + " : "+handshakeRequest.getHeaders().get(key));
+        }
+
         /*
          * Validate if the client public key identity come in the header
          */
-        if (handshakeRequest.getHeaders().containsKey(HeadersAttName.NPKI_ATT_HEADER_NAME)){
+        if (handshakeRequest.getHeaders().containsKey(JsonAttNamesConstants.HEADER_ATT_NAME_TI)){
 
             /*
              * Get the client public key identity
              */
-            String cpki = handshakeRequest.getHeaders().get(HeadersAttName.NPKI_ATT_HEADER_NAME).get(0);
+            String tcpki = handshakeRequest.getHeaders().get(JsonAttNamesConstants.HEADER_ATT_NAME_TI).get(0);
+
+             /*
+             * Get the temporal identity of the CommunicationsClientConnection component
+             */
+            JsonParser parser = new JsonParser();
+            JsonObject temporalIdentity = parser.parse(tcpki).getAsJsonObject();
+            String temporalClientIdentity = temporalIdentity.get(JsonAttNamesConstants.NAME_IDENTITY).getAsString();
 
             /*
-             * Pass the identity create to the WebSocketClientChannelServerEndpoint
+             * Pass the identity create to the FermatWebSocketClientChannelServerEndpoint
              */
-            serverEndpointConfig.getUserProperties().put(HeadersAttName.NPKI_ATT_HEADER_NAME, cpki);
+            serverEndpointConfig.getUserProperties().put(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME, temporalClientIdentity);
 
             /*
              * Create a node identity for this session
@@ -75,7 +89,7 @@ public class NodeChannelConfigurator extends ServerEndpointConfig.Configurator {
              handshakeResponse.getHeaders().put(HeadersAttName.NPKI_ATT_HEADER_NAME, value);
 
             /*
-             * Pass the identity create to the WebSocketClientChannelServerEndpoint
+             * Pass the identity create to the FermatWebSocketClientChannelServerEndpoint
              */
              serverEndpointConfig.getUserProperties().put(HeadersAttName.NPKI_ATT_HEADER_NAME, nodeIdentityForSession);
 

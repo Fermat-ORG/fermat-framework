@@ -10,9 +10,7 @@ import com.bitdubai.fermat_bnk_api.layer.bnk_wallet.bank_money.interfaces.BankMo
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Created by memo on 25/11/15.
@@ -107,8 +105,8 @@ public class HoldBankMoneyTransactionProcessorAgent extends FermatAgent {
             try {
                 availableBalance = bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).getAvailableBalance().getBalance(transaction.getAccountNumber());
                 if(availableBalance >= transaction.getAmount()) {
-                    BankMoneyTransactionRecordImpl bankMoneyTransactionRecord = new BankMoneyTransactionRecordImpl(errorManager,transaction.getTransactionId(), BalanceType.AVAILABLE.getCode(), TransactionType.HOLD.getCode(),transaction.getAmount(), transaction.getCurrency().getCode(),BankOperationType.HOLD.getCode(),"testing reference","test BNK name",transaction.getAccountNumber(), BankAccountType.SAVING.getCode(),0,0,transaction.getTimestamp(),transaction.getMemo(), BankTransactionStatus.CONFIRMED.getCode());
-                    //bankMoneyTransactionRecord = new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(), transaction.getAmount(), transaction.getCurrency().getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, transaction.getAccountNumber(), BankAccountType.SAVING.getCode(), 0, 0, (new Date().getTime()), transaction.getMemo(), null);
+                    BankMoneyTransactionRecordImpl bankMoneyTransactionRecord = new BankMoneyTransactionRecordImpl(errorManager,transaction.getTransactionId(), BalanceType.AVAILABLE.getCode(), TransactionType.HOLD.getCode(),transaction.getAmount(), transaction.getCurrency().getCode(),BankOperationType.HOLD.getCode(),"testing reference","test BNK name",transaction.getAccountNumber(), BankAccountType.SAVINGS.getCode(),0,0,transaction.getTimestamp(),transaction.getMemo(), BankTransactionStatus.CONFIRMED.getCode());
+                    //bankMoneyTransactionRecord = new BankMoneyTransactionRecordImpl(UUID.randomUUID(), BalanceType.AVAILABLE.getCode(), TransactionType.CREDIT.getCode(), transaction.getAmount(), transaction.getCurrency().getCode(), BankOperationType.DEPOSIT.getCode(), "test_reference", null, transaction.getAccountNumber(), BankAccountType.SAVINGS.getCode(), 0, 0, (new Date().getTime()), transaction.getMemo(), null);
                     bankMoneyWalletManager.loadBankMoneyWallet(transaction.getPublicKeyWallet()).hold(bankMoneyTransactionRecord);
                     holdTransactionManager.setTransactionStatusToConfirmed(transaction.getTransactionId());
                 }

@@ -1,15 +1,8 @@
-/*
-* @#DesktopDatabaseBridge.java - 2015
-* Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
-* BITDUBAI/CONFIDENTIAL
-*/
 package com.bitdubai.fermat_osa_addon.layer.linux.database_system.developer.bitdubai.version_1.desktop.database.bridge;
 
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -35,15 +28,12 @@ public class DesktopDatabaseBridge {
     private boolean transaccionSatisfactoria=false;
     private String databasePath;
 
-
     /**
      * Constructor
      */
     public DesktopDatabaseBridge(String databasePath){
         this.databasePath=databasePath;
     }
-
-
 
     /**
      * Method who open the database connection
@@ -62,6 +52,15 @@ public class DesktopDatabaseBridge {
             if (c != null)
                 close();
 
+        }
+    }
+
+    public Connection getConnection() {
+        try {
+            return DriverManager.getConnection("jdbc:sqlite:" + databasePath);
+        } catch (Exception e) {
+            System.out.println("database does not exist?"+e.getMessage());
+            return null;
         }
     }
 
@@ -110,11 +109,8 @@ public class DesktopDatabaseBridge {
 
         }
 
-
-
         return rs;
     }
-
 
     /**
      * Execute a single SQL statement that is NOT a SELECT or any other SQL statement that returns data.
@@ -123,24 +119,14 @@ public class DesktopDatabaseBridge {
     "VALUES (1, 'Paul', 32, 'California', 20000.00 );";
      @exception SQLException	//if the SQL string is invalid
      */
-    public void execSQL(String sql) {
+    public void execSQL(final String sql) throws SQLException {
 
-        if (c == null)
-            connect();
+        Connection conn = DriverManager.getConnection("jdbc:sqlite:" + databasePath);
 
-        ResultSet rs=null;
-        try {
-            stmt = c.createStatement();
-            stmt.executeUpdate(sql);
-            stmt.close();
-            c.commit();
-
-        }catch(SQLException ex){
-            Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-
-        }
-
-
+        Statement statement = conn.createStatement();
+        statement.executeUpdate(sql);
+        statement.close();
+        conn.close();
     }
 
     /**
@@ -253,23 +239,10 @@ public class DesktopDatabaseBridge {
             i++;
         }
 
-       // PreparedStatement ps;
-       /* try {
-            System.out.println("UPDATE "+tableName+" SET "+setVariables+whereClause);
-            ps = c.prepareStatement("UPDATE "+tableName+" SET "+setVariables+whereClause);
-
-            ps.executeUpdate();
-            ps.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-
         if (c == null){
             connect();
         }
 
-        ResultSet rs=null;
         try {
             stmt = c.createStatement();
             stmt.executeUpdate("UPDATE " + tableName + " SET " + setVariables + whereClause);

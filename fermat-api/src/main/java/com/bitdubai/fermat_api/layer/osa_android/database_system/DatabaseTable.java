@@ -24,6 +24,8 @@ public interface DatabaseTable {
 
     void loadToMemory() throws CantLoadTableToMemoryException;
 
+    long getCount() throws CantLoadTableToMemoryException;
+
     List<DatabaseTableRecord> getRecords();
 
     void insertRecord (DatabaseTableRecord record) throws CantInsertRecordException;

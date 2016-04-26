@@ -1,12 +1,9 @@
-/*
- * @#MsgRespond.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.PackageContent;
+import com.google.gson.Gson;
+
+import org.apache.commons.lang.NotImplementedException;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond</code>
@@ -23,7 +20,8 @@ public class MsgRespond extends PackageContent {
      */
     public enum STATUS{
         SUCCESS,
-        FAIL
+        FAIL,
+        EXCEPTION
     }
 
     /**
@@ -55,4 +53,15 @@ public class MsgRespond extends PackageContent {
     public STATUS getStatus() {
         return status;
     }
+
+    /**
+     * Get the Details value
+     *
+     * @return details
+     */
+    public String getDetails() {
+        return details;
+    }
+
+    
 }

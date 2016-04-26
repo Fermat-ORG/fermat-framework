@@ -1,11 +1,4 @@
-/*
- * @#CommunicationsNetworkNodeP2PDeveloperDatabaseFactory.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database;
-
 
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
@@ -225,7 +218,6 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
          */
         List<String> checkedinclientsColumns = new ArrayList<>();
 
-        checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_UUID_COLUMN_NAME);
         checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
         checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_LATITUDE_COLUMN_NAME);
         checkedinclientsColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_LONGITUDE_COLUMN_NAME);
@@ -279,22 +271,22 @@ public final class CommunicationsNetworkNodeP2PDeveloperDatabaseFactory {
         tables.add(checkedactorshistoryTable);
 
         /**
-         * Table checked clients history columns.
+         * Table Clients Registration History table addition.
          */
-        List<String> checkedclientshistoryColumns = new ArrayList<>();
+        List<String> clientsRegistrationHistoryColumns = new ArrayList<>();
 
-        checkedclientshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_UUID_COLUMN_NAME);
-        checkedclientshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
-        checkedclientshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_LAST_LATITUDE_COLUMN_NAME);
-        checkedclientshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_LAST_LONGITUDE_COLUMN_NAME);
-        checkedclientshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_DEVICE_TYPE_COLUMN_NAME);
-        checkedclientshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME);
-        checkedclientshistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_CHECK_TYPE_COLUMN_NAME);
-        /**
-         * Table checked clients history addition.
-         */
-        DeveloperDatabaseTable checkedclientshistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_CLIENTS_HISTORY_TABLE_NAME, checkedclientshistoryColumns);
-        tables.add(checkedclientshistoryTable);
+        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_ID_COLUMN_NAME                 );
+        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_IDENTITY_PUBLIC_KEY_COLUMN_NAME);
+        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_LAST_LATITUDE_COLUMN_NAME      );
+        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_LAST_LONGITUDE_COLUMN_NAME     );
+        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_DEVICE_TYPE_COLUMN_NAME        );
+        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_CHECKED_TIMESTAMP_COLUMN_NAME  );
+        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_TYPE_COLUMN_NAME               );
+        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_RESULT_COLUMN_NAME             );
+        clientsRegistrationHistoryColumns.add(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_DETAIL_COLUMN_NAME             );
+
+        DeveloperDatabaseTable clientsRegistrationHistoryTable = developerObjectFactory.getNewDeveloperDatabaseTable(CommunicationsNetworkNodeP2PDatabaseConstants.CLIENTS_REGISTRATION_HISTORY_TABLE_NAME, clientsRegistrationHistoryColumns);
+        tables.add(clientsRegistrationHistoryTable);
 
         /**
          * Table checked network service history columns.

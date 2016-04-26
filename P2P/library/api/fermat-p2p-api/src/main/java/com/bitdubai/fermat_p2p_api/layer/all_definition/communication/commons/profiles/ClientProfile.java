@@ -1,12 +1,10 @@
-/*
- * @#ClientProfile.java - 2015
- * Copyright bitDubai.com., All rights reserved.
- * You may not modify, use, reproduce or distribute this software.
- * BITDUBAI/CONFIDENTIAL
- */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 /**
  * The Class <code>ClientProfile</code>
@@ -16,7 +14,7 @@ import com.google.gson.Gson;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ClientProfile extends Profile {
+public class ClientProfile extends Profile<ClientProfile> {
 
     /**
      * Represent the deviceType
@@ -27,7 +25,7 @@ public class ClientProfile extends Profile {
      * Constructor
      */
     public ClientProfile(){
-        super();
+        super(ClientProfile.class);
     }
 
     /**
@@ -49,24 +47,13 @@ public class ClientProfile extends Profile {
     }
 
     /**
-     * (no-javadoc)
-     * @see Profile#toJson()
+     * Get the object
+     *
+     * @param jsonString
+     * @return ClientProfile
      */
-    @Override
-    public String toJson() {
-        Gson gson = new Gson();
-        return gson.toJson(this);
+    public static ClientProfile fromJson(String jsonString) {
+        return GsonProvider.getGson().fromJson(jsonString, ClientProfile.class);
     }
-
-    /**
-     * (no-javadoc)
-     * @see Profile#fromJson(String)
-     */
-    @Override
-    public ClientProfile fromJson(String jsonString) {
-        Gson gson = new Gson();
-        return gson.fromJson(jsonString, this.getClass());
-    }
-
 
 }

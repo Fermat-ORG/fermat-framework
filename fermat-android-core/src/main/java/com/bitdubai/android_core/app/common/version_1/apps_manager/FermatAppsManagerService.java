@@ -73,10 +73,7 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
     @Override
     public IBinder onBind(Intent intent) {
         String key = intent.getStringExtra(AppManagerKeys.AUTENTIFICATION_CLIENT_KEY);
-        if(key==null){
-            return localBinder;
-        }
-        return null;
+        return localBinder;
     }
 
     public void init(){
@@ -171,6 +168,13 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
         if(fermatSessionManager.isSessionOpen(fermatApp.getAppPublicKey())){
             fermatSession = fermatSessionManager.getAppsSession(fermatApp.getAppPublicKey());
         }else {
+//            ModuleManager moduleManager = null;
+//            try {
+//                moduleManager = ApplicationSession.getInstance().getClientSideBrokerService().getModuleManager(fermatAppConnection.getPluginVersionReference());
+//            } catch (CantCreateProxyException e) {
+//                e.printStackTrace();
+//            }
+//            fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), moduleManager, fermatAppConnection);
             fermatSession = fermatSessionManager.openAppSession(fermatApp, FermatSystemUtils.getErrorManager(), FermatSystemUtils.getModuleManager(fermatAppConnection.getPluginVersionReference()), fermatAppConnection);
         }
         fermatAppConnection.setFullyLoadedSession(fermatSession);
@@ -226,11 +230,16 @@ public class FermatAppsManagerService extends Service implements com.bitdubai.fe
 
     @Override
     public void clearRuntime() {
-        if(getWalletRuntimeManager().getLastWallet() != null)
-            getWalletRuntimeManager().getLastWallet().clear();
+        try {
+            if (getWalletRuntimeManager().getLastWallet() != null)
+                getWalletRuntimeManager().getLastWallet().clear();
 
-        if(getSubAppRuntimeMiddleware().getLastApp() != null)
-            getSubAppRuntimeMiddleware().getLastApp().clear();
+            if (getSubAppRuntimeMiddleware().getLastApp() != null)
+                getSubAppRuntimeMiddleware().getLastApp().clear();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     /**

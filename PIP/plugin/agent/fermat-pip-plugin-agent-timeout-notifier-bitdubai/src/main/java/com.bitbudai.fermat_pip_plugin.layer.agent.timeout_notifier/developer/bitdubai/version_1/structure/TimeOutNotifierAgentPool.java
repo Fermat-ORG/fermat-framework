@@ -61,12 +61,20 @@ public class TimeOutNotifierAgentPool {
         runningAgents = new ArrayList<>();
         runningAgents.addAll(loadRunningAgents());
 
+        //If I have things to do, I will start the monitoring agent.
+        if (!runningAgents.isEmpty())
+            try {
+                timeOutMonitoringAgent.start();
+            } catch (CantStartAgentException e) {
+                e.printStackTrace();
+            }
+
     }
 
     private List<TimeOutAgent> loadRunningAgents() {
         List<TimeOutAgent> timeOutAgentList = new ArrayList<>();
         try {
-            timeOutAgentList.addAll(dao.getTimeOutNotifierAgent(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, AgentStatus.CREATED.getCode(), DatabaseFilterType.NOT_EQUALS));
+            timeOutAgentList.addAll(dao.getTimeOutNotifierAgent(TimeOutNotifierAgentDatabaseConstants.AGENTS_STATE_COLUMN_NAME, AgentStatus.STARTED.getCode(), DatabaseFilterType.EQUAL));
         } catch (CantExecuteQueryException e) {
             return timeOutAgentList;
         }
@@ -101,9 +109,10 @@ public class TimeOutNotifierAgentPool {
     }
 
     public void removeRunningAgent(TimeOutAgent timeOutNotifierAgent) throws CantRemoveExistingTimeOutAgentException {
-        runningAgents.remove(timeOutNotifierAgent);
+        if (runningAgents.contains(timeOutNotifierAgent))
+            runningAgents.remove(timeOutNotifierAgent);
+
         try {
-            stopTimeOutAgent(timeOutNotifierAgent);
             dao.removeTimeOutNotifierAgent(timeOutNotifierAgent);
 
         } catch (Exception e) {
@@ -128,12 +137,17 @@ public class TimeOutNotifierAgentPool {
     public void stopTimeOutAgent(TimeOutAgent timeOutAgent) throws CantStopTimeOutAgentException {
         TimeOutNotifierAgent agent = (TimeOutNotifierAgent) timeOutAgent;
         try {
-            dao.updateTimeOutNotifierAgent(agent);
             agent.setStatus(AgentStatus.STOPPED);
-            runningAgents.remove(timeOutAgent);
+            dao.updateTimeOutNotifierAgent(agent);
+
+            boolean running = false;
+            for (TimeOutAgent myRunningAgents : runningAgents){
+                if (myRunningAgents.getStatus() == AgentStatus.STARTED)
+                    running = true;
+            }
 
             // stop the monitoring agent if this is the last one
-            if (runningAgents.isEmpty() && timeOutMonitoringAgent.getAgentStatus() == AgentStatus.STARTED)
+            if (!running && timeOutMonitoringAgent.getAgentStatus() == AgentStatus.STARTED)
                 timeOutMonitoringAgent.stop();
 
         } catch (CantExecuteQueryException e) {
@@ -165,5 +179,9 @@ public class TimeOutNotifierAgentPool {
         }
 
         runningAgents.add(timeOutAgent);
+    }
+
+    public void markAsRead(TimeOutAgent timeOutAgent) throws CantExecuteQueryException, InconsistentResultObtainedInDatabaseQueryException {
+        dao.markAsRead(timeOutAgent.getUUID());
     }
 }

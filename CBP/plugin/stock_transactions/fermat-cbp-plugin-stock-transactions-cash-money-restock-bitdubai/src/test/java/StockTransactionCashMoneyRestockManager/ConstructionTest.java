@@ -1,14 +1,13 @@
 package StockTransactionCashMoneyRestockManager;
 
-import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.DatabaseNotFoundException;
 import com.bitdubai.fermat_cbp_plugin.layer.stock_transactions.cash_money_restock.developer.bitdubai.version_1.structure.StockTransactionCashMoneyRestockManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.UUID;
@@ -21,30 +20,27 @@ import static org.fest.assertions.api.Assertions.assertThat;
 @RunWith(MockitoJUnitRunner.class)
 public class ConstructionTest {
 
-    private final PluginDatabaseSystem pluginDatabaseSystem = new PluginDatabaseSystem() {
-        @Override
-        public Database openDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
-            return null;
-        }
+    @Mock
+    private PluginDatabaseSystem pluginDatabaseSystem;
 
-        @Override
-        public void deleteDatabase(UUID ownerId, String databaseName) throws CantOpenDatabaseException, DatabaseNotFoundException {
+    @Mock
+    private ErrorManager errorManager;
 
-        }
 
-        @Override
-        public Database createDatabase(UUID ownerId, String databaseName) throws CantCreateDatabaseException {
-            return null;
-        }
-    };
-    private final UUID pluginId = UUID.randomUUID();
+    private UUID pluginId;
+
+    @Before
+    public void setUp(){
+        pluginId = UUID.randomUUID();
+    }
 
     @Test
     public void Construction_ValidParameters_NewObjectCreated(){
 
         StockTransactionCashMoneyRestockManager stockTransactionCashMoneyDestockManager = new StockTransactionCashMoneyRestockManager(
-                this.pluginDatabaseSystem,
-                this.pluginId
+                pluginDatabaseSystem,
+                pluginId,
+                errorManager
         );
         assertThat(stockTransactionCashMoneyDestockManager).isNotNull();
     }
