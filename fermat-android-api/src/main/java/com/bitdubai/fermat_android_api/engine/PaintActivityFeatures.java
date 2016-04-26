@@ -27,4 +27,5 @@ public interface PaintActivityFeatures {
     @Deprecated
     void setActivityBackgroundColor(Drawable drawable);
 
+    void removeCollapseAnimation(ElementsWithAnimation elementsWithAnimation);
 }
