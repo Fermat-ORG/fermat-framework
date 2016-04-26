@@ -173,43 +173,44 @@ public class ChatListFragment extends AbstractFermatFragment{
                             //ChatActorCommunityInformation sf = chatManager.getChatActorbyConnectionId(mess.getContactId());
                             //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
                             //Contact cont = null; //chatManager.getContactByContactId(mess.getContactId());
-                            for (ChatActorCommunityInformation cont: chatManager
-                                    .listAllConnectedChatActor(chatIdentity, MAX, offset))
-                            {
-                                String pk1=cont.getPublicKey();
-                                String pk2=chat.getRemoteActorPublicKey();
-                                if(pk2.equals(pk1)){
-                                    contactName.add(cont.getAlias());
-                                    message.add(mess.getMessage());
-                                    status.add(mess.getStatus().toString());
-                                    typeMessage.add(mess.getType().toString());
-                                    long timemess = chat.getLastMessageDate().getTime();
-                                    long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
-                                    long milliseconds = timemess + nanos;
-                                    Date dated = new java.util.Date(milliseconds);
-                                    DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
-                                    formatter.setTimeZone(TimeZone.getDefault());
-                                    String datef=formatter.format(new java.util.Date(milliseconds));
-                                    if (Validate.isDateToday(dated)) {
-                                        formatter = new SimpleDateFormat("HH:mm");
+                            if(chatIdentity!= null) {
+                                for (ChatActorCommunityInformation cont : chatManager
+                                        .listAllConnectedChatActor(chatIdentity, MAX, offset)) {
+                                    String pk1 = cont.getPublicKey();
+                                    String pk2 = chat.getRemoteActorPublicKey();
+                                    if (pk2.equals(pk1)) {
+                                        contactName.add(cont.getAlias());
+                                        message.add(mess.getMessage());
+                                        status.add(mess.getStatus().toString());
+                                        typeMessage.add(mess.getType().toString());
+                                        long timemess = chat.getLastMessageDate().getTime();
+                                        long nanos = (chat.getLastMessageDate().getNanos() / 1000000);
+                                        long milliseconds = timemess + nanos;
+                                        Date dated = new java.util.Date(milliseconds);
+                                        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
                                         formatter.setTimeZone(TimeZone.getDefault());
-                                        datef=formatter.format(new java.util.Date(milliseconds));
-                                    } else {
-                                        Date old = new Date(datef);
-                                        Date today = new Date();
-                                        long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
-                                        if (dias == 1) {
-                                            datef="YESTERDAY";
+                                        String datef = formatter.format(new java.util.Date(milliseconds));
+                                        if (Validate.isDateToday(dated)) {
+                                            formatter = new SimpleDateFormat("HH:mm");
+                                            formatter.setTimeZone(TimeZone.getDefault());
+                                            datef = formatter.format(new java.util.Date(milliseconds));
+                                        } else {
+                                            Date old = new Date(datef);
+                                            Date today = new Date();
+                                            long dias = (today.getTime() - old.getTime()) / (1000 * 60 * 60 * 24);
+                                            if (dias == 1) {
+                                                datef = "YESTERDAY";
+                                            }
                                         }
+                                        dateMessage.add(datef);
+                                        chatId.add(chatidtemp);
+                                        ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
+                                        BitmapDrawable bmd = new BitmapDrawable(bytes);
+                                        imgId.add(bmd.getBitmap());
+                                        break;
                                     }
-                                    dateMessage.add(datef);
-                                    chatId.add(chatidtemp);
-                                    ByteArrayInputStream bytes = new ByteArrayInputStream(cont.getImage());
-                                    BitmapDrawable bmd = new BitmapDrawable(bytes);
-                                    imgId.add(bmd.getBitmap());
-                                    break;
                                 }
-                            }
+                            }else setUpHelpChat(false);
                         }
                     }
                 }
@@ -261,12 +262,16 @@ public class ChatListFragment extends AbstractFermatFragment{
         try {
             chatIdentity = chatSettings.getIdentitySelected();
             if (chatIdentity == null) {
-                chatIdentity = chatManager
-                        .newInstanceChatActorCommunitySelectableIdentity(chatManager
-                                .getIdentityChatUsersFromCurrentDeviceUser().get(0));
-                chatSettings.setIdentitySelected(chatIdentity);
-                chatSettings.setProfileSelected(chatIdentity.getPublicKey(),
-                        PlatformComponentType.ACTOR_CHAT);
+                List<ChatIdentity> chatIdentityList=chatManager
+                        .getIdentityChatUsersFromCurrentDeviceUser();
+                if(chatIdentityList != null && chatIdentityList.size()>0) {
+                    chatIdentity = chatManager
+                            .newInstanceChatActorCommunitySelectableIdentity(
+                                    chatIdentityList.get(0));
+                    chatSettings.setIdentitySelected(chatIdentity);
+                    chatSettings.setProfileSelected(chatIdentity.getPublicKey(),
+                            PlatformComponentType.ACTOR_CHAT);
+                }
             }
         } catch (Exception e) {
                 if (errorManager != null)
@@ -285,10 +290,12 @@ public class ChatListFragment extends AbstractFermatFragment{
                 layout.setBackground(bgcolor);
                 noData.setVisibility(View.GONE);
                 noDatalabel.setVisibility(View.GONE);
+                getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager);
             }else{
                 layout.setBackgroundResource(R.drawable.fondo);
                 noData.setVisibility(View.VISIBLE);
                 noDatalabel.setVisibility(View.VISIBLE);
+                getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager_nodata);
                 //text.setBackgroundResource(R.drawable.cht_empty_chat_background);
             }
         } catch (CantGetChatException e) {
@@ -319,8 +326,6 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background_viewpager);
-        //tf = Typeface.createFromAsset(getActivity().getAssets(), "fonts/HelveticaNeue Medium.ttf");
         layout = inflater.inflate(R.layout.chats_list_fragment, container, false);
         mSwipeRefreshLayout = (SwipeRefreshLayout) layout.findViewById(R.id.swipe_container);
         //text = (TextView) layout.findViewById(R.id.text);
@@ -352,7 +357,6 @@ public class ChatListFragment extends AbstractFermatFragment{
 //        } catch (Exception e) {
 //            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
 //        }
-
         adapter=new ChatListAdapter(getActivity(), contactName, message, dateMessage, chatId, contactId, status,
                 typeMessage, noReadMsgs, imgId, errorManager);
         list=(ListView)layout.findViewById(R.id.list);
@@ -429,7 +433,7 @@ public class ChatListFragment extends AbstractFermatFragment{
            //if(chatManager.isIdentityDevice() != false) {
        // Inflate the menu items
        inflater.inflate(R.menu.chat_list_menu, menu);
-       // Locate the search item
+       // Locate the search item//@android:drawable/ic_menu_search
        MenuItem searchItem = menu.findItem(R.id.menu_search);
        searchView = (SearchView) searchItem.getActionView();
        searchView.setQueryHint(getResources().getString(R.string.search_hint));
