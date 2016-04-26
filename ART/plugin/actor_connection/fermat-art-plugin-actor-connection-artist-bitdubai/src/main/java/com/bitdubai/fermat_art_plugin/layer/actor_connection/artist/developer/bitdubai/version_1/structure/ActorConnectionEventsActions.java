@@ -82,8 +82,16 @@ public class ActorConnectionEventsActions {
      */
     public void handleNewsEvent() throws CantHandleNewsEventException {
         try {
-            final List<ArtistConnectionRequest> list = actorArtistNetworkServiceManager.
+            //Here we got all the Artist request
+            List<ArtistConnectionRequest> list = actorArtistNetworkServiceManager.
                     listPendingConnectionNews(PlatformComponentType.ART_ARTIST);
+
+            for (final ArtistConnectionRequest request : list)
+                this.handleRequestConnection(request);
+
+            //Now the fans request
+            list = actorArtistNetworkServiceManager.
+                    listPendingConnectionNews(PlatformComponentType.ART_FAN);
 
             for (final ArtistConnectionRequest request : list)
                 this.handleRequestConnection(request);
