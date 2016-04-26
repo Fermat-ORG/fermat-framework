@@ -178,7 +178,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
 
             //default Exchange rate Provider
             try {
-                if(moduleManager.getExchangeProvider()==null) {
+                if(lossProtectedWallet.getExchangeProvider()==null) {
                     List<CurrencyExchangeRateProviderManager> providers = new ArrayList(lossProtectedWallet.getExchangeRateProviderManagers());
 
                     exchangeProviderId = providers.get(0).getProviderId();

@@ -156,7 +156,7 @@ public class ContactDetailFragment extends AbstractFermatFragment implements Vie
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try{
-            mFragmentView = inflater.inflate(R.layout.contact_detail_base, container, false);
+            mFragmentView = inflater.inflate(R.layout.loss_contact_detail, container, false);
 
             setUp();
             setUpContact();
