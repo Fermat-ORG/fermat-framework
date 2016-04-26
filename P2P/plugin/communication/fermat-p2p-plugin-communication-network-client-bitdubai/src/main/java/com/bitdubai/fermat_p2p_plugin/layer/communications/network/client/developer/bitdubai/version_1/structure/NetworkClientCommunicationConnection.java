@@ -28,6 +28,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.pr
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.Profile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.exceptions.CantSendPackageException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
@@ -85,12 +86,21 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
      */
     private String serverIdentity;
 
+    /*
+     * Represent the networkClientCommunicationPluginRoot
+     */
+    private NetworkClientCommunicationPluginRoot networkClientCommunicationPluginRoot;
+
+    private Integer nodesListPosition;
+
     public NetworkClientCommunicationConnection(final URI                    uri                   ,
                                                 final ErrorManager           errorManager          ,
                                                 final EventManager           eventManager          ,
                                                 final LocationManager        locationManager       ,
                                                 final ECCKeyPair             clientIdentity        ,
-                                                final PluginVersionReference pluginVersionReference){
+                                                final PluginVersionReference pluginVersionReference,
+                                                NetworkClientCommunicationPluginRoot networkClientCommunicationPluginRoot,
+                                                Integer nodesListPosition){
 
         this.uri                    = uri                   ;
         this.errorManager           = errorManager          ;
@@ -98,6 +108,8 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
         this.locationManager        = locationManager       ;
         this.clientIdentity         = clientIdentity        ;
         this.pluginVersionReference = pluginVersionReference;
+        this.networkClientCommunicationPluginRoot = networkClientCommunicationPluginRoot;
+        this.nodesListPosition = nodesListPosition;
 
         this.isConnected            = Boolean.FALSE         ;
         this.tryToReconnect         = Boolean.TRUE          ;
@@ -117,30 +129,71 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
          */
         ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
 
+            int i = 0;
+
             @Override
             public boolean onDisconnect(CloseReason closeReason) {
-                System.out.println("##########################################################################");
-                System.out.println("#  NetworkClientCommunicationConnection  - Disconnect -> Reconnecting... #");
-                System.out.println("##########################################################################");
-                return tryToReconnect;
+                if(nodesListPosition >= 0){
+                    i++;
+
+                    if(i > 4){
+
+                        networkClientCommunicationPluginRoot.intentToConnectToOtherNode(nodesListPosition);
+                        return Boolean.FALSE;
+
+                    }else{
+                        return tryToReconnect;
+                    }
+
+                }else {
+                    System.out.println("##########################################################################");
+                    System.out.println("#  NetworkClientCommunicationConnection  - Disconnect -> Reconnecting... #");
+                    System.out.println("##########################################################################");
+                    return tryToReconnect;
+                }
             }
 
             @Override
             public boolean onConnectFailure(Exception exception) {
-                try {
+                if(nodesListPosition >= 0){
+                    i++;
 
-                    //System.out.println("# NetworkClientCommunicationConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
-                    // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
-                    Thread.sleep(5000);
+                    if(i > 4){
 
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                        networkClientCommunicationPluginRoot.intentToConnectToOtherNode(nodesListPosition);
+                        return Boolean.FALSE;
+
+                    }else{
+
+                        try {
+
+                            //System.out.println("# NetworkClientCommunicationConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
+                            // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
+                            Thread.sleep(5000);
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+
+                        return tryToReconnect;
+                    }
+
+                }else {
+                    try {
+
+                        //System.out.println("# NetworkClientCommunicationConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
+                        // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
+                        Thread.sleep(5000);
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                    System.out.println("###############################################################################");
+                    System.out.println("#  NetworkClientCommunicationConnection  - Connect Failure -> Reconnecting... #");
+                    System.out.println("###############################################################################");
+                    return tryToReconnect;
                 }
-
-                System.out.println("###############################################################################");
-                System.out.println("#  NetworkClientCommunicationConnection  - Connect Failure -> Reconnecting... #");
-                System.out.println("###############################################################################");
-                return tryToReconnect;
             }
 
         };
