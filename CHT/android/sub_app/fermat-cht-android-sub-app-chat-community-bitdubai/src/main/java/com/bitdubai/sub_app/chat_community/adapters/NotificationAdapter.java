@@ -42,8 +42,7 @@ public class NotificationAdapter
         if (data.getPublicKey() != null) {
             holder.userName.setText(data.getAlias());
             if (data.getImage() != null && data.getImage().length > 0) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0,
-                        data.getImage().length);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0, data.getImage().length);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
                 holder.userAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
             }

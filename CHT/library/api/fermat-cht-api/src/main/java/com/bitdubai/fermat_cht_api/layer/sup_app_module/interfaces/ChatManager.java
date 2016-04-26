@@ -116,6 +116,8 @@ public interface ChatManager extends ModuleManager<ChatPreferenceSettings, Activ
 
     void clearChatMessageByChatId(UUID chatId) throws CantDeleteMessageException, CantGetMessageException;
 
+    ChatActorCommunitySelectableIdentity newInstanceChatActorCommunitySelectableIdentity(ChatIdentity chatIdentity);
+
     /**
      * Through the method <code>getSettingsManager</code> we can get a settings manager for the specified
      * settings class parametrized.
