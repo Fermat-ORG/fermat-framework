@@ -117,11 +117,12 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     private LineChart chart;
     private TextView noDataInChart;
     private long balanceAvailable;
+    private long realBalance;
     private View rootView;
     private Activity activity;
 
 
-    private long realBalance;
+
     private LinearLayout emptyListViewsContainer;
     private AnimationManager animationManager;
    // private FermatTextView txt_balance_amount_type;
@@ -600,7 +601,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
     private void changeBalanceType(TextView txt_type_balance,TextView txt_balance_amount) {
         updateBalances();
         try {
-            if (appSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
+            if (lossProtectedWalletSession.getBalanceTypeSelected().equals(BalanceType.AVAILABLE.getCode())) {
                 realBalance = loadBalance(BalanceType.REAL);
                 txt_balance_amount.setText(WalletUtils.formatBalanceString(realBalance, lossProtectedWalletSession.getTypeAmount()));
                 txt_type_balance.setText(R.string.real_balance_text);
