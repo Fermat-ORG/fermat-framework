@@ -217,13 +217,15 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
             txt_chunck_detail_exchangeRate = (TextView) rootView.findViewById(R.id.txt_exchange_rate_chunck_detail);
             txt_chunck_detail_amountSpent = (TextView) rootView.findViewById(R.id.txt_amount_spent);
             txt_percent_spent = (TextView) rootView.findViewById(R.id.txt_percentage_spent);
-
+            progressBar_percent = (ProgressBar) rootView.findViewById(R.id.progressBarLine);
 
             chunckAmount          = WalletUtils.formatAmountString(transaction.getAmount());
             chunckExchangeRate    = WalletUtils.formatExchangeRateString(transaction.getExchangeRate());
             chunckAmountSpent     = WalletUtils.formatAmountString(getTotalSpent());
             chunckPercentageSpent = WalletUtils.formatAmountStringNotDecimal(getSpendingPercentage(transaction));
 
+            progressBar_percent.setProgress(getSpendingPercentage(transaction));
+            progressBar_percent.setBackgroundColor(Color.BLUE);
 
             txt_chunck_detail_balance.setText(chunckAmount);
             txt_chunck_detail_exchangeRate.setText("(1 BTC = " + chunckExchangeRate + " US$)");
