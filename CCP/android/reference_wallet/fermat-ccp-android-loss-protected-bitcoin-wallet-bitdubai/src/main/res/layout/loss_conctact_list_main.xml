@@ -2,13 +2,10 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fragment_container"
-    android:layout_width="match_parent"
-    android:layout_height="fill_parent"
     android:orientation="vertical"
-    android:background="@android:color/transparent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    >
 
     <LinearLayout
         android:id="@+id/fragment_container2"
@@ -66,8 +63,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/color_white">
+            android:layout_height="match_parent">
 
             <com.bitdubai.reference_niche_wallet.loss_protected_wallet.common.Views.views_contacts_fragment.PinnedHeaderListView
                 android:id="@+id/list_view"
@@ -83,8 +79,7 @@
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone"
-                android:background="@color/color_white">
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="125dp"
@@ -106,5 +101,7 @@
         </FrameLayout>
 
     </FrameLayout>
+
+
 
 </LinearLayout>

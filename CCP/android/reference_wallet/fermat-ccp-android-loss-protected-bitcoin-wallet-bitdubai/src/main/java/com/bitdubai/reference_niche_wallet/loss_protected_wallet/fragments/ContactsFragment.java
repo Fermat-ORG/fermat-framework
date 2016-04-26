@@ -172,7 +172,7 @@ public class ContactsFragment extends AbstractFermatFragment implements FermatLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         try {
             mSavedInstanceState = savedInstanceState;
-            rootView = inflater.inflate(R.layout.contact_detail_main, container, false);
+            rootView = inflater.inflate(R.layout.loss_conctact_list_main, container, false);
             setupViews(rootView);
             setUpFAB();
             walletContactRecords = new ArrayList<>();
