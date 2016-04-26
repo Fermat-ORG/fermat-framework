@@ -1,10 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile</code>
@@ -14,7 +10,7 @@ import com.google.gson.GsonBuilder;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NodeProfile extends Profile<NodeProfile> {
+public class NodeProfile extends Profile {
 
     /**
      * Represent the defaultPort
@@ -35,7 +31,7 @@ public class NodeProfile extends Profile<NodeProfile> {
      * Constructor
      */
     public NodeProfile(){
-        super(NodeProfile.class);
+        super();
     }
 
     /**
@@ -90,6 +86,15 @@ public class NodeProfile extends Profile<NodeProfile> {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * Return this object in json string
+     *
+     * @return json string
+     */
+    public String toJson(){
+        return GsonProvider.getGson().toJson(this, NodeProfile.class);
     }
 
     /**

@@ -15,8 +15,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 
 import org.apache.commons.codec.binary.Base64;
 
-import java.sql.Timestamp;
-
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.ActorsCatalogDao</code>
  * <p/>
@@ -94,6 +92,11 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.ACTOR_CATALOG_NODE_IDENTITY_PUBLIC_KEY_COLUMN_NAME,entity.getNodeIdentityPublicKey());
 
         return databaseTableRecord;
+    }
+
+    @Override
+    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(ActorsCatalog entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
+        return null;
     }
 
 

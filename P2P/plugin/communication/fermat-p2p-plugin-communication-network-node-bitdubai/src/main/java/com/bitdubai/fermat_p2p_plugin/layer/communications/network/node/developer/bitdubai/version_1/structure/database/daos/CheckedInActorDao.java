@@ -14,8 +14,6 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 
 import org.apache.commons.codec.binary.Base64;
 
-import java.sql.Timestamp;
-
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.CheckedInActorDao</code>
  * <p/>
@@ -94,6 +92,11 @@ public class CheckedInActorDao  extends AbstractBaseDao<CheckedInActor> {
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NS_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getNsIdentityPublicKey());
 
         return databaseTableRecord;
+    }
+
+    @Override
+    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(CheckedInActor entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
+        return null;
     }
 }
 

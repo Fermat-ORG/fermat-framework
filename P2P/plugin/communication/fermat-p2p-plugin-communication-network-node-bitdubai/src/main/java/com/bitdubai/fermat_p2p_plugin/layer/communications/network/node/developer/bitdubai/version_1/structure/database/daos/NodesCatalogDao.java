@@ -16,7 +16,6 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,6 +82,38 @@ public class NodesCatalogDao  extends AbstractBaseDao<NodesCatalog> {
         databaseTableRecord.setIntegerValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_OFFLINE_COUNTER_COLUMN_NAME, entity.getOfflineCounter());
 
         return databaseTableRecord;
+    }
+
+    @Override
+    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(NodesCatalog entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
+
+        NodesCatalog froDatabase =  getEntityFromDatabaseTableRecord(databaseTableRecordLoad);
+
+        if (!froDatabase.getName().equals(entity.getName())){
+            databaseTableRecordLoad.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_NAME_COLUMN_NAME, entity.getName());
+        }
+
+        if (!froDatabase.getDefaultPort().equals(entity.getDefaultPort())) {
+            databaseTableRecordLoad.setIntegerValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_DEFAULT_PORT_COLUMN_NAME, entity.getDefaultPort());
+        }
+
+        if (!froDatabase.getIp().equals(entity.getIp())) {
+            databaseTableRecordLoad.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IP_COLUMN_NAME, entity.getIp());
+        }
+
+        if (!froDatabase.getLastLatitude().equals(entity.getLastLatitude())) {
+            databaseTableRecordLoad.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LAST_LATITUDE_COLUMN_NAME, entity.getLastLatitude());
+        }
+
+        if (!froDatabase.getLastLongitude().equals(entity.getLastLongitude())) {
+            databaseTableRecordLoad.setDoubleValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LAST_LONGITUDE_COLUMN_NAME, entity.getLastLongitude());
+        }
+
+        if (!froDatabase.getOfflineCounter().equals(entity.getOfflineCounter())) {
+            databaseTableRecordLoad.setIntegerValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_OFFLINE_COUNTER_COLUMN_NAME, entity.getOfflineCounter());
+        }
+
+        return databaseTableRecordLoad;
     }
 
     /**

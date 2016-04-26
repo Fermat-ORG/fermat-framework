@@ -6,8 +6,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInClient;
 
-import java.sql.Timestamp;
-
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.CheckedInClientDao</code>
  * <p/>
@@ -76,6 +74,11 @@ public class CheckedInClientDao  extends AbstractBaseDao<CheckedInClient> {
         databaseTableRecord.setLongValue  (CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_CLIENTS_CHECKED_IN_TIMESTAMP_COLUMN_NAME, getLongValueFromTimestamp(entity.getCheckedInTimestamp()));
 
         return databaseTableRecord;
+    }
+
+    @Override
+    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(CheckedInClient entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
+        return null;
     }
 }
 

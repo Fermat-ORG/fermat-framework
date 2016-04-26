@@ -12,8 +12,6 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRe
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.MethodCallsHistory;
 
-import java.sql.Timestamp;
-
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.MethodCallsHistoryDao</code>
  * <p/>
@@ -67,6 +65,11 @@ public class MethodCallsHistoryDao extends AbstractBaseDao<MethodCallsHistory> {
         databaseTableRecord.setStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.METHOD_CALLS_HISTORY_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME, entity.getProfileIdentityPublicKey());
 
         return databaseTableRecord;
+    }
+
+    @Override
+    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(MethodCallsHistory entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
+        return null;
     }
 }
 

@@ -1,10 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * The Class <code>ClientProfile</code>
@@ -14,7 +10,7 @@ import com.google.gson.GsonBuilder;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ClientProfile extends Profile<ClientProfile> {
+public class ClientProfile extends Profile {
 
     /**
      * Represent the deviceType
@@ -25,7 +21,7 @@ public class ClientProfile extends Profile<ClientProfile> {
      * Constructor
      */
     public ClientProfile(){
-        super(ClientProfile.class);
+        super();
     }
 
     /**
@@ -44,6 +40,15 @@ public class ClientProfile extends Profile<ClientProfile> {
      */
     public void setDeviceType(String deviceType) {
         this.deviceType = deviceType;
+    }
+
+    /**
+     * Return this object in json string
+     *
+     * @return json string
+     */
+    public String toJson(){
+        return GsonProvider.getGson().toJson(this, ClientProfile.class);
     }
 
     /**

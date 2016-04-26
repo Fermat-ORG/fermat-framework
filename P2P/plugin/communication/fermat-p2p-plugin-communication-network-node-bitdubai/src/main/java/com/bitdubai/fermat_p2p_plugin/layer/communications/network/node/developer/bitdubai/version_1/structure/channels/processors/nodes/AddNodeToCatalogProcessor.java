@@ -1,11 +1,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
-
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
@@ -84,7 +80,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
                 nodeProfile = messageContent.getNodeProfile();
 
 
-                if (exist(nodeProfile)){
+                if (getDaoFactory().getNodesCatalogDao().exists(nodeProfile.getIdentityPublicKey())){
 
                     /*
                      * Notify the node already exist
@@ -159,34 +155,6 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
                 LOG.error(e.getMessage());
             }
 
-        }
-
-    }
-
-    /**
-     * Validate if the node exist into the catalog
-     *
-     * @param nodeProfile
-     * @return boolean
-     */
-    private boolean exist(NodeProfile nodeProfile) throws CantReadRecordDataBaseException, RecordNotFoundException {
-
-        try {
-
-            /*
-             * Search in the data base
-             */
-            NodesCatalog nodesCatalog = getDaoFactory().getNodesCatalogDao().findById(nodeProfile.getIdentityPublicKey());
-
-            if (nodesCatalog != null){
-                return Boolean.TRUE;
-            }else {
-                return Boolean.FALSE;
-            }
-
-        }catch (Exception e){
-            LOG.warn(e.getMessage());
-            return Boolean.FALSE;
         }
 
     }

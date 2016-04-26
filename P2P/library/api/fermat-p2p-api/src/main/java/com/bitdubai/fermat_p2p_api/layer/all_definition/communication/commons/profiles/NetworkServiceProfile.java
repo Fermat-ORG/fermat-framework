@@ -7,11 +7,7 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * The Class <code>NetworkServiceProfile</code>
@@ -22,7 +18,7 @@ import com.google.gson.GsonBuilder;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class NetworkServiceProfile extends Profile<NetworkServiceProfile> {
+public class NetworkServiceProfile extends Profile {
 
     /**
      * Represent the networkServiceType
@@ -38,7 +34,7 @@ public class NetworkServiceProfile extends Profile<NetworkServiceProfile> {
      * Constructor
      */
     public NetworkServiceProfile(){
-        super(NetworkServiceProfile.class);
+        super();
     }
 
     /**
@@ -75,6 +71,15 @@ public class NetworkServiceProfile extends Profile<NetworkServiceProfile> {
      */
     public void setNetworkServiceType(NetworkServiceType networkServiceType) {
         this.networkServiceType = networkServiceType;
+    }
+
+    /**
+     * Return this object in json string
+     *
+     * @return json string
+     */
+    public String toJson(){
+        return GsonProvider.getGson().toJson(this, NetworkServiceProfile.class);
     }
 
     /**

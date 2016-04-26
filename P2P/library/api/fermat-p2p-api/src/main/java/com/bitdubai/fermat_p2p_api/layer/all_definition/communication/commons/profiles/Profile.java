@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
 
 /**
  * The Class <code>Profile</code> is
@@ -12,7 +11,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ut
  * @version 1.0
  * @since Java JDK 1.7
  */
-public abstract class Profile<P extends Profile > {
+public abstract class Profile {
 
     /**
      * Represent the Identity public key
@@ -25,16 +24,10 @@ public abstract class Profile<P extends Profile > {
     private Location location;
 
     /**
-     * Represent the profileClass
-     */
-    private Class<P> profileClass;
-
-    /**
      * Constructor
      */
-    public Profile(Class<P> profileClass){
+    public Profile(){
         super();
-        this.profileClass = profileClass;
     }
 
     /**
@@ -78,7 +71,6 @@ public abstract class Profile<P extends Profile > {
      *
      * @return json string
      */
-    public String toJson(){
-        return GsonProvider.getGson().toJson(this, profileClass);
-    }
+    public abstract String toJson();
+
 }

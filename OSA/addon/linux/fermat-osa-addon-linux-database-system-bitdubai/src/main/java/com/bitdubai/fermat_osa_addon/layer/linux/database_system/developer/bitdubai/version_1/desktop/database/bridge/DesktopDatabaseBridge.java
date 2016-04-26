@@ -51,7 +51,7 @@ public class DesktopDatabaseBridge {
             e.printStackTrace();
             if (c != null)
                 close();
-
+            throw new RuntimeException(e);
         }
     }
 
@@ -71,17 +71,17 @@ public class DesktopDatabaseBridge {
     private void close(){
         try {
 
-            if (c != null){
-                c.close();
-            }
-
             if (stmt != null){
                 stmt.close();
             }
 
+            if (c != null){
+                c.close();
+            }
+
         } catch (SQLException ex) {
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-
+            throw new RuntimeException(ex);
         }
 
     }
@@ -106,7 +106,7 @@ public class DesktopDatabaseBridge {
 
         }catch(SQLException ex){
             Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-
+            throw new RuntimeException(ex);
         }
 
         return rs;
@@ -159,7 +159,7 @@ public class DesktopDatabaseBridge {
                 c.commit();
             } catch (SQLException ex) {
                 Logger.getLogger(DesktopDatabaseBridge.class.getName()).log(Level.SEVERE, null, ex);
-
+                throw new RuntimeException(ex);
             }
             if (c != null)
                close();
@@ -244,6 +244,9 @@ public class DesktopDatabaseBridge {
         }
 
         try {
+
+            System.out.println("UPDATE QUERY = " + "UPDATE " + tableName + " SET " + setVariables + whereClause);
+
             stmt = c.createStatement();
             stmt.executeUpdate("UPDATE " + tableName + " SET " + setVariables + whereClause);
             stmt.close();
@@ -254,6 +257,8 @@ public class DesktopDatabaseBridge {
 
             if (c != null)
                 close();
+
+            throw new RuntimeException(ex);
         }
 
     }

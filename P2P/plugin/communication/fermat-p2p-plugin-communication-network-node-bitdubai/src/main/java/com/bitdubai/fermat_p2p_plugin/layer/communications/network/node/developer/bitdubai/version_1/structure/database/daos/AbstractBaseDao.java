@@ -562,7 +562,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      * @throws CantUpdateRecordDataBaseException  if something goes wrong.
      * @throws RecordNotFoundException            if we can't find the record in db.
      */
-    public final void update(final E entity) throws CantUpdateRecordDataBaseException, RecordNotFoundException {
+    public final void update(final E entity) throws CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException {
 
         if (entity == null)
             throw new IllegalArgumentException("The entity is required, can not be null.");
@@ -570,15 +570,13 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
         try {
 
             final DatabaseTable table = this.getDatabaseTable();
-
             table.addStringFilter(idTableName, entity.getId(), DatabaseFilterType.EQUAL);
-
             table.loadToMemory();
 
             final List<DatabaseTableRecord> records = table.getRecords();
 
             if (!records.isEmpty())
-                table.updateRecord(getDatabaseTableRecordFromEntity(entity));
+                table.updateRecord(getDatabaseTableRecordForUpdate(entity, records.get(0)));
             else
                 throw new RecordNotFoundException("id: " + entity.getId(), "Cannot find an entity with that id.");
 
@@ -696,4 +694,17 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      * @return DatabaseTableRecord whit the values
      */
     abstract protected DatabaseTableRecord getDatabaseTableRecordFromEntity(final E entity);
+
+
+    /**
+     * Construct a DatabaseTableRecord whit the values of the a entity pass
+     * by parameter to be update
+     *
+     * @param entity the contains the values
+     * @param databaseTableRecordLoad current values of the table
+     * @return DatabaseTableRecord whit the values
+     */
+    abstract protected DatabaseTableRecord getDatabaseTableRecordForUpdate(final E entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException;
+
+
 }
