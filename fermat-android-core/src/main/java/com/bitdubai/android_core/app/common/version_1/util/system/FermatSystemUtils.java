@@ -414,45 +414,45 @@ public class FermatSystemUtils {
 
     private static AndroidCoreModule androidCoreModule;
     public static AndroidCoreModule getAndroidCoreModule() throws CantCreateProxyException {
-//        try{
-//            if(androidCoreModule==null) {
-//                androidCoreModule = (AndroidCoreModule) ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(
-//                        new PluginVersionReference(
-//                                Platforms.PLUG_INS_PLATFORM,
-//                                Layers.SUB_APP_MODULE,
-//                                Plugins.ANDROID_CORE,
-//                                Developers.BITDUBAI,
-//                                new Version()
-//                        )
-//                );
-//            }
-//            return androidCoreModule;
-//        }catch (Exception e){
-//            throw e;
-//        }
-
-        try {
-            return (AndroidCoreModule) ApplicationSession.getInstance().getFermatSystem().getModuleManager(
-                    new PluginVersionReference(
-                            Platforms.PLUG_INS_PLATFORM,
-                            Layers.SUB_APP_MODULE,
-                            Plugins.ANDROID_CORE,
-                            Developers.BITDUBAI,
-                            new Version()
-                    )
-            );
-        } catch (CantGetModuleManagerException e) {
-
-            System.err.println(e.getMessage());
-            System.err.println(e.toString());
-
-            return null;
-        } catch (Exception e) {
-
-            System.err.println(e.toString());
-
-            return null;
+        try{
+            if(androidCoreModule==null) {
+                androidCoreModule = (AndroidCoreModule) ApplicationSession.getInstance().getServicesHelpers().getClientSideBrokerServiceAIDL().getModuleManager(
+                        new PluginVersionReference(
+                                Platforms.PLUG_INS_PLATFORM,
+                                Layers.SUB_APP_MODULE,
+                                Plugins.ANDROID_CORE,
+                                Developers.BITDUBAI,
+                                new Version()
+                        )
+                );
+            }
+            return androidCoreModule;
+        }catch (Exception e){
+            throw e;
         }
+//
+//        try {
+//            return (AndroidCoreModule) ApplicationSession.getInstance().getFermatSystem().getModuleManager(
+//                    new PluginVersionReference(
+//                            Platforms.PLUG_INS_PLATFORM,
+//                            Layers.SUB_APP_MODULE,
+//                            Plugins.ANDROID_CORE,
+//                            Developers.BITDUBAI,
+//                            new Version()
+//                    )
+//            );
+//        } catch (CantGetModuleManagerException e) {
+//
+//            System.err.println(e.getMessage());
+//            System.err.println(e.toString());
+//
+//            return null;
+//        } catch (Exception e) {
+//
+//            System.err.println(e.toString());
+//
+//            return null;
+//        }
     }
 
 

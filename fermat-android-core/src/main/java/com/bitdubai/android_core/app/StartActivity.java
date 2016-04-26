@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.bitdubai.android_core.app.common.version_1.ApplicationConstants;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
-import com.bitdubai.android_core.app.common.version_1.util.task.GetTaskV2;
 import com.bitdubai.fermat.R;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_api.FermatException;
@@ -180,9 +179,9 @@ public class StartActivity extends AppCompatActivity implements  FermatWorkerCal
 
 
 
-                GetTaskV2 getTask = new GetTaskV2(this,this);
-                getTask.setCallBack(this);
-                getTask.execute();
+//                GetTaskV2 getTask = new GetTaskV2(this,this);
+//                getTask.setCallBack(this);
+//                getTask.execute();
 
 
             }else if (applicationState == ApplicationSession.STATE_STARTED ){
