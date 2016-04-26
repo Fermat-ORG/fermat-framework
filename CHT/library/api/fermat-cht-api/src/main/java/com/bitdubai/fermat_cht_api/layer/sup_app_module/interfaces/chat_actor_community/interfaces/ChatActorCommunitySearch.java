@@ -9,8 +9,11 @@ import java.util.List;
  */
 public interface ChatActorCommunitySearch {
 
-    void addLocalActorAlias(String alias);
+    void addActorAlias(String alias);
 
     List<ChatActorCommunityInformation> getResult() throws CantGetChtActorSearchResult;
 
+    String getAlias();
+
+    String getPublicKey();
 }

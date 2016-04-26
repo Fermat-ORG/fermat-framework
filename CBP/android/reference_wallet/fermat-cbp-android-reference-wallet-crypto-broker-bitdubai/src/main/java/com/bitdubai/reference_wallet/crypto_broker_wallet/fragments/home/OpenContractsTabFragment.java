@@ -11,8 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.enums.FermatRefreshTypes;
 import com.bitdubai.fermat_android_api.ui.expandableRecicler.ExpandableRecyclerAdapter;
 import com.bitdubai.fermat_android_api.ui.fragments.FermatWalletExpandableListFragment;
@@ -89,6 +92,11 @@ public class OpenContractsTabFragment extends FermatWalletExpandableListFragment
         RecyclerView.ItemDecoration itemDecoration = new FermatDividerItemDecoration(getActivity(), R.drawable.cbw_divider_shape);
         recyclerView.addItemDecoration(itemDecoration);
         emptyListViewsContainer = layout.findViewById(R.id.empty);
+        FermatTextView emptyText = (FermatTextView) layout.findViewById(R.id.cbw_empty_message);
+        ImageView emptyImage = (ImageView) layout.findViewById(R.id.cbw_empty_image);
+        emptyText.setText(R.string.no_new_open_contracts);
+        emptyImage.setImageResource(R.drawable.cbw_no_contracts);
+
         if (openContractList.isEmpty()) {
             recyclerView.setVisibility(View.GONE);
             emptyListViewsContainer.setVisibility(View.VISIBLE);

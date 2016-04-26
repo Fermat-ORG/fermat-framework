@@ -15,9 +15,9 @@ repositories {
 //noinspection GroovyAssignabilityCheck
 dependencies {
     /**
-     * For doing the code more readable, please keep the elements in the file sorted alphabetically:
-     * - layer name
-     * - plugin name
+     *  For doing the code more readable, please keep the elements in the file sorted alphabetically:
+     *  - layer name
+     *  - plugin name
      */
     compile project(':fermat-api')
     compile project(':fermat-core-api')
@@ -27,6 +27,7 @@ dependencies {
     //Sub App Module
     compile project(':fermat-cht-plugin-sub-app-module-chat-bitdubai')
     compile project(':fermat-cht-plugin-sub-app-module-chat-identity-bitdubai')
+    compile project(':fermat-cht-plugin-sub-app-module-chat-actor-community-bitdubai')
     //Identity
     compile project(':fermat-cht-plugin-identity-chat-bitdubai')
     //Network Service
@@ -35,6 +36,7 @@ dependencies {
     compile project(':fermat-cht-plugin-actor-connection-chat-bitdubai')
     //Actor Network Service
     compile project(':fermat-cht-plugin-actor-network-service-chat-bitdubai')
+    compile project(':fermat-cht-plugin-sub-app-module-chat-actor-community-bitdubai')
 }
 
 pmd {

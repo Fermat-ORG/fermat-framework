@@ -5037,8 +5037,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#073487");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#073487");
-        //runtimeActivity.setColor("#d07b62");
+
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor("#073487");
@@ -5080,8 +5079,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setColor("#073487");
         runtimeTitleBar.setIconName("back");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#073487");
-        //runtimeActivity.setColor("#d07b62");
+
 
         runtimeStatusBar = new StatusBar();
         runtimeStatusBar.setColor("#073487");
@@ -5328,7 +5326,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setTitleColor("#ffffff");
         runtimeTitleBar.setColor("#12aca1");
         runtimeActivity.setTitleBar(runtimeTitleBar);
-        runtimeActivity.setColor("#12aca1");
+
         //runtimeActivity.setColor("#d07b62");
 
         runtimeStatusBar = new StatusBar();

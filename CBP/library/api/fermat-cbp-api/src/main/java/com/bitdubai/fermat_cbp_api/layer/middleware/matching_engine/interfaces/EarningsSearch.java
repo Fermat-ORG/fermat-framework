@@ -1,5 +1,6 @@
 package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces;
 
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantListEarningTransactionsException;
 
 import java.util.List;
@@ -41,4 +42,5 @@ public interface EarningsSearch {
      */
     void resetFilters();
 
+    void setTransactionStateFilter(EarningTransactionState state);
 }

@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums;
 import com.bitdubai.fermat_api.layer.all_definition.enums.interfaces.FermatEnum;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 
+
 /**
  * The enum <code>com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.enums.EarningTransactionState</code>
  * enumerates all the possible types of an earning transaction.
@@ -15,9 +16,8 @@ public enum EarningTransactionState implements FermatEnum {
      * For doing the code more readable, please keep the elements in the Enum sorted alphabetically.
      */
 
-    CALCULATED   ("CAL"),
-
-    ;
+    CALCULATED("CAL"),
+    EXTRACTED("EXT");
 
     private final String code;
 
@@ -29,7 +29,10 @@ public enum EarningTransactionState implements FermatEnum {
 
         switch (code) {
 
-            case "CAL": return CALCULATED;
+            case "CAL":
+                return CALCULATED;
+            case "EXT":
+                return EXTRACTED;
 
             default:
                 throw new InvalidParameterException(
