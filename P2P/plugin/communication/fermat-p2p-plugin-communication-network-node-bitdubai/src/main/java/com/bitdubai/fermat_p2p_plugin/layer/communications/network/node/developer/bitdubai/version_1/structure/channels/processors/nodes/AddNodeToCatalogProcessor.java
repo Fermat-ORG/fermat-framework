@@ -84,7 +84,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
                 nodeProfile = messageContent.getNodeProfile();
 
 
-                if (exist(nodeProfile)){
+                if (getDaoFactory().getNodesCatalogDao().exists(nodeProfile.getIdentityPublicKey())){
 
                     /*
                      * Notify the node already exist
@@ -159,34 +159,6 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
                 LOG.error(e.getMessage());
             }
 
-        }
-
-    }
-
-    /**
-     * Validate if the node exist into the catalog
-     *
-     * @param nodeProfile
-     * @return boolean
-     */
-    private boolean exist(NodeProfile nodeProfile) throws CantReadRecordDataBaseException, RecordNotFoundException {
-
-        try {
-
-            /*
-             * Search in the data base
-             */
-            NodesCatalog nodesCatalog = getDaoFactory().getNodesCatalogDao().findById(nodeProfile.getIdentityPublicKey());
-
-            if (nodesCatalog != null){
-                return Boolean.TRUE;
-            }else {
-                return Boolean.FALSE;
-            }
-
-        }catch (Exception e){
-            LOG.warn(e.getMessage());
-            return Boolean.FALSE;
         }
 
     }

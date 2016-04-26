@@ -96,4 +96,9 @@ public class CheckedActorsHistoryDao extends AbstractBaseDao<CheckedActorsHistor
 
         return databaseTableRecord;
     }
+
+    @Override
+    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(CheckedActorsHistory entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
+        return null;
+    }
 }

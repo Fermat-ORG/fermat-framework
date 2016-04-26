@@ -78,4 +78,9 @@ public class NodesCatalogTransactionDao  extends AbstractBaseDao<NodesCatalogTra
 
         return databaseTableRecord;
     }
+
+    @Override
+    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(NodesCatalogTransaction entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
+        return null;
+    }
 }

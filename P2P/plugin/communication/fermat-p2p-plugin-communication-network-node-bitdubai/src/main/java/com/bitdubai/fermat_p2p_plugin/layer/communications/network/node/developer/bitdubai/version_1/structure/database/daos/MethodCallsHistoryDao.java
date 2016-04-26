@@ -68,5 +68,10 @@ public class MethodCallsHistoryDao extends AbstractBaseDao<MethodCallsHistory> {
 
         return databaseTableRecord;
     }
+
+    @Override
+    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(MethodCallsHistory entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
+        return null;
+    }
 }
 

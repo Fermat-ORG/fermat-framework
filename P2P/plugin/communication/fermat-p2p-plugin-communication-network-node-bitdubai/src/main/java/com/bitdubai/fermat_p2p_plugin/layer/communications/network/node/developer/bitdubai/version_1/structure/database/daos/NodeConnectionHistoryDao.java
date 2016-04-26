@@ -74,5 +74,10 @@ public class NodeConnectionHistoryDao extends AbstractBaseDao<NodeConnectionHist
 
         return databaseTableRecord;
     }
+
+    @Override
+    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(NodeConnectionHistory entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
+        return null;
+    }
 }
 

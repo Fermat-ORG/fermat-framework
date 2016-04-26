@@ -77,5 +77,10 @@ public class CheckedInClientDao  extends AbstractBaseDao<CheckedInClient> {
 
         return databaseTableRecord;
     }
+
+    @Override
+    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(CheckedInClient entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
+        return null;
+    }
 }
 

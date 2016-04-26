@@ -74,4 +74,9 @@ public class CheckedNetworkServicesHistoryDao extends AbstractBaseDao<CheckedNet
 
         return databaseTableRecord;
     }
+
+    @Override
+    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(CheckedNetworkServicesHistory entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
+        return null;
+    }
 }

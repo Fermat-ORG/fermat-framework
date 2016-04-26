@@ -100,5 +100,10 @@ public class ClientsRegistrationHistoryDao extends AbstractBaseDao<ClientsRegist
         return databaseTableRecord;
 
     }
+
+    @Override
+    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(ClientsRegistrationHistory entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
+        return null;
+    }
 }
 

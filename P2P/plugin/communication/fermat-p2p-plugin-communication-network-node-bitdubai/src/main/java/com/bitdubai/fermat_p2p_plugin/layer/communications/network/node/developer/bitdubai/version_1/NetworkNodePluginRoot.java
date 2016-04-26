@@ -46,6 +46,7 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
 import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper;
 import org.apache.commons.configuration.ConfigurationException;
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
@@ -64,7 +65,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     /**
      * Represent the LOG
      */
-    private static final Logger LOG = Logger.getLogger(NetworkNodePluginRoot.class.getName());
+    private static final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(NetworkNodePluginRoot.class));
 
     /**
      * Represent the IDENTITY_FILE_DIRECTORY

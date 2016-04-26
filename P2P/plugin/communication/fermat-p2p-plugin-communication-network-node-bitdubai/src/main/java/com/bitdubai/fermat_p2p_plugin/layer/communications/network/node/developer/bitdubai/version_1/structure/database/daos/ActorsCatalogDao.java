@@ -96,5 +96,10 @@ public class ActorsCatalogDao extends AbstractBaseDao<ActorsCatalog> {
         return databaseTableRecord;
     }
 
+    @Override
+    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(ActorsCatalog entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
+        return null;
+    }
+
 
 }
