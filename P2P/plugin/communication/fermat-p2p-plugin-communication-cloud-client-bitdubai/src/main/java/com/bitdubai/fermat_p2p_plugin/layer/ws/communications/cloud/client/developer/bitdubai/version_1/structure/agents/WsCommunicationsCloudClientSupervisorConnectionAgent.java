@@ -7,6 +7,7 @@
 package com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.agents;
 
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.WsCommunicationsCloudClientPluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.WsCommunicationsTyrusCloudClientChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.WsCommunicationsTyrusCloudClientConnection;
@@ -43,21 +44,33 @@ public class WsCommunicationsCloudClientSupervisorConnectionAgent extends Thread
     @Override
     public void run() {
 
-        if(wsCommunicationsCloudClientPluginRoot.getStatus() == ServiceStatus.STARTED && getConnection() != null){
+        if(wsCommunicationsCloudClientPluginRoot.getStatus() == ServiceStatus.STARTED &&
+                wsCommunicationsCloudClientPluginRoot.getListOfWSCommunicationsTyrusCloudClientConnection() != null){
 
-            System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Connection is Open = "+getConnection().isOpen());
+            for(NetworkServiceType networkServiceType : wsCommunicationsCloudClientPluginRoot.getListOfWSCommunicationsTyrusCloudClientConnection().keySet()) {
 
-            try {
-                //TODO: acá va un lindo for each por cada instancia
-                if (getConnection().isOpen()){
-                    getWsCommunicationsTyrusCloudClientChannel().sendPing();
+
+                Session session = getConnection(networkServiceType);
+
+                if (session != null) {
+
+                    System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Connection is Open = " + session.isOpen());
+
+                    try {
+
+                        if (session.isOpen()) {
+                            getWsCommunicationsTyrusCloudClientChannel(networkServiceType).sendPing();
+                        }
+
+                    } catch (Exception ex) {
+                        System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Error occurred sending ping to the node, closing the connection to remote node");
+                        getWsCommunicationsTyrusCloudClientChannel(networkServiceType).closeConnection();
+                        ((WsCommunicationsTyrusCloudClientConnection) wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection(networkServiceType)).getWsCommunicationsTyrusCloudClientChannel().setIsRegister(Boolean.FALSE);
+                        ((WsCommunicationsTyrusCloudClientConnection) wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection(networkServiceType)).getWsCommunicationsTyrusCloudClientChannel().raiseClientConnectionLooseNotificationEvent();
+                    }
+
                 }
 
-            } catch (Exception ex) {
-                System.out.println(" WsCommunicationsCloudClientSupervisorConnectionAgent - Error occurred sending ping to the node, closing the connection to remote node");
-                getWsCommunicationsTyrusCloudClientChannel().closeConnection();
-                ((WsCommunicationsTyrusCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsTyrusCloudClientChannel().setIsRegister(Boolean.FALSE);
-                ((WsCommunicationsTyrusCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsTyrusCloudClientChannel().raiseClientConnectionLooseNotificationEvent();
             }
         }
     }
@@ -66,16 +79,16 @@ public class WsCommunicationsCloudClientSupervisorConnectionAgent extends Thread
      * Get the connection
      * @return Session
      */
-    private Session getConnection(){
-        return ((WsCommunicationsTyrusCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsTyrusCloudClientChannel().getClientConnection();
+    private Session getConnection(NetworkServiceType networkServiceType){
+        return ((WsCommunicationsTyrusCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection(networkServiceType)).getWsCommunicationsTyrusCloudClientChannel().getClientConnection();
     }
 
     /**
      * Get the WsCommunicationsTyrusCloudClientChannel
      * @return WsCommunicationsTyrusCloudClientChannel
      */
-    private WsCommunicationsTyrusCloudClientChannel getWsCommunicationsTyrusCloudClientChannel(){
-        return ((WsCommunicationsTyrusCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection()).getWsCommunicationsTyrusCloudClientChannel();
+    private WsCommunicationsTyrusCloudClientChannel getWsCommunicationsTyrusCloudClientChannel(NetworkServiceType networkServiceType){
+        return ((WsCommunicationsTyrusCloudClientConnection)wsCommunicationsCloudClientPluginRoot.getCommunicationsCloudClientConnection(networkServiceType)).getWsCommunicationsTyrusCloudClientChannel();
     }
 
 }

@@ -29,8 +29,7 @@ public enum Platforms implements FermatEnum {
     OPERATIVE_SYSTEM_API                ("OSA","OSA"),
     PLUG_INS_PLATFORM                   ("PIP","Tools"),
     WALLET_PRODUCTION_AND_DISTRIBUTION  ("WPD","Wallets"),
-    TOKENLY                             ("TKY","Tokenly"),
-    ;
+    TOKENLY                             ("TKY","Tokenly");
 
     private final String code;
     private final String textForm;
