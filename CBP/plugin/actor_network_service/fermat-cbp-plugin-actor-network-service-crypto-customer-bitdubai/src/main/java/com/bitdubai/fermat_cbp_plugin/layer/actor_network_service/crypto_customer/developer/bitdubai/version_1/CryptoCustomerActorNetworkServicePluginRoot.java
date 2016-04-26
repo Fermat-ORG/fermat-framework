@@ -55,7 +55,7 @@ public class CryptoCustomerActorNetworkServicePluginRoot extends AbstractNetwork
     @Override
     public void onStart() throws CantStartPluginException {
 
-        final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection();
+        final CommunicationsClientConnection communicationsClientConnection = wsCommunicationsCloudClientManager.getCommunicationsCloudClientConnection(getNetworkServiceProfile().getNetworkServiceType());
 
         fermatManager = new CryptoCustomerActorNetworkServiceManager(
                 communicationsClientConnection         ,

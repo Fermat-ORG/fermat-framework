@@ -6,6 +6,7 @@ import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.C
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningsSettingsNotRegisteredException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
 
+
 /**
  * The interface <code>com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager</code>
  * provide all the published methods of the matching engine middleware cbp plug-in.
@@ -24,28 +25,23 @@ public interface MatchingEngineManager extends FermatManager {
      *
      * @throws CantRegisterEarningsSettingsException if something goes wrong.
      */
-    EarningsSettings registerEarningsSettings(
-
-            WalletReference walletReference
-
-    ) throws CantRegisterEarningsSettingsException;
+    EarningsSettings registerEarningsSettings(WalletReference walletReference) throws CantRegisterEarningsSettingsException;
 
     /**
      * Through the method <code>loadEarningsSettings</code> you can get an earnings settings instance with which you can
      * manage the earnings settings of a specific wallet.
      *
-     * @param walletPublicKey  the public key of the wallet that you want to load.
+     * @param walletPublicKey the public key of the wallet that you want to load.
      *
      * @return an instance of the earnings settings object related with the given wallet information.
      *
-     * @throws CantLoadEarningSettingsException    if something goes wrong.
-     * @throws EarningsSettingsNotRegisteredException   when the earnings settings for the given public key cannot be found.
+     * @throws CantLoadEarningSettingsException       if something goes wrong.
+     * @throws EarningsSettingsNotRegisteredException when the earnings settings for the given public key cannot be found.
      */
-    EarningsSettings loadEarningsSettings(
+    EarningsSettings loadEarningsSettings(String walletPublicKey) throws CantLoadEarningSettingsException, EarningsSettingsNotRegisteredException;
 
-            String walletPublicKey
-
-    ) throws CantLoadEarningSettingsException ,
-            EarningsSettingsNotRegisteredException;
-
+    /**
+     * @return The Earnings Extractor manager
+     */
+    EarningExtractorManager getEarningsExtractorManager();
 }

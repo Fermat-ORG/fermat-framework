@@ -458,10 +458,13 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         try{
             IdentitiesInDevice = chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
             //TODO:Revisar como asignar estos valores deben ser seteados al entrar a la comunidad setear los settings necesario
-            appSettings.setLastSelectedIdentityPublicKey(IdentitiesInDevice.get(0).getPublicKey());
-            appSettings.setLastSelectedActorType(IdentitiesInDevice.get(0).getActorType());
+            if(IdentitiesInDevice != null) {
+                appSettings.setLastSelectedIdentityPublicKey(IdentitiesInDevice.get(0).getPublicKey());
+                appSettings.setLastSelectedActorType(IdentitiesInDevice.get(0).getActorType());
+            }
         } catch(CantListChatIdentityException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE,
+                    UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
             /*Do nothing*/
         }
 

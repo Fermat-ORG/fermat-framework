@@ -3861,11 +3861,11 @@ public class SubAppRuntimeEnginePluginRoot extends AbstractPlugin implements Sub
         runtimeMenuItem.setAppLinkPublicKey(communityPublicKey);
         runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
-        runtimeMenuItem = new MenuItem();
-        runtimeMenuItem.setLabel("Go to Chat");
-        runtimeMenuItem.setLinkToActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
-        runtimeMenuItem.setAppLinkPublicKey(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
-        runtimeSideMenu.addMenuItem(runtimeMenuItem);
+//        runtimeMenuItem = new MenuItem();
+//        runtimeMenuItem.setLabel("Go to Chat");
+//        runtimeMenuItem.setLinkToActivity(Activities.CHT_CHAT_OPEN_CHATLIST);
+//        runtimeMenuItem.setAppLinkPublicKey(SubAppsPublicKeys.CHT_OPEN_CHAT.getCode());
+//        runtimeSideMenu.addMenuItem(runtimeMenuItem);
 
         //Activity Explore
         runtimeActivity = new Activity();

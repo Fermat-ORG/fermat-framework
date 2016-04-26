@@ -9,12 +9,11 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#F9F9F9" />
+        />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#F9F9F9"
         tools:ignore="UselessParent">
 
 
@@ -38,35 +37,31 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:orientation="vertical"
-            android:background="#F9F9F9"
             android:visibility="gone">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/nodata"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:src="@drawable/icon_no_chats"
+                android:gravity="center"
                 android:layout_gravity="center"
-                tools:ignore="ContentDescription" />
-            <!-- android:background="@drawable/img_home_empty" -->
-
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="You don't have any"
-                android:textColor="#000000"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="connections yet"
-                android:textColor="#000000"
-                android:textSize="16sp"
-                tools:ignore="HardcodedText" />
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="No notifications"
+                android:id="@+id/nodatalabel"
+                android:textColor="#D1D3D4"
+                android:textSize="15pt"
+                android:layout_below="@+id/nodata"
+                android:layout_centerHorizontal="true" />
 
         </LinearLayout>
 
     </RelativeLayout>
+
 
 </LinearLayout>

@@ -55,7 +55,7 @@ public final class TransactionTransmissionDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TABLE_NAME);
 
-            table.addColumn(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME       , DatabaseDataType.STRING,        36, Boolean.TRUE );
+            table.addColumn(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_TRANSMISSION_ID_COLUMN_NAME       , DatabaseDataType.STRING,        36, Boolean.FALSE );
             table.addColumn(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_HASH_COLUMN_NAME         , DatabaseDataType.STRING,       100, Boolean.FALSE);
             table.addColumn(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_CONTRACT_STATUS_COLUMN_NAME       , DatabaseDataType.STRING,        10, Boolean.FALSE);
             table.addColumn(TransactionTransmissionNetworkServiceDatabaseConstants.TRANSACTION_TRANSMISSION_HASH_SENDER_PUBLIC_KEY_COLUMN_NAME     , DatabaseDataType.STRING,       100, Boolean.FALSE);
@@ -88,10 +88,10 @@ public final class TransactionTransmissionDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_TABLE_NAME);
 
-            table.addColumn(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME                  , DatabaseDataType.STRING,        36, Boolean.TRUE );
-            table.addColumn(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME    , DatabaseDataType.STRING,        100, Boolean.TRUE );
-            table.addColumn(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_IPK_COLUMN_NAME                 , DatabaseDataType.STRING,        100, Boolean.TRUE );
-            table.addColumn(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_LAST_CONNECTION_COLUMN_NAME     , DatabaseDataType.STRING,        30, Boolean.TRUE );
+            table.addColumn(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ID_COLUMN_NAME                  , DatabaseDataType.STRING,        36, Boolean.FALSE );
+            table.addColumn(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_ACTOR_PUBLIC_KEY_COLUMN_NAME    , DatabaseDataType.STRING,        100, Boolean.FALSE );
+            table.addColumn(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_IPK_COLUMN_NAME                 , DatabaseDataType.STRING,        100, Boolean.FALSE );
+            table.addColumn(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_LAST_CONNECTION_COLUMN_NAME     , DatabaseDataType.STRING,        30, Boolean.FALSE );
 
             table.addIndex(TransactionTransmissionNetworkServiceDatabaseConstants.COMPONENT_VERSIONS_DETAILS_FIRST_KEY_COLUMN);
 

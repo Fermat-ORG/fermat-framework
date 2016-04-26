@@ -637,7 +637,9 @@ public class ChatMiddlewareMonitorAgent implements
                     actorConnection = chatActorConnection;
                     break;
                 }
-                else return null;
+            }
+            if(actorConnection == null){
+                return null;
             }
 
 //            Contact contact = chatMiddlewareDatabaseDao.getContactByLocalPublicKey(contactLocalPublicKey);
