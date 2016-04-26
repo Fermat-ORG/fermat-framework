@@ -221,11 +221,13 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<DesktopSession
         } catch (SettingsNotFoundException e) {
             appManagerSettings = new DesktopManagerSettings();
         }
-        appManagerSettings.setIsPresentationHelpEnabled(isHelpEnabled);
-        try {
-            appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), appManagerSettings);
-        } catch (CantPersistSettingsException e1) {
-            e1.printStackTrace();
+        if(appManagerSettings!=null) {
+            appManagerSettings.setIsPresentationHelpEnabled(isHelpEnabled);
+            try {
+                appSession.getModuleManager().persistSettings(appSession.getAppPublicKey(), appManagerSettings);
+            } catch (CantPersistSettingsException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 
