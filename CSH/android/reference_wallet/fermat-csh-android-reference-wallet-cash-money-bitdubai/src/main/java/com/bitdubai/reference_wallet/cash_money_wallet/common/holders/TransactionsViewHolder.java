@@ -69,22 +69,37 @@ public class TransactionsViewHolder extends FermatViewHolder {
     private String getTransactionTypeText(TransactionType transactionType) {
         if (transactionType == TransactionType.DEBIT)
             return res.getString(R.string.csh_withdrawal_transaction_text_caps);
-        else
+        else if (transactionType == TransactionType.CREDIT)
             return res.getString(R.string.csh_deposit_transaction_text_caps);
+        else if (transactionType == TransactionType.HOLD)
+            return res.getString(R.string.csh_hold_transaction_text_caps);
+        else if (transactionType == TransactionType.UNHOLD)
+            return res.getString(R.string.csh_unhold_transaction_text_caps);
+        else return "ERROR";
     }
 
     private int getTransactionTypeColor(TransactionType transactionType) {
         if (transactionType == TransactionType.DEBIT)
             return res.getColor(R.color.csh_transaction_withdrawal_color);
-        else
+        else if (transactionType == TransactionType.CREDIT)
             return res.getColor(R.color.csh_transaction_deposit_color);
+        else if (transactionType == TransactionType.HOLD)
+            return res.getColor(R.color.csh_transaction_hold_color);
+        else if (transactionType == TransactionType.UNHOLD)
+            return res.getColor(R.color.csh_transaction_unhold_color);
+        else return -1;
     }
 
     private int getTransactionTypeColorProgressBar(TransactionType transactionType) {
         if (transactionType == TransactionType.DEBIT)
             return res.getColor(R.color.csh_transaction_withdrawal_color_progress_bar);
-        else
+        else if (transactionType == TransactionType.CREDIT)
             return res.getColor(R.color.csh_transaction_deposit_color_progress_bar);
+        else if (transactionType == TransactionType.HOLD)
+            return res.getColor(R.color.csh_transaction_hold_color_progress_bar);
+        else if (transactionType == TransactionType.UNHOLD)
+            return res.getColor(R.color.csh_transaction_unhold_color_progress_bar);
+        else return -1;
     }
 
 }

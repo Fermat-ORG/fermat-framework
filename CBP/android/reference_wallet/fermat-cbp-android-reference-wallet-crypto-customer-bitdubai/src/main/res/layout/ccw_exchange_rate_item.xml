@@ -92,7 +92,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginEnd="5dp"
                     android:layout_marginRight="5dp"
-                    android:text="@string/yours_exchange_rate_title"
+                    android:text="@string/ccw_your_exchange_rate_title"
                     android:textColor="@color/description_text_status_confirm"/>
 
                 <TextView

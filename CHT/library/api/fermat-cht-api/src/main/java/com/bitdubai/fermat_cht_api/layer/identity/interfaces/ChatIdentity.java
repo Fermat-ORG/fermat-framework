@@ -26,4 +26,30 @@ public interface ChatIdentity  extends ActiveActorIdentityInformation {
      * @return the boolena
      */
     boolean getIsPaymetForChat();
+
+
+    /**
+     * This method return String with Country
+     * @return the String
+     */
+    String getCountry();
+
+    /**
+     * This method return String with State
+     * @return the String
+     */
+    String getState();
+
+    /**
+     * This method return String with City
+     * @return the String
+     */
+    String getCity();
+
+    /**
+     * This method return String with ConnectionState
+     * @return the String
+     */
+    String getConnectionState();
+
 }

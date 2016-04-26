@@ -13,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.app.ListActivity;
@@ -23,19 +25,25 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 //import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ChatsList;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ChatListFilter;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters.ContactListFilter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.models.ContactList;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments.ContactsListFragment;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.util.Utils;
 import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.FermatSession;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
 import com.bitdubai.fermat_api.layer.dmp_engine.sub_app_runtime.enums.SubApps;
 import com.bitdubai.fermat_cht_android_sub_app_chat_bitdubai.R;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetContactException;
+import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Contact;
+import com.bitdubai.fermat_cht_api.layer.middleware.utils.ContactImpl;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.ChatModuleManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedSubAppExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -48,13 +56,13 @@ import java.util.UUID;
  *
  */
 
-public class ContactListAdapter extends ArrayAdapter<String> {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
+public class ContactListAdapter extends ArrayAdapter implements Filterable {//public class ChatListAdapter extends FermatAdapter<ChatsList, ChatHolder> {//ChatFactory
 
 
     List<ContactList> contactsList = new ArrayList<>();
-    ArrayList<String> contactinfo=new ArrayList<String>();
-    ArrayList<Bitmap> contacticon=new ArrayList<Bitmap>();
-    ArrayList<UUID> contactid=new ArrayList<UUID>();
+    ArrayList<String> contactinfo=new ArrayList<>();
+    ArrayList<Bitmap> contacticon=new ArrayList<>();
+    ArrayList<String> contactid=new ArrayList<>();
     private ChatManager chatManager;
     private FermatSession appSession;
     private ErrorManager errorManager;
@@ -65,15 +73,16 @@ public class ContactListAdapter extends ArrayAdapter<String> {//public class Cha
     private Context mContext;
     ImageView imagen;
     TextView contactname;
-    int position;
     private AdapterCallback mAdapterCallback;
-    Typeface tf;
+
+    ArrayList<String> filteredData;
+    ArrayList<String> originalData;
+    private String filterString;
 
     public ContactListAdapter(Context context, ArrayList contactinfo, ArrayList contacticon, ArrayList contactid,
                               ChatManager chatManager, ChatModuleManager moduleManager,
                               ErrorManager errorManager, ChatSession chatSession, FermatSession appSession, AdapterCallback mAdapterCallback) {
         super(context, R.layout.contact_list_item, contactinfo);
-        //tf = Typeface.createFromAsset(context.getAssets(), "fonts/HelveticaNeue Medium.ttf");
         this.contactinfo = contactinfo;
         this.contacticon = contacticon;
         this.contactid = contactid;
@@ -96,7 +105,7 @@ public class ContactListAdapter extends ArrayAdapter<String> {//public class Cha
         View item = inflater.inflate(R.layout.contact_list_item, null, true);
         try {
             imagen = (ImageView) item.findViewById(R.id.icon);//imagen.setImageResource(contacticon.get(position));//contacticon[position]);
-            imagen.setImageBitmap(getRoundedShape(contacticon.get(position), 400));//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
+            imagen.setImageBitmap(Utils.getRoundedShape(contacticon.get(position), 400));//imagen.setImageBitmap(getRoundedShape(decodeFile(getContext(), contacticon.get(position)), 300));
 
             contactname = (TextView) item.findViewById(R.id.text1);
             contactname.setText(contactinfo.get(position));
@@ -108,10 +117,18 @@ public class ContactListAdapter extends ArrayAdapter<String> {//public class Cha
                 @Override
                 public void onClick(View v) {
                     try {
-
-                            //TODO:Cardozo revisar esta logica ya no aplica, esto viene de un metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
-                            appSession.setData(ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(contactid.get(pos)));
-                            mAdapterCallback.onMethodCallback();//solution to access to changeactivity. j
+                        Contact contact=new ContactImpl();
+                        contact.setRemoteActorPublicKey(contactid.get(pos));
+                        contact.setAlias(contactinfo.get(pos));
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        contacticon.get(pos).compress(Bitmap.CompressFormat.PNG, 100, stream);
+                        byte[] byteArray = stream.toByteArray();
+                        contact.setProfileImage(byteArray);
+                        appSession.setData(ChatSession.CONTACT_DATA, null);//chatManager.getContactByContactId(contactid.get(pos)));
+                        appSession.setData(ChatSession.CONTACT_DATA, contact);
+                        //TODO:metodo nuevo que lo buscara del module del actor connections//chatManager.getChatUserIdentities();
+                        //appSession.setData(ChatSession.CONTACT_DATA, contactid.get(pos));
+                        mAdapterCallback.onMethodCallback();//solution to access to changeactivity. j
                         //} catch (CantGetContactException e) {
                         //    errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         } catch (Exception e) {
@@ -137,173 +154,47 @@ public class ContactListAdapter extends ArrayAdapter<String> {//public class Cha
         notifyDataSetChanged();
     }
 
-    public static Bitmap decodeFile(Context context,int resId) {
-        // decode image size
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(context.getResources(), resId, o);
-        // Find the correct scale value. It should be the power of 2.
-        final int REQUIRED_SIZE = 300;
-        int width_tmp = o.outWidth, height_tmp = o.outHeight;
-        int scale = 1;
-        while (true)
-        {
-            if (width_tmp / 2 < REQUIRED_SIZE
-                    || height_tmp / 2 < REQUIRED_SIZE)
-                break;
-            width_tmp /= 2;
-            height_tmp /= 2;
-            scale++;
+    @Override
+    public int getCount() {
+        if (contactinfo != null) {
+            if (filteredData != null) {
+                if (filteredData.size() < contactinfo.size()) {
+                    return filteredData.size();
+                } else {
+                    return contactinfo.size();
+                }
+            }else{
+                return contactinfo.size();
+            }
+        } else {
+            return 0;
         }
-        // decode with inSampleSize
-        BitmapFactory.Options o2 = new BitmapFactory.Options();
-        o2.inSampleSize = scale;
-        return BitmapFactory.decodeResource(context.getResources(), resId, o2);
     }
 
-    public static Bitmap getRoundedShape(Bitmap scaleBitmapImage,int width) {
-        // TODO Auto-generated method stub
-        int targetWidth = width;
-        int targetHeight = width;
-        Bitmap targetBitmap = Bitmap.createBitmap(targetWidth,
-                targetHeight,Bitmap.Config.ARGB_8888);
-
-        Canvas canvas = new Canvas(targetBitmap);
-        Path path = new Path();
-        path.addCircle(((float) targetWidth - 1) / 2,
-                ((float) targetHeight - 1) / 2,
-                (Math.min(((float) targetWidth),
-                        ((float) targetHeight)) / 2),
-                Path.Direction.CCW);
-        canvas.clipPath(path);
-        Bitmap sourceBitmap = scaleBitmapImage;
-        canvas.drawBitmap(sourceBitmap,
-                new Rect(0, 0, sourceBitmap.getWidth(),
-                        sourceBitmap.getHeight()),
-                new Rect(0, 0, targetWidth,
-                        targetHeight), null);
-        return targetBitmap;
+    @Override
+    public String getItem(int position) {
+        return filteredData.get(position);
     }
 
-//    @Override
-//    protected ChatHolder createHolder(View itemView, int type) {
-//        return new ChatHolder(itemView);
-//    }
-//
-//    protected int getCardViewResource() {return R.layout.chats_item;  }
-//
-//    @Override
-//    protected void bindHolder(ChatHolder holder, ChatsList data, int position) {
-//        View convertView = getView();
-//        /*if (convertView == null) {
-//            convertView = inflater.inflate(R.layout.chat_list_item, parent, false);
-//        }*/
-//        LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//
-//        if (data == null) {
-//            convertView = vi.inflate(R.layout.chat_list_item, null);
-//            holder = createHolder(convertView, position);
-//            convertView.setTag(holder);
-//        } else {
-//            holder = (ChatHolder) convertView.getTag();
-//        }
-//
-//        //holder.message_icon_text.setText(data.getId());
-//       /* holder.firstLastName.setText(data.getName());
-//        holder.lastMessage.setText(data.getLastMessage());
-//        holder.contactItemTime.setText(data.getDate());*/
-//
-//    }
-//
-//    public View getView() {
-//
-//        View convertView;
-//        LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//        convertView = vi.inflate(R.layout.chats_item, null);
-//
-//        TextView icon = (TextView) convertView.findViewById(R.id.message_icon_text);
-//        TextView firstLastName = (TextView) convertView.findViewById(R.id.firstLastName);
-//        TextView lastMessage = (TextView) convertView.findViewById(R.id.lastMessage);
-//        TextView time = (TextView) convertView.findViewById(R.id.contactItemTime);
-//        TextView notify = (TextView) convertView.findViewById(R.id.chat_notification);
-//
-//        final ImageView imageIcon = (ImageView) convertView.findViewById(R.id.message_icon_image);
-//
-//        imageIcon.setImageResource(R.drawable.cht_ic_placeholder);
-//        lastMessage.setText("");
-//        icon.setText("");
-//
-//        Utils.verifySetBackground(icon, null);
-///*
-//        TdApi.Chat item = getItem(position);
-//        TdApi.ChatInfo info = item.type;
-//        TdApi.MessageText text = null;
-//        TdApi.Message message = item.topMessage;
-//        long timeMls = (long) message.date;
-//        Date date = new Date(timeMls * 1000);
-//        if (message.message instanceof TdApi.MessageText) {
-//            text = (TdApi.MessageText) message.message;
-//            lastMessage.setTextColor(Color.BLACK);
-//            lastMessage.setText(text.textWithSmilesAndUserRefs);
-//        } else {
-//            lastMessage.setTextColor(getContext().getResources().getColor(R.color.content_text_color));
-//            if (message.message instanceof TdApi.MessagePhoto) {
-//                lastMessage.setText(R.string.message_photo);
-//            }
-//            if (message.message instanceof TdApi.MessageAudio) {
-//                lastMessage.setText(R.string.message_audio);
-//            }
-//            if (message.message instanceof TdApi.MessageContact) {
-//                lastMessage.setText(R.string.message_contact);
-//            }
-//            if (message.message instanceof TdApi.MessageDocument) {
-//                lastMessage.setText(R.string.message_document);
-//            }
-//            if (message.message instanceof TdApi.MessageGeoPoint) {
-//                lastMessage.setText(R.string.message_geopoint);
-//            }
-//            if (message.message instanceof TdApi.MessageSticker) {
-//                lastMessage.setText(R.string.message_sticker);
-//            }
-//            if (message.message instanceof TdApi.MessageVideo) {
-//                lastMessage.setText(R.string.message_video);
-//            }
-//            if (message.message instanceof TdApi.MessageUnsupported) {
-//                lastMessage.setText(R.string.message_unknown);
-//            }
-//        }
-//        TdApi.File file = null;
-//        long chatId = item.id;
-//        String userFirstName = "";
-//        String userLastName = "";
-//        if (info.getConstructor() == TdApi.PrivateChatInfo.CONSTRUCTOR) {
-//            TdApi.PrivateChatInfo privateChatInfo = (TdApi.PrivateChatInfo) info;
-//            TdApi.User chatUser = privateChatInfo.user;
-//            file = chatUser.photoBig;
-//            userFirstName = privateChatInfo.user.firstName;
-//            userLastName = privateChatInfo.user.lastName;
-//        }
-//        if (info.getConstructor() == TdApi.GroupChatInfo.CONSTRUCTOR) {
-//            TdApi.GroupChatInfo groupChatInfo = (TdApi.GroupChatInfo) info;
-//            file = groupChatInfo.groupChat.photoBig;
-//            userFirstName = groupChatInfo.groupChat.title;
-//            userLastName = "";
-//        }
-//        if (item.unreadCount != 0) {
-//            notify.setText(String.valueOf(item.unreadCount));
-//            Utils.verifySetBackground(notify, Utils.getShapeDrawable(R.dimen.chat_list_item_notification_size, getContext().getResources().getColor(R.color.message_notify)));
-//        } else {
-//            Utils.verifySetBackground(notify, null);
-//            notify.setText("");
-//        }
-//        Utils.setIcon(file, (int) chatId, userFirstName, userLastName, imageIcon, icon, (Activity) getContext());
-//        firstLastName.setText(userFirstName + " " + userLastName);
-//        time.setText(Utils.getDateFormat(Const.TIME_PATTERN).format(date));
-//*/
-//        return convertView;
-//    }
-//
-//    public void add(ChatsList chats) {
-//        chatsList.add(chats);
-//    }
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    public void setData(ArrayList<String> data) {
+        this.filteredData = data;
+    }
+
+    public Filter getFilter() {
+        return new ContactListFilter(contactinfo, this);
+    }
+
+    public void setFilterString(String filterString) {
+        this.filterString = filterString;
+    }
+
+    public String getFilterString() {
+        return filterString;
+    }
+
 }

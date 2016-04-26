@@ -35,6 +35,7 @@ import com.bitdubai.fermat_core_api.layer.all_definition.system.abstract_classes
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantRegisterPlatformException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartAddonException;
 import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.CantStartSystemException;
+import com.bitdubai.fermat_core_api.layer.all_definition.system.exceptions.PlatformNotFoundException;
 import com.bitdubai.fermat_csh_core.CSHPlatform;
 import com.bitdubai.fermat_p2p_core.P2PPlatform;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -44,6 +45,7 @@ import com.bitdubai.fermat_wpd_core.WPDPlatform;
 import org.fermat.fermat_dap_core.DAPPlatform;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -137,7 +139,7 @@ public final class FermatSystem {
             //fermatSystemContext.registerPlatform(new ARTPlatform());
             fermatSystemContext.registerPlatform(new BCHPlatform());
             fermatSystemContext.registerPlatform(new BNKPlatform());
-           // fermatSystemContext.registerPlatform(new CBPPlatform());
+            fermatSystemContext.registerPlatform(new CBPPlatform());
             fermatSystemContext.registerPlatform(new CCPPlatform());
             fermatSystemContext.registerPlatform(new CERPlatform());
             fermatSystemContext.registerPlatform(new CHTPlatform());
@@ -486,6 +488,21 @@ public final class FermatSystem {
             } catch (Exception e) {
                 System.err.println(e.toString());
             }
+        }
+
+        try {
+
+            List<AbstractPlugin> list = fermatSystemContext.getPlatform(new PlatformReference(Platforms.COMMUNICATION_PLATFORM)).getPlugins();
+            for (AbstractPlugin abstractPlugin : list) {
+                fermatPluginManager.startPluginAndReferences(abstractPlugin);
+                System.out.println("---------------------------------------------\n");
+                System.out.println("Cloud client starting");
+                System.out.println("---------------------------------------------\n");
+            }
+        } catch (PlatformNotFoundException e) {
+            e.printStackTrace();
+        } catch (CantStartPluginException e) {
+            e.printStackTrace();
         }
         for(ConcurrentHashMap.Entry<PluginVersionReference, AbstractPlugin> plugin : pluginList.entrySet()) {
             try {

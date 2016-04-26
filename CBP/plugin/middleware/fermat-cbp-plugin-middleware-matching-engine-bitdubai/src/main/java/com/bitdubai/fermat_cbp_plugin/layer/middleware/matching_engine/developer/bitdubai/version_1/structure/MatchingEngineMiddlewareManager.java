@@ -4,12 +4,17 @@ import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVe
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantLoadEarningSettingsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.CantRegisterEarningsSettingsException;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.exceptions.EarningsSettingsNotRegisteredException;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractor;
+import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningExtractorManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.EarningsSettings;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.interfaces.MatchingEngineManager;
 import com.bitdubai.fermat_cbp_api.layer.middleware.matching_engine.utils.WalletReference;
+import com.bitdubai.fermat_cbp_api.layer.wallet.crypto_broker.interfaces.CryptoBrokerWalletManager;
 import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.database.MatchingEngineMiddlewareDao;
+import com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.earning_extraction.EarningExtractorManagerImpl;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
+
 
 /**
  * The class <code>com.bitdubai.fermat_cbp_plugin.layer.middleware.matching_engine.developer.bitdubai.version_1.structure.MatchingEngineMiddlewareManager</code>
@@ -22,17 +27,20 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfac
  */
 public final class MatchingEngineMiddlewareManager implements MatchingEngineManager {
 
-    private final MatchingEngineMiddlewareDao dao                   ;
-    private final ErrorManager                errorManager          ;
-    private final PluginVersionReference      pluginVersionReference;
+    private final MatchingEngineMiddlewareDao dao;
+    private final ErrorManager errorManager;
+    private final PluginVersionReference pluginVersionReference;
+    private final EarningExtractorManager earningExtractorManager;
 
-    public MatchingEngineMiddlewareManager(final MatchingEngineMiddlewareDao dao                   ,
-                                           final ErrorManager                errorManager          ,
-                                           final PluginVersionReference      pluginVersionReference) {
+    public MatchingEngineMiddlewareManager(final MatchingEngineMiddlewareDao dao,
+                                           final ErrorManager errorManager,
+                                           final PluginVersionReference pluginVersionReference,
+                                           CryptoBrokerWalletManager cryptoBrokerWalletManager) {
 
-        this.dao                    = dao                   ;
-        this.errorManager           = errorManager          ;
+        this.dao = dao;
+        this.errorManager = errorManager;
         this.pluginVersionReference = pluginVersionReference;
+        earningExtractorManager = new EarningExtractorManagerImpl(cryptoBrokerWalletManager);
     }
 
     @Override
@@ -51,45 +59,47 @@ public final class MatchingEngineMiddlewareManager implements MatchingEngineMana
             );
 
         } catch (CantRegisterEarningsSettingsException e) {
-
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw e;
-        } catch (final Exception e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (final Exception e) {
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantRegisterEarningsSettingsException(e, null, "Unhandled Exception.");
         }
 
     }
 
     @Override
-    public EarningsSettings loadEarningsSettings(final String walletPublicKey) throws CantLoadEarningSettingsException       ,
-                                                                                      EarningsSettingsNotRegisteredException {
-
+    public EarningsSettings loadEarningsSettings(final String walletPublicKey)
+            throws CantLoadEarningSettingsException, EarningsSettingsNotRegisteredException {
         try {
-
             WalletReference walletReference = dao.loadWalletReference(walletPublicKey);
-
-            return new MatchingEngineMiddlewareEarningsSettings(
-                    walletReference,
-                    dao,
-                    errorManager,
-                    pluginVersionReference
-            );
+            return new MatchingEngineMiddlewareEarningsSettings(walletReference, dao, errorManager, pluginVersionReference);
 
         } catch (EarningsSettingsNotRegisteredException earningsSettingsNotRegisteredException) {
+            throw earningsSettingsNotRegisteredException;   // I DO NOTHING HERE, MAYBE IS NOT REGISTERED
 
-            // I DO NOTHING HERE, MAYBE IS NOT REGISTERED
-            throw earningsSettingsNotRegisteredException;
         } catch (CantLoadEarningSettingsException cantLoadEarningSettingsException) {
-
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadEarningSettingsException);
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, cantLoadEarningSettingsException);
             throw cantLoadEarningSettingsException;
-        } catch (final Exception e){
 
-            errorManager.reportUnexpectedPluginException(this.pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+        } catch (final Exception e) {
+            errorManager.reportUnexpectedPluginException(this.pluginVersionReference,
+                    UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
             throw new CantLoadEarningSettingsException(e, null, "Unhandled Exception.");
         }
 
+    }
+
+    @Override
+    public EarningExtractorManager getEarningsExtractorManager() {
+        return earningExtractorManager;
+    }
+
+    public void addEarningsExtractor(EarningExtractor extractor){
+        earningExtractorManager.addEarningExtractor(extractor);
     }
 }

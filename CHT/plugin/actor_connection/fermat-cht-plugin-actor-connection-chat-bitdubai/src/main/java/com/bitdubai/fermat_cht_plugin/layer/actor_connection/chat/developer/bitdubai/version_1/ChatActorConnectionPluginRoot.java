@@ -114,7 +114,9 @@ public class ChatActorConnectionPluginRoot extends AbstractPlugin implements Dat
                     this.getPluginVersionReference()
             );
 
-            super.start();
+            System.out.println("******* Init Chat Actor Connection ******");
+
+            //super.start();
 
         } catch (final CantInitializeActorConnectionDatabaseException cantInitializeActorConnectionDatabaseException) {
 
