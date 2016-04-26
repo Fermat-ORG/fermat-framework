@@ -42,4 +42,7 @@ public interface WalletManager extends AppManager {
     boolean hasIntraUserIdentity() throws CantGetIfIntraWalletUsersExistsException;
 
     List<InstalledWallet> getInstalledWallets()throws Exception;
+
+
+
 }

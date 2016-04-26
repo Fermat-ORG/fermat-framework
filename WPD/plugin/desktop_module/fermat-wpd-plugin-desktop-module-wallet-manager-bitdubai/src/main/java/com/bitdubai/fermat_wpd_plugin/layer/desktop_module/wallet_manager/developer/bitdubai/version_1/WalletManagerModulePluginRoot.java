@@ -125,6 +125,10 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
     @NeededPluginReference(platform = Platforms.CRYPTO_CURRENCY_PLATFORM, layer = Layers.BASIC_WALLET   , plugin = Plugins.LOSS_PROTECTED_WALLET)
     private BitcoinLossProtectedWalletManager bitcoinLossProtectedWalletManager;
 
+//    @NeededPluginReference(platform = Platforms.BLOCKCHAINS, layer = Layers.CRYPTO_NETWORK   , plugin = Plugins.BITCOIN_NETWORK)
+//    private BitcoinNetworkManager bitcoinNetworkManager;
+
+
     /**
      * WalletManager Interface member variables.
      */
@@ -222,6 +226,8 @@ public class WalletManagerModulePluginRoot extends AbstractModule<AppManagerSett
 
                 }
             }
+
+
             this.serviceStatus = ServiceStatus.STARTED;
 
 
