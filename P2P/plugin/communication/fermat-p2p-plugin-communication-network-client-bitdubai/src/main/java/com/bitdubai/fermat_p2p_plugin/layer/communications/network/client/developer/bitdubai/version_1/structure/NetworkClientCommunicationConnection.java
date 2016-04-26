@@ -55,7 +55,7 @@ import javax.websocket.Session;
  * @version 1.0
  * @since   Java JDK 1.7
  */
-public class NetworkClientCommunicationConnection extends Thread implements NetworkClientConnection {
+public class NetworkClientCommunicationConnection  implements NetworkClientConnection {
 
     private URI                    uri                   ;
     private ErrorManager           errorManager          ;
@@ -109,8 +109,8 @@ public class NetworkClientCommunicationConnection extends Thread implements Netw
         return serverIdentity;
     }
 
-    @Override
-    public void run() {
+
+    public void initializeAndConnect() {
 
         /*
          * Create a ReconnectHandler
@@ -154,7 +154,7 @@ public class NetworkClientCommunicationConnection extends Thread implements Netw
             session = container.connectToServer(CommunicationsNetworkClientChannel.class, uri);
 
             //validate if is connected
-            if (session.isOpen()) {
+            if (session != null && session.isOpen()) {
                 this.isConnected = Boolean.TRUE;
                 serverIdentity = (String) session.getUserProperties().get("");
                 setCheckInClientRequestProcessor();

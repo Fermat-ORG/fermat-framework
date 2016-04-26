@@ -133,7 +133,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
                     identity                   ,
                     getPluginVersionReference()
             );
-            networkClientCommunicationConnection.start();
+            networkClientCommunicationConnection.initializeAndConnect();
 
         } catch (Exception exception){
 
