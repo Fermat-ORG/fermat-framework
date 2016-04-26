@@ -336,9 +336,11 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             if(mp.isPlaying()){
                 mp.pause();
                 pause=true;
+                bplay.setBackgroundResource(R.drawable.pausebars);
             }else if(pause){
                 mp.start();
                 pause=false;
+                bplay.setBackgroundResource(R.drawable.playarrow);
             }
 
         } catch (IllegalArgumentException e) {
@@ -367,6 +369,7 @@ public class MusicPlayerMainActivity extends AbstractFermatFragment {
             pb.setProgress(0);
             tiempo.setText("");
             song.setText("");
+            bplay.setBackgroundResource(R.drawable.playarrow);
         }
 
         loadmysong();
