@@ -25,14 +25,12 @@ import com.bitdubai.fermat_api.layer.all_definition.settings.exceptions.Settings
 import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
-import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginFileSystem;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionManager;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.interfaces.ChatActorConnectionSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatLinkedActorIdentity;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
-import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ErrorSearchingChatSuggestionsException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantGetChatActorWaitingException;
 import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentityException;
@@ -70,17 +68,17 @@ import java.util.UUID;
  */
 public class ChatActorCommunityManager implements ChatActorCommunitySubAppModuleManager, Serializable {
 
-     private final ChatIdentityManager                   chatIdentityManager;
-     private ChatActorCommunityInformation               chatActorCommunityManager             ;
-     private final ChatActorConnectionManager            chatActorConnectionManager            ;
-     private final ChatManager                           chatActorNetworkServiceManager        ;
-     private String                                      subAppPublicKey                       ;
-     private final ErrorManager                          errorManager                          ;
-     private final PluginFileSystem                      pluginFileSystem                      ;
-     private final UUID                                  pluginId                              ;
-     private final PluginVersionReference                pluginVersionReference                ;
-     private SettingsManager<ChatActorCommunitySettings> settingsManager                       ;
-     private ChatActorCommunitySubAppModuleManager chatActorCommunitySubAppModuleManager;
+    private final ChatIdentityManager                   chatIdentityManager;
+    private ChatActorCommunityInformation               chatActorCommunityManager             ;
+    private final ChatActorConnectionManager            chatActorConnectionManager            ;
+    private final ChatManager                           chatActorNetworkServiceManager        ;
+    private String                                      subAppPublicKey                       ;
+    private final ErrorManager                          errorManager                          ;
+    private final PluginFileSystem                      pluginFileSystem                      ;
+    private final UUID                                  pluginId                              ;
+    private final PluginVersionReference                pluginVersionReference                ;
+    private SettingsManager<ChatActorCommunitySettings> settingsManager                       ;
+    private ChatActorCommunitySubAppModuleManager chatActorCommunitySubAppModuleManager;
 
     public ChatActorCommunityManager(ChatIdentityManager chatIdentityManager, ChatActorConnectionManager chatActorConnectionManager, ChatManager chatActorNetworkServiceManager, ErrorManager errorManager, PluginFileSystem pluginFileSystem, UUID pluginId, PluginVersionReference pluginVersionReference) {
         this.chatIdentityManager= chatIdentityManager;
@@ -99,14 +97,14 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         List<ChatActorConnection> actorConnections = null;
 
         try{
-         worldActorList = getChatActorSearch().getResult();
+            worldActorList = getChatActorSearch().getResult();
         } catch (CantGetChtActorSearchResult exception) {
             errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, exception);
         }
 
         try{
-           final ChatLinkedActorIdentity linkedChatActorIdentity = new ChatLinkedActorIdentity(selectableIdentity.getPublicKey(), selectableIdentity.getActorType());
-           final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActorIdentity);
+            final ChatLinkedActorIdentity linkedChatActorIdentity = new ChatLinkedActorIdentity(selectableIdentity.getPublicKey(), selectableIdentity.getActorType());
+            final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActorIdentity);
 
             actorConnections = search.getResult(Integer.MAX_VALUE, 0);
         } catch (CantListActorConnectionsException exception) {
@@ -176,7 +174,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
     @Override
     public ChatActorCommunitySearch getChatActorSearch() {
         return new ChatActorCommunitySubAppModuleSearch(chatActorNetworkServiceManager) {
-                  };
+        };
     }
 
 
@@ -217,17 +215,17 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         }
     }
 
-        public void acceptChatActor(UUID requestId) throws CantAcceptChatRequestException, ActorConnectionRequestNotFoundException {
-            try {
-                chatActorConnectionManager.acceptConnection(requestId);
-            } catch (CantAcceptActorConnectionRequestException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
-            } catch (ActorConnectionNotFoundException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
-            } catch (UnexpectedConnectionStateException e) {
-                errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
-            }
+    public void acceptChatActor(UUID requestId) throws CantAcceptChatRequestException, ActorConnectionRequestNotFoundException {
+        try {
+            chatActorConnectionManager.acceptConnection(requestId);
+        } catch (CantAcceptActorConnectionRequestException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+        } catch (ActorConnectionNotFoundException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+        } catch (UnexpectedConnectionStateException e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
         }
+    }
 
     @Override
     public void denyChatConnection(UUID requestId) throws ChatActorConnectionDenialFailedException,
@@ -297,7 +295,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
             final List<ChatActorConnection> actorConnections = search.getResult(max, offset);
 
-             chatActorCommunityInformationList = new ArrayList<>();
+            chatActorCommunityInformationList = new ArrayList<>();
 
             for (ChatActorConnection cac : actorConnections)
                 chatActorCommunityInformationList.add(new ChatActorCommunitySubAppModuleInformationImpl(cac));
@@ -309,7 +307,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         }
         return chatActorCommunityInformationList;
 
-      }
+    }
 
 
     @Override
@@ -343,71 +341,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
 
 
 
-    @Override
-    public List<ChatActorCommunityInformation> getSuggestionsToContact(String publicKey, int max, int offset) throws CantListChatIdentityException {
-        try {
 
-            List<ChatActorCommunityInformation> chatActorCommunityInformationModuleList = new ArrayList<>();
-
-            List<ChatActorCommunityInformation> chatActorCommunityInformationList = new ArrayList<>();
-            chatActorCommunityInformationList = chatActorNetworkServiceManager.getSuggestionsToContact(publicKey, max, offset);
-
-
-            for (ChatActorCommunityInformation record : chatActorCommunityInformationList) {
-
-                //get connection state status
-                List<ChatActorCommunityInformation> connectionState = this.chatActorNetworkServiceManager.getSuggestionsToContact(record.getPublicKey(), max, offset);
-
-                //return intra user information - if not connected - status return null
-                ChatActorCommunityInformation chatUserInformation = new ChatActorCommunitySubAppModuleInformationImpl(record.getPublicKey(),record.getAlias(),record.getImage(),record.getConnectionState(),record.getConnectionId());
-                chatActorCommunityInformationModuleList.add(chatUserInformation);
-            }
-
-            return chatActorCommunityInformationModuleList;
-        }
-        catch (ErrorSearchingChatSuggestionsException e) {
-            throw new CantListChatIdentityException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
-        }
-        catch (Exception e) {
-            throw new CantListChatIdentityException("CAN'T GET SUGGESTIONS TO CONTACT",e,"","Unknown Error");
-
-        }
-    }
-
-
-
-    @Override
-    public List<ChatActorCommunityInformation> getCacheSuggestionsToContact(int max, int offset) throws CantListChatIdentityException {
-        try {
-
-            List<ChatActorCommunityInformation> chatActorCommunityInformationModuleList = new ArrayList<>();
-
-            List<ChatActorCommunityInformation> chatActorCommunityInformationList = new ArrayList<>();
-            chatActorCommunityInformationList = chatActorNetworkServiceManager.getCacheSuggestionsToContact(max, offset);
-
-
-            for (ChatActorCommunityInformation record : chatActorCommunityInformationList) {
-
-                //get connection state status
-                List<ChatActorCommunityInformation> connectionState = this.chatActorNetworkServiceManager.getCacheSuggestionsToContact(record.getPublicKey(), max, offset);
-
-                //return intra user information - if not connected - status return null
-                ChatActorCommunityInformation chatUserInformation = new ChatActorCommunitySubAppModuleInformationImpl(record.getPublicKey(),record.getAlias(),record.getImage(),record.getConnectionState(),record.getConnectionId());
-                chatActorCommunityInformationModuleList.add(chatUserInformation);
-            }
-
-            return chatActorCommunityInformationModuleList;
-        }
-        catch (ErrorSearchingChatSuggestionsException e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantListChatIdentityException("CAN'T GET CACHE SUGGESTIONS TO CONTACT",e,"","Error on intra user network service");
-        }
-        catch (Exception e) {
-            errorManager.reportUnexpectedPluginException(Plugins.CHAT_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            throw new CantListChatIdentityException("CAN'T GET CACHE SUGGESTIONS TO CONTACT",e,"","Unknown Error");
-
-        }
-    }
 
 
 
@@ -468,31 +402,28 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         return actorList;
     }
 
-    @Override
-    public void saveCacheChatUsersSuggestions(List<ChatActorCommunityInformation> listChatUser) throws CantInsertRecordException {
-        chatActorNetworkServiceManager.saveCacheChatUsersSuggestions(listChatUser);
-    }
+
 
     @Override
     public ConnectionState getActorConnectionState(String publicKey) throws CantValidateActorConnectionStateException {
 
-      try{
+        try{
             ChatActorCommunitySelectableIdentity selectedIdentity = getSelectedActorIdentity();
-          final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
-          final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActor);
-          final List<ChatActorConnection> actorConnections = search.getResult(Integer.MAX_VALUE,0);
+            final ChatLinkedActorIdentity linkedChatActor = new ChatLinkedActorIdentity(selectedIdentity.getPublicKey(), selectedIdentity.getActorType());
+            final ChatActorConnectionSearch search = chatActorConnectionManager.getSearch(linkedChatActor);
+            final List<ChatActorConnection> actorConnections = search.getResult(Integer.MAX_VALUE,0);
 
-          for (ChatActorConnection connection : actorConnections){
-              if(publicKey.equals(connection.getPublicKey()))
-                  return connection.getConnectionState();
-          }
+            for (ChatActorConnection connection : actorConnections){
+                if(publicKey.equals(connection.getPublicKey()))
+                    return connection.getConnectionState();
+            }
 
-      } catch (final CantListActorConnectionsException e) {
-          this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-          throw new CantValidateActorConnectionStateException(e, "", "Error trying to list actor connections.");
-      } catch (Exception e) {
-          errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
-      }
+        } catch (final CantListActorConnectionsException e) {
+            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
+            throw new CantValidateActorConnectionStateException(e, "", "Error trying to list actor connections.");
+        } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_IDENTITY_SUP_APP_MODULE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, FermatException.wrapException(e));
+        }
 
         return ConnectionState.DISCONNECTED_REMOTELY;
     }
@@ -553,7 +484,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
                             selectedIdentity = new ChatActorCommunitySelectableIdentityImpl(i.getPublicKey(), Actors.CHAT, i.getAlias(), i.getImage());
                     }
                 }
-               if(selectedIdentity == null)
+                if(selectedIdentity == null)
                     throw new ActorIdentityNotSelectedException("", null, "", "");
 
                 return selectedIdentity;

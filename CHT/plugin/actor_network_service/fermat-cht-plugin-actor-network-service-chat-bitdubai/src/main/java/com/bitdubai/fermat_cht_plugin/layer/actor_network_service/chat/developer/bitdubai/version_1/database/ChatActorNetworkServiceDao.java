@@ -42,13 +42,11 @@ import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantRe
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatConnectionInformation;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatConnectionRequest;
-import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
 import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantFindRequestException;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
-import com.bitdubai.fermat_cht_plugin.layer.actor_network_service.chat.developer.bitdubai.version_1.exceptions.CantListChatActorCacheUserException;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -177,124 +175,6 @@ public class ChatActorNetworkServiceDao {
 
 
 
-    public void saveChatUserCache(List<ChatActorCommunityInformation> chatUserInformationList) throws CantCreateDatabaseException {
-
-        try {
-
-            /**
-             * first delete old cache records
-             */
-
-            // deleteIntraUserCache();
-
-            DatabaseTable table = this.database.getTable(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_TABLE_NAME);
-            table.getRecords();
-
-            /**
-             * save intra user info on database
-             */
-            Date d = new Date();
-            long milliseconds = d.getTime();
-
-
-            for (ChatActorCommunityInformation chatUserInformation : chatUserInformationList) {
-
-                //if record exist I update data
-                if(existCacheRecord(chatUserInformation.getPublicKey()))
-                {
-                    table.addStringFilter(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME, chatUserInformation.getPublicKey(), DatabaseFilterType.EQUAL);
-
-                    table.loadToMemory();
-
-                    if(table.getRecords().size() > 0) {
-                        DatabaseTableRecord record = table.getRecords().get(0);
-
-                        record.setStringValue(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME, chatUserInformation.getPublicKey());
-                        record.setStringValue(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_ALIAS_COLUMN_NAME, chatUserInformation.getAlias());
-
-
-                        record.setLongValue(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_TIMESTAMP_COLUMN_NAME, milliseconds);
-                        record.setStringValue(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_CITY_COLUMN_NAME, "");
-                        record.setStringValue(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_COUNTRY_COLUMN_NAME, "");
-
-
-                        /**
-                         * Persist profile image on a file
-                         */
-                        if (chatUserInformation.getImage() != null && chatUserInformation.getImage().length > 0)
-                            persistNewUserProfileImage(chatUserInformation.getPublicKey(), chatUserInformation.getImage());
-
-
-                        table.updateRecord(record);
-                    }
-
-                }
-                else
-                {
-                    DatabaseTableRecord record = table.getEmptyRecord();
-
-
-                    record.setUUIDValue(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_ID_COLUMN_NAME, UUID.randomUUID());
-
-                    record.setStringValue(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME, chatUserInformation.getPublicKey());
-                    record.setStringValue(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_ALIAS_COLUMN_NAME, chatUserInformation.getAlias());
-
-                    record.setLongValue(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_TIMESTAMP_COLUMN_NAME, milliseconds);
-                    record.setStringValue(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_CITY_COLUMN_NAME, "");
-                    record.setStringValue(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_COUNTRY_COLUMN_NAME, "");
-
-
-                    /**
-                     * Persist profile image on a file
-                     */
-                    if(chatUserInformation.getImage()!=null && chatUserInformation.getImage().length > 0)
-                        persistNewUserProfileImage(chatUserInformation.getPublicKey(), chatUserInformation.getImage());
-
-
-                    table.insertRecord(record);
-
-                }
-
-            }
-
-
-        } catch (CantInsertRecordException e) {
-
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, e, "", "Cant create new intra user cache record, insert database problems.");
-
-        }
-        catch (Exception e) {
-            throw new CantCreateDatabaseException(CantCreateDatabaseException.DEFAULT_MESSAGE, FermatException.wrapException(e), "", "");
-        }
-
-
-
-    }
-
-    private boolean existCacheRecord(String publicKey) throws CantGetNotificationException {
-        try {
-
-            DatabaseTable table = this.database.getTable(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_TABLE_NAME);
-
-            table.addStringFilter(ChatActorNetworkServiceDatabaseConstants.CHAT_ACTOR_ONLINE_CACHE_PUBLIC_KEY_COLUMN_NAME, publicKey, DatabaseFilterType.EQUAL);
-
-            table.loadToMemory();
-
-            List<DatabaseTableRecord> records = table.getRecords();
-
-
-            if (!records.isEmpty())
-                return true;
-            else
-                return false;
-
-        } catch (CantLoadTableToMemoryException exception) {
-
-            throw new CantGetNotificationException( "",exception, "Exception not handled by the plugin, there is a problem in database and i cannot load the table.","");
-        }
-
-    }
-
 
     public final List<ChatConnectionRequest> listAllPendingRequestsByActorType(final Actors actorType, final List<ConnectionRequestAction> actions) throws CantListPendingConnectionRequestsException {
 
@@ -338,58 +218,7 @@ public class ChatActorNetworkServiceDao {
         }
     }
 
-    public List<ChatActorCommunityInformation> listChatActorCache(int max, int offset) throws CantListChatActorCacheUserException {
-
-        try {
-            DatabaseTable table = this.database.getTable(ChatActorNetworkServiceDatabaseConstants.CONNECTION_CHAT_CACHE_ONLINE);
-
-            table.setFilterOffSet(String.valueOf(offset));
-            table.setFilterTop(String.valueOf(max));
-
-            table.loadToMemory();
-
-            List<DatabaseTableRecord> records = table.getRecords();
-            List<ChatActorCommunityInformation> chatActorCommunityInformationList = new ArrayList<>();
-
-            for (DatabaseTableRecord record : records) {
-                chatActorCommunityInformationList.add((ChatActorCommunityInformation) buildConnectionNewRecord(record));
-            }
-            return chatActorCommunityInformationList;
-        } catch (InvalidParameterException e) {
-            e.printStackTrace();
-        } catch (CantLoadTableToMemoryException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public List<ChatActorCommunityInformation> listChatActorSuggestion(int max, int offset) throws CantListChatActorCacheUserException {
-
-        try {
-            DatabaseTable table = this.database.getTable(ChatActorNetworkServiceDatabaseConstants.CONNECTION_CHAT_SUGGESTION_ONLINE);
-
-            table.setFilterOffSet(String.valueOf(offset));
-            table.setFilterTop(String.valueOf(max));
-
-            table.loadToMemory();
-
-            List<DatabaseTableRecord> records = table.getRecords();
-            List<ChatActorCommunityInformation> chatActorSuggestionInformationList = new ArrayList<>();
-
-            for (DatabaseTableRecord record : records) {
-                chatActorSuggestionInformationList.add((ChatActorCommunityInformation) buildConnectionNewRecord(record));
-            }
-            return chatActorSuggestionInformationList;
-        } catch (InvalidParameterException e) {
-            e.printStackTrace();
-        } catch (CantLoadTableToMemoryException e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
+  
         public final List<ChatConnectionRequest> listPendingConnectionNews(final Actors actorType) throws CantListPendingConnectionRequestsException {
 
         try {
