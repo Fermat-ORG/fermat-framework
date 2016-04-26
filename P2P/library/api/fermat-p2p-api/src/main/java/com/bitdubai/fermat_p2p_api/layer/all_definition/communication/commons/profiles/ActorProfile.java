@@ -11,6 +11,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.ut
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * The Class <code>ActorProfile</code>
@@ -20,7 +21,7 @@ import com.google.gson.GsonBuilder;
  * @version 1.0
  * @since Java JDK 1.7
  */
-public class ActorProfile extends Profile<ActorProfile> {
+public class ActorProfile extends Profile {
 
     /**
      * Represent the actorType
@@ -56,7 +57,7 @@ public class ActorProfile extends Profile<ActorProfile> {
      * Constructor
      */
     public ActorProfile(){
-        super(ActorProfile.class);
+        super();
     }
 
     /**
@@ -165,6 +166,15 @@ public class ActorProfile extends Profile<ActorProfile> {
      */
     public void setNsIdentityPublicKey(String nsIdentityPublicKey) {
         this.nsIdentityPublicKey = nsIdentityPublicKey;
+    }
+
+    /**
+     * Return this object in json string
+     *
+     * @return json string
+     */
+    public String toJson(){
+        return GsonProvider.getGson().toJson(this, ActorProfile.class);
     }
 
     /**
