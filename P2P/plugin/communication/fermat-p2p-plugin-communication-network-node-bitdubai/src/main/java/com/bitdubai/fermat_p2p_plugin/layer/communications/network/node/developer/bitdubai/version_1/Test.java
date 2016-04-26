@@ -14,6 +14,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Pack
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.FermatEmbeddedNodeServer;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.clients.FermatWebSocketClientNodeChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.AddNodeToCatalogMsgRequest;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.UpdateNodeInCatalogMsgRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConstantAttNames;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.SeedServerConf;
@@ -44,30 +45,32 @@ public class Test {
 
 
 
-            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("192.168.1.8", 9090);
 
-            ECCKeyPair eccKeyPair = new ECCKeyPair();
+
+            ECCKeyPair eccKeyPair = new ECCKeyPair("ba68c5945287f8f318773bff4cfc72136eb4d7f7c56de3125f6584b3554e25af");
 
             NodeProfile nodeProfile = new NodeProfile();
-            nodeProfile = new NodeProfile();
-            nodeProfile.setIp(IPAddressHelper.getCurrentIPAddress());
+            nodeProfile.setIp("1.1.1.1");
             nodeProfile.setDefaultPort(8080);
             nodeProfile.setIdentityPublicKey(eccKeyPair.getPublicKey());
-            nodeProfile.setName(ConfigurationManager.getValue(ConfigurationManager.NODE_NAME));
+            nodeProfile.setName("Fermat Node (black)");
             nodeProfile.setLocation(LocationProvider.acquireLocationThroughIP());
 
+            System.out.println(nodeProfile.toJson());
 
-            AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
-            fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
+            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("192.168.1.8", 9090);
 
-           Thread.currentThread().sleep(30000);
+            //AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
+            //fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
+
+             nodeProfile.setDefaultPort(9090);
+             UpdateNodeInCatalogMsgRequest updateNodeInCatalogMsgRequest = new UpdateNodeInCatalogMsgRequest(nodeProfile);
+             fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest.toJson(), PackageType.UPDATE_NODE_IN_CATALOG_REQUEST);
+
+            Thread.currentThread().sleep(30000);
 
 
             System.out.println("FIN");
-
-
-
-
 
            /* System.out.println("***********************************************************************");
             System.out.println("* FERMAT - Plugin Network Node - Version 1.0 (2015)                   *");
