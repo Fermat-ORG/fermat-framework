@@ -59,7 +59,7 @@ public class ServerConf {
     /**
      * Represent the DEFAULT_PORT
      */
-    public static final int DEFAULT_PORT = 9393;
+            public static final int DEFAULT_PORT = 9090;
 
     /**
      * Represent the WEB_SERVICE_PORT
