@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="#ffffff"
     >
 
     <LinearLayout
@@ -31,7 +32,7 @@
             android:paddingRight="8dip"
             android:paddingTop="14dip"
             android:text="@string/home_text"
-            android:textColor="#ffffff"
+            android:textColor="#333333"
             android:textSize="16sp"
             android:layout_weight="1"
             />

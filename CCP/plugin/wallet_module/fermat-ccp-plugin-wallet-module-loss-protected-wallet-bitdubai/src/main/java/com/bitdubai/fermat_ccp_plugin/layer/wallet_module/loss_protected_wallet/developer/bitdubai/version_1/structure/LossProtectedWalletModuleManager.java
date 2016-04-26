@@ -896,7 +896,7 @@ public class LossProtectedWalletModuleManager implements LossProtectedWallet {
 
             BitcoinLossProtectedWallet bitcoinWalletWallet = bitcoinWalletManager.loadWallet(walletPublicKey);
 
-          //  bitcoinLossProtectedWalletSpendList = bitcoinWalletWallet.listTransactionsSpending(transactionId);
+            bitcoinLossProtectedWalletSpendList = bitcoinWalletWallet.listTransactionsSpending(transactionId);
 
 
             if (bitcoinLossProtectedWalletSpendList.size()==0) {
