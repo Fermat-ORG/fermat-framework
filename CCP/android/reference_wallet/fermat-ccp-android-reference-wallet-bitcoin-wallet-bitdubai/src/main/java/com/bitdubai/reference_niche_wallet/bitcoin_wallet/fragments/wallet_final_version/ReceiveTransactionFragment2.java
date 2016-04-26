@@ -180,9 +180,20 @@ public class ReceiveTransactionFragment2 extends FermatWalletExpandableListFragm
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getPaintActivtyFeactures().addCollapseAnimation(this);
+
     }
 
+    @Override
+    public void onResume() {
+        getPaintActivtyFeactures().addCollapseAnimation(this);
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        getPaintActivtyFeactures().removeCollapseAnimation(this);
+        super.onStop();
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

@@ -310,12 +310,24 @@ public class SendTransactionFragment2 extends FermatWalletExpandableListFragment
     public void onActivityCreated(Bundle savedInstanceState) {
         try {
             super.onActivityCreated(savedInstanceState);
-            animationManager = new AnimationManager(rootView,emptyListViewsContainer);
-            getPaintActivtyFeactures().addCollapseAnimation(animationManager);
+
         } catch (Exception e){
             makeText(getActivity(), "Oooops! recovering from system error", Toast.LENGTH_SHORT).show();
             referenceWalletSession.getErrorManager().reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.CRASH, e);
         }
+    }
+
+    @Override
+    public void onResume() {
+        animationManager = new AnimationManager(rootView,emptyListViewsContainer);
+        getPaintActivtyFeactures().addCollapseAnimation(animationManager);
+        super.onResume();
+    }
+
+    @Override
+    public void onStop() {
+        getPaintActivtyFeactures().removeCollapseAnimation(animationManager);
+        super.onStop();
     }
 
     @Nullable
