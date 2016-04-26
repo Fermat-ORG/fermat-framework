@@ -54,7 +54,7 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
     /**
      * Represent the propagation time
      */
-    private final int PROPAGATION_TIME = 10;
+    private final int PROPAGATION_TIME = 3;
 
     /**
      * Represent the scheduledThreadPool
@@ -105,7 +105,7 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
 
                     FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(remoteNodesCatalog);
                     ReceiveNodeCatalogTransactionsMsjRequest receiveNodeCatalogTransactionsMsjRequest = new ReceiveNodeCatalogTransactionsMsjRequest(transactionList);
-                    fermatWebSocketClientNodeChannel.sendMessage(receiveNodeCatalogTransactionsMsjRequest.toJson(), PackageType.RECEIVE_NODE_CATALOG_TRANSACTIONS_RESPOND);
+                    fermatWebSocketClientNodeChannel.sendMessage(receiveNodeCatalogTransactionsMsjRequest.toJson(), PackageType.RECEIVE_NODE_CATALOG_TRANSACTIONS_REQUEST);
 
                 }catch (Exception e){
 

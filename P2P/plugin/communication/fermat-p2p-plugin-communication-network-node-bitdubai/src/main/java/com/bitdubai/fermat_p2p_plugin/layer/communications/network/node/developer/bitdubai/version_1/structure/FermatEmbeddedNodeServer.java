@@ -62,7 +62,7 @@ public class FermatEmbeddedNodeServer {
     /**
      * Represent the DEFAULT_PORT number
      */
-    public static final int DEFAULT_PORT = 9090;
+    public static final int DEFAULT_PORT = 8080;
 
     /**
      * Represent the DEFAULT_IP number
@@ -94,7 +94,7 @@ public class FermatEmbeddedNodeServer {
         LOG.info("Configure PORT: " + ConfigurationManager.getValue(ConfigurationManager.PORT));
 
        //this.serverBuilder = Undertow.builder().addHttpListener(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)), ConfigurationManager.getValue(ConfigurationManager.IP));
-        this.serverBuilder = Undertow.builder().addHttpListener(DEFAULT_PORT, DEFAULT_IP);
+       this.serverBuilder = Undertow.builder().addHttpListener(DEFAULT_PORT, DEFAULT_IP);
 
         this.servletContainer = Servlets.defaultContainer();
     }

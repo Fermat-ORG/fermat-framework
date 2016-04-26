@@ -132,7 +132,7 @@ public class NodeProfile extends Profile {
         NodeProfile that = (NodeProfile) o;
 
         if (!getIdentityPublicKey().equals(that.getIdentityPublicKey())) return false;
-        if ((!getLocation().getAltitude().equals(that.getLocation().getAltitude())) || !getLocation().getLongitude().equals(that.getLocation().getLongitude())) return false;
+        if ((!getLocation().getLatitude().equals(that.getLocation().getLatitude())) || !getLocation().getLongitude().equals(that.getLocation().getLongitude())) return false;
         if (!getDefaultPort().equals(that.getDefaultPort())) return false;
         if (!getIp().equals(that.getIp())) return false;
         return getName().equals(that.getName());

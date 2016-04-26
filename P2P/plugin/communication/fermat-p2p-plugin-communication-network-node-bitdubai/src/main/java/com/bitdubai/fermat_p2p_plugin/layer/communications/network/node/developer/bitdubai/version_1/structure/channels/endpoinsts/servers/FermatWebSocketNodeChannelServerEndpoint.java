@@ -142,7 +142,7 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
      * @param session
      */
     @OnMessage
-    public void newPackageReceived(Package packageReceived, Session session)  {
+    public void newPackageReceived(Package packageReceived, Session session) throws IOException {
 
         LOG.info("New package received");
         LOG.info("Session: " + session.getId() + " packageReceived = " + packageReceived + "");
@@ -156,6 +156,7 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
 
         }catch (PackageTypeNotSupportedException p){
             LOG.warn(p.getMessage());
+            session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, p.getMessage()));
         }
     }
 

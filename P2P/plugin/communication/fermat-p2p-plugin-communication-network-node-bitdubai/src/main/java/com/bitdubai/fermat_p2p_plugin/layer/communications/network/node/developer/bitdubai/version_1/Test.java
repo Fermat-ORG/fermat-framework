@@ -11,6 +11,7 @@ import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdu
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.clients.FermatWebSocketClientNodeChannel;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.AddNodeToCatalogMsgRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.UpdateNodeInCatalogMsgRequest;
 
 import java.io.IOException;
@@ -33,10 +34,6 @@ public class Test {
 
         try {
 
-
-
-
-
             ECCKeyPair eccKeyPair = new ECCKeyPair("ba68c5945287f8f318773bff4cfc72136eb4d7f7c56de3125f6584b3554e25af");
 
             NodeProfile nodeProfile = new NodeProfile();
@@ -50,8 +47,8 @@ public class Test {
 
             FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("192.168.1.8", 9090);
 
-            //AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
-            //fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
+          // AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
+           //fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
 
              nodeProfile.setDefaultPort(9090);
              UpdateNodeInCatalogMsgRequest updateNodeInCatalogMsgRequest = new UpdateNodeInCatalogMsgRequest(nodeProfile);
