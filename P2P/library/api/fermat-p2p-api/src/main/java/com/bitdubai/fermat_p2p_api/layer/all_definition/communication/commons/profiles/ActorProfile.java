@@ -6,12 +6,7 @@
  */
 package com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles;
 
-import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.GsonProvider;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.InterfaceAdapter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.SerializedName;
 
 /**
  * The Class <code>ActorProfile</code>
