@@ -75,7 +75,7 @@
 
         <RelativeLayout
             android:layout_width="349dp"
-            android:layout_height="104dp"
+            android:layout_height="111dp"
             android:layout_gravity="center_horizontal">
 
             <!--android:entries="@array/externalPlatforms"/>-->
@@ -87,6 +87,7 @@
                 android:layout_alignParentStart="true">
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:paddingTop="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/aai_external_platform_label"
@@ -105,9 +106,12 @@
                     android:layout_below="@+id/aai_external_platform_label"
                     android:layout_alignParentLeft="true"
                     android:textColor="#919090"
+                    android:background="#0080FF"
+                    android:popupBackground="#0080FF"
                     />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+                    android:paddingTop="15dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/aai_userIdentityName_label"
@@ -126,7 +130,9 @@
                     android:layout_alignParentStart="true"
                     android:layout_below="@+id/aai_userIdentityName_label"
                     android:layout_alignParentLeft="true"
-                    android:textColor="#919090" />
+                    android:textColor="#919090"
+                    android:background="#0080FF"
+                    android:popupBackground="#0080FF"/>
             </RelativeLayout>
         </RelativeLayout>
 
