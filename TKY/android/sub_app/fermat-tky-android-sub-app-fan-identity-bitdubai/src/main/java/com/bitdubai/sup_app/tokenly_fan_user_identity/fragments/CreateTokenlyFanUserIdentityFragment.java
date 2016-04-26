@@ -247,6 +247,9 @@ public class CreateTokenlyFanUserIdentityFragment extends AbstractFermatFragment
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, arraySpinner);
         mFanExternalPlatform.setAdapter(adapter);
         mFanExternalUserName.requestFocus();
+        mFanExternalPlatform.setVisibility(View.GONE);
+
+
         registerForContextMenu(fanImage);
         fanImage.setOnClickListener(new View.OnClickListener() {
             @Override
