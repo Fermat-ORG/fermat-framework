@@ -142,7 +142,6 @@ public class ContactsListFragment
             adapter = new ContactsListAdapter(getActivity(), lstChatUserInformations);
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
-            rootView.setBackgroundResource(R.drawable.fondo);
             noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
             noData=(ImageView) rootView.findViewById(R.id.nodata);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
@@ -241,6 +240,7 @@ public class ContactsListFragment
             noDatalabel.setAnimation(anim);
             noDatalabel.setVisibility(View.VISIBLE);
             noData.setVisibility(View.VISIBLE);
+            rootView.setBackgroundResource(R.drawable.fondo);
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
