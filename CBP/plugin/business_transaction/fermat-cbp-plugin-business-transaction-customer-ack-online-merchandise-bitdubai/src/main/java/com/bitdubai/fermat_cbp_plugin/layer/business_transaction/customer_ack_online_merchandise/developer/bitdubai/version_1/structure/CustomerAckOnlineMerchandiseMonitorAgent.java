@@ -455,14 +455,18 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
 
                 if (eventTypeCode.equals(EventType.BROKER_ACK_PAYMENT_CONFIRMED.getCode())) {
                     //the eventId from this event is the contractId - Customer side
-                    CustomerBrokerContractPurchase customerBrokerContractPurchase = customerBrokerContractPurchaseManager.
-                            getCustomerBrokerContractPurchaseForContractId(eventId);
+                    try{
+                        CustomerBrokerContractPurchase customerBrokerContractPurchase = customerBrokerContractPurchaseManager.
+                                getCustomerBrokerContractPurchaseForContractId(eventId);
 
-                    String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
-                    CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.
-                            getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                        String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
+                        CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.
+                                getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
 
-                    customerAckOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase, customerBrokerPurchaseNegotiation);
+                        customerAckOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase, customerBrokerPurchaseNegotiation);
+                    }catch (Exception e){
+                        System.out.println("an error has occurred (BROKER_ACK_PAYMENT_CONFIRMED) this must show on the broker side ");
+                    }
                     customerAckOnlineMerchandiseBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
 
@@ -491,11 +495,6 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                         exception,
                         "Checking pending events",
                         "Cannot insert a record in database");
-            } catch (CantGetListCustomerBrokerContractPurchaseException exception) {
-                throw new UnexpectedResultReturnedFromDatabaseException(
-                        exception,
-                        "Checking pending events",
-                        "Cannot get the purchase contract");
             } catch (CantUpdateCustomerBrokerContractPurchaseException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         exception,
@@ -506,11 +505,6 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                         exception,
                         "Checking pending events",
                         "Cannot update the contract sale status");
-            } catch (CantGetListPurchaseNegotiationsException exception) {
-                throw new UnexpectedResultReturnedFromDatabaseException(
-                        exception,
-                        "Checking pending events",
-                        "Cannot get the purchase negotiation list");
             } catch (ObjectNotSetException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         exception,
