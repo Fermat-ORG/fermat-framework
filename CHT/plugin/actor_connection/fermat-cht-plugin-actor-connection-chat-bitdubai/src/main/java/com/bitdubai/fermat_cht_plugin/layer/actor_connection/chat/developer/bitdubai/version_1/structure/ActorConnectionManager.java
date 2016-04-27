@@ -328,7 +328,26 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
                             connectionId,
                             ConnectionState.CONNECTED
                     );
+                    break;
 
+                case DISCONNECTED_LOCALLY:
+
+                    chatNetworkService.acceptConnection(connectionId);
+
+                    dao.changeConnectionState(
+                            connectionId,
+                            ConnectionState.CONNECTED
+                    );
+                    break;
+
+                case DISCONNECTED_REMOTELY:
+
+                    chatNetworkService.acceptConnection(connectionId);
+
+                    dao.changeConnectionState(
+                            connectionId,
+                            ConnectionState.CONNECTED
+                    );
                     break;
 
                 default:
