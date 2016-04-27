@@ -41,6 +41,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInitializeCommunicationsNetworkNodeP2PDatabaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.HexadecimalConverter;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.SeedServerConf;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
@@ -237,19 +238,28 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             /*
              * Validate if the node are the seed server
              */
-            if (iAmSeedServer()){
+            if (!iAmSeedServer()){
 
-                LOG.info("i Am Seed Server() = "+iAmSeedServer());
+                LOG.info("i Am Seed Server() = " + iAmSeedServer());
                 fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
+                //fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("localhost", 9090);
 
                 /*
-                 * Validate if the node server profile register has change
+                 * Validate if the node are register in the node catalog
                  */
-                if (validateNodeProfileRegisterChange()){
-                    requestUpdateProfileInTheNodeCatalog();
+                if (Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTER_IN_CATALOG))){
+
+                    /*
+                     * Validate if the node server profile register has change
+                     */
+                    if (validateNodeProfileRegisterChange()){
+                        requestUpdateProfileInTheNodeCatalog();
+                    }
+
                 }else {
                     requestRegisterProfileInTheNodeCatalog();
                 }
+
             }
 
 
@@ -298,10 +308,16 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
         LOG.info("Generating Node Profile");
 
         nodeProfile = new NodeProfile();
+
+        //TODO: CHANGE
         nodeProfile.setIp(serverIp);
+        //nodeProfile.setIp("localhost");
         nodeProfile.setDefaultPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
+        //nodeProfile.setDefaultPort(8080);
         nodeProfile.setIdentityPublicKey(identity.getPublicKey());
         nodeProfile.setName(ConfigurationManager.getValue(ConfigurationManager.NODE_NAME));
+        //nodeProfile.setName("Otro Server");
+
         nodeProfile.setLocation(LocationProvider.acquireLocationThroughIP());
 
         LOG.info(nodeProfile);
@@ -516,8 +532,11 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      */
     private boolean validateNodeProfileRegisterChange(){
 
-        String jsonString = ConfigurationManager.getValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE);
-        NodeProfile lastNodeProfileRegister = new NodeProfile().fromJson(jsonString);
+        String jsonString = new String(HexadecimalConverter.convertHexStringToByteArray(ConfigurationManager.getValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE)));
+
+        LOG.info("Last Profile Register = "+jsonString);
+
+        NodeProfile lastNodeProfileRegister = NodeProfile.fromJson(jsonString);
         if (!nodeProfile.equals(lastNodeProfileRegister)){
             return Boolean.TRUE;
         }

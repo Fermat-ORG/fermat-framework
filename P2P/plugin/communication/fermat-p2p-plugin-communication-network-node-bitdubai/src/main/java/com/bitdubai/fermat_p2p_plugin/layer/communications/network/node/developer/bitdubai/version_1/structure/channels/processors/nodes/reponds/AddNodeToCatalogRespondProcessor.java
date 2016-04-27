@@ -9,6 +9,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.AddNodeToCatalogMsjRespond;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.HexadecimalConverter;
 
 import org.jboss.logging.Logger;
 
@@ -68,7 +69,7 @@ public class AddNodeToCatalogRespondProcessor extends PackageProcessor {
 
                     LOG.info("MsgRespond status "+messageContent.getStatus());
                     ConfigurationManager.updateValue(ConfigurationManager.REGISTER_IN_CATALOG, String.valueOf(Boolean.TRUE));
-                    ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, messageContent.getNodeProfileAdded().toJson());
+                    ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, HexadecimalConverter.convertHexString(messageContent.getNodeProfileAdded().toJson().getBytes("UTF-8")));
 
                 }else if (messageContent.getStatus() == MsgRespond.STATUS.FAIL) {
 
@@ -77,7 +78,7 @@ public class AddNodeToCatalogRespondProcessor extends PackageProcessor {
 
                     if (messageContent.getAlreadyExists()){
                         ConfigurationManager.updateValue(ConfigurationManager.REGISTER_IN_CATALOG, String.valueOf(Boolean.TRUE));
-                        ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, messageContent.getNodeProfileAdded().toJson());
+                        ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, HexadecimalConverter.convertHexString(messageContent.getNodeProfileAdded().toJson().getBytes("UTF-8")));
                     }
 
                 } else {

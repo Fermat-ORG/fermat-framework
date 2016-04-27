@@ -85,7 +85,7 @@ public class AddNodeToCatalogProcessor extends PackageProcessor {
                     /*
                      * Notify the node already exist
                      */
-                    addNodeToCatalogMsjRespond = new AddNodeToCatalogMsjRespond(AddNodeToCatalogMsjRespond.STATUS.FAIL, "The node profile already exist", nodeProfile, Boolean.FALSE);
+                    addNodeToCatalogMsjRespond = new AddNodeToCatalogMsjRespond(AddNodeToCatalogMsjRespond.STATUS.FAIL, "The node profile already exist", nodeProfile, Boolean.TRUE);
 
                 }else {
 

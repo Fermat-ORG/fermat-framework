@@ -150,18 +150,14 @@ public class DesktopDatabaseTable implements DatabaseTable {
     public void updateRecord(DatabaseTableRecord record) throws CantUpdateRecordException {
 
         try {
-            List<DatabaseRecord> records = record.getValues();
 
-            //ContentValues recordUpdateList = new ContentValues();
+            List<DatabaseRecord> records = record.getValues();
             Map<String, Object> recordUpdateList = new HashMap<>();
 
-            /**
-             * I update only the fields marked as modified
-             *
-             */
-            for (int i = 0; i < records.size(); ++i) {
-                if (records.get(i).isChange())
-                    recordUpdateList.put(records.get(i).getName(), records.get(i).getValue());
+            for (DatabaseRecord item: records) {
+                if (item.isChange()){
+                    recordUpdateList.put(item.getName(), item.getValue());
+                }
             }
 
             if (this.tableFilter != null) {
