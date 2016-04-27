@@ -1144,7 +1144,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
                         String type = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_MAIN.getKey()).getType();
 
-                        fragmentsArray[0] = appConnections.getFragmentFactory().getFragment(
+                        fragmentsArray[1] = appConnections.getFragmentFactory().getFragment(
                                 type,
                                 createOrOpenApp(getDesktopManager()),
                                 null
@@ -1152,7 +1152,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
                         type = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_P2P_MAIN.getKey()).getType();
 
-                        fragmentsArray[1] = appConnections.getFragmentFactory().getFragment(
+                        fragmentsArray[0] = appConnections.getFragmentFactory().getFragment(
                                 type,
                                 createOrOpenApp(getDesktopManager()),
                                 null
@@ -1730,8 +1730,22 @@ public abstract class FermatActivity extends AppCompatActivity implements
         super.onPause();
         if(broadcastManager!=null)broadcastManager.stop();
 //        networkStateReceiver.removeListener(this);
+    }
 
-
+    @Override
+    public void selectApp(String appPublicKey) throws Exception {
+        try{
+            Intent intent;
+            intent = new Intent();
+            intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appPublicKey);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra(ApplicationConstants.INTENT_APP_TYPE,ApplicationSession.getInstance().getAppManager().getApp(appPublicKey).getAppType());
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            intent.setAction("org.fermat.APP_LAUNCHER");
+            sendBroadcast(intent);
+        }catch (Exception e){
+            throw new Exception("App public key not exist");
+        }
     }
 
 

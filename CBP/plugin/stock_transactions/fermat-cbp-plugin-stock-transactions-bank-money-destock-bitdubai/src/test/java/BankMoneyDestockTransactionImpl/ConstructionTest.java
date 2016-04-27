@@ -34,6 +34,7 @@ public class ConstructionTest {
     TransactionStatusRestockDestock transactionStatus = TransactionStatusRestockDestock.INIT_TRANSACTION;
     BigDecimal priceReference = BigDecimal.ONE;
     OriginTransaction originTransaction = OriginTransaction.STOCK_INITIAL;
+    String originTransactionId = new String();
 
     @Test
     public void Construction_ValidParameters_NewObjectCreated(){
@@ -51,7 +52,8 @@ public class ConstructionTest {
                 this.timeStamp,
                 this.transactionStatus,
                 this.priceReference,
-                this.originTransaction
+                this.originTransaction,
+                this.originTransactionId
         );
         assertThat(bankMoneyDestockTransaction).isNotNull();
     }

@@ -4,6 +4,7 @@ import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabase;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTable;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperDatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.all_definition.developer.DeveloperObjectFactory;
+import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
@@ -16,6 +17,8 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.Data
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantInitializeDatabaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseConstants;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.network_services.data_base.CommunicationNetworkServiceDatabaseFactory;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,8 +26,12 @@ import java.util.UUID;
 
 /**
  * Created by José D. Vilchez A. (josvilchezalmera@gmail.com) on 07/04/16.
+ * Edited by Miguel Rincon on 19/04/2016
  */
 public class ChatActorNetworkServiceDeveloperDatabaseFactory {
+
+    private ErrorManager errorManager;
+
     private final PluginDatabaseSystem pluginDatabaseSystem;
     private final UUID pluginId;
 
@@ -59,6 +66,7 @@ public class ChatActorNetworkServiceDeveloperDatabaseFactory {
                     database = this.pluginDatabaseSystem.openDatabase(pluginId, tableId);
 
                 } catch (final CantOpenDatabaseException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
                     throw new CantInitializeDatabaseException(e, "tableId: " + tableId, "Error trying to open the database.");
 
@@ -71,6 +79,7 @@ public class ChatActorNetworkServiceDeveloperDatabaseFactory {
                         database = cryptoBrokerActorNetworkServiceDatabaseFactory.createDatabase(pluginId, tableId);
 
                     } catch (final CantCreateDatabaseException z) {
+                        errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, z);
 
                         throw new CantInitializeDatabaseException(z, "tableId: " + tableId, "Error trying to create the database.");
                     }
@@ -83,6 +92,7 @@ public class ChatActorNetworkServiceDeveloperDatabaseFactory {
                     this.database = this.pluginDatabaseSystem.openDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
                 } catch (CantOpenDatabaseException e) {
+                    errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
 
                     throw new CantInitializeDatabaseException(e, "tableId: " + tableId, "Error trying to open the database.");
 
@@ -95,6 +105,7 @@ public class ChatActorNetworkServiceDeveloperDatabaseFactory {
                         this.database = communicationLayerNetworkServiceDatabaseFactory.createDatabase(pluginId, CommunicationNetworkServiceDatabaseConstants.DATA_BASE_NAME);
 
                     } catch (CantCreateDatabaseException z) {
+                        errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, z);
 
                         throw new CantInitializeDatabaseException(z, "tableId: " + tableId, "Error trying to create the database.");
                     }
@@ -236,6 +247,7 @@ public class ChatActorNetworkServiceDeveloperDatabaseFactory {
             return returnedRecords;
 
         } catch (Exception e) {
+            errorManager.reportUnexpectedPluginException(Plugins.CHAT_ACTOR_NETWORK_SERVICE, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
 
             System.err.println(e.toString());
             return new ArrayList<>();
