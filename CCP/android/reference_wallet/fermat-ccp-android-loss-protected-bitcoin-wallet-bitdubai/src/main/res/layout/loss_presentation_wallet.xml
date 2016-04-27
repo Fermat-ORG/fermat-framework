@@ -10,7 +10,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="4.5dp"
-        android:background="@drawable/round_corner_line_dialog"
+        android:background="#073487"
         android:fitsSystemWindows="true" />
 
     <LinearLayout
@@ -45,7 +45,7 @@
                     android:gravity="left"
                     android:paddingLeft="5dp"
                     android:text="@string/welcome_text"
-                    android:textColor="#00a99d"
+                    android:textColor="#073487"
                     android:textSize="20sp"
                     app:typeface="CAVIAR_DREAMS_BOLD"
                     />
@@ -68,7 +68,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="175dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp">
 
@@ -76,7 +76,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:scaleType="fitXY"
-                    android:src="@drawable/banner" />
+                    android:src="@drawable/banner_loss" />
             </RelativeLayout>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -163,7 +163,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
-                    android:buttonTint="@color/black_overlay" />
+                    android:buttonTint="#073487" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"

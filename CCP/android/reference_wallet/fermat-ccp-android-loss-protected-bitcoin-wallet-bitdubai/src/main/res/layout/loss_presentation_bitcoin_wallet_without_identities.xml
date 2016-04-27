@@ -5,12 +5,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@drawable/rounded_corners">
+    android:background="#ffffff">
 
     <View
         android:layout_width="match_parent"
         android:layout_height="4.5dp"
-        android:background="@drawable/round_corner_line_dialog"
+        android:background="#DC5A0F"
         android:fitsSystemWindows="true" />
 
     <LinearLayout
@@ -44,7 +44,7 @@
                     android:paddingLeft="5dp"
                     android:layout_weight="1"
                     android:textSize="20sp"
-                    android:textColor="#00a99d"
+                    android:textColor="#073487"
                     app:typeface="CAVIAR_DREAMS_BOLD"
                     android:gravity="left"
                     android:layout_gravity="center" />
@@ -53,7 +53,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_weight="0.4"
-                    android:src="@drawable/bitcoin_wallet_2"
+                    android:src="@drawable/lpw_icon"
                     android:paddingBottom="2dp"/>
             </LinearLayout>
 
@@ -62,20 +62,20 @@
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/round_corner_line_dialog"
+                android:background="#073487"
                 android:layout_marginBottom="12dp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="175dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp">
 
                 <ImageView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:scaleType="fitXY"
-                    android:src="@drawable/banner"/>
+                    android:src="@drawable/banner_loss"/>
             </RelativeLayout>
 
             <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -96,7 +96,7 @@
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/round_corner_line_dialog" />
+                android:background="#073487" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -124,7 +124,7 @@
                 android:layout_height="0.7dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/round_corner_line_dialog"
+                android:background="#073487"
                 />
 
             <RelativeLayout
@@ -138,7 +138,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:id="@+id/checkbox_not_show"
-                    android:buttonTint="@color/black_overlay" />
+                    android:buttonTint="#073487" />
 
                 <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
                     android:layout_width="wrap_content"
@@ -162,7 +162,8 @@
                 android:id="@+id/btn_dismiss"
                 android:text="@string/close_text"
                 android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal" />
+                android:layout_gravity="center_horizontal"
+                android:background="#DC5A0F"/>
 
         </RelativeLayout>
 
