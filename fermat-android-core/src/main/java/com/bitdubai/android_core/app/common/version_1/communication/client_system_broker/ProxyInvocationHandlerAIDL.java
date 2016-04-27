@@ -1,5 +1,6 @@
 package com.bitdubai.android_core.app.common.version_1.communication.client_system_broker;
 
+import android.os.Looper;
 import android.util.Log;
 
 import com.bitdubai.fermat_api.layer.all_definition.common.system.utils.PluginVersionReference;
@@ -28,6 +29,8 @@ public class ProxyInvocationHandlerAIDL<T extends ModuleManager> implements Invo
 
     public Object invoke(Object proxy, Method method, Object[] args)
             throws Throwable {
+
+        if(Looper.myLooper() == Looper.getMainLooper()) throw new WorkOnMainThreadException(proxy,method);
 
         Log.i(TAG,"object: "+ proxy.getClass().getInterfaces());
         Log.i(TAG,"method: "+ method.getName());
