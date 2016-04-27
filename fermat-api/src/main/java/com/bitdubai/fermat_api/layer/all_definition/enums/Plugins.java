@@ -171,6 +171,7 @@ public enum Plugins implements FermatPluginsEnum {
     BITCOINVENEZUELA("BCERPBV"  ),
     BITFINEX("BCERPBF"  ),
     BTER("BCERPBT"  ),
+    BTCE("BCERPBC"  ),
     DOLARTODAY("BCERPDT"  ),
     ELCRONISTA("BCERPEC"  ),
     EUROPEAN_CENTRAL_BANK("BCERPECB" ),

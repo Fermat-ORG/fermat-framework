@@ -3,6 +3,7 @@ package com.bitdubai.fermat_cer_core.layer.provider;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_cer_core.layer.provider.bitcoinvenezuela.BitcoinVenezuelaSubsystem;
 import com.bitdubai.fermat_cer_core.layer.provider.bitfinex.BitfinexSubsystem;
+import com.bitdubai.fermat_cer_core.layer.provider.btce.BtceSubsystem;
 import com.bitdubai.fermat_cer_core.layer.provider.bter.BterSubsystem;
 import com.bitdubai.fermat_cer_core.layer.provider.dolartoday.DolarTodaySubsystem;
 import com.bitdubai.fermat_cer_core.layer.provider.elcronista.ElCronistaSubsystem;
@@ -28,6 +29,7 @@ public class ProviderLayer extends AbstractLayer {
         try {
             registerPlugin(new BitcoinVenezuelaSubsystem());
             registerPlugin(new BitfinexSubsystem());
+            registerPlugin(new BtceSubsystem());
             registerPlugin(new BterSubsystem());
             registerPlugin(new DolarTodaySubsystem());
             registerPlugin(new ElCronistaSubsystem());

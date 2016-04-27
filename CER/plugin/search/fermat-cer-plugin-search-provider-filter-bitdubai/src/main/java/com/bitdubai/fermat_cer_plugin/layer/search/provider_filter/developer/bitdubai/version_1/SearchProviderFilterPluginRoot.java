@@ -61,6 +61,9 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BITFINEX)
     private CurrencyExchangeRateProviderManager bitfinexProvider;
 
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BTCE)
+    private CurrencyExchangeRateProviderManager btceProvider;
+
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BTER)
     private CurrencyExchangeRateProviderManager bterProvider;
 
@@ -102,6 +105,7 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
         try {
             providerMap.put(bitcoinVenezuelaProvider.getProviderId(), bitcoinVenezuelaProvider);
             providerMap.put(bitfinexProvider.getProviderId(), bitfinexProvider);
+            providerMap.put(btceProvider.getProviderId(), btceProvider);
             //providerMap.put(bterProvider.getProviderId(), bterProvider);
             providerMap.put(dolarTodayProvider.getProviderId(), dolarTodayProvider);
             providerMap.put(elCronistaProvider.getProviderId(), elCronistaProvider);
