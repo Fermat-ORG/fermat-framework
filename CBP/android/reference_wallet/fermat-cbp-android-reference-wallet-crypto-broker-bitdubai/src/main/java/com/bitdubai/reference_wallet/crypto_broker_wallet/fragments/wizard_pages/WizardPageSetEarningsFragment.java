@@ -194,22 +194,6 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                                 }
                             }
                         }
-                        /*List<BankAccountNumber> accounts = moduleManager.getAccounts(wallet.getWalletPublicKey());
-                        for (BankAccountNumber account : accounts) {
-                            FiatCurrency currencyType = account.getCurrencyType();
-                            if (currencyType.equals(earningCurrency) || currencyType.equals(linkedCurrency)) {
-                                for (CryptoBrokerWalletAssociatedSetting walletAssociatedItem : walletAssociated) {
-                                    if( wallet.getWalletPublicKey().equals(walletAssociatedItem.getWalletPublicKey()) &&
-                                        currencyType.getCode().equals(walletAssociatedItem.getMerchandise().getCode()) &&
-                                        account.getAccount().equals(walletAssociatedItem.getBankAccount())
-                                    ) {
-                                        filteredList.add(wallet);
-                                        setCurrencyEarningWallet(wallet.getWalletPublicKey(), data, currencyType);
-                                        break;
-                                    }
-                                }
-                            }
-                        }*/
                         break;
                     case CASH_PLATFORM:
                         FiatCurrency cashCurrency = moduleManager.getCashCurrency(wallet.getWalletPublicKey());
@@ -220,18 +204,6 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                                 break;
                             }
                         }
-                        /*FiatCurrency cashCurrency = moduleManager.getCashCurrency(wallet.getWalletPublicKey());
-                        if (cashCurrency.equals(earningCurrency) || cashCurrency.equals(linkedCurrency)) {
-                            for (CryptoBrokerWalletAssociatedSetting walletAssociatedItem : walletAssociated) {
-                                if (    wallet.getWalletPublicKey().equals(walletAssociatedItem.getWalletPublicKey()) &&
-                                        cashCurrency.getCode().equals(walletAssociatedItem.getMerchandise().getCode())
-                                ) {
-                                    filteredList.add(wallet);
-                                    setCurrencyEarningWallet(wallet.getWalletPublicKey(), data, cashCurrency);
-                                    break;
-                                }
-                            }
-                        }*/
                         break;
                     case CRYPTO_CURRENCY_PLATFORM:
                         CryptoCurrency cryptoCurrency = wallet.getCryptoCurrency();
@@ -242,20 +214,6 @@ public class WizardPageSetEarningsFragment extends AbstractFermatFragment
                                 break;
                             }
                         }
-                        /*CryptoCurrency cryptoCurrency = wallet.getCryptoCurrency();
-                        if (cryptoCurrency.equals(earningCurrency) || cryptoCurrency.equals(linkedCurrency)) {
-                            for (CryptoBrokerWalletAssociatedSetting walletAssociatedItem : walletAssociated) {
-                                System.out.print("\n*** Test Wizard - Earning - showWalletsDialog() - CRYPTO_CURRENCY_PLATFORM: " + cryptoCurrency.getCode() + ".equals(" + walletAssociatedItem.getMerchandise().getCode() + "\n");
-                                if (    wallet.getWalletPublicKey().equals(walletAssociatedItem.getWalletPublicKey()) &&
-                                        cryptoCurrency.getCode().equals(walletAssociatedItem.getMerchandise().getCode())
-                                ) {
-                                    System.out.print("\n*** Test Wizard - Earning - showWalletsDialog() - CRYPTO_CURRENCY_PLATFORM: Add: "+cryptoCurrency.getCode()+"\n");
-                                    filteredList.add(wallet);
-                                    setCurrencyEarningWallet(wallet.getWalletPublicKey(), data, cryptoCurrency);
-                                    break;
-                                }
-                            }
-                        }*/
                         break;
                 }
             }
