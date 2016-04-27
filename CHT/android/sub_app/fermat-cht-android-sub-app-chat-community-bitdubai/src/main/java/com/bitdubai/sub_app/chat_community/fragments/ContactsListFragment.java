@@ -240,6 +240,7 @@ public class ContactsListFragment
             noDatalabel.setAnimation(anim);
             noDatalabel.setVisibility(View.VISIBLE);
             noData.setVisibility(View.VISIBLE);
+            rootView.setBackgroundResource(R.drawable.fondo);
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show && emptyView.getVisibility() == View.VISIBLE) {

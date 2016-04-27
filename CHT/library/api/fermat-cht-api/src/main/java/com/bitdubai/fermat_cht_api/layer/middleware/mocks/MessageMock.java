@@ -4,7 +4,6 @@ import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeMessage;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Message;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.UUID;
 
