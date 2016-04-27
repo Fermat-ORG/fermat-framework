@@ -361,7 +361,7 @@ public class ChatListFragment extends AbstractFermatFragment{
                 typeMessage, noReadMsgs, imgId, errorManager);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
-        //registerForContextMenu(list);
+        registerForContextMenu(list);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -429,15 +429,12 @@ public class ChatListFragment extends AbstractFermatFragment{
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        //try {
-           //if(chatManager.isIdentityDevice() != false) {
-       // Inflate the menu items
-       inflater.inflate(R.menu.chat_list_menu, menu);
-       // Locate the search item//@android:drawable/ic_menu_search
-       MenuItem searchItem = menu.findItem(R.id.menu_search);
-       searchView = (SearchView) searchItem.getActionView();
-       searchView.setQueryHint(getResources().getString(R.string.search_hint));
-       searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        inflater.inflate(R.menu.chat_list_menu, menu);
+        // Locate the search item
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
            @Override
            public boolean onQueryTextSubmit(String s) {
                return false;
@@ -450,15 +447,15 @@ public class ChatListFragment extends AbstractFermatFragment{
                }
                return false;
            }
-       });
-       if (chatSession.getData("filterString") != null) {
+        });
+        if (chatSession.getData("filterString") != null) {
            String filterString = (String) chatSession.getData("filterString");
            if (filterString.length() > 0) {
                searchView.setQuery(filterString, true);
                searchView.setIconified(false);
            }
-       }
-       menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
+        }
+        menu.add(0, ChtConstants.CHT_ICON_HELP, 0, "help").setIcon(R.drawable.ic_menu_help_cht)
                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
 
@@ -471,10 +468,10 @@ public class ChatListFragment extends AbstractFermatFragment{
         if (id == R.id.menu_search) {
             return true;
         }
-//        if (id == R.id.menu_open_chat) {
-//            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
-//            return true;
-//        }
+        if (id == R.id.menu_open_chat) {
+            changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
+            return true;
+        }
 //        if (id == R.id.menu_create_group) {
 //            //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
 //            return true;
@@ -483,33 +480,33 @@ public class ChatListFragment extends AbstractFermatFragment{
 //            changeActivity(Activities.CHT_CHAT_BROADCAST_WIZARD_ONE_DETAIL, appSession.getAppPublicKey());
 //            return true;
 //        }
-//        if (id == R.id.menu_delete_all_chats) {
-//            try {
-//                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
-//                alert.setTextTitle("Delete All Chats");
-//                alert.setTextBody("Do you want to delete all chats? All chats will be erased");
-//                alert.setType("delete-chat");
-//                alert.show();
-//                alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                    @Override
-//                    public void onDismiss(DialogInterface dialog) {
-//                        try {
-//                            // Delete chats and refresh view
-//                            chatManager.deleteChats();
-//                            updatevalues();
-//                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
-//                        } catch (CantDeleteChatException e) {
-//                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//                        }catch (Exception e) {
-//                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//                        }
-//                    }
-//                });
-//            }catch (Exception e){
-//                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-//            }
-//            return true;
-//        }
+        if (id == R.id.menu_delete_all_chats) {
+            try {
+                final cht_dialog_yes_no alert = new cht_dialog_yes_no(getActivity(),appSession,null,null,null);
+                alert.setTextTitle("Delete All Chats");
+                alert.setTextBody("Do you want to delete all chats? All chats will be erased");
+                alert.setType("delete-chat");
+                alert.show();
+                alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        try {
+                            // Delete chats and refresh view
+                            chatManager.deleteChats();
+                            updatevalues();
+                            adapter.refreshEvents(contactName, message, dateMessage, chatId, contactId, status, typeMessage, noReadMsgs, imgId);
+                        } catch (CantDeleteChatException e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }catch (Exception e) {
+                            errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+                        }
+                    }
+                });
+            }catch (Exception e){
+                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+            }
+            return true;
+        }
 
         if (id == R.id.menu_error_report) {
             changeActivity(Activities.CHT_CHAT_OPEN_SEND_ERROR_REPORT, appSession.getAppPublicKey());

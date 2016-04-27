@@ -168,7 +168,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         }
 
         // Let this fragment contribute menu items
-        //setHasOptionsMenu(true);
+        setHasOptionsMenu(true);
     }
 
 
@@ -220,7 +220,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 null, errorManager, chatSession, appSession, this);
         list=(ListView)layout.findViewById(R.id.list);
         list.setAdapter(adapter);
-        //registerForContextMenu(list);
+        registerForContextMenu(list);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener()/*new AdapterView.OnItemClickListener()*/ {
 
@@ -229,7 +229,6 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                 //public void onClick(View view) {
                 try {
                     appSession.setData("whocallme", "contact");
-                    //TODO: metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
                     appSessionSetDataContact(position);
                     changeActivity(Activities.CHT_CHAT_OPEN_MESSAGE_LIST, appSession.getAppPublicKey());
                 } catch (Exception e) {
@@ -420,7 +419,6 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
         if (id == R.id.menu_view_contact) {
             try {
                 //Contact con = chatSession.getSelectedContact();// type ChatActorCommunityInformation
-                //TODO: metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
                 appSessionSetDataContact(info.position);
                 changeActivity(Activities.CHT_CHAT_OPEN_CONTACT_DETAIL, appSession.getAppPublicKey());
             }catch (Exception e){
@@ -428,15 +426,15 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
             }
             return true;
         }
-        if (id == R.id.menu_edit_contact) {
-            try {
-                appSessionSetDataContact(info.position);
-                changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
-            }catch (Exception e){
-                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
-            }
-            return true;
-        }
+//        if (id == R.id.menu_edit_contact) {
+//            try {
+//                appSessionSetDataContact(info.position);
+//                changeActivity(Activities.CHT_CHAT_EDIT_CONTACT, appSession.getAppPublicKey());
+//            }catch (Exception e){
+//                errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
+//            }
+//            return true;
+//        }
         if (id == R.id.menu_block_contact) {
             //changeActivity(Activities.CHT_CHAT_OPEN_CONTACTLIST, appSession.getAppPublicKey());
             return true;
@@ -445,6 +443,7 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
     }
 
     public void appSessionSetDataContact (int position){
+        //TODO: metodo nuevo que lo buscara del module del identity//chatManager.getChatUserIdentities();
         Contact contact=new ContactImpl();
         contact.setRemoteActorPublicKey(contactid.get(position));
         contact.setAlias(contactname.get(position));
