@@ -2,6 +2,7 @@ package com.bitdubai.fermat_art_plugin.layer.actor_connection.artist.developer.b
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ServiceStatus;
+import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
 import com.bitdubai.fermat_api.layer.all_definition.events.exceptions.UnexpectedEventException;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEvent;
 import com.bitdubai.fermat_api.layer.all_definition.events.interfaces.FermatEventHandler;
@@ -40,9 +41,11 @@ public class ArtistConnectionRequestNewsEventHandler implements FermatEventHandl
      */
     @Override
     public void handleEvent(FermatEvent fermatEvent) throws FermatException {
+        EventSource eventSource;
         if (this.artistActorConnectionPluginRoot.getStatus() == ServiceStatus.STARTED) {
             if (fermatEvent instanceof ArtistConnectionRequestNewsEvent) {
-                switch (fermatEvent.getSource()){
+                eventSource = fermatEvent.getSource();
+                switch (eventSource){
                     case ACTOR_NETWORK_SERVICE_ARTIST:
                         actorConnectionEventActions.handleNewsEvent();
                         break;
@@ -50,7 +53,12 @@ public class ArtistConnectionRequestNewsEventHandler implements FermatEventHandl
                         //No action required
                         break;
                     default:
-                        //TODO: throw an exception.
+                        throw new FermatException(
+                                "Unexpected Event source when trying to handling " +
+                                        "ArtistConnectionRequestNewsEvent",
+                                null,
+                                "ArtistConnectionRequestNewsEventHandler",
+                                "Unexpected event source: "+eventSource);
                 }
 
             } else {

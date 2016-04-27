@@ -105,8 +105,9 @@ public class ActorConnectionEventActions {
                         this.handleFanRequestConnection(request, Actors.ART_FAN);
                     break;
                 default:
-                    //TODO: throw an exception
-                    break;
+                    throw new CantHandleNewsEventException(
+                            "Unexpected event source when processing News Event in Fan Actor " +
+                                    "Network Service");
             }
 
         } catch(CantListPendingConnectionRequestsException |
@@ -290,8 +291,8 @@ public class ActorConnectionEventActions {
                 handleFanUpdateEvent();
                 break;
             default:
-                //TODO: throw an exception.
-                break;
+                throw new CantHandleNewsEventException(
+                        "Unexpected Event source from Update event in Fan Actor Network service.");
         }
     }
 
@@ -304,8 +305,8 @@ public class ActorConnectionEventActions {
             final List<ArtistConnectionRequest> list = artistNetworkService.
                     listPendingConnectionUpdates();
             for (final ArtistConnectionRequest request : list) {
-                if (request.getRequestType() == RequestType.RECEIVED  &&
-                        request.getSenderActorType() == PlatformComponentType.ART_FAN) {
+                if (request.getRequestType() == RequestType.RECEIVED  /*&&
+                        request.getSenderActorType() == PlatformComponentType.ART_FAN*/) {
                     switch (request.getRequestAction()) {
                         case ACCEPT:
                             this.handleAcceptConnection(request.getRequestId());
