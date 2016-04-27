@@ -74,6 +74,9 @@ public final class CommunicationRegistrationProcessNetworkServiceAgent {
 
             try{
 
+                System.out.println(networkServiceRoot.getNetworkServiceProfile().getAlias() + " networkServiceRoot.isRegister() " + networkServiceRoot.isRegister()
+                             + " networkServiceRoot.getCommunicationsClientConnection().isRegister() " + networkServiceRoot.getCommunicationsClientConnection().isRegister());
+
                 if (networkServiceRoot.getCommunicationsClientConnection().isRegister() && !networkServiceRoot.isRegister()){
 
                     /*

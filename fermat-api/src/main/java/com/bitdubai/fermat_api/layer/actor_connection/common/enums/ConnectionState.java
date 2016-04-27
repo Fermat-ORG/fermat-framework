@@ -18,6 +18,7 @@ public enum ConnectionState implements FermatEnum {
     CANCELLED_LOCALLY           ("CAL"),
     CANCELLED_REMOTELY          ("CAR"),
     CONNECTED                   ("CTD"),
+    CONNECTED_ONLINE            ("CTDO"),
     NO_CONNECTED                ("NCTD"),
     DENIED_LOCALLY              ("DNL"),
     DENIED_REMOTELY             ("DNR"),

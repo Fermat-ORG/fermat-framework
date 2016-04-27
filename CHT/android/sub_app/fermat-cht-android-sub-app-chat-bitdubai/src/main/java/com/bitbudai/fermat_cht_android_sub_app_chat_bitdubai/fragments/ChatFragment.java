@@ -2,6 +2,7 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.fragments;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
+import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatAdapterView;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.sessions.ChatSession;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.settings.ChatSettings;
@@ -47,11 +49,12 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     private ChatSession chatSession;
     private Toolbar toolbar;
 
-    //ArrayList<String> historialmensaje = new ArrayList<>();
-    //SwipeRefreshLayout mSwipeRefreshLayout;
     // Defines a tag for identifying log entries
     String TAG="CHT_ChatFragment";
-    private ChatAdapterView adapter;
+    private ChatAdapterView adapterView;
+    private ChatAdapter adapter;
+
+    private SearchView searchView;
 
     public static ChatFragment newInstance() { return new ChatFragment(); }
 
@@ -104,7 +107,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
     public void onUpdateViewOnUIThread(String code) {
         super.onUpdateViewOnUIThread(code);
         if(code.equals("13")){
-            adapter.refreshEvents();
+            adapterView.refreshEvents();
         }
     }
 
@@ -118,7 +121,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
         });
         getActivity().getWindow().setBackgroundDrawableResource(R.drawable.cht_background);
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        adapter=new ChatAdapterView.Builder(inflater.getContext())
+        adapterView=new ChatAdapterView.Builder(inflater.getContext())
                 .insertInto(container)
                 .addModuleManager(moduleManager)
                 .addErrorManager(errorManager)
@@ -128,19 +131,43 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                 .addChatSettings(chatSettings)
                 .addToolbar(toolbar)
                 .build();
-        return adapter;
+        return adapterView;
     }
 
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
         // Inflate the menu items
         inflater.inflate(R.menu.chat_menu, menu);
+        // Locate the search item
+        MenuItem searchItem = menu.findItem(R.id.menu_search);
+        searchView = (SearchView) searchItem.getActionView();
+        searchView.setQueryHint(getResources().getString(R.string.search_hint));
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                if (s.equals(searchView.getQuery().toString())) {
+                    adapter.getFilter().filter(s);
+                }
+                return false;
+            }
+        });
+        if (chatSession.getData("filterString") != null) {
+            String filterString = (String) chatSession.getData("filterString");
+            if (filterString.length() > 0) {
+                searchView.setQuery(filterString, true);
+                searchView.setIconified(false);
+            }
+        }
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_search) {
-            //changeActivity(Activities.CHT_CHAT_OPEN_CONNECTIONLIST, appSession.getAppPublicKey());
             return true;
         }
         if (item.getItemId() == R.id.menu_block_contact) {
@@ -162,7 +189,7 @@ public class ChatFragment extends AbstractFermatFragment {//ActionBarActivity
                             Chat chat = chatSession.getSelectedChat();
                             // Delete chat and refresh view
                             chatManager.deleteMessagesByChatId(chat.getChatId());
-                            adapter.refreshEvents();
+                            adapterView.refreshEvents();
                         } catch (CantDeleteMessageException e) {
                             errorManager.reportUnexpectedSubAppException(SubApps.CHT_CHAT, UnexpectedSubAppExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
                         }catch (Exception e) {

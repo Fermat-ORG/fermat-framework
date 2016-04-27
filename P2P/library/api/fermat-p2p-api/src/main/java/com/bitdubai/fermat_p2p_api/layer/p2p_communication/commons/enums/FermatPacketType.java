@@ -66,6 +66,12 @@ public enum FermatPacketType {
     REQUEST_LIST_COMPONENT_REGISTERED("REQ_LIST_COMP_REG"),
 
     /**
+     * This type is use when NOTIFICATE to All client to register in other Platform Cloud Server
+     */
+
+    REGISTER_SERVER_REQUEST("REG_SERV_REQ"),
+
+    /**
      * This type is use when a requested list is not available
      */
     FAILURE_REQUESTED_LIST_NOT_AVAILABLE("REQ_LIST_NOT_AVA"),
@@ -175,6 +181,7 @@ public enum FermatPacketType {
             case "COMPL_UPD_ACT"          : return FermatPacketType.COMPLETE_UPDATE_ACTOR;
             case "REQ_LIST_COMP_REG"      : return FermatPacketType.REQUEST_LIST_COMPONENT_REGISTERED;
             case "REQ_LIST_NOT_AVA"       : return FermatPacketType.FAILURE_REQUESTED_LIST_NOT_AVAILABLE;
+            case "REG_SERV_REQ"           : return FermatPacketType.REGISTER_SERVER_REQUEST;
             case "COMP_DISC_REQ"          : return FermatPacketType.COMPONENT_DISCONNECT_REQUEST;
             case "MSG_DEL_NOT"            : return FermatPacketType.MESSAGE_DELIVERY_NOTIFICATION;
             case "COMP_CONNECT_REQ"       : return FermatPacketType.COMPONENT_CONNECTION_REQUEST;
