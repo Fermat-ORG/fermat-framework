@@ -643,6 +643,8 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                             BigDecimal operator = new BigDecimal(newAmount);
 
                                 if (operator.compareTo(minSatoshis) == 1) {
+
+
                                     if (!lossProtectedEnabled) {
                                         confirm_dialog confirm_dialog = new confirm_dialog(getActivity(),cryptoWallet,operator.longValueExact(),
                                                 validAddress,
@@ -657,6 +659,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                         confirm_dialog.show();
                                     }else{
                                         try {
+                                            //TODO:  verifico en este punto el balance disponible para no enviar el send
                                             cryptoWallet.send(
                                                     operator.longValueExact(),
                                                     validAddress,
@@ -675,7 +678,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
                                         } catch (LossProtectedInsufficientFundsException e) {
                                         e.printStackTrace();
-                                            Toast.makeText(getActivity(), "Action not allowed,You will lose money,Restricted by LossProtectedWallet " + msg, Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getActivity(), "Action not allowed, you will lose money. Restricted by LossProtected Configuration. " + msg, Toast.LENGTH_LONG).show();
                                         }
                                     }
                                 } else {

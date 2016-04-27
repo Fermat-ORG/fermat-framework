@@ -30,7 +30,7 @@ public class FragmentsCommons {
         View view = inflater.inflate(R.layout.loss_navigation_view_row_first, null, true);
         FermatTextView fermatTextView = (FermatTextView) view.findViewById(R.id.txt_name);
         try {
-            ImageView imageView = (ImageView) view.findViewById(R.id.image_view_profile);
+            ImageView imageView = (ImageView) view.findViewById(R.id.image_view_photo);
             if (intraUserLoginIdentity != null) {
                 if (intraUserLoginIdentity.getImage() != null) {
                     if (intraUserLoginIdentity.getImage().length > 0) {

@@ -32,7 +32,7 @@
     <string name="no_id_dont_show_this_again_text">Don\'t show this again</string>
     <string name="add_fermat_user_text">Add Fermat Contact</string>no_id_Users_of_other_text_Fermat_wallets
     <string name="add_extra_user_text">Add External Contact</string>
-    <!-- loos_create_contact_dialog.xml -->
+    <!-- loss_create_contact_dialog.xml -->
     <string name="create_external_contact_text">Create External Contact</string>
     <string name="set_name_text">Type name</string>
     <string name="set_address_text">Paste address</string>

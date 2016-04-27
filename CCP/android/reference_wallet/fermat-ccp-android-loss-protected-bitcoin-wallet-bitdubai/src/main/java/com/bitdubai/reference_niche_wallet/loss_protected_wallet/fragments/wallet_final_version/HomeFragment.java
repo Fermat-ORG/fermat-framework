@@ -624,17 +624,16 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
         try {
 
             if(balanceType.equals(BalanceType.REAL))
-                balance =  lossProtectedWalletSession.getModuleManager().getCryptoWallet().getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
+                balance =  lossProtectedWallet.getRealBalance(lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType);
 
             if(balanceType.equals(BalanceType.AVAILABLE))
-                balance =  lossProtectedWalletSession.getModuleManager().getCryptoWallet().getBalance(balanceType, lossProtectedWalletSession.getAppPublicKey(),blockchainNetworkType,String.valueOf(exchangeRate));
+                balance =  lossProtectedWallet.getBalance(balanceType, lossProtectedWalletSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(lossProtectedWalletSession.getActualExchangeRate()));
 
 
         } catch (CantGetLossProtectedBalanceException e) {
             e.printStackTrace();
-        } catch (CantGetCryptoLossProtectedWalletException e) {
-            e.printStackTrace();
         }
+
         return balance;
     }
 

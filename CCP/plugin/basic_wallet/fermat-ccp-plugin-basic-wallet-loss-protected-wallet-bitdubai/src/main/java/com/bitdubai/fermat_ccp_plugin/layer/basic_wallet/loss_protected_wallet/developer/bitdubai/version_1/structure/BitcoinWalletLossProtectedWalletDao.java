@@ -116,9 +116,8 @@ public class BitcoinWalletLossProtectedWalletDao {
         try {
 
             long availableBalance = 0;
-            DatabaseTable bitcoinWalletTable = getBitcoinWalletTable();
 
-            //busco los registros de ingreso menores a la cotizacion actual, me ijo cuanto gasto de cada bloque y saco el salod
+            //busco los registros de ingreso menores a la cotizacion actual, me ijo cuanto gasto de cada bloque y saco el saldo
 
 
             for(DatabaseTableRecord record :  getRecordsLessThanRate(blockchainNetworkType,exchangeRate))
