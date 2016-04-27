@@ -297,6 +297,9 @@ public class ActorConnectionEventActions {
                 if (request.getRequestType() == RequestType.RECEIVED  &&
                         request.getSenderActorType() == PlatformComponentType.ART_FAN) {
                     switch (request.getRequestAction()) {
+                        case ACCEPT:
+                            this.handleAcceptConnection(request.getRequestId());
+                            break;
                         case DISCONNECT:
                             this.handleDisconnect(request.getRequestId());
                             break;
@@ -306,7 +309,8 @@ public class ActorConnectionEventActions {
         } catch(CantListPendingConnectionRequestsException |
                 ActorConnectionNotFoundException |
                 UnexpectedConnectionStateException |
-                CantDisconnectFromActorException e) {
+                CantDisconnectFromActorException |
+                CantAcceptActorConnectionRequestException e) {
             throw new CantHandleNewsEventException(
                     e,
                     "",
