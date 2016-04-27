@@ -576,7 +576,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
             final List<DatabaseTableRecord> records = table.getRecords();
 
             if (!records.isEmpty())
-                table.updateRecord(getDatabaseTableRecordForUpdate(entity, records.get(0)));
+                table.updateRecord(getDatabaseTableRecordFromEntity(entity));
             else
                 throw new RecordNotFoundException("id: " + entity.getId(), "Cannot find an entity with that id.");
 
@@ -694,17 +694,4 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      * @return DatabaseTableRecord whit the values
      */
     abstract protected DatabaseTableRecord getDatabaseTableRecordFromEntity(final E entity);
-
-
-    /**
-     * Construct a DatabaseTableRecord whit the values of the a entity pass
-     * by parameter to be update
-     *
-     * @param entity the contains the values
-     * @param databaseTableRecordLoad current values of the table
-     * @return DatabaseTableRecord whit the values
-     */
-    abstract protected DatabaseTableRecord getDatabaseTableRecordForUpdate(final E entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException;
-
-
 }

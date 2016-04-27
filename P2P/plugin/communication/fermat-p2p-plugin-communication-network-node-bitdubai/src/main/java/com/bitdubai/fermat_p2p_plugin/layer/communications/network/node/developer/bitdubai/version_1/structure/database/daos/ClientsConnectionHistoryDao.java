@@ -70,10 +70,5 @@ public class ClientsConnectionHistoryDao extends AbstractBaseDao<ClientsConnecti
 
         return databaseTableRecord;
     }
-
-    @Override
-    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(ClientsConnectionHistory entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
-        return null;
-    }
 }
 

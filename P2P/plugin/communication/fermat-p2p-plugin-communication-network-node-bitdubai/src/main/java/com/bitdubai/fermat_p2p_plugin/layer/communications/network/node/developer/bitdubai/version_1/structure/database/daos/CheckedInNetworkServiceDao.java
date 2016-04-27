@@ -70,10 +70,5 @@ public class CheckedInNetworkServiceDao extends AbstractBaseDao<CheckedInNetwork
 
         return databaseTableRecord;
     }
-
-    @Override
-    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(CheckedInNetworkService entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
-        return null;
-    }
 }
 
