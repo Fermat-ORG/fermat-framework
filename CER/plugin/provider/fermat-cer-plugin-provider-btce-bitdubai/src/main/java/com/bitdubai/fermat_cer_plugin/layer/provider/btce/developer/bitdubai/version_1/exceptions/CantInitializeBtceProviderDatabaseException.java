@@ -7,7 +7,7 @@ import com.bitdubai.fermat_api.FermatException;
  * is thrown when an error occurs initializing database
  * <p/>
  *
- * Created by Alejandro Bicelis - (abicelis@gmail.com) on 19/03/16.
+ * Created by Alejandro Bicelis - (abicelis@gmail.com) on 27/04/16.
  *
  * @version 1.0
  * @since Java JDK 1.7

@@ -12,7 +12,7 @@ import com.bitdubai.fermat_cer_plugin.layer.provider.btce.developer.bitdubai.ver
 
 
 /**
- * Created by Alejandro Bicelis on 18/03/2016
+ * Created by Alejandro Bicelis on 27/04/16
  */
 
 public class DeveloperBitDubai extends AbstractPluginDeveloper implements PluginLicensor {

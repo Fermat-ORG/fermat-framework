@@ -5,7 +5,7 @@ package com.bitdubai.fermat_cer_plugin.layer.provider.btce.developer.bitdubai.ve
  * keeps constants the column names of the database.<p/>
  * <p/>
  *
- * Created by Alejandro Bicelis - (abicelis@gmail.com) on 19/03/16.
+ * Created by Alejandro Bicelis - (abicelis@gmail.com) on 27/04/16.
  *
  * @version 1.0
  * @since Java JDK 1.7

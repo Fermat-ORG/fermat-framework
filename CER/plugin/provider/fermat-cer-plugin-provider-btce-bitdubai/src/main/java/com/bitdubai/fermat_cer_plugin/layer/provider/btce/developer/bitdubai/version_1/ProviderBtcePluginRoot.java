@@ -50,7 +50,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by Alejandro Bicelis on 18/03/2016.
+ * Created by Alejandro Bicelis on 27/04/16.
  */
 public class ProviderBtcePluginRoot extends AbstractPlugin implements DatabaseManagerForDevelopers, CurrencyExchangeRateProviderManager {
 
