@@ -238,7 +238,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             /*
              * Validate if the node are the seed server
              */
-            if (!iAmSeedServer()){
+            if (iAmSeedServer()){
 
                 LOG.info("i Am Seed Server() = " + iAmSeedServer());
                 fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);

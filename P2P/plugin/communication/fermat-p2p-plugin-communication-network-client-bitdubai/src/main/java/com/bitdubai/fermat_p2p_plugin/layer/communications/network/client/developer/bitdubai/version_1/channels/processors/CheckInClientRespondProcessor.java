@@ -42,6 +42,17 @@ public class CheckInClientRespondProcessor extends PackageProcessor {
         CheckInProfileMsjRespond checkInProfileMsjRespond = CheckInProfileMsjRespond.parseContent(packageReceived.getContent());
 
         if(checkInProfileMsjRespond.getStatus() == CheckInProfileMsjRespond.STATUS.SUCCESS){
+
+            /*
+             * set nodesListPosition to -1 when the client is checkIn to avoid connecting to other node if this fails
+             */
+            getChannel().getNetworkClientCommunicationConnection().setNodesListPosition();
+
+            /*
+             * set registered
+             */
+            getChannel().setIsRegister(Boolean.TRUE);
+
             //raise event
 
         }else{

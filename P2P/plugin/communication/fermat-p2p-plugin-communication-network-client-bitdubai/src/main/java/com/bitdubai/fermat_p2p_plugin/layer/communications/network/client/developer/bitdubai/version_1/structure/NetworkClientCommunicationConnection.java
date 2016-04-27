@@ -93,6 +93,8 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
 
     private Integer nodesListPosition;
 
+    private CommunicationsNetworkClientChannel communicationsNetworkClientChannel;
+
     public NetworkClientCommunicationConnection(final URI                    uri                   ,
                                                 final ErrorManager           errorManager          ,
                                                 final EventManager           eventManager          ,
@@ -110,15 +112,12 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
         this.pluginVersionReference = pluginVersionReference;
         this.networkClientCommunicationPluginRoot = networkClientCommunicationPluginRoot;
         this.nodesListPosition = nodesListPosition;
+        this.communicationsNetworkClientChannel = new CommunicationsNetworkClientChannel(this);
 
         this.isConnected            = Boolean.FALSE         ;
         this.tryToReconnect         = Boolean.TRUE          ;
 
         this.container              = ClientManager.createClient();
-    }
-
-    public String getServerIdentity() {
-        return serverIdentity;
     }
 
 
@@ -208,14 +207,16 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
         container.getProperties().put(ClientProperties.RECONNECT_HANDLER, reconnectHandler);
 
         try {
-            session = container.connectToServer(CommunicationsNetworkClientChannel.class, uri);
+
+            session = container.connectToServer(communicationsNetworkClientChannel, uri);
 
             //validate if is connected
-            if (session != null && session.isOpen()) {
-                this.isConnected = Boolean.TRUE;
-                serverIdentity = (String) session.getUserProperties().get("");
-                setCheckInClientRequestProcessor();
-            }
+//            if (session != null && session.isOpen()) {
+//                this.isConnected = Boolean.TRUE;
+//                serverIdentity = (String) session.getUserProperties().get("");
+//                setCheckInClientRequestProcessor();
+//            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -236,11 +237,10 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
     @Override
     public boolean isRegistered() {
 
-        // TODO IMPLEMENT
-        return false;
+        return communicationsNetworkClientChannel.isRegister();
     }
 
-    private void setCheckInClientRequestProcessor(){
+    public void setCheckInClientRequestProcessor(){
 
         ClientProfile clientProfile = new ClientProfile();
         clientProfile.setIdentityPublicKey(clientIdentity.getPublicKey());
@@ -583,6 +583,21 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
                     "Unhandled error trying to send the message through the session."
             );
         }
+    }
+
+    /*
+     * set nodesListPosition to -1 when the client is checkIn to avoid connecting to other node if this fails
+     */
+    public void setNodesListPosition() {
+        this.nodesListPosition = -1;
+    }
+
+    public void setServerIdentity(String serverIdentity) {
+        this.serverIdentity = serverIdentity;
+    }
+
+    public String getServerIdentity() {
+        return serverIdentity;
     }
 
 }
