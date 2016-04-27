@@ -16,6 +16,8 @@
     <string name="group_users_delete">Delete</string>
     <string name="group_detail">Group Detail</string>
     <string name="add_users">Add</string>
+    <string name="connection_request_send">Connection request sent</string>
+    <string name="before_action_user">Asset Issuer or Asset User Identities must be created before action.</string>
 
     <!--Dialog Help - Init-->
     <string name="dap_user_community_welcome_subTitle">Welcome to the Asset User Community.</string>
