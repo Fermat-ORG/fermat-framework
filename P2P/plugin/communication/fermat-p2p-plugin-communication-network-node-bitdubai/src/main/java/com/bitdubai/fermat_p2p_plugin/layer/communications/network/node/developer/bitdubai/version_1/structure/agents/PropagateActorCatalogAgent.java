@@ -197,6 +197,8 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
         if ((nodesCatalogsList != null && !nodesCatalogsList.isEmpty()) &&
                 (transactionList != null && !transactionList.isEmpty())){
 
+            LOG.info("Transaction to propagate size = " + transactionList.size());
+
             for (NodesCatalog remoteNodesCatalog: nodesCatalogsList) {
 
                 try {
