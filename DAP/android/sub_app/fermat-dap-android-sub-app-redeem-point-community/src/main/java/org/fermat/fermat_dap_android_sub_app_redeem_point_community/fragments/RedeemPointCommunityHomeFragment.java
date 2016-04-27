@@ -489,7 +489,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                                 @Override
                                 public void onPostExecute(Object... result) {
                                     dialog.dismiss();
-                                    Toast.makeText(getContext(), "Connection request sent", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), R.string.dap_other_profile_request_send, Toast.LENGTH_SHORT).show();
                                     restartButtons();
                                     if (swipeRefreshLayout != null)
                                         swipeRefreshLayout.post(new Runnable() {
@@ -504,7 +504,7 @@ public class RedeemPointCommunityHomeFragment extends AbstractFermatFragment
                                 public void onErrorOccurred(Exception ex) {
                                     dialog.dismiss();
 //                                Toast.makeText(getActivity(), String.format("An exception has been thrown: %s", ex.getMessage()), Toast.LENGTH_LONG).show();
-                                    Toast.makeText(getActivity(), "Asset User or Redeem Point Identities must be created before using this app.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getActivity(), R.string.before_action_redeem, Toast.LENGTH_LONG).show();
 //                                ex.printStackTrace();
                                 }
                             });
