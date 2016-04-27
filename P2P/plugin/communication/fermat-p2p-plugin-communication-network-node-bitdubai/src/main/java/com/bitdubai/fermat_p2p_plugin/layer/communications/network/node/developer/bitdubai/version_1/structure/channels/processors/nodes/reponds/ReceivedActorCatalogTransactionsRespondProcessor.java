@@ -10,6 +10,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConstantAttNames;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class ReceivedActorCatalogTransactionsRespondProcessor extends PackagePro
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(ReceivedActorCatalogTransactionsRespondProcessor.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ReceivedActorCatalogTransactionsRespondProcessor.class));
 
     /**
      * Constructor with parameter
@@ -38,7 +39,7 @@ public class ReceivedActorCatalogTransactionsRespondProcessor extends PackagePro
      * @param channel
      * */
     public ReceivedActorCatalogTransactionsRespondProcessor(FermatWebSocketChannelEndpoint channel) {
-        super(channel, PackageType.RECEIVE_ACTOR_CATALOG_TRANSACTIONS_REQUEST);
+        super(channel, PackageType.RECEIVE_ACTOR_CATALOG_TRANSACTIONS_RESPOND);
     }
 
     /**
@@ -86,6 +87,7 @@ public class ReceivedActorCatalogTransactionsRespondProcessor extends PackagePro
 
             try {
 
+                exception.printStackTrace();
                 LOG.error(exception.getMessage());
                 session.close(new CloseReason(CloseReason.CloseCodes.PROTOCOL_ERROR, "Can't process respond: "+ exception.getMessage()));
 

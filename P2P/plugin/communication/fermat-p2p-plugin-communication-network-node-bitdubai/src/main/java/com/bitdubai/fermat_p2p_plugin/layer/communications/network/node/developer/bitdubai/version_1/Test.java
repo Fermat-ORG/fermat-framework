@@ -7,15 +7,22 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.utils.LocationProvider;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.clients.FermatWebSocketClientNodeChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.AddNodeToCatalogMsgRequest;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.ReceiveActorCatalogTransactionsMsjRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.UpdateNodeInCatalogMsgRequest;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -45,18 +52,50 @@ public class Test {
 
             System.out.println(nodeProfile.toJson());
 
-            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("192.168.1.8", 9090);
+            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("localhost", 8080);
 
           // AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
            //fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
 
-             nodeProfile.setDefaultPort(9090);
-             UpdateNodeInCatalogMsgRequest updateNodeInCatalogMsgRequest = new UpdateNodeInCatalogMsgRequest(nodeProfile);
-             fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest.toJson(), PackageType.UPDATE_NODE_IN_CATALOG_REQUEST);
+
+          //   nodeProfile.setDefaultPort(9090);
+          //   UpdateNodeInCatalogMsgRequest updateNodeInCatalogMsgRequest = new UpdateNodeInCatalogMsgRequest(nodeProfile);
+          //   fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest.toJson(), PackageType.UPDATE_NODE_IN_CATALOG_REQUEST);
+
+
+            List<ActorsCatalogTransaction> actors = new ArrayList<>();
+            Location location = LocationProvider.acquireLocationThroughIP();
+
+
+            for (int i = 0; i < 5; i++) {
+
+                ECCKeyPair id = new ECCKeyPair();
+
+                ActorsCatalogTransaction actorProfile = new ActorsCatalogTransaction();
+                actorProfile.setActorType("Actor type " + i);
+                actorProfile.setAlias("Alias " + i);
+                actorProfile.setName("Actor " + i);
+                actorProfile.setIdentityPublicKey(id.getPublicKey());
+                actorProfile.setExtraData("Extra " + i);
+                actorProfile.setPhoto(new byte[0]);
+                actorProfile.setLastLatitude(location.getLatitude());
+                actorProfile.setLastLongitude(location.getLongitude());
+                actorProfile.setHostedTimestamp(new Timestamp(System.currentTimeMillis()+i));
+                actorProfile.setNodeIdentityPublicKey(nodeProfile.getIdentityPublicKey());
+                actorProfile.setTransactionType(ActorsCatalogTransaction.ADD_TRANSACTION_TYPE);
+                actorProfile.setHashId(String.valueOf(actorProfile.hashCode()));
+
+                actors.add(actorProfile);
+            }
+
+            ReceiveActorCatalogTransactionsMsjRequest receiveActorCatalogTransactionsMsjRequest = new ReceiveActorCatalogTransactionsMsjRequest(actors);
+
+            System.out.println(receiveActorCatalogTransactionsMsjRequest.toJson());
+
+            fermatWebSocketClientNodeChannel.sendMessage(receiveActorCatalogTransactionsMsjRequest.toJson(), PackageType.RECEIVE_ACTOR_CATALOG_TRANSACTIONS_REQUEST);
+
 
             Thread.currentThread().sleep(30000);
-
-
             System.out.println("FIN");
 
            /* System.out.println("***********************************************************************");

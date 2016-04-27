@@ -7,9 +7,14 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.NetworkNodePluginRoot;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
 import com.google.gson.JsonObject;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.util.Arrays;
@@ -33,30 +38,21 @@ public class ClientNodeChannelConfigurator extends ClientEndpointConfig.Configur
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(ClientNodeChannelConfigurator.class.getName());
-
-    /*
-     * Create a new temporal identity
-     */
-    public final static ECCKeyPair tempIdentity = new ECCKeyPair();
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ClientNodeChannelConfigurator.class));
 
     @Override
     public void beforeRequest(Map<String, List<String>> headers) {
 
-        for (String key : headers.keySet()) {
+        /* for (String key : headers.keySet()) {
             LOG.info(key + " : "+headers.get(key));
-        }
-
-         /*
-         * Get json representation
-         */
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty(JsonAttNamesConstants.NAME_IDENTITY, tempIdentity.getPublicKey());
+        } */
 
         /*
          * Add the att to the header
          */
-        headers.put(JsonAttNamesConstants.HEADER_ATT_NAME_TI, Arrays.asList(jsonObject.toString()));
+        //headers.put(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME, Arrays.asList(new ECCKeyPair().getPublicKey()));
+
+         headers.put(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME, Arrays.asList(((NetworkNodePluginRoot) NodeContext.get(NodeContextItem.PLUGIN_ROOT)).getIdentity().getPublicKey()));
     }
 
     @Override

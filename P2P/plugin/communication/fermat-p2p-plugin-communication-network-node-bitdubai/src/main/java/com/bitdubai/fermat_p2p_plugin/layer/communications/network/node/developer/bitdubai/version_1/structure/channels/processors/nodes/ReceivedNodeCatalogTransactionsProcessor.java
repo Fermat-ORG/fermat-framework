@@ -19,6 +19,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(ReceivedNodeCatalogTransactionsProcessor.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ReceivedNodeCatalogTransactionsProcessor.class));
 
     /**
      * Constructor with parameter
@@ -138,7 +139,7 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
 
         int lateNotificationsCounter = 0;
 
-        if (exist(nodesCatalogTransaction.getIdentityPublicKey())){
+        if (getDaoFactory().getNodesCatalogDao().exists(nodesCatalogTransaction.getIdentityPublicKey())){
             lateNotificationsCounter++;
         }else {
 
@@ -163,29 +164,6 @@ public class ReceivedNodeCatalogTransactionsProcessor extends PackageProcessor {
         }
 
         return lateNotificationsCounter;
-    }
-
-    /**
-     * Validate if the node exist into the catalog
-     *
-     * @param identityPublicKey
-     * @return boolean
-     */
-    private boolean exist(String identityPublicKey) throws CantReadRecordDataBaseException, RecordNotFoundException {
-
-        LOG.info("Executing method exist");
-
-        /*
-         * Search in the data base
-         */
-        NodesCatalog nodesCatalog = getDaoFactory().getNodesCatalogDao().findById(identityPublicKey);
-
-        if (nodesCatalog != null){
-            return Boolean.TRUE;
-        }
-
-        return Boolean.FALSE;
-
     }
 
     /**

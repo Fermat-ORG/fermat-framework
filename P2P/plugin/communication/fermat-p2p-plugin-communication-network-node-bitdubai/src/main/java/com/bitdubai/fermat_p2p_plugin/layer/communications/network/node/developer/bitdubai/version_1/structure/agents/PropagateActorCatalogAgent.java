@@ -27,6 +27,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransactionsPendingForPropagation;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(PropagateActorCatalogAgent.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(PropagateActorCatalogAgent.class));
 
     /**
      * Represent the propagation time

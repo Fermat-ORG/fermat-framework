@@ -241,8 +241,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             if (!iAmSeedServer()){
 
                 LOG.info("i Am Seed Server() = " + iAmSeedServer());
-                fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
-                //fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("localhost", 9090);
+                //fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
+                fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("localhost", 9090);
 
                 /*
                  * Validate if the node are register in the node catalog
@@ -308,15 +308,17 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
         LOG.info("Generating Node Profile");
 
         nodeProfile = new NodeProfile();
+        nodeProfile.setIdentityPublicKey(identity.getPublicKey());
 
         //TODO: CHANGE
         nodeProfile.setIp(serverIp);
-        //nodeProfile.setIp("localhost");
+        nodeProfile.setIp("localhost");
+
         nodeProfile.setDefaultPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
-        //nodeProfile.setDefaultPort(8080);
-        nodeProfile.setIdentityPublicKey(identity.getPublicKey());
+        nodeProfile.setDefaultPort(8080);
+
         nodeProfile.setName(ConfigurationManager.getValue(ConfigurationManager.NODE_NAME));
-        //nodeProfile.setName("Otro Server");
+        nodeProfile.setName("Otro Server");
 
         nodeProfile.setLocation(LocationProvider.acquireLocationThroughIP());
 
@@ -569,4 +571,12 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
     }
 
+    /**
+     * Get the identity
+     *
+     * @return ECCKeyPair
+     */
+    public ECCKeyPair getIdentity() {
+        return identity;
+    }
 }

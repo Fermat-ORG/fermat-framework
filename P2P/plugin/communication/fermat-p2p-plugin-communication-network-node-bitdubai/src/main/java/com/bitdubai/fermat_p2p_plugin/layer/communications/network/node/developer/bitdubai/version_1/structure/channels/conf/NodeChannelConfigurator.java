@@ -7,16 +7,10 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf;
 
 
-import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.websocket.HandshakeResponse;
 import javax.websocket.server.HandshakeRequest;
@@ -35,7 +29,7 @@ public class NodeChannelConfigurator extends ServerEndpointConfig.Configurator {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(NodeChannelConfigurator.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(NodeChannelConfigurator.class));
 
     /**
      * (non-javadoc)
@@ -45,54 +39,27 @@ public class NodeChannelConfigurator extends ServerEndpointConfig.Configurator {
     @Override
     public void modifyHandshake(ServerEndpointConfig serverEndpointConfig, HandshakeRequest handshakeRequest, HandshakeResponse handshakeResponse) {
 
-        for (String key : handshakeRequest.getHeaders().keySet()) {
+       /* for (String key : handshakeRequest.getHeaders().keySet()) {
             LOG.info(key + " : "+handshakeRequest.getHeaders().get(key));
-        }
+        } */
 
         /*
          * Validate if the client public key identity come in the header
          */
-        if (handshakeRequest.getHeaders().containsKey(JsonAttNamesConstants.HEADER_ATT_NAME_TI)){
+        if (handshakeRequest.getHeaders().containsKey(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME)){
 
             /*
              * Get the client public key identity
              */
-            String tcpki = handshakeRequest.getHeaders().get(JsonAttNamesConstants.HEADER_ATT_NAME_TI).get(0);
-
-             /*
-             * Get the temporal identity of the CommunicationsClientConnection component
-             */
-            JsonParser parser = new JsonParser();
-            JsonObject temporalIdentity = parser.parse(tcpki).getAsJsonObject();
-            String temporalClientIdentity = temporalIdentity.get(JsonAttNamesConstants.NAME_IDENTITY).getAsString();
+            String tcpki = handshakeRequest.getHeaders().get(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME).get(0);
 
             /*
              * Pass the identity create to the FermatWebSocketClientChannelServerEndpoint
              */
-            serverEndpointConfig.getUserProperties().put(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME, temporalClientIdentity);
+            serverEndpointConfig.getUserProperties().put(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME, tcpki);
 
-            /*
-             * Create a node identity for this session
-             */
-            ECCKeyPair nodeIdentityForSession = new ECCKeyPair();
-
-            /*
-             * Create the node public key identity header attribute value
-             * to share with the client
-             */
-             List<String> value = new ArrayList<>();
-             value.add(nodeIdentityForSession.getPublicKey());
-
-            /*
-             * Set the new header attribute
-             */
-             handshakeResponse.getHeaders().put(HeadersAttName.NPKI_ATT_HEADER_NAME, value);
-
-            /*
-             * Pass the identity create to the FermatWebSocketClientChannelServerEndpoint
-             */
-             serverEndpointConfig.getUserProperties().put(HeadersAttName.NPKI_ATT_HEADER_NAME, nodeIdentityForSession);
-
+        }else {
+            LOG.warn(HeadersAttName.NPKI_ATT_HEADER_NAME + " No Found");
         }
 
 
