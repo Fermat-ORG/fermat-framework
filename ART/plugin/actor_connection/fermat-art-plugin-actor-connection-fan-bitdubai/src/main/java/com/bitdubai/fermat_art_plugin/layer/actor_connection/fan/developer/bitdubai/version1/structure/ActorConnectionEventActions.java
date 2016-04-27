@@ -338,8 +338,8 @@ public class ActorConnectionEventActions {
             final List<FanConnectionRequest> list = fanNetworkService.
                     listPendingConnectionUpdates();
             for (final FanConnectionRequest request : list) {
-                if (request.getRequestType() == RequestType.SENT  &&
-                        request.getSenderActorType() == PlatformComponentType.ART_FAN) {
+                if (request.getRequestType() == RequestType.SENT  /*&&
+                        request.getSenderActorType() == PlatformComponentType.ART_FAN*/) {
                     switch (request.getRequestAction()) {
                         case ACCEPT:
                             this.handleAcceptConnection(request.getRequestId());
