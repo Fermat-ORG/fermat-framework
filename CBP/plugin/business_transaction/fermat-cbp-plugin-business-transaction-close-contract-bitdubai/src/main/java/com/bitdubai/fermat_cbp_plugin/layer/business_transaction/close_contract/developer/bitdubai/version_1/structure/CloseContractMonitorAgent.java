@@ -450,7 +450,7 @@ public class CloseContractMonitorAgent implements
                             closeContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_COMPLETED);
                             closeContractBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                             transactionTransmissionManager.confirmReception(record.getTransactionID());
-                            raiseNewContractClosedEvent();
+                            //raiseNewContractClosedEvent();
                         }
                     }
                 }
