@@ -55,6 +55,7 @@ import java.util.UUID;
 
 import com.bitdubai.sub_app.art_fan_identity.popup.PresentationArtFanUserIdentityDialog;
 import com.bitdubai.sub_app.art_fan_identity.sessions.ArtFanUserIdentitySubAppSession;
+import com.bitdubai.sub_app.art_fan_identity.sessions.SessionConstants;
 import com.bitdubai.sub_app.art_fan_identity.util.CommonLogger;
 import com.squareup.picasso.Picasso;
 
@@ -166,8 +167,8 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     }
     private void setUpIdentity() {
         try {
-            //identitySelected = (Fanatic) artFanUserIdentitySubAppSession.getData(
-              //      SessionConstants.IDENTITY_SELECTED);
+            identitySelected = (Fanatic) artFanUserIdentitySubAppSession.getData(
+                    SessionConstants.IDENTITY_SELECTED);
 
             if (identitySelected != null) {
                 loadIdentity();
@@ -297,8 +298,10 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                     case CREATE_IDENTITY_SUCCESS:
                         if (!isUpdate) {
                             Toast.makeText(getActivity(), "Identity created", Toast.LENGTH_SHORT).show();
+                            getActivity().onBackPressed();
                         } else {
                             Toast.makeText(getActivity(), "Changes saved", Toast.LENGTH_SHORT).show();
+                            getActivity().onBackPressed();
                         }
                         break;
                     case CREATE_IDENTITY_FAIL_MODULE_EXCEPTION:
@@ -334,22 +337,14 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         if (dataIsValid) {
             if (moduleManager != null) {
                 try {
-                    if (!isUpdate)
-                        new ManageIdentity(
-                                fanExternalName,
-                                externalPlatform,
-                                ManageIdentity.CREATE_IDENTITY).execute();
-                    else
-                    if(updateProfileImage)
-                        new ManageIdentity(
-                                fanExternalName,
-                                externalPlatform,
-                                ManageIdentity.UPDATE_IMAGE_IDENTITY).execute();
-                    else
-                        new ManageIdentity(
-                                fanExternalName,
-                                externalPlatform,
-                                ManageIdentity.UPDATE_IDENTITY).execute();
+                    if(!isUpdate){
+                        moduleManager.createFanaticIdentity(fanExternalName, fanImageByteArray, (externalPlatformID == null) ? null : externalPlatformID, externalPlatform);
+                    }else{
+                        if(updateProfileImage)
+                            moduleManager.updateFanIdentity(fanExternalName, identitySelected.getPublicKey(), fanImageByteArray, (externalPlatformID == null) ? null : externalPlatformID, externalPlatform);
+                        else
+                            moduleManager.updateFanIdentity(fanExternalName, identitySelected.getPublicKey(), identitySelected.getProfileImage(), (externalPlatformID == null) ? null : externalPlatformID,externalPlatform);
+                    }
                 } catch (Exception e){
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                     e.printStackTrace();
@@ -509,92 +504,6 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Experimental code to get http responses from android.
-     * The main idea is make the cURL request in android background with an AsyncTask
-     */
-    private class ManageIdentity extends AsyncTask {
-        String fanExternalName;
-        ArtExternalPlatform externalPlatform;
-        int identityAction;
-        public static final int CREATE_IDENTITY = 0;
-        public static final int UPDATE_IDENTITY = 1;
-        public static final int UPDATE_IMAGE_IDENTITY = 2;
-
-        public ManageIdentity(
-                String fanExternalName,
-                ArtExternalPlatform externalPlatform,
-                int identityAction
-        ) {
-            this.fanExternalName = fanExternalName;
-            this.externalPlatform = externalPlatform;
-            this.identityAction = identityAction;
-        }
-
-        @Override
-        protected Object doInBackground(Object... arg0) {
-            try{
-                switch (identityAction){
-                    case CREATE_IDENTITY:
-                        createIdentity(fanExternalName, externalPlatform);
-                        break;
-                    case UPDATE_IDENTITY:
-                        updateIdentity(fanExternalName, externalPlatform);
-                        break;
-                    case UPDATE_IMAGE_IDENTITY:
-                        updateIdentityImage(fanExternalName, externalPlatform);
-                        break;
-                }
-
-            } catch (FanIdentityAlreadyExistsException e) {
-                errorManager.reportUnexpectedUIException(
-                        UISource.VIEW,
-                        UnexpectedUIExceptionSeverity.UNSTABLE,
-                        e);
-            } catch (CantCreateFanIdentityException e) {
-                errorManager.reportUnexpectedUIException(
-                        UISource.VIEW,
-                        UnexpectedUIExceptionSeverity.UNSTABLE,
-                        e);
-            } catch (CantUpdateFanIdentityException e) {
-                errorManager.reportUnexpectedUIException(
-                        UISource.VIEW,
-                        UnexpectedUIExceptionSeverity.UNSTABLE,
-                        e);
-            }
-            return null;
-        }
-    }
-
-    private void createIdentity(
-            String fanExternalName,
-            ArtExternalPlatform externalPlatform) throws
-            CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
-            moduleManager.createFanaticIdentity(
-                    fanExternalName, (fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,
-                    externalPlatformID, externalPlatform) ;
-    }
-
-    private void updateIdentity(
-            String fanExternalName,
-            ArtExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
-        moduleManager.updateFanIdentity(
-                fanExternalName,
-                identitySelected.getPublicKey(),
-                identitySelected.getProfileImage(),
-                identitySelected.getExternalIdentityID(),
-                externalPlatform);
-    }
-
-    private void updateIdentityImage(
-            String fanExternalName,
-            ArtExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
-        moduleManager.updateFanIdentity(
-                fanExternalName,
-                identitySelected.getPublicKey(),
-                fanImageByteArray,
-                identitySelected.getExternalIdentityID(),externalPlatform);
-    }
     private List<String> getFanIdentityByPlatform(ArtExternalPlatform externalPlatform) throws Exception{
         HashMap<UUID, String>fanIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
         List<String> identityNameList = new ArrayList<>();
