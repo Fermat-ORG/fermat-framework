@@ -5157,11 +5157,6 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeWalletNavigationStructure.addActivity(runtimeActivity);
 
-        runtimeHeader = new Header();
-        runtimeHeader.setLabel("Chunck Values");
-        runtimeActivity.setHeader(runtimeHeader);
-
-
         runtimeTitleBar = new TitleBar();
         runtimeTitleBar.setLabel("Chunk Value");
         runtimeTitleBar.setLabelSize(16);
@@ -5177,15 +5172,15 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeTabStrip = new TabStrip();
 
-       runtimeTabStrip.setTabsColor("#1173aa");
+        runtimeTabStrip.setTabsColor("#1173aa");
 
         runtimeTabStrip.setTabsTextColor("#FFFFFF");
 
         runtimeTabStrip.setTabsIndicateColor("#FFFFFF");
 
-        runtimeHeader = new Header();
+        /*runtimeHeader = new Header();
         runtimeHeader.setLabel("Balance");
-        runtimeActivity.setHeader(runtimeHeader);
+        runtimeActivity.setHeader(runtimeHeader);*/
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
@@ -5218,7 +5213,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTitleBar.setColor("#073487");
         runtimeTitleBar.setIconName("back");
         runtimeTitleBar.setTitleColor("#ffffff");
-        runtimeTitleBar.setIsTitleTextStatic(true);
+        //runtimeTitleBar.setIsTitleTextStatic(true);
         runtimeActivity.setTitleBar(runtimeTitleBar);
         runtimeActivity.setColor("#073487");
         //runtimeActivity.setColor("#d07b62");
@@ -5228,9 +5223,9 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
 
         runtimeActivity.setStatusBar(runtimeStatusBar);
 
-        runtimeHeader = new Header();
+        /*runtimeHeader = new Header();
         runtimeHeader.setLabel("Chunck Detail Header");
-        runtimeActivity.setHeader(runtimeHeader);
+        runtimeActivity.setHeader(runtimeHeader);*/
 
 
         runtimeActivity.setStartFragment(Fragments.CCP_BITCOIN_LOSS_PROTECTED_WALLET_CHUNCK_VALUES_DETAIL_FRAGMENT.getKey());
