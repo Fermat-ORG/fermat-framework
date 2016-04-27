@@ -40,8 +40,12 @@ import com.google.gson.reflect.TypeToken;
 
 import org.springframework.web.client.RestTemplate;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -147,7 +151,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
             ClientContext.add(ClientContextItem.ERROR_MANAGER  , errorManager);
             ClientContext.add(ClientContextItem.EVENT_MANAGER, eventManager);
 
-           // nodesProfileList = getNodesProfileList();
+            nodesProfileList = getNodesProfileList();
 
             if(nodesProfileList != null && nodesProfileList.size() > 0){
 
@@ -443,32 +447,46 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
      */
     private List<NodeProfile> getNodesProfileList(){
 
-        List<NodeProfile> listServer = null;
+        HttpURLConnection conn = null;
 
-        String respond;
-        RestTemplate restTemplate = new RestTemplate(true);
-        try{
-            respond = restTemplate.getForObject("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + 9090 + "/fermat/rest/api/v1/availablenodes/listavailablenodesprofile", String.class);
+        try {
+
+            URL url = new URL("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + 9090 + "/fermat/rest/api/v1/availablenodes/listavailablenodesprofile");
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String respond = reader.readLine();
+
+            if (conn.getResponseCode() == 200 && respond != null && respond.contains("data")) {
+
+               /*
+                * Decode into a json Object
+                */
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonobject = (JsonObject) parser.parse(respond.trim());
+
+                Gson gson = new Gson();
+                List<NodeProfile> listServer = gson.fromJson(respondJsonobject.get("data").getAsString(), new TypeToken<List<NodeProfile>>() {
+                }.getType());
+
+                System.out.println(respondJsonobject);
+
+                return listServer;
+
+            }else{
+                return null;
+            }
+
         }catch (Exception e){
             e.printStackTrace();
-            return  null;
+            return null;
+        }finally {
+            if (conn != null)
+                conn.disconnect();
         }
 
-        if(respond != null && respond.contains("data")){
-
-            /*
-             * Decode into a json Object
-             */
-            JsonParser parser = new JsonParser();
-            JsonObject respondJsonobject = (JsonObject) parser.parse(respond.toString());
-
-            Gson gson = new Gson();
-            listServer = gson.fromJson(respondJsonobject.get("data").getAsString(), new TypeToken<List<NodeProfile>>(){}.getType());
-
-            System.out.println(respondJsonobject);
-        }
-
-        return listServer;
     }
 
 }

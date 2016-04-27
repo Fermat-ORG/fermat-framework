@@ -124,6 +124,10 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
 
     public void initializeAndConnect() {
 
+        System.out.println("*****************************************************************");
+        System.out.println("Connecting To Server: " + uri);
+        System.out.println("*****************************************************************");
+
         /*
          * Create a ReconnectHandler
          */
