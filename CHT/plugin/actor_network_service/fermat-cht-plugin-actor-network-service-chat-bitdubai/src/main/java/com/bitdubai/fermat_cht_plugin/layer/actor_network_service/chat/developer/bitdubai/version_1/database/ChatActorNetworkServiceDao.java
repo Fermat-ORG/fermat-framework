@@ -142,6 +142,7 @@ public class ChatActorNetworkServiceDao {
 
             actions.add(ConnectionRequestAction.ACCEPT);
             actions.add(ConnectionRequestAction.DENY);
+            actions.add(ConnectionRequestAction.DISCONNECT);
 
             final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
 
