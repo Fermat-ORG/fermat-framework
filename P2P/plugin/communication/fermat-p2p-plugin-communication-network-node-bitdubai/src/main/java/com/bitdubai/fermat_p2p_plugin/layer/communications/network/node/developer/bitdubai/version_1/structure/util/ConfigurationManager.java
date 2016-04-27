@@ -37,7 +37,7 @@ public class ConfigurationManager {
     /**
      * Represent the value of DIR_NAME
      */
-    public static final String DIR_NAME = "configuration";
+    public static final String DIR_NAME = getExternalStorageDirectory()+"/configuration";
 
     /**
      * Represent the value of FILE_NAME
@@ -213,6 +213,20 @@ public class ConfigurationManager {
     public static void updateValue(String property, String value) throws ConfigurationException {
         configuration.setProperty(property, value);
         configuration.save();
+    }
+
+    /**
+     * Get the path to file system folder
+     * @return String path to file folder
+     **/
+    private static String getExternalStorageDirectory() {
+
+        //User home directory
+        String home = System.getProperty("user.home");
+        File dir = new File(home+"/externalStorage/files/");
+        dir.mkdirs();
+        return dir.getAbsolutePath();
+
     }
 
 }
