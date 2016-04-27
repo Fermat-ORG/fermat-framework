@@ -82,13 +82,13 @@ We recommend to always commit the changes through the IDE's integration with Git
 ##### Console
 To commit changes through the terminal you have to execute the following commands:
 ```bash
-git commit -m"Commit's Message"
+git commit -m "Commit's Message"
 ```
 ##### IDE
 To commit changes through the IDE, you need to go to the menu: **VCS -> Show Changes View**, click it, and it will display a menu with four tabs, one of them says: **Local Changes**.
 
 In there all the changes executed after the commit will be shown. You could pick one or many files and do partial commits through:
-**Click derecho -> Git -> Commit Changes**.
+**Right Click -> Git -> Commit Changes**.
 
 #### Updating your Fork
 To update your Fork you must first update your local copy with the changes of your Responsible, once again executing a Pull (explained above).
@@ -127,13 +127,13 @@ You have to approve the Pull Requests of the Developers that depend on you, in o
 #### Creating a local branch to do the merge
 You will create a branch in order to be able to do the merge with the Execution of the following command:
 ```bash
-git checkout -b mezcla$nombreDeveloper
+git checkout -b $DeveloperName-$RelatedBranch
 ```
 
 #### Pull the changes from the Developer
 You can pull this changes by executing the next command:
 ```bash
-git pull https://github.com/$nombreDeveloper/fermat.git develop
+git pull https://github.com/$DeveloperName/fermat.git develop
 ```
 
 #### Compiling and Running the project on the IDE
@@ -147,7 +147,7 @@ git checkout develop
 ```
 ##### Execute the merge
 ```bash
-git merge --no-ff mezcla$nombreDeveloper
+git merge --no-ff $DeveloperName-$RelatedBranch
 ```
 ##### Update your Fork
 ```bash
@@ -155,6 +155,6 @@ git push origin develop
 ```
 ##### Delete the temporal branch for the merge
 ```bash
-git branch -d mezcla$nombreDeveloper
+git branch -d $DeveloperName-$RelatedBranch
 ```
 
