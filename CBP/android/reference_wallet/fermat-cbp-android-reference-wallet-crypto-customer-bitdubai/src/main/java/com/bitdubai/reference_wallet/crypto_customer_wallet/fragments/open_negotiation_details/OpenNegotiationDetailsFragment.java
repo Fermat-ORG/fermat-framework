@@ -875,7 +875,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
             } else if (currencyType.equals(MoneyType.BANK.getCode())) {
                 if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null) {
-                    String bankAccount = "INSERT BANK ACCOUNT IN SETTINGS WALLET.";
+                    String bankAccount = "INSERT BANK ACCOUNT IN WALLET SETTINGS.";
                     if (bankAccountList.size() > 0)
                         bankAccount = bankAccountList.get(0).toString();
 //                    bankAccount = bankAccountList.get(0).getAccount();
@@ -887,7 +887,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
             } else if (currencyType.equals(MoneyType.CASH_DELIVERY.getCode()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getCode()))) {
                 if (clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER) == null) {
-                    String infoDelivery = "INSERT LOCATION IN SETTINGS WALLET.";
+                    String infoDelivery = "INSERT LOCATION IN WALLET SETTINGS.";
                     if (locationList.size() > 0)
                         infoDelivery = locationList.get(0);
                     putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER, infoDelivery);
