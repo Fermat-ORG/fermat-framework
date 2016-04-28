@@ -92,7 +92,7 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
                  * If all ok, respond whit success message
                  */
                 CheckInProfileMsjRespond respondProfileCheckInMsj = new CheckInProfileMsjRespond(CheckInProfileMsjRespond.STATUS.SUCCESS, CheckInProfileMsjRespond.STATUS.SUCCESS.toString(), actorProfile.getIdentityPublicKey());
-                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_ACTOR_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -105,18 +105,20 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
 
             try {
 
-                LOG.error(exception.getMessage());
+                LOG.error(exception.getCause());
 
                 /*
                  * Respond whit fail message
                  */
                 CheckInProfileMsjRespond respondProfileCheckInMsj = new CheckInProfileMsjRespond(CheckInProfileMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), actorProfile.getIdentityPublicKey());
-                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_CLIENT_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                Package packageRespond = Package.createInstance(respondProfileCheckInMsj.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.CHECK_IN_ACTOR_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
                  */
                 session.getBasicRemote().sendObject(packageRespond);
+
+                exception.printStackTrace();
 
             } catch (IOException iOException) {
                 LOG.error(iOException.getMessage());
@@ -152,6 +154,9 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
         if (actorProfile.getLocation() != null){
             checkedInActor.setLatitude(actorProfile.getLocation().getLatitude());
             checkedInActor.setLongitude(actorProfile.getLocation().getLongitude());
+        }else{
+            checkedInActor.setLatitude(0.0);
+            checkedInActor.setLongitude(0.0);
         }
 
         /*
@@ -185,6 +190,9 @@ public class CheckInActorRequestProcessor extends PackageProcessor {
         if (actorProfile.getLocation() != null){
             checkedActorsHistory.setLastLatitude(actorProfile.getLocation().getLatitude());
             checkedActorsHistory.setLastLongitude(actorProfile.getLocation().getLongitude());
+        }else{
+            checkedActorsHistory.setLastLatitude(0.0);
+            checkedActorsHistory.setLastLongitude(0.0);
         }
 
         /*

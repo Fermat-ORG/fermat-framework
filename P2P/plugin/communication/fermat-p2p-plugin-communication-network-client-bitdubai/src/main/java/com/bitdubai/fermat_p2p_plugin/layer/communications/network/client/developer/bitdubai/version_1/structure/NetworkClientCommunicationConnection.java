@@ -91,10 +91,24 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
      */
     private NetworkClientCommunicationPluginRoot networkClientCommunicationPluginRoot;
 
+    /*
+     * Represent the nodesListPosition
+     */
     private Integer nodesListPosition;
 
+    /*
+     * Represent the communicationsNetworkClientChannel
+     */
     private CommunicationsNetworkClientChannel communicationsNetworkClientChannel;
 
+    /*
+     * Represent the clientProfile
+     */
+    private ClientProfile clientProfile;
+
+    /*
+     * Constructor
+     */
     public NetworkClientCommunicationConnection(final URI                    uri                   ,
                                                 final ErrorManager           errorManager          ,
                                                 final EventManager           eventManager          ,
@@ -120,7 +134,9 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
         this.container              = ClientManager.createClient();
     }
 
-
+    /*
+     * initialize And Connect to Network Node
+     */
     public void initializeAndConnect() {
 
         System.out.println("*****************************************************************");
@@ -240,9 +256,12 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
         return communicationsNetworkClientChannel.isRegister();
     }
 
+    /*
+     * CheckIn Client Request to Network Node
+     */
     public void setCheckInClientRequestProcessor(){
 
-        ClientProfile clientProfile = new ClientProfile();
+        clientProfile = new ClientProfile();
         clientProfile.setIdentityPublicKey(clientIdentity.getPublicKey());
         clientProfile.setDeviceType("");
 
@@ -598,6 +617,10 @@ public class NetworkClientCommunicationConnection  implements NetworkClientConne
 
     public String getServerIdentity() {
         return serverIdentity;
+    }
+
+    public ClientProfile getClientProfile() {
+        return clientProfile;
     }
 
 }

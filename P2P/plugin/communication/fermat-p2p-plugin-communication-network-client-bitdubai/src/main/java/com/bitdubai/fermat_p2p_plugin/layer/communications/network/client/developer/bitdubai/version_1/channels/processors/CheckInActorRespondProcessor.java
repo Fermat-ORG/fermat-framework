@@ -41,6 +41,8 @@ public class CheckInActorRespondProcessor extends PackageProcessor {
         System.out.println("Processing new package received, packageType: "+packageReceived.getPackageType());
         CheckInProfileMsjRespond checkInProfileMsjRespond = CheckInProfileMsjRespond.parseContent(packageReceived.getContent());
 
+        System.out.println(checkInProfileMsjRespond.toJson());
+
         if(checkInProfileMsjRespond.getStatus() == CheckInProfileMsjRespond.STATUS.SUCCESS){
             //raise event
 

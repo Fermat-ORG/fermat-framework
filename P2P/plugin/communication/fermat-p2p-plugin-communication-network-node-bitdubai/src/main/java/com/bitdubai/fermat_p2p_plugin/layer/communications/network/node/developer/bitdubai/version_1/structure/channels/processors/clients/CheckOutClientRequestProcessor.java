@@ -2,6 +2,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.request.CheckOutProfileMsgRequest;
@@ -153,12 +154,17 @@ public class CheckOutClientRequestProcessor extends PackageProcessor {
      * @throws CantDeleteRecordDataBaseException
      * @throws RecordNotFoundException
      */
-    private void deleteCheckedInClient(String profileIdentity) throws CantDeleteRecordDataBaseException, RecordNotFoundException {
+    private void deleteCheckedInClient(String profileIdentity) throws CantDeleteRecordDataBaseException, RecordNotFoundException, CantReadRecordDataBaseException {
 
         /*
-         * Delete from the data base
+         * validate if exists
          */
-        getDaoFactory().getCheckedInClientDao().delete(profileIdentity);
+        if(getDaoFactory().getCheckedInClientDao().exists(profileIdentity)) {
+            /*
+             * Delete from the data base
+             */
+            getDaoFactory().getCheckedInClientDao().delete(profileIdentity);
+        }
     }
 
     /**

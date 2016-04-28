@@ -24,6 +24,11 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckOutClientRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckOutNetworkServiceRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.NearNodeListRequestProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedActorsHistory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInNetworkService;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedNetworkServicesHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ClientsConnectionHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ClientsRegistrationHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.enums.RegistrationResult;
@@ -32,6 +37,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.websocket.CloseReason;
 import javax.websocket.EncodeException;
@@ -163,7 +169,7 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
     public void newPackageReceived(Package packageReceived, Session session) {
 
         LOG.info("New message Received");
-        LOG.info("Session: " + session.getId() + " packageReceived = " + packageReceived + "");
+        LOG.info("Session: " + session.getId() + " packageReceived = " + packageReceived.getPackageType() + "");
 
         try {
 
@@ -208,12 +214,64 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
                         closeReason.toString()
                 );
 
+                List<CheckedInNetworkService> listCheckedInNetworkService = getDaoFactory().getCheckedInNetworkServiceDao().
+                                         findAll(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                                                 clientPublicKey);
+
+                if(listCheckedInNetworkService != null){
+
+                    for(CheckedInNetworkService checkedInNetworkService : listCheckedInNetworkService){
+
+                        /*
+                         * DELETE from table CheckedInNetworkService
+                         */
+                        getDaoFactory().getCheckedInNetworkServiceDao().delete(checkedInNetworkService.getId());
+
+                        LOG.info("DELETE checkedInNetworkService " + checkedInNetworkService.getClientIdentityPublicKey());
+
+                        /*
+                         * Create a new row into the CheckedNetworkServicesHistory
+                         */
+                        insertCheckedNetworkServicesHistory(checkedInNetworkService);
+
+
+                        /*
+                         * get the list of CheckedInActor where is the ClientIdentityPublicKey
+                         */
+                        List<CheckedInActor> listCheckedInActor = getDaoFactory().getCheckedInActorDao().
+                                findAll(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NS_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                                        checkedInNetworkService.getIdentityPublicKey());
+
+                        if(listCheckedInActor != null){
+
+                            for(CheckedInActor actor : listCheckedInActor){
+
+                                /*
+                                 * DELETE from table CheckedInActor
+                                 */
+                                getDaoFactory().getCheckedInActorDao().delete(actor.getId());
+
+                                LOG.info("DELETE Actor " + actor.toString());
+
+                                /*
+                                 * Create a new row into the table CheckedActorsHistory
+                                 */
+                                insertCheckedActorsHistory(actor);
+
+
+                            }
+
+                        }
+
+                    }
+                }
+
             } else {
 
                 insertClientsRegistrationHistory(
                         clientPublicKey,
                         RegistrationResult.IGNORED,
-                        "There's no client registered with the given public key, indicated closed reason: "+closeReason.toString()
+                        "There's no client registered with the given public key, indicated closed reason: " + closeReason.toString()
                 );
             }
 
@@ -224,7 +282,7 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
     }
 
     /**
-     * Create a new row into the data base
+     * Create a new row into the table ClientsRegistrationHistory
      *
      * @param publicKey of the client.
      * @param result    of the registration.
@@ -249,6 +307,50 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
          * Save into the data base
          */
         getDaoFactory().getClientsRegistrationHistoryDao().create(clientsRegistrationHistory);
+    }
+
+    /*
+     * Create a new row into the table CheckedNetworkServicesHistory
+     */
+    private void insertCheckedNetworkServicesHistory(CheckedInNetworkService checkedInNetworkService) throws CantInsertRecordDataBaseException{
+
+        CheckedNetworkServicesHistory checkedNetworkServicesHistory = new CheckedNetworkServicesHistory();
+        checkedNetworkServicesHistory.setIdentityPublicKey(checkedInNetworkService.getIdentityPublicKey());
+        checkedNetworkServicesHistory.setClientIdentityPublicKey(checkedInNetworkService.getClientIdentityPublicKey());
+        checkedNetworkServicesHistory.setNetworkServiceType(checkedInNetworkService.getNetworkServiceType());
+        checkedNetworkServicesHistory.setCheckType(CheckedNetworkServicesHistory.CHECK_TYPE_OUT);
+        checkedNetworkServicesHistory.setLastLatitude(checkedInNetworkService.getLatitude());
+        checkedNetworkServicesHistory.setLastLongitude(checkedInNetworkService.getLongitude());
+
+        /*
+         * save into table CheckedNetworkServicesHistory
+         */
+        getDaoFactory().getCheckedNetworkServicesHistoryDao().create(checkedNetworkServicesHistory);
+
+    }
+
+    /*
+     * Create a new row into the table CheckedActorsHistory
+     */
+    private void insertCheckedActorsHistory(CheckedInActor actor) throws CantInsertRecordDataBaseException{
+
+        CheckedActorsHistory checkedActorsHistory = new CheckedActorsHistory();
+        checkedActorsHistory.setIdentityPublicKey(actor.getIdentityPublicKey());
+        checkedActorsHistory.setActorType(actor.getActorType());
+        checkedActorsHistory.setAlias(actor.getAlias());
+        checkedActorsHistory.setName(actor.getName());
+        checkedActorsHistory.setPhoto(actor.getPhoto());
+        checkedActorsHistory.setExtraData(actor.getExtraData());
+        checkedActorsHistory.setCheckType(CheckedActorsHistory.CHECK_TYPE_OUT);
+        checkedActorsHistory.setLastLatitude(actor.getLatitude());
+        checkedActorsHistory.setLastLongitude(actor.getLongitude());
+
+
+       /*
+        * Save into the table CheckedActorsHistory
+        */
+        getDaoFactory().getCheckedActorsHistoryDao().create(checkedActorsHistory);
+
     }
 
 

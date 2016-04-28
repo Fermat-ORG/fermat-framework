@@ -151,7 +151,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
             ClientContext.add(ClientContextItem.ERROR_MANAGER  , errorManager);
             ClientContext.add(ClientContextItem.EVENT_MANAGER, eventManager);
 
-            nodesProfileList = getNodesProfileList();
+            //nodesProfileList = getNodesProfileList();
 
             if(nodesProfileList != null && nodesProfileList.size() > 0){
 
@@ -170,7 +170,7 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
 
             }else {
 
-                URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + 9090 + "/fermat/ws/client-channel");
+                URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + 8080 + "/fermat/ws/client-channel");
 
                 networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
                         uri,
