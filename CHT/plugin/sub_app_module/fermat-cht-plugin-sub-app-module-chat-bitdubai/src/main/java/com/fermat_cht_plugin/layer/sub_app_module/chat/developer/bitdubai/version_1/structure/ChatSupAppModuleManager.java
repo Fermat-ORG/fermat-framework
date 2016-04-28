@@ -233,6 +233,16 @@ public class ChatSupAppModuleManager implements ChatManager, Serializable {
     }
 
     @Override
+    public void sendWritingStatus(String contactPublicKey, UUID chatId) throws CantSendChatMessageException {
+
+    }
+
+    @Override
+    public void sendOnlineStatus(String contactPublicKey, UUID chatId) throws CantSendChatMessageException {
+
+    }
+
+    @Override
     public void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException {
         middlewareChatManager.saveGroupMember(groupMember);
     }
