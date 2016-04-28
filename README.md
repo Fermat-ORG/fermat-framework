@@ -1,5 +1,8 @@
 <!-- all links tested by laderuner -->
-![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+![alt text](https://github.com/Fermat-ORG/media-kit/blob/master/MediaKit/Fermat%20Branding/Fermat%20Logotype/Fermat_Logo_3D.png "Fermat Logo")
+
+# *Fermat*
+*A Decentralized, Collaborative, Blockchain-Enabled, Modular App Platform To Unleash the P2P “Internet of People” Economy*
 
 # Welcome to Fermat!
 
@@ -17,23 +20,36 @@ In order to meet this demand thousands of wallets should be available. Wallets w
 
 Fermat is a master plan to avoid getting into that future by waiting for independent entrepreneurs to build each of these wallets and financial apps one at the time and from scratch, repeating every time all the math, accounting, cryptography and algorithms that are common to all these APPs. Fermat handles all that and by doing the heavy lifting enables any developer in the world to easily create niche wallets and financial APPs on top of its shared infrastructure.
 
-Fermat offers a new approach, allowing us to achieve large-scale and systematic cooperation in an entirely distributed and decentralized manner. Our goal is to move from competition to cooperation by creating the infraestructure needed to decentralize not only software development, but also analysis and design. 
+Fermat offers a new approach, allowing us to achieve large-scale and systematic cooperation in an entirely distributed and decentralized manner. Our goal is to move from competition to collaboration by creating the infraestructure needed to decentralize not only software development, but also analysis and design. 
 
-#### The Framework
+#### The System
+The Fermat System has three major architectural pillars: 
 
-Fermat is a p2p financial application framework that enables any kind of trust-less applications, including digital wallets. 
+1. *The Network*: a peer-to-peer infrastructure that allows data flows between Fermat apps without going through central servers
+2. *The Framework*: the technology that runs the collection of reusable atomic components that can be added to or drawn upon for use in Fermat-powered applications (apps)
+3. *The Ecosystem of Fermat Apps*: where end users interact with each other. These apps are made up of dozens of components
 
-The framework evolves from the stand-alone crypto wallet and enables an ecosystem of peer-to-peer financial applications that are both crypto currency and digital asset enabled. The Framework handles a full stack of layers. Starting down from an OS API level, to a Blockchain, Communication, Platform, and User Interface Level. 
-
-![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Coins/Platform%20Coins/PIP/PIP.jpg "Plugins Platform")
 
 #### The Network
 
-Crypto networks are peer-to-Peer electronic cash systems that allow online payments to be sent directly from one party to another without going through a financial institution. Stand-alone crypto wallets stay truth to that principle. But the main benefits are lost if a trusted third party is still required to transport metadata, synchronize devices, hold wallet files or keys, manage identities, interface crypto networks or the legacy financial system.
+The Fermat system runs on end users devices, wherever it is needed: phones, tablets, laptops, PCs and even web servers. One of the design requirements was to create a censorship resistant system. Since these devices need to communicate with each other in order to exchange information, the need arose for a reliable, compatible p2p network to enable this communication without going through third parties. If device-to-device communications were to go through centralized service providers, then the system would not be secure and autonomous. This system requires specialized nodes.
 
-Fermat features a peer-to-peer network for transporting metadata and interconnect network clients between each other. On top of that network a synchronization scheme transforms a standalone app into a distributed application across several devices still owned by the same user. 
+Fermats handles p2p transactions  in an unique way, splitting the transport of information from the transport of value. In every transaction Fermat features a peer-to-peer network for transporting metadata and interconnect network clients between each other. 
+Existing cryptocurrency networks are used by Fermat to transport the value component.
+
+On top of that network a synchronization scheme transforms a standalone app into a distributed application across several devices still owned by the same user. 
 
 ![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Coins/Platform%20Coins/P2P/P2P.jpg "Peer to Peer Network")
+
+#### The Framework
+
+Fermat’s Framework sits on top of the device’s OS and extends it in order to support Fermat apps, which run on top of the Framework. 
+Each of these apps are in fact a set of interconnected, reusable atomic components, one or more being the user interface. 
+The Fermat system is downloaded as a whole, but each Fermat App is activated when the end user performs the usual act of "installing" them. What happens really is that underneath the skin are a set of app components interacting with each other – a few may have been built for specific Fermat apps, while the rest are part of a pool of reusable components, and coordinated they offer the desired functionality. The pool of reusable components expands each time a new Fermat app is added to the system.
+
+
+![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Coins/Platform%20Coins/PIP/PIP.jpg "Plugins Platform")
+
 
 #### Fermat Goals
 
@@ -56,7 +72,7 @@ We believe the open source community collectively has more influence than any of
 
 We are asking each of you to help lead the way. Because we’re already connected with you as we are also developers and designers, and we want to build our relationship with you into a network of developers across the world to share new ideas and forge new collaborations. Working together, we can build the tools and technology that people need to become financially independent, have access from any country to financial products and be safe of nasty third parties spying on them or trying to tell them what they can and can not do with their money. We believe in true financial freedom.
 
-We want to hear from you on how we can build this network. We are by now about 50 developers / designers / academics / entrepreneurs working full time on Fermat and our goal is to reach 500. To learn more about how to join, just read the [how-to-participate-guide](https://github.com/bitDubai/participate-now). We hope at every single one of you will join us.  Because Fermat and the world need you.  We need your skills, imagination and optimism.  And with this new network, we're sure we can be partners for decades to come.
+We want to hear from you on how we can build this network. We are by now about 100+ developers / designers / academics / entrepreneurs working full time on Fermat and our goal is to reach 500. To learn more about how to join, just read the [how-to-participate-guide](https://github.com/Fermat-ORG/participate-now). We hope at every single one of you will join us.  Because Fermat and the world need you.  We need your skills, imagination and optimism.  And with this new network, we're sure we can be partners for decades to come.
 
 We believe in people with passion who are crazy enough to think they can change the world. With a lot of hard work, we believe we can accomplish this.
 
@@ -112,10 +128,10 @@ Technically Fermat is an open-source P2P system built on a Plug-in architecture 
 Fermat is moving towards version 1, but we're not stopping there. We have many feature ideas on our
 [white paper](FERMAT-WHITE-PAPER.md) that we're anxious to add. So take Fermat out for a spin and let us know how we can make it your favorite platform to launch your own digital wallet or financial APP.
 
-You can learn more, see some cool images of Fermat's architecture and its P2P network and explore the design space at [Fermat.org](http://www.fermat.org).
+You can learn more about the project and see the latest information at the official site [Fermat.org](http://www.fermat.org).
 
 
-![alt text](https://github.com/bitDubai/media-kit/blob/master/MediaKit/Coins/Fiat%20Coins/Fiat%20Art/Scene1/HQ_1920x1080.jpg "Fermat Digital Money")
+![alt text](https://github.com/Fermat-ORG/media-kit/blob/master/MediaKit/Coins/Fiat%20Coins/Fiat%20Art/Scene1/HQ_1920x1080.jpg "Fermat Digital Money")
 
 <br>
 ### Fermat's Purpose
@@ -249,15 +265,16 @@ log into the [IRC DEV Channel](http://irc.lc/freenode/fermat-dev/), and we will 
 
 #### Learn More?
 
-Take a look at the [Fermat Book](https://github.com/bitDubai/fermat/tree/master/fermat-book) that it is being written in order to help developers learn more about Fermat technology.
+Take a look at the [Fermat Book](https://github.com/Fermat-ORG/fermat-book/blob/master/README.md) that it is being written in order to help developers learn more about Fermat technology.
 
 #### Project status
 
-As of November 2015 the project status is the following:
+As of March 2016 the project status is the following:
 
-**Code state** : Under development for 6 months. No releases yet. Many full time developers working on it provided by the project's main contributor: [bitDubai](https://www.bitDubai.com).
+**Code state** : Under development for 10 months. No releases yet. Alpha version available at [fermat.org].
+Fermat Dev Teams is a network of developers teams actively working on the project. [Dev Teams](https://github.com/Fermat-ORG/fermat/blob/master/README-DEV-TEAMS.md)
 
-**Future path of development** : Active (First release with very limited features scheduled for December 2015).
+**Future path of development** : Active (First release with very limited features scheduled for April 2016).
 
 <br>
 ## I Want to Join the Team!

@@ -9,15 +9,28 @@ import java.util.UUID;
  * Created by franklin on 31/03/16.
  */
 public class GroupMemberImpl implements GroupMember {
+    private final UUID groupMemberId;
     private final UUID groupId;
     private final String publicKeyActor;
     private final String alias;
 
-    public GroupMemberImpl(UUID groupId, String publicKeyActor, String alias){
+    public GroupMemberImpl(UUID groupMemberId, UUID groupId, String publicKeyActor, String alias){
+        this.groupMemberId     = groupMemberId;
         this.groupId           = groupId;
         this.publicKeyActor    = publicKeyActor;
         this.alias             = alias;
     }
+
+    /**
+     * Returns the group id that representing the id of the group to which the user belongs
+     *
+     * @return groupId
+     */
+    @Override
+    public UUID getGroupMemberId() {
+        return groupMemberId;
+    }
+
     /**
      * Returns the group id that representing the id of the group to which the user belongs
      *

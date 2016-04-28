@@ -115,7 +115,7 @@ public class AssetFactoryMiddlewareDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_TABLE_NAME);
 
-            //table.addColumn(AssertFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ID_COLUMN, DatabaseDataType.STRING, 100, Boolean.TRUE);
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ID_COLUMN, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_ASSET_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.TRUE);
             table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_CONTRACT_VALUE_COLUMN, DatabaseDataType.STRING, 50, Boolean.FALSE);
@@ -134,6 +134,7 @@ public class AssetFactoryMiddlewareDatabaseFactory {
              */
             table = databaseFactory.newTableFactory(ownerId, AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_TABLE_NAME);
 
+            table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ID_COLUMN, DatabaseDataType.STRING, 100, Boolean.TRUE);
             table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.TRUE);
             table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_NAME_COLUMN, DatabaseDataType.STRING, 100, Boolean.FALSE);
             table.addColumn(AssetFactoryMiddlewareDatabaseConstant.ASSET_FACTORY_IDENTITY_ISSUER_ASSET_PUBLIC_KEY_COLUMN, DatabaseDataType.STRING, 255, Boolean.FALSE);

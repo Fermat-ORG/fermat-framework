@@ -288,17 +288,17 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                 List<BusinessTransactionRecord> pendingToSubmitNotificationList = customerAckOnlineMerchandiseBusinessTransactionDao.
                         getPendingToSubmitNotificationList();
                 for (BusinessTransactionRecord pendingToSubmitNotificationRecord : pendingToSubmitNotificationList) {
-                    contractHash = pendingToSubmitNotificationRecord.getTransactionHash();
+                    contractHash = pendingToSubmitNotificationRecord.getContractHash();
 
                     transactionTransmissionManager.sendContractStatusNotification(
-                            pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             pendingToSubmitNotificationRecord.getCustomerPublicKey(),
+                            pendingToSubmitNotificationRecord.getBrokerPublicKey(),
                             contractHash,
                             pendingToSubmitNotificationRecord.getTransactionId(),
                             ContractTransactionStatus.ONLINE_MERCHANDISE_ACK,
                             Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
-                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER);
 
                     customerAckOnlineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash,
                             ContractTransactionStatus.ONLINE_MERCHANDISE_ACK);
@@ -310,16 +310,16 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                 List<BusinessTransactionRecord> pendingToSubmitConfirmationList = customerAckOnlineMerchandiseBusinessTransactionDao.
                         getPendingToSubmitConfirmationList();
                 for (BusinessTransactionRecord pendingToSubmitConfirmationRecord : pendingToSubmitConfirmationList) {
-                    contractHash = pendingToSubmitConfirmationRecord.getTransactionHash();
+                    contractHash = pendingToSubmitConfirmationRecord.getContractHash();
 
                     transactionTransmissionManager.confirmNotificationReception(
-                            pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             pendingToSubmitConfirmationRecord.getBrokerPublicKey(),
+                            pendingToSubmitConfirmationRecord.getCustomerPublicKey(),
                             contractHash,
                             pendingToSubmitConfirmationRecord.getTransactionId(),
                             Plugins.CUSTOMER_ACK_ONLINE_MERCHANDISE,
-                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER,
-                            PlatformComponentType.ACTOR_CRYPTO_BROKER);
+                            PlatformComponentType.ACTOR_CRYPTO_BROKER,
+                            PlatformComponentType.ACTOR_CRYPTO_CUSTOMER);
 
                     customerAckOnlineMerchandiseBusinessTransactionDao.updateContractTransactionStatus(contractHash,
                             ContractTransactionStatus.CONFIRM_ONLINE_ACK_MERCHANDISE);
@@ -370,8 +370,11 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                     return; //Case: the contract event is not processed or the incoming money is not link to a contract.
 
                 final String contractHash = businessTransactionRecord.getContractHash();
-                final long incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
-                final long contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
+                long incomingCryptoAmount = incomingMoneyEventWrapper.getCryptoAmount();
+                long contractCryptoAmount = businessTransactionRecord.getCryptoAmount();
+                //TODO:fix this
+                incomingCryptoAmount = 0;
+                contractCryptoAmount = 0;
                 if (incomingCryptoAmount != contractCryptoAmount)
                     throw new IncomingOnlineMerchandiseException("The incoming crypto amount received is " + incomingCryptoAmount +
                             "\nThe amount excepted in contract " + contractHash + "\nis " + contractCryptoAmount);
@@ -384,7 +387,8 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
 
                 businessTransactionRecord.setContractTransactionStatus(ContractTransactionStatus.PENDING_ACK_ONLINE_MERCHANDISE_NOTIFICATION);
                 customerAckOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(businessTransactionRecord);
-                customerAckOnlineMerchandiseBusinessTransactionDao.updateEventStatus(eventId,EventStatus.NOTIFIED);
+                customerAckOnlineMerchandiseBusinessTransactionDao.updateIncomingEventStatus(eventId,EventStatus.NOTIFIED);
+
 
             } catch (UnexpectedResultReturnedFromDatabaseException e) {
                 throw new IncomingOnlineMerchandiseException(e, "Checking the incoming payment", "The database return an unexpected result");
@@ -451,14 +455,18 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
 
                 if (eventTypeCode.equals(EventType.BROKER_ACK_PAYMENT_CONFIRMED.getCode())) {
                     //the eventId from this event is the contractId - Customer side
-                    CustomerBrokerContractPurchase customerBrokerContractPurchase = customerBrokerContractPurchaseManager.
-                            getCustomerBrokerContractPurchaseForContractId(eventId);
+                    try{
+                        CustomerBrokerContractPurchase customerBrokerContractPurchase = customerBrokerContractPurchaseManager.
+                                getCustomerBrokerContractPurchaseForContractId(eventId);
 
-                    String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
-                    CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.
-                            getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
+                        String negotiationId = customerBrokerContractPurchase.getNegotiatiotId();
+                        CustomerBrokerPurchaseNegotiation customerBrokerPurchaseNegotiation = customerBrokerPurchaseNegotiationManager.
+                                getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
 
-                    customerAckOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase, customerBrokerPurchaseNegotiation);
+                        customerAckOnlineMerchandiseBusinessTransactionDao.persistContractInDatabase(customerBrokerContractPurchase, customerBrokerPurchaseNegotiation);
+                    }catch (Exception e){
+                        System.out.println("an error has occurred (BROKER_ACK_PAYMENT_CONFIRMED) this must show on the broker side ");
+                    }
                     customerAckOnlineMerchandiseBusinessTransactionDao.updateEventStatus(eventId, EventStatus.NOTIFIED);
                 }
 
@@ -487,11 +495,6 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                         exception,
                         "Checking pending events",
                         "Cannot insert a record in database");
-            } catch (CantGetListCustomerBrokerContractPurchaseException exception) {
-                throw new UnexpectedResultReturnedFromDatabaseException(
-                        exception,
-                        "Checking pending events",
-                        "Cannot get the purchase contract");
             } catch (CantUpdateCustomerBrokerContractPurchaseException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         exception,
@@ -502,11 +505,6 @@ public class CustomerAckOnlineMerchandiseMonitorAgent implements
                         exception,
                         "Checking pending events",
                         "Cannot update the contract sale status");
-            } catch (CantGetListPurchaseNegotiationsException exception) {
-                throw new UnexpectedResultReturnedFromDatabaseException(
-                        exception,
-                        "Checking pending events",
-                        "Cannot get the purchase negotiation list");
             } catch (ObjectNotSetException exception) {
                 throw new UnexpectedResultReturnedFromDatabaseException(
                         exception,

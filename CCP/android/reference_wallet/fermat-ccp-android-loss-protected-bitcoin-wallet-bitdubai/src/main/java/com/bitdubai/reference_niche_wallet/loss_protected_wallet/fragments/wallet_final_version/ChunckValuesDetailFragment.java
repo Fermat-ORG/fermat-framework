@@ -61,7 +61,7 @@ import static android.widget.Toast.makeText;
 
 
 /**
- * Created by root on 12/04/16.
+ * Created by Gian Barboza on 12/04/16.
  */
 public class ChunckValuesDetailFragment extends FermatWalletListFragment<BitcoinLossProtectedWalletSpend>
         implements FermatListItemListeners<BitcoinLossProtectedWalletSpend>, onRefreshList {

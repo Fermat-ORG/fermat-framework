@@ -27,7 +27,6 @@ import org.fourthline.cling.UpnpService;
 import org.fourthline.cling.UpnpServiceImpl;
 import org.fourthline.cling.support.igd.PortMappingListener;
 import org.fourthline.cling.support.model.PortMapping;
-import org.fourthline.cling.support.model.PortMapping.Protocol;
 import org.jboss.resteasy.plugins.server.servlet.HttpServlet30Dispatcher;
 
 import java.io.IOException;
@@ -191,18 +190,18 @@ public class JettyEmbeddedAppServer {
      */
     public void start() throws Exception {
 
-        Inet4Address address;
+
+       Inet4Address address;
         try {
-            address = getIPv4Address("wlan0");
-            // TfsClientSingleton.init(address, tfsCache);
+            address = getIPv4AddressStatic();
         } catch (UnknownHostException | SocketException e) {
             throw new Error(e);
         }
 
-       PortMapping desiredMapping = new PortMapping(
+        PortMapping desiredMapping = new PortMapping(
                 DEFAULT_PORT,
                 address.getHostAddress(),
-                Protocol.TCP
+                PortMapping.Protocol.TCP
         );
 
         UpnpService upnpService = new UpnpServiceImpl(
@@ -211,30 +210,30 @@ public class JettyEmbeddedAppServer {
 
         upnpService.getControlPoint().search();
 
-        // Use this is OK, load the ip dynamically
+        /* Use this is OK, load the ip dynamically
 
-//        UpnpServiceImpl upnpService = null;
-//        PortMapping[] arr = null;
-//        List<String> addressList;
-//        int i = 0;
-//        addressList = getIPv4Address();
-//
-//        if(addressList != null) {
-//
-//            arr = new PortMapping[addressList.size()];
-//
-//            for (String address : addressList) {
-//
-//                LOG.info("Ip Address " + address);
-//                arr[i] = new PortMapping(9090, address, PortMapping.Protocol.TCP, "My Port Mapping1");
-//                i++;
-//
-//            }
-//
-//            upnpService = new UpnpServiceImpl(new PortMappingListener(arr));
-//            upnpService.getControlPoint().search();
-//
-//        }
+        UpnpServiceImpl upnpService = null;
+        PortMapping[] arr = null;
+        List<String> addressList;
+        int i = 0;
+        addressList = getIPv4Address();
+
+        if(addressList != null) {
+
+            arr = new PortMapping[addressList.size()];
+
+            for (String address : addressList) {
+
+                LOG.info("Ip Address " + address);
+                arr[i] = new PortMapping(9090, address, PortMapping.Protocol.TCP, "My Port Mapping1");
+                i++;
+
+            }
+
+            upnpService = new UpnpServiceImpl(new PortMappingListener(arr));
+            upnpService.getControlPoint().search();
+
+        }*/
 
         this.initialize();
         LOG.info("Starting the internal server");
@@ -267,6 +266,34 @@ public class JettyEmbeddedAppServer {
         }
 
         throw new UnsupportedAddressTypeException();
+    }
+
+
+    private static Inet4Address getIPv4AddressStatic() throws Exception {
+
+        Enumeration<NetworkInterface> enumeration = NetworkInterface.getNetworkInterfaces();
+
+        while (enumeration.hasMoreElements()) {
+
+            NetworkInterface networkInterface = NetworkInterface.getByName(enumeration.nextElement().getDisplayName());
+            Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+
+            while (addresses.hasMoreElements()) {
+                InetAddress addr = addresses.nextElement();
+                if (addr instanceof Inet4Address) {
+                    return (Inet4Address) addr;
+                }
+            }
+
+            InetAddress localhost = InetAddress.getLocalHost();
+            if (localhost instanceof Inet4Address) {
+                return (Inet4Address) localhost;
+            }
+
+        }
+
+        throw new Exception();
+
     }
 
     /*

@@ -52,6 +52,7 @@ import com.bitdubai.android_core.app.common.version_1.bottom_navigation.BottomNa
 import com.bitdubai.android_core.app.common.version_1.builders.FooterBuilder;
 import com.bitdubai.android_core.app.common.version_1.builders.SideMenuBuilder;
 import com.bitdubai.android_core.app.common.version_1.classes.BroadcastManager;
+import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.connection_manager.FermatAppConnectionManager;
 import com.bitdubai.android_core.app.common.version_1.navigation_view.FermatActionBarDrawerEventListener;
 import com.bitdubai.android_core.app.common.version_1.notifications.NotificationService;
@@ -85,10 +86,13 @@ import com.bitdubai.fermat_android_api.layer.definition.wallet.interfaces.Wizard
 import com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
-import com.bitdubai.fermat_api.AndroidCoreManager;
 import com.bitdubai.fermat_api.AppsStatus;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.FermatStates;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.enums.NetworkStatus;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetBitcoinNetworkStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.common.system.exceptions.CantGetCommunicationNetworkStatusException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Engine;
 import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
@@ -1140,7 +1144,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
                         String type = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_MAIN.getKey()).getType();
 
-                        fragmentsArray[0] = appConnections.getFragmentFactory().getFragment(
+                        fragmentsArray[1] = appConnections.getFragmentFactory().getFragment(
                                 type,
                                 createOrOpenApp(getDesktopManager()),
                                 null
@@ -1148,7 +1152,7 @@ public abstract class FermatActivity extends AppCompatActivity implements
 
                         type = desktopObject.getLastActivity().getFragment(DesktopFragmentsEnumType.DESKTOP_P2P_MAIN.getKey()).getType();
 
-                        fragmentsArray[1] = appConnections.getFragmentFactory().getFragment(
+                        fragmentsArray[0] = appConnections.getFragmentFactory().getFragment(
                                 type,
                                 createOrOpenApp(getDesktopManager()),
                                 null
@@ -1709,7 +1713,12 @@ public abstract class FermatActivity extends AppCompatActivity implements
         yourOwnSender.send(mailUserTo, LogReader.getLog().toString());
     }
 
+    //send mail
 
+    public void sendMailExternal(String mailUserTo, String bodyText) throws Exception {
+        YourOwnSender yourOwnSender = new YourOwnSender(this);
+        yourOwnSender.send(mailUserTo, bodyText);
+    }
 
     @Override
     protected void onStart() {
@@ -1721,8 +1730,22 @@ public abstract class FermatActivity extends AppCompatActivity implements
         super.onPause();
         if(broadcastManager!=null)broadcastManager.stop();
 //        networkStateReceiver.removeListener(this);
+    }
 
-
+    @Override
+    public void selectApp(String appPublicKey) throws Exception {
+        try{
+            Intent intent;
+            intent = new Intent();
+            intent.putExtra(ApplicationConstants.INTENT_DESKTOP_APP_PUBLIC_KEY, appPublicKey);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra(ApplicationConstants.INTENT_APP_TYPE,ApplicationSession.getInstance().getAppManager().getApp(appPublicKey).getAppType());
+            overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+            intent.setAction("org.fermat.APP_LAUNCHER");
+            sendBroadcast(intent);
+        }catch (Exception e){
+            throw new Exception("App public key not exist");
+        }
     }
 
 
@@ -1795,9 +1818,33 @@ public abstract class FermatActivity extends AppCompatActivity implements
         return activityType;
     }
 
+
     @Override
-    public AndroidCoreManager getFermatStates(){
-        return FermatSystemUtils.getAndroidCoreModule().getAndroidCoreManager();
+    public NetworkStatus getFermatNetworkStatus() throws CantGetCommunicationNetworkStatusException {
+        try {
+            return FermatSystemUtils.getAndroidCoreModule().getFermatNetworkStatus();
+        } catch (CantCreateProxyException e) {
+            throw new CantGetCommunicationNetworkStatusException("",e,"","");
+        }
+    }
+
+    @Override
+    public NetworkStatus getBitcoinNetworkStatus(BlockchainNetworkType blockchainNetworkType) throws CantGetBitcoinNetworkStatusException {
+        try {
+            return FermatSystemUtils.getAndroidCoreModule().getBitcoinNetworkStatus(blockchainNetworkType);
+        } catch (CantCreateProxyException e) {
+            throw new CantGetBitcoinNetworkStatusException("",e,"","");
+        }
+    }
+
+    @Override
+    public NetworkStatus getPrivateNetworkStatus() {
+        try {
+            return FermatSystemUtils.getAndroidCoreModule().getPrivateNetworkStatus();
+        } catch (CantCreateProxyException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     public TabsPagerAdapter getAdapter() {

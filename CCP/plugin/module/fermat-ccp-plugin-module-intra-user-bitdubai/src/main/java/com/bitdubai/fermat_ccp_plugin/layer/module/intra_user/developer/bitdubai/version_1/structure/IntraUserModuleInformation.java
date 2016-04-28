@@ -3,6 +3,8 @@ package com.bitdubai.fermat_ccp_plugin.layer.module.intra_user.developer.bitduba
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserInformation;
 
+import java.io.Serializable;
+
 /**
  * The class <code>com.bitdubai.fermat_dmp_plugin.layer.module.intra_user.developer.bitdubai.version_1.structure.IntraUserModuleInformation</code>
  * is the implementation of IntraUserInformation interface.
@@ -10,7 +12,7 @@ import com.bitdubai.fermat_ccp_api.layer.module.intra_user.interfaces.IntraUserI
  *
  * Created by natalia on 11/08/15.
  */
-public class IntraUserModuleInformation implements IntraUserInformation {
+public class IntraUserModuleInformation implements IntraUserInformation,Serializable {
 
     private String name;
     private String phrase;

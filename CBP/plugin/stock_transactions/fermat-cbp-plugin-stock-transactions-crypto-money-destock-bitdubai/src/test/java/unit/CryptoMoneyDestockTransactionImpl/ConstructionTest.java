@@ -1,5 +1,6 @@
 package unit.CryptoMoneyDestockTransactionImpl;
 
+import com.bitdubai.fermat_api.layer.all_definition.enums.BlockchainNetworkType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.OriginTransaction;
 import com.bitdubai.fermat_cbp_api.all_definition.enums.TransactionStatusRestockDestock;
@@ -33,6 +34,8 @@ public class ConstructionTest {
     TransactionStatusRestockDestock transactionStatus = TransactionStatusRestockDestock.INIT_TRANSACTION;
     BigDecimal priceReference = BigDecimal.ONE;
     OriginTransaction originTransaction = OriginTransaction.STOCK_INITIAL;
+    String originTransactionId = new String();
+    BlockchainNetworkType mBlockchainNetworkType = BlockchainNetworkType.PRODUCTION;
 
     @Test
     public void Construction_ValidParameters_NewObjectCreated(){
@@ -49,7 +52,9 @@ public class ConstructionTest {
                 this.timeStamp,
                 this.transactionStatus,
                 this.priceReference,
-                this.originTransaction
+                this.originTransaction,
+                this.originTransactionId,
+                this.mBlockchainNetworkType
         );
         assertThat(cryptoMoneyDestockTransaction).isNotNull();
     }
