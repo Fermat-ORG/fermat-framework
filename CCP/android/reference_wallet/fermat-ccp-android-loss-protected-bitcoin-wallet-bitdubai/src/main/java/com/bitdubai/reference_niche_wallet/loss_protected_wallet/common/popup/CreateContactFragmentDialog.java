@@ -154,7 +154,7 @@ public class CreateContactFragmentDialog extends Dialog implements
 
         try {
             requestWindowFeature(Window.FEATURE_NO_TITLE);
-            setContentView(R.layout.create_contact_dialog);
+            setContentView(R.layout.loss_create_contact_dialog);
 
 
             save_contact_btn = (Button) findViewById(R.id.save_contact_btn);
