@@ -197,10 +197,9 @@ public class ActorConnectionEventsActions {
                     throw new UnsupportedActorTypeException(
                             "request: "+request, "Unsupported actor type exception.");
             }
-            //TODO: I'll use ART_ARTIST_IDENTITY until the Art community is ready
             broadcaster.publish(
                     BroadcasterType.NOTIFICATION_SERVICE,
-                    SubAppsPublicKeys.ART_ARTIST_IDENTITY.getCode(),
+                    SubAppsPublicKeys.ART_ARTIST_COMMUNITY.getCode(),
                     ArtistActorConnectionNotificationType.CONNECTION_REQUEST_RECEIVED.getCode());
 
 
