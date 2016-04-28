@@ -94,9 +94,4 @@ public class ActorsCatalogTransactionsPendingForPropagationDao extends AbstractB
         return databaseTableRecord;
 
     }
-
-    @Override
-    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(ActorsCatalogTransactionsPendingForPropagation entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
-        return null;
-    }
 }

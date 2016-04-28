@@ -76,9 +76,4 @@ public class NodesCatalogTransactionsPendingForPropagationDao  extends AbstractB
 
         return databaseTableRecord;
     }
-
-    @Override
-    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(NodesCatalogTransactionsPendingForPropagation entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
-        return null;
-    }
 }

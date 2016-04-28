@@ -576,7 +576,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
             final List<DatabaseTableRecord> records = table.getRecords();
 
             if (!records.isEmpty())
-                table.updateRecord(getDatabaseTableRecordForUpdate(entity, records.get(0)));
+                table.updateRecord(getDatabaseTableRecordFromEntity(entity));
             else
                 throw new RecordNotFoundException("id: " + entity.getId(), "Cannot find an entity with that id.");
 
@@ -598,8 +598,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      * @throws CantDeleteRecordDataBaseException  if something goes wrong.
      * @throws RecordNotFoundException            if we can't find the record in db.
      */
-    public final void delete(final String id) throws CantDeleteRecordDataBaseException,
-            RecordNotFoundException          {
+    public final void delete(final String id) throws CantDeleteRecordDataBaseException, RecordNotFoundException {
 
         if (id == null)
             throw new CantDeleteRecordDataBaseException("id null", "The id is required, can not be null.");
@@ -618,6 +617,34 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
                 table.deleteRecord(records.get(0));
             else
                 throw new RecordNotFoundException("id: "+id, "Cannot find an outgoing message with that id.");
+
+        } catch (CantDeleteRecordException e) {
+
+            throw new CantDeleteRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantDeleteRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        }
+    }
+
+    /**
+     * Method that delete a entity in the data base.
+     *
+     * @throws CantDeleteRecordDataBaseException  if something goes wrong.
+     * @throws RecordNotFoundException            if we can't find the record in db.
+     */
+    public final void deleteAll() throws CantDeleteRecordDataBaseException, RecordNotFoundException {
+
+        try {
+
+            final DatabaseTable table = this.getDatabaseTable();
+            table.loadToMemory();
+
+            final List<DatabaseTableRecord> records = table.getRecords();
+
+            if (!records.isEmpty())
+                table.deleteRecord(records.get(0));
 
         } catch (CantDeleteRecordException e) {
 
@@ -694,17 +721,4 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      * @return DatabaseTableRecord whit the values
      */
     abstract protected DatabaseTableRecord getDatabaseTableRecordFromEntity(final E entity);
-
-
-    /**
-     * Construct a DatabaseTableRecord whit the values of the a entity pass
-     * by parameter to be update
-     *
-     * @param entity the contains the values
-     * @param databaseTableRecordLoad current values of the table
-     * @return DatabaseTableRecord whit the values
-     */
-    abstract protected DatabaseTableRecord getDatabaseTableRecordForUpdate(final E entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException;
-
-
 }

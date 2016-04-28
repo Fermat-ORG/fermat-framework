@@ -10,6 +10,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConstantAttNames;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
@@ -30,7 +31,7 @@ public class ReceivedNodeCatalogTransactionsRespondProcessor extends PackageProc
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(ReceivedNodeCatalogTransactionsRespondProcessor.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(ReceivedNodeCatalogTransactionsRespondProcessor.class));
 
     /**
      * Constructor with parameter
@@ -38,7 +39,7 @@ public class ReceivedNodeCatalogTransactionsRespondProcessor extends PackageProc
      * @param channel
      * */
     public ReceivedNodeCatalogTransactionsRespondProcessor(FermatWebSocketChannelEndpoint channel) {
-        super(channel, PackageType.RECEIVE_NODE_CATALOG_TRANSACTIONS_REQUEST);
+        super(channel, PackageType.RECEIVE_NODE_CATALOG_TRANSACTIONS_RESPOND);
     }
 
     /**

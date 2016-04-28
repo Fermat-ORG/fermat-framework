@@ -79,8 +79,4 @@ public class CallsLogDao extends AbstractBaseDao<CallsLog> {
         return databaseTableRecord;
     }
 
-    @Override
-    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(CallsLog entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
-        return null;
-    }
 }

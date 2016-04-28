@@ -12,6 +12,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.servlets.HomeServlet;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 import org.jboss.resteasy.cdi.CdiInjectorFactory;
 import org.jboss.resteasy.plugins.server.undertow.UndertowJaxrsServer;
@@ -47,7 +48,7 @@ public class FermatEmbeddedNodeServer {
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(FermatEmbeddedNodeServer.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(FermatEmbeddedNodeServer.class));
 
     /**
      * Represent the APP_NAME
@@ -62,7 +63,7 @@ public class FermatEmbeddedNodeServer {
     /**
      * Represent the DEFAULT_PORT number
      */
-    public static final int DEFAULT_PORT = 8080;
+    public static final int DEFAULT_PORT = 9090;
 
     /**
      * Represent the DEFAULT_IP number
@@ -93,10 +94,8 @@ public class FermatEmbeddedNodeServer {
         LOG.info("Configure IP  : " + ConfigurationManager.getValue(ConfigurationManager.IP));
         LOG.info("Configure PORT: " + ConfigurationManager.getValue(ConfigurationManager.PORT));
 
-       //this.serverBuilder = Undertow.builder().addHttpListener(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)), ConfigurationManager.getValue(ConfigurationManager.IP));
-       this.serverBuilder = Undertow.builder().addHttpListener(DEFAULT_PORT, DEFAULT_IP);
-
-        this.servletContainer = Servlets.defaultContainer();
+       this.serverBuilder = Undertow.builder().addHttpListener(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)), ConfigurationManager.getValue(ConfigurationManager.IP));
+       this.servletContainer = Servlets.defaultContainer();
     }
 
     /**

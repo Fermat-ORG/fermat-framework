@@ -93,10 +93,5 @@ public class CheckedInActorDao  extends AbstractBaseDao<CheckedInActor> {
 
         return databaseTableRecord;
     }
-
-    @Override
-    protected DatabaseTableRecord getDatabaseTableRecordForUpdate(CheckedInActor entity, DatabaseTableRecord databaseTableRecordLoad) throws InvalidParameterException {
-        return null;
-    }
 }
 

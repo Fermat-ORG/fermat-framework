@@ -16,6 +16,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConstantAttNames;
 
+import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
@@ -49,7 +50,7 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
     /**
      * Represent the LOG
      */
-    private final Logger LOG = Logger.getLogger(FermatWebSocketClientNodeChannel.class.getName());
+    private final Logger LOG = Logger.getLogger(ClassUtils.getShortClassName(FermatWebSocketClientNodeChannel.class));
 
     /**
      * Represent the clientConnection
@@ -80,6 +81,7 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
             clientConnection.getUserProperties().put(ConstantAttNames.REMOTE_NODE_CATALOG_PROFILE, remoteNodeCatalogProfile);
 
         } catch (Exception e) {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
@@ -96,15 +98,14 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
        try {
 
             URI endpointURI = new URI("ws://"+ip+":"+port+"/fermat/ws/node-channel");
-
-           LOG.info("Trying to connect to "+endpointURI.toString());
+            LOG.info("Trying to connect to "+endpointURI.toString());
 
             WebSocketContainer webSocketContainer = ContainerProvider.getWebSocketContainer();
             clientConnection = webSocketContainer.connectToServer(this, endpointURI);
 
         } catch (Exception e) {
            e.printStackTrace();
-           // throw new RuntimeException(e);
+           throw new RuntimeException(e);
         }
 
     }
@@ -139,10 +140,11 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
     @OnOpen
     public void onConnect(final Session session, EndpointConfig endpointConfig) {
 
-        System.out.println(" --------------------------------------------------------------------- ");
-        System.out.println(" Starting method onOpen");
-        System.out.println(" id = "+session.getId());
-        System.out.println(" url = "+session.getRequestURI());
+        LOG.info(" --------------------------------------------------------------------- ");
+        LOG.info(" Starting method onConnect");
+        LOG.info(" id = "+session.getId());
+        LOG.info(" url = " + session.getRequestURI());
+
     }
 
     /**
