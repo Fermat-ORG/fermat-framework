@@ -533,17 +533,22 @@ public class DesktopDatabaseTable implements DatabaseTable {
             if (!records.isEmpty()) {
                 for (DatabaseRecord record1 : records) {
 
-                    if (queryWhereClause.length() > 0) {
-                        queryWhereClause += " and ";
-                        queryWhereClause += record1.getName();
-                    } else
-                        queryWhereClause += record1.getName();
-                    queryWhereClause += "=";
-                    queryWhereClause += "'" + record1.getValue() + "'";
+                    if(record1.getValue() != null) {
+
+                        if (queryWhereClause.length() > 0) {
+                            queryWhereClause += " and ";
+                            queryWhereClause += record1.getName();
+                        } else
+                            queryWhereClause += record1.getName();
+                        queryWhereClause += "=";
+                        queryWhereClause += "'" + record1.getValue() + "'";
+                    }
                 }
+            }else{
+                queryWhereClause = null;
             }
 
-            String query = "DELETE FROM " + tableName + (!queryWhereClause.isEmpty() ? " WHERE " + queryWhereClause : null);
+            String query = "DELETE FROM " + tableName + (queryWhereClause != null ? " WHERE " + queryWhereClause : "");
 
             System.out.println("*** * *   *   *     *      * Im executing the query: "+query);
             database.execSQL(query);

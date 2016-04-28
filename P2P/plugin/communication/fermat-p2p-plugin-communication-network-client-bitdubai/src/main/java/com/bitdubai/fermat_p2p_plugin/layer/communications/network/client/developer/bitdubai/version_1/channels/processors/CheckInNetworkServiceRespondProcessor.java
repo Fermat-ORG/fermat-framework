@@ -1,7 +1,12 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors;
 
+import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.osa_android.location_system.exceptions.CantGetDeviceLocationException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.CantRegisterProfileException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.clients.exceptions.ProfileAlreadyRegisteredException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
 
@@ -43,6 +48,24 @@ public class CheckInNetworkServiceRespondProcessor extends PackageProcessor {
 
         if(checkInProfileMsjRespond.getStatus() == CheckInProfileMsjRespond.STATUS.SUCCESS){
             //raise event
+
+            /* test resgiter actorProfile */
+            ActorProfile actorProfile = new ActorProfile();
+            actorProfile.setNsIdentityPublicKey("123456789321654987");
+            actorProfile.setIdentityPublicKey("147");
+            actorProfile.setName("Intra Actor");
+            actorProfile.setAlias("Actor");
+            actorProfile.setActorType("intra");
+            actorProfile.setExtraData("extradata");
+
+            try {
+                getChannel().getNetworkClientCommunicationConnection().registerProfile(actorProfile);
+            } catch (CantRegisterProfileException e) {
+                e.printStackTrace();
+            } catch (ProfileAlreadyRegisteredException e) {
+                e.printStackTrace();
+            }
+            /*  test resgiter actorProfile  */
 
         }else{
             //there is some wrong

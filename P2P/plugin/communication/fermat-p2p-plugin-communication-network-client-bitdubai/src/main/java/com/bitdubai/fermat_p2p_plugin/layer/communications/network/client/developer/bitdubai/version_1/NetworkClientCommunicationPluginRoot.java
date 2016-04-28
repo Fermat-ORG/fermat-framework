@@ -22,6 +22,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.PluginTextFile;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCreateFileException;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.LocationManager;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.context.ClientContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.database.NetworkClientP2PDatabaseConstants;
@@ -32,8 +33,22 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.develo
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedPluginExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.interfaces.EventManager;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.reflect.TypeToken;
 
+import org.springframework.web.client.RestTemplate;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.NetworkClientCommunicationPluginRoot</code>
@@ -82,7 +97,20 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
      */
     public static final String SERVER_IP = HardcodeConstants.SERVER_IP_DEFAULT;
 
+    /*
+     * Represent the networkClientCommunicationConnection
+     */
     private NetworkClientCommunicationConnection networkClientCommunicationConnection;
+
+    /*
+     * Represent The executorService
+     */
+    private ExecutorService executorService;
+
+    /**
+     * Represent the list of nodes
+     */
+    private List<NodeProfile> nodesProfileList;
 
 
     @Override
@@ -121,19 +149,52 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
              */
             ClientContext.add(ClientContextItem.CLIENT_IDENTITY, identity    );
             ClientContext.add(ClientContextItem.ERROR_MANAGER  , errorManager);
-            ClientContext.add(ClientContextItem.EVENT_MANAGER  , eventManager);
+            ClientContext.add(ClientContextItem.EVENT_MANAGER, eventManager);
 
-            URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + HardcodeConstants.DEFAULT_PORT+"/fermat/ws/client-channel");
+            //nodesProfileList = getNodesProfileList();
 
-            networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
-                    uri                        ,
-                    errorManager               ,
-                    eventManager               ,
-                    locationManager            ,
-                    identity                   ,
-                    getPluginVersionReference()
-            );
-            networkClientCommunicationConnection.start();
+            if(nodesProfileList != null && nodesProfileList.size() > 0){
+
+                URI uri = new URI(HardcodeConstants.WS_PROTOCOL + nodesProfileList.get(0).getIp() + ":" + nodesProfileList.get(0).getDefaultPort() + "/fermat/ws/client-channel");
+
+                networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
+                        uri,
+                        errorManager,
+                        eventManager,
+                        locationManager,
+                        identity,
+                        getPluginVersionReference(),
+                        this,
+                        0
+                );
+
+            }else {
+
+                URI uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + 8080 + "/fermat/ws/client-channel");
+
+                networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
+                        uri,
+                        errorManager,
+                        eventManager,
+                        locationManager,
+                        identity,
+                        getPluginVersionReference(),
+                        this,
+                        -1
+                );
+
+            }
+
+            Thread thread = new Thread(){
+                @Override
+                public void run(){
+                    networkClientCommunicationConnection.initializeAndConnect();
+                }
+            };
+
+            executorService = Executors.newSingleThreadExecutor();
+            executorService.submit(thread);
+
 
         } catch (Exception exception){
 
@@ -313,4 +374,119 @@ public class NetworkClientCommunicationPluginRoot extends AbstractPlugin {
         }
 
     }
+
+    /*
+     * Receive the Actual index of the Nodes list
+     */
+    public void intentToConnectToOtherNode(Integer i){
+
+        if(executorService != null)
+            executorService.shutdownNow();
+
+        /*
+         * if is the last index then connect to networkNode Harcoded
+         * else intent connect to other networkNode
+         */
+        if(nodesProfileList != null  && nodesProfileList.size() > 0 && i < (nodesProfileList.size() - 1)){
+
+            URI uri = null;
+            try {
+                uri = new URI(HardcodeConstants.WS_PROTOCOL + nodesProfileList.get(i+1).getIp() + ":" + nodesProfileList.get(i+1).getDefaultPort() + "/fermat/ws/client-channel");
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+            networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
+                    uri,
+                    errorManager,
+                    eventManager,
+                    locationManager,
+                    identity,
+                    getPluginVersionReference(),
+                    this,
+                    i+1
+            );
+
+        }else{
+
+
+            URI uri = null;
+            try {
+                uri = new URI(HardcodeConstants.WS_PROTOCOL + NetworkClientCommunicationPluginRoot.SERVER_IP + ":" + 8080 + "/fermat/ws/client-channel");
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
+
+            networkClientCommunicationConnection = new NetworkClientCommunicationConnection(
+                    uri,
+                    errorManager,
+                    eventManager,
+                    locationManager,
+                    identity,
+                    getPluginVersionReference(),
+                    this,
+                    -1
+            );
+
+        }
+
+        Thread thread = new Thread(){
+            @Override
+            public void run(){
+                networkClientCommunicationConnection.initializeAndConnect();
+            }
+        };
+
+        executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(thread);
+
+    }
+
+    /*
+     * get the NodesProfile List in the webService of the NetworkNode Harcoded
+     */
+    private List<NodeProfile> getNodesProfileList(){
+
+        HttpURLConnection conn = null;
+
+        try {
+
+            URL url = new URL("http://" + HardcodeConstants.SERVER_IP_DEFAULT + ":" + 8080 + "/fermat/rest/api/v1/availablenodes/listavailablenodesprofile");
+            conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String respond = reader.readLine();
+
+            if (conn.getResponseCode() == 200 && respond != null && respond.contains("data")) {
+
+               /*
+                * Decode into a json Object
+                */
+                JsonParser parser = new JsonParser();
+                JsonObject respondJsonobject = (JsonObject) parser.parse(respond.trim());
+
+                Gson gson = new Gson();
+                List<NodeProfile> listServer = gson.fromJson(respondJsonobject.get("data").getAsString(), new TypeToken<List<NodeProfile>>() {
+                }.getType());
+
+                System.out.println(respondJsonobject);
+
+                return listServer;
+
+            }else{
+                return null;
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }finally {
+            if (conn != null)
+                conn.disconnect();
+        }
+
+    }
+
 }

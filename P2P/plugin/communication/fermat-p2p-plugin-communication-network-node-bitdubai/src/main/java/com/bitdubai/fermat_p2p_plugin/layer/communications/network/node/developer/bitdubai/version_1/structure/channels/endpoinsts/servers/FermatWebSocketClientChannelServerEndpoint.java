@@ -1,11 +1,16 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.servers;
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.ServerHandshakeRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageDecoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.util.PackageEncoder;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.caches.ClientsSessionMemoryCache;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.ClientChannelConfigurator;
@@ -19,6 +24,11 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckOutClientRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.CheckOutNetworkServiceRequestProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.clients.NearNodeListRequestProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedActorsHistory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInActor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedInNetworkService;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.CheckedNetworkServicesHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ClientsConnectionHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ClientsRegistrationHistory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.enums.RegistrationResult;
@@ -28,8 +38,10 @@ import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.websocket.CloseReason;
+import javax.websocket.EncodeException;
 import javax.websocket.EndpointConfig;
 import javax.websocket.OnClose;
 import javax.websocket.OnMessage;
@@ -120,9 +132,24 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
         String cpki = (String) endpointConfig.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
 
         /*
-         * Mach the session whit the client public key identity
+         * Mach the session with the client public key identity
          */
         clientsSessionMemoryCache.add(cpki, session);
+
+        /*
+         * Construct packet SERVER_HANDSHAKE_RESPOND
+         */
+        ServerHandshakeRespond serverHandshakeRespond = new ServerHandshakeRespond(ServerHandshakeRespond.STATUS.SUCCESS, ServerHandshakeRespond.STATUS.SUCCESS.toString(), cpki);
+        Package packageRespond = Package.createInstance(serverHandshakeRespond.toJson(), NetworkServiceType.UNDEFINED, PackageType.SERVER_HANDSHAKE_RESPOND, getChannelIdentity().getPrivateKey(), cpki);
+
+        /*
+         * Send the respond
+         */
+        try {
+            session.getBasicRemote().sendObject(packageRespond);
+        } catch (EncodeException e) {
+            e.printStackTrace();
+        }
 
         /*
          * Create a new ClientsConnectionHistory
@@ -143,7 +170,7 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
     public void newPackageReceived(Package packageReceived, Session session) {
 
         LOG.info("New message Received");
-        LOG.info("Session: " + session.getId() + " packageReceived = " + packageReceived + "");
+        LOG.info("Session: " + session.getId() + " packageReceived = " + packageReceived.getPackageType() + "");
 
         try {
 
@@ -188,12 +215,64 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
                         closeReason.toString()
                 );
 
+                List<CheckedInNetworkService> listCheckedInNetworkService = getDaoFactory().getCheckedInNetworkServiceDao().
+                                         findAll(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_NETWORK_SERVICE_CLIENT_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                                                 clientPublicKey);
+
+                if(listCheckedInNetworkService != null){
+
+                    for(CheckedInNetworkService checkedInNetworkService : listCheckedInNetworkService){
+
+                        /*
+                         * DELETE from table CheckedInNetworkService
+                         */
+                        getDaoFactory().getCheckedInNetworkServiceDao().delete(checkedInNetworkService.getId());
+
+                        LOG.info("DELETE checkedInNetworkService " + checkedInNetworkService.getClientIdentityPublicKey());
+
+                        /*
+                         * Create a new row into the CheckedNetworkServicesHistory
+                         */
+                        insertCheckedNetworkServicesHistory(checkedInNetworkService);
+
+
+                        /*
+                         * get the list of CheckedInActor where is the ClientIdentityPublicKey
+                         */
+                        List<CheckedInActor> listCheckedInActor = getDaoFactory().getCheckedInActorDao().
+                                findAll(CommunicationsNetworkNodeP2PDatabaseConstants.CHECKED_IN_ACTOR_NS_IDENTITY_PUBLIC_KEY_COLUMN_NAME,
+                                        checkedInNetworkService.getIdentityPublicKey());
+
+                        if(listCheckedInActor != null){
+
+                            for(CheckedInActor actor : listCheckedInActor){
+
+                                /*
+                                 * DELETE from table CheckedInActor
+                                 */
+                                getDaoFactory().getCheckedInActorDao().delete(actor.getId());
+
+                                LOG.info("DELETE Actor " + actor.toString());
+
+                                /*
+                                 * Create a new row into the table CheckedActorsHistory
+                                 */
+                                insertCheckedActorsHistory(actor);
+
+
+                            }
+
+                        }
+
+                    }
+                }
+
             } else {
 
                 insertClientsRegistrationHistory(
                         clientPublicKey,
                         RegistrationResult.IGNORED,
-                        "There's no client registered with the given public key, indicated closed reason: "+closeReason.toString()
+                        "There's no client registered with the given public key, indicated closed reason: " + closeReason.toString()
                 );
             }
 
@@ -204,7 +283,7 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
     }
 
     /**
-     * Create a new row into the data base
+     * Create a new row into the table ClientsRegistrationHistory
      *
      * @param publicKey of the client.
      * @param result    of the registration.
@@ -229,6 +308,50 @@ public class FermatWebSocketClientChannelServerEndpoint extends FermatWebSocketC
          * Save into the data base
          */
         getDaoFactory().getClientsRegistrationHistoryDao().create(clientsRegistrationHistory);
+    }
+
+    /*
+     * Create a new row into the table CheckedNetworkServicesHistory
+     */
+    private void insertCheckedNetworkServicesHistory(CheckedInNetworkService checkedInNetworkService) throws CantInsertRecordDataBaseException{
+
+        CheckedNetworkServicesHistory checkedNetworkServicesHistory = new CheckedNetworkServicesHistory();
+        checkedNetworkServicesHistory.setIdentityPublicKey(checkedInNetworkService.getIdentityPublicKey());
+        checkedNetworkServicesHistory.setClientIdentityPublicKey(checkedInNetworkService.getClientIdentityPublicKey());
+        checkedNetworkServicesHistory.setNetworkServiceType(checkedInNetworkService.getNetworkServiceType());
+        checkedNetworkServicesHistory.setCheckType(CheckedNetworkServicesHistory.CHECK_TYPE_OUT);
+        checkedNetworkServicesHistory.setLastLatitude(checkedInNetworkService.getLatitude());
+        checkedNetworkServicesHistory.setLastLongitude(checkedInNetworkService.getLongitude());
+
+        /*
+         * save into table CheckedNetworkServicesHistory
+         */
+        getDaoFactory().getCheckedNetworkServicesHistoryDao().create(checkedNetworkServicesHistory);
+
+    }
+
+    /*
+     * Create a new row into the table CheckedActorsHistory
+     */
+    private void insertCheckedActorsHistory(CheckedInActor actor) throws CantInsertRecordDataBaseException{
+
+        CheckedActorsHistory checkedActorsHistory = new CheckedActorsHistory();
+        checkedActorsHistory.setIdentityPublicKey(actor.getIdentityPublicKey());
+        checkedActorsHistory.setActorType(actor.getActorType());
+        checkedActorsHistory.setAlias(actor.getAlias());
+        checkedActorsHistory.setName(actor.getName());
+        checkedActorsHistory.setPhoto(actor.getPhoto());
+        checkedActorsHistory.setExtraData(actor.getExtraData());
+        checkedActorsHistory.setCheckType(CheckedActorsHistory.CHECK_TYPE_OUT);
+        checkedActorsHistory.setLastLatitude(actor.getLatitude());
+        checkedActorsHistory.setLastLongitude(actor.getLongitude());
+
+
+       /*
+        * Save into the table CheckedActorsHistory
+        */
+        getDaoFactory().getCheckedActorsHistoryDao().create(checkedActorsHistory);
+
     }
 
 
