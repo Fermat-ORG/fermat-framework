@@ -28,6 +28,7 @@ import com.bitdubai.fermat_api.layer.osa_android.logger_system.LogManager;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.CurrencyPair;
 import com.bitdubai.fermat_cer_api.all_definition.interfaces.ExchangeRate;
 import com.bitdubai.fermat_cer_api.layer.provider.interfaces.CurrencyExchangeRateProviderManager;
+import com.bitdubai.fermat_cer_api.layer.provider.utils.DateHelper;
 import com.bitdubai.fermat_cer_api.layer.search.interfaces.CurrencyExchangeProviderFilterManager;
 import com.bitdubai.fermat_csh_api.all_definition.enums.BalanceType;
 import com.bitdubai.fermat_csh_api.all_definition.enums.TransactionType;
@@ -295,6 +296,8 @@ public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWal
                         UUID yahooKey = null;
                         UUID bitfinex = null;
                         UUID bter = null;
+                        UUID btce = null;
+                        UUID ccex = null;
 
                         System.out.println("CERTEST - ---Listing ALL CER Providers and their supported currencies---");
                         for( Map.Entry<UUID, String> provider : providerFilter.getProviderNames().entrySet()){
@@ -313,31 +316,81 @@ public class CashMoneyWalletModulePluginRoot extends AbstractModule<CashMoneyWal
                                 bitfinex = provider.getKey();
                             if(provider.getValue().toString().equals("Bter"))
                                 bter = provider.getKey();
+                            if(provider.getValue().toString().equals("Btce"))
+                                btce = provider.getKey();
+                            if(provider.getValue().toString().equals("Ccex"))
+                                ccex = provider.getKey();
                         }
                         System.out.println(" ");
 
-                        try{
-                            System.out.println("CERTEST - BTER ---Getting all ExchangeRates from Bter Provider");
-                            CurrencyExchangeRateProviderManager bitfinexProvider = providerFilter.getProviderReference(bter);
-                            for(CurrencyPair p : bitfinexProvider.getSupportedCurrencyPairs()){
-                                //p = new CurrencyPairImpl(p.getTo(), p.getFrom());
-                                System.out.println("CERTEST - BTER    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
-                                ExchangeRate e = bitfinexProvider.getCurrentExchangeRate(p);
-                                System.out.println("CERTEST - BTER    Current exchange: (" + e.getTimestamp() + ") " + formatter.format(e.getTimestamp() * 1000)
-                                        + " Purchase: " + e.getPurchasePrice() + "Sale: " + e.getSalePrice());
-
-                                for(ExchangeRate er : bitfinexProvider.getQueriedExchangeRates(p)){
-                                    System.out.println("CERTEST - BTER    QueriedExchangeRates:");
-                                    System.out.println("CERTEST - BTER    Found exchange date: (" + er.getTimestamp() + ") " + formatter.format(er.getTimestamp()*1000)
-                                            + " Purchase: " + er.getPurchasePrice() + "Sale: " + er.getSalePrice());
-                                }
-                            }
 
 
+//
+//                        try{
+//                            System.out.println("CERTEST - CCEX ---Getting all ExchangeRates from Ccex Provider");
+//                            CurrencyExchangeRateProviderManager ccexProvider = providerFilter.getProviderReference(ccex);
+//                            for(CurrencyPair p : ccexProvider.getSupportedCurrencyPairs()){
+//
+//                                System.out.println("CERTEST - CCEX    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+//                                System.out.println("CERTEST - CCEX    Current Exchange: " + ccexProvider.getCurrentExchangeRate(p).getPurchasePrice());
+//                                System.out.println("CERTEST - CCEX    Exchange for: " + formatter.format(oneYearAgo.getTime()) + " is: " + ccexProvider.getExchangeRateFromDate(p, oneYearAgo).getPurchasePrice());
+//                                System.out.println("CERTEST - CCEX    Getting daily exchange rates for period: " + formatter.format(startTenDaysAgo.getTime()) + " till " + formatter.format(endToday.getTime()));
+//                                for( ExchangeRate exr : ccexProvider.getDailyExchangeRatesForPeriod(p, startTenDaysAgo, endToday))
+//                                {
+//                                    System.out.println("CERTEST - CCEX  Day:" + DateHelper.getDateStringFromTimestamp(exr.getTimestamp()) + " Purchase: " + exr.getPurchasePrice() + " Sale: " + exr.getSalePrice());
+//                                }
+//                            }
+//                        }catch (Exception e) {
+//                            System.out.println("CERTEST - CCEX - Exception!!! " + e.toString());
+//                        }
 
-                        }catch (Exception e) {
-                            System.out.println("CERTEST - ECB - Exception!!! " + e.toString());
-                        }
+
+
+
+
+//                        try{
+//                            System.out.println("CERTEST - BTCE ---Getting all ExchangeRates from Btce Provider");
+//                            CurrencyExchangeRateProviderManager bitfinexProvider = providerFilter.getProviderReference(btce);
+//                            for(CurrencyPair p : bitfinexProvider.getSupportedCurrencyPairs()){
+//                                //p = new CurrencyPairImpl(p.getTo(), p.getFrom());
+//                                System.out.println("CERTEST - BTCE    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+//                                ExchangeRate e = bitfinexProvider.getCurrentExchangeRate(p);
+//                                System.out.println("CERTEST - BTCE    Current exchange: (" + e.getTimestamp() + ") " + formatter.format(e.getTimestamp() * 1000)
+//                                        + " Purchase: " + e.getPurchasePrice() + "Sale: " + e.getSalePrice());
+//
+//                                System.out.println("CERTEST - BTCE    QueriedExchangeRates:");
+//                                for(ExchangeRate er : bitfinexProvider.getQueriedExchangeRates(p)){
+//                                    System.out.println("CERTEST - BTCE    Found exchange date: (" + er.getTimestamp() + ") " + formatter.format(er.getTimestamp()*1000)
+//                                            + " Purchase: " + er.getPurchasePrice() + "Sale: " + er.getSalePrice());
+//                                }
+//                            }
+//                        }catch (Exception e) {
+//                            System.out.println("CERTEST - ECB - Exception!!! " + e.toString());
+//                        }
+
+//
+//                        try{
+//                            System.out.println("CERTEST - BTER ---Getting all ExchangeRates from Bter Provider");
+//                            CurrencyExchangeRateProviderManager bitfinexProvider = providerFilter.getProviderReference(bter);
+//                            for(CurrencyPair p : bitfinexProvider.getSupportedCurrencyPairs()){
+//                                //p = new CurrencyPairImpl(p.getTo(), p.getFrom());
+//                                System.out.println("CERTEST - BTER    Supported CurrencyPair! From: " + p.getFrom().getCode() + " To: " + p.getTo().getCode());
+//                                ExchangeRate e = bitfinexProvider.getCurrentExchangeRate(p);
+//                                System.out.println("CERTEST - BTER    Current exchange: (" + e.getTimestamp() + ") " + formatter.format(e.getTimestamp() * 1000)
+//                                        + " Purchase: " + e.getPurchasePrice() + "Sale: " + e.getSalePrice());
+//
+//                                for(ExchangeRate er : bitfinexProvider.getQueriedExchangeRates(p)){
+//                                    System.out.println("CERTEST - BTER    QueriedExchangeRates:");
+//                                    System.out.println("CERTEST - BTER    Found exchange date: (" + er.getTimestamp() + ") " + formatter.format(er.getTimestamp()*1000)
+//                                            + " Purchase: " + er.getPurchasePrice() + "Sale: " + er.getSalePrice());
+//                                }
+//                            }
+//
+//
+//
+//                        }catch (Exception e) {
+//                            System.out.println("CERTEST - ECB - Exception!!! " + e.toString());
+//                        }
 
 
 //                        try{
