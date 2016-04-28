@@ -598,8 +598,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      * @throws CantDeleteRecordDataBaseException  if something goes wrong.
      * @throws RecordNotFoundException            if we can't find the record in db.
      */
-    public final void delete(final String id) throws CantDeleteRecordDataBaseException,
-            RecordNotFoundException          {
+    public final void delete(final String id) throws CantDeleteRecordDataBaseException, RecordNotFoundException {
 
         if (id == null)
             throw new CantDeleteRecordDataBaseException("id null", "The id is required, can not be null.");
@@ -635,9 +634,7 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
      * @throws CantDeleteRecordDataBaseException  if something goes wrong.
      * @throws RecordNotFoundException            if we can't find the record in db.
      */
-    public final void deleteAll() throws CantDeleteRecordDataBaseException,
-            RecordNotFoundException          {
-
+    public final void deleteAll() throws CantDeleteRecordDataBaseException, RecordNotFoundException {
 
         try {
 

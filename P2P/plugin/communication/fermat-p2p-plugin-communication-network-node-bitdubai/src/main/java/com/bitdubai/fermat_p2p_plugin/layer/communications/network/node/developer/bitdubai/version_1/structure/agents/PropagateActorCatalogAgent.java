@@ -12,6 +12,7 @@ import com.bitdubai.fermat_api.FermatAgent;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.enums.AgentStatus;
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantDeleteRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
@@ -195,7 +196,7 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
     /**
      * Propagation logic implementation
      */
-    private void propagateCatalog() throws CantReadRecordDataBaseException, CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException {
+    private void propagateCatalog() throws CantReadRecordDataBaseException, CantUpdateRecordDataBaseException, RecordNotFoundException, InvalidParameterException, CantDeleteRecordDataBaseException {
 
         LOG.info("Executing propagateCatalog()");
 
@@ -221,6 +222,8 @@ public class PropagateActorCatalogAgent  extends FermatAgent {
                     nodesCatalogDao.update(remoteNodesCatalog);
                 }
             }
+
+            actorsCatalogTransactionsPendingForPropagationDao.deleteAll();
 
         }else {
 

@@ -569,7 +569,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
         /*
          * Validate if the node are the seed server
          */
-        if (iAm){
+        if (!iAm){
 
             /*
              * Validate if the node are register in the node catalog
@@ -590,8 +590,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
         } else {
 
             //TODO: UNCOMMENT THE CLIENT
-            //fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
-            fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("localhost", 9090);
+            fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
+            //fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("localhost", 9090);
 
             /*
              * Validate if the node are register in the node catalog
