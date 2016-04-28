@@ -77,13 +77,13 @@ public class AmountViewHolder extends ClauseViewHolder implements View.OnClickLi
     @Override
     protected void onAcceptedStatus() {
         amountText.setTextColor(getColor(R.color.description_text_status_accepted));
-        currencyTextValue.setTextColor(getColor(R.color.text_value_status_accepted));
+        currencyTextValue.setTextColor(getColor(R.color.description_text_status_accepted));
     }
 
     @Override
     protected void setChangedStatus() {
         amountText.setTextColor(getColor(R.color.description_text_status_changed));
-        currencyTextValue.setTextColor(getColor(R.color.text_value_status_changed));
+        currencyTextValue.setTextColor(getColor(R.color.description_text_status_changed));
     }
 
     @Override

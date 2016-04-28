@@ -193,10 +193,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     @Override
     public void onConfirmCLicked(final ClauseInformation clause) {
         if (clause.getType().equals(ClauseType.CUSTOMER_BANK_ACCOUNT) && bankAccountList.size() == 0) {
-            Toast.makeText(getActivity(), "Not Confirmed. The Bank Account List is Empty. Add Your Bank Account in the Settings Wallet.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Not Confirmed. The Bank Account List is Empty. Add a Bank Account in the Wallet Settings.", Toast.LENGTH_LONG).show();
         } else {
             if (clause.getType().equals(ClauseType.CUSTOMER_PLACE_TO_DELIVER) && locationList.size() == 0) {
-                Toast.makeText(getActivity(), "Not Confirmed. The Locations List is Empty. Add Your Locations in the Settings Wallet.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Not Confirmed. The Locations List is Empty. Add a Location in the Wallet Settings.", Toast.LENGTH_LONG).show();
             } else {
 
                 if (clausesTemp.get(clause.getType()) != null) {
@@ -875,7 +875,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
             } else if (currencyType.equals(MoneyType.BANK.getCode())) {
                 if (clauses.get(ClauseType.CUSTOMER_BANK_ACCOUNT) == null) {
-                    String bankAccount = "INSERT BANK ACCOUNT IN SETTINGS WALLET.";
+                    String bankAccount = "INSERT BANK ACCOUNT IN WALLET SETTINGS.";
                     if (bankAccountList.size() > 0)
                         bankAccount = bankAccountList.get(0).toString();
 //                    bankAccount = bankAccountList.get(0).getAccount();
@@ -887,7 +887,7 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
 
             } else if (currencyType.equals(MoneyType.CASH_DELIVERY.getCode()) || (currencyType.equals(MoneyType.CASH_ON_HAND.getCode()))) {
                 if (clauses.get(ClauseType.CUSTOMER_PLACE_TO_DELIVER) == null) {
-                    String infoDelivery = "INSERT LOCATION IN SETTINGS WALLET.";
+                    String infoDelivery = "INSERT LOCATION IN WALLET SETTINGS.";
                     if (locationList.size() > 0)
                         infoDelivery = locationList.get(0);
                     putClause(ClauseType.CUSTOMER_PLACE_TO_DELIVER, infoDelivery);
