@@ -134,6 +134,11 @@ public class SongFragment extends AbstractFermatFragment {
         fanWalletModule=fanwalletSession.getModuleManager();
         compareViewAndDatabase();
         syncTokenlyAndUpdateThreads(true);
+      /*  if(items.isEmpty()){
+            recyclerView.setBackgroundResource(R.drawable.nosong);
+        }else{
+            recyclerView.setBackgroundResource(R.drawable.fanwallet_background_viewpager);
+        }*/
 
     }
 
