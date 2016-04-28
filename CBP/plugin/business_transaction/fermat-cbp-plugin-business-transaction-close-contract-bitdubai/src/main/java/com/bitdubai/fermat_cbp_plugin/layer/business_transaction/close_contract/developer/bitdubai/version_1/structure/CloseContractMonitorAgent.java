@@ -341,7 +341,7 @@ public class CloseContractMonitorAgent implements
                         contractHash = businessTransactionMetadata.getContractHash();
                         contractTransactionStatus = closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
 
-                        System.out.println("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractTransactionStatus = " + ContractTransactionStatus.CHECKING_CLOSING_CONTRACT.getCode());
+                        System.out.println("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractTransactionStatus = " + contractTransactionStatus);
                         if (contractTransactionStatus == ContractTransactionStatus.SUBMIT_CLOSING_CONTRACT_CONFIRMATION) {
                             closeContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_COMPLETED);
                             raiseNewContractClosedEvent();
