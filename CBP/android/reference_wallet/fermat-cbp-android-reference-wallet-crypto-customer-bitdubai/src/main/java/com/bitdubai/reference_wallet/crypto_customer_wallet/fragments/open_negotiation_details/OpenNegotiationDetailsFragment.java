@@ -193,10 +193,10 @@ public class OpenNegotiationDetailsFragment extends AbstractFermatFragment<Crypt
     @Override
     public void onConfirmCLicked(final ClauseInformation clause) {
         if (clause.getType().equals(ClauseType.CUSTOMER_BANK_ACCOUNT) && bankAccountList.size() == 0) {
-            Toast.makeText(getActivity(), "Not Confirmed. The Bank Account List is Empty. Add Your Bank Account in the Settings Wallet.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getActivity(), "Not Confirmed. The Bank Account List is Empty. Add a Bank Account in the Wallet Settings.", Toast.LENGTH_LONG).show();
         } else {
             if (clause.getType().equals(ClauseType.CUSTOMER_PLACE_TO_DELIVER) && locationList.size() == 0) {
-                Toast.makeText(getActivity(), "Not Confirmed. The Locations List is Empty. Add Your Locations in the Settings Wallet.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), "Not Confirmed. The Locations List is Empty. Add a Location in the Wallet Settings.", Toast.LENGTH_LONG).show();
             } else {
 
                 if (clausesTemp.get(clause.getType()) != null) {
