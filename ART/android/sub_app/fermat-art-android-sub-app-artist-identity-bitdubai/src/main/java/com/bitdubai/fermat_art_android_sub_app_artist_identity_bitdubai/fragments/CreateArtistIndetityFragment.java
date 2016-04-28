@@ -302,7 +302,7 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
                     mArtistExternalPlatform.getSelectedItem().toString());
         }
-        if(mArtistExternalName.isSelected()){
+        if(mArtistExternalName.getCount()>1){
             externalUsername = mArtistExternalName.getSelectedItem().toString();
         }
         boolean dataIsValid = validateIdentityData(

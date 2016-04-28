@@ -1,6 +1,7 @@
 package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util;
 
 import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
+import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ExposingData;
 
 import java.util.ArrayList;
@@ -29,7 +30,10 @@ public final class ArtistExposingData implements ExposingData {
         this.alias     = alias    ;
         List data = getListFromExtraData(extraData);
         image = (byte[]) data.get(0);
-        artistExternalPlatformInformation = (ArtistExternalPlatformInformation) data.get(1);
+        HashMap<ArtExternalPlatform,String> externalPlatformInformationMap =
+                (HashMap<ArtExternalPlatform, String>) data.get(1);
+        artistExternalPlatformInformation = new ArtistExternalPlatformInformation(
+                externalPlatformInformationMap);
     }
 
     private List getListFromExtraData(String extraData){
@@ -70,7 +74,7 @@ public final class ArtistExposingData implements ExposingData {
     public final String getExtraData(){
         List data = new ArrayList();
         data.add(image);
-        data.add(artistExternalPlatformInformation);
+        data.add(artistExternalPlatformInformation.getExternalPlatformInformationMap());
         return XMLParser.parseObject(data);
     }
 
