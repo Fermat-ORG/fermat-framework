@@ -6,7 +6,6 @@ import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.Discov
 import com.bitdubai.fermat_api.layer.all_definition.components.interfaces.PlatformComponentProfile;
 import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_api.layer.all_definition.util.Base64;
-import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.exceptions.CantListChatException;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;

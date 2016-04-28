@@ -31,7 +31,6 @@ import com.bitdubai.fermat_api.layer.all_definition.exceptions.NotificationNotFo
 import com.bitdubai.fermat_cht_api.all_definition.enums.MessageStatus;
 import com.bitdubai.fermat_cht_api.all_definition.enums.TypeChat;
 import com.bitdubai.fermat_cht_api.all_definition.events.enums.EventType;
-import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.Chat;
 import com.bitdubai.fermat_cht_api.layer.middleware.interfaces.GroupMember;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageStatus;
 import com.bitdubai.fermat_cht_api.layer.network_service.chat.enums.ChatMessageTransactionType;

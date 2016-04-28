@@ -1,7 +1,6 @@
 package com.bitdubai.fermat_cht_plugin.layer.sub_app_module.chat_community.developer.bitdubai.version_1.structure;
 
 import com.bitdubai.fermat_api.FermatException;
-import com.bitdubai.fermat_cht_api.layer.actor_connection.utils.ChatActorConnection;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatManager;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.interfaces.ChatSearch;
 import com.bitdubai.fermat_cht_api.layer.actor_network_service.utils.ChatExposingData;

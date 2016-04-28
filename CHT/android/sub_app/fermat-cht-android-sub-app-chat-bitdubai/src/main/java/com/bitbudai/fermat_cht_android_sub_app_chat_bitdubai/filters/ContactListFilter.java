@@ -2,7 +2,6 @@ package com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.filters;
 
 import android.widget.Filter;
 
-import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ChatListAdapter;
 import com.bitbudai.fermat_cht_android_sub_app_chat_bitdubai.adapters.ContactListAdapter;
 
 import java.util.ArrayList;
