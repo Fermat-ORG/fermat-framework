@@ -33,7 +33,7 @@ public class ExposeIdentityTest {
     public void constructorTest () throws CantExposeIdentityException {
 
         FanActorNetworkServiceManager fanActorNetworkServiceManager = PowerMockito.mock(FanActorNetworkServiceManager.class);
-        final FanExposingData fan = new FanExposingData("public key","gianco",new byte[0]);
+        final FanExposingData fan = new FanExposingData("public key","gianco","");
 
         doCallRealMethod().when(fanActorNetworkServiceManager).exposeIdentity(fan);
 

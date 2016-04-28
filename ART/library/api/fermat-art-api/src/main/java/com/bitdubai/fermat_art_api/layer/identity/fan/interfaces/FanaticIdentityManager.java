@@ -57,7 +57,8 @@ public interface FanaticIdentityManager extends FermatManager {
             final String alias,
             final byte[] imageBytes,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws
             CantCreateFanIdentityException,
             FanIdentityAlreadyExistsException;
 
@@ -73,7 +74,8 @@ public interface FanaticIdentityManager extends FermatManager {
             String publicKey,
             byte[] imageProfile,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws
             CantUpdateFanIdentityException;
 
     /**

@@ -349,9 +349,13 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         }
         String fanExternalName = mFanExternalUserName.getText().toString();
         ArtExternalPlatform externalPlatform = ArtExternalPlatform.getDefaultExternalPlatform();
+        String externalUsername="";
         if(mFanExternalPlatform.getSelectedItem() != mFanExternalPlatform.getItemAtPosition(0)){
             externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
                     mFanExternalPlatform.getSelectedItem().toString());
+        }
+        if(mFanExternalUser.getCount()>1){
+            externalUsername=mFanExternalUser.getSelectedItem().toString();
         }
         boolean dataIsValid = validateIdentityData(
                 fanExternalName,
@@ -366,20 +370,23 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                                 fanExternalName,
                                 externalPlatform,
                                 externalIdentityID,
-                                ManageIdentity.CREATE_IDENTITY).execute();
+                                ManageIdentity.CREATE_IDENTITY,
+                                externalUsername).execute();
                     else
                     if(updateProfileImage)
                         new ManageIdentity(
                                 fanExternalName,
                                 externalPlatform,
                                 externalIdentityID,
-                                ManageIdentity.UPDATE_IMAGE_IDENTITY).execute();
+                                ManageIdentity.UPDATE_IMAGE_IDENTITY,
+                                externalUsername).execute();
                     else
                         new ManageIdentity(
                                 fanExternalName,
                                 externalPlatform,
                                 externalIdentityID,
-                                ManageIdentity.UPDATE_IDENTITY).execute();
+                                ManageIdentity.UPDATE_IDENTITY,
+                                externalUsername).execute();
                 } catch (Exception e){
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
                     e.printStackTrace();
@@ -557,6 +564,7 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         ArtExternalPlatform externalPlatform;
         int identityAction;
         UUID externalIdentityID;
+        String externalUsername;
         public static final int CREATE_IDENTITY = 0;
         public static final int UPDATE_IDENTITY = 1;
         public static final int UPDATE_IMAGE_IDENTITY = 2;
@@ -565,12 +573,14 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
                 String fanExternalName,
                 ArtExternalPlatform externalPlatform,
                 UUID externalIdentityID,
-                int identityAction
+                int identityAction,
+                String externalUsername
         ) {
             this.fanExternalName = fanExternalName;
             this.externalPlatform = externalPlatform;
             this.identityAction = identityAction;
             this.externalIdentityID = externalIdentityID;
+            this.externalUsername = externalUsername;
         }
 
         @Override
@@ -578,13 +588,24 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
             try{
                 switch (identityAction){
                     case CREATE_IDENTITY:
-                        createIdentity(fanExternalName, externalPlatform,externalIdentityID);
+                        createIdentity(
+                                fanExternalName,
+                                externalPlatform,
+                                externalIdentityID,
+                                externalUsername);
                         break;
                     case UPDATE_IDENTITY:
-                        updateIdentity(fanExternalName, externalPlatform,externalIdentityID);
+                        updateIdentity(
+                                fanExternalName,
+                                externalPlatform,
+                                externalIdentityID,
+                                externalUsername);
                         break;
                     case UPDATE_IMAGE_IDENTITY:
-                        updateIdentityImage(fanExternalName, externalPlatform);
+                        updateIdentityImage(
+                                fanExternalName,
+                                externalPlatform,
+                                externalUsername);
                         break;
                 }
 
@@ -611,33 +632,37 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
     private void createIdentity(
             String fanExternalName,
             ArtExternalPlatform externalPlatform,
-            UUID externalIdentityID) throws
+            UUID externalIdentityID,
+            String externalName) throws
             CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
             moduleManager.createFanaticIdentity(
                     fanExternalName, (fanImageByteArray == null) ? convertImage(R.drawable.ic_profile_male) : fanImageByteArray,
-                    externalIdentityID, externalPlatform) ;
+                    externalIdentityID, externalPlatform, externalName) ;
     }
 
     private void updateIdentity(
             String fanExternalName,
             ArtExternalPlatform externalPlatform,
-            UUID externalIdentityID) throws CantUpdateFanIdentityException {
+            UUID externalIdentityID,
+            String externalName) throws CantUpdateFanIdentityException {
         moduleManager.updateFanIdentity(
                 fanExternalName,
                 identitySelected.getPublicKey(),
                 identitySelected.getProfileImage(),
                 externalIdentityID,
-                externalPlatform);
+                externalPlatform,
+                externalName);
     }
 
     private void updateIdentityImage(
             String fanExternalName,
-            ArtExternalPlatform externalPlatform) throws CantUpdateFanIdentityException {
+            ArtExternalPlatform externalPlatform,
+            String externalName) throws CantUpdateFanIdentityException {
         moduleManager.updateFanIdentity(
                 fanExternalName,
                 identitySelected.getPublicKey(),
                 fanImageByteArray,
-                identitySelected.getExternalIdentityID(),externalPlatform);
+                identitySelected.getExternalIdentityID(),externalPlatform,externalName);
     }
     private List<String> getFanIdentityByPlatform(ArtExternalPlatform externalPlatform) throws Exception{
         HashMap<UUID, String>fanIdentityByPlatform = moduleManager.listExternalIdentitiesFromCurrentDeviceUser().get(externalPlatform);
