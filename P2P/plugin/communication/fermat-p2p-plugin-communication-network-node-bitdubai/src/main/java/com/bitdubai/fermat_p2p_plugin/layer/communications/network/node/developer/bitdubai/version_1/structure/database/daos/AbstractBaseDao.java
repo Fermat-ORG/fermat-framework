@@ -630,6 +630,36 @@ public abstract class AbstractBaseDao<E extends AbstractBaseEntity> {
     }
 
     /**
+     * Method that delete a entity in the data base.
+     *
+     * @throws CantDeleteRecordDataBaseException  if something goes wrong.
+     * @throws RecordNotFoundException            if we can't find the record in db.
+     */
+    public final void deleteAll() throws CantDeleteRecordDataBaseException,
+            RecordNotFoundException          {
+
+
+        try {
+
+            final DatabaseTable table = this.getDatabaseTable();
+            table.loadToMemory();
+
+            final List<DatabaseTableRecord> records = table.getRecords();
+
+            if (!records.isEmpty())
+                table.deleteRecord(records.get(0));
+
+        } catch (CantDeleteRecordException e) {
+
+            throw new CantDeleteRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot delete the record.");
+        } catch (final CantLoadTableToMemoryException e) {
+
+            throw new CantDeleteRecordDataBaseException(e, "", "Exception not handled by the plugin, there is a problem in database and i cannot load the table.");
+
+        }
+    }
+
+    /**
      * Get the timestamp representation if the value are not null
      *
      * @param value
