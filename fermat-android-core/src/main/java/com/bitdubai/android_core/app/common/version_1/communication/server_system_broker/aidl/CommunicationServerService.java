@@ -2,7 +2,10 @@ package com.bitdubai.android_core.app.common.version_1.communication.server_syst
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
@@ -10,6 +13,9 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.bitdubai.android_core.app.ApplicationSession;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationDataKeys;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.IntentServerServiceAction;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.structure.FermatModuleObjectWrapper;
 import com.bitdubai.android_core.app.common.version_1.util.AndroidCoreUtils;
 import com.bitdubai.android_core.app.common.version_1.util.task.GetTask;
@@ -38,9 +44,14 @@ import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.exceptio
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfo;
 import com.bitdubai.fermat_pip_api.layer.platform_service.platform_info.interfaces.PlatformInfoManager;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
@@ -55,6 +66,7 @@ import java.util.concurrent.Future;
 public class CommunicationServerService extends Service implements FermatWorkerCallBack {
 
     private static String TAG = "CommunicationServerService";
+    private static int BLOCK_SYZE = 1024*1000;
 
     public int processingQueue = 0;
     /**
@@ -76,11 +88,117 @@ public class CommunicationServerService extends Service implements FermatWorkerC
      */
     private ExecutorService executorService;
 
+    /**
+     * Target we publish for clients to send messages to IncomingHandler.
+     */
+    final Messenger mMessenger = new Messenger(new IncomingHandler());
+
+
+
+    private void chunkAndSendData(String dataId,String clientKey,Serializable data){
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byteArrayOutputStream.reset();
+        ObjectOutput out = null;
+        try {
+            out = new ObjectOutputStream(byteArrayOutputStream);
+            out.writeObject(data);
+            byte[] yourBytes = byteArrayOutputStream.toByteArray();
+
+
+            int i = 0;
+            int blockSize = BLOCK_SYZE;
+            while (i < yourBytes.length){
+                if (i + BLOCK_SYZE > yourBytes.length) {
+                    blockSize = yourBytes.length - i;
+                }
+
+                Messenger messenger = clients.get(clientKey);
+                Message msg = Message.obtain(null, CommunicationMessages.MSG_SEND_CHUNKED_DATA);
+                byte[] chunkedDate = Arrays.copyOfRange(yourBytes, i, (i+1)*blockSize);
+                msg.getData().putByteArray(CommunicationDataKeys.DATA_CHUNKED_DATA, chunkedDate);
+                msg.getData().putString(CommunicationDataKeys.DATA_REQUEST_ID, dataId);
+
+                i = blockSize * i;
+                i++;
+
+                msg.getData().putBoolean(CommunicationDataKeys.DATA_IS_CHUNKED_DATA_FINISH, i>=yourBytes.length);
+
+                try {
+                    messenger.send(msg);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+            try {
+                byteArrayOutputStream.close();
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+        }
+
+    }
+
+    private boolean isDataForChunk(Serializable data){
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byteArrayOutputStream.reset();
+        ObjectOutput out = null;
+        try {
+            out = new ObjectOutputStream(byteArrayOutputStream);
+            out.writeObject(data);
+            byte[] yourBytes = byteArrayOutputStream.toByteArray();
+
+            return (yourBytes.length>BLOCK_SYZE);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+            try {
+                byteArrayOutputStream.close();
+            } catch (IOException ex) {
+                // ignore close exception
+            }
+        }
+        return false;
+    }
+
+    private void sendFullData(String dataId, String clientKey, Serializable data){
+        Messenger messenger = clients.get(clientKey);
+        Message msg = Message.obtain(null, CommunicationMessages.MSG_REQUEST_DATA_MESSAGE);
+        msg.getData().putSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE, data);
+        msg.getData().putString(CommunicationDataKeys.DATA_REQUEST_ID, dataId);
+        try {
+            messenger.send(msg);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private final IServerBrokerService.Stub mBinder = new IServerBrokerService.Stub() {
 
 
         @Override
-        public FermatModuleObjectWrapper invoqueModuleMethod(String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, FermatModuleObjectWrapper[] parameters) throws RemoteException {
+        public FermatModuleObjectWrapper invoqueModuleMethod(String clientKey,String dataId,String platformCode, String layerCode, String pluginsCode, String developerCode, String version, String method, FermatModuleObjectWrapper[] parameters) throws RemoteException {
             Log.i(TAG,"invoqueModuleMethod");
             Log.i(TAG,platformCode);
             Log.i(TAG,layerCode);
@@ -104,8 +222,18 @@ public class CommunicationServerService extends Service implements FermatWorkerC
                 e.printStackTrace();
             }
 
+            /**
+             * Acá se va a hacer el chunk y el envio al cliente
+             */
+            //chunkAndSendData(dataId,clientKey,aidlObject);
 
-            return new FermatModuleObjectWrapper(aidlObject);
+            if (isDataForChunk(aidlObject)) {
+                sendFullData(dataId,clientKey,aidlObject);
+                return new FermatModuleObjectWrapper(aidlObject,true);
+            }else {
+                return new FermatModuleObjectWrapper(aidlObject,false);
+            }
+
         }
 
         @Override
@@ -150,7 +278,25 @@ public class CommunicationServerService extends Service implements FermatWorkerC
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return mBinder;
+        Log.i(TAG,"onBind:"+intent.getAction());
+        IBinder iBinder = null;
+        try {
+            switch (intent.getAction()) {
+                case IntentServerServiceAction.ACTION_BIND_AIDL:
+                    iBinder = mBinder;
+                break;
+                case IntentServerServiceAction.ACTION_BIND_MESSENGER:
+                    iBinder = mMessenger.getBinder();
+                break;
+                default:
+                    Log.i(TAG, "onBind defautl");
+                    break;
+
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return iBinder;
     }
 
     @Override
@@ -369,5 +515,49 @@ public class CommunicationServerService extends Service implements FermatWorkerC
         float dpWidth = displayMetrics.widthPixels / displayMetrics.density;
         return DeviceInfoUtils.toScreenSize(dpHeight, dpWidth);
 
+    }
+
+
+    /**
+     * Messenger
+     */
+
+    /**
+     * Handler of incoming messages from service.
+     */
+    class IncomingHandler extends Handler {
+        @Override
+        public void handleMessage(final Message msg) {
+            Log.d(TAG, "Received from service: " + msg.arg1);
+            final Bundle data = msg.getData();
+            try {
+                switch (msg.what) {
+                    case CommunicationMessages.MSG_REGISTER_CLIENT:
+                        registerClient(msg.getData().getString(CommunicationDataKeys.DATA_PUBLIC_KEY), msg.replyTo);
+                        break;
+                    case CommunicationMessages.MSG_UNREGISTER_CLIENT:
+                        unRegisterClient(msg.getData().getString(CommunicationDataKeys.DATA_PUBLIC_KEY));
+                        break;
+                    case CommunicationMessages.MSG_REQUEST_DATA_MESSAGE:
+                        break;
+                    default:
+                        Log.i(TAG,"Incoming handler default");
+                        super.handleMessage(msg);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    private void registerClient(String key, Messenger replyTo){
+        if(key!=null) {
+            clients.put(key, replyTo);
+        }
+    }
+
+    private void unRegisterClient(String key){
+        clients.remove(key);
     }
 }

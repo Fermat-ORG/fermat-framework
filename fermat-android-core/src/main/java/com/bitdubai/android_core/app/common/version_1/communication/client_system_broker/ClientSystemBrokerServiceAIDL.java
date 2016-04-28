@@ -8,12 +8,14 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.IntentServerServiceAction;
 import com.bitdubai.android_core.app.common.version_1.communication.client_system_broker.exceptions.CantCreateProxyException;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationDataKeys;
 import com.bitdubai.android_core.app.common.version_1.communication.server_system_broker.CommunicationMessages;
@@ -41,8 +43,8 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     private final IBinder localBinder = new LocalBinder();
 
     private ExecutorService poolExecutor;
-
     private ProxyFactory proxyFactory;
+    private BufferChannelAIDL bufferChannelAIDL;
 
     public ClientSystemBrokerServiceAIDL() {
         this.proxyFactory = new ProxyFactory();
@@ -68,30 +70,81 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
             parameters = new FermatModuleObjectWrapper[0];
         }
 
+
+        String dataId = UUID.randomUUID().toString();
+        boolean isDataChuncked = false;
+
+        FermatModuleObjectWrapper objectArrived = null;
+
         try {
-            FermatModuleObjectWrapper fermatModuleObjectWrapper = iServerBrokerService.invoqueModuleMethod(
-                    pluginVersionReference.getPlatform().getCode(),
-                    pluginVersionReference.getLayers().getCode(),
-                    pluginVersionReference.getPlugins().getCode(),
-                    pluginVersionReference.getDeveloper().getCode(),
-                    pluginVersionReference.getVersion().toString(),
-                    method.getName(),
-                    parameters);
-
-            if(fermatModuleObjectWrapper!=null) {
-                Log.i(TAG, "Object retuned: " + fermatModuleObjectWrapper.toString());
-            }else{
-                Log.i(TAG, "Object retuned: null");
-            }
-            return (fermatModuleObjectWrapper!=null)?fermatModuleObjectWrapper.getObject():null;
-
+            objectArrived = iServerBrokerService.invoqueModuleMethod(
+                     KEY,
+                     dataId,
+                     pluginVersionReference.getPlatform().getCode(),
+                     pluginVersionReference.getLayers().getCode(),
+                     pluginVersionReference.getPlugins().getCode(),
+                     pluginVersionReference.getDeveloper().getCode(),
+                     pluginVersionReference.getVersion().toString(),
+                     method.getName(),
+                     parameters);
         } catch (RemoteException e) {
             e.printStackTrace();
         } catch (Exception e){
             e.printStackTrace();
         }
 
-        return null;
+        if(objectArrived!=null){
+            isDataChuncked = objectArrived.isChunckedData();
+        }else{
+            Log.e(TAG,"Object arrived null, please check this");
+        }
+
+
+        Object o = null;
+
+
+        if(isDataChuncked){
+            if(Looper.myLooper() == Looper.getMainLooper()) throw new WorkOnMainThreadException(proxy,method);
+            o = bufferChannelAIDL.getBufferObject(dataId);
+            Log.i(TAG, o != null ? o.toString() : "");
+            return (o instanceof EmptyObject)?null:o;
+        }else{
+            Object o1 = objectArrived.getObject();;
+            Log.i(TAG, o1 != null ? o1.toString() : "");
+            return o1;
+        }
+
+
+
+
+
+//        try {
+//            FermatModuleObjectWrapper fermatModuleObjectWrapper = iServerBrokerService.invoqueModuleMethod(
+//                    pluginVersionReference.getPlatform().getCode(),
+//                    pluginVersionReference.getLayers().getCode(),
+//                    pluginVersionReference.getPlugins().getCode(),
+//                    pluginVersionReference.getDeveloper().getCode(),
+//                    pluginVersionReference.getVersion().toString(),
+//                    method.getName(),
+//                    parameters);
+//
+//            if(fermatModuleObjectWrapper!=null) {
+//                Log.i(TAG, "Object retuned: " + fermatModuleObjectWrapper.toString());
+//            }else{
+//                Log.i(TAG, "Object retuned: null");
+//            }
+//
+//            //Acá si esta en true el flag armo el objeto desde el buffer y lo devuelvo por el return
+//
+//            return (fermatModuleObjectWrapper!=null)?fermatModuleObjectWrapper.getObject():null;
+//
+//        } catch (RemoteException e) {
+//            e.printStackTrace();
+//        } catch (Exception e){
+//            e.printStackTrace();
+//        }
+
+        //return null;
     }
 
     @Override
@@ -119,9 +172,17 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         super.onCreate();
         proxyFactory = new ProxyFactory();
         poolExecutor = Executors.newFixedThreadPool(THREADS_NUM);
+        bufferChannelAIDL = new BufferChannelAIDL();
+
         Intent serviceIntent = new Intent(this, CommunicationServerService.class);
+        serviceIntent.setAction(IntentServerServiceAction.ACTION_BIND_AIDL);
         doBindService(serviceIntent);
+
+        Intent serviceIntent2 = new Intent(this, CommunicationServerService.class);
+        serviceIntent2.setAction(IntentServerServiceAction.ACTION_BIND_MESSENGER);
+        doBindMessengerService(serviceIntent2);
     }
+
 
 
     @Nullable
@@ -134,6 +195,10 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
     public void onDestroy() {
         if(mIsBound){
             doUnbindService();
+        }
+
+        if(mMessengerIsBound){
+            doUnbindMessengerService();
         }
         super.onDestroy();
     }
@@ -200,6 +265,9 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
      * Target we publish for clients to send messages to IncomingHandler.
      */
     final Messenger mMessenger = new Messenger(new IncomingHandler());
+    /**
+     * Service server messenger
+     */
     private Messenger mServiceMcu = null;
     /** Flag indicating whether we have called bind on the service. */
     boolean mMessengerIsBound;
@@ -212,17 +280,22 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         @Override
         public void handleMessage(Message msg) {
             Log.d(TAG, "Received from service: " + msg.arg1);
+            Bundle bundle = msg.getData();
+            String id = bundle.getString(CommunicationDataKeys.DATA_REQUEST_ID);
             switch (msg.what) {
                 case CommunicationMessages.MSG_REQUEST_DATA_MESSAGE:
                     //Log.d(TAG, "Received from service: " + msg.arg1);
                     //String keyResponse = msg.getData().getString(DATA_KEY_TO_RESPONSE);
-                    Bundle bundle = msg.getData();
-                    String id = bundle.getString(CommunicationDataKeys.DATA_REQUEST_ID);
                     //TODO: el DATA_KEY_TO_RESPONSE quizás deberia ser el id
-                    onMessageRecieve(UUID.fromString(id),msg.getData().getSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE));
+//                    onMessageRecieve(UUID.fromString(id),msg.getData().getSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE));
+                    onFullDateRecieve(id,bundle.getSerializable(CommunicationDataKeys.DATA_KEY_TO_RESPONSE));
                     break;
                 case CommunicationMessages.MSG_SEND_CHUNKED_DATA:
-
+                    bundle = msg.getData();
+                    onChuckedDateRecieve(
+                            id,
+                            bundle.getByteArray(CommunicationDataKeys.DATA_CHUNKED_DATA),
+                            bundle.getBoolean(CommunicationDataKeys.DATA_IS_CHUNKED_DATA_FINISH));
                     break;
                 default:
                     super.handleMessage(msg);
@@ -230,18 +303,24 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
         }
     }
 
-    /**
-     *
-     *
-     * @param data
-     */
-    protected void onMessageRecieve(UUID id,Object data){
+    private void onChuckedDateRecieve(String id, byte[] chunkedData,boolean isFinishData) {
         try {
             //bufferChannel.notificateObject(id,data);
+            bufferChannelAIDL.addChunkedData(id,chunkedData,isFinishData);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    };
+    }
+
+    private void onFullDateRecieve(String id, Serializable data) {
+        try {
+            //bufferChannel.notificateObject(id,data);
+            bufferChannelAIDL.addFullData(id,data);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * Class for interacting with the main interface of the service.
@@ -300,6 +379,33 @@ public class ClientSystemBrokerServiceAIDL extends Service implements ClientBrok
 
         }
     };
+
+    void doBindMessengerService(Intent intent) {
+        try {
+            Log.d(TAG, "Before init intent.componentName");
+            Log.d(TAG, "Before bindService");
+            if (bindService(intent, mMessengerConnection, BIND_AUTO_CREATE)){
+                Log.d(TAG, "Binding to ISERVERBROKERSERVICE MESSENGER returned true");
+            } else {
+                Log.d(TAG, "Binding to ISERVERBROKERSERVICE MESSENGER returned false");
+            }
+        } catch (SecurityException e) {
+            Log.e(TAG, "can't bind to ISERVERBROKERSERVICE MESSENGER, check permission in Manifest");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+        //mIsBound = true;
+        Log.d(TAG, "Binding.");
+    }
+
+    void doUnbindMessengerService() {
+        if (mMessengerIsBound) {
+            // Detach our existing connection.
+            unbindService(mMessengerConnection);
+            mMessengerIsBound = false;
+            Log.d(TAG, "Unbinding MESSENGER.");
+        }
+    }
 
 
 
