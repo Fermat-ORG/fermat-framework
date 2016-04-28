@@ -1452,7 +1452,7 @@ public class ChatMiddlewareDatabaseDao {
             table.addStringFilter(filter.getColumn(), filter.getValue(), filter.getType());
 
         table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_ID_CHAT_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
-        table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
+        //table.addFilterOrder(ChatMiddlewareDatabaseConstants.MESSAGE_MESSAGE_DATE_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
 
         table.loadToMemory();
 //
