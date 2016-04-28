@@ -340,7 +340,7 @@ public class ChatMetadataRecordDAO implements DAO {
         else if (messageId == null) {
             OUTGOINGMessageTable.addStringFilter(ChatNetworkServiceDataBaseConstants.CHAT_METADATA_TRANSACTION_RECORD_IDCHAT_COLUMN_NAME, chatId.toString(), DatabaseFilterType.EQUAL);
         }
-        else throw new IllegalArgumentException("The id is required, can not be null");
+        else if(chatId == null && messageId == null) new IllegalArgumentException("The id is required, can not be null");
 
         ChatMetadataRecord chatMetadaTransactionRecord = null;
 
