@@ -1,9 +1,14 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.processors;
 
+import com.bitdubai.fermat_api.layer.all_definition.network_service.enums.NetworkServiceType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.CheckInProfileMsjRespond;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NetworkServiceProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.client.developer.bitdubai.version_1.channels.endpoints.CommunicationsNetworkClientChannel;
+
+import java.util.concurrent.TimeUnit;
 
 import javax.websocket.Session;
 
@@ -45,6 +50,39 @@ public class CheckInActorRespondProcessor extends PackageProcessor {
 
         if(checkInProfileMsjRespond.getStatus() == CheckInProfileMsjRespond.STATUS.SUCCESS){
             //raise event
+
+            /* test unregister actor and networkservice */
+            try{
+
+                TimeUnit.SECONDS.sleep(2);
+
+                ActorProfile actorProfile = new ActorProfile();
+                actorProfile.setNsIdentityPublicKey("123456789321654987");
+                actorProfile.setIdentityPublicKey("147");
+                actorProfile.setName("Intra Actor");
+                actorProfile.setAlias("Actor");
+                actorProfile.setActorType("intra");
+                actorProfile.setExtraData("extradata");
+
+                getChannel().getNetworkClientCommunicationConnection().unregisterProfile(actorProfile);
+
+                TimeUnit.SECONDS.sleep(2);
+
+                NetworkServiceProfile ns = new NetworkServiceProfile();
+                ns.setClientIdentityPublicKey(getChannel().getNetworkClientCommunicationConnection().getClientProfile().getIdentityPublicKey());
+                ns.setNetworkServiceType(NetworkServiceType.INTRA_USER);
+                ns.setIdentityPublicKey("123456789321654987");
+
+                getChannel().getNetworkClientCommunicationConnection().unregisterProfile(ns);
+
+                TimeUnit.SECONDS.sleep(2);
+
+                getChannel().getNetworkClientCommunicationConnection().unregisterProfile(getChannel().getNetworkClientCommunicationConnection().getClientProfile());
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            /* test unregister actor and networkservice */
 
         }else{
             //there is some wrong
