@@ -72,7 +72,7 @@ public class ContractDetailViewHolder extends FermatViewHolder implements View.O
         textDescription = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_description_text);
         textDescriptionDate = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_description_date);
         textDescriptionPending = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_description_pending);
-        amountAndMethodTextView = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_text_button);
+        amountAndMethodTextView = (FermatTextView) itemView.findViewById(R.id.ccw_contract_detail_amount_and_method);
         confirmButton = (FermatButton) itemView.findViewById(R.id.ccw_contract_detail_confirm_button);
         confirmButton.setOnClickListener(this);
     }
