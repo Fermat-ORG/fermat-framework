@@ -10,6 +10,7 @@
     app:cardBackgroundColor="#f1f1f1"
     app:cardCornerRadius="4dp"
     app:cardElevation="4dp"
+    app:cardUseCompatPadding="true"
     tools:visibility="visible">
 
     <FrameLayout
@@ -61,8 +62,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:textColor="@color/description_text_status_confirm"
                 android:layout_margin="16dp"
+                android:textColor="@color/description_text_status_confirm"
                 android:textSize="14sp"
                 tools:text="8 BTC, using Cash Delivery"/>
 
