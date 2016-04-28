@@ -92,13 +92,6 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
-            //Delete potential previous configurations made by this wizard page
-            //So that they can be reconfigured cleanly
-            if(moduleManager.getInstallWallets() != null) {
-                for (InstalledWallet wallet : moduleManager.getInstallWallets())
-                    moduleManager.clearAssociatedWalletSettings(appSession.getAppPublicKey(), wallet.getPlatform());
-            }
-
             // Verify if wallet has been configured, if true show this fragment, else show the home fragment (the second start fragment)
             try {
                 walletConfigured = moduleManager.isWalletConfigured(appSession.getAppPublicKey());
@@ -114,7 +107,10 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                 //Delete potential previous configurations made by this wizard page
                 //So that they can be reconfigured cleanly
                 moduleManager.clearAssociatedIdentities(appSession.getAppPublicKey());
-                moduleManager.clearAssociatedWalletSettings(appSession.getAppPublicKey(), null);
+
+                final List<InstalledWallet> installWallets = moduleManager.getInstallWallets();
+                for (InstalledWallet wallet : installWallets)
+                    moduleManager.clearAssociatedWalletSettings(appSession.getAppPublicKey(), wallet.getPlatform());
             }
 
             //Obtain walletSettings or create new wallet settings if first time opening wallet
@@ -140,8 +136,6 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             else
                 Log.e(TAG, ex.getMessage(), ex);
         }
-
-
     }
 
     @Override
