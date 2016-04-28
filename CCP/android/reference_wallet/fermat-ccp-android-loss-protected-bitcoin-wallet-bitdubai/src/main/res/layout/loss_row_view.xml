@@ -6,10 +6,8 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="2dp"
-    android:paddingLeft="2dp"
-    android:paddingRight="2dp"
-    android:paddingTop="2dp">
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
@@ -51,7 +49,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/gradient_line"/>
+        android:background="#ccc"/>
 
 </LinearLayout>
 
