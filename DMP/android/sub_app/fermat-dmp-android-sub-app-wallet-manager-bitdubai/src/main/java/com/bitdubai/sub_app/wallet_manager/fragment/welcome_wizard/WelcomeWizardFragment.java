@@ -198,10 +198,16 @@ public class WelcomeWizardFragment extends AbstractFermatFragment<DesktopSession
 
         if(id==R.id.btn_got_it){
             if(position==fragments.size()-1){
-                saveSettings(!checkbox.isChecked());
-                if(checkbox.isChecked()){
-                    getRuntimeManager().changeStartActivity(Activities.CCP_DESKTOP.getCode());
-                }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        saveSettings(!checkbox.isChecked());
+                        if(checkbox.isChecked()){
+                            getRuntimeManager().changeStartActivity(Activities.CCP_DESKTOP.getCode());
+                        }
+                    }
+                }).start();
+
                 home();
             }else {
                 doNext();
