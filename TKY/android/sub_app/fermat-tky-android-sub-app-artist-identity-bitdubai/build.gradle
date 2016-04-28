@@ -41,7 +41,7 @@ android {
     dexOptions {
         incremental true
     }
-    sourceSets { main { java.srcDirs = ['src/main/java', 'src/main/test', 'src/main/pruebas'] } }
+    //sourceSets { main { java.srcDirs = ['src/main/java', 'src/main/test', 'src/main/pruebas'] } }
 }
 dependencies {
     // Fermat

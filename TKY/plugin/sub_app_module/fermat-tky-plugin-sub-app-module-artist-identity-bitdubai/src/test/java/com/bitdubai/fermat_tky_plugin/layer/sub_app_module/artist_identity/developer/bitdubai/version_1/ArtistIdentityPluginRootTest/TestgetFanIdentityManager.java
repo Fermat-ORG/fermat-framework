@@ -37,7 +37,7 @@ public class TestgetFanIdentityManager {
         Assert.assertNotNull(artistIdentityManager);
 
         int actual = artistIdentityManager.getMenuNotifications().length;
-        int expected = artistIdentityPluginRoot.getManager().getMenuNotifications().length;
+        int expected = artistIdentityPluginRoot.getModuleManager().getMenuNotifications().length;
         Assert.assertEquals(expected,actual);
     }
 
