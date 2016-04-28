@@ -273,9 +273,11 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                     case CANCELLED_LOCALLY:
                     case CANCELLED_REMOTELY:
                         connectionRejected();
+                        strConnectionState="BLOCKED";
                         break;
                     case CONNECTED:
                         disconnectRequest();
+                        strConnectionState="CONNECTED";
                         break;
                     case NO_CONNECTED:
                     case DISCONNECTED_LOCALLY:
@@ -284,14 +286,19 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                     case DENIED_LOCALLY:
                     case DENIED_REMOTELY:
                         connectRequest();
+                        strConnectionState="DISCONNECTED";
                         break;
                     case PENDING_REMOTELY_ACCEPTANCE:
                         connectionSend();
+                        strConnectionState="PENDING ACCEPTANCE";
                         break;
                     case PENDING_LOCALLY_ACCEPTANCE:
                         conectionAccept();
+                        strConnectionState="PENDING ACCEPTANCE";
                         break;
                 }
+                userStatus.setText(strConnectionState);//connectionState.toString());
+                userStatus.setTextColor(Color.parseColor("#292929"));
             }else  connectRequest();
         } catch (CantValidateActorConnectionStateException e) {
             e.printStackTrace();
