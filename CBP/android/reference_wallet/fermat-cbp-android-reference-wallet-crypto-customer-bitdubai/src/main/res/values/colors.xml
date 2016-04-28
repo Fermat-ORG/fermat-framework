@@ -62,7 +62,7 @@
     <color name="description_text_status_accepted">#ffffff</color>
     <color name="text_value_status_changed">#27507b</color>
     <color name="text_value_status_confirm">#27507b</color>
-    <color name="text_value_status_accepted">#ffffff</color>
+    <color name="ccw_text_value_status_accepted">#ffffff</color>
     <color name="activity_background">#222</color>
 
     <color name="ccw_contract_details_background">#222</color>

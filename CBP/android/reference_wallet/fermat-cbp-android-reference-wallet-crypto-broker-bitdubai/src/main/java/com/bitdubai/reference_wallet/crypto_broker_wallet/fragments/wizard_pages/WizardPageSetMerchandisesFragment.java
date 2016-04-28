@@ -107,7 +107,10 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
                 //Delete potential previous configurations made by this wizard page
                 //So that they can be reconfigured cleanly
                 moduleManager.clearAssociatedIdentities(appSession.getAppPublicKey());
-                moduleManager.clearAssociatedWalletSettings(appSession.getAppPublicKey(), null);
+
+                final List<InstalledWallet> installWallets = moduleManager.getInstallWallets();
+                for (InstalledWallet wallet : installWallets)
+                    moduleManager.clearAssociatedWalletSettings(appSession.getAppPublicKey(), wallet.getPlatform());
             }
 
             //Obtain walletSettings or create new wallet settings if first time opening wallet
@@ -133,8 +136,6 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             else
                 Log.e(TAG, ex.getMessage(), ex);
         }
-
-
     }
 
     @Override

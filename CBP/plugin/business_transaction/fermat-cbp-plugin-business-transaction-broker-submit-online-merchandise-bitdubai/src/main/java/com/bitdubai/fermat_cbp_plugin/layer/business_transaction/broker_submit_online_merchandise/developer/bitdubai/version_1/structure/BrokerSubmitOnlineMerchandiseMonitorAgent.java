@@ -5,6 +5,7 @@ import com.bitdubai.fermat_api.DealsWithPluginIdentity;
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.components.enums.PlatformComponentType;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Actors;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
 import com.bitdubai.fermat_api.layer.all_definition.enums.ReferenceWallet;
 import com.bitdubai.fermat_api.layer.all_definition.events.EventSource;
@@ -397,6 +398,7 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
                     //Updating the business transaction record
                     pendingToSubmitConfirmationRecord.setContractTransactionStatus(ContractTransactionStatus.CONFIRM_ONLINE_CONSIGNMENT);
                     brokerSubmitOnlineMerchandiseBusinessTransactionDao.updateBusinessTransactionRecord(pendingToSubmitConfirmationRecord);
+                    raiseIncomingMoneyNotificationEvent(pendingToSubmitConfirmationRecord);
                 }
 
                 // from here on, all this code checks the crypto status of a transaction
@@ -484,6 +486,20 @@ public class BrokerSubmitOnlineMerchandiseMonitorAgent implements
             brokerSubmitMerchandiseConfirmed.setContractHash(contractHash);
             brokerSubmitMerchandiseConfirmed.setMerchandiseType(MoneyType.CRYPTO);
             eventManager.raiseEvent(brokerSubmitMerchandiseConfirmed);
+        }
+        
+        private void raiseIncomingMoneyNotificationEvent(BusinessTransactionRecord record){
+            FermatEvent fermatEvent = eventManager.getNewEvent(com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.enums.EventType.INCOMING_MONEY_NOTIFICATION);
+            com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent event = (com.bitdubai.fermat_pip_api.layer.platform_service.event_manager.events.IncomingMoneyNotificationEvent) fermatEvent;
+            //TODO: quitar el hardcodeo del cryptocurrency para poder negociar con otras monedas.
+            event.setCryptoCurrency(CryptoCurrency.BITCOIN);
+            event.setAmount(record.getCryptoAmount());
+            event.setIntraUserIdentityPublicKey(record.getBrokerPublicKey());
+            event.setWalletPublicKey(record.getCBPWalletPublicKey());
+            event.setActorId(record.getCustomerPublicKey());
+            event.setSource(EventSource.BROKER_SUBMIT_ONLINE_MERCHANDISE);
+            event.setActorType(Actors.CBP_CRYPTO_CUSTOMER);
+            eventManager.raiseEvent(event);
         }
 
         //TODO: raise an event only in broker side, notifying the incoming online payment. Create the event.

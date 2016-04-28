@@ -820,18 +820,14 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
     }
 
     @Override
-    public boolean isWalletConfigured(String publicKeyWalletCryptoBrokerInstall) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException {
-        //TODO: Faltar validar los otros de los demas plugins
-        //TODO: Quitar este hardcore luego que se implemente la instalacion de la wallet
-        publicKeyWalletCryptoBrokerInstall = "walletPublicKeyTest";
-        boolean isConfigured = true;
-        CryptoBrokerWalletSettingSpread cryptoBrokerWalletSettingSpread = cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall).getCryptoWalletSetting().getCryptoBrokerWalletSpreadSetting();
-        List<CryptoBrokerWalletAssociatedSetting> cryptoBrokerWalletAssociatedSettings = cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall).getCryptoWalletSetting().getCryptoBrokerWalletAssociatedSettings();
-        List<CryptoBrokerWalletProviderSetting> cryptoBrokerWalletProviderSettings = cryptoBrokerWalletManager.loadCryptoBrokerWallet(publicKeyWalletCryptoBrokerInstall).getCryptoWalletSetting().getCryptoBrokerWalletProviderSettings();
-        if (cryptoBrokerWalletSettingSpread == null || cryptoBrokerWalletAssociatedSettings.isEmpty() || cryptoBrokerWalletProviderSettings.isEmpty()) {
-            isConfigured = false;
-        }
-        return isConfigured;
+    public boolean isWalletConfigured(String publicKeyWalletCryptoBrokerInstall) throws CryptoBrokerWalletNotFoundException, CantGetCryptoBrokerWalletSettingException, EarningsSettingsNotRegisteredException, CantListEarningsPairsException, CantLoadEarningSettingsException {
+
+        CryptoBrokerWalletSettingSpread spread = getCryptoBrokerWalletSpreadSetting("walletPublicKeyTest"); //TODO: quitar este hardcodeo
+        List<CryptoBrokerWalletAssociatedSetting> associatedWallets = getCryptoBrokerWalletAssociatedSettings("walletPublicKeyTest");//TODO: quitar este hardcodeo
+        List<CryptoBrokerWalletProviderSetting> associatedProviders = getCryptoBrokerWalletProviderSettings("walletPublicKeyTest");//TODO: quitar este hardcodeo
+        List<EarningsPair> earningsPairs = getEarningsPairs(publicKeyWalletCryptoBrokerInstall);
+
+        return spread != null && !associatedWallets.isEmpty() && !associatedProviders.isEmpty() && !earningsPairs.isEmpty();
     }
 
     @Override
@@ -1213,7 +1209,7 @@ public class CryptoBrokerWalletModuleCryptoBrokerWalletManager implements Crypto
             CustomerBrokerSaleNegotiation customerBrokerSaleNegotiation = this.customerBrokerSaleNegotiationManager.getNegotiationsByNegotiationId(UUID.fromString(negotiationId));
             /*//TODO: remove this mock
             customerBrokerSaleNegotiation = new SaleNegotiationOnlineMock();*/
-            ContractClauseType contractClauseType = getContractClauseType(customerBrokerSaleNegotiation,ClauseType.BROKER_PAYMENT_METHOD);
+            ContractClauseType contractClauseType = getContractClauseType(customerBrokerSaleNegotiation, ClauseType.BROKER_PAYMENT_METHOD);
 
             // Case: sending crypto merchandise.
             if (contractClauseType.getCode() == ContractClauseType.CRYPTO_TRANSFER.getCode()) {
