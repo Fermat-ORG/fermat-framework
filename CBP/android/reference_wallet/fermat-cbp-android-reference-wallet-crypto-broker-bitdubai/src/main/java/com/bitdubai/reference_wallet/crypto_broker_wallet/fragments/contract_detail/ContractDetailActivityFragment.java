@@ -177,7 +177,7 @@ public class ContractDetailActivityFragment extends AbstractFermatFragment<Crypt
 
         Date date = new Date(data.getLastUpdate());
         SimpleDateFormat formatter = new SimpleDateFormat("EEE, d MMM yy");
-        detailDate.setText("Date:\n"+formatter.format(date));
+        detailDate.setText(formatter.format(date));
         double exchangeRateAmount= getFormattedNumber(data.getExchangeRateAmount());
         double amount= getFormattedNumber(data.getAmount());
         adapter = new ContractDetailAdapter(getActivity(), contractInformation, appSession, walletModuleManager, this);

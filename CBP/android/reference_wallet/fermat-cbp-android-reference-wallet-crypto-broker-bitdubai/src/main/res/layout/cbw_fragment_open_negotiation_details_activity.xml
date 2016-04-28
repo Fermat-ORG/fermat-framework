@@ -78,7 +78,6 @@
         android:id="@+id/cbw_open_negotiation_details_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFF"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="16dp"

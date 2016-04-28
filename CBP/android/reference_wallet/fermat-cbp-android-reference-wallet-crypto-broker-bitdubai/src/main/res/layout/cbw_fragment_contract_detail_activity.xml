@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cbw_contract_details_background"
+    android:background="#444"
     android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="85dp"
-        android:background="@drawable/cbw_contract_details_gradient_colors"
+        android:layout_height="wrap_content"
+        android:background="#1271A7"
         android:paddingBottom="8dp"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
@@ -19,31 +19,24 @@
 
         <ImageView
             android:id="@+id/cbw_contract_details_broker_image"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:src="@android:drawable/sym_def_app_icon"
-            tools:ignore="contentDescription" />
+            tools:ignore="contentDescription"/>
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbw_contract_details_selling_summary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
+            android:layout_marginBottom="6dp"
             android:layout_toEndOf="@+id/cbw_contract_details_broker_image"
-            android:textColor="#000000"
-            android:textSize="16sp"
+            android:layout_toRightOf="@+id/cbw_contract_details_broker_image"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
             tools:text="@string/cbw_contract_details_contract_title" />
-
-        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
-            android:id="@+id/cbw_contract_details_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignStart="@+id/cbw_contract_details_negotiation_details"
-            android:layout_alignTop="@+id/cbw_contract_details_selling_summary"
-            android:textColor="#b4b4b4"
-            android:textSize="14sp"
-            tools:text="Date" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
             android:id="@+id/cbw_contract_details_rate"
@@ -51,8 +44,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/cbw_contract_details_selling_summary"
             android:layout_toEndOf="@+id/cbw_contract_details_broker_image"
-            android:textColor="#b4b4b4"
-            android:textSize="16sp"
+            android:layout_toRightOf="@+id/cbw_contract_details_broker_image"
+            android:layout_marginBottom="-2dp"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
             tools:text="1 BTC @ 254 USD" />
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
@@ -61,16 +56,39 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/cbw_contract_details_rate"
             android:layout_toEndOf="@+id/cbw_contract_details_broker_image"
-            android:textColor="@color/black"
+            android:layout_toRightOf="@+id/cbw_contract_details_broker_image"
+            android:layout_marginBottom="-2dp"
+            android:textColor="#FFFFFF"
             android:textSize="14sp"
             tools:text="Broker Name" />
+
+        <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView
+            android:id="@+id/cbw_contract_details_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignBaseline="@+id/cbw_contract_details_broker_name"
+            android:textColor="#fff"
+            android:textSize="12sp"
+            tools:text="03 Feb 2015"/>
+
+        <!--<com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatTextView-->
+            <!--android:id="@+id/cbw_contract_details_date"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignStart="@+id/cbw_contract_details_negotiation_details"-->
+            <!--android:layout_alignTop="@+id/cbw_contract_details_selling_summary"-->
+            <!--android:textColor="#b4b4b4"-->
+            <!--android:textSize="14sp"-->
+            <!--tools:text="Date" />-->
 
         <com.bitdubai.fermat_android_api.layer.definition.wallet.views.FermatButton
             android:id="@+id/cbw_contract_details_negotiation_details"
             android:layout_width="wrap_content"
-            android:layout_height="40sp"
+            android:layout_height="20dp"
+            android:layout_alignParentTop="true"
             android:layout_alignParentEnd="true"
-            android:layout_below="@+id/cbw_contract_details_rate"
             android:background="@color/white"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
@@ -85,6 +103,7 @@
         android:id="@+id/cbw_contract_details_contract_steps_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#FFF"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="16dp"
