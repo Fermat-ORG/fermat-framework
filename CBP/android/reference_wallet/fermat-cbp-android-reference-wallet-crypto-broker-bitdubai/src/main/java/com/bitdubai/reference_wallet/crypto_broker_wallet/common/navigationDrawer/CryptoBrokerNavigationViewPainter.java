@@ -13,7 +13,10 @@ import android.widget.RelativeLayout;
 import com.bitdubai.fermat_android_api.engine.NavigationViewPainter;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.FermatException;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CryptoCurrency;
+import com.bitdubai.fermat_api.layer.all_definition.enums.CurrencyTypes;
 import com.bitdubai.fermat_api.layer.all_definition.enums.TimeFrequency;
+import com.bitdubai.fermat_api.layer.all_definition.util.BitcoinConverter;
 import com.bitdubai.fermat_api.layer.modules.common_classes.ActiveActorIdentityInformation;
 import com.bitdubai.fermat_api.layer.world.interfaces.Currency;
 import com.bitdubai.fermat_cbp_api.layer.identity.crypto_broker.interfaces.CryptoBrokerIdentity;
@@ -148,7 +151,11 @@ public class CryptoBrokerNavigationViewPainter implements NavigationViewPainter 
 
             for (CryptoBrokerWalletAssociatedSetting associatedWallet : associatedWallets) {
                 Currency currency = associatedWallet.getMerchandise();
-                float balance = moduleManager.getAvailableBalance(currency, session.getAppPublicKey());
+                double balance = moduleManager.getAvailableBalance(currency, session.getAppPublicKey());
+
+                String currencyCode = currency.getCode();
+                if(currency.getType() == CurrencyTypes.CRYPTO && CryptoCurrency.BITCOIN.getCode().equals(currencyCode))
+                    balance = BitcoinConverter.convert(balance, BitcoinConverter.Currency.SATOSHI, BitcoinConverter.Currency.BITCOIN);
 
                 stockItems.add(new NavViewFooterItem(currency.getFriendlyName(), numberFormat.format(balance)));
             }
