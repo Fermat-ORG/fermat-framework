@@ -142,12 +142,9 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
 
             if(bitcoinWalletSettings != null) {
 
-                if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
-                    bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
-                }
+                blockchainNetworkType = bitcoinWalletSettings.getBlockchainNetworkType();
 
-                blockchainNetworkType = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
-
+                lossProtectedEnabled = bitcoinWalletSettings.getLossProtectedEnabled();
             }
 
 
