@@ -272,9 +272,6 @@ public class ProviderCcexPluginRoot extends AbstractPlugin implements DatabaseMa
         List<ExchangeRate> exchangeRates = new ArrayList<>();
         queryCcexExchangeRateHistoryAPI(exchangeRates, currencyPair.getFrom(), currencyPair.getTo(), requiredStartDate, requiredEndDate, invertCurrencies);
 
-        if(exchangeRates.size() == 0)
-            throw new CantGetExchangeRateException(CantGetExchangeRateException.DEFAULT_MESSAGE);
-
         return exchangeRates;
     }
 
