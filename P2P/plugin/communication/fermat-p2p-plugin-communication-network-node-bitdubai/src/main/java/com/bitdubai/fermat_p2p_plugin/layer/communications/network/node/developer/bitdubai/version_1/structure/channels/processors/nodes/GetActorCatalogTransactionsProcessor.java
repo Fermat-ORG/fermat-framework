@@ -7,8 +7,11 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Mess
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.PackageProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.GetActorCatalogTransactionsMsjRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.GetNodeCatalogTransactionsMsjRequest;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.GetActorCatalogTransactionsMsjRespond;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.respond.GetNodeCatalogTransactionsMsjRespond;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
 
 import org.apache.commons.lang.ClassUtils;
@@ -53,12 +56,12 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
 
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
-        GetNodeCatalogTransactionsMsjRespond getNodeCatalogTransactionsMsjRespond = null;
-        List<NodesCatalogTransaction> nodesCatalogTransactionList = null;
+        GetActorCatalogTransactionsMsjRespond getActorCatalogTransactionsMsjRespond = null;
+        List<ActorsCatalogTransaction> actorsCatalogTransactionList = null;
 
         try {
 
-            GetNodeCatalogTransactionsMsjRequest messageContent = GetNodeCatalogTransactionsMsjRequest.parseContent(packageReceived.getContent());
+            GetActorCatalogTransactionsMsjRequest messageContent = GetActorCatalogTransactionsMsjRequest.parseContent(packageReceived.getContent());
 
             /*
              * Create the method call history
@@ -71,15 +74,15 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
             if (messageContent.getMessageContentType() == MessageContentType.OBJECT){
 
 
-                nodesCatalogTransactionList = loadData(messageContent.getOffset(), messageContent.getMax());
+                actorsCatalogTransactionList = loadData(messageContent.getOffset(), messageContent.getMax());
 
-                Long count = getDaoFactory().getNodesCatalogTransactionDao().getAllCount();
+                Long count = getDaoFactory().getActorsCatalogTransactionDao().getAllCount();
 
                 /*
                  * If all ok, respond whit success message
                  */
-                getNodeCatalogTransactionsMsjRespond = new GetNodeCatalogTransactionsMsjRespond(GetNodeCatalogTransactionsMsjRespond.STATUS.SUCCESS, GetNodeCatalogTransactionsMsjRespond.STATUS.SUCCESS.toString(), nodesCatalogTransactionList, count);
-                Package packageRespond = Package.createInstance(getNodeCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                getActorCatalogTransactionsMsjRespond = new GetActorCatalogTransactionsMsjRespond(GetActorCatalogTransactionsMsjRespond.STATUS.SUCCESS, GetActorCatalogTransactionsMsjRespond.STATUS.SUCCESS.toString(), actorsCatalogTransactionList, count);
+                Package packageRespond = Package.createInstance(getActorCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -98,8 +101,8 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
                 /*
                  * Respond whit fail message
                  */
-                getNodeCatalogTransactionsMsjRespond = new GetNodeCatalogTransactionsMsjRespond(GetNodeCatalogTransactionsMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), nodesCatalogTransactionList, new Long(0));
-                Package packageRespond = Package.createInstance(getNodeCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                getActorCatalogTransactionsMsjRespond = new GetActorCatalogTransactionsMsjRespond(GetActorCatalogTransactionsMsjRespond.STATUS.FAIL, exception.getLocalizedMessage(), actorsCatalogTransactionList, new Long(0));
+                Package packageRespond = Package.createInstance(getActorCatalogTransactionsMsjRespond.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_RESPOND, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
                 /*
                  * Send the respond
@@ -121,21 +124,21 @@ public class GetActorCatalogTransactionsProcessor extends PackageProcessor {
      * @param max
      * @return List<NodeProfile>
      */
-    public List<NodesCatalogTransaction> loadData(Integer offset, Integer max) throws CantReadRecordDataBaseException {
+    public List<ActorsCatalogTransaction> loadData(Integer offset, Integer max) throws CantReadRecordDataBaseException {
 
-        List<NodesCatalogTransaction> nodesCatalogTransactionList = null;
+        List<ActorsCatalogTransaction> transactionList = null;
 
         if (offset > 0 && max > 0){
 
-            nodesCatalogTransactionList = getDaoFactory().getNodesCatalogTransactionDao().findAll(offset, max);
+            transactionList = getDaoFactory().getActorsCatalogTransactionDao().findAll(offset, max);
 
         }else {
 
-            nodesCatalogTransactionList = getDaoFactory().getNodesCatalogTransactionDao().findAll();
+            transactionList = getDaoFactory().getActorsCatalogTransactionDao().findAll();
 
         }
 
-        return nodesCatalogTransactionList;
+        return transactionList;
 
     }
 }

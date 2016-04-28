@@ -16,6 +16,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.NodeChannelConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.AddNodeToCatalogProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.GetActorCatalogTransactionsProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.GetNodeCatalogProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.GetNodeCatalogTransactionsProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.ReceivedActorCatalogTransactionsProcessor;
@@ -88,6 +89,7 @@ public class FermatWebSocketNodeChannelServerEndpoint extends FermatWebSocketCha
         registerMessageProcessor(new AddNodeToCatalogProcessor(this));
         registerMessageProcessor(new GetNodeCatalogProcessor(this));
         registerMessageProcessor(new GetNodeCatalogTransactionsProcessor(this));
+        registerMessageProcessor(new GetActorCatalogTransactionsProcessor(this));
         registerMessageProcessor(new ReceivedActorCatalogTransactionsProcessor(this));
         registerMessageProcessor(new ReceivedNodeCatalogTransactionsProcessor(this));
         registerMessageProcessor(new UpdateNodeInCatalogProcessor(this));

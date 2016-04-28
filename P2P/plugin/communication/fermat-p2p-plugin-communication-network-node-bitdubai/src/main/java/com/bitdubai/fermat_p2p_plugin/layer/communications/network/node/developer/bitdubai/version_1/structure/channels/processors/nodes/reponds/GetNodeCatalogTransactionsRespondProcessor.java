@@ -7,6 +7,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.Package;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.data.client.respond.MsgRespond;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.MessageContentType;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
@@ -60,7 +61,6 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
 
         String channelIdentityPrivateKey = getChannel().getChannelIdentity().getPrivateKey();
         String destinationIdentityPublicKey = (String) session.getUserProperties().get(HeadersAttName.CPKI_ATT_HEADER_NAME);
-        List<NodesCatalogTransaction> nodesCatalogTransactionList = null;
 
         try {
 
@@ -76,31 +76,39 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
              */
             if (messageContent.getMessageContentType() == MessageContentType.OBJECT){
 
-                /*
-                 * Get the block of transactions
-                 */
-                List<NodesCatalogTransaction>  transactionList = messageContent.getNodesCatalogTransactions();
 
-                for (NodesCatalogTransaction nodesCatalogTransaction : transactionList) {
+                if (messageContent.getStatus() == GetNodeCatalogTransactionsMsjRespond.STATUS.SUCCESS){
 
-                    /*
-                     * Process the transaction
+                     /*
+                     * Get the block of transactions
                      */
-                    processTransaction(nodesCatalogTransaction);
-                }
+                    List<NodesCatalogTransaction>  transactionList = messageContent.getNodesCatalogTransactions();
+
+                    for (NodesCatalogTransaction nodesCatalogTransaction : transactionList) {
+
+                        /*
+                         * Process the transaction
+                         */
+                        processTransaction(nodesCatalogTransaction);
+                    }
 
 
-                long totalRowInDb = getDaoFactory().getNodesCatalogDao().getAllCount();
+                    long totalRowInDb = getDaoFactory().getNodesCatalogDao().getAllCount();
 
-                if (totalRowInDb < messageContent.getCount()){
+                    if (totalRowInDb < messageContent.getCount()){
 
-                    GetNodeCatalogTransactionsMsjRequest nodeCatalogTransactionsMsjRequest = new GetNodeCatalogTransactionsMsjRequest(transactionList.size(), 250);
-                    Package packageRespond = Package.createInstance(nodeCatalogTransactionsMsjRequest.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_TRANSACTIONS_REQUEST, channelIdentityPrivateKey, destinationIdentityPublicKey);
+                        GetNodeCatalogTransactionsMsjRequest nodeCatalogTransactionsMsjRequest = new GetNodeCatalogTransactionsMsjRequest(transactionList.size(), 250);
+                        Package packageRespond = Package.createInstance(nodeCatalogTransactionsMsjRequest.toJson(), packageReceived.getNetworkServiceTypeSource(), PackageType.GET_NODE_CATALOG_TRANSACTIONS_REQUEST, channelIdentityPrivateKey, destinationIdentityPublicKey);
 
-                    /*
-                     * Send the respond
-                     */
-                    session.getAsyncRemote().sendObject(packageRespond);
+                        /*
+                         * Send the respond
+                         */
+                        session.getAsyncRemote().sendObject(packageRespond);
+                    }
+
+                }else {
+
+                    LOG.warn(messageContent.getStatus() + " - " + messageContent.getDetails());
                 }
 
             }

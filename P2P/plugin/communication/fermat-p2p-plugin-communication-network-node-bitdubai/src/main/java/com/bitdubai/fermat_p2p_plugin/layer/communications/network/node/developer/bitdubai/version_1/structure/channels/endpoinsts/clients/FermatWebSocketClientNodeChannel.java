@@ -9,7 +9,9 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.Pack
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.exception.PackageTypeNotSupportedException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.conf.ClientNodeChannelConfigurator;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.FermatWebSocketChannelEndpoint;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.GetActorCatalogTransactionsProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.reponds.AddNodeToCatalogRespondProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.reponds.GetNodeCatalogTransactionsRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.reponds.ReceivedActorCatalogTransactionsRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.reponds.ReceivedNodeCatalogTransactionsRespondProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.processors.nodes.reponds.UpdateNodeInCatalogRespondProcessor;
@@ -126,6 +128,7 @@ public class FermatWebSocketClientNodeChannel extends FermatWebSocketChannelEndp
         registerMessageProcessor(new ReceivedActorCatalogTransactionsRespondProcessor(this));
         registerMessageProcessor(new AddNodeToCatalogRespondProcessor(this));
         registerMessageProcessor(new UpdateNodeInCatalogRespondProcessor(this));
+        registerMessageProcessor(new GetNodeCatalogTransactionsRespondProcessor(this));
 
 
     }
