@@ -2,6 +2,7 @@ package com.bitdubai.sub_app.chat_community.fragments;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,14 +14,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bitdubai.fermat_android_api.layer.definition.wallet.AbstractFermatFragment;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatListItemListeners;
 import com.bitdubai.fermat_android_api.ui.interfaces.FermatWorkerCallBack;
 import com.bitdubai.fermat_android_api.ui.util.FermatWorker;
+import com.bitdubai.fermat_api.layer.all_definition.enums.UISource;
 import com.bitdubai.fermat_api.layer.all_definition.navigation_structure.enums.Activities;
+import com.bitdubai.fermat_api.layer.all_definition.settings.structure.SettingsManager;
 import com.bitdubai.fermat_api.layer.modules.exceptions.ActorIdentityNotSelectedException;
 import com.bitdubai.fermat_api.layer.modules.exceptions.CantGetSelectedActorIdentityException;
 import com.bitdubai.fermat_ccp_api.layer.module.intra_user.exceptions.CantGetActiveLoginIdentityException;
@@ -28,7 +33,9 @@ import com.bitdubai.fermat_cht_api.layer.identity.exceptions.CantListChatIdentit
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.exceptions.CantListChatActorException;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunitySubAppModuleManager;
+import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.settings.ChatActorCommunitySettings;
 import com.bitdubai.fermat_pip_api.layer.network_service.subapp_resources.SubAppResourcesProviderManager;
+import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.enums.UnexpectedUIExceptionSeverity;
 import com.bitdubai.fermat_pip_api.layer.platform_service.error_manager.interfaces.ErrorManager;
 import com.bitdubai.sub_app.chat_community.R;
 import com.bitdubai.sub_app.chat_community.adapters.ContactsListAdapter;
@@ -50,6 +57,11 @@ public class ContactsListFragment
         implements SwipeRefreshLayout.OnRefreshListener,
         FermatListItemListeners<ChatActorCommunityInformation> {
 
+    //Managers
+    private ChatActorCommunitySubAppModuleManager moduleManager;
+    private ErrorManager errorManager;
+    private SettingsManager<ChatActorCommunitySettings> settingsManager;
+    private ChatUserSubAppSession chatUserSubAppSession;
     public static final String CHAT_USER_SELECTED = "chat_user";
     private static final int MAX = 20;
     protected final String TAG = "ContactsListFragment";
@@ -58,13 +70,16 @@ public class ContactsListFragment
     private LinearLayoutManager layoutManager;
     private SwipeRefreshLayout swipeRefresh;
     private LinearLayout empty;
-    private boolean isRefreshing = false;
     private View rootView;
     private ContactsListAdapter adapter;
     private LinearLayout emptyView;
-    private ChatActorCommunitySubAppModuleManager moduleManager;
-    private ErrorManager errorManager;
     private ArrayList<ChatActorCommunityInformation> lstChatUserInformations;//cryptoBrokerCommunityInformationArrayList;
+    private ChatActorCommunitySettings appSettings;
+    TextView noDatalabel;
+    ImageView noData;
+    private boolean isRefreshing = false;
+    private boolean launchActorCreationDialog = false;
+    private boolean launchListIdentitiesDialog = false;
 
     public static ContactsListFragment newInstance() {
         return new ContactsListFragment();
@@ -73,9 +88,45 @@ public class ContactsListFragment
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        moduleManager = appSession.getModuleManager();
-        errorManager = appSession.getErrorManager();
+        try {
+            setHasOptionsMenu(true);
+            //Get managers
+            chatUserSubAppSession = ((ChatUserSubAppSession) appSession);
+            moduleManager = appSession.getModuleManager();
+            errorManager = appSession.getErrorManager();
+            settingsManager = moduleManager.getSettingsManager();
+            moduleManager.setAppPublicKey(appSession.getAppPublicKey());
         lstChatUserInformations = new ArrayList<>();
+            //Obtain Settings or create new Settings if first time opening subApp
+            appSettings = null;
+            try {
+                appSettings = this.settingsManager.loadAndGetSettings(appSession.getAppPublicKey());
+            }catch (Exception e){ appSettings = null; }
+
+            if(appSettings == null){
+                appSettings = new ChatActorCommunitySettings();
+                appSettings.setIsPresentationHelpEnabled(true);
+                try {
+                    settingsManager.persistSettings(appSession.getAppPublicKey(), appSettings);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            //Check if a default identity is configured
+            try{
+                moduleManager.getSelectedActorIdentity();
+            }catch (CantGetSelectedActorIdentityException e){
+                //There are no identities in device
+                launchActorCreationDialog = true;
+            }catch (ActorIdentityNotSelectedException e){
+                //There are identities in device, but none selected
+                launchListIdentitiesDialog = true;
+            }
+        } catch (Exception ex) {
+            CommonLogger.exception(TAG, ex.getMessage(), ex);
+            errorManager.reportUnexpectedUIException(UISource.ACTIVITY, UnexpectedUIExceptionSeverity.CRASH, ex);
+        }
     }
 
     @Override
@@ -91,6 +142,8 @@ public class ContactsListFragment
             adapter = new ContactsListAdapter(getActivity(), lstChatUserInformations);
             adapter.setFermatListEventListener(this);
             recyclerView.setAdapter(adapter);
+            noDatalabel = (TextView) rootView.findViewById(R.id.nodatalabel);
+            noData=(ImageView) rootView.findViewById(R.id.nodata);
             swipeRefresh = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh);
             swipeRefresh.setOnRefreshListener(this);
             swipeRefresh.setColorSchemeColors(Color.BLUE, Color.BLUE);
@@ -182,11 +235,23 @@ public class ContactsListFragment
                 (emptyView.getVisibility() == View.GONE || emptyView.getVisibility() == View.INVISIBLE)) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.VISIBLE);
+            emptyView.setBackgroundResource(R.drawable.fondo);
+            noData.setAnimation(anim);
+            noDatalabel.setAnimation(anim);
+            noDatalabel.setVisibility(View.VISIBLE);
+            noData.setVisibility(View.VISIBLE);
+            rootView.setBackgroundResource(R.drawable.fondo);
             if (adapter != null)
                 adapter.changeDataSet(null);
         } else if (!show && emptyView.getVisibility() == View.VISIBLE) {
             emptyView.setAnimation(anim);
             emptyView.setVisibility(View.GONE);
+            ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
+            emptyView.setBackground(bgcolor);
+            noData.setAnimation(anim);
+            noDatalabel.setAnimation(anim);
+            noDatalabel.setVisibility(View.GONE);
+            noData.setVisibility(View.GONE);
         }
     }
 

@@ -108,7 +108,7 @@ public class ActorConnectionEventActions {
                         this.handleDenyConnection(request.getRequestId());
                         break;
                     case DISCONNECT:
-                        if (request.getRequestType() == RequestType.SENT)
+//                        if (request.getRequestType() == RequestType.SENT)
                             this.handleDisconnect(request.getRequestId());
 
                         break;
@@ -157,7 +157,7 @@ public class ActorConnectionEventActions {
             switch (request.getSenderActorType()) {
                 case CHAT:
 
-                    dao.registerActorConnection(actorConnection);
+                    dao.registerChatActorConnection(actorConnection);
 
                     chatNetworkService.confirm(request.getRequestId());
                     break;

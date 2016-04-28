@@ -31,7 +31,7 @@ import java.util.List;
  * @version 1.0
  */
 
-public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> implements Filterable {
+public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> /*implements Filterable*/ {
 
     List<ChatMessage> chatMessages = new ArrayList<>();
     ArrayList<String> messagesData = new ArrayList<>();
@@ -179,46 +179,46 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> implemen
 //        }
     }
 
-    public int getCount() {
-        if (chatMessages != null) {
-            if(filteredData.size()<chatMessages.size()) {
-                return filteredData.size();
-            }else{
-                return chatMessages.size();}
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public ChatMessage getItem(int position) {
-        return filteredData.get(position);
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public void setData(ArrayList<ChatMessage> data) {
-        this.filteredData = data;
-    }
-
-    public Filter getFilter() {
-        messagesData=null;
-        for(ChatMessage data:chatMessages){
-            messagesData.add(data.getMessage());
-        }
-        return new ChatFilter(messagesData, this);
-    }
-
-    public void setFilterString(String filterString) {
-        this.filterString = filterString;
-    }
-
-    public String getFilterString() {
-        return filterString;
-    }
+//    public int getCount() {
+//        if (chatMessages != null) {
+//            if(filteredData.size()<chatMessages.size()) {
+//                return filteredData.size();
+//            }else{
+//                return chatMessages.size();}
+//        } else {
+//            return 0;
+//        }
+//    }
+//
+//    @Override
+//    public ChatMessage getItem(int position) {
+//        return filteredData.get(position);
+//    }
+//
+//    @Override
+//    public long getItemId(int position) {
+//        return position;
+//    }
+//
+//    public void setData(ArrayList<ChatMessage> data) {
+//        this.filteredData = data;
+//    }
+//
+//    public Filter getFilter() {
+//        messagesData=null;
+//        for(ChatMessage data:chatMessages){
+//            messagesData.add(data.getMessage());
+//        }
+//        return new ChatFilter(messagesData, this);
+//    }
+//
+//    public void setFilterString(String filterString) {
+//        this.filterString = filterString;
+//    }
+//
+//    public String getFilterString() {
+//        return filterString;
+//    }
 
 
 //
