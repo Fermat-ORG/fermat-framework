@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dp"
-    app:cardBackgroundColor="@color/note_card_background"
+    app:cardBackgroundColor="#2D2E82"
     app:cardCornerRadius="4dp"
     app:cardElevation="4dp"
     tools:visibility="visible">
@@ -21,31 +21,34 @@
             android:id="@+id/negotiation_notes_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp"
-            android:gravity="center"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="left"
             android:text="@string/notes"
             android:textAllCaps="true"
-            android:textColor="#fff"/>
+            android:textColor="#fff"
+            android:textSize="16sp"/>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/note_card_separator_background"/>
+            android:background="#ffffff"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"/>
 
         <TextView
             android:id="@+id/note_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="15dp"
             android:textColor="#ffffff"
             android:textSize="14sp"
             tools:text="Nos Vemos en el Sambil a las 4:30pm en la feria de la comida, cerca de Farmatodo"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginBottom="34dp"
-            android:background="@color/note_card_separator_background"/>
 
     </LinearLayout>
 
