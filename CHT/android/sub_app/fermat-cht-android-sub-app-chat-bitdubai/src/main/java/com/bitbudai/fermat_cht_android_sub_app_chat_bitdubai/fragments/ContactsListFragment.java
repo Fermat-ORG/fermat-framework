@@ -281,8 +281,12 @@ public class ContactsListFragment extends AbstractFermatFragment implements Cont
                                 list.invalidateViews();
                                 list.requestLayout();
                                 noData.setVisibility(View.GONE);
+                                noDatalabel.setVisibility(View.GONE);
+                                ColorDrawable bgcolor = new ColorDrawable(Color.parseColor("#F9F9F9"));
+                                layout.setBackground(bgcolor);
                             } else {
                                 noData.setVisibility(View.VISIBLE);
+                                noDatalabel.setVisibility(View.VISIBLE);
                             }
                         } else
                             noData.setVisibility(View.VISIBLE);
