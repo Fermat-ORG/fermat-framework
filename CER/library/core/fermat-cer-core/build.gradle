@@ -19,7 +19,9 @@ dependencies {
     //Providers
     compile project(':fermat-cer-plugin-provider-bitcoinvenezuela-bitdubai')
     compile project(':fermat-cer-plugin-provider-bitfinex-bitdubai')
+    compile project(':fermat-cer-plugin-provider-btce-bitdubai')
     compile project(':fermat-cer-plugin-provider-bter-bitdubai')
+    compile project(':fermat-cer-plugin-provider-ccex-bitdubai')
     compile project(':fermat-cer-plugin-provider-dolartoday-bitdubai')
     compile project(':fermat-cer-plugin-provider-elcronista-bitdubai')
     compile project(':fermat-cer-plugin-provider-europeancentralbank-bitdubai')
