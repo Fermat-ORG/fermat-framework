@@ -115,23 +115,23 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
     @Override
     protected void onAcceptedStatus() {
         exchangeRateReferenceText.setTextColor(getColor(R.color.description_text_status_accepted));
-        exchangeRateReferenceValue.setTextColor(getColor(R.color.text_value_status_accepted));
+        exchangeRateReferenceValue.setTextColor(getColor(R.color.description_text_status_accepted));
         markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_accepted));
-        markerRateReference.setTextColor(getColor(R.color.text_value_status_accepted));
+        markerRateReference.setTextColor(getColor(R.color.description_text_status_accepted));
         yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_accepted));
-        yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_accepted));
-        yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_accepted));
+        yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.description_text_status_accepted));
+        yourExchangeRateValueRightSide.setTextColor(getColor(R.color.description_text_status_accepted));
     }
 
     @Override
     protected void setChangedStatus() {
         exchangeRateReferenceText.setTextColor(getColor(R.color.description_text_status_changed));
-        exchangeRateReferenceValue.setTextColor(getColor(R.color.text_value_status_changed));
+        exchangeRateReferenceValue.setTextColor(getColor(R.color.description_text_status_changed));
         markerRateReferenceText.setTextColor(getColor(R.color.description_text_status_changed));
-        markerRateReference.setTextColor(getColor(R.color.text_value_status_changed));
+        markerRateReference.setTextColor(getColor(R.color.description_text_status_changed));
         yourExchangeRateText.setTextColor(getColor(R.color.description_text_status_changed));
-        yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_changed));
-        yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_changed));
+        yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.description_text_status_changed));
+        yourExchangeRateValueRightSide.setTextColor(getColor(R.color.description_text_status_changed));
     }
 
     @Override
