@@ -3089,7 +3089,7 @@ public class WalletRuntimeEnginePluginRoot extends AbstractPlugin implements
         runtimeTabStrip = new TabStrip();
 //        runtimeTabStrip.setTabsColor("#502681");
 //        runtimeTabStrip.setTabsTextColor("#FFFFFF");
-        runtimeTabStrip.setTabsColor("#222222");
+        runtimeTabStrip.setTabsColor("#492781");
         runtimeTabStrip.setTabsTextColor("#F9F9F9");
         runtimeTabStrip.setTabsIndicateColor("#dbdbdb");
         runtimeTabStrip.setDividerColor(0x72af9c);
