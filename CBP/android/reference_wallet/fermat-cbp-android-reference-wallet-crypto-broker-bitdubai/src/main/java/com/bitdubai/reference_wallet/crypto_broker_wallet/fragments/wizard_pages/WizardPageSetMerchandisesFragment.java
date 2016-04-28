@@ -92,6 +92,13 @@ public class WizardPageSetMerchandisesFragment extends AbstractFermatFragment<Cr
             moduleManager = appSession.getModuleManager();
             errorManager = appSession.getErrorManager();
 
+            //Delete potential previous configurations made by this wizard page
+            //So that they can be reconfigured cleanly
+            if(moduleManager.getInstallWallets() != null) {
+                for (InstalledWallet wallet : moduleManager.getInstallWallets())
+                    moduleManager.clearAssociatedWalletSettings(appSession.getAppPublicKey(), wallet.getPlatform());
+            }
+
             // Verify if wallet has been configured, if true show this fragment, else show the home fragment (the second start fragment)
             try {
                 walletConfigured = moduleManager.isWalletConfigured(appSession.getAppPublicKey());
