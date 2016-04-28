@@ -62,4 +62,13 @@ public enum ExposureLevel implements FermatEnum {
         }
         return  platformsNames;
     }
+
+    public static ExposureLevel getExposureLevelByLabel(String label){
+        for (ExposureLevel exposureLevel :
+                values()) {
+            if(exposureLevel.name().equals(label.toUpperCase()))
+                return exposureLevel;
+        }
+        return null;
+    }
 }
