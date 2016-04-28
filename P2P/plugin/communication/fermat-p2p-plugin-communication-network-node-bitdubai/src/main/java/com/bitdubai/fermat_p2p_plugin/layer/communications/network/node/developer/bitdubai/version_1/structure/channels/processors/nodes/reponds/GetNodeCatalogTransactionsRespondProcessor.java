@@ -257,35 +257,4 @@ public class GetNodeCatalogTransactionsRespondProcessor extends PackageProcessor
          */
         getDaoFactory().getNodesCatalogTransactionDao().create(nodesCatalogTransaction);
     }
-
-    /**
-     * Create a new row into the data base
-     *
-     * @param nodesCatalogTransaction
-     * @throws CantInsertRecordDataBaseException
-     */
-    private void insertNodesCatalogTransactionsPendingForPropagation(NodesCatalogTransaction nodesCatalogTransaction) throws CantInsertRecordDataBaseException {
-
-        LOG.info("Executing method insertNodesCatalogTransactionsPendingForPropagation");
-
-        /*
-         * Create the NodesCatalog
-         */
-        NodesCatalogTransactionsPendingForPropagation transaction = new NodesCatalogTransactionsPendingForPropagation();
-        transaction.setIp(nodesCatalogTransaction.getIp());
-        transaction.setDefaultPort(nodesCatalogTransaction.getDefaultPort());
-        transaction.setIdentityPublicKey(nodesCatalogTransaction.getIdentityPublicKey());
-        transaction.setName(nodesCatalogTransaction.getName());
-        transaction.setTransactionType(nodesCatalogTransaction.getTransactionType());
-        transaction.setHashId(transaction.getHashId());
-        transaction.setLastLatitude(nodesCatalogTransaction.getLastLatitude());
-        transaction.setLastLongitude(nodesCatalogTransaction.getLastLongitude());
-        transaction.setLastConnectionTimestamp(nodesCatalogTransaction.getLastConnectionTimestamp());
-        transaction.setRegisteredTimestamp(nodesCatalogTransaction.getRegisteredTimestamp());
-
-        /*
-         * Save into the data base
-         */
-        getDaoFactory().getNodesCatalogTransactionsPendingForPropagationDao().create(transaction);
-    }
 }
