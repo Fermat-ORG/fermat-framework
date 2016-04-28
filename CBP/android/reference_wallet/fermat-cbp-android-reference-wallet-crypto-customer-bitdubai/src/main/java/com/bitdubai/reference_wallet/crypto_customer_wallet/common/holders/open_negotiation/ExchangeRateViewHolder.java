@@ -108,7 +108,6 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
                 markerRateText.setTextColor(getColor(R.color.ccw_text_value_status_accepted));
                 yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.ccw_text_value_status_accepted));
                 yourExchangeRateValueRightSide.setTextColor(getColor(R.color.ccw_text_value_status_accepted));
-                yourExchangeRateValue.setTextColor(getColor(R.color.ccw_text_value_status_accepted));
                 yourExchangeRateText.setTextColor(getColor(R.color.ccw_text_value_status_accepted));
                 break;
             case CHANGED:
@@ -116,7 +115,6 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
                 markerRateText.setTextColor(getColor(R.color.text_value_status_changed));
                 yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_changed));
                 yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_changed));
-                yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_changed));
                 yourExchangeRateText.setTextColor(getColor(R.color.text_value_status_changed));
                 break;
             case CONFIRM:
@@ -124,7 +122,6 @@ public class ExchangeRateViewHolder extends ClauseViewHolder implements View.OnC
                 markerRateText.setTextColor(getColor(R.color.text_value_status_confirm));
                 yourExchangeRateValueLeftSide.setTextColor(getColor(R.color.text_value_status_confirm));
                 yourExchangeRateValueRightSide.setTextColor(getColor(R.color.text_value_status_confirm));
-                yourExchangeRateValue.setTextColor(getColor(R.color.text_value_status_confirm));
                 yourExchangeRateText.setTextColor(getColor(R.color.text_value_status_confirm));
                 break;
         }
