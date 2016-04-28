@@ -163,8 +163,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Intr
             public void run() {
                 if (intraUserIdentitySettings != null) {
                     if (intraUserIdentitySettings.isPresentationHelpEnabled()) {
-                        PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(), appSession, null, appSession.getModuleManager());
-                        presentationIntraUserCommunityDialog.show();
+                        if(getActivity()!=null) {
+                            PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(), appSession, null, appSession.getModuleManager());
+                            presentationIntraUserCommunityDialog.show();
+                        }
                     }
                 }
             }
@@ -505,8 +507,10 @@ public class CreateIntraUserIdentityFragment extends AbstractFermatFragment<Intr
 
 
     public void showDialog(){
-        PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(),appSession, null,appSession.getModuleManager());
-        presentationIntraUserCommunityDialog.show();
+        if(getActivity()!=null) {
+            PresentationIntraUserIdentityDialog presentationIntraUserCommunityDialog = new PresentationIntraUserIdentityDialog(getActivity(), appSession, null, appSession.getModuleManager());
+            presentationIntraUserCommunityDialog.show();
+        }
     }
 
     @Override

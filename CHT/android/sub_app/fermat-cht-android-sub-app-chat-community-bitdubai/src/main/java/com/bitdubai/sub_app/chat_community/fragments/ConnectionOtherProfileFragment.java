@@ -69,6 +69,7 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
     private Button accept;
     //private IntraWalletUserActorManager intraWalletUserActorManager;
     private ConnectionState connectionState;
+    private String strConnectionState = "UNKNOWN";
     private android.support.v7.widget.Toolbar toolbar;
 
     /**
@@ -129,9 +130,11 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                     case CANCELLED_LOCALLY:
                     case CANCELLED_REMOTELY:
                         connectionRejected();
+                        strConnectionState="BLOCKED";
                         break;
                     case CONNECTED:
                         disconnectRequest();
+                        strConnectionState="CONNECTED";
                         break;
                     case NO_CONNECTED:
                     case DISCONNECTED_LOCALLY:
@@ -139,17 +142,20 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                     case ERROR:
                     case DENIED_LOCALLY:
                     case DENIED_REMOTELY:
+                        strConnectionState="DISCONNECTED";
                         connectRequest();
                         break;
                     case PENDING_LOCALLY_ACCEPTANCE:
                         conectionAccept();
+                        strConnectionState="PENDING ACCEPTANCE";
                         break;
                     case PENDING_REMOTELY_ACCEPTANCE:
                         connectionSend();
+                        strConnectionState="PENDING ACCEPTANCE";
                         break;
                 }
-                userStatus.setText(connectionState.toString());
-                userStatus.setTextColor(Color.parseColor("#292929"));
+                userStatus.setText(strConnectionState);//connectionState.toString());
+                        userStatus.setTextColor(Color.parseColor("#292929"));
             } else connectRequest();
 
             if (chatUserInformation.getImage() != null) {
@@ -267,9 +273,11 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                     case CANCELLED_LOCALLY:
                     case CANCELLED_REMOTELY:
                         connectionRejected();
+                        strConnectionState="BLOCKED";
                         break;
                     case CONNECTED:
                         disconnectRequest();
+                        strConnectionState="CONNECTED";
                         break;
                     case NO_CONNECTED:
                     case DISCONNECTED_LOCALLY:
@@ -278,14 +286,19 @@ public class ConnectionOtherProfileFragment extends AbstractFermatFragment
                     case DENIED_LOCALLY:
                     case DENIED_REMOTELY:
                         connectRequest();
+                        strConnectionState="DISCONNECTED";
                         break;
                     case PENDING_REMOTELY_ACCEPTANCE:
                         connectionSend();
+                        strConnectionState="PENDING ACCEPTANCE";
                         break;
                     case PENDING_LOCALLY_ACCEPTANCE:
                         conectionAccept();
+                        strConnectionState="PENDING ACCEPTANCE";
                         break;
                 }
+                userStatus.setText(strConnectionState);//connectionState.toString());
+                userStatus.setTextColor(Color.parseColor("#292929"));
             }else  connectRequest();
         } catch (CantValidateActorConnectionStateException e) {
             e.printStackTrace();

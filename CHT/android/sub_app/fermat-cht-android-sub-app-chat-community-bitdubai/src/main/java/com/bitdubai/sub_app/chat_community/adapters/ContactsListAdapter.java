@@ -46,7 +46,7 @@ public class ContactsListAdapter
                 Bitmap bitmap = BitmapFactory.decodeByteArray(data.getImage(), 0, data.getImage().length);
                 bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
                 //holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
-                holder.friendAvatar.setImageBitmap(Utils.getRoundedShape(bitmap, 400));
+                holder.friendAvatar.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
             }
         }
     }

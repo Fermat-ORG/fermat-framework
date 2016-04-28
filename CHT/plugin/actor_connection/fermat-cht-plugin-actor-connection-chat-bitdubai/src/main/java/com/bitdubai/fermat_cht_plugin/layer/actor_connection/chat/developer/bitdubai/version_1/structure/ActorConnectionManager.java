@@ -98,7 +98,7 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
             /**
              * I register the actor connection.
              */
-            dao.registerActorConnection(actorConnection);
+            dao.registerChatActorConnection(actorConnection);
 
             final ChatConnectionInformation connectionInformation = new ChatConnectionInformation(
                     newConnectionId,
@@ -328,7 +328,26 @@ public class ActorConnectionManager implements ChatActorConnectionManager {
                             connectionId,
                             ConnectionState.CONNECTED
                     );
+                    break;
 
+                case DISCONNECTED_LOCALLY:
+
+                    chatNetworkService.acceptConnection(connectionId);
+
+                    dao.changeConnectionState(
+                            connectionId,
+                            ConnectionState.CONNECTED
+                    );
+                    break;
+
+                case DISCONNECTED_REMOTELY:
+
+                    chatNetworkService.acceptConnection(connectionId);
+
+                    dao.changeConnectionState(
+                            connectionId,
+                            ConnectionState.CONNECTED
+                    );
                     break;
 
                 default:
