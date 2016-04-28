@@ -1,5 +1,7 @@
 package com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.ArtistIdentityPluginRootTest;
 
+
+
 import com.bitdubai.fermat_api.layer.modules.interfaces.ModuleManager;
 import com.bitdubai.fermat_tky_plugin.layer.sub_app_module.artist_identity.developer.bitdubai.version_1.ArtistIdentityPluginRoot;
 
@@ -24,7 +26,7 @@ public class TestgetManager {
     }
 
     @Test
-    public void testManagerNull() {
+    public void testManagerNull() throws Exception{
         System.out.println("testManagerNull");
         ModuleManager moduleManager = artistIdentityPluginRoot.getManager();
         Assert.assertNull(moduleManager);
