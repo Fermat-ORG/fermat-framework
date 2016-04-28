@@ -489,7 +489,8 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
             String phrase,
             byte[] profile_img,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws Exception {
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws Exception {
         String createdPublicKey = null;
 
         try{
@@ -497,7 +498,8 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
                     name,
                     profile_img,
                     externalIdentityID,
-                    artExternalPlatform);
+                    artExternalPlatform,
+                    externalUsername);
             createdPublicKey = createdIdentity.getPublicKey();
 
             new Thread() {

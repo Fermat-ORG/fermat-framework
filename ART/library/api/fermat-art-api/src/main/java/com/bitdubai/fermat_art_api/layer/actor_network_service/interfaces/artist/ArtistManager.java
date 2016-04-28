@@ -152,6 +152,7 @@ public interface ArtistManager extends FermatManager{
      * @throws CantRequestExternalPlatformInformationException
      */
     ArtArtistExtraData<ArtistExternalPlatformInformation> requestExternalPlatformInformation(
+            UUID requestId,
             String requesterPublicKey,
             PlatformComponentType requesterActorType,
             String artistPublicKey) throws CantRequestExternalPlatformInformationException;
@@ -164,4 +165,12 @@ public interface ArtistManager extends FermatManager{
      */
     List<ArtArtistExtraData<ArtistExternalPlatformInformation>> listPendingInformationRequests(
             RequestType requestType) throws CantListPendingInformationRequestsException;
+
+    /**
+     * This method returns all completed request connections.
+     * @return
+     * @throws CantListPendingConnectionRequestsException
+     */
+    List<ArtistConnectionRequest> listCompletedConnections() throws
+            CantListPendingConnectionRequestsException;
 }

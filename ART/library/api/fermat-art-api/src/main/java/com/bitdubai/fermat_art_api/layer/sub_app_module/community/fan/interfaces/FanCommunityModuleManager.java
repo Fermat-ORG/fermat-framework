@@ -211,7 +211,8 @@ public interface FanCommunityModuleManager extends
             String phrase,
             byte[] profile_img,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws Exception;
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws Exception;
 
 
     @Override

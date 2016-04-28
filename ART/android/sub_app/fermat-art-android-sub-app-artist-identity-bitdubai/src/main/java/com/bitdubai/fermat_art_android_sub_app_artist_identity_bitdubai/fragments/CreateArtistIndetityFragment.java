@@ -297,9 +297,13 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
     private int createNewIdentity() throws InvalidParameterException {
         String artistName = mArtistUserName.getText().toString();
         ArtExternalPlatform externalPlatform = ArtExternalPlatform.getDefaultExternalPlatform();
+        String externalUsername = "";
         if(mArtistExternalPlatform.isSelected()){
             externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
                     mArtistExternalPlatform.getSelectedItem().toString());
+        }
+        if(mArtistExternalName.isSelected()){
+            externalUsername = mArtistExternalName.getSelectedItem().toString();
         }
         boolean dataIsValid = validateIdentityData(
                 artistName,
@@ -308,12 +312,12 @@ public class CreateArtistIndetityFragment extends AbstractFermatFragment<ArtistI
             if(moduleManager != null){
                 try{
                     if(!isUpdate){
-                        moduleManager.createArtistIdentity(artistName,artistImageByteArray,(externalPlatformID == null) ? null : externalPlatformID,externalPlatform);
+                        moduleManager.createArtistIdentity(artistName,artistImageByteArray,(externalPlatformID == null) ? null : externalPlatformID,externalPlatform,externalUsername);
                     }else{
                         if(updateProfileImage)
-                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),artistImageByteArray,(externalPlatformID == null) ? null : externalPlatformID,externalPlatform);
+                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),artistImageByteArray,(externalPlatformID == null) ? null : externalPlatformID,externalPlatform,externalUsername);
                         else
-                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),identitySelected.getProfileImage(),(externalPlatformID == null) ? null : externalPlatformID,externalPlatform);
+                            moduleManager.updateArtistIdentity(artistName,identitySelected.getPublicKey(),identitySelected.getProfileImage(),(externalPlatformID == null) ? null : externalPlatformID,externalPlatform,externalUsername);
                     }
                 }catch (Exception e){
                     errorManager.reportUnexpectedUIException(UISource.VIEW, UnexpectedUIExceptionSeverity.UNSTABLE, e);
