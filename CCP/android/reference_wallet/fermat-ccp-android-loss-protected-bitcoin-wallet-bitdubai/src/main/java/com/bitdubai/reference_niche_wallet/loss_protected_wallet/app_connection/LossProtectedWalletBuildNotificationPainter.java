@@ -14,7 +14,7 @@ import java.util.UUID;
  */
 public class LossProtectedWalletBuildNotificationPainter {
 
-    public static NotificationPainter getNotification(LossProtectedWallet moduleManager,String code,String resultCode)
+    public static NotificationPainter getNotification(LossProtectedWallet moduleManager,String code,String walletPublicKey,String resultCode)
     {
         NotificationPainter notification = null;
         try {
@@ -32,7 +32,7 @@ public class LossProtectedWalletBuildNotificationPainter {
                     case "TRANSACTIONARRIVE":
                         if(moduleManager != null){
                             loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
-                                transaction= moduleManager.getTransaction(UUID.fromString(transactionId), resultCode,loggedIntraUserPublicKey);
+                                transaction= moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey,loggedIntraUserPublicKey);
 
                             notification = new LossProtectedWalletNotificationPainter("Received money", transaction.getInvolvedActor().getName() + " send "+ WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC","","",true,resultCode);
 
@@ -40,10 +40,10 @@ public class LossProtectedWalletBuildNotificationPainter {
                             notification = new LossProtectedWalletNotificationPainter("Received money", "BTC Arrived","","",true,resultCode);
                         }
                         break;
-                    case "TRANSACTION_REVERSE":
+                    case "TRANSACTIONREVERSE":
                         if(moduleManager != null) {
                             loggedIntraUserPublicKey = moduleManager.getActiveIdentities().get(0).getPublicKey();
-                            transaction = moduleManager.getTransaction(UUID.fromString(transactionId), resultCode, loggedIntraUserPublicKey);
+                            transaction = moduleManager.getTransaction(UUID.fromString(transactionId), walletPublicKey, loggedIntraUserPublicKey);
                             notification = new LossProtectedWalletNotificationPainter("Sent Transaction reversed", "Sending " + WalletUtils.formatBalanceString(transaction.getAmount()) + " BTC could not be completed.", "", "",true,resultCode);
                         }else
                         {

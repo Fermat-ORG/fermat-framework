@@ -15,7 +15,7 @@
     <string name="add_user_in_your_contact_list_text">Add user to your contact list or\nlook for it in the community section</string>
     <string name="cancel_text">Cancel</string>
     <string name="search_text">Search</string>
-    <!-- contact_detail_base.xml -->
+    <!-- loss_contact_detail_base.xml -->
     <string name="matias_furszyfer_text">Matias Furszyfer</string>
     <string name="name_text">Name</string>
     <string name="address_text">Address</string>
@@ -82,7 +82,7 @@
     <string name="refuse_text">Refuse</string>
     <!-- loss_presentation_bitcoin_wallet_without_identities.xml -->
     <string name="welcome_text">Welcome!</string>
-    <string name="this_is_a_simple_bitcoint_only_wallet_text">This is a simple bitcoin only wallet. It\'s main features are:</string>
+    <string name="this_is_a_simple_bitcoint_only_wallet_text">This is a wallet that will allow you to protect against loss of money. It\'s main features are:</string>
     <string name="close_text">Close</string>
 
     <!-- loss_presentation_wallet.xml -->

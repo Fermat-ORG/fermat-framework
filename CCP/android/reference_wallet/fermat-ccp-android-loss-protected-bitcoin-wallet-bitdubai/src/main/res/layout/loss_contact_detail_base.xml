@@ -165,7 +165,7 @@
                     android:text="@string/share_address_text"
                     android:gravity="center_vertical"
                     android:layout_marginLeft="7dp"
-                    android:textColor="#12aca1"/>
+                    android:textColor="#073487"/>
 
             </LinearLayout>
 
@@ -189,7 +189,7 @@
                     android:padding="3dp"
                     android:clickable="true"
                     android:text="@string/request_text"
-                    android:background="#DC5A0F"
+                    android:background="#073487"
                     android:textColor="#fff"
                     android:layout_weight="1"
                     android:layout_marginRight="8dp"
