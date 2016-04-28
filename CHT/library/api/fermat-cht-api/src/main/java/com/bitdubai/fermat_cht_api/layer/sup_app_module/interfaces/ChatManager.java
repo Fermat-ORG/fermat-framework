@@ -88,6 +88,22 @@ public interface ChatManager extends ModuleManager<ChatPreferenceSettings, Activ
      */
     void sendMessage(Message createdMessage) throws CantSendChatMessageException;
 
+    /**
+     * This method sends the message through the Chat Network Service for view writingStatus
+     * @param contactPublicKey,
+     * @param chatId
+     * @throws CantSendChatMessageException
+     */
+    void sendWritingStatus(String contactPublicKey, UUID chatId) throws CantSendChatMessageException;
+
+    /**
+     * This method sends the message through the Chat Network Service for view onlineStatus
+     * @param contactPublicKey,
+     * @param chatId
+     * @throws CantSendChatMessageException
+     */
+    void sendOnlineStatus (String contactPublicKey, UUID chatId) throws CantSendChatMessageException;
+
     void saveGroupMember(GroupMember groupMember) throws CantSaveGroupMemberException;
 
     void deleteGroupMember(GroupMember groupMember) throws CantDeleteGroupMemberException;
