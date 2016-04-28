@@ -16,6 +16,7 @@ import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantDeleteMessageEx
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetMessageException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetNetworkServicePublicKeyException;
+import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantGetWritingStatus;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantListGroupMemberException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyChatException;
 import com.bitdubai.fermat_cht_api.all_definition.exceptions.CantNewEmptyMessageException;
@@ -769,6 +770,21 @@ public class ChatMiddlewareManager implements MiddlewareChatManager {
         }
     }
 
+    public boolean checkWritingStatus(UUID chatId) throws CantGetWritingStatus {
+        try {
+            return chatMiddlewareDatabaseDao.getChatByChatId(chatId).isWriting();
+        }catch(CantGetChatException e){
+            throw new CantGetWritingStatus(
+                    e,
+                    "Something went wrong",
+                    "");
+        } catch (DatabaseOperationException e) {
+            throw new CantGetWritingStatus(
+                    e,
+                    "Something went wrong",
+                    "");
+        }
+    }
 
 
     /**
