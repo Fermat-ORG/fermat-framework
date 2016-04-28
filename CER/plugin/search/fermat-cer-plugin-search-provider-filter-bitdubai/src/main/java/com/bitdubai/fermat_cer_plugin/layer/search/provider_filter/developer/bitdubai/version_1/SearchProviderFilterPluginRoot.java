@@ -67,6 +67,9 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.BTER)
     private CurrencyExchangeRateProviderManager bterProvider;
 
+    @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.CCEX)
+    private CurrencyExchangeRateProviderManager ccexProvider;
+
     @NeededPluginReference(platform = Platforms.CURRENCY_EXCHANGE_RATE_PLATFORM, layer = Layers.PROVIDER, plugin = Plugins.DOLARTODAY)
     private CurrencyExchangeRateProviderManager dolarTodayProvider;
 
@@ -107,6 +110,7 @@ public class SearchProviderFilterPluginRoot extends AbstractPlugin implements Da
             providerMap.put(bitfinexProvider.getProviderId(), bitfinexProvider);
             providerMap.put(btceProvider.getProviderId(), btceProvider);
             //providerMap.put(bterProvider.getProviderId(), bterProvider);
+            providerMap.put(ccexProvider.getProviderId(), ccexProvider);
             providerMap.put(dolarTodayProvider.getProviderId(), dolarTodayProvider);
             providerMap.put(elCronistaProvider.getProviderId(), elCronistaProvider);
             providerMap.put(europeanCentralBankProvider.getProviderId(), europeanCentralBankProvider);
