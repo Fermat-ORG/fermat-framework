@@ -33,6 +33,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantLi
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantGetArtistIdentityException;
@@ -131,10 +132,16 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
         try {
             for (Artist artist :
                     listIdentitiesFromCurrentDeviceUser()) {
+                HashMap<ArtExternalPlatform,String> externalInformation = new HashMap<>();
+                externalInformation.put(artist.getExternalPlatform(), artist.getExternalUsername());
+                List extraData = new ArrayList();
+                extraData.add(artist.getProfileImage());
+                extraData.add(new ArtistExternalPlatformInformation(externalInformation));
+                String xmlExtraData = XMLParser.parseObject(extraData);
                 artistExposingDatas.add(new ArtistExposingData(
                         artist.getPublicKey(),
                         artist.getAlias(),
-                        artist.getProfileImage()
+                        xmlExtraData
                 ));
             }
             artistManager.exposeIdentities(artistExposingDatas);
@@ -173,8 +180,8 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
 
             Artist artist = null;
             if(externalIdentityID != null){
-                artist = createArtistIdentity(alias,image,externalIdentityID, ArtExternalPlatform.TOKENLY);
-                artistManager.exposeIdentity(new ArtistExposingData(artist.getPublicKey(),"El gabo",artist.getProfileImage()));
+                artist = createArtistIdentity(alias,image,externalIdentityID, ArtExternalPlatform.TOKENLY,"ugo");
+                artistManager.exposeIdentity(new ArtistExposingData(artist.getPublicKey(),"El gabo",null));
                 ActorSearch<ArtistExposingData> artistExposingDataActorSearch = artistManager.getSearch();
                 List<ArtistExposingData> artistExposingDatas = artistExposingDataActorSearch.getResult();
                 for (ArtistExposingData artistExposingData :
@@ -256,7 +263,13 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
                         case TOKENLY:
                             final com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist tokenlyArtist = tokenlyArtistIdentityManager.getArtistIdentity(artist.getExternalIdentityID());
                             if(tokenlyArtist != null){
-                                artIdentity = new ArtistIdentityImp(tokenlyArtist.getPublicKey(),tokenlyArtist.getProfileImage(),tokenlyArtist.getUsername(),tokenlyArtist.getId(),externalPlatform);
+                                artIdentity = new ArtistIdentityImp(
+                                        tokenlyArtist.getPublicKey(),
+                                        tokenlyArtist.getProfileImage(),
+                                        tokenlyArtist.getUsername(),
+                                        tokenlyArtist.getId(),
+                                        externalPlatform,
+                                        tokenlyArtist.getUsername());
                             }
                             break;
                     }
@@ -278,12 +291,14 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
             String alias,
             byte[] imageBytes,
             UUID externalIdentityId,
-            ArtExternalPlatform artExternalPlatform) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
         return identityArtistManager.createNewIdentityArtist(
                 alias,
                 imageBytes,
                 externalIdentityId,
-                artExternalPlatform);
+                artExternalPlatform,
+                externalUsername);
     }
 
     @Override
@@ -292,13 +307,15 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
             String publicKey,
             byte[] profileImage,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws CantUpdateArtistIdentityException {
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantUpdateArtistIdentityException {
         identityArtistManager.updateIdentityArtist(
                 alias,
                 publicKey,
                 profileImage,
                 externalIdentityID,
-                artExternalPlatform);
+                artExternalPlatform,
+                externalUsername);
     }
 
     @Override

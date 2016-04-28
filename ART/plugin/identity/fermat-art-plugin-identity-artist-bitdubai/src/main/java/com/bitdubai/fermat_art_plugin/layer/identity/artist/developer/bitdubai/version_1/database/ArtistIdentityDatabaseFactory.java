@@ -62,6 +62,7 @@ public class ArtistIdentityDatabaseFactory implements DealsWithErrors, DealsWith
             table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME, DatabaseDataType.STRING, 150, false);
             table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_IDENTITY_ID_COLUMN_NAME, DatabaseDataType.STRING, 200, false);
             table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME, DatabaseDataType.STRING, 10, false);
+            table.addColumn(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME, DatabaseDataType.STRING,100,false);
 
             table.addIndex(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_FIRST_KEY_COLUMN);
 

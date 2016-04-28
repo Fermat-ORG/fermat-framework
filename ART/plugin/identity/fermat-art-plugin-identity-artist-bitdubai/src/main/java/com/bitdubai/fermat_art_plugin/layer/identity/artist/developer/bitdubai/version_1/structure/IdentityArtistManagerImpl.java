@@ -2,6 +2,7 @@ package com.bitdubai.fermat_art_plugin.layer.identity.artist.developer.bitdubai.
 
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -27,6 +28,8 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.exceptions.CantGetLogg
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUser;
 import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserManager;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -153,7 +156,8 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
             String alias,
             byte[] profileImage,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws CantCreateArtistIdentityException {
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantCreateArtistIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -168,7 +172,8 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
                     loggedUser,
                     profileImage,
                     externalIdentityID,
-                    artExternalPlatform);
+                    artExternalPlatform,
+                    externalUsername);
 
             Thread registerToAns = new Thread(new Runnable() {
                 @Override
@@ -187,7 +192,8 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
                     externalIdentityID,
                     pluginFileSystem,
                     pluginId,
-                    artExternalPlatform);
+                    artExternalPlatform,
+                    externalUsername);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateArtistIdentityException("CAN'T CREATE NEW ARTIST IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {
@@ -200,15 +206,25 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
             String publicKey,
             byte[] profileImage,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws CantUpdateArtistIdentityException {
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantUpdateArtistIdentityException {
         try {
             getArtistIdentityDao().updateIdentityArtistUser(
                     publicKey,
                     alias,
                     profileImage,
                     externalIdentityID,
-                    artExternalPlatform);
-            final ArtistExposingData artistExposingData = new ArtistExposingData(publicKey,alias,profileImage);
+                    artExternalPlatform,
+                    externalUsername);
+            HashMap<ArtExternalPlatform,String> externalInformation = new HashMap<>();
+            externalInformation.put(artExternalPlatform,externalUsername);
+            List data = new ArrayList();
+            data.add(profileImage);
+            data.add(externalInformation);
+            final ArtistExposingData artistExposingData = new ArtistExposingData(
+                    publicKey,
+                    alias,
+                    XMLParser.parseObject(data));
 
             Thread registerToAns = new Thread(new Runnable() {
                 @Override
@@ -229,7 +245,15 @@ public class IdentityArtistManagerImpl implements DealsWithErrors, DealsWithLogg
     public void registerIdentitiesANS(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
         try {
             Artist artist = getIdentityArtist(publicKey);
-            ArtistExposingData artistExposingData = new ArtistExposingData(artist.getPublicKey(),artist.getAlias(),artist.getProfileImage());
+            HashMap<ArtExternalPlatform,String> externalInformation = new HashMap<>();
+            externalInformation.put(artist.getExternalPlatform(),artist.getExternalUsername());
+            List data = new ArrayList();
+            data.add(artist.getProfileImage());
+            data.add(externalInformation);
+            ArtistExposingData artistExposingData = new ArtistExposingData(
+                    artist.getPublicKey(),
+                    artist.getAlias(),
+                    XMLParser.parseObject(data));
             artistManager.exposeIdentity(artistExposingData);
         } catch (CantGetArtistIdentityException | CantExposeIdentityException e) {
             e.printStackTrace();

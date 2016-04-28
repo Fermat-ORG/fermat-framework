@@ -154,7 +154,8 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             DeviceUser deviceUser,
             byte[] profileImage,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws CantCreateArtistIdentityException {
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantCreateArtistIdentityException {
 
         try {
             if (aliasExists(alias)) {
@@ -194,6 +195,10 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                         ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
                         artExternalPlatform.getCode());
             }
+            //external username
+            record.setStringValue(
+                    ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME,
+                    externalUsername);
 
 
             table.insertRecord(record);
@@ -232,7 +237,8 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
             String alias,
             byte[] profileImage,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws CantUpdateArtistIdentityException {
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantUpdateArtistIdentityException {
         try {
             /**
              * 1) Get the table.
@@ -273,6 +279,9 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                             ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
                             artExternalPlatform.getCode());
                 }
+                record.setStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME,
+                        externalUsername);
 
                 table.updateRecord(record);
             }
@@ -359,13 +368,17 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                         } else{
                             externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
                         }
+                //External username
+                String externalUsername = record.getStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME);
                 list.add(new ArtistIdentityImp(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
                         getArtistProfileImagePrivateKey(record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME)),
                         externalIdentityId,
                         pluginFileSystem,
                         pluginId,
-                        externalPlatform));
+                        externalPlatform,
+                        externalUsername));
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantListArtistIdentitiesException(
@@ -441,6 +454,9 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 } else{
                     externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
                 }
+                //External username
+                String externalUsername = record.getStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME);
                 artist = new ArtistIdentityImp(
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
@@ -448,7 +464,8 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                         externalIdentityId,
                         pluginFileSystem,
                         pluginId,
-                        externalPlatform);
+                        externalPlatform,
+                        externalUsername);
 
             }
         } catch (CantLoadTableToMemoryException e) {
@@ -520,6 +537,9 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                 } else{
                     externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
                 }
+                //External username
+                String externalUsername = record.getStringValue(
+                        ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME);
                 artist = new ArtistIdentityImp(
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_ALIAS_COLUMN_NAME),
                         record.getStringValue(ArtistIdentityDatabaseConstants.ARTIST_IDENTITY_PUBLIC_KEY_COLUMN_NAME),
@@ -527,7 +547,8 @@ public class ArtistIdentityDao implements DealsWithPluginDatabaseSystem {
                         externalIdentityId,
                         pluginFileSystem,
                         pluginId,
-                        externalPlatform);
+                        externalPlatform,
+                        externalUsername);
 
             }
         } catch (CantLoadTableToMemoryException e) {
