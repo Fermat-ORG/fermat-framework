@@ -95,9 +95,9 @@
     <string name="footer_message_text">Footer Message</string>
     <!-- refresh_header.xml -->
     <string name="loading_text">Loading..........</string>
-    <!-- request_form_base.xml -->
+    <!-- loss_request_form_base_base.xml -->
     <string name="confirm_request_text">Confirm request</string>
-    <!-- send_form_base.xml -->
+    <!-- loss_send_form_base.xml -->
     <string name="enter_name_here_text">Enter name here</string>
     <string name="bits_text">[bits]</string>
     <string name="btc_text">[btc]</string>

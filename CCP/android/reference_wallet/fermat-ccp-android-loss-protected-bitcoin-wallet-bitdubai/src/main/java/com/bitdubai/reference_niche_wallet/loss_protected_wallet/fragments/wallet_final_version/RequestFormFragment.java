@@ -163,7 +163,7 @@ public class RequestFormFragment extends AbstractFermatFragment<LossProtectedWal
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         try {
-            rootView = inflater.inflate(R.layout.request_form_base, container, false);
+            rootView = inflater.inflate(R.layout.loss_request_form_base, container, false);
             NetworkStatus networkStatus = getFermatNetworkStatus();
             if (networkStatus != null) {
                 switch (networkStatus) {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,13 +11,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_marginBottom="14dp">
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="16dp"
+            android:paddingLeft="16dp"
+            android:paddingBottom="14dp"
+            android:paddingRight="16dp"
+            android:paddingTop="14dp"
             android:background="@drawable/header_bg_gradient_color">
 
             <LinearLayout
@@ -29,25 +33,46 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="2dp"
-                        android:fontFamily="roboto"
-                        android:textColor="#fff"
-                        android:textSize="24sp"
-                        android:text="12.2 BTC"
-                        android:id="@+id/txt_amount_chunck_detail"/>
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="2dp"
+                            android:fontFamily="roboto"
+                            android:textColor="#fff"
+                            android:textSize="20sp"
+                            android:text="12.2"
+                            android:id="@+id/txt_amount_chunck_detail"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="2dp"
+                            android:layout_marginStart="2dp"
+                            android:textColor="#fff"
+                            android:textSize="14sp"
+                            android:text="BTC"
+                            android:id="@+id/txt_amount_chunck_detail_type"/>
 
-                    <TextView
+                    </LinearLayout>
+
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:fontFamily="roboto medium"
-                        android:textColor="#fff"
-                        android:textSize="16sp"
-                        android:text="(1 BTC = 422 US$)"
-                        android:id="@+id/txt_exchange_rate_chunck_detail"/>
+                        android:layout_gravity="bottom">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="3dp"
+                            android:fontFamily="roboto medium"
+                            android:textColor="#fff"
+                            android:textSize="14sp"
+                            android:text="(1 BTC = 422 US$)"
+                            android:id="@+id/txt_exchange_rate_chunck_detail"/>
+                    </LinearLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -59,17 +84,17 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="roboto medium"
                         android:textColor="#fff"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:text="BTC Spent: 3.05 BTC"
                         android:id="@+id/txt_amount_spent"/>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="2dp"
+                        android:layout_marginStart="2dp"
                         android:layout_gravity="bottom"
                         android:fontFamily="roboto medium"
                         android:textColor="#fff"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:text="(25%)"
                         android:id="@+id/txt_percentage_spent"/>
 
@@ -79,12 +104,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:layout_marginTop="10dp">
+                    android:layout_marginTop="6dp">
                     <ProgressBar
                         style="@android:style/Widget.ProgressBar.Horizontal"
                         android:id="@+id/progressBarLine"
                         android:layout_width="match_parent"
-                        android:layout_height="16dp"
+                        android:layout_height="14dp"
                         android:progressTint="#1D85B8"
                         android:secondaryProgressTint="#073487"/>
                 </LinearLayout>
@@ -117,7 +142,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="Date"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textColor="#666666"
                         android:fontFamily="roboto"/>
                     <TextView
@@ -125,7 +150,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="BTC Spent"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textColor="#666666"
                         android:fontFamily="roboto"/>
                     <TextView
@@ -133,7 +158,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:text="Exchange Rate"
-                        android:textSize="16sp"
+                        android:textSize="14sp"
                         android:textColor="#666666"
                         android:fontFamily="roboto"/>
                 </TableRow>
@@ -144,7 +169,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp">
+            android:paddingTop="10dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"

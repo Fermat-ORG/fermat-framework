@@ -59,6 +59,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import static android.widget.Toast.makeText;
+import static com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R.color.color_spent_progressBar;
+import static com.bitdubai.android_fermat_ccp_loss_protected_wallet_bitcoin.R.color.design_textinput_error_color;
 
 
 /**
@@ -95,6 +97,7 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
     private LinearLayout header;
     private LinearLayout headerSpending;
     private TextView txt_chunck_detail_balance;
+    private TextView txt_chunck_detail_balance_type;
     private TextView txt_chunck_detail_exchangeRate;
     private TextView txt_chunck_detail_amountSpent;
     private TextView txt_percent_spent;
@@ -214,8 +217,10 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
 
             //set transaction data header
             txt_chunck_detail_balance = (TextView) rootView.findViewById(R.id.txt_amount_chunck_detail);
+            txt_chunck_detail_balance_type = (TextView) rootView.findViewById(R.id.txt_amount_chunck_detail_type);
             txt_chunck_detail_exchangeRate = (TextView) rootView.findViewById(R.id.txt_exchange_rate_chunck_detail);
             txt_chunck_detail_amountSpent = (TextView) rootView.findViewById(R.id.txt_amount_spent);
+
             txt_percent_spent = (TextView) rootView.findViewById(R.id.txt_percentage_spent);
             progressBar_percent = (ProgressBar) rootView.findViewById(R.id.progressBarLine);
 
@@ -225,7 +230,12 @@ public class ChunckValuesDetailFragment extends FermatWalletListFragment<Bitcoin
             chunckPercentageSpent = WalletUtils.formatAmountStringNotDecimal(getSpendingPercentage(transaction));
 
             progressBar_percent.setProgress(getSpendingPercentage(transaction));
-            progressBar_percent.setBackgroundColor(Color.BLUE);
+            progressBar_percent.setBackgroundColor(Color.parseColor("#1D85B8"));
+            progressBar_percent.setSecondaryProgress(getSpendingPercentage(transaction) - 100);
+            progressBar_percent.setBackgroundColor(Color.parseColor("#073487"));
+
+            progressBar_percent.setContentDescription(chunckPercentageSpent + "%");
+
 
             txt_chunck_detail_balance.setText(chunckAmount);
             txt_chunck_detail_exchangeRate.setText("(1 BTC = " + chunckExchangeRate + " US$)");
