@@ -298,8 +298,20 @@ public class CloseContractMonitorAgent implements
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                         businessTransactionMetadata = record.getInformation();
                         contractHash = businessTransactionMetadata.getContractHash();
-                        contractType = closeContractBusinessTransactionDao.getContractType(contractHash);
-                        contractTransactionStatus = closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
+
+                        try{
+                            contractType = closeContractBusinessTransactionDao.getContractType(contractHash);
+                        }catch (Exception e){
+                            System.out.println("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractType NOT FOUND. Maybe the contract is not yet in Database");
+                            return;
+                        }
+
+                        try{
+                            contractTransactionStatus = closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
+                        }catch (Exception e){
+                            System.out.println("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractTransactionStatus NOT FOUND. Maybe the contract is not yet in Database");
+                            return;
+                        }
 
                         System.out.println("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractTransactionStatus = " + contractTransactionStatus);
                         if (contractTransactionStatus == ContractTransactionStatus.CHECKING_CLOSING_CONTRACT) {
@@ -339,9 +351,15 @@ public class CloseContractMonitorAgent implements
                     for (Transaction<BusinessTransactionMetadata> record : pendingTransactionList) {
                         businessTransactionMetadata = record.getInformation();
                         contractHash = businessTransactionMetadata.getContractHash();
-                        contractTransactionStatus = closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
 
-                        System.out.println("CLOSE_CONTRACT - INCOMING_NEW_CONTRACT_STATUS_UPDATE - contractTransactionStatus = " + contractTransactionStatus);
+                        try{
+                            contractTransactionStatus = closeContractBusinessTransactionDao.getContractTransactionStatus(contractHash);
+                        }catch (Exception e){
+                            System.out.println("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - contractTransactionStatus NOT FOUND. Maybe the contract is not yet in Database");
+                            return;
+                        }
+
+                        System.out.println("CLOSE_CONTRACT - INCOMING_CONFIRM_BUSINESS_TRANSACTION_RESPONSE - contractTransactionStatus = " + contractTransactionStatus);
                         if (contractTransactionStatus == ContractTransactionStatus.SUBMIT_CLOSING_CONTRACT_CONFIRMATION) {
                             closeContractBusinessTransactionDao.updateContractTransactionStatus(contractHash, ContractTransactionStatus.CONTRACT_COMPLETED);
                             raiseNewContractClosedEvent();
