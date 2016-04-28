@@ -136,89 +136,63 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder> /*implem
             layoutParams.gravity = Gravity.LEFT;
             holder.txtInfo.setLayoutParams(layoutParams);
         }
-//        if (!isMe) {
-//            holder.contentWithBG.setBackgroundResource(R.drawable.out_message_bg);
-//
-//            LinearLayout.LayoutParams layoutParams =
-//                    (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
-//            layoutParams.gravity = Gravity.START;
-//            holder.contentWithBG.setLayoutParams(layoutParams);
-//
-//            RelativeLayout.LayoutParams lp =
-//                    (RelativeLayout.LayoutParams) holder.content.getLayoutParams();
-//            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 0);
-//            lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-//            holder.content.setLayoutParams(lp);
-//            layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
-//            layoutParams.gravity = Gravity.START;
-//            holder.txtMessage.setLayoutParams(layoutParams);
-//
-//            layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
-//            layoutParams.gravity = Gravity.START;
-//            holder.txtInfo.setLayoutParams(layoutParams);
-//        } else {
-//            holder.contentWithBG.setBackgroundResource(R.drawable.in_message_bg);
-//
-//            LinearLayout.LayoutParams layoutParams =
-//                    (LinearLayout.LayoutParams) holder.contentWithBG.getLayoutParams();
-//            layoutParams.gravity = Gravity.END;
-//            holder.contentWithBG.setLayoutParams(layoutParams);
-//
-//            RelativeLayout.LayoutParams lp =
-//                    (RelativeLayout.LayoutParams) holder.content.getLayoutParams();
-//            lp.addRule(RelativeLayout.ALIGN_PARENT_LEFT, 0);
-//            lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-//            holder.content.setLayoutParams(lp);
-//            layoutParams = (LinearLayout.LayoutParams) holder.txtMessage.getLayoutParams();
-//            layoutParams.gravity = Gravity.END;
-//            holder.txtMessage.setLayoutParams(layoutParams);
-//
-//            layoutParams = (LinearLayout.LayoutParams) holder.txtInfo.getLayoutParams();
-//            layoutParams.gravity = Gravity.END;
-//            holder.txtInfo.setLayoutParams(layoutParams);
-//        }
     }
 
-//    public int getCount() {
-//        if (chatMessages != null) {
-//            if(filteredData.size()<chatMessages.size()) {
-//                return filteredData.size();
-//            }else{
-//                return chatMessages.size();}
-//        } else {
-//            return 0;
-//        }
-//    }
-//
-//    @Override
-//    public ChatMessage getItem(int position) {
-//        return filteredData.get(position);
-//    }
-//
-//    @Override
-//    public long getItemId(int position) {
-//        return position;
-//    }
-//
-//    public void setData(ArrayList<ChatMessage> data) {
-//        this.filteredData = data;
-//    }
-//
-//    public Filter getFilter() {
-//        messagesData=null;
-//        for(ChatMessage data:chatMessages){
-//            messagesData.add(data.getMessage());
-//        }
-//        return new ChatFilter(messagesData, this);
-//    }
-//
-//    public void setFilterString(String filterString) {
-//        this.filterString = filterString;
-//    }
-//
-//    public String getFilterString() {
-//        return filterString;
-//    }
+    public int getCount() {
+        if (chatMessages != null) {
+            if (filteredData != null) {
+                if (filteredData.size() <= chatMessages.size()) {
+                    return filteredData.size();
+                } else {
+                    return chatMessages.size();
+                }
+            }else  return chatMessages.size();
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public ChatMessage getItem(int position) {
+        ChatMessage dataM;
+        if (chatMessages != null) {
+            if (filteredData != null) {
+                if (filteredData.size() <= chatMessages.size()) {
+                    dataM= filteredData.get(position);
+                } else {
+                    dataM= chatMessages.get(position);
+                }
+            }else dataM=chatMessages.get(position);
+        } else {
+            dataM=chatMessages.get(position);
+        }
+        return dataM;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    public void setData(ArrayList<ChatMessage> data) {
+        this.filteredData = data;
+    }
+
+    public Filter getFilter() {
+        messagesData=null;
+        for(ChatMessage data:chatMessages){
+            messagesData.add(data.getMessage());
+        }
+        return new ChatFilter(messagesData, this);
+    }
+
+    public void setFilterString(String filterString) {
+        this.filterString = filterString;
+    }
+
+    public String getFilterString() {
+        return filterString;
+    }
 
 
 //
