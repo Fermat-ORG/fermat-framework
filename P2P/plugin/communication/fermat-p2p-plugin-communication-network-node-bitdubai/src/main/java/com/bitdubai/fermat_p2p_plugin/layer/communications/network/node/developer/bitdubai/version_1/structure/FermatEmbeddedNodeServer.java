@@ -63,7 +63,7 @@ public class FermatEmbeddedNodeServer {
     /**
      * Represent the DEFAULT_PORT number
      */
-    public static final int DEFAULT_PORT = 8080;
+    public static final int DEFAULT_PORT = 9090;
 
     /**
      * Represent the DEFAULT_IP number

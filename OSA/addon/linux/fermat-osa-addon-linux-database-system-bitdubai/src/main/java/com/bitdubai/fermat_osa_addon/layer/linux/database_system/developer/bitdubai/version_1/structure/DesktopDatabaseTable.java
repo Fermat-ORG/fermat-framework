@@ -286,7 +286,11 @@ public class DesktopDatabaseTable implements DatabaseTable {
             conn = this.database.getConnection();
             stmt = conn.createStatement();
 
-            rs = stmt.executeQuery("SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence);
+            String SQL_QUERY = "SELECT * FROM " + tableName + makeFilter() + makeOrder() + topSentence;
+
+            System.out.println("QUERY = "+SQL_QUERY);
+
+            rs = stmt.executeQuery(SQL_QUERY);
 
             if(rs.next()) {
 

@@ -9,6 +9,7 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -24,6 +25,9 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.CantCrea
 import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotFoundException;
 import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.exceptions.CantAcquireLocationException;
 import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.utils.LocationProvider;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantUpdateRecordDataBaseException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.NetworkNodeManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
@@ -39,6 +43,9 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseFactory;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDeveloperDatabaseFactoryTemp;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.daos.DaoFactory;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalog;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.exceptions.CantInitializeCommunicationsNetworkNodeP2PDatabaseException;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.ConfigurationManager;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.util.HexadecimalConverter;
@@ -52,6 +59,8 @@ import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.sql.Timestamp;
 
 /**
  * The Class <code>com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.NetworkNodePluginRoot</code> is
@@ -193,7 +202,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              * Get the server ip
              */
             serverIp = IPAddressHelper.getCurrentIPAddress();
-            LOG.info("Server ip "+serverIp);
+            LOG.info("Server ip " + serverIp);
 
             /*
              * Initialize the configuration file
@@ -222,46 +231,23 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             NodeContext.add(NodeContextItem.EVENT_MANAGER              , eventManager            );
             NodeContext.add(NodeContextItem.FERMAT_EMBEDDED_NODE_SERVER, fermatEmbeddedNodeServer);
             NodeContext.add(NodeContextItem.PLUGIN_DATABASE_SYSTEM     , pluginDatabaseSystem    );
-            NodeContext.add(NodeContextItem.PLUGIN_FILE_SYSTEM         , pluginFileSystem        );
-            NodeContext.add(NodeContextItem.PLUGIN_ROOT                , this                    );
+            NodeContext.add(NodeContextItem.PLUGIN_FILE_SYSTEM, pluginFileSystem);
+            NodeContext.add(NodeContextItem.PLUGIN_ROOT, this);
+
+            /*
+             * Process the node catalog
+             */
+            initializeNodeCatalog();
+
 
             LOG.info("Initialize propagate catalog agents ...");
             /*
              * Initialize propagate catalog agents
              */
-
-            this.propagateNodeCatalogAgent = new PropagateNodeCatalogAgent();
-            this.propagateActorCatalogAgent =  new PropagateActorCatalogAgent();
+            this.propagateNodeCatalogAgent = new PropagateNodeCatalogAgent(this);
+            this.propagateActorCatalogAgent =  new PropagateActorCatalogAgent(this);
             propagateNodeCatalogAgent.start();
             propagateActorCatalogAgent.start();
-
-            /*
-             * Validate if the node are the seed server
-             */
-            if (!iAmSeedServer()){
-
-                LOG.info("i Am Seed Server() = " + iAmSeedServer());
-                //fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
-                fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("localhost", 9090);
-
-                /*
-                 * Validate if the node are register in the node catalog
-                 */
-                if (Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTER_IN_CATALOG))){
-
-                    /*
-                     * Validate if the node server profile register has change
-                     */
-                    if (validateNodeProfileRegisterChange()){
-                        requestUpdateProfileInTheNodeCatalog();
-                    }
-
-                }else {
-                    requestRegisterProfileInTheNodeCatalog();
-                }
-
-            }
-
 
         } catch (CantInitializeCommunicationsNetworkNodeP2PDatabaseException exception) {
 
@@ -312,13 +298,13 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         //TODO: CHANGE
         nodeProfile.setIp(serverIp);
-        nodeProfile.setIp("localhost");
+        //nodeProfile.setIp("localhost");
 
         nodeProfile.setDefaultPort(Integer.valueOf(ConfigurationManager.getValue(ConfigurationManager.PORT)));
-        nodeProfile.setDefaultPort(8080);
+        //nodeProfile.setDefaultPort(8080);
 
         nodeProfile.setName(ConfigurationManager.getValue(ConfigurationManager.NODE_NAME));
-        nodeProfile.setName("Otro Server");
+        //nodeProfile.setName("Otro Server");
 
         nodeProfile.setLocation(LocationProvider.acquireLocationThroughIP());
 
@@ -570,6 +556,240 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
         fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest.toJson(), PackageType.UPDATE_NODE_IN_CATALOG_REQUEST);
 
     }
+
+    /**
+     * Process the node into the node catalog
+     */
+    private void initializeNodeCatalog() throws Exception {
+
+        LOG.info("Initialize node catalog");
+        boolean iAm = iAmSeedServer();
+        LOG.info("i Am Seed Server() = " + iAm);
+
+        /*
+         * Validate if the node are the seed server
+         */
+        if (iAm){
+
+            /*
+             * Validate if the node are register in the node catalog
+             */
+            if (Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTER_IN_CATALOG))){
+
+                /*
+                 * Validate if the node server profile register has change
+                 */
+                if (validateNodeProfileRegisterChange()){
+                    updateNodeProfileIntoCatalog();
+                }
+
+            }else {
+                insertNodeProfileIntoCatalog();
+            }
+
+        } else {
+
+            //TODO: UNCOMMENT THE CLIENT
+            //fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
+            fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("localhost", 9090);
+
+            /*
+             * Validate if the node are register in the node catalog
+             */
+            if (Boolean.valueOf(ConfigurationManager.getValue(ConfigurationManager.REGISTER_IN_CATALOG))){
+
+                    /*
+                     * Validate if the node server profile register has change
+                     */
+                if (validateNodeProfileRegisterChange()){
+                    requestUpdateProfileInTheNodeCatalog();
+                }
+
+            }else {
+                requestRegisterProfileInTheNodeCatalog();
+            }
+        }
+
+    }
+
+    /**
+     * Insert the node profile into the catalog
+     * @throws CantInsertRecordDataBaseException
+     */
+    private void insertNodeProfileIntoCatalog() throws Exception {
+
+        LOG.info("Inserting my profile in the node catalog");
+
+        if (!daoFactory.getNodesCatalogDao().exists(nodeProfile.getIdentityPublicKey())){
+
+            /*
+             * Create the NodesCatalog
+             */
+            NodesCatalog nodeCatalog = new NodesCatalog();
+            nodeCatalog.setIp(nodeProfile.getIp());
+            nodeCatalog.setDefaultPort(nodeProfile.getDefaultPort());
+            nodeCatalog.setIdentityPublicKey(nodeProfile.getIdentityPublicKey());
+            nodeCatalog.setName(nodeProfile.getName());
+            nodeCatalog.setOfflineCounter(0);
+            nodeCatalog.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
+
+            //Validate if location are available
+            if (nodeProfile.getLocation() != null){
+                nodeCatalog.setLastLatitude(nodeProfile.getLocation().getLatitude());
+                nodeCatalog.setLastLongitude(nodeProfile.getLocation().getLongitude());
+            }
+
+            /*
+             * Save into the data base
+             */
+            daoFactory.getNodesCatalogDao().create(nodeCatalog);
+
+            /*
+             * Create the NodesCatalog
+             */
+            NodesCatalogTransaction transaction = new NodesCatalogTransaction();
+            transaction.setIp(nodeProfile.getIp());
+            transaction.setDefaultPort(nodeProfile.getDefaultPort());
+            transaction.setIdentityPublicKey(nodeProfile.getIdentityPublicKey());
+            transaction.setName(nodeProfile.getName());
+            transaction.setTransactionType(NodesCatalogTransaction.ADD_TRANSACTION_TYPE);
+            transaction.setHashId(transaction.getHashId());
+            transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
+
+            //Validate if location are available
+            if (nodeProfile.getLocation() != null){
+                transaction.setLastLatitude(nodeProfile.getLocation().getLatitude());
+                transaction.setLastLongitude(nodeProfile.getLocation().getLongitude());
+            }
+
+            /*
+             * Save into the data base
+             */
+            daoFactory.getNodesCatalogTransactionDao().create(transaction);
+
+            /*
+             * Create the NodesCatalog
+             */
+            NodesCatalogTransactionsPendingForPropagation pendingForPropagation = new NodesCatalogTransactionsPendingForPropagation();
+            pendingForPropagation.setIp(nodeProfile.getIp());
+            pendingForPropagation.setDefaultPort(nodeProfile.getDefaultPort());
+            pendingForPropagation.setIdentityPublicKey(nodeProfile.getIdentityPublicKey());
+            pendingForPropagation.setName(nodeProfile.getName());
+            pendingForPropagation.setTransactionType(NodesCatalogTransaction.ADD_TRANSACTION_TYPE);
+            pendingForPropagation.setHashId(transaction.getHashId());
+            pendingForPropagation.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
+
+            //Validate if location are available
+            if (nodeProfile.getLocation() != null){
+                pendingForPropagation.setLastLatitude(nodeProfile.getLocation().getLatitude());
+                pendingForPropagation.setLastLongitude(nodeProfile.getLocation().getLongitude());
+            }
+
+            /*
+             * Save into the data base
+             */
+            daoFactory.getNodesCatalogTransactionsPendingForPropagationDao().create(pendingForPropagation);
+
+            ConfigurationManager.updateValue(ConfigurationManager.REGISTER_IN_CATALOG, String.valueOf(Boolean.TRUE));
+            ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, HexadecimalConverter.convertHexString(nodeProfile.toJson().getBytes("UTF-8")));
+
+        }else {
+
+            ConfigurationManager.updateValue(ConfigurationManager.REGISTER_IN_CATALOG, String.valueOf(Boolean.TRUE));
+            ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, HexadecimalConverter.convertHexString(nodeProfile.toJson().getBytes("UTF-8")));
+        }
+
+    }
+
+    /**
+     * Update the node profile into the catalog
+     * @throws CantInsertRecordDataBaseException
+     */
+    private void updateNodeProfileIntoCatalog() throws Exception {
+
+        LOG.info("Updating my profile in the node catalog");
+
+        if (daoFactory.getNodesCatalogDao().exists(nodeProfile.getIdentityPublicKey())) {
+
+            /*
+             * Create the NodesCatalog
+             */
+            NodesCatalog nodeCatalog = new NodesCatalog();
+            nodeCatalog.setIp(nodeProfile.getIp());
+            nodeCatalog.setDefaultPort(nodeProfile.getDefaultPort());
+            nodeCatalog.setIdentityPublicKey(nodeProfile.getIdentityPublicKey());
+            nodeCatalog.setName(nodeProfile.getName());
+            nodeCatalog.setOfflineCounter(0);
+            nodeCatalog.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
+
+            //Validate if location are available
+            if (nodeProfile.getLocation() != null) {
+                nodeCatalog.setLastLatitude(nodeProfile.getLocation().getLatitude());
+                nodeCatalog.setLastLongitude(nodeProfile.getLocation().getLongitude());
+            }
+
+            /*
+             * Save into the data base
+             */
+            daoFactory.getNodesCatalogDao().update(nodeCatalog);
+
+            /*
+             * Create the NodesCatalog
+             */
+            NodesCatalogTransaction transaction = new NodesCatalogTransaction();
+            transaction.setIp(nodeProfile.getIp());
+            transaction.setDefaultPort(nodeProfile.getDefaultPort());
+            transaction.setIdentityPublicKey(nodeProfile.getIdentityPublicKey());
+            transaction.setName(nodeProfile.getName());
+            transaction.setTransactionType(NodesCatalogTransaction.UPDATE_TRANSACTION_TYPE);
+            transaction.setHashId(transaction.getHashId());
+            transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
+
+            //Validate if location are available
+            if (nodeProfile.getLocation() != null) {
+                transaction.setLastLatitude(nodeProfile.getLocation().getLatitude());
+                transaction.setLastLongitude(nodeProfile.getLocation().getLongitude());
+            }
+
+            /*
+             * Save into the data base
+             */
+            daoFactory.getNodesCatalogTransactionDao().create(transaction);
+
+            /*
+             * Create the NodesCatalog
+             */
+            NodesCatalogTransactionsPendingForPropagation pendingForPropagation = new NodesCatalogTransactionsPendingForPropagation();
+            pendingForPropagation.setIp(nodeProfile.getIp());
+            pendingForPropagation.setDefaultPort(nodeProfile.getDefaultPort());
+            pendingForPropagation.setIdentityPublicKey(nodeProfile.getIdentityPublicKey());
+            pendingForPropagation.setName(nodeProfile.getName());
+            pendingForPropagation.setTransactionType(NodesCatalogTransaction.UPDATE_TRANSACTION_TYPE);
+            pendingForPropagation.setHashId(transaction.getHashId());
+            pendingForPropagation.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
+
+            //Validate if location are available
+            if (nodeProfile.getLocation() != null) {
+                pendingForPropagation.setLastLatitude(nodeProfile.getLocation().getLatitude());
+                pendingForPropagation.setLastLongitude(nodeProfile.getLocation().getLongitude());
+            }
+
+            /*
+             * Save into the data base
+             */
+            daoFactory.getNodesCatalogTransactionsPendingForPropagationDao().create(pendingForPropagation);
+
+            ConfigurationManager.updateValue(ConfigurationManager.REGISTER_IN_CATALOG, String.valueOf(Boolean.TRUE));
+            ConfigurationManager.updateValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE, HexadecimalConverter.convertHexString(nodeProfile.toJson().getBytes("UTF-8")));
+
+        } else {
+
+            insertNodeProfileIntoCatalog();
+
+        }
+
+    }
+
 
     /**
      * Get the identity

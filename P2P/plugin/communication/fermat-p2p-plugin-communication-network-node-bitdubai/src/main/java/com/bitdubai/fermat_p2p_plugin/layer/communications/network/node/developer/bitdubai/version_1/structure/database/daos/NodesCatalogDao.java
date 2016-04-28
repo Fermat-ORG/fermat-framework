@@ -9,6 +9,7 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterOrder;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseFilterType;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
@@ -91,12 +92,13 @@ public class NodesCatalogDao  extends AbstractBaseDao<NodesCatalog> {
      *
      * @throws CantReadRecordDataBaseException if something goes wrong.
      */
-    public final List<NodesCatalog> getNodeCatalogueListToShare() throws CantReadRecordDataBaseException {
+    public final List<NodesCatalog> getNodeCatalogueListToShare(String identityPublicKey) throws CantReadRecordDataBaseException {
 
         try {
 
             // load the data base to memory
             DatabaseTable table = getDatabaseTable();
+            table.addStringFilter(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME, identityPublicKey, DatabaseFilterType.NOT_EQUALS);
             table.addFilterOrder(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_LATE_NOTIFICATION_COUNTER_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             table.addFilterOrder(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_OFFLINE_COUNTER_COLUMN_NAME, DatabaseFilterOrder.ASCENDING);
             table.setFilterTop("10");
@@ -107,8 +109,13 @@ public class NodesCatalogDao  extends AbstractBaseDao<NodesCatalog> {
             final List<NodesCatalog> list = new ArrayList<>();
 
             // Convert into entity objects and add to the list.
-            for (DatabaseTableRecord record : records)
-                list.add(getEntityFromDatabaseTableRecord(record));
+            for (DatabaseTableRecord record : records) {
+
+                if (!record.getStringValue(CommunicationsNetworkNodeP2PDatabaseConstants.NODES_CATALOG_IDENTITY_PUBLIC_KEY_COLUMN_NAME).equals(identityPublicKey)){
+                    list.add(getEntityFromDatabaseTableRecord(record));
+                }
+
+            }
 
             return list;
 

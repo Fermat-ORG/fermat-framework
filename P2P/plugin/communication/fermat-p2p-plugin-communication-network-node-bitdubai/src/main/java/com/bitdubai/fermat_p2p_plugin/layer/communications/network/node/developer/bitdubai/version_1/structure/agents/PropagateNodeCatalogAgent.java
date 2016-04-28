@@ -16,6 +16,7 @@ import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantUpdateRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.NetworkNodePluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.clients.FermatWebSocketClientNodeChannel;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
@@ -78,9 +79,15 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
     private NodesCatalogTransactionsPendingForPropagationDao nodesCatalogTransactionsPendingForPropagationDao;
 
     /**
+     * Represent the networkNodePluginRoot
+     */
+    private NetworkNodePluginRoot networkNodePluginRoot;
+
+    /**
      * Constructor
      */
-    public PropagateNodeCatalogAgent(){
+    public PropagateNodeCatalogAgent(NetworkNodePluginRoot networkNodePluginRoot){
+        this.networkNodePluginRoot = networkNodePluginRoot;
         this.scheduledThreadPool = Executors.newScheduledThreadPool(1);
         this.scheduledFutures    = new ArrayList<>();
         this.nodesCatalogDao     = ((DaoFactory) NodeContext.get(NodeContextItem.DAO_FACTORY)).getNodesCatalogDao();
@@ -94,7 +101,7 @@ public class PropagateNodeCatalogAgent extends FermatAgent {
 
         LOG.info("Executing propagateCatalog()");
 
-        List<NodesCatalog> nodesCatalogsList = nodesCatalogDao.getNodeCatalogueListToShare();
+        List<NodesCatalog> nodesCatalogsList = nodesCatalogDao.getNodeCatalogueListToShare(networkNodePluginRoot.getIdentity().getPublicKey());
         List<NodesCatalogTransaction> transactionList = getNodesCatalogTransactionsPendingForPropagationBlock();
 
         if ((nodesCatalogsList != null && !nodesCatalogsList.isEmpty()) &&
