@@ -145,23 +145,21 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                 if (bitcoinWalletSettings.getBlockchainNetworkType() == null) {
                     bitcoinWalletSettings.setBlockchainNetworkType(BlockchainNetworkType.getDefaultBlockchainNetworkType());
                 }
-                settingsManager.persistSettings(appSession.getAppPublicKey(), bitcoinWalletSettings);
+
+                blockchainNetworkType = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
 
             }
 
-            blockchainNetworkType = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getBlockchainNetworkType();
-            lossProtectedEnabled = settingsManager.loadAndGetSettings(appSession.getAppPublicKey()).getLossProtectedEnabled();
-            System.out.println("Network Type" + blockchainNetworkType);
+
             cryptoWallet = appSession.getModuleManager().getCryptoWallet();
+
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         } catch (CantGetSettingsException e) {
             e.printStackTrace();
         } catch (SettingsNotFoundException e) {
             e.printStackTrace();
-        } catch (CantPersistSettingsException e) {
-            e.printStackTrace();
-        } catch (CantGetCryptoLossProtectedWalletException e) {
+        }  catch (CantGetCryptoLossProtectedWalletException e) {
             appSession.getErrorManager().reportUnexpectedWalletException(Wallets.CWP_WALLET_RUNTIME_WALLET_BITCOIN_WALLET_ALL_BITDUBAI, UnexpectedWalletExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_FRAGMENT, e);
             showMessage(getActivity(), "CantGetCryptoWalletException- " + e.getMessage());
 
