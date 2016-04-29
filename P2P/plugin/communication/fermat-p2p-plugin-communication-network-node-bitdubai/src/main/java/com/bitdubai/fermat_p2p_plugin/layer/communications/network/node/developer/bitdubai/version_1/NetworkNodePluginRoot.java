@@ -9,7 +9,6 @@ import com.bitdubai.fermat_api.layer.all_definition.enums.Addons;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Layers;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Platforms;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
-import com.bitdubai.fermat_api.layer.all_definition.exceptions.InvalidParameterException;
 import com.bitdubai.fermat_api.layer.all_definition.util.Version;
 import com.bitdubai.fermat_api.layer.all_definition.util.ip_address.IPAddressHelper;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.Database;
@@ -26,8 +25,7 @@ import com.bitdubai.fermat_api.layer.osa_android.file_system.exceptions.FileNotF
 import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.exceptions.CantAcquireLocationException;
 import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.utils.LocationProvider;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantInsertRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantUpdateRecordDataBaseException;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.RecordNotFoundException;
+import com.bitdubai.fermat_p2p_api.layer.all_definition.common.network_services.template.exceptions.CantReadRecordDataBaseException;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.NetworkNodeManager;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
@@ -38,6 +36,8 @@ import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develope
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.AddNodeToCatalogMsgRequest;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.GetActorCatalogTransactionsMsjRequest;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.GetNodeCatalogTransactionsMsjRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.UpdateNodeInCatalogMsgRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.database.CommunicationsNetworkNodeP2PDatabaseFactory;
@@ -59,7 +59,6 @@ import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.sql.Timestamp;
 
 /**
@@ -146,11 +145,6 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
      * Represent the fermatEmbeddedNodeServer instance
      */
     private FermatEmbeddedNodeServer fermatEmbeddedNodeServer;
-
-    /**
-     * Represent the fermatWebSocketClientNodeChannel instance
-     */
-    private FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel;
 
     /**
      * Represent the nodeProfile
@@ -246,8 +240,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
              */
             this.propagateNodeCatalogAgent = new PropagateNodeCatalogAgent(this);
             this.propagateActorCatalogAgent =  new PropagateActorCatalogAgent(this);
-            propagateNodeCatalogAgent.start();
-            propagateActorCatalogAgent.start();
+          //  propagateNodeCatalogAgent.start();
+          //  propagateActorCatalogAgent.start();
 
         } catch (CantInitializeCommunicationsNetworkNodeP2PDatabaseException exception) {
 
@@ -501,6 +495,17 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     }
 
     /**
+     * Create  a new instance of the client to the seed node
+     * @return
+     */
+    private FermatWebSocketClientNodeChannel getFermatWebSocketClientNodeChannelInstanceSeedNode(){
+
+        //return new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
+        return new FermatWebSocketClientNodeChannel("localhost", 9090);
+
+    }
+
+    /**
      * Validate if the node is the seed server
      *
      * @return boolean
@@ -522,7 +527,7 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         String jsonString = new String(HexadecimalConverter.convertHexStringToByteArray(ConfigurationManager.getValue(ConfigurationManager.LAST_REGISTER_NODE_PROFILE)));
 
-        LOG.info("Last Profile Register = "+jsonString);
+        LOG.info("Last Profile Register = " + jsonString);
 
         NodeProfile lastNodeProfileRegister = NodeProfile.fromJson(jsonString);
         if (!nodeProfile.equals(lastNodeProfileRegister)){
@@ -540,6 +545,8 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     private void requestRegisterProfileInTheNodeCatalog(){
 
         LOG.info("Request register profile in the node catalog");
+
+        FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
         AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
         fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
 
@@ -552,10 +559,47 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
     private void requestUpdateProfileInTheNodeCatalog(){
 
         LOG.info("Request update profile in the node catalog");
+
+        FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
         UpdateNodeInCatalogMsgRequest updateNodeInCatalogMsgRequest = new UpdateNodeInCatalogMsgRequest(nodeProfile);
         fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest.toJson(), PackageType.UPDATE_NODE_IN_CATALOG_REQUEST);
 
     }
+
+    /**
+     * Validate if the catalog if empty request the data to the seed server
+     *
+     * @throws CantReadRecordDataBaseException
+     */
+    private void requestNodesCatalogTransactions() throws CantReadRecordDataBaseException {
+
+        if (daoFactory.getNodesCatalogDao().getAllCount() <= 0){
+            LOG.info("Request the list of transactions in the node catalog");
+
+            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
+            GetNodeCatalogTransactionsMsjRequest getNodeCatalogTransactionsMsjRequest = new GetNodeCatalogTransactionsMsjRequest(0, 250);
+            fermatWebSocketClientNodeChannel.sendMessage(getNodeCatalogTransactionsMsjRequest.toJson(), PackageType.GET_NODE_CATALOG_TRANSACTIONS_REQUEST);
+        }
+
+    }
+
+    /**
+     * Validate if the catalog if empty request the data to the seed server
+     *
+     * @throws CantReadRecordDataBaseException
+     */
+    private void requestActorsCatalogTransactions() throws CantReadRecordDataBaseException {
+
+        if (daoFactory.getActorsCatalogDao().getAllCount() <= 0) {
+            LOG.info("Request the list of transactions in the actors catalog");
+
+            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = getFermatWebSocketClientNodeChannelInstanceSeedNode();
+            GetActorCatalogTransactionsMsjRequest getActorCatalogTransactionsMsjRequest = new GetActorCatalogTransactionsMsjRequest(0, 250);
+            fermatWebSocketClientNodeChannel.sendMessage(getActorCatalogTransactionsMsjRequest.toJson(), PackageType.GET_ACTOR_CATALOG_TRANSACTIONS_REQUEST);
+        }
+
+    }
+
 
     /**
      * Process the node into the node catalog
@@ -589,10 +633,6 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
 
         } else {
 
-            //TODO: UNCOMMENT THE CLIENT
-            fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel(SeedServerConf.DEFAULT_IP, SeedServerConf.DEFAULT_PORT);
-            //fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("localhost", 9090);
-
             /*
              * Validate if the node are register in the node catalog
              */
@@ -608,6 +648,10 @@ public class NetworkNodePluginRoot extends AbstractPlugin implements NetworkNode
             }else {
                 requestRegisterProfileInTheNodeCatalog();
             }
+
+            requestNodesCatalogTransactions();
+            requestActorsCatalogTransactions();
+
         }
 
     }

@@ -7,12 +7,12 @@
 package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.rest;
 
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -26,13 +26,10 @@ import javax.ws.rs.core.MediaType;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@Path("/availablenodes")
+@Path("/available/nodes")
 public class AvailableNodes implements RestFulServices {
 
-
-
     @GET
-    @Path("/listavailablenodesprofile")
     @Produces(MediaType.APPLICATION_JSON)
     public String listAvailableNodesProfile(){
 

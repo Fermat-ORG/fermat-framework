@@ -8,11 +8,9 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.HeadersAttName;
-import com.bitdubai.fermat_p2p_api.layer.p2p_communication.commons.enums.JsonAttNamesConstants;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.NetworkNodePluginRoot;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContext;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.context.NodeContextItem;
-import com.google.gson.JsonObject;
 
 import org.apache.commons.lang.ClassUtils;
 import org.jboss.logging.Logger;
@@ -52,7 +50,7 @@ public class ClientNodeChannelConfigurator extends ClientEndpointConfig.Configur
          */
         //headers.put(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME, Arrays.asList(new ECCKeyPair().getPublicKey()));
 
-         headers.put(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME, Arrays.asList(((NetworkNodePluginRoot) NodeContext.get(NodeContextItem.PLUGIN_ROOT)).getIdentity().getPublicKey()));
+        headers.put(HeadersAttName.REMOTE_NPKI_ATT_HEADER_NAME, Arrays.asList(((NetworkNodePluginRoot) NodeContext.get(NodeContextItem.PLUGIN_ROOT)).getIdentity().getPublicKey()));
     }
 
     @Override

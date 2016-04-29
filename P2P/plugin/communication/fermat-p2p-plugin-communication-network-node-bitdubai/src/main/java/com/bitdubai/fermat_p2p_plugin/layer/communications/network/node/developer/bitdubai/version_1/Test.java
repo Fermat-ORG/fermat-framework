@@ -9,14 +9,14 @@ package com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.develop
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.osa_android.location_system.Location;
 import com.bitdubai.fermat_osa_addon.layer.linux.device_location.developer.bitdubai.version_1.utils.LocationProvider;
-import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.ActorProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.commons.profiles.NodeProfile;
 import com.bitdubai.fermat_p2p_api.layer.all_definition.communication.enums.PackageType;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.channels.endpoinsts.clients.FermatWebSocketClientNodeChannel;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.AddNodeToCatalogMsgRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.ReceiveActorCatalogTransactionsMsjRequest;
-import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.UpdateNodeInCatalogMsgRequest;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.data.node.request.ReceiveNodeCatalogTransactionsMsjRequest;
 import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.ActorsCatalogTransaction;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransaction;
+import com.bitdubai.fermat_p2p_plugin.layer.communications.network.node.developer.bitdubai.version_1.structure.entities.NodesCatalogTransactionsPendingForPropagation;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -54,19 +54,19 @@ public class Test {
 
             FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel = new FermatWebSocketClientNodeChannel("localhost", 9090);
 
-          // AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
-           //fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
+            // AddNodeToCatalogMsgRequest addNodeToCatalogMsgRequest = new AddNodeToCatalogMsgRequest(nodeProfile);
+            //fermatWebSocketClientNodeChannel.sendMessage(addNodeToCatalogMsgRequest.toJson(), PackageType.ADD_NODE_TO_CATALOG_REQUEST);
 
 
-          //   nodeProfile.setDefaultPort(9090);
-          //   UpdateNodeInCatalogMsgRequest updateNodeInCatalogMsgRequest = new UpdateNodeInCatalogMsgRequest(nodeProfile);
-          //   fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest.toJson(), PackageType.UPDATE_NODE_IN_CATALOG_REQUEST);
+            //   nodeProfile.setDefaultPort(9090);
+            //   UpdateNodeInCatalogMsgRequest updateNodeInCatalogMsgRequest = new UpdateNodeInCatalogMsgRequest(nodeProfile);
+            //   fermatWebSocketClientNodeChannel.sendMessage(updateNodeInCatalogMsgRequest.toJson(), PackageType.UPDATE_NODE_IN_CATALOG_REQUEST);
 
 
             List<ActorsCatalogTransaction> actors = new ArrayList<>();
             Location location = LocationProvider.acquireLocationThroughIP();
 
-
+/*
             for (int i = 0; i < 5; i++) {
 
                 ECCKeyPair id = new ECCKeyPair();
@@ -80,7 +80,7 @@ public class Test {
                 actorProfile.setPhoto(new byte[0]);
                 actorProfile.setLastLatitude(location.getLatitude());
                 actorProfile.setLastLongitude(location.getLongitude());
-                actorProfile.setHostedTimestamp(new Timestamp(System.currentTimeMillis()+i));
+                actorProfile.setHostedTimestamp(new Timestamp(System.currentTimeMillis() + i));
                 actorProfile.setNodeIdentityPublicKey(nodeProfile.getIdentityPublicKey());
                 actorProfile.setTransactionType(ActorsCatalogTransaction.ADD_TRANSACTION_TYPE);
                 actorProfile.setHashId(String.valueOf(actorProfile.hashCode()));
@@ -88,14 +88,36 @@ public class Test {
                 actors.add(actorProfile);
             }
 
+
             ReceiveActorCatalogTransactionsMsjRequest receiveActorCatalogTransactionsMsjRequest = new ReceiveActorCatalogTransactionsMsjRequest(actors);
-
-            System.out.println(receiveActorCatalogTransactionsMsjRequest.toJson());
-
             fermatWebSocketClientNodeChannel.sendMessage(receiveActorCatalogTransactionsMsjRequest.toJson(), PackageType.RECEIVE_ACTOR_CATALOG_TRANSACTIONS_REQUEST);
+*/
+            List<NodesCatalogTransaction> nodes = new ArrayList<>();
 
+            for (int i = 0; i < 300; i++) {
 
-            Thread.currentThread().sleep(30000);
+                ECCKeyPair id = new ECCKeyPair();
+
+                NodesCatalogTransaction transaction = new NodesCatalogTransactionsPendingForPropagation();
+                transaction.setIp("1.1.1."+i);
+                transaction.setDefaultPort(9090 + i);
+                transaction.setIdentityPublicKey(id.getPublicKey());
+                transaction.setName("Node Name " + i);
+                transaction.setTransactionType(NodesCatalogTransaction.ADD_TRANSACTION_TYPE);
+                transaction.setHashId(transaction.getHashId());
+                transaction.setLastLatitude(location.getLatitude()+i);
+                transaction.setLastLongitude(location.getLongitude()+i);
+                transaction.setLastConnectionTimestamp(new Timestamp(System.currentTimeMillis()));
+                transaction.setRegisteredTimestamp(new Timestamp(System.currentTimeMillis()));
+
+                nodes.add(transaction);
+            }
+
+            FermatWebSocketClientNodeChannel fermatWebSocketClientNodeChannel2 = new FermatWebSocketClientNodeChannel("localhost", 9090);
+            ReceiveNodeCatalogTransactionsMsjRequest receiveNodeCatalogTransactionsMsjRequest = new ReceiveNodeCatalogTransactionsMsjRequest(nodes);
+            fermatWebSocketClientNodeChannel2.sendMessage(receiveNodeCatalogTransactionsMsjRequest.toJson(), PackageType.RECEIVE_NODE_CATALOG_TRANSACTIONS_REQUEST);
+
+            Thread.currentThread().sleep(40000);
             System.out.println("FIN");
 
            /* System.out.println("***********************************************************************");
