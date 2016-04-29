@@ -81,22 +81,33 @@ public class ActorConnectionEventActions {
      */
     public void handleArtistNewsEvent(EventSource eventSource) throws CantHandleNewsEventException {
         try {
+            List<ArtistConnectionRequest> artistConnectionRequests;
+            List<FanConnectionRequest> fanConnectionRequests;
             switch (eventSource){
                 case ARTIST_ACTOR_CONNECTION:
-                    final List<ArtistConnectionRequest> artistConnectionRequests = artistNetworkService.listPendingConnectionNews(
+                    artistConnectionRequests = artistNetworkService.listPendingConnectionNews(
                             PlatformComponentType.ART_FAN);
+                    for (final ArtistConnectionRequest request : artistConnectionRequests)
+                        this.handleArtistRequestConnection(request, Actors.ART_ARTIST);
+                    artistConnectionRequests = artistNetworkService.listPendingConnectionNews(
+                            PlatformComponentType.ART_ARTIST);
                     for (final ArtistConnectionRequest request : artistConnectionRequests)
                         this.handleArtistRequestConnection(request, Actors.ART_ARTIST);
                     break;
                 case ACTOR_NETWORK_SERVICE_FAN:
-                    final List<FanConnectionRequest> fanConnectionRequests = fanNetworkService.listPendingConnectionNews(
+                    fanConnectionRequests = fanNetworkService.listPendingConnectionNews(
                             PlatformComponentType.ART_FAN);
+                    for (final FanConnectionRequest request : fanConnectionRequests)
+                        this.handleFanRequestConnection(request, Actors.ART_FAN);
+                    fanConnectionRequests = fanNetworkService.listPendingConnectionNews(
+                            PlatformComponentType.ART_ARTIST);
                     for (final FanConnectionRequest request : fanConnectionRequests)
                         this.handleFanRequestConnection(request, Actors.ART_FAN);
                     break;
                 default:
-                    //TODO: throw an exception
-                    break;
+                    throw new CantHandleNewsEventException(
+                            "Unexpected event source when processing News Event in Fan Actor " +
+                                    "Network Service");
             }
 
         } catch(CantListPendingConnectionRequestsException |
@@ -280,8 +291,8 @@ public class ActorConnectionEventActions {
                 handleFanUpdateEvent();
                 break;
             default:
-                //TODO: throw an exception.
-                break;
+                throw new CantHandleNewsEventException(
+                        "Unexpected Event source from Update event in Fan Actor Network service.");
         }
     }
 
@@ -294,8 +305,8 @@ public class ActorConnectionEventActions {
             final List<ArtistConnectionRequest> list = artistNetworkService.
                     listPendingConnectionUpdates();
             for (final ArtistConnectionRequest request : list) {
-                if (request.getRequestType() == RequestType.RECEIVED  &&
-                        request.getSenderActorType() == PlatformComponentType.ART_FAN) {
+                if (request.getRequestType() == RequestType.RECEIVED  /*&&
+                        request.getSenderActorType() == PlatformComponentType.ART_FAN*/) {
                     switch (request.getRequestAction()) {
                         case ACCEPT:
                             this.handleAcceptConnection(request.getRequestId());
@@ -328,8 +339,8 @@ public class ActorConnectionEventActions {
             final List<FanConnectionRequest> list = fanNetworkService.
                     listPendingConnectionUpdates();
             for (final FanConnectionRequest request : list) {
-                if (request.getRequestType() == RequestType.SENT  &&
-                        request.getSenderActorType() == PlatformComponentType.ART_FAN) {
+                if (request.getRequestType() == RequestType.SENT  /*&&
+                        request.getSenderActorType() == PlatformComponentType.ART_FAN*/) {
                     switch (request.getRequestAction()) {
                         case ACCEPT:
                             this.handleAcceptConnection(request.getRequestId());

@@ -4,6 +4,22 @@ apply plugin: 'findbugs'
 apply plugin: 'checkstyle'
 apply plugin: 'pmd'
 
+
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+version = '1.0'
+
+configurations {
+    cucumberRuntime {
+        extendsFrom testRuntime
+    }
+}
+
+repositories {
+    mavenCentral ()
+}
+
 dependencies {
     compile project(':fermat-api')
     compile project(':fermat-art-api')
@@ -16,6 +32,8 @@ dependencies {
     testCompile 'info.cukes:cucumber-java:1.2.4'
     testCompile 'info.cukes:cucumber-junit:1.2.4'
     testCompile 'org.mockito:mockito-core:1.9.5'
+    testCompile 'org.powermock:powermock-module-junit4:1.5.2'
+    testCompile 'org.powermock:powermock-api-mockito:1.5.2'
 }
 
 pmd {
@@ -52,17 +70,8 @@ task testCoverage(dependsOn: jacocoTestReport) << {
     println jacocoHtmlReport
 }
 
-configurations {
-    cucumberRuntime {
-        extendsFrom testRuntime
-    }
-}
+
 
 jacocoTestReport.dependsOn clean, test
 jacocoTestReport.mustRunAfter test
 test.mustRunAfter clean
-dependencies {
-    compile 'junit:junit:4.12'
-    compile 'org.powermock:powermock-module-junit4:1.5.2'
-    compile 'org.powermock:powermock-api-mockito:1.5.2'
-}
