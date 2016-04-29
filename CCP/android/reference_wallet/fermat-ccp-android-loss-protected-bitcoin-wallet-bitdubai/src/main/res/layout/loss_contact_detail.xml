@@ -213,7 +213,7 @@
                     android:padding="3dp"
                     android:clickable="true"
                     android:text="@string/request_text"
-                    android:background="#DC5A0F"
+                    android:background="#073487"
                     android:textColor="#fff"
                     android:layout_weight="1"
                     android:layout_marginRight="8dp"

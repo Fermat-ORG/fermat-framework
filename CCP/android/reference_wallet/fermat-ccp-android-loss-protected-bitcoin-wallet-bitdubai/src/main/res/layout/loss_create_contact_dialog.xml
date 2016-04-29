@@ -186,11 +186,10 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:background="#DC5A0F"
+            android:background="#073487"
             android:text="@string/cancel_text"
             android:textColor="#ffff"
             android:textSize="14sp"
-            android:layout_marginRight="10dp"
             />
 
         <Button
