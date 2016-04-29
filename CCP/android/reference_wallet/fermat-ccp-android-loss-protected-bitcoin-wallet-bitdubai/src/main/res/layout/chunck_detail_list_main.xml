@@ -100,7 +100,7 @@
 
                 </LinearLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
@@ -108,11 +108,23 @@
                     <ProgressBar
                         style="@android:style/Widget.ProgressBar.Horizontal"
                         android:id="@+id/progressBarLine"
+                        android:max="100"
+                        android:layout_centerInParent="true"
                         android:layout_width="match_parent"
                         android:layout_height="14dp"
                         android:progressTint="#1D85B8"
                         android:secondaryProgressTint="#073487"/>
-                </LinearLayout>
+                    <TextView
+                        android:id="@+id/info_into_progress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="#fff"
+                        android:layout_centerInParent="true"
+                        android:textSize="10sp"
+                        android:text="25%" />
+
+
+                </RelativeLayout>
             </LinearLayout>
 
 
