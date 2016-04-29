@@ -3,6 +3,7 @@ package com.bitdubai.fermat_art_plugin.layer.identity.fan.developer.bitdubai.ver
 import com.bitdubai.fermat_api.FermatException;
 import com.bitdubai.fermat_api.layer.all_definition.crypto.asymmetric.ECCKeyPair;
 import com.bitdubai.fermat_api.layer.all_definition.enums.Plugins;
+import com.bitdubai.fermat_api.layer.all_definition.util.XMLParser;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DealsWithPluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.file_system.DealsWithPluginFileSystem;
@@ -33,6 +34,7 @@ import com.bitdubai.fermat_pip_api.layer.user.device_user.interfaces.DeviceUserM
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.Fan;
 import com.bitdubai.fermat_tky_api.layer.identity.fan.interfaces.TokenlyFanIdentityManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -162,7 +164,8 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
             String alias,
             byte[] profileImage,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws CantCreateFanIdentityException {
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantCreateFanIdentityException {
         try {
             DeviceUser loggedUser = deviceUserManager.getLoggedInDeviceUser();
 
@@ -177,7 +180,8 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
                     loggedUser,
                     profileImage,
                     externalIdentityID,
-                    artExternalPlatform);
+                    artExternalPlatform,
+                    externalUsername);
 
             Thread registerToAns = new Thread(new Runnable() {
                 @Override
@@ -197,7 +201,8 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
                     externalIdentityID,
                     pluginFileSystem,
                     pluginId,
-                    artExternalPlatform);
+                    artExternalPlatform,
+                    externalUsername);
         } catch (CantGetLoggedInDeviceUserException e) {
             throw new CantCreateFanIdentityException("CAN'T CREATE NEW Fanatic IDENTITY", e, "Error getting current logged in device user", "");
         } catch (Exception e) {
@@ -219,15 +224,23 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
             String publicKey,
             byte[] profileImage,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws CantUpdateFanIdentityException {
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantUpdateFanIdentityException {
         try {
             getFanaticIdentityDao().updateIdentityFanaticUser(
                     publicKey,
                     alias,
                     profileImage,
                     externalIdentityID,
-                    artExternalPlatform);
-            final FanExposingData fanExposingData = new FanExposingData(publicKey,alias,profileImage);
+                    artExternalPlatform,
+                    externalUsername);
+            List extraDataList = new ArrayList();
+            extraDataList.add(profileImage);
+            HashMap<ArtExternalPlatform,String> externalPlatformInformationMap = new HashMap<>();
+            externalPlatformInformationMap.put(artExternalPlatform, externalUsername);
+            extraDataList.add(externalPlatformInformationMap);
+            String extraDataString = XMLParser.parseObject(extraDataList);
+            final FanExposingData fanExposingData = new FanExposingData(publicKey,alias,extraDataString);
             Thread updateToAns = new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -246,8 +259,17 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
 
     public void registerIdentitiesANS(String publicKey) throws CantPublishIdentityException, IdentityNotFoundException {
         try {
-            Fanatic Fanatic = getIdentityFanatic(publicKey);
-            FanExposingData fanExposingData = new FanExposingData(Fanatic.getPublicKey(),Fanatic.getAlias(),Fanatic.getProfileImage());
+            Fanatic fanatic = getIdentityFanatic(publicKey);
+            List extraDataList = new ArrayList();
+            extraDataList.add(fanatic.getProfileImage());
+            HashMap<ArtExternalPlatform,String> externalPlatformInformationMap = new HashMap<>();
+            externalPlatformInformationMap.put(fanatic.getExternalPlatform(),fanatic.getExternalUsername());
+            extraDataList.add(externalPlatformInformationMap);
+            String extraDataString = XMLParser.parseObject(extraDataList);
+            FanExposingData fanExposingData = new FanExposingData(
+                    fanatic.getPublicKey(),
+                    fanatic.getAlias(),
+                    extraDataString);
             fanManager.exposeIdentity(fanExposingData);
         } catch (CantGetFanIdentityException | CantExposeIdentityException e) {
             e.printStackTrace();
@@ -306,7 +328,13 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
                         case TOKENLY:
                             final Fan tokenlyArtist = tokenlyFanIdentityManager.getFanIdentity(Fanatic.getExternalIdentityID());
                             if(tokenlyArtist != null){
-                                artIdentity = new FanaticIdentityImp(tokenlyArtist.getPublicKey(),tokenlyArtist.getProfileImage(),tokenlyArtist.getUsername(),tokenlyArtist.getId(),externalPlatform);
+                                artIdentity = new FanaticIdentityImp(
+                                        tokenlyArtist.getPublicKey(),
+                                        tokenlyArtist.getProfileImage(),
+                                        tokenlyArtist.getUsername(),
+                                        tokenlyArtist.getId(),
+                                        externalPlatform,
+                                        tokenlyArtist.getUsername());
                             }
                             break;
                     }
@@ -336,8 +364,14 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
             String alias,
             byte[] imageBytes,
             UUID externalIdentityId,
-            ArtExternalPlatform artExternalPlatform) throws CantCreateFanIdentityException {
-        return createNewIdentityFanatic(alias, imageBytes, externalIdentityId,artExternalPlatform);
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantCreateFanIdentityException {
+        return createNewIdentityFanatic(
+                alias,
+                imageBytes,
+                externalIdentityId,
+                artExternalPlatform,
+                externalUsername);
     }
 
     /**
@@ -355,8 +389,15 @@ public class IdentityFanaticManagerImpl implements DealsWithErrors, DealsWithLog
             String publicKey,
             byte[] imageProfile,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws CantUpdateFanIdentityException {
-        updateIdentityFanatic(alias, publicKey, imageProfile, externalIdentityID, artExternalPlatform);
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantUpdateFanIdentityException {
+        updateIdentityFanatic(
+                alias,
+                publicKey,
+                imageProfile,
+                externalIdentityID,
+                artExternalPlatform,
+                externalUsername);
     }
 
     @Override

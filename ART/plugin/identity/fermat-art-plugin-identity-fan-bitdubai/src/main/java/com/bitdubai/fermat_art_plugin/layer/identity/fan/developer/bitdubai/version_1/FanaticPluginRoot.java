@@ -170,17 +170,23 @@ public class FanaticPluginRoot extends AbstractPlugin implements
     }
 
     private void exposeIdentities(){
-        ArrayList<FanExposingData> artistExposingDatas = new ArrayList<>();
+        ArrayList<FanExposingData> artistExposingData = new ArrayList<>();
         try {
             for (Fanatic fan :
                     identityFanaticManager.listIdentitiesFromCurrentDeviceUser()) {
-                artistExposingDatas.add(new FanExposingData(
+                List extraDataList = new ArrayList();
+                extraDataList.add(fan.getProfileImage());
+                HashMap<ArtExternalPlatform,String> externalPlatformInformationMap = new HashMap<>();
+                externalPlatformInformationMap.put(fan.getExternalPlatform(),fan.getExternalUsername());
+                extraDataList.add(externalPlatformInformationMap);
+                String extraDataString = XMLParser.parseObject(extraDataList);
+                artistExposingData.add(new FanExposingData(
                         fan.getPublicKey(),
                         fan.getAlias(),
-                        fan.getProfileImage()
+                        extraDataString
                 ));
             }
-            fanManager.exposeIdentities(artistExposingDatas);
+            fanManager.exposeIdentities(artistExposingData);
         } catch (CantListFanIdentitiesException e) {
             e.printStackTrace();
         } catch (CantExposeIdentitiesException e) {
@@ -219,8 +225,8 @@ public class FanaticPluginRoot extends AbstractPlugin implements
 
             Fanatic Fanatic = null;
             if(externalIdentityID != null){
-                Fanatic = identityFanaticManager.createFanaticIdentity(alias, image, externalIdentityID, ArtExternalPlatform.TOKENLY);
-                fanManager.exposeIdentity(new FanExposingData(Fanatic.getPublicKey(),Fanatic.getAlias(),Fanatic.getProfileImage()));
+                Fanatic = identityFanaticManager.createFanaticIdentity(alias, image, externalIdentityID, ArtExternalPlatform.TOKENLY,"");
+                fanManager.exposeIdentity(new FanExposingData(Fanatic.getPublicKey(),Fanatic.getAlias(),""));
                 ArtIdentity artIdentity = identityFanaticManager.getLinkedIdentity(Fanatic.getPublicKey());
                 System.out.println("artIdentity = " + artIdentity.toString());
             }else{

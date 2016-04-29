@@ -154,7 +154,8 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
             DeviceUser deviceUser,
             byte[] profileImage,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws CantCreateFanIdentityException {
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantCreateFanIdentityException {
 
         try {
             if (aliasExists(alias)) {
@@ -195,7 +196,10 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                         FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
                         artExternalPlatform.getCode());
             }
-
+            //External username
+            record.setStringValue(
+                    FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME,
+                    externalUsername);
             table.insertRecord(record);
 
             if (profileImage != null)
@@ -238,7 +242,8 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
             String alias,
             byte[] profileImage,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws CantUpdateFanIdentityException {
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantUpdateFanIdentityException {
         try {
             /**
              * 1) Get the table.
@@ -283,6 +288,11 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                             FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_PLATFORM_COLUMN_NAME,
                             artExternalPlatform.getCode());
                 }
+                //External username
+                record.setStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME,
+                        externalUsername);
+                table.insertRecord(record);
 
                 table.updateRecord(record);
             }
@@ -367,6 +377,9 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                 } else{
                     externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
                 }
+                //External username
+                String externalUsername = record.getStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME);
                 list.add(
                         new FanaticIdentityImp(
                                 record.getStringValue(
@@ -378,7 +391,8 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                                 externalIdentityId,
                                 pluginFileSystem,
                                 pluginId,
-                                externalPlatform));
+                                externalPlatform,
+                                externalUsername));
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantListFanIdentitiesException(
@@ -451,6 +465,9 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                 } else{
                     externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
                 }
+                //External username
+                String externalUsername = record.getStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME);
                 Fanatic = new FanaticIdentityImp(
                         record.getStringValue(
                                 FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_ALIAS_COLUMN_NAME),
@@ -461,7 +478,8 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                         externalIdentityId,
                         pluginFileSystem,
                         pluginId,
-                        externalPlatform);
+                        externalPlatform,
+                        externalUsername);
 
             }
         } catch (CantLoadTableToMemoryException e) {
@@ -536,6 +554,9 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                 } else{
                     externalPlatform = ArtExternalPlatform.getByCode(externalPlatformString);
                 }
+                //External username
+                String externalUsername = record.getStringValue(
+                        FanaticIdentityDatabaseConstants.FANATIC_IDENTITY_EXTERNAL_USERNAME_COLUMN_NAME);
                 Fanatic = new FanaticIdentityImp(
                         record.getStringValue(
                                 FanaticIdentityDatabaseConstants
@@ -547,7 +568,8 @@ public class FanaticIdentityDao implements DealsWithPluginDatabaseSystem {
                         externalIdentityId,
                         pluginFileSystem,
                         pluginId,
-                        externalPlatform);
+                        externalPlatform,
+                        externalUsername);
             }
         } catch (CantLoadTableToMemoryException e) {
             throw new CantGetFanIdentityException(

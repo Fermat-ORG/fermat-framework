@@ -57,7 +57,8 @@ public interface FanIdentityManagerModule extends ModuleManager<FanIdentitySetti
             final String alias,
             final byte[] imageBytes,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws
             CantCreateFanIdentityException,
             FanIdentityAlreadyExistsException;
     /**
@@ -72,7 +73,8 @@ public interface FanIdentityManagerModule extends ModuleManager<FanIdentitySetti
             String publicKey,
             byte[] imageProfile,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws
             CantUpdateFanIdentityException;
 
     /**

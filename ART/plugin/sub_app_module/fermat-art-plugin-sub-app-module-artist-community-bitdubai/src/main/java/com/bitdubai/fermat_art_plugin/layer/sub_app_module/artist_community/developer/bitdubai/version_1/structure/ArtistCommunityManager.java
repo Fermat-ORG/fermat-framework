@@ -468,7 +468,12 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         {
             try{
                 //TODO: I'll set Tokenly, for now, only for fix compilation. Manuel
-                final Fanatic createdIdentity = fanaticIdentityManager.createFanaticIdentity(name, profile_img,externalIdentityID, ArtExternalPlatform.TOKENLY);
+                final Fanatic createdIdentity = fanaticIdentityManager.createFanaticIdentity(
+                        name,
+                        profile_img,
+                        externalIdentityID,
+                        ArtExternalPlatform.TOKENLY,
+                        externalUsername);
                 createdPublicKey = createdIdentity.getPublicKey();
                 new Thread() {
                     @Override

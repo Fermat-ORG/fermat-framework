@@ -343,9 +343,13 @@ public class CreateArtFanUserIdentityFragment extends AbstractFermatFragment {
         }
         String fanExternalName = mFanExternalUserName.getText().toString();
         ArtExternalPlatform externalPlatform = ArtExternalPlatform.getDefaultExternalPlatform();
+        String externalUsername="";
         if(mFanExternalPlatform.getSelectedItem() != mFanExternalPlatform.getItemAtPosition(0)){
             externalPlatform = ArtExternalPlatform.getArtExternalPlatformByLabel(
                     mFanExternalPlatform.getSelectedItem().toString());
+        }
+        if(mFanExternalUser.getCount()>1){
+            externalUsername=mFanExternalUser.getSelectedItem().toString();
         }
         boolean dataIsValid = validateIdentityData(
                 fanExternalName,

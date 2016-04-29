@@ -1,4 +1,4 @@
-package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util;
+package com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.fan.util;
 
 import com.bitdubai.fermat_art_api.all_definition.enums.ArtExternalPlatform;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ArtActorInfo;
@@ -7,9 +7,9 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist
 import java.util.HashMap;
 
 /**
- * Created by Manuel Perez (darkpriestrelative@gmail.com) on 11/04/16.
+ * Created by Manuel Perez (darkpriestrelative@gmail.com) on 28/04/16.
  */
-public class ArtistExternalPlatformInformation implements ArtActorInfo {
+public class FanExternalPlatformInformation implements ArtActorInfo {
 
     private final HashMap<ArtExternalPlatform,String> externalPlatformInformationMap;
 
@@ -17,7 +17,7 @@ public class ArtistExternalPlatformInformation implements ArtActorInfo {
      * Constructor with parameters
      * @param externalPlatformInformationMap
      */
-    public ArtistExternalPlatformInformation(
+    public FanExternalPlatformInformation(
             HashMap<ArtExternalPlatform, String> externalPlatformInformationMap) {
         this.externalPlatformInformationMap = externalPlatformInformationMap;
     }
@@ -26,7 +26,7 @@ public class ArtistExternalPlatformInformation implements ArtActorInfo {
      * Constructor with parameters
      * @param externalPlatformInformation
      */
-    public ArtistExternalPlatformInformation(
+    public FanExternalPlatformInformation(
             ExternalPlatformInformation externalPlatformInformation){
         this.externalPlatformInformationMap = externalPlatformInformation.
                 getLinkedExternalPlatformInformation();
