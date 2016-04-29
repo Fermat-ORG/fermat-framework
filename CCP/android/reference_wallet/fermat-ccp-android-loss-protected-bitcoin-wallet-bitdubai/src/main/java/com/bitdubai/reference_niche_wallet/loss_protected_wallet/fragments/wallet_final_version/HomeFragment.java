@@ -160,6 +160,7 @@ public class HomeFragment extends AbstractFermatFragment<LossProtectedWalletSess
                 bitcoinWalletSettings.setIsContactsHelpEnabled(true);
                 bitcoinWalletSettings.setIsPresentationHelpEnabled(true);
                 bitcoinWalletSettings.setNotificationEnabled(true);
+                bitcoinWalletSettings.setLossProtectedEnabled(true);
 
                 settingsManager.persistSettings(lossProtectedWalletSession.getAppPublicKey(), bitcoinWalletSettings);
             }
