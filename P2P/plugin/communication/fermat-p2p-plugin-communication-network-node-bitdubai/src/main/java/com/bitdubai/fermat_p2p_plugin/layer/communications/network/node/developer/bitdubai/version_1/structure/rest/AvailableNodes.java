@@ -26,13 +26,10 @@ import javax.ws.rs.core.MediaType;
  * @version 1.0
  * @since Java JDK 1.7
  */
-@Path("/availablenodes")
+@Path("/available/nodes")
 public class AvailableNodes implements RestFulServices {
 
-
-
     @GET
-    @Path("/listavailablenodesprofile")
     @Produces(MediaType.APPLICATION_JSON)
     public String listAvailableNodesProfile(){
 
