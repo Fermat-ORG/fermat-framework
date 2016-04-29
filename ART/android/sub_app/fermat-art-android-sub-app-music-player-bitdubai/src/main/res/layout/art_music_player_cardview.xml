@@ -14,8 +14,8 @@
 
         <ImageView
             android:id="@+id/imagen"
-            android:layout_width="70dp"
-            android:layout_height="100dp"
+            android:layout_width="100px"
+            android:layout_height="100px"
             android:scaleType="centerCrop"
             android:layout_above="@+id/linea" />
 
@@ -28,7 +28,8 @@
             android:id="@+id/songname"
             android:layout_toRightOf="@+id/imagen"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="10dp" />
+            android:layout_marginLeft="20px"
+            android:textSize="16px" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -38,7 +39,8 @@
             android:textColor="@color/textviewcolor"
             android:id="@+id/artistname"
             android:layout_below="@+id/songname"
-            android:layout_alignLeft="@+id/songname" />
+            android:layout_alignLeft="@+id/songname"
+            android:textSize="14px" />
         <View
             android:layout_width="wrap_content"
             android:layout_height="0dp"

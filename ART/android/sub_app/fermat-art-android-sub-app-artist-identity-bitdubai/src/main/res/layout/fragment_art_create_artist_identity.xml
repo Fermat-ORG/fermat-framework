@@ -33,8 +33,8 @@
         android:layout_centerHorizontal="true"
         android:orientation="vertical"
         android:id="@+id/aai_linearLayout"
-        android:layout_above="@+id/afi_create_art_fan_identity"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:layout_above="@+id/create_art_artist_identity">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -75,7 +75,7 @@
 
         <RelativeLayout
             android:layout_width="349dp"
-            android:layout_height="111dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal">
 
             <!--android:entries="@array/externalPlatforms"/>-->
@@ -83,6 +83,7 @@
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:id="@+id/aai_external_identity_layout"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentStart="true">
 
@@ -133,6 +134,53 @@
                     android:textColor="#919090"
                     android:background="#0080FF"
                     android:popupBackground="#0080FF"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/art_exposureLevel_label"
+                    android:text="Exposure Level"
+                    android:textStyle="bold"
+                    android:textColor="#919090"
+                    android:layout_below="@+id/aai_userIdentityName"
+                    tools:ignore="HardcodedText"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="5dp"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/art_artistAcceptConnectionsType_label"
+                    android:text="Connections Type"
+                    android:textColor="#919090"
+                    android:textStyle="bold"
+                    tools:ignore="HardcodedText"
+                    android:layout_alignBaseline="@+id/art_exposureLevel_label"
+                    android:layout_toRightOf="@+id/art_exposureLevel_label"
+
+                    android:paddingLeft="15dp"/>
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/art_exposureLevel"
+                    android:textColor="#919090"
+                    android:background="#0080FF"
+                    android:popupBackground="#0080FF"
+                    android:layout_below="@+id/art_exposureLevel_label"
+
+                    android:spinnerMode="dropdown"
+                    />
+                <Spinner
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/art_artistAcceptConnectionsType"
+                    android:textColor="#919090"
+                    android:background="#0080FF"
+                    android:popupBackground="#0080FF"
+                    android:layout_alignBaseline="@+id/art_exposureLevel"
+                    android:layout_toRightOf="@+id/art_exposureLevel"
+                    android:paddingStart="30dp"
+
+                    android:spinnerMode="dropdown"
+                    />
             </RelativeLayout>
         </RelativeLayout>
 

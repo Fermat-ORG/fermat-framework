@@ -182,12 +182,5 @@ public interface ArtistCommunitySubAppModuleManager extends ModuleManager<Artist
      */
     ConnectionState getActorConnectionState(String publicKey) throws CantValidateConnectionStateException;
 
-    void createArtistIdentity(
-            String name,
-            String phrase,
-            byte[] profile_img,
-            UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws Exception;
-
 
 }

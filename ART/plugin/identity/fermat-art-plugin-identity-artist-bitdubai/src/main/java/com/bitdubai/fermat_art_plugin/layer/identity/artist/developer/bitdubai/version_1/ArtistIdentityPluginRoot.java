@@ -32,6 +32,7 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantEx
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantListArtistsException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.ActorSearch;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtistManager;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExposingData;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException;
 import com.bitdubai.fermat_art_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException;
@@ -131,10 +132,16 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
         try {
             for (Artist artist :
                     listIdentitiesFromCurrentDeviceUser()) {
+                HashMap<ArtExternalPlatform,String> externalInformation = new HashMap<>();
+                externalInformation.put(artist.getExternalPlatform(), artist.getExternalUsername());
+                List extraData = new ArrayList();
+                extraData.add(artist.getProfileImage());
+                extraData.add(new ArtistExternalPlatformInformation(externalInformation));
+                String xmlExtraData = XMLParser.parseObject(extraData);
                 artistExposingDatas.add(new ArtistExposingData(
                         artist.getPublicKey(),
                         artist.getAlias(),
-                        artist.getProfileImage()
+                        xmlExtraData
                 ));
             }
             artistManager.exposeIdentities(artistExposingDatas);
@@ -145,65 +152,65 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
         }
     }
 
-    private void testCreateArtist(){
-        String alias = "perezilla";
-        byte[] image = new byte[0];
-        String password = "milestone";
-        ExternalPlatform externalPlatformTokenly = ExternalPlatform.TOKENLY;
-        ExposureLevel exposureLevelTokenly = ExposureLevel.DEFAULT_EXPOSURE_LEVEL;
-        ArtistAcceptConnectionsType artistAcceptConnectionsTypeTokenly = ArtistAcceptConnectionsType.DEFAULT_ARTIST_ACCEPT_CONNECTION_TYPE;
-
-        try {
-
-            tokenlyArtistIdentityManager.createArtistIdentity(alias, image, password, externalPlatformTokenly, exposureLevelTokenly, artistAcceptConnectionsTypeTokenly);
-            HashMap<ArtExternalPlatform, HashMap<UUID,String>> externalIdentites = listExternalIdentitiesFromCurrentDeviceUser();
-            Iterator<Map.Entry<ArtExternalPlatform, HashMap<UUID, String>>> entries = externalIdentites.entrySet().iterator();
-            UUID externalIdentityID = null;
-            while (entries.hasNext()) {
-                Map.Entry<ArtExternalPlatform, HashMap<UUID, String>> entry = entries.next();
-                HashMap<UUID, String> artists = entry.getValue();
-                Iterator<Map.Entry<UUID, String>> entiesSet = artists.entrySet().iterator();
-                while(entiesSet.hasNext()){
-                    Map.Entry<UUID, String> entrySet = entiesSet.next();
-                    System.out.println("Key = " + entrySet.getKey() + ", Value = " + entrySet.getValue());
-                    externalIdentityID = entrySet.getKey();
-                }
-            }
-            System.out.println("externalIdentites = " + XMLParser.parseObject(externalIdentites));
-
-            Artist artist = null;
-            if(externalIdentityID != null){
-                artist = createArtistIdentity(alias,image,externalIdentityID, ArtExternalPlatform.TOKENLY);
-                artistManager.exposeIdentity(new ArtistExposingData(artist.getPublicKey(),"El gabo",artist.getProfileImage()));
-                ActorSearch<ArtistExposingData> artistExposingDataActorSearch = artistManager.getSearch();
-                List<ArtistExposingData> artistExposingDatas = artistExposingDataActorSearch.getResult();
-                for (ArtistExposingData artistExposingData :
-                        artistExposingDatas) {
-                    System.out.println("artistExposingData = " + artistExposingData.toString());
-                }
-                ArtIdentity artIdentity = getLinkedIdentity(artist.getPublicKey());
-                System.out.println("artIdentity = " + artIdentity.toString());
-            }else{
-                System.out.println("###############\nNo funciona.");
-            }
-        } catch (com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException e) {
-            e.printStackTrace();
-        } catch (com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException e) {
-            e.printStackTrace();
-        } catch (CantCreateArtistIdentityException e) {
-            e.printStackTrace();
-        } catch (ArtistIdentityAlreadyExistsException e) {
-            e.printStackTrace();
-        } catch (CantListArtistIdentitiesException e) {
-            e.printStackTrace();
-        } catch (CantExposeIdentityException e) {
-            e.printStackTrace();
-        } catch (CantListArtistsException e) {
-            e.printStackTrace();
-        } catch (WrongTokenlyUserCredentialsException e) {
-            e.printStackTrace();
-        }
-    }
+//    private void testCreateArtist(){
+//        String alias = "perezilla";
+//        byte[] image = new byte[0];
+//        String password = "milestone";
+//        ExternalPlatform externalPlatformTokenly = ExternalPlatform.TOKENLY;
+//        ExposureLevel exposureLevelTokenly = ExposureLevel.DEFAULT_EXPOSURE_LEVEL;
+//        ArtistAcceptConnectionsType artistAcceptConnectionsTypeTokenly = ArtistAcceptConnectionsType.DEFAULT_ARTIST_ACCEPT_CONNECTION_TYPE;
+//
+//        try {
+//
+//            tokenlyArtistIdentityManager.createArtistIdentity(alias, image, password, externalPlatformTokenly, exposureLevelTokenly, artistAcceptConnectionsTypeTokenly);
+//            HashMap<ArtExternalPlatform, HashMap<UUID,String>> externalIdentites = listExternalIdentitiesFromCurrentDeviceUser();
+//            Iterator<Map.Entry<ArtExternalPlatform, HashMap<UUID, String>>> entries = externalIdentites.entrySet().iterator();
+//            UUID externalIdentityID = null;
+//            while (entries.hasNext()) {
+//                Map.Entry<ArtExternalPlatform, HashMap<UUID, String>> entry = entries.next();
+//                HashMap<UUID, String> artists = entry.getValue();
+//                Iterator<Map.Entry<UUID, String>> entiesSet = artists.entrySet().iterator();
+//                while(entiesSet.hasNext()){
+//                    Map.Entry<UUID, String> entrySet = entiesSet.next();
+//                    System.out.println("Key = " + entrySet.getKey() + ", Value = " + entrySet.getValue());
+//                    externalIdentityID = entrySet.getKey();
+//                }
+//            }
+//            System.out.println("externalIdentites = " + XMLParser.parseObject(externalIdentites));
+//
+//            Artist artist = null;
+//            if(externalIdentityID != null){
+//                artist = createArtistIdentity(alias,image,ExposureLevel.DEFAULT_EXPOSURE_LEVEL,ArtistAcceptConnectionsType.DEFAULT_ARTIST_ACCEPT_CONNECTION_TYPE, externalIdentityID, ArtExternalPlatform.TOKENLY);
+//                artistManager.exposeIdentity(new ArtistExposingData(artist.getPublicKey(),"El gabo",artist.getProfileImage()));
+//                ActorSearch<ArtistExposingData> artistExposingDataActorSearch = artistManager.getSearch();
+//                List<ArtistExposingData> artistExposingDatas = artistExposingDataActorSearch.getResult();
+//                for (ArtistExposingData artistExposingData :
+//                        artistExposingDatas) {
+//                    System.out.println("artistExposingData = " + artistExposingData.toString());
+//                }
+//                ArtIdentity artIdentity = getLinkedIdentity(artist.getPublicKey());
+//                System.out.println("artIdentity = " + artIdentity.toString());
+//            }else{
+//                System.out.println("###############\nNo funciona.");
+//            }
+//        } catch (com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.CantCreateArtistIdentityException e) {
+//            e.printStackTrace();
+//        } catch (com.bitdubai.fermat_tky_api.layer.identity.artist.exceptions.ArtistIdentityAlreadyExistsException e) {
+//            e.printStackTrace();
+//        } catch (CantCreateArtistIdentityException e) {
+//            e.printStackTrace();
+//        } catch (ArtistIdentityAlreadyExistsException e) {
+//            e.printStackTrace();
+//        } catch (CantListArtistIdentitiesException e) {
+//            e.printStackTrace();
+//        } catch (CantExposeIdentityException e) {
+//            e.printStackTrace();
+//        } catch (CantListArtistsException e) {
+//            e.printStackTrace();
+//        } catch (WrongTokenlyUserCredentialsException e) {
+//            e.printStackTrace();
+//        }
+//    }
     @Override
     public List<Artist> listIdentitiesFromCurrentDeviceUser() throws CantListArtistIdentitiesException {
         return identityArtistManager.getIdentityArtistFromCurrentDeviceUser();
@@ -256,7 +263,13 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
                         case TOKENLY:
                             final com.bitdubai.fermat_tky_api.layer.identity.artist.interfaces.Artist tokenlyArtist = tokenlyArtistIdentityManager.getArtistIdentity(artist.getExternalIdentityID());
                             if(tokenlyArtist != null){
-                                artIdentity = new ArtistIdentityImp(tokenlyArtist.getPublicKey(),tokenlyArtist.getProfileImage(),tokenlyArtist.getUsername(),tokenlyArtist.getId(),externalPlatform);
+                                artIdentity = new ArtistIdentityImp(
+                                        tokenlyArtist.getPublicKey(),
+                                        tokenlyArtist.getProfileImage(),
+                                        tokenlyArtist.getUsername(),
+                                        tokenlyArtist.getId(),
+                                        externalPlatform,
+                                        tokenlyArtist.getUsername());
                             }
                             break;
                     }
@@ -274,31 +287,38 @@ public class ArtistIdentityPluginRoot extends AbstractPlugin implements
 
 
     @Override
-    public Artist createArtistIdentity(
-            String alias,
-            byte[] imageBytes,
-            UUID externalIdentityId,
-            ArtExternalPlatform artExternalPlatform) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
+    public Artist createArtistIdentity( final String alias,
+                                        final byte[] imageBytes,
+                                        final String externalUsername,
+                                        ExposureLevel exposureLevel, ArtistAcceptConnectionsType acceptConnectionsType, final UUID externalIdentityID,
+                                        final ArtExternalPlatform artExternalPlatform) throws CantCreateArtistIdentityException, ArtistIdentityAlreadyExistsException {
+
         return identityArtistManager.createNewIdentityArtist(
                 alias,
                 imageBytes,
-                externalIdentityId,
-                artExternalPlatform);
+                externalIdentityID,
+                externalUsername,
+                artExternalPlatform,
+                exposureLevel,
+                acceptConnectionsType);
     }
 
     @Override
     public void updateArtistIdentity(
-            String alias,
-            String publicKey,
-            byte[] profileImage,
-            UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws CantUpdateArtistIdentityException {
+            String alias, String publicKey, byte[] profileImage,
+            ExposureLevel exposureLevel, ArtistAcceptConnectionsType acceptConnectionsType, UUID externalIdentityID,
+            ArtExternalPlatform artExternalPlatform,String externalUserName) throws CantUpdateArtistIdentityException {
+
         identityArtistManager.updateIdentityArtist(
                 alias,
                 publicKey,
                 profileImage,
                 externalIdentityID,
-                artExternalPlatform);
+                externalUserName,
+                artExternalPlatform,
+                exposureLevel,
+                acceptConnectionsType);
+
     }
 
     @Override

@@ -74,9 +74,13 @@ public final class FanActorNetworkServiceSearch extends ActorSearch<FanExposingD
                     imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
                 else
                     imageByte = null;
+                String extraDataString = new String(imageByte);
 
-
-                fanExposingDatas.add(new FanExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte));
+                fanExposingDatas.add(
+                        new FanExposingData(
+                                platformComponentProfile.getIdentityPublicKey(),
+                                platformComponentProfile.getAlias(),
+                                extraDataString));
             }
 
             return fanExposingDatas;
@@ -124,9 +128,13 @@ public final class FanActorNetworkServiceSearch extends ActorSearch<FanExposingD
                     imageByte = Base64.decode(platformComponentProfile.getExtraData(), Base64.DEFAULT);
                 else
                     imageByte = null;
+                String extraDataString = new String(imageByte);
 
-
-                artistExposingDatas.add(new FanExposingData(platformComponentProfile.getIdentityPublicKey(), platformComponentProfile.getAlias(), imageByte));
+                artistExposingDatas.add(
+                        new FanExposingData(
+                                platformComponentProfile.getIdentityPublicKey(),
+                                platformComponentProfile.getAlias(),
+                                extraDataString));
             }
 
             return artistExposingDatas;

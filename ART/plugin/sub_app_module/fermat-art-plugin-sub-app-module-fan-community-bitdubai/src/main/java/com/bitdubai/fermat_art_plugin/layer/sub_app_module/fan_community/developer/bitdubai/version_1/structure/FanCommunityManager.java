@@ -483,58 +483,6 @@ public class FanCommunityManager implements FanCommunityModuleManager,Serializab
 
     }
 
-    @Override
-    public void createFanaticIdentity(
-            String name,
-            String phrase,
-            byte[] profile_img,
-            UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws Exception {
-        String createdPublicKey = null;
-
-        try{
-            final Artist createdIdentity = artistIdentityManager.createArtistIdentity(
-                    name,
-                    profile_img,
-                    externalIdentityID,
-                    artExternalPlatform);
-            createdPublicKey = createdIdentity.getPublicKey();
-
-            new Thread() {
-                @Override
-                public void run() {
-                    try {
-                        artistIdentityManager.publishIdentity(createdIdentity.getPublicKey());
-                    } catch(Exception e) {
-                        errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-                    }
-                }
-            }.start();
-        }catch(Exception e) {
-            this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_THIS_PLUGIN, e);
-            return;
-        }
-
-
-        //Try to get appSettings
-        FanCommunitySettings appSettings = null;
-        try {
-            appSettings = this.settingsManager.loadAndGetSettings(this.subAppPublicKey);
-        }catch (Exception e){ appSettings = null; }
-
-
-        //If appSettings exist
-        if(appSettings != null){
-            appSettings.setLastSelectedIdentityPublicKey(createdPublicKey);
-            try {
-                this.settingsManager.persistSettings(this.subAppPublicKey, appSettings);
-            }catch (CantPersistSettingsException e){
-                this.errorManager.reportUnexpectedPluginException(pluginVersionReference, UnexpectedPluginExceptionSeverity.DISABLES_SOME_FUNCTIONALITY_WITHIN_THIS_PLUGIN, e);
-            }
-        }
-    }
-
-    @Override
     public void setAppPublicKey(String publicKey) {
         this.subAppPublicKey = publicKey;
     }

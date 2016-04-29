@@ -424,7 +424,7 @@ public class ArtistActorNetworkServicePluginRoot extends AbstractNetworkServiceB
     private void testCreateAndList(){
         ECCKeyPair identity = new ECCKeyPair();
         try {
-            artistActorNetworkServiceManager.exposeIdentity(new ArtistExposingData(identity.getPublicKey(), "El Gabo artist", new byte[0]));
+            artistActorNetworkServiceManager.exposeIdentity(new ArtistExposingData(identity.getPublicKey(), "El Gabo artist", ""));
             ActorSearch<ArtistExposingData> artistActorNetworkServiceSearch = artistActorNetworkServiceManager.getSearch();
             List<ArtistExposingData> artistExposingDatas = artistActorNetworkServiceSearch.getResult();
             for (ArtistExposingData artistExposingData:

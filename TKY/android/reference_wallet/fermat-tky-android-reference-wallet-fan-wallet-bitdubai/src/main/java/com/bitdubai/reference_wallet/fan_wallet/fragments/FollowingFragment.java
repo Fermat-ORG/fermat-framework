@@ -172,6 +172,11 @@ public class FollowingFragment extends AbstractFermatFragment implements SearchV
         adapter = new FollowingAdapter(items);
         recyclerView.setAdapter(adapter);
 
+       /* if(items.isEmpty()){
+            recyclerView.setBackgroundResource(R.drawable.nocconnect);
+        }else{
+            recyclerView.setBackgroundResource(R.drawable.fanwallet_background_viewpager);
+        }*/
 
         swipe_effect();
 

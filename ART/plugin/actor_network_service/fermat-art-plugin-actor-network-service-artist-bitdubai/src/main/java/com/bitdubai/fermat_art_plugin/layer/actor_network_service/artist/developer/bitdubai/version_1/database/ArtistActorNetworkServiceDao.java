@@ -40,9 +40,9 @@ import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRe
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.CantRequestExternalPlatformInformationException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.exceptions.ConnectionRequestNotFoundException;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.ArtArtistExtraData;
+import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionInformation;
 import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistConnectionRequest;
-import com.bitdubai.fermat_art_api.layer.actor_network_service.interfaces.artist.util.ArtistExternalPlatformInformation;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantAnswerInformationRequestException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantChangeProtocolStateException;
 import com.bitdubai.fermat_art_plugin.layer.actor_network_service.artist.developer.bitdubai.version_1.exceptions.CantConfirmConnectionRequestException;
@@ -121,6 +121,55 @@ public final class ArtistActorNetworkServiceDao {
         } catch (final Exception e) {
 
             throw new CantInitializeDatabaseException(e, "", "Unhandled Exception.");
+        }
+    }
+
+    /**
+     * This method returns all completed request connections.
+     * @return
+     * @throws CantListPendingConnectionRequestsException
+     */
+    public final List<ArtistConnectionRequest> listCompletedConnections() throws CantListPendingConnectionRequestsException {
+        try {
+            //We need all the connections done.
+            final ProtocolState protocolState = ProtocolState.DONE;
+            final DatabaseTable connectionNewsTable = database.getTable
+                    (ArtistActorNetworkServiceDatabaseConstants.CONNECTION_NEWS_TABLE_NAME);
+            connectionNewsTable.addFermatEnumFilter(
+                    ArtistActorNetworkServiceDatabaseConstants.
+                            CONNECTION_NEWS_REQUEST_STATE_COLUMN_NAME,
+                    protocolState, DatabaseFilterType.EQUAL);
+            //We create a list, we can need more actions in the future
+            List<ConnectionRequestAction> actions = new ArrayList<>();
+            actions.add(ConnectionRequestAction.NONE);
+            final List<DatabaseTableFilter> tableFilters = new ArrayList<>();
+            for(final ConnectionRequestAction action : actions)
+                tableFilters.add(
+                        connectionNewsTable.getNewFilter(
+                                ArtistActorNetworkServiceDatabaseConstants.
+                                        CONNECTION_NEWS_REQUEST_ACTION_COLUMN_NAME,
+                                DatabaseFilterType.EQUAL,
+                                action.getCode()));
+            final DatabaseTableFilterGroup filterGroup = connectionNewsTable.getNewFilterGroup(
+                    tableFilters, null, DatabaseFilterOperator.OR);
+            connectionNewsTable.setFilterGroup(filterGroup);
+            connectionNewsTable.loadToMemory();
+            final List<DatabaseTableRecord> records = connectionNewsTable.getRecords();
+            final List<ArtistConnectionRequest> artistConnectionRequests = new ArrayList<>();
+            for (final DatabaseTableRecord record : records)
+                artistConnectionRequests.add(buildConnectionNewRecord(record));
+            return artistConnectionRequests;
+        } catch (final CantLoadTableToMemoryException e) {
+            throw new CantListPendingConnectionRequestsException(
+                    e,
+                    "",
+                    "Exception not handled by the plugin," +
+                            " there is a problem in database and I cannot load the table.");
+        } catch (final InvalidParameterException e) {
+            throw new CantListPendingConnectionRequestsException(
+                    e,
+                    "",
+                    "There is a problem with some enum code."                                                                                );
         }
     }
 
