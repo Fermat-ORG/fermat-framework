@@ -162,61 +162,61 @@ public class ChatAdapter extends FermatAdapter<ChatMessage, ChatHolder>
         }
     }
 
-    public int getCount() {
-        if (chatMessages != null) {
-            if (filteredData != null) {
-                if (filteredData.size() <= chatMessages.size()) {
-                    return filteredData.size();
-                } else {
-                    return chatMessages.size();
-                }
-            }else  return chatMessages.size();
-        } else {
-            return 0;
-        }
-    }
-
-    @Override
-    public ChatMessage getItem(int position) {
-        ChatMessage dataM;
-        if (chatMessages != null) {
-            if (filteredData != null) {
-                if (filteredData.size() <= chatMessages.size()) {
-                    dataM= filteredData.get(position);
-                } else {
-                    dataM= chatMessages.get(position);
-                }
-            }else dataM=chatMessages.get(position);
-        } else {
-            dataM=chatMessages.get(position);
-        }
-        return dataM;
-    }
-
-    @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    public void setData(ArrayList<ChatMessage> data) {
-        this.filteredData = data;
-    }
-
-    public Filter getFilter() {
-        messagesData=null;
-        for(ChatMessage data:chatMessages){
-            messagesData.add(data.getMessage());
-        }
-        return new ChatFilter(messagesData, this);
-    }
-
-    public void setFilterString(String filterString) {
-        this.filterString = filterString;
-    }
-
-    public String getFilterString() {
-        return filterString;
-    }
+//    public int getCount() {
+//        if (chatMessages != null) {
+//            if (filteredData != null) {
+//                if (filteredData.size() <= chatMessages.size()) {
+//                    return filteredData.size();
+//                } else {
+//                    return chatMessages.size();
+//                }
+//            }else  return chatMessages.size();
+//        } else {
+//            return 0;
+//        }
+//    }
+//
+//    @Override
+//    public ChatMessage getItem(int position) {
+//        ChatMessage dataM;
+//        if (chatMessages != null) {
+//            if (filteredData != null) {
+//                if (filteredData.size() <= chatMessages.size()) {
+//                    dataM= filteredData.get(position);
+//                } else {
+//                    dataM= chatMessages.get(position);
+//                }
+//            }else dataM=chatMessages.get(position);
+//        } else {
+//            dataM=chatMessages.get(position);
+//        }
+//        return dataM;
+//    }
+//
+//    @Override
+//    public long getItemId(int position) {
+//        return position;
+//    }
+//
+//    public void setData(ArrayList<ChatMessage> data) {
+//        this.filteredData = data;
+//    }
+//
+//    public Filter getFilter() {
+//        messagesData=null;
+//        for(ChatMessage data:chatMessages){
+//            messagesData.add(data.getMessage());
+//        }
+//        return new ChatFilter(messagesData, this);
+//    }
+//
+//    public void setFilterString(String filterString) {
+//        this.filterString = filterString;
+//    }
+//
+//    public String getFilterString() {
+//        return filterString;
+//    }
 
 
 //
