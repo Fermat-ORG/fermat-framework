@@ -16,6 +16,7 @@ import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTable;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.DatabaseTableRecord;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.PluginDatabaseSystem;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantCreateDatabaseException;
+import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantDeleteRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantInsertRecordException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantLoadTableToMemoryException;
 import com.bitdubai.fermat_api.layer.osa_android.database_system.exceptions.CantOpenDatabaseException;
@@ -106,16 +107,24 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
             final DatabaseTable actorConnectionsTable = getActorConnectionsTable();
 
             DatabaseTableRecord entityRecord = actorConnectionsTable.getEmptyRecord();
+            DatabaseTableRecord entityRecordOld = actorConnectionsTable.getEmptyRecord();
 
             entityRecord = buildDatabaseRecord(
                     entityRecord,
                     actorConnection
             );
 
-            if(oldActorConnection == null)
-            actorConnectionsTable.insertRecord(entityRecord);
-            else
-            actorConnectionsTable.updateRecord(entityRecord);
+            if(oldActorConnection == null) {
+                actorConnectionsTable.insertRecord(entityRecord);
+            }
+            else {
+                entityRecordOld = buildDatabaseRecord(
+                        entityRecordOld,
+                        oldActorConnection
+                );
+                actorConnectionsTable.deleteRecord(entityRecordOld);
+                actorConnectionsTable.insertRecord(entityRecord);
+            }
 
             return buildActorConnectionNewRecord(entityRecord);
 
@@ -128,9 +137,11 @@ public class ChatActorConnectionDao extends ActorConnectionDao<ChatLinkedActorId
         } catch (final CantGetActorConnectionException e) {
 
             throw new CantRegisterActorConnectionException(e, "", "There was an error trying to find if the actor connection exists.");
-        } catch (CantUpdateRecordException e) {
-
-            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to update the actor connection");
+//        } catch (CantUpdateRecordException e) {
+//
+//            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to update the actor connection");
+        } catch (CantDeleteRecordException e) {
+            throw new CantRegisterActorConnectionException(e, "", "There was an error trying to delete the actor.");
         }
     }
 

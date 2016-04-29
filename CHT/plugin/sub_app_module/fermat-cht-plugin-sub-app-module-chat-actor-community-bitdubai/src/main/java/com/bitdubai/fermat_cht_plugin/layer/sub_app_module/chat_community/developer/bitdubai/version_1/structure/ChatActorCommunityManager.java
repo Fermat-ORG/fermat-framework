@@ -525,7 +525,7 @@ public class ChatActorCommunityManager implements ChatActorCommunitySubAppModule
         try{
             IdentitiesInDevice = chatIdentityManager.getIdentityChatUsersFromCurrentDeviceUser();
             //TODO:Revisar como asignar estos valores deben ser seteados al entrar a la comunidad setear los settings necesario
-            if(IdentitiesInDevice != null) {
+            if(IdentitiesInDevice != null && IdentitiesInDevice.size() > 0) {
                 appSettings.setLastSelectedIdentityPublicKey(IdentitiesInDevice.get(0).getPublicKey());
                 appSettings.setLastSelectedActorType(IdentitiesInDevice.get(0).getActorType());
             }
