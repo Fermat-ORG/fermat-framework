@@ -450,7 +450,7 @@ public class ArtistCommunityManager implements ArtistCommunitySubAppModuleManage
         } catch (Exception e) {}
 
         return ConnectionState.DISCONNECTED_LOCALLY;    }
-
+    
     public SettingsManager<ArtistCommunitySettings> getSettingsManager() {
         if (this.settingsManager != null)
             return this.settingsManager;

@@ -56,13 +56,15 @@ public class ModuleFanIdentityManager implements FanIdentityManagerModule,Serial
             String alias,
             byte[] imageBytes,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws
             CantCreateFanIdentityException, FanIdentityAlreadyExistsException {
         return fanaticIdentityManager.createFanaticIdentity(
                 alias,
                 imageBytes,
                 externalIdentityID,
-                artExternalPlatform);
+                artExternalPlatform,
+                externalUsername);
     }
 
     @Override
@@ -71,13 +73,15 @@ public class ModuleFanIdentityManager implements FanIdentityManagerModule,Serial
             String publicKey,
             byte[] imageProfile,
             UUID externalIdentityID,
-            ArtExternalPlatform artExternalPlatform) throws CantUpdateFanIdentityException {
+            ArtExternalPlatform artExternalPlatform,
+            String externalUsername) throws CantUpdateFanIdentityException {
         fanaticIdentityManager.updateFanIdentity(
                 alias,
                 publicKey,
                 imageProfile,
                 externalIdentityID,
-                artExternalPlatform);
+                artExternalPlatform,
+                externalUsername);
     }
 
     @Override
