@@ -40,7 +40,7 @@ import static android.widget.Toast.makeText;
 /**
  * Created by mati on 2015.09.30..
  */
-public class RequestSendHistoryFragment extends FermatWalletListFragment<LossProtectedPaymentRequest> implements FermatListItemListeners<LossProtectedPaymentRequest>, View.OnClickListener,onRefreshList {
+public class RequestHistorySendFragment extends FermatWalletListFragment<LossProtectedPaymentRequest> implements FermatListItemListeners<LossProtectedPaymentRequest>, View.OnClickListener,onRefreshList {
 
     /**
      * Session
@@ -75,8 +75,8 @@ public class RequestSendHistoryFragment extends FermatWalletListFragment<LossPro
      *
      * @return InstalledFragment instance object
      */
-    public static RequestSendHistoryFragment newInstance() {
-        return new RequestSendHistoryFragment();
+    public static RequestHistorySendFragment newInstance() {
+        return new RequestHistorySendFragment();
     }
 
     @Override
