@@ -58,6 +58,41 @@ public class OnlineComponents implements RestFulServices {
     }
 
     @GET
+    @Path("/client/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response isClientOnline(@PathParam("id") String identityPublicKey){
+
+        LOG.info("Executing isClientOnline");
+        LOG.info("identityPublicKey = "+identityPublicKey);
+
+        try {
+
+            Boolean online = daoFactory.getCheckedInClientDao().exists(identityPublicKey);
+
+            LOG.info("Is online = " + online);
+
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", Boolean.TRUE);
+            jsonObject.addProperty("isOnline",online);
+
+            return Response.status(200).entity(gson.toJson(jsonObject)).build();
+
+        } catch (CantReadRecordDataBaseException e) {
+
+            e.printStackTrace();
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("success", Boolean.FALSE);
+            jsonObject.addProperty("isOnline", Boolean.FALSE);
+            jsonObject.addProperty("details", e.getMessage());
+
+            return Response.status(200).entity(gson.toJson(jsonObject)).build();
+
+        }
+
+    }
+
+
+    @GET
     @Path("/ns/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public Response isNsOnline(@PathParam("id") String identityPublicKey){
@@ -101,7 +136,7 @@ public class OnlineComponents implements RestFulServices {
 
         try {
 
-            Boolean online = daoFactory.getCheckedInNetworkServiceDao().exists(identityPublicKey);
+            Boolean online = daoFactory.getCheckedInActorDao().exists(identityPublicKey);
 
             LOG.info("Is online = " + online);
 
