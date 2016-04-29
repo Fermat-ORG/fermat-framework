@@ -638,17 +638,17 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                             }
 
                             BigDecimal minSatoshis = new BigDecimal(BitcoinNetworkConfiguration.MIN_ALLOWED_SATOSHIS_ON_SEND);
-                            BigDecimal operator = new BigDecimal(newAmount);
+                            BigDecimal amountDecimal = new BigDecimal(newAmount);
 
-                                if (operator.compareTo(minSatoshis) == 1) {
+                                if (amountDecimal.compareTo(minSatoshis) == 1) {
                                     //TODO:  esta verificacion de proteccion solo se valida si sabes que va a perder dinero
 
                                     long availableBalance = lossProtectedWallet.getBalance(BalanceType.AVAILABLE, appSession.getAppPublicKey(), blockchainNetworkType, String.valueOf(appSession.getActualExchangeRate()));
 
-                                    if(money < availableBalance)
+                                    if(amountDecimal.compareTo(new BigDecimal(availableBalance)) != 1)
                                     {
                                         if (!lossProtectedEnabled) {
-                                            confirm_dialog confirm_dialog = new confirm_dialog(getActivity(),lossProtectedWallet,operator.longValueExact(),
+                                            confirm_dialog confirm_dialog = new confirm_dialog(getActivity(),lossProtectedWallet,amountDecimal.longValueExact(),
                                                     validAddress,
                                                     notes,
                                                     appSession.getAppPublicKey(),
@@ -671,7 +671,7 @@ public class SendFormFragment extends AbstractFermatFragment<LossProtectedWallet
                                         try {
 
                                             lossProtectedWallet.send(
-                                                    operator.longValueExact(),
+                                                    amountDecimal.longValueExact(),
                                                     validAddress,
                                                     notes,
                                                     appSession.getAppPublicKey(),
