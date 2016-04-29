@@ -50,8 +50,8 @@
                     android:layout_height="40dp"
                     android:layout_weight="0.4"
                     android:paddingBottom="2dp"
+                    android:src="@drawable/chat_banner_community"
                     tools:ignore="ContentDescription" />
-                <!-- android:src="@drawable/bitcoin_wallet_2" -->
             </LinearLayout>
             <View
                 android:layout_width="match_parent"

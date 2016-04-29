@@ -36,6 +36,7 @@ import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.devel
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.FailureComponentRegistrationRequestTyrusPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.FailureRequestedListNoAvailbleTyrusPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.FailureUpdateActorTyrusPacketProcessor;
+import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.RegisterServerRequestTyrusPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.RequestListComponentRegisterTyrusPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.processors.ServerHandshakeRespondTyrusPacketProcessor;
 import com.bitdubai.fermat_p2p_plugin.layer.ws.communications.cloud.client.developer.bitdubai.version_1.structure.tyrus.vpn.WsCommunicationTyrusVPNClientManagerAgent;
@@ -101,6 +102,11 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
      */
     private WsCommunicationTyrusVPNClientManagerAgent wsCommunicationTyrusVPNClientManagerAgent;
 
+    /*
+     * Represent The networkServiceType use to reconnecting to main backup Connection AWS
+     */
+    private NetworkServiceType networkServiceType;
+
     /**
      * Represent the webSocketContainer
      */
@@ -116,6 +122,16 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
      */
     private URI uri;
 
+    /**
+     * Represent the SERVER_IP
+     */
+    private String SERVER_IP;
+
+    /**
+     * Represent the PORT
+     */
+    private Integer PORT;
+
     /*
      * Represent if it must reconnect to cloud server
      */
@@ -127,7 +143,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
      * @param uri
      * @param eventManager
      */
-    public WsCommunicationsTyrusCloudClientConnection(URI uri, EventManager eventManager, LocationManager locationManager, ECCKeyPair clientIdentity, WsCommunicationsCloudClientPluginRoot WsCommunicationsCloudClientPluginRoot) throws IOException, DeploymentException {
+    public  WsCommunicationsTyrusCloudClientConnection(URI uri, EventManager eventManager, LocationManager locationManager, ECCKeyPair clientIdentity, WsCommunicationsCloudClientPluginRoot WsCommunicationsCloudClientPluginRoot, String SERVER_IP, Integer PORT,NetworkServiceType networkServiceType) throws IOException, DeploymentException {
         super();
         this.uri = uri;
         this.wsCommunicationsTyrusCloudClientChannel = new WsCommunicationsTyrusCloudClientChannel(this, eventManager, clientIdentity);
@@ -136,6 +152,9 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
         this.webSocketContainer = ClientManager.createClient();
         this.WsCommunicationsCloudClientPluginRoot = WsCommunicationsCloudClientPluginRoot;
         this.tryToReconnect = Boolean.TRUE;
+        this.SERVER_IP = SERVER_IP;
+        this.PORT = PORT;
+        this.networkServiceType = networkServiceType;
     }
 
     /**
@@ -162,8 +181,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
         wsCommunicationsTyrusCloudClientChannel.registerFermatPacketProcessor(new CompleteUpdateActorTyrusPacketProcessor(wsCommunicationsTyrusCloudClientChannel));
         wsCommunicationsTyrusCloudClientChannel.registerFermatPacketProcessor(new FailureUpdateActorTyrusPacketProcessor(wsCommunicationsTyrusCloudClientChannel));
         wsCommunicationsTyrusCloudClientChannel.registerFermatPacketProcessor(new ClientSuccessfullyReconnectTyrusPacketProcessor(wsCommunicationsTyrusCloudClientChannel));
-
-
+        wsCommunicationsTyrusCloudClientChannel.registerFermatPacketProcessor(new RegisterServerRequestTyrusPacketProcessor(wsCommunicationsTyrusCloudClientChannel));
 
     }
 
@@ -190,26 +208,75 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
          */
         ClientManager.ReconnectHandler reconnectHandler = new ClientManager.ReconnectHandler() {
 
+            int i = 0;
+
             @Override
             public boolean onDisconnect(CloseReason closeReason) {
-                System.out.println("############################################################");
-                System.out.println("#  WsCommunicationsCloudClientConnection - Reconnecting... #");
-                System.out.println("############################################################");
-                return tryToReconnect;
+                if(networkServiceType == NetworkServiceType.UNDEFINED) {
+
+                    System.out.println("############################################################");
+                    System.out.println("#  WsCommunicationsCloudClientConnection - Reconnecting... #");
+                    System.out.println("############################################################");
+
+                    return tryToReconnect;
+                }else{
+                    i++;
+
+                    if(i > 4){
+                        try {
+                            getWsCommunicationsCloudClientPluginRoot().connectToBackupConnection(networkServiceType);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return Boolean.FALSE;
+                    }else{
+                        return tryToReconnect;
+                    }
+
+
+                }
             }
 
             @Override
             public boolean onConnectFailure(Exception exception) {
-                try {
+                if(networkServiceType == NetworkServiceType.UNDEFINED) {
+                    try {
 
-                    //System.out.println("# WsCommunicationsCloudClientConnection - Reconnect Failure Message: "+exception.getMessage()+" Cause: "+exception.getCause());
-                    // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
-                    Thread.sleep(5000);
+                        System.out.println("# WsCommunicationsCloudClientConnection - Reconnect Failure Message: " + exception.getMessage() + " Cause: " + exception.getCause());
+                        // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
+                        Thread.sleep(5000);
 
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    return tryToReconnect;
+                }else{
+
+                    i++;
+
+                    if(i > 4){
+                        try {
+                            getWsCommunicationsCloudClientPluginRoot().connectToBackupConnection(networkServiceType);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        return Boolean.FALSE;
+                    }else{
+
+                        try {
+
+                            System.out.println("# WsCommunicationsCloudClientConnection - Reconnect Failure Message: " + exception.getMessage() + " Cause: " + exception.getCause());
+                            // To avoid potential DDoS when you don't limit number of reconnects, wait to the next try.
+                            Thread.sleep(5000);
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        return tryToReconnect;
+
+                    }
+
                 }
-                return tryToReconnect;
             }
 
         };
@@ -602,7 +669,7 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
 
             // Create a new RestTemplate instance
             RestTemplate restTemplate = new RestTemplate(true);
-            String respond = restTemplate.postForObject("http://" + WsCommunicationsCloudClientPluginRoot.getServerIp() + ":" + WsCommunicationsCloudClientPluginRoot.getServerPort() + "/fermat/api/components/registered", parameters, String.class);
+            String respond = restTemplate.postForObject("http://" + getServerIp() + ":" + getServerPort() + "/fermat/api/components/registered", parameters, String.class);
 
             /*
              * if respond have the result list
@@ -1031,6 +1098,21 @@ public class WsCommunicationsTyrusCloudClientConnection implements Communication
      */
     public WsCommunicationsCloudClientPluginRoot getWsCommunicationsCloudClientPluginRoot(){
         return WsCommunicationsCloudClientPluginRoot;
+    }
+
+
+    /*
+     * get the Server Ip
+     */
+    public String getServerIp() {
+        return SERVER_IP;
+    }
+
+    /*
+     * get the Server Port
+     */
+    public Integer getServerPort(){
+        return PORT;
     }
 
 }

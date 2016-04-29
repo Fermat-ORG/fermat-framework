@@ -1,6 +1,7 @@
 package com.bitdubai.reference_wallet.crypto_broker_wallet.common.models;
 
 import com.bitdubai.fermat_cbp_api.all_definition.enums.ContractStatus;
+import com.bitdubai.fermat_cbp_api.all_definition.enums.MoneyType;
 
 import java.util.UUID;
 
@@ -20,9 +21,11 @@ public class ContractDetail {
     private String paymentOrMerchandiseTypeOfPayment;
     private String paymentOrMerchandiseCurrencyCode;
     private long paymentOrMerchandiseDeliveryDate;
+    
+    private MoneyType paymentMethodType;
 
     public ContractDetail(int contractStep, ContractStatus contractStatus, String contractId, UUID negotiationId,
-                          String amount, String typeOfPayment, String currencyCode, long deliveryDate) {
+                          String amount, String typeOfPayment, String currencyCode, long deliveryDate,MoneyType paymentMethodType) {
         this.contractStep = contractStep;
         this.contractStatus = contractStatus;
         this.contractId = contractId;
@@ -31,6 +34,7 @@ public class ContractDetail {
         this.paymentOrMerchandiseTypeOfPayment = typeOfPayment;
         this.paymentOrMerchandiseCurrencyCode = currencyCode;
         this.paymentOrMerchandiseDeliveryDate = deliveryDate;
+        this.paymentMethodType = paymentMethodType;
     }
 
     public int getContractStep() {return contractStep;}
@@ -60,6 +64,10 @@ public class ContractDetail {
 
     public long getPaymentOrMerchandiseDeliveryDate() {return paymentOrMerchandiseDeliveryDate;}
     //public void setPaymentOrMerchandiseDeliveryDate(long paymentOrMerchandiseDeliveryDate) {this.paymentOrMerchandiseDeliveryDate = paymentOrMerchandiseDeliveryDate;}
+
+    public MoneyType getPaymentMethodType() {
+        return paymentMethodType;
+    }
 
 
 

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.View;
 
+import com.bitdubai.fermat_android_api.layer.definition.wallet.utils.ImagesUtils;
 import com.bitdubai.fermat_android_api.ui.adapters.FermatAdapter;
 import com.bitdubai.fermat_api.layer.actor_connection.common.enums.ConnectionState;
 import com.bitdubai.fermat_cht_api.layer.sup_app_module.interfaces.chat_actor_community.interfaces.ChatActorCommunityInformation;
@@ -113,8 +114,8 @@ public class CommunityListAdapter extends FermatAdapter<ChatActorCommunityInform
         byte[] profileImage = data.getImage();
         if (profileImage != null && profileImage.length > 0) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(profileImage, 0, profileImage.length);
-            bitmap = Bitmap.createScaledBitmap(bitmap, 480, 480, true);
-            holder.thumbnail.setImageBitmap(Utils.getRoundedShape(bitmap, 400));
+            bitmap = Bitmap.createScaledBitmap(bitmap, 120, 120, true);
+            holder.thumbnail.setImageDrawable(ImagesUtils.getRoundedBitmap(context.getResources(), bitmap));
         }
 
     }
